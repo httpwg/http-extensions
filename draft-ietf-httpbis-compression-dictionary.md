@@ -72,13 +72,6 @@ negotiated dictionary.
 
 This document uses the line folding strategies described in [FOLDING].
 
-# Editor's Note
-
-This draft depends on the URLPattern specification which is currently in a
-draft state (https://wicg.github.io/urlpattern/). This draft MUST NOT be
-standardized until the URLPattern specification is out of incubation and
-complete.
-
 # Dictionary Negotiation
 
 ## Use-As-Dictionary
@@ -95,16 +88,16 @@ The Use-As-Dictionary response header is a Structured Field
 
 The "match-path" value of the Use-As-Dictionary header is a sf-string value
 that provides the "pathname" of a URLPattern
-(https://wicg.github.io/urlpattern/#dictdef-urlpatterninit).
+(https://urlpattern.spec.whatwg.org/#dom-urlpatterninit-pathname).
 
 The "match-path" is a {{URL}} path relative to the full request URL of the
 dictionary.  The request URL for the dictionary itself is used as the "baseURL"
-for constructing the URLPattern (https://wicg.github.io/urlpattern/) that
+for constructing the URLPattern (https://urlpattern.spec.whatwg.org/) that
 is used for matching the dictionary to relevant requests when running
 {{dictionary-url-matching}}.
 
 The URLPattern used for request matching does not support regular expressions
-(https://wicg.github.io/urlpattern/#token-type-regexp) in the "match-path".
+(https://urlpattern.spec.whatwg.org/#token-type-regexp) in the "match-path".
 
 The "match-path" value is required and MUST be included in the
 Use-As-Dictionary sf-dictionary for the dictionary to be considered valid.
@@ -113,7 +106,7 @@ Use-As-Dictionary sf-dictionary for the dictionary to be considered valid.
 
 The "match-search" value of the Use-As-Dictionary header is a sf-string value
 that provides the "search" of a URLPattern
-(https://wicg.github.io/urlpattern/#dictdef-urlpatterninit).
+(https://urlpattern.spec.whatwg.org/#dom-urlpatterninit-search).
 
 The "match-search" is the match pattern for the searchpart of the request
 {{URL}} and does not support regular expressions.
@@ -264,10 +257,10 @@ algorithm will return TRUE for a successful match and FALSE for no-match:
 1. Let SEARCH be the value of "match-search" for the given dictionary.
 1. Let BASEURL be the request URL of the given dictionary.
 1. Let PATTERN be a URLPattern constructed by setting pathname=PATH,
-search=SEARCH, baseURL=BASEURL (https://wicg.github.io/urlpattern/).
+search=SEARCH, baseURL=BASEURL (https://urlpattern.spec.whatwg.org/).
 1. LET URL represent the request URL being checked.
 1. Return the result of running the URLPattern "match" algorithm
-(https://wicg.github.io/urlpattern/#match)
+(https://urlpattern.spec.whatwg.org/#match)
 
 ### Multiple matching dictionaries
 
