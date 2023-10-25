@@ -165,9 +165,9 @@ In order to include the `next-hop-aliases` parameter, a proxy needs to have acce
 of alias names and canonical names received in CNAME records.
 
 Implementations ought to note that the full chain of names might not be available in common DNS
-resolution APIs, such as `getaddrinfo`. `getaddrinfo` does have an option for `AI_CANONNAME`,
-but this will only return the last name in the chain (the canonical name), not the alias
-names.
+resolution APIs, such as `getaddrinfo`. `getaddrinfo` does have an option for `AI_CANONNAME`
+({{Section 6.1 of ?RFC3493}}), but this will only return the last name in the chain
+(the canonical name), not the alias names.
 
 An implementation MAY include incomplete information in the `next-hop-aliases` parameter to accommodate cases where it is unable to include the full chain, such as only including the canonical name if the implementation can only use `getaddrinfo` as described above.
 
