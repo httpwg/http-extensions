@@ -157,7 +157,15 @@ Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
 
 Upon parsing this name, "dot%5C.label" MUST be treated as a single label.
 
-Similarly the "\\" character in a label MUST be escaped as "\\\\".  Other uses of "\\" MUST NOT appear in the label after percent-decoding.
+Similarly the "\\" character in a label MUST be escaped as "\\\\" and then percent-encoded.
+Other uses of "\\" MUST NOT appear in the label after percent-decoding. For example,
+if there is a DNS name `backslash\\name.example.com`, it would first be escaped as
+`backslash\\\\name.example.com`, and the percent-encoded as follows:
+
+~~~ http-message
+Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
+    next-hop-aliases="backslash%5C%5Cname.example.com,service1.example.com"
+~~~
 
 # Implementation Considerations
 
