@@ -2556,8 +2556,8 @@ NOTE: '\' line wrapping per RFC 8792
 HTTP/1.1 200 OK
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
-Content-Digest: sha-512=:JlEy2bfUz7WrWIjc1qV6KVLpdr/7L5/L4h7Sxvh6sN\
-  HpDQWDCL+GauFQWcZBvVDhiyOnAQsxzZFYwi0wDH+1pw==:
+Content-Digest: sha-512=:mEWXIS7MaLRuGgxOBdODa3xqM1XdEvxoYhvlCFJ41Q\
+  JgJc4GTsPp29l5oGX69wWdXymyU0rjJuahq4l5aGgfLQ==:
 Content-Length: 23
 
 {"message": "good dog"}
