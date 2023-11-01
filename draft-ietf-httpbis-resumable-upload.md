@@ -400,27 +400,25 @@ To prevent this, the server SHOULD ensure that only authorized clients can acces
 
 # IANA Considerations
 
-This specification registers the following entry in the Permanent Message Header Field Names registry established by {{!RFC3864}}:
+IANA is asked to register the following entries in the "Hypertext Transfer Protocol (HTTP) Field Name Registry":
 
-Header field name: Upload-Offset, Upload-Complete
+|----------------------|-----------|-------------------------------------------|
+| Field Name           | Status    |                 Reference                 |
+|----------------------|-----------|-------------------------------------------|
+| Upload-Complete      | permanent | {{upload-complete}} of this document      |
+| Upload-Offset        | permanent | {{upload-offset}} of this document        |
+|----------------------|-----------|-------------------------------------------|
 
-Applicable protocol: http
+IANA is asked to register the following entry in the "HTTP Status Codes" registry:
 
-Status: standard
+Value:
+: 104 (suggested value)
 
-Author/change controller: IETF
+Description:
+: Upload Resumption Supported
 
-Specification: This document
-
-Related information: n/a
-
-This specification registers the following entry in the "HTTP Status Codes" registry:
-
-Code: 104 (suggested value)
-
-Description: Upload Resumption Supported
-
-Specification: This document
+Specification:
+: This document
 
 --- back
 
