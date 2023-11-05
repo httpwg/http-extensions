@@ -720,7 +720,7 @@ Given a Date as input_date, return an ASCII string suitable for use in an HTTP f
 Given a sequence of Unicode codepoints as input_sequence, return an ASCII string suitable for use in an HTTP field value.
 
 0. If input_sequence is not a sequence of Unicode codepoints, fail serialization.
-1. Let byte_array be the result of applying UTF-8 encoding {{UTF8}} to input_sequence.
+1. Let byte_array be the result of applying UTF-8 encoding ({{Section 3 of UTF8}}) to input_sequence.
 2. Let encoded_string be a string containing "%" followed by DQUOTE.
 3. For each byte in byte_array:
    1. If byte is %x25 ("%"), %x22 (DQUOTE), or in the ranges %x00-1f or %x7f-ff:
@@ -1011,7 +1011,7 @@ Given an ASCII string as input_string, return a sequence of Unicode codepoints. 
       2. Let octet be the result of hex decoding octet_hex ({{Section 8 of !RFC4648}}).
       3. Append octet to byte_array.
    4. If char is DQUOTE:
-      1. Let unicode_sequence be the result of decoding byte_array as a UTF-8 string {{UTF8}}. Fail parsing if decoding fails.
+      1. Let unicode_sequence be the result of decoding byte_array as a UTF-8 string ({{Section 3 of UTF8}}). Fail parsing if decoding fails.
       2. Return unicode_sequence.
    5. Otherwise, if char is not "%" or DQUOTE:
       1. Let byte be the result of applying ASCII encoding to char.
