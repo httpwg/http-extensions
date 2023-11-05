@@ -157,7 +157,15 @@ Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
 
 Upon parsing this name, "dot%5C.label" MUST be treated as a single label.
 
-Similarly the "\\" character in a label MUST be escaped as "\\\\".  Other uses of "\\" MUST NOT appear in the label after percent-decoding.
+Similarly the "\\" character in a label MUST be escaped as "\\\\" and then percent-encoded.
+Other uses of "\\" MUST NOT appear in the label after percent-decoding. For example,
+if there is a DNS name "backslash\\name.example.com", it would first be escaped as
+"backslash\\\\name.example.com", and then percent-encoded as follows:
+
+~~~ http-message
+Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
+    next-hop-aliases="backslash%5C%5Cname.example.com,service1.example.com"
+~~~
 
 # Implementation Considerations
 
@@ -165,9 +173,9 @@ In order to include the `next-hop-aliases` parameter, a proxy needs to have acce
 of alias names and canonical names received in CNAME records.
 
 Implementations ought to note that the full chain of names might not be available in common DNS
-resolution APIs, such as `getaddrinfo`. `getaddrinfo` does have an option for `AI_CANONNAME`,
-but this will only return the last name in the chain (the canonical name), not the alias
-names.
+resolution APIs, such as `getaddrinfo`. `getaddrinfo` does have an option for `AI_CANONNAME`
+({{Section 6.1 of ?RFC3493}}), but this will only return the last name in the chain
+(the canonical name), not the alias names.
 
 An implementation MAY include incomplete information in the `next-hop-aliases` parameter to accommodate cases where it is unable to include the full chain, such as only including the canonical name if the implementation can only use `getaddrinfo` as described above.
 

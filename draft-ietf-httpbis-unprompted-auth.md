@@ -16,6 +16,7 @@ venue:
   mail: ietf-http-wg@w3.org
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
   repo: https://github.com/httpwg/http-extensions/labels/unprompted-auth
+  latest: "https://httpwg.org/http-extensions/draft-ietf-httpbis-unprompted-auth.html"
 github-issue-label: unprompted-auth
 keyword:
   - secure
@@ -47,6 +48,14 @@ author:
 
 normative:
   FOLDING: RFC8792
+  X.690:
+    title: "Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"
+    date: 2021-02
+    author:
+      org: ITU-T
+    seriesinfo:
+      ISO/IEC 8824-1:2021
+
 informative:
   H2:
     =: RFC9113
@@ -125,9 +134,7 @@ probeable.
 
 {::boilerplate bcp14-tagged}
 
-This document uses the following terminology from {{Section 3 of
-!STRUCTURED-FIELDS=RFC8941}} to specify syntax and parsing: Integer and Byte
-Sequence. This document uses the notation from {{Section 1.3 of !QUIC=RFC9000}}.
+This document uses the notation from {{Section 1.3 of !QUIC=RFC9000}}.
 
 # The Signature Authentication Scheme
 
@@ -181,6 +188,8 @@ The TLS key exporter context is described in {{fig-context}}:
   Signature Algorithm (16),
   Key ID Length (i),
   Key ID (..),
+  Public Key Length (i),
+  Public Key (..),
   Scheme Length (i),
   Scheme (..),
   Host Length (i),
@@ -200,6 +209,11 @@ Signature Algorithm:
 Key ID:
 
 : The key ID sent in the `k` Parameter (see {{parameter-k}}).
+
+Public Key:
+
+: The public key used by the server to validate the signature provided by the
+client (the encoding is described below).
 
 Scheme:
 
@@ -225,11 +239,32 @@ use a specific realm, it SHALL use an empty realm and SHALL NOT send the realm
 authentication parameter.
 
 The Signature Algorithm and Port fields are encoded as unsigned 16-bit integers
-in network byte order. The Key ID, Scheme, Host, and Real fields are length
-prefixed strings; they are preceded by a Length field that represents their
-length in bytes. These length fields are encoded using the variable-length
-integer encoding from {{Section 16 of QUIC}} and MUST be encoded in the minimum
-number of bytes necessary.
+in network byte order. The Key ID, Public Key, Scheme, Host, and Real fields
+are length prefixed strings; they are preceded by a Length field that
+represents their length in bytes. These length fields are encoded using the
+variable-length integer encoding from {{Section 16 of QUIC}} and MUST be
+encoded in the minimum number of bytes necessary.
+
+The encoding of the public key is determined by the Signature Algorithm in use
+as follows:
+
+RSASSA-PSS algorithms:
+
+: The public key is an RSAPublicKey structure {{!PKCS1=RFC8017}} encoded in DER
+{{X.690}}. BER encodings which are not DER MUST be rejected.
+
+ECDSA algorithms:
+
+: The public key is a UncompressedPointRepresentation structure defined in
+{{Section 4.2.8.2 of TLS}}, using the curve specified by the SignatureScheme.
+
+EdDSA algorithms:
+
+: The public key is the byte string encoding defined in {{!EdDSA=RFC8032}}.
+
+This document does not define the public key encodings for other algorithms. In
+order for a SignatureScheme to be usable with the Signature HTTP authentication
+scheme, its public key encoding needs to be defined in a corresponding document.
 
 ## Key Exporter Output {#output}
 
@@ -290,19 +325,38 @@ Parameter (see {{parameter-p}}).
 
 # Authentication Parameters {#auth-params}
 
-This specification defines the following authentication parameters. These
-parameters use structured fields ({{STRUCTURED-FIELDS}}) in their definition,
-even though the Authorization field itself does not use structured fields. Due
-to the syntax requirements for authentication parameters, the byte sequences
-defined below SHALL be enclosed in double-quotes (the base64-encoded data and
-colon delimeters are enclosed in double-quotes, see example in {{example}}).
+This specification defines the following authentication parameters.
 
+All of the byte sequences below are encoded using base64url (see {{Section 5 of
+!BASE64=RFC4648}}) without quotes and without padding. In other words, these
+byte sequence authentication parameters values MUST NOT include any characters
+other then ASCII letters, digits, dash and underscore.
+
+The integer below is encoded without a minus and without leading zeroes. In
+other words, the integer authentication parameters value MUST NOT include any
+characters other than digits, and MUST NOT start with a zero unless the full
+value is "0".
+
+Using the syntax from {{!ABNF=RFC5234}}:
+
+~~~
+signature-byte-sequence-param-value = *( ALPHA / DIGIT / "-" / "_" )
+signature-integer-param-value =  %x31-39 1*4( DIGIT ) / "0"
+~~~
+{: #fig-param title="Authentication Parameter Value ABNF"}
 
 ## The k Parameter {#parameter-k}
 
 The REQUIRED "k" (key ID) parameter is a byte sequence that identifies which key
 the user agent wishes to use to authenticate. This can for example be used to
 point to an entry into a server-side database of known keys.
+
+## The a Parameter {#parameter-a}
+
+The REQUIRED "a" (public key) parameter is a byte sequence that contains the
+public key used by the server to validate the signature provided by the client.
+This avoids key confusion issues (see {{SEEMS-LEGIT}}). The encoding of the
+public key is described in {{context}}.
 
 ## The p Parameter {#parameter-p}
 
@@ -335,11 +389,12 @@ For example, the key ID "basement" authenticating using Ed25519
 NOTE: '\' line wrapping per RFC 8792
 
 Authorization: Signature \
-  k=":YmFzZW1lbnQ=:", \
+  k=YmFzZW1lbnQ, \
+  a=VGhpcyBpcyBhIHB1YmxpYyBrZXkgaW4gdXNlIGhlcmU, \
   s=2055, \
-  v=":dmVyaWZpY2F0aW9uXzE2Qg==:", \
-  p=":SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo \
-    aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ==:"
+  v=dmVyaWZpY2F0aW9uXzE2Qg, \
+  p=SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo \
+    aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ
 ~~~
 {: #fig-hdr-example title="Example Header Field"}
 
@@ -358,6 +413,8 @@ can be caused for example by:
 * failure to parse that field
 
 * use of the Signature authentication scheme with an unknown key ID
+
+* mismatch between key ID and provided public key
 
 * failure to validate the verification parameter
 
@@ -483,9 +540,10 @@ Reference:
 
 The authors would like to thank many members of the IETF community, as this
 document is the fruit of many hallway conversations. In particular, the authors
-would like to thank {{{Nick Harper}}}, {{{Dennis Jackson}}}, {{{Ilari
-Liusvaara}}}, {{{Lucas Pardue}}}, {{{Justin Richer}}}, {{{Ben Schwartz}}},
-{{{Martin Thomson}}}, and {{{Chris Wood}}} for their reviews and contributions.
-The mechanism described in this document was originally part of the first
-iteration of MASQUE {{?MASQUE-ORIGINAL=I-D.schinazi-masque-00}}.
+would like to thank {{{David Benjamin}}}, {{{Nick Harper}}}, {{{Dennis
+Jackson}}}, {{{Ilari Liusvaara}}}, {{{Lucas Pardue}}}, {{{Justin Richer}}},
+{{{Ben Schwartz}}}, {{{Martin Thomson}}}, and {{{Chris A. Wood}}} for their
+reviews and contributions. The mechanism described in this document was
+originally part of the first iteration of MASQUE
+{{?MASQUE-ORIGINAL=I-D.schinazi-masque-00}}.
 
