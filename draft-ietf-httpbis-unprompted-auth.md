@@ -16,6 +16,7 @@ venue:
   mail: ietf-http-wg@w3.org
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
   repo: https://github.com/httpwg/http-extensions/labels/unprompted-auth
+  latest: "https://httpwg.org/http-extensions/draft-ietf-httpbis-unprompted-auth.html"
 github-issue-label: unprompted-auth
 keyword:
   - secure
