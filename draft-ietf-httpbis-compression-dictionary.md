@@ -77,33 +77,56 @@ This document uses the line folding strategies described in [FOLDING].
 ## Use-As-Dictionary
 
 When responding to a HTTP Request, a server can advertise that the response can
-be used as a dictionary for future requests for URLs that match the pattern
+be used as a dictionary for future requests for URLs that match the rules
 specified in the Use-As-Dictionary response header.
 
 The Use-As-Dictionary response header is a Structured Field
-{{STRUCTURED-FIELDS}} sf-dictionary with values for "match", "ttl", "type" and
-"hashes".
+{{STRUCTURED-FIELDS}} sf-dictionary with values for "match",
+"match-query", "match-dest", "ttl", "type" and "hashes".
 
 ### match
 
-The "match" value of the Use-As-Dictionary header is a sf-string value that
-provides an URL-matching pattern for requests where the dictionary can be used.
+The "match" value of the Use-As-Dictionary header is a sf-string value
+that provides the "pathname" of a URLPattern
+(https://urlpattern.spec.whatwg.org/#dom-urlpatterninit-pathname).
 
-The sf-string is parsed as a URL {{URL}}, and supports absolute URLs
-as well as relative URLs. When stored, any relative URLs MUST be expanded
-so that only absolute URL patterns are used for matching against requests.
+The "match" is a {{URL}} path relative to the full request URL of the
+dictionary.  The request URL for the dictionary itself is used as the "baseURL"
+for constructing the URLPattern (https://urlpattern.spec.whatwg.org/) that
+is used for matching the dictionary to relevant requests when running
+{{dictionary-url-matching}}.
 
-The match URL supports using * as a wildcard within the match string for
-pattern-matching multiple URLs. URLs with a natural * in them are not directly
-supported unless they can rely on the behavior of * matching an arbitrary
-string.
+The URLPattern used for request matching does not support regular expressions
+(https://urlpattern.spec.whatwg.org/#token-type-regexp) in the "match".
 
-The {{Origin}} of the URL in the "match" pattern MUST be the same as the
-origin of the request that specifies the "Use-As-Dictionary" response and MUST
-not include a * wildcard.
+The "match" value is required and MUST be included in the
+Use-As-Dictionary sf-dictionary for the dictionary to be considered valid.
 
-The "match" value is required and MUST be included in the Use-As-Dictionary
-sf-dictionary for the dictionary to be considered valid.
+### match-query
+
+The "match-query" value of the Use-As-Dictionary header is a sf-string value
+that provides the "search" of a URLPattern
+(https://urlpattern.spec.whatwg.org/#dom-urlpatterninit-search).
+
+The "match-query" is the match pattern for the searchpart of the request
+{{URL}} and does not support regular expressions.
+
+The "match-query" value is optional and defaults to the asterisk wildcard
+token "*".
+
+### match-dest
+
+The "match-dest" value of the Use-As-Dictionary header is a sf-string value
+that provides a request destination
+(https://fetch.spec.whatwg.org/#concept-request-destination).
+
+An empty string for "match-dest" MUST match all destinations.
+
+For clients that do not support request destinations or if the value of
+"match-dest" is a value that is not supported by the client then the client
+MUST treat it as an empty string and match all destinations.
+
+The "match-dest" value is optional and defaults to the empty string.
 
 ### ttl
 
@@ -156,13 +179,13 @@ A response that contained a response header:
 NOTE: '\' line wrapping per RFC 8792
 
 Use-As-Dictionary: \
-  match="/product/*", ttl=604800, hashes=(sha-256 sha-512)
+  match="/product/*", match-dest="document", ttl=604800, hashes=(sha-256 sha-512)
 ~~~
 
-Would specify matching any URL with a path prefix of /product/ on the same
-{{Origin}} as the original request, expiring as a dictionary in 7 days
-independent of the cache lifetime of the resource, and advertise support for
-both sha-256 and sha-512 hash algorithms.
+Would specify matching any document request for a URL with a path prefix of
+/product/ on the same {{Origin}} as the original request, expiring as a
+dictionary in 7 days independent of the cache lifetime of the resource, and
+advertise support for both sha-256 and sha-512 hash algorithms.
 
 #### Versioned Directories
 
@@ -218,45 +241,40 @@ of the dictionary, it MUST be ignored.
 ### Dictionary URL matching
 
 When a dictionary is stored as a result of a "Use-As-Dictionary" directive, it
-includes a "match" string with the URL pattern of request URLs that the
-dictionary can be used for.
+includes "match", "match-query" and "match-dest" strings that are used to
+match an outgoing request from a client to the available dictionaries.
 
-When comparing request URLs to the available dictionary match patterns, the
-comparison should account for the * wildcard when matching against request
-URLs. This can be accomplished with the following algorithm which returns TRUE
-for a successful match and FALSE for no-match:
+To see if an outbound request matches a given dictionary, the following
+algorithm will return TRUE for a successful match and FALSE for no-match:
 
-1. Let MATCH represent the absolute URL pattern from the "match" value for the
-given dictionary.
+1. If the current client supports request destinations:
+    * Let DEST be the value of "match-dest" for the given dictionary.
+    * Let REQUEST_DEST be the value of the destination for the current
+    request.
+    * If DEST is not an empty string and If DEST and REQUEST_DEST are not the
+    same value, return FALSE
+1. Let PATH be the value of "match" for the given dictionary.
+1. Let SEARCH be the value of "match-query" for the given dictionary.
+1. Let BASEURL be the request URL of the given dictionary.
+1. Let PATTERN be a URLPattern constructed by setting pathname=PATH,
+search=SEARCH, baseURL=BASEURL (https://urlpattern.spec.whatwg.org/).
 1. LET URL represent the request URL being checked.
-1. If there are no * characters in MATCH:
-    * If the MATCH and URL strings are identical, return TRUE.
-    * Else, return FALSE.
-1. If there is a single * character in MATCH and it is at the end of the
-   string:
-    * If the MATCH string is identical to the start of the URL string, return
-       TRUE.
-    * Else, return FALSE.
-1. Split the MATCH string by the * character into an array of MATCHES
-   (excluding the * deliminator from the individual entries).
-1. If there is not a * character at the end of MATCH:
-    * Pop the last entry in MATCHES from the end of the array into PATTERN.
-    * If PATTERN is identical to the end of the URL string, remove the end of
-       the URL string to the beginning of the match to PATTERN.
-    * Else, return FALSE.
-1. Pop the first entry in MATCHES from the front of the array into PATTERN.
-    * If PATTERN is not identical to the start of the URL string, return FALSE.
-1. Pop each entry off of the front of the MATCHES array into PATTERN. For
-   each PATTERN, in order:
-    * Search for the first match of PATTERN in URL, starting from the position
-      of the end of the previous match.
-    * If no match is found, return FALSE.
-1. Return TRUE.
+1. Return the result of running the URLPattern "match" algorithm
+(https://urlpattern.spec.whatwg.org/#match)
 
 ### Multiple matching dictionaries
 
 When there are multiple dictionaries that match a given request URL, the client
-MUST pick the dictionary with the longest match pattern string length.
+MUST pick a single dictionary using the following rules:
+1. For clients that support request destinations, a dictionary that specifies
+and matches a "match-dest" takes precedence over a match that does not use a
+destination.
+1. Given equivalent destination precedence, the dictionary with the longest
+"match" takes precedence.
+1. Given equivalent destination and path precedence, the dictionary with the
+longest "match-query" takes precedence.
+1. Given equivalent destination, path and search precedence, the most recently
+fetched dictionary takes precedence.
 
 # Negotiating the compression algorithm
 
@@ -372,9 +390,9 @@ return an error.
 ### Cross-origin protection
 
 To make sure that a dictionary can only impact content from the same origin
-where the dictionary was served, the "match" pattern used for matching a
-dictionary to requests MUST be for the same origin that the dictionary
-is served from.
+where the dictionary was served, the URLPattern used for matching a
+dictionary to requests is guaranteed to be for the same origin that the
+dictionary is served from.
 
 ### Response readability
 
