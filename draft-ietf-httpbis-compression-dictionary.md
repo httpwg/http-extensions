@@ -144,7 +144,7 @@ limit the life of a dictionary in cases where the dictionary is updated
 frequently which can help limit the number of possible incoming dictionary
 variations.
 
-The "ttl" value is optional and defaults to 31536000 (1 year).
+The "ttl" value is optional and defaults to 1209600 (14 days).
 
 ### type
 
@@ -222,7 +222,7 @@ Available-Dictionary: \
 To be considered as a match, the dictionary must not yet be expired as a
 dictionary. When iterating through dictionaries looking for a match, the
 expiration time of the dictionary is calculated by taking the last time the
-dictionary was written and adding the "ttl" seconds from the
+dictionary was fetched and adding the "ttl" seconds from the
 "Use-As-Dictionary" response. If the current time is beyond the expiration time
 of the dictionary, it MUST be ignored.
 
