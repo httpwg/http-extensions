@@ -46,6 +46,7 @@ informative:
   ABNF: RFC5234
   STRUCTURED-FIELDS: RFC8941
   URL: RFC3986
+  SHA-256: RFC6234
   RFC4648:  # Base16 encoding
   RFC7932:  # Brotli
   RFC8878:  # Zstandard
@@ -81,8 +82,8 @@ be used as a dictionary for future requests for URLs that match the rules
 specified in the Use-As-Dictionary response header.
 
 The Use-As-Dictionary response header is a Structured Field
-{{STRUCTURED-FIELDS}} sf-dictionary with values for "match",
-"match-query", "match-dest", "ttl", "type" and "hashes".
+{{STRUCTURED-FIELDS}} sf-dictionary with values for "match", "match-query",
+"match-dest", "ttl", and "type".
 
 ### match
 
@@ -158,17 +159,6 @@ MUST NOT use the dictionary.
 
 The "type" value is optional and defaults to "raw".
 
-### hashes
-
-The "hashes" value of the Use-As-Dictionary header is a inner-list value
-that provides a list of supported hash algorithms in order of server
-preference.
-
-The dictionaries are identified by the hash of their contents and this value
-allows for negotiation of the algorithm to use.
-
-The "hashes" value is optional and defaults to (sha-256).
-
 ### Examples
 
 #### Path Prefix
@@ -179,13 +169,12 @@ A response that contained a response header:
 NOTE: '\' line wrapping per RFC 8792
 
 Use-As-Dictionary: \
-  match="/product/*", match-dest="document", ttl=604800, hashes=(sha-256 sha-512)
+  match="/product/*", match-dest="document", ttl=604800
 ~~~
 
 Would specify matching any document request for a URL with a path prefix of
-/product/ on the same {{Origin}} as the original request, expiring as a
-dictionary in 7 days independent of the cache lifetime of the resource, and
-advertise support for both sha-256 and sha-512 hash algorithms.
+/product/ on the same {{Origin}} as the original request, and expiring as a
+dictionary in 7 days independent of the cache lifetime of the resource.
 
 #### Versioned Directories
 
@@ -195,8 +184,8 @@ A response that contained a response header:
 Use-As-Dictionary: match="/app/*/main.js"
 ~~~
 
-Would match main.js in any directory under /app/, expiring as a dictionary in
-one year and support using the sha-256 hash algorithm.
+Would match main.js in any directory under /app/ and expiring as a dictionary
+in one year.
 
 ## Available-Dictionary
 
@@ -206,8 +195,7 @@ to the request to indicate to the server that it has a dictionary available to
 use for compression.
 
 The "Available-Dictionary" request header is a lowercase Base16-encoded
-{{RFC4648}} hash of the contents of a single available dictionary calculated
-using one of the algorithms advertised as being supported by the server.
+{{RFC4648}} {{SHA-256}} hash of the contents of a single available dictionary.
 
 Its syntax is defined by the following {{ABNF}}:
 
@@ -366,6 +354,16 @@ algorithms.
 The dictionary must be treated with the same security precautions as
 the content, because a change to the dictionary can result in a
 change to the decompressed content.
+
+The dictionary is validated using a SHA-256 hash of the content to make sure
+that the client and server are both using the same dictionary. The strength
+of the SHA-256 hash algorithm isn't explicitly needed to counter attacks
+since the dictionary is being served from the same origin as the content. That
+said, if a weakness is discovered in SHA-256 and it is determined that the
+dictionary negotiation should use a different hash algorithm, the
+"Use-As-Dictionary" response header can be extended to specify a different
+algorithm and the server would just ignore any "Available-Dictionary" requests
+that do not use the updated hash.
 
 ## Reading content
 
