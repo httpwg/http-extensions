@@ -1132,7 +1132,8 @@ sf-token         = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 sf-binary        = ":" base64 ":"
 sf-boolean       = "?" ( "0" / "1" )
 sf-date          = "@" sf-integer
-sf-displaystring = "%" DQUOTE *( unescaped / "\" / pct-encoded ) DQUOTE
+sf-displaystring = "%" DQUOTE *( unescaped / "\" / pct-encoded )
+                   DQUOTE
 
 base64       = *( ALPHA / DIGIT / "+" / "/" ) *"="
 
