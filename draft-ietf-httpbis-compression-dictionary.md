@@ -264,6 +264,37 @@ longest "match-query" takes precedence.
 1. Given equivalent destination, path and search precedence, the most recently
 fetched dictionary takes precedence.
 
+## Content-Dictionary
+
+When a HTTP server responds with a resource that is encoded with a dictionary
+the server SHOULD send the hash of the dictionary that was used in the
+"Content-Dictionary" response header.
+
+The "Content-Dictionary" response header is a lowercase Base16-encoded
+{{RFC4648}} {{SHA-256}} hash of the contents of the dictionary that was used
+to encode the response.
+
+If the HTTP response contains a "Content-Dictionary" response header with the
+hash of a dictionary that the client does not have available then the client
+MUST NOT attempt to decode or use the HTTP response.
+
+Its syntax is defined by the following {{ABNF}}:
+
+~~~ abnf
+Content-Dictionary = hvalue
+hvalue             = 1*hchar
+hchar              = DIGIT / "a" / "b" / "c" / "d" / "e" / "f"
+~~~
+
+For example:
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+Content-Dictionary: \
+  a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e
+~~~
+
 # Negotiating the compression algorithm
 
 When a compression dictionary is available for use for a given request, the
@@ -335,6 +366,7 @@ IANA is asked to update the
 |----------------------|-----------|-------------------------------------------|
 | Use-As-Dictionary    | permanent | {{use-as-dictionary}} of this document    |
 | Available-Dictionary | permanent | {{available-dictionary}} of this document |
+| Content-Dictionary   | permanent | {{content-dictionary}} of this document   |
 |----------------------|-----------|-------------------------------------------|
 
 # Compatibility Considerations
