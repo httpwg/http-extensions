@@ -202,7 +202,7 @@ Its syntax is defined by the following {{ABNF}}:
 ~~~ abnf
 Available-Dictionary = hvalue
 hvalue               = 1*hchar
-hchar                = DIGIT / "a" / "b" / "c" / "d" / "e" / "f"
+hchar                = DIGIT / %x61-66 ; 0-9, a-f
 ~~~
 
 The client MUST only send a single "Available-Dictionary" request header
@@ -283,7 +283,7 @@ Its syntax is defined by the following {{ABNF}}:
 ~~~ abnf
 Content-Dictionary = hvalue
 hvalue             = 1*hchar
-hchar              = DIGIT / "a" / "b" / "c" / "d" / "e" / "f"
+hchar              = DIGIT / %x61-66 ; 0-9, a-f
 ~~~
 
 For example:
