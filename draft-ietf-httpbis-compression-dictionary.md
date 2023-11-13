@@ -276,7 +276,7 @@ to encode the response.
 
 If the HTTP response contains a "Content-Dictionary" response header with the
 hash of a dictionary that the client does not have available then the client
-MUST NOT attempt to decode or use the HTTP response.
+cannot decode or use the HTTP response.
 
 Its syntax is defined by the following {{ABNF}}:
 
