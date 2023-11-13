@@ -267,7 +267,7 @@ fetched dictionary takes precedence.
 ## Content-Dictionary
 
 When a HTTP server responds with a resource that is encoded with a dictionary
-the server SHOULD send the hash of the dictionary that was used in the
+the server MUST send the hash of the dictionary that was used in the
 "Content-Dictionary" response header.
 
 The "Content-Dictionary" response header is a lowercase Base16-encoded
