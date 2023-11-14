@@ -47,7 +47,6 @@ informative:
   STRUCTURED-FIELDS: RFC8941
   URL: RFC3986
   SHA-256: RFC6234
-  RFC4648:  # Base16 encoding
   RFC7932:  # Brotli
   RFC8878:  # Zstandard
 
@@ -194,16 +193,9 @@ appropriate dictionary, it can add a "Available-Dictionary" request header
 to the request to indicate to the server that it has a dictionary available to
 use for compression.
 
-The "Available-Dictionary" request header is a lowercase Base16-encoded
-{{RFC4648}} {{SHA-256}} hash of the contents of a single available dictionary.
-
-Its syntax is defined by the following {{ABNF}}:
-
-~~~ abnf
-Available-Dictionary = hvalue
-hvalue               = 1*hchar
-hchar                = DIGIT / %x61-66 ; 0-9, a-f
-~~~
+The "Available-Dictionary" request header is a Structured Field
+{{STRUCTURED-FIELDS}} sf-binary {{SHA-256}} hash of the contents of a single
+available dictionary.
 
 The client MUST only send a single "Available-Dictionary" request header
 with a single hash value for the best available match that it has available.
@@ -211,10 +203,7 @@ with a single hash value for the best available match that it has available.
 For example:
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
-Available-Dictionary: \
-  a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e
+Available-Dictionary: :pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:
 ~~~
 
 ### Dictionary freshness requirement
@@ -270,29 +259,18 @@ When a HTTP server responds with a resource that is encoded with a dictionary
 the server MUST send the hash of the dictionary that was used in the
 "Content-Dictionary" response header.
 
-The "Content-Dictionary" response header is a lowercase Base16-encoded
-{{RFC4648}} {{SHA-256}} hash of the contents of the dictionary that was used
-to encode the response.
+The "Content-Dictionary" response header is a Structured Field
+{{STRUCTURED-FIELDS}} sf-dictionary {{SHA-256}} hash of the contents of the
+dictionary that was used to encode the response.
 
 If the HTTP response contains a "Content-Dictionary" response header with the
 hash of a dictionary that the client does not have available then the client
 cannot decode or use the HTTP response.
 
-Its syntax is defined by the following {{ABNF}}:
-
-~~~ abnf
-Content-Dictionary = hvalue
-hvalue             = 1*hchar
-hchar              = DIGIT / %x61-66 ; 0-9, a-f
-~~~
-
 For example:
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
-Content-Dictionary: \
-  a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e
+Content-Dictionary: :pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:
 ~~~
 
 # Negotiating the compression algorithm
