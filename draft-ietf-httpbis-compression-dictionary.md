@@ -81,7 +81,7 @@ be used as a dictionary for future requests for URLs that match the rules
 specified in the Use-As-Dictionary response header.
 
 The Use-As-Dictionary response header is a Structured Field
-{{STRUCTURED-FIELDS}} sf-dictionary with values for "match", "match-query",
+{{STRUCTURED-FIELDS}} sf-dictionary with values for "match", "match-search",
 "match-dest", "ttl", and "type".
 
 ### match
@@ -102,16 +102,16 @@ The URLPattern used for request matching does not support regular expressions
 The "match" value is required and MUST be included in the
 Use-As-Dictionary sf-dictionary for the dictionary to be considered valid.
 
-### match-query
+### match-search
 
-The "match-query" value of the Use-As-Dictionary header is a sf-string value
+The "match-search" value of the Use-As-Dictionary header is a sf-string value
 that provides the "search" of a URLPattern
 (https://urlpattern.spec.whatwg.org/#dom-urlpatterninit-search).
 
-The "match-query" is the match pattern for the searchpart of the request
+The "match-search" is the match pattern for the searchpart of the request
 {{URL}} and does not support regular expressions.
 
-The "match-query" value is optional and defaults to the asterisk wildcard
+The "match-search" value is optional and defaults to the asterisk wildcard
 token "*".
 
 ### match-dest
@@ -218,7 +218,7 @@ of the dictionary, it MUST be ignored.
 ### Dictionary URL matching
 
 When a dictionary is stored as a result of a "Use-As-Dictionary" directive, it
-includes "match", "match-query" and "match-dest" strings that are used to
+includes "match", "match-search" and "match-dest" strings that are used to
 match an outgoing request from a client to the available dictionaries.
 
 To see if an outbound request matches a given dictionary, the following
@@ -231,7 +231,7 @@ algorithm will return TRUE for a successful match and FALSE for no-match:
     * If DEST is not an empty string and If DEST and REQUEST_DEST are not the
     same value, return FALSE
 1. Let PATH be the value of "match" for the given dictionary.
-1. Let SEARCH be the value of "match-query" for the given dictionary.
+1. Let SEARCH be the value of "match-search" for the given dictionary.
 1. Let BASEURL be the request URL of the given dictionary.
 1. Let PATTERN be a URLPattern constructed by setting pathname=PATH,
 search=SEARCH, baseURL=BASEURL (https://urlpattern.spec.whatwg.org/).
@@ -249,7 +249,7 @@ destination.
 1. Given equivalent destination precedence, the dictionary with the longest
 "match" takes precedence.
 1. Given equivalent destination and path precedence, the dictionary with the
-longest "match-query" takes precedence.
+longest "match-search" takes precedence.
 1. Given equivalent destination, path and search precedence, the most recently
 fetched dictionary takes precedence.
 
