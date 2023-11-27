@@ -109,6 +109,7 @@ and baseURL=BASEURL (https://urlpattern.spec.whatwg.org/).
 1. If any of the "protocol", "username", "password", "hostname", or "port"
 attributes of PATTERN do not match the value of the same attribute in SRC then
 return FALSE.
+1. Return True.
 
 The "match" value is required and MUST be included in the
 Use-As-Dictionary sf-dictionary for the dictionary to be considered valid.
