@@ -250,11 +250,15 @@ algorithm will return TRUE for a successful match and FALSE for no-match:
 1. Let PATH be the value of "match" for the given dictionary.
 1. Let SEARCH be the value of "match-search" for the given dictionary.
 1. Let BASEURL be the request URL of the given dictionary.
-1. Let PATTERN be a URLPattern constructed by setting pathname=PATH,
-search=SEARCH, baseURL=BASEURL (https://urlpattern.spec.whatwg.org/).
+1. Let INIT be a URLPatternInit (https://urlpattern.spec.whatwg.org/).
+1. Set the value of INIT["baseURL"] to BASEURL
+1. Set the value of INIT["pathname"] to PATH
+1. Set the value of INIT["search"] to SEARCH
+1. Let PATTERN be a URLPattern constructed with input=INIT
+(https://urlpattern.spec.whatwg.org/).
 1. LET URL represent the request URL being checked.
-1. Return the result of running the URLPattern "match" algorithm
-(https://urlpattern.spec.whatwg.org/#match)
+1. Return the result of running the "test" method of PATTERN with input=URL
+(https://urlpattern.spec.whatwg.org/#ref-for-dom-urlpattern-test)
 
 ### Multiple matching dictionaries
 
