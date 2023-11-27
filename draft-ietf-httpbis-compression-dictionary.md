@@ -82,7 +82,7 @@ specified in the Use-As-Dictionary response header.
 
 The Use-As-Dictionary response header is a Structured Field
 {{STRUCTURED-FIELDS}} sf-dictionary with values for "match", "match-search",
-"match-dest", "ttl", and "type".
+"match-dest", "ttl", "id", and "type".
 
 ### match
 
@@ -144,6 +144,23 @@ frequently which can help limit the number of possible incoming dictionary
 variations.
 
 The "ttl" value is optional and defaults to 1209600 (14 days).
+
+### id
+
+The "id" value of the Use-As-Dictionary header is a sf-string value that
+specifies a server identifier for the dictionary. If an "id" value is present
+then it MUST be sent to the server in a "Dictionary-ID" request header when
+the dictionary is advertised as being available.
+
+The server identifier MUST be treated as an opaque string by the client.
+
+The server identifier MUST NOT be relied upon by the server to guarantee the
+contents of the dictionary. The dictionary hash MUST be validated before use.
+
+The "id" value string length (after any decoding) supports up to 1024
+characters.
+
+The "id" value is optional.
 
 ### type
 
@@ -253,6 +270,24 @@ longest "match-search" takes precedence.
 1. Given equivalent destination, path and search precedence, the most recently
 fetched dictionary takes precedence.
 
+## Dictionary-ID
+
+When a HTTP client makes a request for a resource for which it has an
+appropriate dictionary and the dictionary was stored with a server-provided
+"id" in the Use-As-Dictionary response then the client MUST echo the stored
+"id" in a "Dictionary-ID" request header.
+
+The "Dictionary-ID" request header is a Structured Field {{STRUCTURED-FIELDS}}
+sf-string of up to 1024 characters (after any decoding) and MUST be identical
+to the server-provided "id".
+
+For example:
+
+~~~ http-message
+Available-Dictionary: :pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:
+Dictionary-ID: "/v1/main.js 33a64df551425fcc55e4d42a148795d9f25f89d4"
+~~~
+
 ## Content-Dictionary
 
 When a HTTP server responds with a resource that is encoded with a dictionary
@@ -344,6 +379,7 @@ IANA is asked to update the
 |----------------------|-----------|-------------------------------------------|
 | Use-As-Dictionary    | permanent | {{use-as-dictionary}} of this document    |
 | Available-Dictionary | permanent | {{available-dictionary}} of this document |
+| Dictionary-ID        | permanent | {{dictionary-id}} of this document        |
 | Content-Dictionary   | permanent | {{content-dictionary}} of this document   |
 |----------------------|-----------|-------------------------------------------|
 
