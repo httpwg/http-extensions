@@ -180,7 +180,9 @@ https://proxy.example/{?target_host,tcp_port,target_port,
 
 # Security Considerations
 
-TODO
+Template-driven TCP proxying is largely subject to the same security risks as classic HTTP CONNECT.  For example, any restrictions on authorized use of the proxy (see {{?RFC9110, Section 9.3.6}}) apply equally to both.
+
+A small additional risk is posed by the use of a URI Template parser on the client side.  The template input string could be crafted to exploit any vulnerabilities in the parser implementation.  Client implementers should apply their usual precautions for code that processes untrusted inputs.
 
 # Operational Considerations
 
