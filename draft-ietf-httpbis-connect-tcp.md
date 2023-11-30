@@ -150,6 +150,22 @@ The URI template can also be structured to generate high-entropy Capability URLs
 
 Clients that support both classic HTTP CONNECT proxies and template-driven TCP proxies MAY accept both types via a single configuration string.  If the configuration string can be parsed as a URI Template containing the required variables, it is a template-driven TCP proxy.  Otherwise, it is presumed to represent a classic HTTP CONNECT proxy.
 
+In some cases, it is valuable to allow "connect-tcp" clients to reach "connect-tcp"-only proxies when using a legacy configuration method that cannot convey a URI template.  To support this arrangement, clients SHOULD treat certain errors during classic HTTP CONNECT as indications that the proxy might only support "connect-tcp":
+
+* In HTTP/1.1: the response status code is 426 "Upgrade Required", with an "Upgrade: connect-tcp" response header.
+* In any HTTP version: the response status code is 501 "Not Implemented".
+  - Requires SETTINGS_ENABLE_CONNECT_PROTOCOL to have been negotiated in HTTP/2 or HTTP/3.
+
+If the client infers that classic HTTP CONNECT is not supported, it SHOULD retry the request using the registered default template for "connect-tcp":
+
+~~~
+https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
+                    /tcp/{target_host}/{tcp_port}/
+~~~
+{: title="Registered default template"}
+
+If this request succeeds, the client SHOULD record a preference for "connect-tcp" to avoid further retry delays.
+
 ## Multi-purpose proxies
 
 The names of the variables in the URI Template uniquely identify the capabilities of the proxy.  Undefined variables are permitted in URI Templates, so a single template can be used for multiple purposes.
@@ -177,11 +193,21 @@ Templated TCP proxies can make use of standard HTTP gateways and path-routing to
 
 # IANA Considerations
 
+## New Upgrade Token
+
 IF APPROVED, IANA is requested to add the following entry to the HTTP Upgrade Token Registry:
 
 * Value: "connect-tcp"
 * Description: Proxying of TCP payloads
 * Reference: (This document)
+
+## New MASQUE Default Template {#iana-template}
+
+IF APPROVED, IANA is requested to add the following entry to the "MASQUE URI Suffixes" registry:
+
+| ------------ | ------------ | --------------- |
+| Path Segment | Description  | Reference       |
+| tcp          | TCP Proxying | (This document) |
 
 --- back
 
