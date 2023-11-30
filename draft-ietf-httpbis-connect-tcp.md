@@ -44,9 +44,9 @@ HTTP/3 uses a UDP transport, so it cannot be forwarded using the pre-existing CO
 
 ## Problems
 
-Classic HTTP CONNECT proxies are identified by an origin.  The proxy does not have a path of its own.  This prevents any origin from hosting multiple distinct proxy services.
+Classic HTTP CONNECT proxies are identified by a host, port, and scheme.  The proxy does not have a path of its own.  This prevents any origin from hosting multiple distinct proxy services.
 
-Ordinarily, HTTP allows multiple origin hostnames to share a single server IP address and port number (i.e., virtual-hosting), by specifying the applicable hostname in the "Host" or ":authority" header field.  However, classic HTTP CONNECT proxies use these fields to indicate the CONNECT request's destination ({{?RFC9112, Section 3.2.3}}), leaving no way to determine the proxy's origin from the request.  As a result, classic HTTP CONNECT proxies cannot be deployed using virtual-hosting, nor can they apply the usual defenses against server port misdirection attacks (see {{Section 7.4 of ?RFC9110}}).
+Ordinarily, HTTP allows multiple origin hostnames to share a single server IP address and port number (i.e., virtual-hosting), by specifying the applicable hostname in the "Host" or ":authority" header field.  However, classic HTTP CONNECT proxies use these fields to indicate the CONNECT request's destination ({{?RFC9112, Section 3.2.3}}), leaving no way to distinguish multiple proxies on one server.  As a result, classic HTTP CONNECT proxies cannot be deployed using virtual-hosting, nor can they apply the usual defenses against server port misdirection attacks (see {{Section 7.4 of ?RFC9110}}).  The absence of an explicit origin for the proxy also creates ambiguity about the use of origin-scoped response header fields such as Alt-Svc {{?RFC7838}} and Strict-Transport-Security {{?RFC6797}}.
 
 Classic HTTP CONNECT proxies can be used to reach a target host that is specified as a domain name or an IP address.  However, because only a single target host can be specified, proxy-driven Happy Eyeballs and cross-IP fallback can only be used when the host is a domain name.  For IP-targeted requests to succeed, the client must know which address families are supported by the proxy via some out-of-band mechanism, or open multiple independent CONNECT requests and abandon any that prove unnecessary.
 
@@ -121,6 +121,12 @@ HEADERS
 ...
 ~~~
 {: title="Templated TCP proxy example in HTTP/2"}
+
+## Use of Relevant Headers
+
+A templated TCP proxy has an unambiguous origin of its own.  Origin-scoped HTTP header fields such as Alt-Svc {{?RFC7838}} and Strict-Transport-Security {{?RFC6797}} apply to this origin.
+
+In a web browser, authentication for templated TCP proxy requests uses a "407 (Proxy Authentication Required)" response, and the "Proxy-Authenticate" and "Proxy-Authorization" header fields.  Non-proxy-related requests to the same origin continue to use "WWW-Authenticate" and "Authorization" header fields.  This distinction is not technically required, but it may facilitate separation of credentials between the browser and the webpage contents.
 
 # Additional Connection Setup Behaviors
 
