@@ -152,8 +152,8 @@ Clients that support both classic HTTP CONNECT proxies and template-driven TCP p
 
 In some cases, it is valuable to allow "connect-tcp" clients to reach "connect-tcp"-only proxies when using a legacy configuration method that cannot convey a URI template.  To support this arrangement, clients SHOULD treat certain errors during classic HTTP CONNECT as indications that the proxy might only support "connect-tcp":
 
-* In HTTP/1.1: the response status code is 426 "Upgrade Required", with an "Upgrade: connect-tcp" response header.
-* In any HTTP version: the response status code is 501 "Not Implemented".
+* In HTTP/1.1: the response status code is "426 (Upgrade Required)", with an "Upgrade: connect-tcp" response header.
+* In any HTTP version: the response status code is "501 (Not Implemented)".
   - Requires SETTINGS_ENABLE_CONNECT_PROTOCOL to have been negotiated in HTTP/2 or HTTP/3.
 
 If the client infers that classic HTTP CONNECT is not supported, it SHOULD retry the request using the registered default template for "connect-tcp":
