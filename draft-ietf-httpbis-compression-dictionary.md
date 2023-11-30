@@ -91,8 +91,7 @@ that provides the URLPattern to use for request matching
 (https://urlpattern.spec.whatwg.org/).
 
 The URLPattern used for matching has some restrictions:
-* Regular expressions are not supported
-(https://urlpattern.spec.whatwg.org/#token-type-regexp).
+* Regular expressions are not supported.
 * The match pattern MUST be for the same {{Origin}} as the dictionary.
 
 The following algorithm will return TRUE for a valid match pattern and FALSE
@@ -102,9 +101,8 @@ for an invalid pattern that MUST NOT be used:
 1. Let URL be the URL of the dictionary request.
 1. Let PATTERN be a URLPattern constructed by setting input=MATCH,
 and baseURL=BASEURL (https://urlpattern.spec.whatwg.org/).
-1. If PATTERN parsed a regexp token then return FALSE
-(https://urlpattern.spec.whatwg.org/#token-type-regexp).
-1. If the "hash" attribute of PATTERN is a non-empty string then return FALSE.
+1. If PATTERN has regexp groups then return FALSE
+(https://urlpattern.spec.whatwg.org/#urlpattern-has-regexp-groups).
 1. Let SRC be a URLPattern constructed by setting input=BASEURL.
 1. If any of the "protocol", "username", "password", "hostname", or "port"
 attributes of PATTERN do not match the value of the same attribute in SRC then
