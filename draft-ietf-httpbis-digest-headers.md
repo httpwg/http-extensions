@@ -705,16 +705,16 @@ instead.
 
 # Resource Representation and Representation Data {#resource-representation}
 
-This section following examples show how representation metadata, content
-transformations, and method impacts on the message and content. These examples a
+The following examples show how representation metadata, content
+transformations, and method impact the message and content. These examples a
 not exhaustive.
 
 Unless otherwise indicated, the examples are based on the JSON object `{"hello":
 "world"}` followed by an LF. When the content contains non-printable characters
-(e.g., when it is encoded) it is shown as a sequence of hex-encoded bytes.
+(e.g., when it is encoded), it is shown as a sequence of hex-encoded bytes.
 
 Consider a client that wishes to upload a JSON object using the PUT method. It
-could do this using the application/json content type without any content
+could do this using the application/json Content-Type without any content
 coding.
 
 ~~~ http-message
@@ -725,7 +725,7 @@ Content-Length: 19
 
 {"hello": "world"}
 ~~~
-{: title="Request containing a JSON object without any content coding"}
+{: title="Request Containing a JSON Object without Any Content Coding"}
 
 However, the use of content coding is quite common. The client could also upload
 the same data with a gzip coding ({{Section 8.4.1.3 of RFC9110}}). Note that in
@@ -744,7 +744,7 @@ AB 56 CA 48 CD C9 C9 57 B2 52
 50 2A CF 2F CA 49 51 AA E5 02
 00 D9 E4 31 E7 13 00 00 00
 ~~~
-{: title="Request containing a gzip-encoded JSON object" #ex-put-gz}
+{: title="Request Containing a gzip-Encoded JSON Object" #ex-put-gz}
 
 Sending the gzip coded data without indicating it via `Content-Encoding` means
 that the content is malformed. In this case, the server can reply with an error.
@@ -761,13 +761,13 @@ AB 56 CA 48 CD C9 C9 57 B2 52
 50 2A CF 2F CA 49 51 AA E5 02
 00 D9 E4 31 E7 13 00 00 00
 ~~~
-{: title="Request containing malformed JSON"}
+{: title="Request Containing Malformed JSON"}
 
 ~~~ http-message
 HTTP/1.1 400 Bad Request
 
 ~~~
-{: title="An error response for a malformed content"}
+{: title="An Error Response for Malformed Content"}
 
 A Range-Request affects the transferred message content. In this example, the
 client is accessing the resource at `/entries/1234`, which is the JSON object
@@ -781,7 +781,7 @@ Accept-Encoding: gzip
 Range: bytes=1-7
 
 ~~~
-{: title="Request for partial content"}
+{: title="Request for Partial Content"}
 
 The server satisfies the client request by responding with a partial
 representation (equivalent to the first 10 of the JSON object displayed in whole
@@ -795,11 +795,11 @@ Content-Range: bytes 0-9/39
 
 1F 8B 08 00 A5 B4 BD 62 02 FF
 ~~~
-{: title="Partial response from a gzip-encoded representation"}
+{: title="Partial Response from a gzip-Encoded Representation"}
 
 Aside from content coding or range requests, the method can also affect the
 transferred message content. For example, the response to a HEAD request does
-not carry content but in this example case does include a Content-Length; see
+not carry content, but this example case includes Content-Length; see
 {{Section 8.6 of RFC9110}}.
 
 ~~~ http-message
@@ -809,7 +809,7 @@ Accept: application/json
 Accept-Encoding: gzip
 
 ~~~
-{: title="HEAD request"}
+{: title="HEAD Request"}
 
 ~~~ http-message
 HTTP/1.1 200 OK
@@ -818,12 +818,12 @@ Content-Encoding: gzip
 Content-Length: 39
 
 ~~~
-{: title="Response to HEAD request (empty content)"}
+{: title="Response to HEAD Request (Empty Content)"}
 
 Finally, the semantics of a response might decouple the target URI
 from the enclosed representation. In the example below, the client issues a POST
-request directed to `/authors/` but the response includes a `Content-Location`
-header field that indicates the enclosed representation refers to the
+request directed to `/authors/`, but the response includes a `Content-Location`
+header field indicating that the enclosed representation refers to the
 resource available at `/authors/123`. Note that `Content-Length` is not sent
 in this example.
 
@@ -835,7 +835,7 @@ Content-Type: application/json
 
 {"author": "Camilleri"}
 ~~~
-{: title="POST request"}
+{: title="POST Request"}
 
 ~~~ http-message
 HTTP/1.1 201 Created
@@ -845,19 +845,19 @@ Location: /authors/123
 
 {"id": "123", "author": "Camilleri"}
 ~~~
-{: title="Response with Content-Location header"}
+{: title="Response with Content-Location Header"}
 
 # Examples of Unsolicited Digest {#examples-unsolicited}
 
 The following examples demonstrate interactions where a server responds with a
-`Content-Digest` or `Repr-Digest` fields even though the client did not solicit one using
+`Content-Digest` or `Repr-Digest` field, even though the client did not solicit one using
 `Want-Content-Digest` or `Want-Repr-Digest`.
 
 Some examples include JSON objects in the content.
 For presentation purposes, objects that fit completely within the line-length limits
 are presented on a single line using compact notation with no leading space.
 Objects that would exceed line-length limits are presented across multiple lines
-(one line per key-value pair) with 2 spaces of leading indentation.
+(one line per key-value pair) with two spaces of leading indentation.
 
 Checksum mechanisms defined in this document are media-type agnostic
 and do not provide canonicalization algorithms for specific formats.
@@ -869,14 +869,14 @@ While examples can include both fields,
 
 In this example, the message content conveys complete representation data.
 This means that in the response, `Content-Digest` and `Repr-Digest`
-are both computed over the JSON object `{"hello": "world"}` followed by an LF, and thus have the same value.
+are both computed over the JSON object `{"hello": "world"}` followed by an LF; thus, they have the same value.
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
 Host: foo.example
 
 ~~~
-{: title="GET request for an item"}
+{: title="GET Request for an Item"}
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -891,7 +891,7 @@ Repr-Digest: \
 
 {"hello": "world"}
 ~~~
-{: title="Response with identical Repr-Digest and Content-Digest"}
+{: title="Response with Identical Repr-Digest and Content-Digest"}
 
 ## Server Returns No Representation Data
 
@@ -908,7 +908,7 @@ HEAD /items/123 HTTP/1.1
 Host: foo.example
 
 ~~~
-{: title="HEAD request for an item"}
+{: title="HEAD Request for an Item"}
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -921,7 +921,7 @@ Repr-Digest: \
   sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
 
 ~~~
-{: title="Response with both Content-Digest and Digest; empty content"}
+{: title="Response with Both Content-Digest and Digest (Empty Content)"}
 
 ## Server Returns Partial Representation Data
 
@@ -934,7 +934,7 @@ Host: foo.example
 Range: bytes=10-18
 
 ~~~
-{: title="Request for partial content"}
+{: title="Request for Partial Content"}
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -949,7 +949,7 @@ Repr-Digest: \
 
 "world"}
 ~~~
-{: title="Partial response with both Content-Digest and Repr-Digest"}
+{: title="Partial Response with Both Content-Digest and Repr-Digest"}
 
 In the response message above, note that the
 `Repr-Digest` and `Content-Digests` are different.
@@ -965,7 +965,7 @@ Repr-Digest: \
 
 However, since the message content is constrained to bytes 10-18,
 the `Content-Digest` field-value is calculated over the
-sequence  `"world"}` followed by an LF, thus resulting in
+sequence  `"world"}` followed by an LF, thus resulting in the following:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -977,7 +977,7 @@ Content-Digest: \
 ## Client and Server Provide Full Representation Data
 
 The request contains a `Repr-Digest` field-value calculated on the enclosed
-representation. It also includes an `Accept-Encoding: br` header field that advertises the
+representation. It also includes an `Accept-Encoding: br` header field that advertises that the
 client supports Brotli encoding.
 
 The response includes a `Content-Encoding: br` that indicates the selected
@@ -1016,13 +1016,13 @@ Repr-Digest: \
 22 3A 20 22 77 6F 72 6C 64 22
 7D 0A 03
 ~~~
-{: title="Response with Digest of encoded response"}
+{: title="Response with Digest of Encoded Response"}
 
 
 ## Client Provides Full Representation Data and Server Provides No Representation Data
 
 The request `Repr-Digest` field-value is calculated on the enclosed content, which
-is the JSON object `{"hello": "world"}` followed by an LF
+is the JSON object `{"hello": "world"}` followed by an LF.
 
 The response `Repr-Digest` field-value
 depends on the representation metadata header fields, including
@@ -1051,7 +1051,7 @@ Content-Encoding: br
 Repr-Digest: sha-256=:d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=:
 
 ~~~
-{: title="Empty response with Digest"}
+{: title="Empty Response with Digest"}
 
 ## Client and Server Provide Full Representation Data
 
@@ -1100,8 +1100,8 @@ Title"}` followed by an LF.
 
 The representation enclosed in the response is a multiline JSON object followed by an LF.
 It refers to the resource identified by
-`Content-Location` (see {{Section 6.4.2 of RFC9110}});
-an application can thus use `Repr-Digest` in association with the resource
+`Content-Location` (see {{Section 6.4.2 of RFC9110}}); thus,
+an application can use `Repr-Digest` in association with the resource
 referenced by `Content-Location`.
 
 ~~~ http-message
@@ -1177,7 +1177,7 @@ This case is analogous to a POST request where the target resource reflects the
 target URI.
 
 The PATCH request uses the `application/merge-patch+json` media type defined in
-{{?RFC7396}}. `Repr-Digest` is calculated on the content, which corresponds to the
+{{?RFC7396}}. `Repr-Digest` is calculated on the content that corresponds to the
 patch document and is the JSON object `{"title": "New Title"}` followed by an
 LF.
 
@@ -1208,8 +1208,8 @@ Repr-Digest: sha-256=:uVSlinTTdQUwm2On4k8TJUikGN1bf/Ds8WPX4oe0h9I=:
 ~~~
 {: title="Response with Digest of Representation"}
 
-Note that a `204 No Content` response without content but with the same
-`Repr-Digest` field-value would have been legitimate too.
+Note that a `204 No Content` response without content, but with the same
+`Repr-Digest` field-value, would have been legitimate too.
 In that case, `Content-Digest` would have been computed on an empty content.
 
 ## Error Responses
@@ -1245,7 +1245,7 @@ while streaming content and thus mitigate resource consumption.
 The `Repr-Digest` field-value is the same as in {{example-full-representation}} because `Repr-Digest` is designed to
 be independent of the use of one or more transfer codings (see {{representation-digest}}).
 
-In the response content below, the string "\r\n" represent the bytes CRLF.
+In the response content below, the string "\r\n" represents the bytes CRLF.
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
@@ -1294,7 +1294,7 @@ Examples are calculated inclusive of any space.
 
 ## Server Selects Client's Least Preferred Algorithm
 
-The client requests a digest, preferring "sha". The server is free to reply with
+The client requests a digest and prefers "sha". The server is free to reply with
 "sha-256" anyway.
 
 ~~~ http-message
@@ -1321,7 +1321,7 @@ Repr-Digest: \
 
 The client requests a "sha" digest because that is the only algorithm it
 supports. The server is not obliged to produce a response containing a "sha"
-digest, it instead uses a different algorithm.
+digest; it instead uses a different algorithm.
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
@@ -1348,18 +1348,18 @@ Repr-Digest: \
 
 {{ex-server-selects-unsupported-algorithm}} is an example where a server ignores
 the client's preferred digest algorithm.
-Alternatively a server can also reject
+Alternatively, a server can also reject
 the request and return a response with
 error status code such as 4xx or 5xx.
 This specification does not prescribe
 any requirement on status code selection;
-the follow example illustrates one possible
+the following example illustrates one possible
 option.
 
 In this example, the client requests a "sha" `Repr-Digest`, and the server returns an
 error with problem details {{?RFC7807}} contained in the content. The problem
 details contain a list of the hashing algorithms that the server supports. This
-is purely an example, this specification does not define any format or
+is purely an example; this specification does not define any format or
 requirements for such content.
 
 ~~~ http-message
@@ -1380,7 +1380,7 @@ Content-Type: application/problem+json
   "status": 400
 }
 ~~~
-{: title="Response advertising the supported algorithms"}
+{: title="Response Advertising the Supported Algorithms"}
 
 # Sample Digest Values
 
