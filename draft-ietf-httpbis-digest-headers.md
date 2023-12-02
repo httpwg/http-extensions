@@ -254,12 +254,12 @@ Integrity preference fields: collective term for `Want-Repr-Digest` and `Want-Co
 The `Content-Digest` HTTP field can be used in requests and responses to
 communicate digests that are calculated using a hashing algorithm applied to
 the actual message content (see {{Section 6.4 of RFC9110}}). It is a
-`Dictionary` (see {{Section 3.2 of STRUCTURED-FIELDS}})
+`Dictionary` (see {{Section 3.2 of STRUCTURED-FIELDS}}),
 where each:
 
 * key conveys the hashing algorithm (see {{algorithms}})
   used to compute the digest;
-* value is a `Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}), that
+* value is a `Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}) that
   conveys an encoded version of the byte output produced by the digest
   calculation.
 
@@ -290,7 +290,7 @@ Content-Digest: \
 A recipient MAY ignore any or all digests. Application-specific behavior or
 local policy MAY set additional constraints on the processing and validation
 practices of the conveyed digests.
-The security considerations covers some of the issues related to
+The security considerations cover some of the issues related to
 ignoring digests (see {{sec-agility}})
 and validating multiple digests (see {{sec-exhaustion}}).
 
@@ -310,22 +310,22 @@ communicate digests that are calculated using a hashing algorithm applied to
 the entire selected representation data (see {{Section 8.1 of RFC9110}}).
 
 Representations take into account the effect of the HTTP semantics on
-messages. For example, the content can be affected by Range Requests or methods
+messages. For example, the content can be affected by Range Requests or methods,
 such as HEAD, while the way the content is transferred "on the wire" is
-dependent on other transformations (e.g., transfer codings for HTTP/1.1 - see
+dependent on other transformations (e.g., transfer codings for HTTP/1.1; see
 {{Section 6.1 of RFC9112}}). To help illustrate HTTP representation concepts,
 several examples are provided in {{resource-representation}}.
 
-When a message has no representation data it is still possible to assert that no
+When a message has no representation data, it is still possible to assert that no
 representation data was sent by computing the digest on an empty
 string (see {{usage-in-signatures}}).
 
 `Repr-Digest` is a `Dictionary` (see {{Section 3.2 of
-STRUCTURED-FIELDS}}) where each:
+STRUCTURED-FIELDS}}), where each:
 
 * key conveys the hashing algorithm (see {{algorithms}})
   used to compute the digest;
-* value is a `Byte Sequence`, that conveys an encoded version of the byte
+* value is a `Byte Sequence` that conveys an encoded version of the byte
   output produced by the digest calculation.
 
 For example:
@@ -338,7 +338,7 @@ Repr-Digest: \
   yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
 ~~~
 
-The `Dictionary` type can be used, for example, to attach multiple digests
+The `Dictionary` type can be used to attach multiple digests
 calculated using different hashing algorithms in order to support a population
 of endpoints with different or evolving capabilities. Such an approach could
 support transitions away from weaker algorithms (see {{sec-agility}}).
@@ -355,7 +355,7 @@ Repr-Digest: \
 A recipient MAY ignore any or all digests. Application-specific behavior or
 local policy MAY set additional constraints on the processing and validation
 practices of the conveyed digests.
-The security considerations covers some of the issues related to
+The security considerations cover some of the issues related to
 ignoring digests (see {{sec-agility}})
 and validating multiple digests (see {{sec-exhaustion}}).
 
@@ -382,13 +382,13 @@ In responses,
   `Repr-Digest` MUST be computed on the enclosed representation
    (see {{post-referencing-status}});
 
-- if there is a referenced resource
+- if there is a referenced resource,
   `Repr-Digest` MUST be computed on the selected representation of the referenced resource
    even if that is different from the target resource.
-   That might or might not result in computing `Repr-Digest` on the enclosed representation.
+   This might or might not result in computing `Repr-Digest` on the enclosed representation.
 
 The latter case is done according to the HTTP semantics of the given
-method, for example using the `Content-Location` header field (see {{Section 8.7 of
+method, for example, using the `Content-Location` header field (see {{Section 8.7 of
 RFC9110}}).
 In contrast, the `Location` header field does not affect `Repr-Digest` because
 it is not representation metadata.
@@ -396,7 +396,7 @@ it is not representation metadata.
 For example, in `PATCH` requests, the representation digest
 will be computed on the patch document
 because the representation metadata refers to the patch document and not
-to the target resource (see {{Section 2 of PATCH}}).
+the target resource (see {{Section 2 of PATCH}}).
 In responses, instead, the representation digest will be computed on the selected
 representation of the patched resource.
 
