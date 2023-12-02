@@ -92,7 +92,7 @@ Repr-Digest field can be used for the integrity of HTTP representations.
 Want-Content-Digest and Want-Repr-Digest can be used to indicate a sender's
 interest and preferences for receiving the respective Integrity fields.
 
-This document obsoletes RFC 3230 and the Digest and Want-Digest HTTP
+This document obsoletes {{RFC3230}} and the Digest and Want-Digest HTTP
 fields.
 
 
@@ -101,12 +101,12 @@ fields.
 # Introduction
 
 HTTP does not define the means to protect the data integrity of content or
-representations. When HTTP messages are transferred between endpoints, lower layer
+representations. When HTTP messages are transferred between endpoints, lower-layer
 features or properties such as TCP checksums or TLS records {{?TLS=RFC8446}} can provide
 some integrity protection. However, transport-oriented integrity provides a
 limited utility because it is opaque to the application layer and only covers
 the extent of a single connection. HTTP messages often travel over a chain of
-separate connections. In between connections there is a possibility for
+separate connections. In between connections, there is a possibility for
 data corruption. An HTTP integrity mechanism can provide
 the means for endpoints, or applications using HTTP, to detect data corruption
 and make a choice about how to act on it. An example use case is to aid
@@ -116,7 +116,7 @@ This document defines two digest integrity mechanisms for HTTP.
 First, content integrity, which acts on conveyed content ({{Section 6.4 of
 RFC9110}}).
 Second, representation data integrity, which acts on representation data ({{Section 8.1
-of RFC9110}}). This supports advanced use cases such as validating the
+of RFC9110}}). This supports advanced use cases, such as validating the
 integrity of a resource that was reconstructed from parts retrieved using
 multiple requests or connections.
 
@@ -138,7 +138,7 @@ This document is structured as follows:
   - {{digest-and-content-location}} (Content-Location),
   - {{resource-representation}} contains worked examples of Representation data
     in message exchanges, and
-  - {{examples-unsolicited}} and {{examples-solicited}} contain worked examples
+  - Appendixes {{<examples-unsolicited}} and {{<examples-solicited}} contain worked examples
   of Repr-Digest and Want-Repr-Digest fields in message exchanges.
 - {{algorithms}} presents hash algorithm considerations and defines
   registration procedures for future entries.
@@ -172,13 +172,13 @@ such as Range Requests (see {{Section 14 of RFC9110}}).
 
 `Content-Digest` and `Repr-Digest` support hashing algorithm agility.
 The `Want-Content-Digest` and `Want-Repr-Digest` fields allow
-endpoints to express interest in `Content-Digest` and `Repr-Digest`
+endpoints to express interest in `Content-Digest` and `Repr-Digest`,
 respectively, and to express algorithm preferences in either.
 
 `Content-Digest` and `Repr-Digest` are collectively termed
-Integrity fields.
+"Integrity fields".
 `Want-Content-Digest` and `Want-Repr-Digest` are
-collectively termed Integrity preference fields.
+collectively termed "Integrity preference" fields.
 
 Integrity fields are tied to the `Content-Encoding`
 and `Content-Type` header fields. Therefore, a given resource may have multiple
@@ -205,7 +205,7 @@ meaning of "instance" inconsistently, leading to interoperability issues. The
 most common issue relates to the mistake of calculating the digest using (what
 we now call) message content, rather than using (what we now call)
 representation data as was originally intended. Interestingly, time has also
-shown that a digest of message content can be beneficial for some use cases. So
+shown that a digest of message content can be beneficial for some use cases, so
 it is difficult to detect if non-conformance to [RFC3230] is intentional or
 unintentional.
 
