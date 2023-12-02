@@ -1415,14 +1415,14 @@ crc32c -    :Q3lHIA==:
 # Migrating from RFC 3230 {#migrating}
 
 HTTP digests are computed by applying a hashing algorithm to input data.
-RFC 3230 defined the input data as an "instance", a term it also defined.
+{{RFC3230}} defined the input data as an "instance", a term it also defined.
 The concept of instance has since been superseded by the HTTP semantic term "representation".
-It is understood that some implementations of RFC 3230
+It is understood that some implementations of {{RFC3230}}
 mistook "instance" to mean HTTP content.
 Using content for the Digest field is an error
-that leads to interoperability problems between peers that implement RFC 3230.
+that leads to interoperability problems between peers that implement {{RFC3230}}.
 
-RFC 3230 was only ever intended
+{{RFC3230}} was only ever intended
 to use what HTTP now defines as selected representation data.
 The semantic concept of digest and representation are explained
 alongside the definition of [the Repr-Digest field](#representation-digest).
@@ -1432,18 +1432,18 @@ the considerations and examples this document gives for Repr-Digest
 apply equally to Digest because they operate on the same input data;
 see Sections {{<state-changing-requests}}, {{<security}} and {{<usage-in-signatures}}.
 
-RFC 3230 could never communicate
+{{RFC3230}} could never communicate
 the digest of HTTP message content in the Digest field;
 Content-Digest now provides that capability.
 
-RFC 3230 allowed algorithms to define their output encoding format for use with
-the Digest field. This resulted in a mix of formats such as base64, hex or
-decimal. By virtue of using Structured fields, Content-Digest and Repr-Digest
+{{RFC3230}} allowed algorithms to define their output encoding format for use with
+the Digest field. This resulted in a mix of formats such as base64, hex, or
+decimal. By virtue of using Structured Fields, Content-Digest, and Repr-Digest
 use only a single encoding format. Further explanation and examples are provided in {{sample-digest-values}}.
 
 # Acknowledgements
 {:numbered="false"}
-This document is based on ideas from [RFC3230], so thanks
+This document is based on ideas from {{RFC3230}}, so thanks
 to Jeff Mogul and Arthur Van Hoff for their great work.
 The original idea of refreshing RFC3230 arose from an interesting
 discussion with Mark Nottingham, Jeffrey Yasskin, and Martin Thomson when reviewing
