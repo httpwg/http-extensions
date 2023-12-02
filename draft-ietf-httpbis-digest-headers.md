@@ -467,21 +467,21 @@ Algorithms for HTTP Digest Fields" registry; see
 {{establish-hash-algorithm-registry}}. Additional algorithms can be registered
 in accordance with the policies set out in this section.
 
-Each algorithm has a status field, which is intended to provide an aid to
+Each algorithm has a status field that is intended to provide an aid to
 implementation selection.
 
 Algorithms with a status value of "Active" are suitable for many purposes and
 it is RECOMMENDED that applications use these algorithms. These can be used in
 adversarial situations where hash functions might need to provide resistance to
-collision, first-preimage and second-preimage attacks. For adversarial
+collision, first-preimage, and second-preimage attacks. For adversarial
 situations, selecting which of the "Active" algorithms are acceptable will
 depend on the level of protection the circumstances demand.
 More considerations are presented in {{sec-agility}}.
 
 Algorithms with a status value of "Deprecated" either provide none of these
-properties, or are known to be weak (see {{NO-MD5}} and {{NO-SHA}}). These
+properties or are known to be weak (see {{NO-MD5}} and {{NO-SHA}}). These
 algorithms MAY be used to preserve integrity against corruption, but MUST NOT be
-used in a potentially adversarial setting; for example, when signing Integrity
+used in a potentially adversarial setting, for example, when signing Integrity
 fields' values for authenticity. Permitting the use of these algorithms can help
 some applications, for example, those that previously used [RFC3230], are
 migrating to this specification ({{migrating}}), and have existing stored
@@ -497,21 +497,21 @@ Registration requests for the "Hash Algorithms for HTTP Digest Fields" registry
 use the Specification Required policy ({{Section 4.6 of !RFC8126}}). Requests
 should use the following template:
 
- - Algorithm Key: the Structured Fields key value used in
+ - Algorithm Key: The Structured Fields key value used in
    `Content-Digest`, `Repr-Digest`, `Want-Content-Digest`, or `Want-Repr-Digest`
-    field Dictionary member keys
- - Status: the status of the algorithm. The options are:
-     - "Active" - for algorithms without known problems,
-     - "Provisional" - for unproven algorithms,
-     - "Deprecated" - for deprecated or insecure algorithms,
- - Description: a short description of the algorithm
- - Reference(s): pointer(s) to the primary document(s) defining the Algorithm
-   Key and technical details of the algorithm
+    field Dictionary member keys.
+ - Status: The status of the algorithm. The options are:
+     - "Active" - Algorithms without known problems
+     - "Provisional" - Unproven algorithms
+     - "Deprecated" - Deprecated or insecure algorithms
+ - Description: A short description of the algorithm
+ - Reference(s): Pointer(s) to the primary document(s) defining the Algorithm
+   Key and technical details of the algorithm.
 
 When reviewing registration requests, the designated expert(s) should pay
 attention to the requested status. The status value should reflect
 standardization status and the broad opinion of relevant interest groups such as
-the IETF or security-related SDOs. The "Active" status is not suitable for an
+the IETF or security-related Standards Development Organizations SDOs. The "Active" status is not suitable for an
 algorithm that is known to be weak, broken, or experimental. If a registration
 request attempts to register such an algorithm as "Active", the designated
 expert(s) should suggest an alternative status of "Deprecated" or "Provisional".
