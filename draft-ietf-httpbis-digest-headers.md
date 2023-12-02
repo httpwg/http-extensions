@@ -429,7 +429,7 @@ Integrity field on future requests.
 
 Integrity preference fields are only a hint. The receiver of the field can
 ignore it and send an Integrity field using any algorithm or omit the field
-entirely, for example see {{ex-server-selects-unsupported-algorithm}}. It is not
+entirely; for example, see {{ex-server-selects-unsupported-algorithm}}. It is not
 a protocol error if preferences are ignored. Applications that use Integrity
 fields and Integrity preferences can define expectations or constraints that
 operate in addition to this specification. Ignored preferences are an
