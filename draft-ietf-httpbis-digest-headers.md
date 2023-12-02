@@ -63,11 +63,11 @@ informative:
   NIST800-32:
     title: Introduction to Public Key Technology and the Federal PKI Infrastructure
     author:
-      org: National Institute of Standards and Technology, U.S. Department of Commerce
+      org: National Institute of Standards and Technology (NIST), U.S. Department of Commerce
     date: 2001-02
     target: https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-32.pdf
   CMU-836068:
-    title: MD5 Vulnerable to collision attacks
+    title: MD5 vulnerable to collision attacks
     author:
       org: Carnegie Mellon University, Software Engineering Institute
     date: 2008-12-31
