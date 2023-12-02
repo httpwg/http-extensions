@@ -408,7 +408,7 @@ enclosed representation refers to the resource identified by its value and
 An example is given in {{post-not-request-uri}}.
 
 
-# Integrity preference fields  {#want-fields}
+# Integrity Preference Fields  {#want-fields}
 
 Senders can indicate their interest in Integrity fields and hashing algorithm
 preferences using the
@@ -607,7 +607,7 @@ This means the complete data needs to be available, which means there is
 negligible processing difference in sending an Integrity field in a header or
 trailer section.
 
-## Variations Within Content Encoding
+## Variations within Content Encoding
 
 Content coding mechanisms can support different encoding parameters, meaning that the same input content can produce different outputs. For example, GZIP supports multiple compression levels. Such encoding parameters are generally not communicated as representation metadata. For instance, different compression levels would all use the same "Content-Encoding: gzip" field. Other examples include where encoding relies on nonces or timestamps, such as the aes128gcm content coding defined in {{?RFC8188}}.
 
@@ -636,7 +636,7 @@ attacks (see Section 1 of {{?RFC6211}}) of the hashing algorithm.
 To protect against such attacks, endpoints could restrict their set of supported algorithms
 to stronger ones and protect the fields value by using TLS and/or digital signatures.
 
-## Resource exhaustion {#sec-exhaustion}
+## Resource Exhaustion {#sec-exhaustion}
 
 Integrity fields validation consumes computational resources.
 In order to avoid resource exhaustion, implementations can restrict
@@ -664,7 +664,7 @@ IANA is asked to update the
 |---------------------|-----------|-----------------------------------------------|
 
 
-## Establish the Hash Algorithms for HTTP Digest Fields Registry {#establish-hash-algorithm-registry}
+## Creation of the Hash Algorithms for HTTP Digest Fields Registry {#establish-hash-algorithm-registry}
 
 IANA is requested to create the new "Hash Algorithms for HTTP Digest Fields"
 registry at <https://www.iana.org/assignments/http-digest-hash-alg/> and
@@ -1019,7 +1019,7 @@ Repr-Digest: \
 {: title="Response with Digest of encoded response"}
 
 
-## Client Provides Full Representation Data, Server Provides No Representation Data
+## Client Provides Full Representation Data and Server Provides No Representation Data
 
 The request `Repr-Digest` field-value is calculated on the enclosed content, which
 is the JSON object `{"hello": "world"}` followed by an LF
@@ -1092,7 +1092,7 @@ Repr-Digest: \
 ~~~
 {: title="Response with Digest of Encoded Content"}
 
-## POST Response does not Reference the Request URI {#post-not-request-uri}
+## POST Response Does Not Reference the Request URI {#post-not-request-uri}
 
 The request `Repr-Digest` field-value is computed on the enclosed representation
 (see {{state-changing-requests}}), which is the JSON object `{"title": "New
@@ -1212,7 +1212,7 @@ Note that a `204 No Content` response without content but with the same
 `Repr-Digest` field-value would have been legitimate too.
 In that case, `Content-Digest` would have been computed on an empty content.
 
-## Error responses
+## Error Responses
 
 In error responses, the representation data does not necessarily refer to the
 target resource. Instead, it refers to the representation of the error.
