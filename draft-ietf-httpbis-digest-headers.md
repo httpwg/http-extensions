@@ -121,7 +121,7 @@ integrity of a resource that was reconstructed from parts retrieved using
 multiple requests or connections.
 
 
-This document obsoletes RFC 3230 and therefore the Digest and Want-Digest HTTP
+This document obsoletes {{RFC3230}} and therefore the Digest and Want-Digest HTTP
 fields; see {{obsolete-3230}}.
 
 
