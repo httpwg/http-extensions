@@ -526,7 +526,7 @@ status from "Active" to "Deprecated" as the security environment evolves.
 
 # Security Considerations {#security}
 
-## HTTP Messages Are Not Protected In Full {#sec-limitations}
+## HTTP Messages Are Not Protected in Full {#sec-limitations}
 
 This document specifies a data integrity mechanism that protects HTTP
 representation data or content, but not HTTP header and trailer fields, from
@@ -545,14 +545,14 @@ Signatures {{SIGNATURES}}).
 ## End-to-End Integrity
 
 Integrity fields can help detect representation data or content modification due to implementation errors,
-undesired "transforming proxies" (see {{Section 7.7 of RFC9110}})
+undesired "transforming proxies" (see {{Section 7.7 of RFC9110}}),
 or other actions as the data passes across multiple hops or system boundaries.
 Even a simple mechanism for end-to-end representation data integrity is valuable
 because a user agent can validate that resource retrieval succeeded before handing off to an
-HTML parser, video player, etc. for parsing.
+HTML parser, video player, etc., for parsing.
 
 Note that using these mechanisms alone does not provide end-to-end integrity of HTTP messages over
-multiple hops, since metadata could be manipulated at any stage. Methods to protect
+multiple hops since metadata could be manipulated at any stage. Methods to protect
 metadata are discussed in {{usage-in-signatures}}.
 
 ## Usage in Signatures {#usage-in-signatures}
@@ -568,7 +568,7 @@ HTTP Message Signatures {{SIGNATURES}}.
 
 Digests explicitly
 depend on the "representation metadata" (e.g., the values of `Content-Type`,
-`Content-Encoding` etc.). A signature that protects Integrity fields but not other
+`Content-Encoding`, etc.). A signature that protects Integrity fields but not other
 "representation metadata" can expose the communication to tampering. For
 example, an actor could manipulate the `Content-Type` field-value and cause a
 digest validation failure at the recipient, preventing the application from
@@ -581,7 +581,7 @@ possibility when combined with signatures. In the scenario where there is no
 content to send, the digest of an empty string can be included in the message
 and, if signed, can help the recipient detect if content was added either as a
 result of accident or purposeful manipulation. The opposite scenario is also
-supported; including an Integrity field for content, and signing it, can help a
+supported; including an Integrity field for content and signing it can help a
 recipient detect where the content was removed.
 
 Any mangling of Integrity fields, including digests' de-duplication
@@ -602,22 +602,22 @@ One of the benefits of using Integrity fields in a trailer section is that it
 allows hashing of bytes as they are sent. However, it is possible to
 design a hashing algorithm that requires processing of content in such a way
 that would negate these benefits. For example, Merkle Integrity Content Encoding
-{{?I-D.thomson-http-mice}} requires content to be processed in reverse order.
+{{?MICE=I-D.thomson-http-mice}} requires content to be processed in reverse order.
 This means the complete data needs to be available, which means there is
-negligible processing difference in sending an Integrity field in a header or
+negligible processing difference in sending an Integrity field in a header versus a
 trailer section.
 
 ## Variations within Content Encoding
 
 Content coding mechanisms can support different encoding parameters, meaning that the same input content can produce different outputs. For example, GZIP supports multiple compression levels. Such encoding parameters are generally not communicated as representation metadata. For instance, different compression levels would all use the same "Content-Encoding: gzip" field. Other examples include where encoding relies on nonces or timestamps, such as the aes128gcm content coding defined in {{?RFC8188}}.
 
-Since it is possible for there to be variation within content coding, the checksum conveyed by the integrity fields cannot be used to provide a proof of integrity "at rest"
+Since it is possible for there to be variation within content coding, the checksum conveyed by the Integrity fields cannot be used to provide a proof of integrity "at rest"
 unless the whole content is persisted.
 
 ## Algorithm Agility {#sec-agility}
 
 The security properties of hashing algorithms are not fixed.
-Algorithm Agility (see {{?RFC7696}}) is achieved by providing implementations with flexibility
+Algorithm agility (see {{?RFC7696}}) is achieved by providing implementations with flexibility
 to choose hashing algorithms from the IANA Hash Algorithms for HTTP Digest Fields registry; see
 {{establish-hash-algorithm-registry}}.
 
@@ -626,21 +626,21 @@ by negotiation of hashing algorithm using `Want-Content-Digest` or `Want-Repr-Di
 or by sending multiple digests from which the receiver chooses.
 A receiver that depends on a digest for security will be vulnerable
 to attacks on the weakest algorithm it is willing to accept.
-Endpoints are advised that sending multiple values consumes resources,
-which may be wasted if the receiver ignores them (see {{representation-digest}}).
+Endpoints are advised that sending multiple values consumes resources
+that may be wasted if the receiver ignores them (see {{representation-digest}}).
 
-While algorithm agility allows the migration to stronger algorithms
+While algorithm agility allows the migration to stronger algorithms,
 it does not prevent the use of weaker algorithms.
 Integrity fields do not provide any mitigations for downgrade or substitution
 attacks (see Section 1 of {{?RFC6211}}) of the hashing algorithm.
 To protect against such attacks, endpoints could restrict their set of supported algorithms
-to stronger ones and protect the fields value by using TLS and/or digital signatures.
+to stronger ones and protect the fields' value by using TLS and/or digital signatures.
 
 ## Resource Exhaustion {#sec-exhaustion}
 
-Integrity fields validation consumes computational resources.
+Integrity field validation consumes computational resources.
 In order to avoid resource exhaustion, implementations can restrict
-validation of the algorithm types, number of validations, or the size of content.
+validation of the algorithm types, the number of validations, or the size of content.
 In these cases, skipping validation entirely or ignoring validation failure of a more-preferred algorithm
 leaves the possibility of a downgrade attack (see {{sec-agility}}).
 
