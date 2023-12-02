@@ -648,57 +648,57 @@ leaves the possibility of a downgrade attack (see {{sec-agility}}).
 
 ## HTTP Field Name Registration
 
-IANA is asked to update the
+IANA has updated the
 "Hypertext Transfer Protocol (HTTP) Field Name Registry" registry
-({{RFC9110}}) according to the table below:
+({{RFC9110}}) as shown in the table below:
 
 |---------------------|-----------|-----------------------------------------------|
 | Field Name          | Status    |                     Reference                 |
 |---------------------|-----------|-----------------------------------------------|
-| Content-Digest      | permanent | {{content-digest}} of this document           |
-| Repr-Digest         | permanent | {{representation-digest}} of this document    |
-| Want-Content-Digest | permanent | {{want-fields}} of this document              |
-| Want-Repr-Digest    | permanent | {{want-fields}} of this document              |
-| Digest              | obsoleted | [RFC3230], {{obsolete-3230}} of this document |
-| Want-Digest         | obsoleted | [RFC3230], {{obsolete-3230}} of this document |
+| Content-Digest      | permanent | {{content-digest}} of RFC 9530                |
+| Repr-Digest         | permanent | {{representation-digest}} of RFC 9530         |
+| Want-Content-Digest | permanent | {{want-fields}} of RFC 9530                   |
+| Want-Repr-Digest    | permanent | {{want-fields}} of RFC 9530                   |
+| Digest              | obsoleted | {{RFC3230}}, {{obsolete-3230}} RFC 9530         |
+| Want-Digest         | obsoleted | {{RFC3230}}, {{obsolete-3230}} RFC 9530         |
 |---------------------|-----------|-----------------------------------------------|
 
 
 ## Creation of the Hash Algorithms for HTTP Digest Fields Registry {#establish-hash-algorithm-registry}
 
-IANA is requested to create the new "Hash Algorithms for HTTP Digest Fields"
-registry at <https://www.iana.org/assignments/http-digest-hash-alg/> and
-populate it with the entries in {{iana-hash-algorithm-table}}. The procedure for
+IANA has created the new "Hash Algorithms for HTTP Digest Fields"
+registry at \<https://www.iana.org/assignments/http-digest-hash-alg/\> and
+populated it with the entries in {{iana-hash-algorithm-table}}. The procedure for
 new registrations is provided in {{algorithms}}.
 
 | -------------- | -------- | ----------------------------------- | -------------- |
-| Algorithm Key  | Status   | Description                         | Reference(s)   |
+| Algorithm Key  | Status   | Description                         | Reference   |
 | -------------- | -------- | ----------------------------------- | --------- |
-| sha-512        | Active | The SHA-512 algorithm.              | [RFC6234], [RFC4648], this document. |
-| sha-256        | Active | The SHA-256 algorithm.              | [RFC6234], [RFC4648], this document. |
-| md5            | Deprecated | The MD5 algorithm. It is vulnerable to collision attacks; see {{NO-MD5}} and [CMU-836068] | [RFC1321], [RFC4648], this document. |
-| sha            | Deprecated | The SHA-1 algorithm. It is vulnerable to collision attacks; see {{NO-SHA}} and [IACR-2020-014] | [RFC3174], [RFC4648], [RFC6234] this document. |
-| unixsum        | Deprecated | The algorithm used by the UNIX "sum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
-| unixcksum      | Deprecated | The algorithm used by the UNIX "cksum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
-| adler          | Deprecated | The ADLER32 algorithm.                          | [RFC1950], this document. |
-| crc32c         | Deprecated | The CRC32c algorithm.                           | {{?RFC9260}} appendix A, this document. |
+| sha-512        | Active | The SHA-512 algorithm.              | [RFC6234], [RFC4648], RFC 9530. |
+| sha-256        | Active | The SHA-256 algorithm.              | [RFC6234], [RFC4648],  RFC 9530. |
+| md5            | Deprecated | The MD5 algorithm. It is vulnerable to collision attacks; see {{NO-MD5}} and [CMU-836068] | [RFC1321], [RFC4648],  RFC 9530. |
+| sha            | Deprecated | The SHA-1 algorithm. It is vulnerable to collision attacks; see {{NO-SHA}} and [IACR-2020-014] | [RFC3174], [RFC4648], [RFC6234],  RFC 9530. |
+| unixsum        | Deprecated | The algorithm used by the UNIX "sum" command. | [RFC4648], [RFC6234], [UNIX],  RFC 9530. |
+| unixcksum      | Deprecated | The algorithm used by the UNIX "cksum" command. | [RFC4648], [RFC6234], [UNIX],  RFC 9530. |
+| adler          | Deprecated | The ADLER32 algorithm.                          | [RFC1950],  RFC 9530. |
+| crc32c         | Deprecated | The CRC32c algorithm.                           | {{?RFC9260}} appendix A,  RFC 9530. |
 | -------------- | -------- | ----------------------------------- | -------------- |
 {: #iana-hash-algorithm-table title="Initial Hash Algorithms"}
 
 ## Deprecate the Hypertext Transfer Protocol (HTTP) Digest Algorithm Values Registry
 
-IANA is requested to deprecate the "Hypertext Transfer Protocol (HTTP) Digest
+IANA has deprecated the "Hypertext Transfer Protocol (HTTP) Digest
 Algorithm Values" registry at
-<https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml> and replace the note on this registry with the following text:
+\<https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml\> and replaced the note on that registry with the following text:
 
 
-> "This registry is deprecated since it lists the algorithms that can be used
+> This registry is deprecated since it lists the algorithms that can be used
 with the Digest and Want-Digest fields defined in
-[RFC3230], which has been obsoleted by
-\[rfc-to-be-this-document\]. While registration is not closed, new registrations
-are encouraged to use the \[Hash Algorithms for HTTP Digest
-Fields\]<https://www.iana.org/assignments/http-digest-hash-alg/> registry
-instead."
+{{RFC3230}}, which has been obsoleted by
+RFC 9530. While registration is not closed, new registrations
+are encouraged to use the Hash Algorithms for HTTP Digest
+Fields (https://www.iana.org/assignments/http-digest-hash-alg/) registry
+instead.
 
 
 --- back
