@@ -90,9 +90,7 @@ The "match" value of the Use-As-Dictionary header is a sf-string value
 that provides the URLPattern to use for request matching
 (https://urlpattern.spec.whatwg.org/).
 
-The URLPattern used for matching has some restrictions:
-* Regular expressions are not supported.
-* The match pattern MUST be for the same {{Origin}} as the dictionary.
+The URLPattern used for matching does not support using Regular expressions.
 
 The following algorithm will return TRUE for a valid match pattern and FALSE
 for an invalid pattern that MUST NOT be used:
@@ -103,10 +101,6 @@ for an invalid pattern that MUST NOT be used:
 and baseURL=BASEURL (https://urlpattern.spec.whatwg.org/).
 1. If PATTERN has regexp groups then return FALSE
 (https://urlpattern.spec.whatwg.org/#urlpattern-has-regexp-groups).
-1. Let SRC be a URLPattern constructed by setting input=BASEURL.
-1. If any of the "protocol", "username", "password", "hostname", or "port"
-attributes of PATTERN do not match the value of the same attribute in SRC then
-return FALSE.
 1. Return True.
 
 The "match" value is required and MUST be included in the
@@ -236,6 +230,9 @@ When a dictionary is stored as a result of a "Use-As-Dictionary" directive, it
 includes "match" and "match-dest" strings that are used to match an outgoing
 request from a client to the available dictionaries.
 
+Dictionaries MUST have been served from the same {Origin} as the outgoing
+request to match.
+
 To see if an outbound request matches a given dictionary, the following
 algorithm will return TRUE for a successful match and FALSE for no-match:
 
@@ -245,11 +242,13 @@ algorithm will return TRUE for a successful match and FALSE for no-match:
     request.
     * If DEST is not an empty string and If DEST and REQUEST_DEST are not the
     same value, return FALSE
-1. Let MATCH be the value of "match" for the given dictionary.
 1. Let BASEURL be the URL of the dictionary request.
+1. LET URL represent the URL of the outbound request being checked.
+1. If the {Origin} of BASEURL and the {Origin} of URL are not the same, return
+FALSE.
+1. Let MATCH be the value of "match" for the given dictionary.
 1. Let PATTERN be a URLPattern constructed by setting input=MATCH,
 and baseURL=BASEURL (https://urlpattern.spec.whatwg.org/).
-1. LET URL represent the request URL being checked.
 1. Return the result of running the "test" method of PATTERN with input=URL
 (https://urlpattern.spec.whatwg.org/#ref-for-dom-urlpattern-test)
 
