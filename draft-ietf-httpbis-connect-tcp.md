@@ -124,7 +124,7 @@ HEADERS
 
 ## Use of Relevant Headers
 
-A templated TCP proxy has an unambiguous origin of its own.  Origin-scoped HTTP header fields such as Alt-Svc {{?RFC7838}} and Strict-Transport-Security {{?RFC6797}} apply to this origin.
+A templated TCP proxy has an unambiguous origin of its own.  Origin-scoped HTTP header fields such as Alt-Svc {{?RFC7838}} and Strict-Transport-Security {{?RFC6797}} apply to this origin when they are associated with a templated TCP proxy request or response.
 
 In a web browser, authentication for templated TCP proxy requests uses a "407 (Proxy Authentication Required)" response, and the "Proxy-Authenticate" and "Proxy-Authorization" header fields.  Non-proxy-related requests to the same origin continue to use "WWW-Authenticate" and "Authorization" header fields.  This distinction is not technically required, but it may facilitate separation of credentials between the browser and the webpage contents.
 
