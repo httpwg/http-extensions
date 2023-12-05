@@ -396,7 +396,7 @@ The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in
 
 The upload resource URL is the identifier used for modifying the upload. Without further protection of this URL, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can access the upload resource. In addition, the upload resource URL SHOULD be generated in such a way that makes it hard to be guessed by unauthorized clients.
 
-Servers or intermediaries may inspect header fields and request content to detect and filter out unwanted requests. However, with resumable uploads the contents of a file may be split up across multiple requests, which can circumvent or limit the effectiveness of these detection mechanisms. To prevent this, servers and intermediaries wishing to perform content scanning SHOULD be aware of resumable uploads and consider that a file may be split into multiple requests. Alternatively, they SHOULD perform detection once the upload is complete and the full file has been received.
+Some servers or intermediaries provide scanning of content uploaded by clients. Any scanning mechanism that relies on receiving a complete file in a single request message can be defeated by resumable uploads because content can be split across multiple messages. Servers or intermediaries wishing to perform content scanning SHOULD consider how resumable uploads can circumvent scanning and take appropriate measures. Possible strategies include waiting for the upload to complete before scanning a full file, or disabling resumable uploads.
 
 # IANA Considerations
 
