@@ -44,9 +44,9 @@ HTTP/3 uses a UDP transport, so it cannot be forwarded using the pre-existing CO
 
 ## Problems
 
-Classic HTTP CONNECT proxies are identified by a host, a port number, and whether a security protocol is used or not.  The proxy does not have a path of its own.  This prevents any HTTP origin from hosting multiple distinct proxy services.
+Classic HTTP CONNECT proxies are usually identified by an "http" or "https" URI ({{?RFC9110, Section 7.3.2}}).  However, this URI cannot specify a non-empty path, because classic CONNECT requests cannot convey any path information.  This prevents any HTTP origin from hosting multiple distinct proxy services.
 
-An ordinary HTTP request involves a URI, which includes an origin as a property. Since clients specify origins in HTTP requests using the "Host" or ":authority" header field, servers can colocate multiple origins on a single server IP address and port number, a practice known as virtual hosting. However, the classic CONNECT method is an exception. It targets a proxy, and the hostname of the proxy is not included in the HTTP request. As a result, classic CONNECT cannot be deployed using virtual hosting, nor can it implement the usual defenses against server port misdirection attacks (see {{Section 7.4 of ?RFC9110}}). The absence of an explicit origin for the proxy also creates ambiguity about the use of origin-scoped response header fields such as Alt-Svc {{?RFC7838}} and Strict-Transport-Security {{?RFC6797}}.
+An ordinary HTTP request indicates an origin using the "Host" or ":authority" header field. This allows servers to colocate multiple origins on a single server IP address and port number, a practice known as "virtual hosting". However, the classic CONNECT method is an exception: it targets an HTTP proxy, which is not identified in the HTTP request. As a result, classic CONNECT cannot be deployed using virtual hosting, nor can it implement the usual defenses against server port misdirection attacks (see {{Section 7.4 of ?RFC9110}}). The absence of an explicit origin for the proxy also creates ambiguity about the use of origin-scoped response header fields such as "Alt-Svc" {{?RFC7838}} and "Strict-Transport-Security" {{?RFC6797}}.
 
 Classic HTTP CONNECT proxies can be used to reach a target host that is specified as a domain name or an IP address.  However, because only a single target host can be specified, proxy-driven Happy Eyeballs and cross-IP fallback can only be used when the host is a domain name.  For IP-targeted requests to succeed, the client must know which address families are supported by the proxy via some out-of-band mechanism, or open multiple independent CONNECT requests and abandon any that prove unnecessary.
 
@@ -124,7 +124,7 @@ HEADERS
 
 ## Use of Origin-Scoped Headers
 
-A templated TCP proxy has an unambiguous origin of its own.  Origin-scoped HTTP header fields such as Alt-Svc {{?RFC7838}} and Strict-Transport-Security {{?RFC6797}} apply to this origin when they are associated with a templated TCP proxy request or response.
+A templated TCP proxy has an unambiguous origin of its own.  Origin-scoped HTTP header fields such as "Alt-Svc" {{?RFC7838}} and "Strict-Transport-Security" {{?RFC6797}} apply to this origin when they are associated with a templated TCP proxy request or response.
 
 # Additional Connection Setup Behaviors
 
@@ -220,4 +220,4 @@ IF APPROVED, IANA is requested to add the following entry to the "MASQUE URI Suf
 # Acknowledgments
 {:numbered="false"}
 
-Thanks to Amos Jeffries, Tommy Pauly, and Kyle Nekritz for close review and suggested changes.
+Thanks to Amos Jeffries, Tommy Pauly, Kyle Nekritz, David Schinazi, and Kazuho Oku for close review and suggested changes.
