@@ -198,7 +198,7 @@ As a consequence, resumable uploads support all HTTP request methods that can ca
 
 If the request is valid, the server SHOULD create an upload resource. Then, the server MUST include the `Location` header field in the response and set its value to the URL of the upload resource. The client MAY use this URL for offset retrieval ({{offset-retrieving}}), upload append ({{upload-appending}}), and upload cancellation ({{upload-cancellation}}).
 
-Once the upload resource is available, the target resource MAY send an informational response with a `104 (Upload Resumption Supported)` status code to the client while the request content is being uploaded. In this informational response, the `Location` header field MUST be set to the upload resource.
+Once the upload resource is available and while the request content is being uploaded, the target resource MAY send one or more informational responses with a `104 (Upload Resumption Supported)` status code to the client. In the first informational response, the `Location` header field MUST be set to the URL pointing to the upload resource. In subsequent informational responses, the `Location` header field MUST NOT be set. An informational response MAY contain the `Upload-Offset` header field with the current upload offset as the value to inform the client about the upload progress. In subsequent informational responses, the upload offset MUST NOT be smaller than in previous informational responses. In addition, later offset retrievals ({{offset-retrieving}}) MUST NOT receive an upload offset that is less than the offset reported in the latest informational response, allowing the client to free associated resources.
 
 The server MUST send the `Upload-Offset` header field in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The `Upload-Offset` field value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the response has a status code that indicates a success but the offset indicated in the `Upload-Offset` field value does not equal the total of begin offset plus the number of bytes uploaded in the request.
 
@@ -221,6 +221,10 @@ content-length: 100
 :status: 104
 upload-draft-interop-version: 4
 location: https://example.com/upload/b530ce8ff
+
+:status: 104
+upload-draft-interop-version: 4
+upload-offset: 50
 
 :status: 201
 location: https://example.com/upload/b530ce8ff
@@ -323,6 +327,8 @@ If the server does not consider the upload associated with the upload resource a
 The client MUST NOT perform multiple upload transfers for the same upload resource in parallel. This helps avoid race conditions, and data loss or corruption. The server is RECOMMENDED to take measures to avoid parallel upload transfers: The server MAY terminate any creation ({{upload-creation}}) or append ({{upload-appending}}) for the same upload URL. Since the client is not allowed to perform multiple transfers in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
 
 If the offset indicated by the `Upload-Offset` field value does not match the offset provided by the immediate previous offset retrieval ({{offset-retrieving}}), or the end offset of the immediate previous incomplete successful transfer, the server MUST respond with a `409 (Conflict)` status code.
+
+While the request content is being uploaded, the target resource MAY send one or more informational responses with a `104 (Upload Resumption Supported)` status code to the client. These informational responses MUST NOT contain the `Location` header field. They MAY include the `Upload-Offset` header field with the current upload offset as the value to inform the client about the upload progress. The same restrictions on the `Upload-Offset` header field in informational responses from the upload creation ({{upload-creation}}) apply.
 
 The server MUST send the `Upload-Offset` header field in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the status code indicates a success but the offset indicated by the `Upload-Offset` field value does not equal the total of begin offset plus the number of bytes uploaded in the request.
 
