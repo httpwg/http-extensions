@@ -44,7 +44,7 @@ HTTP/3 uses a UDP transport, so it cannot be forwarded using the pre-existing CO
 
 ## Problems
 
-Classic HTTP CONNECT proxies are identified by a host, a port number, and optionally a security protocol.  The proxy does not have a path of its own.  This prevents any HTTP origin from hosting multiple distinct proxy services.
+Classic HTTP CONNECT proxies are identified by a host, a port number, and whether a security protocol is used or not.  The proxy does not have a path of its own.  This prevents any HTTP origin from hosting multiple distinct proxy services.
 
 An ordinary HTTP request involves a URI, which includes an origin as a property. Since clients specify origins in HTTP requests using the "Host" or ":authority" header field, servers can colocate multiple origins on a single server IP address and port number, a practice known as virtual hosting. However, the classic CONNECT method is an exception. It targets a proxy, and the hostname of the proxy is not included in the HTTP request. As a result, classic CONNECT cannot be deployed using virtual hosting, nor can it implement the usual defenses against server port misdirection attacks (see {{Section 7.4 of ?RFC9110}}). The absence of an explicit origin for the proxy also creates ambiguity about the use of origin-scoped response header fields such as Alt-Svc {{?RFC7838}} and Strict-Transport-Security {{?RFC6797}}.
 
