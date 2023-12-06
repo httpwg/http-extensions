@@ -126,7 +126,7 @@ HEADERS
 
 A templated TCP proxy has an unambiguous origin of its own.  Origin-scoped HTTP header fields such as "Alt-Svc" {{?RFC7838}} and "Strict-Transport-Security" {{?RFC6797}} apply to this origin when they are associated with a templated TCP proxy request or response.
 
-Authentication to a templated TCP proxy normally uses ordinary HTTP authentication via the "401 (Unauthorized)" response code, the "WWW-Authenticate" response header field, and the "Authorization" request header field ({{!RFC9110, Section 11.6}}).  For example, if the client is accessing the templated TCP proxy via an HTTP request proxy (an unusual but permissible configuration), the client's requests could contain both "Proxy-Authorization" and "Authorization" header fields, authenticating to the request proxy and the templated TCP proxy respectively.  To avoid unnecessary delays, clients that have received a "401 (Unauthorized)" response from one templated proxy resource SHOULD apply the authentication request to all resources derived from that template.
+Authentication to a templated TCP proxy normally uses ordinary HTTP authentication via the "401 (Unauthorized)" response code, the "WWW-Authenticate" response header field, and the "Authorization" request header field ({{!RFC9110, Section 11.6}}).  The "407 (Proxy Authentication Required)" response code and related header fields ({{?RFC9110, Section 11.7}}) are not used, because they do not traverse HTTP gateways (see {{operational-considerations}}).  To avoid unnecessary delays, clients that have received a "401 (Unauthorized)" response from one templated proxy resource SHOULD apply the authentication request to all resources derived from that template.
 
 # Additional Connection Setup Behaviors
 
@@ -194,10 +194,12 @@ A small additional risk is posed by the use of a URI Template parser on the clie
 
 Templated TCP proxies can make use of standard HTTP gateways and path-routing to ease implementation and allow use of shared infrastructure.  However, current gateways might need modifications to support TCP proxy services.  To be compatible, a gateway must:
 
-* support Extended CONNECT.
-* convert HTTP/1.1 Upgrade requests into Extended CONNECT.
-* allow the Extended CONNECT method to pass through to the origin.
-* forward Proxy-* request headers to the origin.
+* support Extended CONNECT (if acting as an HTTP/2 or HTTP/3 server)
+  - and forward the "connect-tcp" protocol to the origin.
+* support HTTP/1.1 Upgrade to "connect-tcp" (if acting as an HTTP/1.1 server)
+  - and forward the upgrade request to the origin.
+* convert "connect-tcp" requests between all supported HTTP server and client versions.
+* allow any "Proxy-Status" headers to traverse the gateway.
 
 # IANA Considerations
 
