@@ -194,10 +194,10 @@ A small additional risk is posed by the use of a URI Template parser on the clie
 
 Templated TCP proxies can make use of standard HTTP gateways and path-routing to ease implementation and allow use of shared infrastructure.  However, current gateways might need modifications to support TCP proxy services.  To be compatible, a gateway must:
 
-* support Extended CONNECT (if acting as an HTTP/2 or HTTP/3 server)
-  - and forward the "connect-tcp" protocol to the origin.
+* support Extended CONNECT (if acting as an HTTP/2 or HTTP/3 server).
 * support HTTP/1.1 Upgrade to "connect-tcp" (if acting as an HTTP/1.1 server)
-  - and forward the upgrade request to the origin.
+  - only after forwarding the upgrade request to the origin and observing a success response.
+* forward the "connect-tcp" protocol to the origin.
 * convert "connect-tcp" requests between all supported HTTP server and client versions.
 * allow any "Proxy-Status" headers to traverse the gateway.
 
