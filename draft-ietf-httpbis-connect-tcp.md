@@ -44,7 +44,7 @@ HTTP/3 uses a UDP transport, so it cannot be forwarded using the pre-existing CO
 
 ## Problems
 
-HTTP proxies are usually identified by an "http" or "https" URI ({{?RFC9110, Section 7.3.2}}).  However, HTTP requests using the proxy do not include any information from this URI.  Instead, they only indicate the URI of the request target (i.e., the origin) or, in the case of CONNECT requests, the host and port of the target.  This prevents any HTTP server from hosting multiple distinct proxy services, as the server cannot distinguish them by path (as with distinct resources) or by origin (as in "virtual hosting").
+HTTP clients can be configured to use proxies by selecting a proxy hostname, a port, and whether to use a security protocol. However, CONNECT requests using the proxy do not carry this configuration information. Instead, they only indicate the hostname and port of the target. This prevents any HTTP server from hosting multiple distinct proxy services, as the server cannot distinguish them by path (as with distinct resources) or by origin (as in "virtual hosting").
 
 The absence of an explicit origin for the proxy also rules out the usual defenses against server port misdirection attacks (see {{Section 7.4 of ?RFC9110}}) and creates ambiguity about the use of origin-scoped response header fields (e.g., "Alt-Svc" {{?RFC7838}}, "Strict-Transport-Security" {{?RFC6797}}).
 
