@@ -122,9 +122,11 @@ HEADERS
 ~~~
 {: title="Templated TCP proxy example in HTTP/2"}
 
-## Use of Origin-Scoped Headers
+## Use of Origin-Oriented Headers
 
 A templated TCP proxy has an unambiguous origin of its own.  Origin-scoped HTTP header fields such as "Alt-Svc" {{?RFC7838}} and "Strict-Transport-Security" {{?RFC6797}} apply to this origin when they are associated with a templated TCP proxy request or response.
+
+Authentication to a templated TCP proxy normally uses ordinary HTTP authentication via the "401 (Unauthorized)" response code, the "WWW-Authenticate" response header field, and the "Authorization" request header field ({{!RFC9110, Section 11.6}}).  For example, if the client is accessing the templated TCP proxy via an HTTP request proxy (an unusual but permissible configuration), the client's requests could contain both "Proxy-Authorization" and "Authorization" header fields, authenticating to the request proxy and the templated TCP proxy respectively.  To avoid unnecessary delays, clients that have received a "401 (Unauthorized)" response from one templated proxy resource SHOULD apply the authentication request to all resources derived from that template.
 
 # Additional Connection Setup Behaviors
 
