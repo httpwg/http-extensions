@@ -78,8 +78,6 @@ This specification uses the following terminology from {{STRUCTURED-FIELDS}}: Li
 
 The Cache-Groups HTTP Response Header is a List of Strings {{STRUCTURED-FIELDS}}. Each member of the list is an opaque value that identifies a group that the response belongs to.
 
-For example, an origin server might group all of the assets in a fictional ExampleJS package, so that it can be revalidated and invalidated as a single unit. Additionally, it might group together all scripting assets on the server, so that they can be invalidated together.
-
 ~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/javascript
