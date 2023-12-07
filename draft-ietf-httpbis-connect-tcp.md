@@ -73,16 +73,16 @@ The "target_host" variable MUST be a domain name, an IP address literal, or a li
 In HTTP/1.1, the client uses the proxy by issuing a request as follows:
 
 * The method SHALL be "GET".
-* The request SHALL include a single Host header field containing the origin of the proxy.
-* The request SHALL include a Connection header field with the value "Upgrade".  (Note that this requirement is case-insensitive as per {{Section 7.6.1 of !RFC9110}}.)
+* The request SHALL include a single "Host" header field containing the origin of the proxy.
+* The request SHALL include a "Connection" header field with the value "Upgrade".  (Note that this requirement is case-insensitive as per {{Section 7.6.1 of !RFC9110}}.)
 * The request SHALL include an "Upgrade" header field with the value "connect-tcp".
 * The request's target SHALL correspond to the URI derived from expansion of the proxy's URI Template.
 
 If the request is well-formed and permissible, the proxy MUST attempt the TCP connection before returning its response header.  If the TCP connection is successful, the response SHALL be as follows:
 
-* The HTTP status code SHALL be 101 (Switching Protocols).
-* The response SHALL include a Connection header field with the value "Upgrade".
-* The response SHALL include a single Upgrade header field with the value "connect-tcp".
+* The HTTP status code SHALL be "101 (Switching Protocols)".
+* The response SHALL include a "Connection" header field with the value "Upgrade".
+* The response SHALL include a single "Upgrade" header field with the value "connect-tcp".
 
 If the request is malformed or impermissible, the proxy MUST return a 4XX error code.  If a TCP connection was not established, the proxy MUST NOT switch protocols to "connect-tcp", and the client MAY reuse this connection for additional HTTP requests.
 
@@ -153,7 +153,7 @@ This section discusses some behaviors that are permitted or recommended in order
 
 ## Latency optimizations
 
-When using this specification in HTTP/2 or HTTP/3, clients MAY start sending TCP stream content optimistically, subject to flow control limits ({{Section 5.2 of !RFC9113}} or {{Section 4.1 of !RFC9000}}).  Proxies MUST buffer this "optimistic" content until the TCP stream becomes writable, and discard it if the TCP connection fails.  (This "optimistic" behavior is not permitted in HTTP/1.1 because it would prevent reuse of the connection after an error response such as "407 (Proxy Authentication Required)".)
+When using this specification in HTTP/2 or HTTP/3, clients MAY start sending TCP stream content optimistically, subject to flow control limits ({{Section 5.2 of !RFC9113}} or {{Section 4.1 of !RFC9000}}).  Proxies MUST buffer this "optimistic" content until the TCP stream becomes writable, and discard it if the TCP connection fails.  (This "optimistic" behavior is not permitted in HTTP/1.1 because it would interfere with reuse of the connection after an error response such as "401 (Unauthorized)".)
 
 Servers that host a proxy under this specification MAY offer support for TLS early data in accordance with {{!RFC8470}}.  Clients MAY send "connect-tcp" requests in early data, and MAY include "optimistic" TCP content in early data (in HTTP/2 and HTTP/3).  At the TLS layer, proxies MAY ignore, reject, or accept the `early_data` extension ({{!RFC8446, Section 4.2.10}}).  At the HTTP layer, proxies MAY process the request immediately, return a "425 (Too Early)" response ({{!RFC8470, Section 5.2}}), or delay some or all processing of the request until the handshake completes.  For example, a proxy with limited anti-replay defenses might choose to perform DNS resolution of the `target_host` when a request arrives in early data, but delay the TCP connection until the TLS handshake completes.
 
@@ -161,7 +161,7 @@ Servers that host a proxy under this specification MAY offer support for TLS ear
 
 This specification supports the "Expect: 100-continue" request header ({{?RFC9110, Section 10.1.1}}) in any HTTP version.  The "100 (Continue)" status code confirms receipt of a request at the proxy without waiting for the proxy-destination TCP handshake to succeed or fail.  This might be particularly helpful when the destination host is not responding, as TCP handshakes can hang for several minutes before failing.  Implementation of "100 (Continue)" support is OPTIONAL for clients and REQUIRED for proxies.
 
-Proxies implementing this specification SHOULD include a Proxy-Status response header {{!RFC9209}} in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  In HTTP/2 or HTTP/3, proxies MAY additionally send a Proxy-Status trailer in the event of an unclean shutdown.
+Proxies implementing this specification SHOULD include a "Proxy-Status" response header {{!RFC9209}} in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  In HTTP/2 or HTTP/3, proxies MAY additionally send a "Proxy-Status" trailer in the event of an unclean shutdown.
 
 # Applicability
 
