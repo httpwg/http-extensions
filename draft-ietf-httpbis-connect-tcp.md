@@ -130,9 +130,9 @@ HEADERS
 
 ### Origin-scoped Headers
 
-Ordinary HTTP headers apply only to the single resource identified in the request or response.  An origin-scoped HTTP header is a special response header that applies to all resources on the origin.  Origin-scoped HTTP headers are intended to change the client's behavior for subsequent requests to other resources on this origin.
+Ordinary HTTP headers apply only to the single resource identified in the request or response.  An origin-scoped HTTP header is a special response header that is intended to change the client's behavior for subsequent requests to any resource on this origin.
 
-Unlike classic HTTP CONNECT proxies, a templated TCP proxy has an unambiguous origin of its own.  Origin-scoped headers apply to this origin when they are associated with a templated TCP proxy response.  Some origin-scoped headers that could potentially be sent by a templated TCP proxy include:
+Unlike classic HTTP CONNECT proxies, a templated TCP proxy has an unambiguous origin of its own.  Origin-scoped headers apply to this origin when they are associated with a templated TCP proxy response.  Here are some origin-scoped headers that could potentially be sent by a templated TCP proxy:
 
 * "Alt-Svc" {{?RFC7838}}
 * "Strict-Transport-Security" {{?RFC6797}}
