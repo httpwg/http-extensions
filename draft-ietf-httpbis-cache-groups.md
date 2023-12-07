@@ -50,7 +50,7 @@ This specification introduces a means of describing the relationships between st
 
 # Introduction
 
-HTTP caching {{HTTP-CACHING}} operates at the granularity of a single resource; the freshness of one stored response does not effect that of others. This granularity can make caching more efficient -- for example, when a page is composed of many assets that have different requirements for caching.
+HTTP caching {{HTTP-CACHING}} operates at the granularity of a single resource; the freshness of one stored response does not affect that of others. This granularity can make caching more efficient -- for example, when a page is composed of many assets that have different requirements for caching.
 
 However, there are also cases where the relationship between stored responses could be used to improve cache efficiency.
 
