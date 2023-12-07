@@ -94,7 +94,7 @@ The ordering of members of Cache-Groups is not significant.
 
 Two responses stored in the same cache are considered to have the same group when all of the following conditions are met:
 
-1. They both contain a Cache-Groups response header field that contains the same String in any position, when compared character-by-character.
+1. They both contain a Cache-Groups response header field that contains the same String (in any position in the List), when compared character-by-character.
 2. The both share the same URI origin (per {{Section 4.3.1 of HTTP}}).
 3. If being considered for revalidation ({{revalidation}}), they both have the "revalidate" Parameter.
 
