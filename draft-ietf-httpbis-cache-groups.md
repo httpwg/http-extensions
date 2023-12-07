@@ -40,6 +40,8 @@ normative:
 informative:
   TARGETED: RFC9213
 
+entity:
+  SELF: "RFC nnnn"
 
 --- abstract
 
@@ -134,7 +136,22 @@ A cache that receives a Cache-Group-Invalidation header field on a response to a
 
 # IANA Considerations
 
-_TBD_
+IANA should perform the following tasks:
+
+## HTTP Field Names
+
+Enter the following into the Hypertext Transfer Protocol (HTTP) Field Name Registry:
+
+- Field Name: Cache-Groups
+- Status: permanent
+- Reference: {{&SELF}}
+- Comments:
+
+- Field Name: Cache-Group-Invalidation
+- Status: permanent
+- Reference: {{&SELF}}
+- Comments:
+
 
 # Security Considerations
 
