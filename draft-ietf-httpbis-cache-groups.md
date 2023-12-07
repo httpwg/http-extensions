@@ -133,6 +133,8 @@ The Cache-Group-Invalidation header field MUST be ignored on responses to reques
 
 A cache that receives a Cache-Group-Invalidation header field on a response to an unsafe request MAY invalidate any stored responses that share groups (per {{identify}}) with any of the listed groups.
 
+Cache extensions can explicitly strengthen the requirement above. For example, a targeted cache control header field {{TARGETED}} might specify that caches processing it are required to respect the Cache-Group-Invalidation signal.
+
 
 # IANA Considerations
 
