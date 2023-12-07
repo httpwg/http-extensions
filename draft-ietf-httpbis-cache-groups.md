@@ -129,7 +129,7 @@ Content-Type: text/html
 Cache-Group-Invalidation: "eurovision-results", "kylie-minogue"
 ~~~
 
-The Cache-Group-Invalidation header field MUST be ignored on responses to requests that have a safe method (e.g., GET; see {{Section 9.2.1 of HTTP}}.
+The Cache-Group-Invalidation header field MUST be ignored on responses to requests that have a safe method (e.g., GET; see {{Section 9.2.1 of HTTP}}).
 
 A cache that receives a Cache-Group-Invalidation header field on a response to an unsafe request MAY invalidate any stored responses that share groups (per {{identify}}) with any of the listed groups.
 
