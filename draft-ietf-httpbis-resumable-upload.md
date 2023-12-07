@@ -490,6 +490,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
 
+* Add upload progress notifications via informational responses.
 * Add security consideration regarding request filtering.
 
 ## Since draft-ietf-httpbis-resumable-upload-01
