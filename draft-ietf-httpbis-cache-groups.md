@@ -35,7 +35,7 @@ author:
 normative:
   HTTP: RFC9110
   HTTP-CACHING: RFC9111
-  STRUCTURED-FIELDS: RFC8941
+  STRUCTURED-FIELDS: I-D.ietf-httpbis-sfbis
 
 informative:
   TARGETED: RFC9213
