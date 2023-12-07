@@ -60,7 +60,7 @@ Likewise, when some resources change, it implies that other resources may have a
 
 In addition to sharing revalidation and invalidation events, the relationships indicated by grouping can also be used by caches to optimise their operation; for example, it could be used to inform the operation of cache eviction algorithms.
 
-{{cache-groups}} introduces a means of describing the relationships between stored responses in HTTP caches, "grouping" them by associating a stored response with one or more opaque strings. It also describes how caches can use that information to apply revalidation and invalidation events to members of a group.
+{{cache-groups}} introduces a means of describing the relationships between a set of stored responses in HTTP caches by associating them with one or more opaque strings. It also describes how caches can use that information to apply revalidation and invalidation events to members of a group.
 
 {{cache-group-invalidation}} introduces one new source of such events: a HTTP response header that allows a state-changing response to trigger a group invalidation.
 
