@@ -3,9 +3,9 @@
     "variants": "dict",
     "signature": "dict",
     "signature-input": "dict",
-    "representation-digest": "dict",
+    "repr-digest": "dict",
     "content-digest": "dict",
-    "want-representation-digest": "dict",
+    "want-repr-digest": "dict",
     "want-content-digest": "dict",
 
     "x-dict": "dict",
