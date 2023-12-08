@@ -35,11 +35,13 @@ author:
 normative:
   HTTP: RFC9110
   HTTP-CACHING: RFC9111
-  STRUCTURED-FIELDS: RFC8941
+  STRUCTURED-FIELDS: I-D.ietf-httpbis-sfbis
 
 informative:
   TARGETED: RFC9213
 
+entity:
+  SELF: "RFC nnnn"
 
 --- abstract
 
@@ -50,7 +52,7 @@ This specification introduces a means of describing the relationships between st
 
 # Introduction
 
-HTTP caching {{HTTP-CACHING}} operates at the granularity of a single resource; the freshness of one stored response does not effect that of others. This granularity can make caching more efficient -- for example, when a page is composed of many assets that have different requirements for caching.
+HTTP caching {{HTTP-CACHING}} operates at the granularity of a single resource; the freshness of one stored response does not affect that of others. This granularity can make caching more efficient -- for example, when a page is composed of many assets that have different requirements for caching.
 
 However, there are also cases where the relationship between stored responses could be used to improve cache efficiency.
 
@@ -60,7 +62,7 @@ Likewise, when some resources change, it implies that other resources may have a
 
 In addition to sharing revalidation and invalidation events, the relationships indicated by grouping can also be used by caches to optimise their operation; for example, it could be used to inform the operation of cache eviction algorithms.
 
-{{cache-groups}} introduces a means of describing the relationships between stored responses in HTTP caches, "grouping" them by associating a stored response with one or more opaque strings. It also describes how caches can use that information to apply revalidation and invalidation events to members of a group.
+{{cache-groups}} introduces a means of describing the relationships between a set of stored responses in HTTP caches by associating them with one or more opaque strings. It also describes how caches can use that information to apply revalidation and invalidation events to members of a group.
 
 {{cache-group-invalidation}} introduces one new source of such events: a HTTP response header that allows a state-changing response to trigger a group invalidation.
 
@@ -78,8 +80,6 @@ This specification uses the following terminology from {{STRUCTURED-FIELDS}}: Li
 
 The Cache-Groups HTTP Response Header is a List of Strings {{STRUCTURED-FIELDS}}. Each member of the list is an opaque value that identifies a group that the response belongs to.
 
-For example, an origin server might group all of the assets in a fictional ExampleJS package, so that it can be revalidated and invalidated as a single unit. Additionally, it might group together all scripting assets on the server, so that they can be invalidated together.
-
 ~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/javascript
@@ -96,7 +96,7 @@ The ordering of members of Cache-Groups is not significant.
 
 Two responses stored in the same cache are considered to have the same group when all of the following conditions are met:
 
-1. They both contain a Cache-Groups response header field that contains the same String in any position, when compared character-by-character.
+1. They both contain a Cache-Groups response header field that contains the same String (in any position in the List), when compared character-by-character.
 2. The both share the same URI origin (per {{Section 4.3.1 of HTTP}}).
 3. If being considered for revalidation ({{revalidation}}), they both have the "revalidate" Parameter.
 
@@ -129,18 +129,39 @@ Content-Type: text/html
 Cache-Group-Invalidation: "eurovision-results", "kylie-minogue"
 ~~~
 
-The Cache-Group-Invalidation header field MUST be ignored on responses to requests that have a safe method (e.g., GET; see {{Section 9.2.1 of HTTP}}.
+The Cache-Group-Invalidation header field MUST be ignored on responses to requests that have a safe method (e.g., GET; see {{Section 9.2.1 of HTTP}}).
 
 A cache that receives a Cache-Group-Invalidation header field on a response to an unsafe request MAY invalidate any stored responses that share groups (per {{identify}}) with any of the listed groups.
+
+Cache extensions can explicitly strengthen the requirement above. For example, a targeted cache control header field {{TARGETED}} might specify that caches processing it are required to respect the Cache-Group-Invalidation signal.
 
 
 # IANA Considerations
 
-_TBD_
+IANA should perform the following tasks:
+
+## HTTP Field Names
+
+Enter the following into the Hypertext Transfer Protocol (HTTP) Field Name Registry:
+
+- Field Name: Cache-Groups
+- Status: permanent
+- Reference: {{&SELF}}
+- Comments:
+
+- Field Name: Cache-Group-Invalidation
+- Status: permanent
+- Reference: {{&SELF}}
+- Comments:
+
 
 # Security Considerations
 
-_TBD_
+This mechanism allows resources that share an origin to invalidate each other. Because of this,
+origins that represent multiple parties (sometimes referred to as "shared hosting") might allow
+one party to group its resources with those of others, or to send signals which have side effects upon them -- either invalidating stored responses or extending their lifetime.
+
+Shared hosts that wish to mitigate these risks can control access to the header fields defined in this specification.
 
 
 --- back
