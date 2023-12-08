@@ -157,7 +157,11 @@ Enter the following into the Hypertext Transfer Protocol (HTTP) Field Name Regis
 
 # Security Considerations
 
-_TBD_
+This mechanism allows resources that share an origin to invalidate each other. Because of this,
+origins that represent multiple parties (sometimes referred to as "shared hosting") might allow
+one party to group its resources with those of others, or to send signals which have side effects upon them -- either invalidating stored responses or extending their lifetime.
+
+Shared hosts that wish to mitigate these risks can control access to the header fields defined in this specification.
 
 
 --- back
