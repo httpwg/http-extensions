@@ -63,7 +63,7 @@ HTTP methods such as POST or PUT can be used by clients to request processing of
 
 Connection interruptions are common and the absence of a standard mechanism for resumable uploads has lead to a proliferation of custom solutions. Some of those use HTTP, while others rely on other transfer mechanisms entirely. An HTTP-based standard solution is desirable for such a common class of problem.
 
-This document defines an optional mechanism for HTTP than enables resumable uploads in a way that is backwards-compatible with conventional HTTP uploads. When an upload is interrupted, clients can send subsequent requests to query the server state and use this information to the send remaining data. Alternatively, they can cancel the upload entirely. Different from ranged downloads, this protocol does not support transferring different parts of the same representation in parallel.
+This document defines an optional mechanism for HTTP than enables resumable uploads in a way that is backwards-compatible with conventional HTTP uploads. When an upload is interrupted, clients can send subsequent requests to query the server state and use this information to send the remaining data. Alternatively, they can cancel the upload entirely. Different from ranged downloads, this protocol does not support transferring different parts of the same representation in parallel.
 
 # Conventions and Definitions
 
@@ -208,43 +208,45 @@ If the request completes successfully but the entire upload is not yet complete,
 
 If the request includes an `Upload-Complete` field value set to true and a valid `Content-Length` header field, the client attempts to upload a fixed-length resource in one request. In this case, the upload's final size is the `Content-Length` field value and the server MUST record it to ensure its consistency.
 
-~~~ example
-:method: POST
-:scheme: https
-:authority: example.com
-:path: /upload
-upload-draft-interop-version: 4
-upload-complete: ?1
-content-length: 100
+~~~ http-message
+POST /upload HTTP/1.1
+Host: example.com
+Upload-Draft-Interop-Version: 4
+Upload-Complete: ?1
+Content-Length: 100
+
 [content (100 bytes)]
-
-:status: 104
-upload-draft-interop-version: 4
-location: https://example.com/upload/b530ce8ff
-
-:status: 104
-upload-draft-interop-version: 4
-upload-offset: 50
-
-:status: 201
-location: https://example.com/upload/b530ce8ff
-upload-offset: 100
 ~~~
 
-~~~ example
-:method: POST
-:scheme: https
-:authority: example.com
-:path: /upload
-upload-draft-interop-version: 4
-upload-complete: ?0
-content-length: 25
-[partial content (25 bytes)]
+~~~ http-message
+HTTP/1.1 104 Upload Resumption Supported
+Upload-Draft-Interop-Version: 4
+Location: https://example.com/upload/b530ce8ff
 
-:status: 201
-location: https://example.com/upload/b530ce8ff
-upload-complete: ?0
-upload-offset: 25
+HTTP/1.1 104 Upload Resumption Supported
+Upload-Draft-Interop-Version: 4
+Upload-Offset: 50
+
+HTTP/1.1 201 Created
+Location: https://example.com/upload/b530ce8ff
+Upload-Offset: 100
+~~~
+
+~~~ http-message
+POST /upload HTTP/1.1
+Host: example.com
+Upload-Draft-Interop-Version: 4
+Upload-Complete: ?0
+Content-Length: 25
+
+[partial content (25 bytes)]
+~~~
+
+~~~ http-message
+HTTP/1.1 201 Created
+Location: https://example.com/upload/b530ce8ff
+Upload-Complete: ?0
+Upload-Offset: 25
 ~~~
 
 If the client received an informational response with the upload URL in the Location field value, it MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status is received. The client SHOULD NOT automatically retry if it receives a 4xx status code.
@@ -297,17 +299,17 @@ If the server does not consider the upload resource to be active, it MUST respon
 
 The resumption offset can be less than or equal to the number of bytes the client has already sent. The client MAY reject an offset which is greater than the number of bytes it has already sent during this upload. The client is expected to handle backtracking of a reasonable length. If the offset is invalid for this upload, or if the client cannot backtrack to the offset and reproduce the same content it has already sent, the upload MUST be considered a failure. The client MAY cancel the upload ({{upload-cancellation}}) after rejecting the offset.
 
+~~~ http-message
+HEAD /upload/b530ce8ff HTTP/1.1
+Host: example.com
+Upload-Draft-Interop-Version: 4
 ~~~
-:method: HEAD
-:scheme: https
-:authority: example.com
-:path: /upload/b530ce8ff
-upload-draft-interop-version: 4
 
-:status: 204
-upload-offset: 100
-upload-complete: ?0
-cache-control: no-store
+~~~ http-message
+HTTP/1.1 204 No Content
+Upload-Offset: 100
+Upload-Complete: ?0
+Cache-Control: no-store
 ~~~
 
 The client SHOULD NOT automatically retry if a client error status code between 400 and 499 (inclusive) is received.
@@ -338,18 +340,19 @@ If the request completes successfully but the entire upload is not yet complete 
 
 If the request includes the `Upload-Complete` field value set to true  and a valid `Content-Length` header field, the client attempts to upload the remaining resource in one request. In this case, the upload's final size is the sum of the upload's offset and the `Content-Length` header field. If the server does not have a record of the upload's final size from creation or the previous append, the server MUST record the upload's final size to ensure its consistency. If the server does have a previous record, that value MUST match the upload's final size. If they do not match, the server MUST reject the request with a `400 (Bad Request)` status code.
 
-~~~ example
-:method: PATCH
-:scheme: https
-:authority: example.com
-:path: /upload/b530ce8ff
-upload-offset: 100
-upload-draft-interop-version: 4
-content-length: 100
-[content (100 bytes)]
+~~~ http-message
+PATCH /upload/b530ce8ff HTTP/1.1
+Host: example.com
+Upload-Offset: 100
+Upload-Draft-Interop-Version: 4
+Content-Length: 100
 
-:status: 201
-upload-offset: 200
+[content (100 bytes)]
+~~~
+
+~~~ http-message
+HTTP/1.1 201 Created
+Upload-Offset: 200
 ~~~
 
 The client MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a server error status code between 500 and 599 (inclusive) is received. The client SHOULD NOT automatically retry if a client error status code between 400 and 499 (inclusive) is received.
@@ -370,16 +373,15 @@ If the server does not consider the upload resource to be active, it MUST respon
 
 If the server does not support cancellation, it MUST respond with a `405 (Method Not Allowed)` status code.
 
-~~~ example
-:method: DELETE
-:scheme: https
-:authority: example.com
-:path: /upload/b530ce8ff
-upload-draft-interop-version: 4
-
-:status: 204
+~~~ http-message
+DELETE /upload/b530ce8ff HTTP/1.1
+Host: example.com
+Upload-Draft-Interop-Version: 4
 ~~~
 
+~~~ http-message
+HTTP/1.1 204 No Content
+~~~
 
 # Header Fields
 
@@ -392,7 +394,7 @@ The `Upload-Offset` request and response header field indicates the resumption o
 
 The `Upload-Complete` request and response header field indicates whether the corresponding upload is considered complete. The `Upload-Complete` field value is a Boolean.
 
-The `Upload-Complete` header field MUST only by used if support by the resource is known to the client ({{feature-detection}}).
+The `Upload-Complete` header field MUST only be used if support by the resource is known to the client ({{feature-detection}}).
 
 # Redirection
 
@@ -488,6 +490,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
 
+* Add upload progress notifications via informational responses.
 * Add security consideration regarding request filtering.
 
 ## Since draft-ietf-httpbis-resumable-upload-01

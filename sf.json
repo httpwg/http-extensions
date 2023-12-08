@@ -7,6 +7,9 @@
     "content-digest": "dict",
     "want-repr-digest": "dict",
     "want-content-digest": "dict",
+    "upload-offset": "item",
+    "upload-complete": "item",
+    "upload-draft-interop-version": "item",
 
     "x-dict": "dict",
     "x-list": "list",
