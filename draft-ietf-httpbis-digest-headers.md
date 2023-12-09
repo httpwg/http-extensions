@@ -240,7 +240,7 @@ Hashing algorithm names respect the casing used in their definition document (e.
 HTTP messages indicate hashing algorithms using an Algorithm Key ({{{algorithms}}}).
 Where the document refers to an Algorithm Key in prose, it is quoted (e.g., "sha", "crc32c").
 
-The term "checksum" describes the output of the application of an algorithm
+The term "checksum" describes the output of applying an algorithm
 to a sequence of bytes,
 whereas "digest" is only used in relation to the value contained in the fields.
 
