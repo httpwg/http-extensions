@@ -360,8 +360,8 @@ The security considerations cover some of the issues related to
 ignoring digests (see {{sec-agility}})
 and validating multiple digests (see {{sec-exhaustion}}).
 
-A sender MAY send a digest without knowing whether the
-recipient supports a given hashing algorithm, or even knowing that the recipient
+A sender MAY send a digest without knowing whether the recipient supports a
+given hashing algorithm. A sender MAY send a digest if it knows the recipient
 will ignore it.
 
 `Repr-Digest` can be sent in a trailer section.
