@@ -221,7 +221,7 @@ have names that more clearly articulate the intended usages.
 {::boilerplate bcp14-tagged}
 
 This document uses the Augmented BNF defined in [RFC5234] and updated by
-[RFC7405]. This includes the rules: CR (carriage
+[RFC7405]. This includes the rules CR (carriage
 return), LF (line feed), and CRLF (CR LF).
 
 This document uses the following terminology from {{Section 3 of
