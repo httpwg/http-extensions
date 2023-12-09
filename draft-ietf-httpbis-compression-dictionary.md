@@ -98,7 +98,7 @@ for an invalid pattern that MUST NOT be used:
 1. Let MATCH be the value of "match" for the given dictionary.
 1. Let URL be the URL of the dictionary request.
 1. Let PATTERN be a URLPattern constructed by setting input=MATCH,
-and baseURL=BASEURL (https://urlpattern.spec.whatwg.org/).
+and baseURL=URL (https://urlpattern.spec.whatwg.org/).
 1. If PATTERN has regexp groups then return FALSE
 (https://urlpattern.spec.whatwg.org/#urlpattern-has-regexp-groups).
 1. Return True.
@@ -243,7 +243,7 @@ algorithm will return TRUE for a successful match and FALSE for no-match:
     * If DEST is not an empty string and If DEST and REQUEST_DEST are not the
     same value, return FALSE
 1. Let BASEURL be the URL of the dictionary request.
-1. LET URL represent the URL of the outbound request being checked.
+1. Let URL represent the URL of the outbound request being checked.
 1. If the {Origin} of BASEURL and the {Origin} of URL are not the same, return
 FALSE.
 1. Let MATCH be the value of "match" for the given dictionary.
@@ -261,7 +261,7 @@ and matches a "match-dest" takes precedence over a match that does not use a
 destination.
 1. Given equivalent destination precedence, the dictionary with the longest
 "match" takes precedence.
-1. Given equivalent destination, path and search precedence, the most recently
+1. Given equivalent destination and match length precedence, the most recently
 fetched dictionary takes precedence.
 
 ## Dictionary-ID
