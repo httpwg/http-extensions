@@ -535,8 +535,7 @@ certain kinds of corruption.
 Integrity fields are not intended to be a general protection against malicious tampering with
 HTTP messages.
 In the absence of additional security mechanisms,
-an on-path, malicious actor can remove or recalculate and substitute a digest
-value.
+an on-path malicious actor can either remove a digest value entirely or substitute it with a new digest value computed over manipulated representation data or content.
 This attack can be mitigated by combining mechanisms described in this
 document with other approaches such
 as transport-layer security or digital signatures (for example, HTTP Message
