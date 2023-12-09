@@ -168,7 +168,7 @@ computed by applying a hashing algorithm to selected representation data
 representation makes it straightforward to apply it to use cases where the
 message content requires some sort of manipulation to be considered as
 representation of the resource or content conveys a partial representation of a resource,
-such as Range Requests (see {{Section 14 of RFC9110}}).
+such as range requests (see {{Section 14 of RFC9110}}).
 
 `Content-Digest` and `Repr-Digest` support hashing algorithm agility.
 The `Want-Content-Digest` and `Want-Repr-Digest` fields allow
@@ -311,7 +311,7 @@ communicate digests that are calculated using a hashing algorithm applied to
 the entire selected representation data (see {{Section 8.1 of RFC9110}}).
 
 Representations take into account the effect of the HTTP semantics on
-messages. For example, the content can be affected by Range Requests or methods,
+messages. For example, the content can be affected by range requests or methods,
 such as HEAD, while the way the content is transferred "on the wire" is
 dependent on other transformations (e.g., transfer codings for HTTP/1.1; see
 {{Section 6.1 of RFC9112}}). To help illustrate HTTP representation concepts,
