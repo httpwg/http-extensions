@@ -196,9 +196,10 @@ This specification does not define means for authentication, authorization, or p
 ## Obsoleting RFC 3230 {#obsolete-3230}
 
 [RFC3230] defined the `Digest` and `Want-Digest` HTTP fields for HTTP integrity.
-It also coined the term "instance" and "instance manipulation" in order to
-explain concepts that are now more universally defined, and implemented, as HTTP
-semantics such as selected representation data ({{Section 8.1 of RFC9110}}).
+It also coined the terms "instance" and "instance manipulation" in order to
+explain concepts, such as selected representation data ({{Section 8.1 of
+RFC9110}}), that are now more universally defined and implemented as HTTP
+semantics.
 
 Experience has shown that implementations of [RFC3230] have interpreted the
 meaning of "instance" inconsistently, leading to interoperability issues. The
