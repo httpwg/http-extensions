@@ -538,7 +538,7 @@ In the absence of additional security mechanisms,
 an on-path malicious actor can either remove a digest value entirely or substitute it with a new digest value computed over manipulated representation data or content.
 This attack can be mitigated by combining mechanisms described in this
 document with other approaches such
-as transport-layer security or digital signatures (for example, HTTP Message
+as Transport Layer Security (TLS) or digital signatures (for example, HTTP Message
 Signatures {{SIGNATURES}}).
 
 ## End-to-End Integrity
