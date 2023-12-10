@@ -512,7 +512,7 @@ should use the following template:
 When reviewing registration requests, the designated expert(s) should pay
 attention to the requested status. The status value should reflect
 standardization status and the broad opinion of relevant interest groups such as
-the IETF or security-related Standards Development Organizations SDOs. The "Active" status is not suitable for an
+the IETF or security-related Standards Development Organizations (SDOs). The "Active" status is not suitable for an
 algorithm that is known to be weak, broken, or experimental. If a registration
 request attempts to register such an algorithm as "Active", the designated
 expert(s) should suggest an alternative status of "Deprecated" or "Provisional".
