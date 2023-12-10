@@ -652,17 +652,17 @@ IANA has updated the
 "Hypertext Transfer Protocol (HTTP) Field Name Registry"
 ({{RFC9110}}) as shown in the table below:
 
-|---------------------|-----------|-----------------------------------------------|
-| Field Name          | Status    |                     Reference                 |
-|---------------------|-----------|-----------------------------------------------|
-| Content-Digest      | permanent | {{content-digest}} of RFC 9530                |
-| Repr-Digest         | permanent | {{representation-digest}} of RFC 9530         |
-| Want-Content-Digest | permanent | {{want-fields}} of RFC 9530                   |
-| Want-Repr-Digest    | permanent | {{want-fields}} of RFC 9530                   |
-| Digest              | obsoleted | {{RFC3230}}, {{obsolete-3230}} RFC 9530         |
-| Want-Digest         | obsoleted | {{RFC3230}}, {{obsolete-3230}} RFC 9530         |
-|---------------------|-----------|-----------------------------------------------|
-
+|---------------------|-----------|------------------------------------------|
+| Field Name          | Status    |                     Reference            |
+|---------------------|-----------|------------------------------------------|
+| Content-Digest      | permanent | {{content-digest}} of RFC 9530           |
+| Repr-Digest         | permanent | {{representation-digest}} of RFC 9530    |
+| Want-Content-Digest | permanent | {{want-fields}} of RFC 9530              |
+| Want-Repr-Digest    | permanent | {{want-fields}} of RFC 9530              |
+| Digest              | obsoleted | {{RFC3230}}, {{obsolete-3230}} RFC 9530  |
+| Want-Digest         | obsoleted | {{RFC3230}}, {{obsolete-3230}} RFC 9530  |
+|---------------------|-----------|------------------------------------------|
+{: #iana-field-name-table title="Hypertext Transfer Protocol (HTTP) Field Name Registry Update"}
 
 ## Creation of the Hash Algorithms for HTTP Digest Fields Registry {#establish-hash-algorithm-registry}
 
@@ -674,14 +674,14 @@ new registrations is provided in {{algorithms}}.
 | -------------- | -------- | ----------------------------------- | -------------- |
 | Algorithm Key  | Status   | Description                         | Reference   |
 | -------------- | -------- | ----------------------------------- | --------- |
-| sha-512        | Active | The SHA-512 algorithm.              | [RFC6234], [RFC4648], RFC 9530. |
-| sha-256        | Active | The SHA-256 algorithm.              | [RFC6234], [RFC4648],  RFC 9530. |
-| md5            | Deprecated | The MD5 algorithm. It is vulnerable to collision attacks; see {{NO-MD5}} and [CMU-836068] | [RFC1321], [RFC4648],  RFC 9530. |
-| sha            | Deprecated | The SHA-1 algorithm. It is vulnerable to collision attacks; see {{NO-SHA}} and [IACR-2020-014] | [RFC3174], [RFC4648], [RFC6234],  RFC 9530. |
-| unixsum        | Deprecated | The algorithm used by the UNIX "sum" command. | [RFC4648], [RFC6234], [UNIX],  RFC 9530. |
-| unixcksum      | Deprecated | The algorithm used by the UNIX "cksum" command. | [RFC4648], [RFC6234], [UNIX],  RFC 9530. |
-| adler          | Deprecated | The ADLER32 algorithm.                          | [RFC1950],  RFC 9530. |
-| crc32c         | Deprecated | The CRC32c algorithm.                           | {{?RFC9260}} appendix A,  RFC 9530. |
+| sha-512        | Active | The SHA-512 algorithm.              | [RFC6234], [RFC4648], RFC 9530 |
+| sha-256        | Active | The SHA-256 algorithm.              | [RFC6234], [RFC4648],  RFC 9530 |
+| md5            | Deprecated | The MD5 algorithm. It is vulnerable to collision attacks; see {{NO-MD5}} and [CMU-836068] | [RFC1321], [RFC4648],  RFC 9530 |
+| sha            | Deprecated | The SHA-1 algorithm. It is vulnerable to collision attacks; see {{NO-SHA}} and [IACR-2020-014] | [RFC3174], [RFC4648], [RFC6234],  RFC 9530 |
+| unixsum        | Deprecated | The algorithm used by the UNIX "sum" command. | [RFC4648], [RFC6234], [UNIX],  RFC 9530 |
+| unixcksum      | Deprecated | The algorithm used by the UNIX "cksum" command. | [RFC4648], [RFC6234], [UNIX],  RFC 9530 |
+| adler          | Deprecated | The ADLER32 algorithm.                          | [RFC1950],  RFC 9530 |
+| crc32c         | Deprecated | The CRC32c algorithm.                           | Appendix A of {{?RFC9260}},  RFC 9530 |
 | -------------- | -------- | ----------------------------------- | -------------- |
 {: #iana-hash-algorithm-table title="Initial Hash Algorithms"}
 
@@ -689,7 +689,7 @@ new registrations is provided in {{algorithms}}.
 
 IANA has deprecated the "Hypertext Transfer Protocol (HTTP) Digest
 Algorithm Values" registry at
-\<https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml\> and replaced the note on that registry with the following text:
+\<https://www.iana.org/assignments/http-dig-alg\> and replaced the note on that registry with the following text:
 
 
 > This registry is deprecated since it lists the algorithms that can be used
