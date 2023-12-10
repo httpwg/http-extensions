@@ -649,7 +649,7 @@ leaves the possibility of a downgrade attack (see {{sec-agility}}).
 ## HTTP Field Name Registration
 
 IANA has updated the
-"Hypertext Transfer Protocol (HTTP) Field Name Registry" registry
+"Hypertext Transfer Protocol (HTTP) Field Name Registry"
 ({{RFC9110}}) as shown in the table below:
 
 |---------------------|-----------|-----------------------------------------------|
