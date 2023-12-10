@@ -1349,7 +1349,7 @@ Repr-Digest: \
 {{ex-server-selects-unsupported-algorithm}} is an example where a server ignores
 the client's preferred digest algorithm.
 Alternatively, a server can also reject
-the request and return a response with
+the request and return a response with an
 error status code such as 4xx or 5xx.
 This specification does not prescribe
 any requirement on status code selection;
