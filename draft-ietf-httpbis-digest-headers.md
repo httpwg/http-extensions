@@ -584,8 +584,8 @@ result of accident or purposeful manipulation. The opposite scenario is also
 supported; including an Integrity field for content and signing it can help a
 recipient detect where the content was removed.
 
-Any mangling of Integrity fields, including digests' de-duplication
-or combining different field values (see {{Section 5.2 of RFC9110}})
+Any mangling of Integrity fields, including the digests' de-duplication
+or combination of different field values (see {{Section 5.2 of RFC9110}}),
 might affect signature validation.
 
 ## Usage in Trailer Fields
