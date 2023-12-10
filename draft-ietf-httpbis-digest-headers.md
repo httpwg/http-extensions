@@ -1220,7 +1220,7 @@ target resource. Instead, it refers to the representation of the error.
 In the following example, a client sends the same request from {{fig-patch}} to
 patch the resource located at /books/123. However, the resource does not exist
 and the server generates a 404 response with a body that describes the error in
-accordance with {{?RFC7807}}.
+accordance with {{?RFC9457}}.
 
 The response `Repr-Digest` field-value is computed on this enclosed representation.
 It is a multiline JSON object followed by an LF.
