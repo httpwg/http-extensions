@@ -954,7 +954,7 @@ Repr-Digest: \
 In the response message above, note that the
 `Repr-Digest` and `Content-Digests` are different.
 The `Repr-Digest` field-value is calculated across the entire JSON object
-`{"hello": "world"}` followed by an LF, and the field is
+`{"hello": "world"}` followed by an LF, and the field appears as follows:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
