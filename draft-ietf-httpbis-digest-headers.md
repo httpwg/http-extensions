@@ -1026,7 +1026,7 @@ is the JSON object `{"hello": "world"}` followed by an LF.
 
 The response `Repr-Digest` field-value
 depends on the representation metadata header fields, including
-`Content-Encoding: br` even when the response does not contain content.
+`Content-Encoding: br`, even when the response does not contain content.
 
 
 ~~~ http-message
@@ -1245,7 +1245,7 @@ while streaming content and thus mitigate resource consumption.
 The `Repr-Digest` field-value is the same as in {{example-full-representation}} because `Repr-Digest` is designed to
 be independent of the use of one or more transfer codings (see {{representation-digest}}).
 
-In the response content below, the string "\r\n" represents the bytes CRLF.
+In the response content below, the string "\r\n" represents the CRLF bytes.
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
