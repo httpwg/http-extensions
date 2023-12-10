@@ -169,7 +169,7 @@ computed by applying a hashing algorithm to selected representation data
 ({{Section 8.1 of RFC9110}}). Basing `Repr-Digest` on the selected
 representation makes it straightforward to apply it to use cases where the
 message content requires some sort of manipulation to be considered as
-representation of the resource or content conveys a partial representation of a resource,
+representation of the resource or the content conveys a partial representation of a resource,
 such as range requests (see {{Section 14 of RFC9110}}).
 
 `Content-Digest` and `Repr-Digest` support hashing algorithm agility.
