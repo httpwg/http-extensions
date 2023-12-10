@@ -634,7 +634,7 @@ it does not prevent the use of weaker algorithms.
 Integrity fields do not provide any mitigations for downgrade or substitution
 attacks (see Section 1 of {{?RFC6211}}) of the hashing algorithm.
 To protect against such attacks, endpoints could restrict their set of supported algorithms
-to stronger ones and protect the fields' value by using TLS and/or digital signatures.
+to stronger ones and protect the fields' values by using TLS and/or digital signatures.
 
 ## Resource Exhaustion {#sec-exhaustion}
 
