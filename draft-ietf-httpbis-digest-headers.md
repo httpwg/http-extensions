@@ -2,11 +2,13 @@
 title: Digest Fields
 docname: draft-ietf-httpbis-digest-headers-latest
 category: std
+number: 9530
 obsoletes: 3230
+submissionType: IETF
 
 ipr: trust200902
-area: Applications and Real-Time
-workgroup: HTTP
+area: art
+workgroup: httpbis
 keyword: Digest
 
 stand_alone: yes
