@@ -1357,7 +1357,7 @@ the following example illustrates one possible
 option.
 
 In this example, the client requests a "sha" `Repr-Digest`, and the server returns an
-error with problem details {{?RFC7807}} contained in the content. The problem
+error with problem details {{?RFC9457}} contained in the content. The problem
 details contain a list of the hashing algorithms that the server supports. This
 is purely an example; this specification does not define any format or
 requirements for such content.
