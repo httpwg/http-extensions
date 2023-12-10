@@ -475,7 +475,7 @@ Algorithms with a status value of "Active" are suitable for many purposes and
 it is RECOMMENDED that applications use these algorithms. These can be used in
 adversarial situations where hash functions might need to provide resistance to
 collision, first-preimage, and second-preimage attacks. For adversarial
-situations, selecting which of the "Active" algorithms are acceptable will
+situations, selection of the acceptable "Active" will
 depend on the level of protection the circumstances demand.
 More considerations are presented in {{sec-agility}}.
 
@@ -484,9 +484,9 @@ properties or are known to be weak (see {{NO-MD5}} and {{NO-SHA}}). These
 algorithms MAY be used to preserve integrity against corruption, but MUST NOT be
 used in a potentially adversarial setting, for example, when signing Integrity
 fields' values for authenticity. Permitting the use of these algorithms can help
-some applications, for example, those that previously used [RFC3230], are
+some applications (such as those that previously used [RFC3230], are
 migrating to this specification ({{migrating}}), and have existing stored
-collections of computed digest values avoid undue operational overhead caused by
+collections of computed digest values) avoid undue operational overhead caused by
 recomputation using other more-secure algorithms. Such applications are not
 exempt from the requirements in this section. Furthermore, applications without
 such legacy or history ought to follow the guidance for using algorithms with
