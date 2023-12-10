@@ -609,7 +609,7 @@ This means the complete data needs to be available, which means there is
 negligible processing difference in sending an Integrity field in a header versus a
 trailer section.
 
-## Variations within Content Encoding
+## Variations within Content-Encoding
 
 Content coding mechanisms can support different encoding parameters, meaning that the same input content can produce different outputs. For example, GZIP supports multiple compression levels. Such encoding parameters are generally not communicated as representation metadata. For instance, different compression levels would all use the same "Content-Encoding: gzip" field. Other examples include where encoding relies on nonces or timestamps, such as the aes128gcm content coding defined in {{?RFC8188}}.
 
