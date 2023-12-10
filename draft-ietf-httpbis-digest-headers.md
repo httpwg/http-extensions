@@ -420,11 +420,9 @@ requests and responses.
 
 `Want-Content-Digest` indicates that the sender would like to receive (via the
 Content-Digest field) a content digest on messages associated with the request
-URI and representation metadata.
-
-`Want-Repr-Digest` indicates that the sender would like to receive (via the
-Repr-Digest field) a representation digest on messages associated with the
-request URI and representation metadata.
+URI and representation metadata. `Want-Repr-Digest` indicates that the sender
+would like to receive (via the Repr-Digest field) a representation digest on
+messages associated with the request URI and representation metadata.
 
 If `Want-Content-Digest` or `Want-Repr-Digest` are used in a response, it
 indicates that the server would like the client to provide the respective
