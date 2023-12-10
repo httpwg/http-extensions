@@ -1286,7 +1286,7 @@ Some examples include JSON objects in the content.
 For presentation purposes, objects that fit completely within the line-length limits
 are presented on a single line using compact notation with no leading space.
 Objects that would exceed line-length limits are presented across multiple lines
-(one line per key-value pair) with 2 spaces of leading indentation.
+(one line per key-value pair) with two spaces of leading indentation.
 
 Checksum mechanisms described in this document are media-type agnostic
 and do not provide canonicalization algorithms for specific formats.
