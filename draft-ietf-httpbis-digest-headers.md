@@ -728,7 +728,7 @@ Content-Length: 19
 {: title="Request Containing a JSON Object without Any Content Coding"}
 
 However, the use of content coding is quite common. The client could also upload
-the same data with a gzip coding ({{Section 8.4.1.3 of RFC9110}}). Note that in
+the same data with a GZIP coding ({{Section 8.4.1.3 of RFC9110}}). Note that in
 this case, the `Content-Length` contains a larger value due to the coding
 overheads.
 
@@ -744,9 +744,9 @@ AB 56 CA 48 CD C9 C9 57 B2 52
 50 2A CF 2F CA 49 51 AA E5 02
 00 D9 E4 31 E7 13 00 00 00
 ~~~
-{: title="Request Containing a gzip-Encoded JSON Object" #ex-put-gz}
+{: title="Request Containing a GZIP-Encoded JSON Object" #ex-put-gz}
 
-Sending the gzip coded data without indicating it via `Content-Encoding` means
+Sending the GZIP coded data without indicating it via `Content-Encoding` means
 that the content is malformed. In this case, the server can reply with an error.
 
 ~~~ http-message
@@ -784,7 +784,7 @@ Range: bytes=1-7
 {: title="Request for Partial Content"}
 
 The server satisfies the client request by responding with a partial
-representation (equivalent to the first 10 of the JSON object displayed in whole
+representation (equivalent to the first 10 bytes of the JSON object displayed in whole
 in {{ex-put-gz}}).
 
 ~~~ http-message
