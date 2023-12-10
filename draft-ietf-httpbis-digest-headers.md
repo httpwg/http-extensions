@@ -706,7 +706,7 @@ instead.
 # Resource Representation and Representation Data {#resource-representation}
 
 The following examples show how representation metadata, content
-transformations, and method impact the message and content. These examples a
+transformations, and methods impact the message and content. These examples a
 not exhaustive.
 
 Unless otherwise indicated, the examples are based on the JSON object `{"hello":
