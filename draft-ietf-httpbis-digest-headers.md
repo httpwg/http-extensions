@@ -180,7 +180,7 @@ respectively, and to express algorithm preferences in either.
 `Content-Digest` and `Repr-Digest` are collectively termed
 "Integrity fields".
 `Want-Content-Digest` and `Want-Repr-Digest` are
-collectively termed "Integrity preference" fields.
+collectively termed "Integrity preference fields".
 
 Integrity fields are tied to the `Content-Encoding`
 and `Content-Type` header fields. Therefore, a given resource may have multiple
