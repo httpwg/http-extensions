@@ -415,7 +415,7 @@ An example is given in {{post-not-request-uri}}.
 
 Senders can indicate their interest in Integrity fields and hashing algorithm
 preferences using the
-`Want-Content-Digest` or `Want-Repr-Digest` fields. These can be used in both
+`Want-Content-Digest` or `Want-Repr-Digest` HTTP fields. These can be used in both
 requests and responses.
 
 `Want-Content-Digest` indicates that the sender would like to receive (via the
