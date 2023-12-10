@@ -197,24 +197,24 @@ This specification does not define means for authentication, authorization, or p
 
 ## Obsoleting RFC 3230 {#obsolete-3230}
 
-[RFC3230] defined the `Digest` and `Want-Digest` HTTP fields for HTTP integrity.
+{{RFC3230}} defined the `Digest` and `Want-Digest` HTTP fields for HTTP integrity.
 It also coined the terms "instance" and "instance manipulation" in order to
 explain concepts, such as selected representation data ({{Section 8.1 of
 RFC9110}}), that are now more universally defined and implemented as HTTP
 semantics.
 
-Experience has shown that implementations of [RFC3230] have interpreted the
+Experience has shown that implementations of {{RFC3230}} have interpreted the
 meaning of "instance" inconsistently, leading to interoperability issues. The
 most common issue relates to the mistake of calculating the digest using (what
 we now call) message content, rather than using (what we now call)
 representation data as was originally intended. Interestingly, time has also
 shown that a digest of message content can be beneficial for some use cases, so
-it is difficult to detect if non-conformance to [RFC3230] is intentional or
+it is difficult to detect if non-conformance to {{RFC3230}} is intentional or
 unintentional.
 
 In order to address potential inconsistencies and ambiguity across
 implementations of `Digest` and `Want-Digest`, this document obsoletes
-[RFC3230]. The Integrity fields (Sections {{<content-digest}} and
+{{RFC3230}}. The Integrity fields (Sections {{<content-digest}} and
 {{<representation-digest}}) and Integrity preference fields ({{want-fields}})
 defined in this document are better aligned with current HTTP semantics and
 have names that more clearly articulate the intended usages.
@@ -223,8 +223,8 @@ have names that more clearly articulate the intended usages.
 ## Notational Conventions
 {::boilerplate bcp14-tagged}
 
-This document uses the Augmented BNF defined in [RFC5234] and updated by
-[RFC7405]. This includes the rules CR (carriage
+This document uses the Augmented BNF defined in {{RFC5234}} and updated by
+{{RFC7405}}. This includes the rules CR (carriage
 return), LF (line feed), and CRLF (CR LF).
 
 This document uses the following terminology from {{Section 3 of
@@ -236,7 +236,7 @@ data", "representation metadata", "user agent", and "content" in this document a
 interpreted as described in {{RFC9110}}.
 
 This document uses the line folding strategies
-described in [FOLDING].
+described in {{FOLDING}}.
 
 Hashing algorithm names respect the casing used in their definition document (e.g., SHA-1, CRC32c).
 
@@ -484,7 +484,7 @@ properties or are known to be weak (see {{NO-MD5}} and {{NO-SHA}}). These
 algorithms MAY be used to preserve integrity against corruption, but MUST NOT be
 used in a potentially adversarial setting, for example, when signing Integrity
 fields' values for authenticity. Permitting the use of these algorithms can help
-some applications (such as those that previously used [RFC3230], are
+some applications (such as those that previously used {{RFC3230}}, are
 migrating to this specification ({{migrating}}), and have existing stored
 collections of computed digest values) avoid undue operational overhead caused by
 recomputation using other more-secure algorithms. Such applications are not
@@ -558,7 +558,7 @@ metadata are discussed in {{usage-in-signatures}}.
 ## Usage in Signatures {#usage-in-signatures}
 
 Digital signatures are widely used together with checksums to provide the
-certain identification of the origin of a message [NIST800-32]. Such signatures
+certain identification of the origin of a message {{NIST800-32}}. Such signatures
 can protect one or more HTTP fields and there are additional considerations when
 Integrity fields are included in this set.
 
@@ -674,13 +674,13 @@ new registrations is provided in {{algorithms}}.
 | -------------- | -------- | ----------------------------------- | -------------- |
 | Algorithm Key  | Status   | Description                         | Reference   |
 | -------------- | -------- | ----------------------------------- | --------- |
-| sha-512        | Active | The SHA-512 algorithm.              | [RFC6234], [RFC4648], RFC 9530 |
-| sha-256        | Active | The SHA-256 algorithm.              | [RFC6234], [RFC4648],  RFC 9530 |
-| md5            | Deprecated | The MD5 algorithm. It is vulnerable to collision attacks; see {{NO-MD5}} and [CMU-836068] | [RFC1321], [RFC4648],  RFC 9530 |
-| sha            | Deprecated | The SHA-1 algorithm. It is vulnerable to collision attacks; see {{NO-SHA}} and [IACR-2020-014] | [RFC3174], [RFC4648], [RFC6234],  RFC 9530 |
-| unixsum        | Deprecated | The algorithm used by the UNIX "sum" command. | [RFC4648], [RFC6234], [UNIX],  RFC 9530 |
-| unixcksum      | Deprecated | The algorithm used by the UNIX "cksum" command. | [RFC4648], [RFC6234], [UNIX],  RFC 9530 |
-| adler          | Deprecated | The ADLER32 algorithm.                          | [RFC1950],  RFC 9530 |
+| sha-512        | Active | The SHA-512 algorithm.              | {{RFC6234}}, {{RFC4648}}, RFC 9530 |
+| sha-256        | Active | The SHA-256 algorithm.              | {{RFC6234}}, {{RFC4648}},  RFC 9530 |
+| md5            | Deprecated | The MD5 algorithm. It is vulnerable to collision attacks; see {{NO-MD5}} and {{CMU-836068}} | {{RFC1321}}, {{RFC4648}},  RFC 9530 |
+| sha            | Deprecated | The SHA-1 algorithm. It is vulnerable to collision attacks; see {{NO-SHA}} and {{IACR-2020-014}} | {{RFC3174}}, {{RFC4648}}, {{RFC6234}},  RFC 9530 |
+| unixsum        | Deprecated | The algorithm used by the UNIX "sum" command. | {{RFC4648}}, {{RFC6234}}, {{UNIX}},  RFC 9530 |
+| unixcksum      | Deprecated | The algorithm used by the UNIX "cksum" command. | {{RFC4648}}, {{RFC6234}}, {{UNIX}},  RFC 9530 |
+| adler          | Deprecated | The ADLER32 algorithm.                          | {{RFC1950}},  RFC 9530 |
 | crc32c         | Deprecated | The CRC32c algorithm.                           | Appendix A of {{?RFC9260}},  RFC 9530 |
 | -------------- | -------- | ----------------------------------- | -------------- |
 {: #iana-hash-algorithm-table title="Initial Hash Algorithms"}
@@ -1445,7 +1445,7 @@ use only a single encoding format. Further explanation and examples are provided
 {:numbered="false"}
 This document is based on ideas from {{RFC3230}}, so thanks
 to Jeff Mogul and Arthur Van Hoff for their great work.
-The original idea of refreshing RFC3230 arose from an interesting
+The original idea of refreshing {{RFC3230}} arose from an interesting
 discussion with Mark Nottingham, Jeffrey Yasskin, and Martin Thomson when reviewing
 the MICE content coding.
 
