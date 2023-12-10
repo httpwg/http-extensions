@@ -475,7 +475,7 @@ Algorithms with a status value of "Active" are suitable for many purposes and
 it is RECOMMENDED that applications use these algorithms. These can be used in
 adversarial situations where hash functions might need to provide resistance to
 collision, first-preimage, and second-preimage attacks. For adversarial
-situations, selection of the acceptable "Active" will
+situations, selection of the acceptable "Active" algorithms will
 depend on the level of protection the circumstances demand.
 More considerations are presented in {{sec-agility}}.
 
