@@ -81,38 +81,30 @@ be used as a dictionary for future requests for URLs that match the rules
 specified in the Use-As-Dictionary response header.
 
 The Use-As-Dictionary response header is a Structured Field
-{{STRUCTURED-FIELDS}} sf-dictionary with values for "match", "match-search",
-"match-dest", "ttl", "id", and "type".
+{{STRUCTURED-FIELDS}} sf-dictionary with values for "match", "match-dest",
+"ttl", "id", and "type".
 
 ### match
 
 The "match" value of the Use-As-Dictionary header is a sf-string value
-that provides the "pathname" of a URLPattern
-(https://urlpattern.spec.whatwg.org/#dom-urlpatterninit-pathname).
+that provides the URLPattern to use for request matching
+(https://urlpattern.spec.whatwg.org/).
 
-The "match" is a {{URL}} path relative to the full request URL of the
-dictionary.  The request URL for the dictionary itself is used as the "baseURL"
-for constructing the URLPattern (https://urlpattern.spec.whatwg.org/) that
-is used for matching the dictionary to relevant requests when running
-{{dictionary-url-matching}}.
+The URLPattern used for matching does not support using Regular expressions.
 
-The URLPattern used for request matching does not support regular expressions
-(https://urlpattern.spec.whatwg.org/#token-type-regexp) in the "match".
+The following algorithm will return TRUE for a valid match pattern and FALSE
+for an invalid pattern that MUST NOT be used:
+
+1. Let MATCH be the value of "match" for the given dictionary.
+1. Let URL be the URL of the dictionary request.
+1. Let PATTERN be a URLPattern constructed by setting input=MATCH,
+and baseURL=URL (https://urlpattern.spec.whatwg.org/).
+1. If PATTERN has regexp groups then return FALSE
+(https://urlpattern.spec.whatwg.org/#urlpattern-has-regexp-groups).
+1. Return True.
 
 The "match" value is required and MUST be included in the
 Use-As-Dictionary sf-dictionary for the dictionary to be considered valid.
-
-### match-search
-
-The "match-search" value of the Use-As-Dictionary header is a sf-string value
-that provides the "search" of a URLPattern
-(https://urlpattern.spec.whatwg.org/#dom-urlpatterninit-search).
-
-The "match-search" is the match pattern for the searchpart of the request
-{{URL}} and does not support regular expressions.
-
-The "match-search" value is optional and defaults to the asterisk wildcard
-token "*".
 
 ### match-dest
 
@@ -235,8 +227,11 @@ of the dictionary, it MUST be ignored.
 ### Dictionary URL matching
 
 When a dictionary is stored as a result of a "Use-As-Dictionary" directive, it
-includes "match", "match-search" and "match-dest" strings that are used to
-match an outgoing request from a client to the available dictionaries.
+includes "match" and "match-dest" strings that are used to match an outgoing
+request from a client to the available dictionaries.
+
+Dictionaries MUST have been served from the same {Origin} as the outgoing
+request to match.
 
 To see if an outbound request matches a given dictionary, the following
 algorithm will return TRUE for a successful match and FALSE for no-match:
@@ -247,14 +242,15 @@ algorithm will return TRUE for a successful match and FALSE for no-match:
     request.
     * If DEST is not an empty string and If DEST and REQUEST_DEST are not the
     same value, return FALSE
-1. Let PATH be the value of "match" for the given dictionary.
-1. Let SEARCH be the value of "match-search" for the given dictionary.
-1. Let BASEURL be the request URL of the given dictionary.
-1. Let PATTERN be a URLPattern constructed by setting pathname=PATH,
-search=SEARCH, baseURL=BASEURL (https://urlpattern.spec.whatwg.org/).
-1. LET URL represent the request URL being checked.
-1. Return the result of running the URLPattern "match" algorithm
-(https://urlpattern.spec.whatwg.org/#match)
+1. Let BASEURL be the URL of the dictionary request.
+1. Let URL represent the URL of the outbound request being checked.
+1. If the {Origin} of BASEURL and the {Origin} of URL are not the same, return
+FALSE.
+1. Let MATCH be the value of "match" for the given dictionary.
+1. Let PATTERN be a URLPattern constructed by setting input=MATCH,
+and baseURL=BASEURL (https://urlpattern.spec.whatwg.org/).
+1. Return the result of running the "test" method of PATTERN with input=URL
+(https://urlpattern.spec.whatwg.org/#ref-for-dom-urlpattern-test)
 
 ### Multiple matching dictionaries
 
@@ -265,9 +261,7 @@ and matches a "match-dest" takes precedence over a match that does not use a
 destination.
 1. Given equivalent destination precedence, the dictionary with the longest
 "match" takes precedence.
-1. Given equivalent destination and path precedence, the dictionary with the
-longest "match-search" takes precedence.
-1. Given equivalent destination, path and search precedence, the most recently
+1. Given equivalent destination and match length precedence, the most recently
 fetched dictionary takes precedence.
 
 ## Dictionary-ID
