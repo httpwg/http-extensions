@@ -33,8 +33,12 @@ author:
 informative:
     POSIX:
       title: "Standard for Information Technology Portable Operating System Interface (POSIX(R)) Base Specifications, Issue 7"
-      url: <http://ieeexplore.ieee.org/servlet/opac?punumber=6506089>
+      author:
+        org: IEEE
+      target: http://ieeexplore.ieee.org/servlet/opac?punumber=6506089
       date: April 2013
+      seriesinfo:
+        DOI: 10.1109/ieeestd.2013.6506091
 
 --- abstract
 
