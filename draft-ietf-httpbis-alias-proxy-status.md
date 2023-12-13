@@ -70,11 +70,11 @@ by including the list of names in a new `next-hop-aliases` Proxy-Status paramete
 The `next-hop-aliases` parameter's value is a String {{!STRUCTURED-FIELDS=RFC8941}} that contains
 one or more DNS names in a comma-separated list. The items in the list include all alias names and
 canonical names received in CNAME records {{DNS}} during the course of resolving the next hop's
-hostname using DNS, and MAY include the original requested hostname itself. The names SHOULD
-appear in the order in which they were received in DNS. If there are multiple CNAME records
-in the chain, the first name in the `next-hop-aliases` list would be the value in the CNAME
-record for the original hostname, and the final name in the `next-hop-aliases` list would
-be the name that ultimately resolved to one or more addresses.
+hostname using DNS, and MAY include the original requested hostname itself. The names ought to
+appear in the order in which they were received in DNS, for the sake of consistency. If there
+are multiple CNAME records in the chain, the first name in the `next-hop-aliases` list would
+be the value in the CNAME record for the original hostname, and the final name in the
+`next-hop-aliases` list would be the name that ultimately resolved to one or more addresses.
 
 The list of DNS names in `next-hop-aliases` uses a comma (",") as a separator between names.
 Note that if a comma is included in a name itself, the comma must be encoded as described in
