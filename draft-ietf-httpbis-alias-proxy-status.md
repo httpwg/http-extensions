@@ -30,6 +30,16 @@ author:
     org: Apple, Inc.
     email: tpauly@apple.com
 
+informative:
+    POSIX:
+      title: "Standard for Information Technology Portable Operating System Interface (POSIX(R)) Base Specifications, Issue 7"
+      author:
+        org: IEEE
+      target: http://ieeexplore.ieee.org/servlet/opac?punumber=6506089
+      date: April 2013
+      seriesinfo:
+        DOI: 10.1109/ieeestd.2013.6506091
+
 --- abstract
 
 This document defines the `next-hop-aliases` HTTP Proxy-Status Parameter. This parameter carries
@@ -173,7 +183,7 @@ In order to include the `next-hop-aliases` parameter, a proxy needs to have acce
 of alias names and canonical names received in CNAME records.
 
 Implementations ought to note that the full chain of names might not be available in common DNS
-resolution APIs, such as `getaddrinfo`. `getaddrinfo` does have an option for `AI_CANONNAME`
+resolution APIs, such as `getaddrinfo` {{POSIX}}. `getaddrinfo` does have an option for `AI_CANONNAME`
 ({{Section 6.1 of ?RFC3493}}), but this will only return the last name in the chain
 (the canonical name), not the alias names.
 
