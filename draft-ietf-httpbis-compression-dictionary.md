@@ -1,6 +1,5 @@
 ---
 title: Compression Dictionary Transport
-abbrev: compression-dictionary
 docname: draft-ietf-httpbis-compression-dictionary-latest
 category: std
 
