@@ -43,9 +43,7 @@ normative:
 
 informative:
   Origin: RFC6454
-  ABNF: RFC5234
   STRUCTURED-FIELDS: RFC8941
-  URL: RFC3986
   SHA-256: RFC6234
   RFC7932:  # Brotli
   RFC8878:  # Zstandard
