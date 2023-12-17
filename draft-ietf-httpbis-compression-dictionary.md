@@ -52,10 +52,10 @@ informative:
 
 --- abstract
 
-This specification defines a mechanism for using designated {{HTTP}} responses
+This specification defines a mechanism for using designated HTTP responses
 as an external dictionary for future HTTP responses for compression schemes
-that support using external dictionaries (e.g., Brotli {{RFC7932}} and
-Zstandard {{RFC8878}}).
+that support using external dictionaries (e.g., Brotli (RFC 7932) and
+Zstandard (RFC 8878)).
 
 --- middle
 
