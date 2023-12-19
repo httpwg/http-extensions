@@ -23,6 +23,7 @@ keyword:
   - tunnels
   - masque
   - http-ng
+  - token
 author:
   -
     ins: D. Schinazi
@@ -546,4 +547,3 @@ Jackson}}}, {{{Ilari Liusvaara}}}, {{{Lucas Pardue}}}, {{{Justin Richer}}},
 reviews and contributions. The mechanism described in this document was
 originally part of the first iteration of MASQUE
 {{?MASQUE-ORIGINAL=I-D.schinazi-masque-00}}.
-
