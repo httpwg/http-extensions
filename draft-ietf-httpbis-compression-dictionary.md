@@ -199,7 +199,7 @@ Available-Dictionary: :pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:
 ### Dictionary freshness requirement
 
 To be considered as a match, the dictionary resource MUST be either fresh
-[HTTP1.1]. Or within the "stale-while-revalidate" window defined in [RFC5861].
+[HTTP1.1] or within the "stale-while-revalidate" window defined in [RFC5861].
 
 ### Dictionary URL matching
 
