@@ -39,6 +39,8 @@ author:
 normative:
   FOLDING: RFC8792
   HTTP: RFC9110
+  HTTP1.1: RFC2616
+  RFC5861: # Stale-While-Revalidate
 
 informative:
   Origin: RFC6454
@@ -79,7 +81,7 @@ specified in the Use-As-Dictionary response header.
 
 The Use-As-Dictionary response header is a Structured Field
 {{STRUCTURED-FIELDS}} sf-dictionary with values for "match", "match-dest",
-"ttl", "id", and "type".
+"id", and "type".
 
 ### match
 
@@ -116,23 +118,6 @@ For clients that do not support request destinations or if the value of
 MUST treat it as an empty string and match all destinations.
 
 The "match-dest" value is optional and defaults to the empty string.
-
-### ttl
-
-The "ttl" value of the Use-As-Dictionary header is a sf-integer value that
-provides the time in seconds that the dictionary is valid for (time to live).
-
-The "ttl" is independent of the cache lifetime of the resource being used for
-the dictionary. If the underlying resource is evicted from cache then it is
-also removed but this allows for setting an explicit time to live for use as a
-dictionary independent of the underlying resource in cache. Expired resources
-can still be useful as dictionaries while they are in cache and can be used for
-fetching updates of the expired resource. It can also be useful to artificially
-limit the life of a dictionary in cases where the dictionary is updated
-frequently which can help limit the number of possible incoming dictionary
-variations.
-
-The "ttl" value is optional and defaults to 1209600 (14 days).
 
 ### id
 
@@ -174,12 +159,11 @@ A response that contained a response header:
 NOTE: '\' line wrapping per RFC 8792
 
 Use-As-Dictionary: \
-  match="/product/*", match-dest="document", ttl=604800
+  match="/product/*", match-dest="document"
 ~~~
 
 Would specify matching any document request for a URL with a path prefix of
-/product/ on the same {{Origin}} as the original request, and expiring as a
-dictionary in 7 days independent of the cache lifetime of the resource.
+/product/ on the same {{Origin}} as the original request.
 
 #### Versioned Directories
 
@@ -214,12 +198,8 @@ Available-Dictionary: :pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:
 
 ### Dictionary freshness requirement
 
-To be considered as a match, the dictionary must not yet be expired as a
-dictionary. When iterating through dictionaries looking for a match, the
-expiration time of the dictionary is calculated by taking the last time the
-dictionary was fetched and adding the "ttl" seconds from the
-"Use-As-Dictionary" response. If the current time is beyond the expiration time
-of the dictionary, it MUST be ignored.
+To be considered as a match, the dictionary resource MUST be either fresh
+[HTTP1.1]. Or within the "stale-while-revalidate" window defined in [RFC5861].
 
 ### Dictionary URL matching
 
