@@ -1424,7 +1424,7 @@ that leads to interoperability problems between peers that implement {{RFC3230}}
 {{RFC3230}} was only ever intended
 to use what HTTP now defines as selected representation data.
 The semantic concept of digest and representation are explained
-alongside the definition of the Repr-Digest field( {{representation-digest}}).
+alongside the definition of the Repr-Digest field ({{representation-digest}}).
 
 While the syntax of Digest and Repr-Digest are different,
 the considerations and examples this document gives for Repr-Digest
