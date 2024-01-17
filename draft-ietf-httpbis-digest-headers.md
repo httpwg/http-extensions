@@ -94,8 +94,7 @@ Repr-Digest field can be used for the integrity of HTTP representations.
 Want-Content-Digest and Want-Repr-Digest can be used to indicate a sender's
 interest and preferences for receiving the respective Integrity fields.
 
-This document obsoletes {{RFC3230}} and the Digest and Want-Digest HTTP
-fields.
+This document obsoletes RFC 3230 and the Digest and Want-Digest HTTP fields.
 
 
 --- middle
