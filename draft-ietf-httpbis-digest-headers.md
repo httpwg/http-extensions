@@ -745,7 +745,7 @@ AB 56 CA 48 CD C9 C9 57 B2 52
 ~~~
 {: title="Request Containing a GZIP-Encoded JSON Object" #ex-put-gz}
 
-Sending the GZIP coded data without indicating it via `Content-Encoding` means
+Sending the GZIP-coded data without indicating it via `Content-Encoding` means
 that the content is malformed. In this case, the server can reply with an error.
 
 ~~~ http-message
@@ -794,7 +794,7 @@ Content-Range: bytes 0-9/39
 
 1F 8B 08 00 A5 B4 BD 62 02 FF
 ~~~
-{: title="Partial Response from a gzip-Encoded Representation"}
+{: title="Partial Response from a GZIP-Encoded Representation"}
 
 Aside from content coding or range requests, the method can also affect the
 transferred message content. For example, the response to a HEAD request does
