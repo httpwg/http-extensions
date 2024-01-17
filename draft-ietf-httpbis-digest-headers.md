@@ -137,7 +137,7 @@ This document is structured as follows:
 - Considerations specific to representation data integrity.
   - {{state-changing-requests}} (State-changing requests),
   - {{digest-and-content-location}} (Content-Location),
-  - {{resource-representation}} contains worked examples of Representation data
+  - {{resource-representation}} contains worked examples of representation data
     in message exchanges, and
   - Appendixes {{<examples-unsolicited}} and {{<examples-solicited}} contain worked examples
   of Repr-Digest and Want-Repr-Digest fields in message exchanges.
