@@ -651,16 +651,16 @@ IANA has updated the
 "Hypertext Transfer Protocol (HTTP) Field Name Registry"
 {{RFC9110}} as shown in the table below:
 
-|---------------------|-----------|------------------------------------------|
-| Field Name          | Status    |                     Reference            |
-|---------------------|-----------|------------------------------------------|
-| Content-Digest      | permanent | {{content-digest}} of RFC 9530           |
-| Repr-Digest         | permanent | {{representation-digest}} of RFC 9530    |
-| Want-Content-Digest | permanent | {{want-fields}} of RFC 9530              |
-| Want-Repr-Digest    | permanent | {{want-fields}} of RFC 9530              |
-| Digest              | obsoleted | {{RFC3230}}, {{obsolete-3230}} RFC 9530  |
-| Want-Digest         | obsoleted | {{RFC3230}}, {{obsolete-3230}} RFC 9530  |
-|---------------------|-----------|------------------------------------------|
+|---------------------|-----------|---------------------------------------------|
+| Field Name          | Status    |                     Reference               |
+|---------------------|-----------|---------------------------------------------|
+| Content-Digest      | permanent | {{content-digest}} of RFC 9530              |
+| Repr-Digest         | permanent | {{representation-digest}} of RFC 9530       |
+| Want-Content-Digest | permanent | {{want-fields}} of RFC 9530                 |
+| Want-Repr-Digest    | permanent | {{want-fields}} of RFC 9530                 |
+| Digest              | obsoleted | {{RFC3230}}, {{obsolete-3230}} of RFC 9530  |
+| Want-Digest         | obsoleted | {{RFC3230}}, {{obsolete-3230}} of RFC 9530  |
+|---------------------|-----------|---------------------------------------------|
 {: #iana-field-name-table title="Hypertext Transfer Protocol (HTTP) Field Name Registry Update"}
 
 ## Creation of the Hash Algorithms for HTTP Digest Fields Registry {#establish-hash-algorithm-registry}
