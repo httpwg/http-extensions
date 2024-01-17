@@ -1415,7 +1415,7 @@ crc32c -    :Q3lHIA==:
 
 HTTP digests are computed by applying a hashing algorithm to input data.
 {{RFC3230}} defined the input data as an "instance", a term it also defined.
-The concept of instance has since been superseded by the HTTP semantic term "representation".
+The concept of an instance has since been superseded by the HTTP semantic term "representation".
 It is understood that some implementations of {{RFC3230}}
 mistook "instance" to mean HTTP content.
 Using content for the Digest field is an error
