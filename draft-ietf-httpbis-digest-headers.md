@@ -1259,7 +1259,7 @@ NOTE: '\' line wrapping per RFC 8792
 HTTP/1.1 200 OK
 Content-Type: application/json
 Transfer-Encoding: chunked
-Trailer: Digest
+Trailer: Repr-Digest
 
 8\r\n
 {"hello"\r\n
@@ -1272,7 +1272,7 @@ Repr-Digest: \
   sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg==:\r\n
 
 ~~~
-{: title="Chunked Response with Digest"}
+{: title="Chunked Response with Repr-Digest"}
 
 
 # Examples of Want-Repr-Digest Solicited Digest {#examples-solicited}
