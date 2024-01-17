@@ -1272,7 +1272,7 @@ Repr-Digest: \
   sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg==:\r\n
 
 ~~~
-{: title="Chunked Response with Repr-Digest"}
+{: title="Chunked Response with Digest"}
 
 
 # Examples of Want-Repr-Digest Solicited Digest {#examples-solicited}
