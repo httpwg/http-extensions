@@ -62,12 +62,12 @@ informative:
     author:
       org: The Open Group
     date: 1997-02
-  NIST800-32:
-    title: Introduction to Public Key Technology and the Federal PKI Infrastructure
+  FIPS186-5:
+    title: Digital Signature Standard (DSS)
     author:
-      org: National Institute of Standards and Technology (NIST), U.S. Department of Commerce
-    date: 2001-02
-    target: https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-32.pdf
+      org: National Institute of Standards and Technology (NIST)
+      date: 2023-12
+      target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-5.pdf
   CMU-836068:
     title: MD5 vulnerable to collision attacks
     author:
@@ -557,7 +557,7 @@ metadata are discussed in {{usage-in-signatures}}.
 ## Usage in Signatures {#usage-in-signatures}
 
 Digital signatures are widely used together with checksums to provide the
-certain identification of the origin of a message {{NIST800-32}}. Such signatures
+certain identification of the origin of a message {{FIPS186-5}}. Such signatures
 can protect one or more HTTP fields and there are additional considerations when
 Integrity fields are included in this set.
 
