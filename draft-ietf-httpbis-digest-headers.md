@@ -688,7 +688,7 @@ new registrations is provided in {{algorithms}}.
 
 IANA has deprecated the "Hypertext Transfer Protocol (HTTP) Digest
 Algorithm Values" registry at
-\<https://www.iana.org/assignments/http-dig-alg\> and replaced the note on that registry with the following text:
+\<https://www.iana.org/assignments/http-dig-alg/\> and replaced the note on that registry with the following text:
 
 
 > This registry is deprecated since it lists the algorithms that can be used
