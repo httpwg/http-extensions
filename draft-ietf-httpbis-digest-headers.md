@@ -61,7 +61,7 @@ informative:
     title: The Single UNIX Specification, Version 2 - 6 Vol Set for UNIX 98
     author:
       org: The Open Group
-    date: 1997-02
+    date: 1998-01
   FIPS186-5:
     title: Digital Signature Standard (DSS)
     author:
