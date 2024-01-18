@@ -68,11 +68,14 @@ informative:
       org: National Institute of Standards and Technology (NIST)
     date: 2023-02
     target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-5.pdf
+    seriesinfo:
+      DOI: 10.6028/NIST.FIPS.186-5
+      'FIPS PUB': '186-5'
   CMU-836068:
     title: MD5 vulnerable to collision attacks
     author:
       org: Carnegie Mellon University, Software Engineering Institute
-    date: 2008-12-31
+    date: 2008-12
     target: https://www.kb.cert.org/vuls/id/836068/
   IACR-2020-014:
     title: SHA-1 is a Shambles
@@ -83,7 +86,7 @@ informative:
       -
          ins: T. Peyrin
          org: Nanyang Technological University, Singapore; Temasek Laboratories, Singapore
-    date: 2020-01-05
+    date: 2020-01
     target: https://eprint.iacr.org/2020/014.pdf
 
 --- abstract
