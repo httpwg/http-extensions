@@ -204,7 +204,7 @@ The key exporter context contains the following fields:
 
 Signature Algorithm:
 
-: The signature scheme sent in the `p` Parameter (see {{parameter-s}}).
+: The signature scheme sent in the `s` Parameter (see {{parameter-s}}).
 
 Key ID:
 
@@ -227,7 +227,9 @@ URI as defined in {{Section 3.2.2 of URI}}.
 
 Port:
 
-: The port for this request.
+: The port for this request, encoded in network byte order. Note that the port
+is either included in the URI, or is the default port for the scheme in use;
+see {{Section 3.2.3 of URI}}.
 
 Realm:
 
@@ -390,11 +392,11 @@ NOTE: '\' line wrapping per RFC 8792
 
 Authorization: Signature \
   k=YmFzZW1lbnQ, \
-  a=VGhpcyBpcyBhIHB1YmxpYyBrZXkgaW4gdXNlIGhlcmU, \
+  a=VGhpcyBpcyBh-HB1YmxpYyBrZXkgaW4gdXNl_GhlcmU, \
   s=2055, \
-  v=dmVyaWZpY2F0aW9uXzE2Qg, \
-  p=SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo \
-    aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ
+  v=dmVyaWZpY2F0aW9u_zE2Qg, \
+  p=SW5zZXJ0_HNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo\
+    aWNoIHRha2VzIDUxMiBiaXRz-GZvciBFZDI1NTE5IQ
 ~~~
 {: #fig-hdr-example title="Example Header Field"}
 
@@ -541,9 +543,9 @@ Reference:
 The authors would like to thank many members of the IETF community, as this
 document is the fruit of many hallway conversations. In particular, the authors
 would like to thank {{{David Benjamin}}}, {{{Nick Harper}}}, {{{Dennis
-Jackson}}}, {{{Ilari Liusvaara}}}, {{{Lucas Pardue}}}, {{{Justin Richer}}},
-{{{Ben Schwartz}}}, {{{Martin Thomson}}}, and {{{Chris A. Wood}}} for their
-reviews and contributions. The mechanism described in this document was
-originally part of the first iteration of MASQUE
+Jackson}}}, {{{Ilari Liusvaara}}}, {{{François Michel}}}, {{{Lucas Pardue}}},
+{{{Justin Richer}}}, {{{Ben Schwartz}}}, {{{Martin Thomson}}}, and
+{{{Chris A. Wood}}} for their reviews and contributions. The mechanism
+described in this document was originally part of the first iteration of MASQUE
 {{?MASQUE-ORIGINAL=I-D.schinazi-masque-00}}.
 
