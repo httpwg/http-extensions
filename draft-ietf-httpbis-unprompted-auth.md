@@ -392,11 +392,11 @@ NOTE: '\' line wrapping per RFC 8792
 
 Authorization: Signature \
   k=YmFzZW1lbnQ, \
-  a=VGhpcyBpcyBhIHB1YmxpYyBrZXkgaW4gdXNlIGhlcmU, \
+  a=VGhpcyBpcyBh-HB1YmxpYyBrZXkgaW4gdXNl_GhlcmU, \
   s=2055, \
-  v=dmVyaWZpY2F0aW9uXzE2Qg, \
-  p=SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo\
-    aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ
+  v=dmVyaWZpY2F0aW9u_zE2Qg, \
+  p=SW5zZXJ0_HNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo\
+    aWNoIHRha2VzIDUxMiBiaXRz-GZvciBFZDI1NTE5IQ
 ~~~
 {: #fig-hdr-example title="Example Header Field"}
 
