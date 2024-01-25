@@ -80,7 +80,7 @@ be used as a dictionary for future requests for URLs that match the rules
 specified in the Use-As-Dictionary response header.
 
 The Use-As-Dictionary response header is a Structured Field
-{{STRUCTURED-FIELDS}} sf-dictionary with values for "match", "match-dest",
+{{STRUCTURED-FIELDS}} with values for "match", "match-dest",
 "id", and "type".
 
 ### match
