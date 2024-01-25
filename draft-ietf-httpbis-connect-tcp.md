@@ -66,7 +66,23 @@ This specification describes an alternative mechanism for proxying TCP in HTTP. 
 
 A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "tcp_port".  The client substitutes the destination host and port number into these variables to produce the request URI.
 
-The "target_host" variable MUST be a domain name, an IP address literal, or a list of IP addresses.  The "tcp_port" variable MUST be a single integer.  If "target_host" is a list (as in {{Section 3.2.1 of !RFC6570}}), the server SHOULD perform the same connection procedure as if these IP addresses had been returned in response to A and AAAA queries for a domain name.
+The "target_host" variable MUST be a domain name, an IP address literal, or a list of IP addresses.  If "target_host" is a list (as in {{Section 3.2.1 of !RFC6570}}), the server SHOULD perform the same connection procedure as if these IP addresses had been returned in response to A and AAAA queries for a domain name.
+
+The "tcp_port" variable MUST represent a single integer between 1 and 65535 inclusive.  Both the "target_host" and "tcp_port" values MUST NOT be empty or undefined when using the template for TCP proxying.
+
+Using the terms `IPv6address`, `IPv4address`, `reg-name`, and `port` from {{!RFC3986}} and notation from {{!RFC5234}} and {{!RFC6570}}, the "target_host" and "tcp_port" values MUST adhere to the format in {{abnf}}:
+
+~~~~ abnf
+ip-addr = IPv6address / IPv4address
+single-host-str = DQUOTE ( ip-addr / reg-name ) DQUOTE
+ip-addr-str = DQUOTE ip-addr DQUOTE
+ip-addr-list = "(" ( ip-addr-str ", " )* ip-addr-str ")"
+target_host = single-host-str / ip-addr-list
+target_port = DQUOTE port DQUOTE
+~~~~
+{: #abnf title="ABNF syntax for \"target_host\" and \"target_port\" as URI Template string or list values."}
+
+Note that IPv6 scoped addressing zone identifiers are not supported, and the colons in IPv6 addresses will be percent-encoded by the URI Template expansion process (e.g., "2001%3Adb8%3A%3A42").
 
 ## In HTTP/1.1
 
@@ -120,7 +136,7 @@ HEADERS
 :method = CONNECT
 :scheme = https
 :authority = request-proxy.example
-:path = /proxy?target_host=192.0.2.1,2001:db8::1&tcp_port=443
+:path = /proxy?target_host=192.0.2.1,2001%3Adb8%3A%3A1&tcp_port=443
 :protocol = connect-tcp
 ...
 ~~~
