@@ -115,6 +115,8 @@ In HTTP/2 and HTTP/3, the client uses the proxy by issuing an "extended CONNECT"
 
 From this point on, the request and response SHALL conform to all the usual requirements for classic CONNECT proxies in this HTTP version (see {{Section 8.5 of !RFC9113}} and {{Section 4.4 of !RFC9114}}).
 
+A templated TCP proxying request that does not conform to all of these requirements represents a client error (see {{!RFC9110, Section 15.5}}) and may be malformed (see {{Section 8.1.1 of !RFC9113}} and {{Section 4.1.2 of !RFC9114}}).
+
 ~~~
 HEADERS
 :method = CONNECT
