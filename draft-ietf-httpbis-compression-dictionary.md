@@ -39,7 +39,7 @@ author:
 normative:
   FOLDING: RFC8792
   HTTP: RFC9110
-  HTTP1.1: RFC2616
+  HTTP-CACHING: RFC9111
   RFC5861: # Stale-While-Revalidate
 
 informative:
