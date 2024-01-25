@@ -70,23 +70,21 @@ The "target_host" variable MUST be a domain name, an IP address literal, or a li
 
 The "tcp_port" variable MUST represent a single integer between 1 and 65535 inclusive.  Both the "target_host" and "tcp_port" values MUST NOT be empty or undefined when using the template for TCP proxying.
 
-Using the terms `IPv6address`, `IPv4address`, `reg-name`, and `port` from {{!RFC3986}} and notation from {{!RFC5234}} and {{!RFC6570}}, the "target_host" and "tcp_port" values MUST adhere to the format in {{abnf}}:
+The syntax rules for these variables can be specified using ABNF {{!RFC5234}}.  Using the terms `IPv6address`, `IPv4address`, and `reg-name` from {{!RFC3986}}, we first define some additional ABNF rules in {{abnf}}:
 
 ~~~~ abnf
-ip-addr = IPv6address / IPv4address
-single-host-str = DQUOTE ( ip-addr / reg-name ) DQUOTE
-ip-addr-str = DQUOTE ip-addr DQUOTE
-ip-addr-list = "(" ( ip-addr-str ", " )* ip-addr-str ")"
-target_host = single-host-str / ip-addr-list
-target_port = DQUOTE port DQUOTE
+ip-addr    = IPv6address / IPv4address
+host-value = ip-addr / reg-name
 ~~~~
-{: #abnf title="ABNF syntax for \"target_host\" and \"target_port\" as URI Template string or list values."}
+{: #abnf title="Additional ABNF definitions."}
 
-Note that IPv6 scoped addressing zone identifiers are not supported, and the colons in IPv6 addresses will be percent-encoded by the URI Template expansion process (e.g., "2001%3Adb8%3A%3A42").
+The "target_host" variable is permitted to contain either a `host-value` or a list of `ip-addr`.  The value of the "tcp_port" variable MUST match the `port` rule from {{!RFC3986}}.
+
+Note that IPv6 scoped addressing zone identifiers are not supported, and the colons in IPv6 addresses will normally be percent-encoded by the URI Template expansion process (see {{substitution-example}}).
 
 ~~~~
 URI template:
-    https://a.example/{/target_host,tcp_port}
+    https://a.example/{?target_host,tcp_port}
 
 Variable assignments in RFC 6570 syntax:
     target_host := ("192.0.2.1", "2001:db8::1")
@@ -95,7 +93,7 @@ Variable assignments in RFC 6570 syntax:
 Resulting URI:
 https://a.example/?target_host=192.0.2.1,2001%3Adb8%3A%3A1&tcp_port=443
 ~~~~
-{: title="Template substitution example"}
+{: #substitution-example title="Template substitution example"}
 
 ## In HTTP/1.1
 
