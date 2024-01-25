@@ -78,7 +78,7 @@ In HTTP/1.1, the client uses the proxy by issuing a request as follows:
 * The request SHALL include an "Upgrade" header field with the value "connect-tcp".
 * The request's target SHALL correspond to the URI derived from expansion of the proxy's URI Template.
 
-If the request is well-formed and permissible, the proxy MUST attempt the TCP connection before returning its response header.  If the TCP connection is successful, the response SHALL be as follows:
+If the request is well-formed and permissible, the proxy MUST attempt the TCP connection before sending any response status code other than "100 (Continue)" (see {{conveying-metadata}}).  If the TCP connection is successful, the response SHALL be as follows:
 
 * The HTTP status code SHALL be "101 (Switching Protocols)".
 * The response SHALL include a "Connection" header field with the value "Upgrade".
