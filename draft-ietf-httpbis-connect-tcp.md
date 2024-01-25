@@ -195,7 +195,7 @@ If this request succeeds, the client SHOULD record a preference for "connect-tcp
 
 ## Multi-purpose proxies
 
-The names of the variables in the URI Template uniquely identify the capabilities of the proxy.  Undefined variables are permitted in URI Templates, so a single template can be used for multiple purposes.
+The names of the variables in the URI Template allow the client to infer certain capabilities of the proxy.  Undefined variables are permitted in URI Templates, so a single template can be used for multiple purposes.
 
 Multipurpose templates can be useful when a single client may benefit from access to multiple complementary services (e.g., TCP and UDP), or when the proxy is used by a variety of clients with different needs.
 
@@ -203,7 +203,9 @@ Multipurpose templates can be useful when a single client may benefit from acces
 https://proxy.example/{?target_host,tcp_port,target_port,
                         target,ipproto,dns}
 ~~~
-{: title="Example multipurpose template for a combined TCP, UDP, and IP proxy and DoH server"}
+{: title="Example multipurpose template that allows the client to infer support for TCP, UDP, and IP proxying, and for DNS over HTTPS"}
+
+To allow correct inference of the proxy's capabilities, multipurpose templates for general use MUST only contain variable names specified by the proxy's supported standards.  Note that the "connect-ip" protocol has no mandatory variable names, so a proxy's support for "connect-ip" cannot always be inferred from the template's contents.
 
 # Security Considerations
 
