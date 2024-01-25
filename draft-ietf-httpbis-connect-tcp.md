@@ -84,6 +84,19 @@ target_port = DQUOTE port DQUOTE
 
 Note that IPv6 scoped addressing zone identifiers are not supported, and the colons in IPv6 addresses will be percent-encoded by the URI Template expansion process (e.g., "2001%3Adb8%3A%3A42").
 
+~~~~
+URI template:
+    https://a.example/{/target_host,tcp_port}
+
+Variable assignments in RFC 6570 syntax:
+    target_host := ("192.0.2.1", "2001:db8::1")
+    tcp_port    := "443"
+
+Resulting URI:
+https://a.example/?target_host=192.0.2.1,2001%3Adb8%3A%3A1&tcp_port=443
+~~~~
+{: title="Template substitution example"}
+
 ## In HTTP/1.1
 
 In HTTP/1.1, the client uses the proxy by issuing a request as follows:
