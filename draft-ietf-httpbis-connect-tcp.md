@@ -80,20 +80,34 @@ host-value = ip-addr / reg-name
 
 The "target_host" variable is permitted to contain either a `host-value` or a list of `ip-addr`.  The value of the "tcp_port" variable MUST match the `port` rule from {{!RFC3986}}.
 
-Note that IPv6 scoped addressing zone identifiers are not supported, and the colons in IPv6 addresses will normally be percent-encoded by the URI Template expansion process (see {{substitution-example}}).
+Note that IPv6 scoped addressing zone identifiers are not supported, and the colons in IPv6 addresses will normally be percent-encoded by the URI Template expansion process (see {{substitution-examples}}).
 
 ~~~~
-URI template:
-    https://a.example/{?target_host,tcp_port}
+Example URI Templates:
+  A: https://a.example{/target_host,tcp_port}
+  B: https://b.example/{?target_host*,tcp_port}
 
-Variable assignments in RFC 6570 syntax:
-    target_host := ("192.0.2.1", "2001:db8::1")
+Example variable assignments in RFC 6570 syntax:
+  1:
+    target_host := "one.example"
     tcp_port    := "443"
+  2:
+    target_host := ("192.0.2.2", "2001:db8::2")
+    tcp_port    := "80"
 
-Resulting URI:
-https://a.example/?target_host=192.0.2.1,2001%3Adb8%3A%3A1&tcp_port=443
+
+Resulting URIs:
+  A + 1:
+    https://a.example/one.example/443
+  B + 1:
+    https://b.example/?target_host=one.example&tcp_port=443
+  A + 2:
+    https://a.example/192.0.2.2,2001%3Adb8%3A%3A2/80
+  B + 2:
+    https://b.example/
+    ?target_host=192.0.2.2&target_host=2001%3Adb8%3A%3A2&tcp_port=443
 ~~~~
-{: #substitution-example title="Template substitution example"}
+{: #substitution-examples title="Template substitution examples"}
 
 ## In HTTP/1.1
 
