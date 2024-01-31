@@ -123,8 +123,9 @@ The "match-dest" value is optional and defaults to the empty string.
 
 The "id" value of the Use-As-Dictionary header is a sf-string value that
 specifies a server identifier for the dictionary. If an "id" value is present
-then it MUST be sent to the server in a "Dictionary-ID" request header when
-the dictionary is advertised as being available.
+and has a string length longer than zero then it MUST be sent to the server in
+a "Dictionary-ID" request header when the dictionary is advertised as being
+available.
 
 The server identifier MUST be treated as an opaque string by the client.
 
@@ -134,7 +135,7 @@ contents of the dictionary. The dictionary hash MUST be validated before use.
 The "id" value string length (after any decoding) supports up to 1024
 characters.
 
-The "id" value is optional.
+The "id" value is optional and defaults to the empty string.
 
 ### type
 
