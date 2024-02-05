@@ -80,8 +80,7 @@ be used as a dictionary for future requests for URLs that match the rules
 specified in the Use-As-Dictionary response header.
 
 The Use-As-Dictionary response header is a Structured Field
-{{STRUCTURED-FIELDS}} with values for "match", "match-dest",
-"id", and "type".
+{{STRUCTURED-FIELDS}} with values for "match", "match-dest", "id", and "type".
 
 ### match
 
@@ -107,17 +106,17 @@ Use-As-Dictionary sf-dictionary for the dictionary to be considered valid.
 
 ### match-dest
 
-The "match-dest" value of the Use-As-Dictionary header is a sf-string value
-that provides a request destination
+The "match-dest" value of the Use-As-Dictionary header is an inner list of
+sf-string values that provides a list of request destinations for the
+dictionary to match
 (https://fetch.spec.whatwg.org/#concept-request-destination).
 
-An empty string for "match-dest" MUST match all destinations.
+An empty list for "match-dest" MUST match all destinations.
 
-For clients that do not support request destinations or if the value of
-"match-dest" is a value that is not supported by the client then the client
-MUST treat it as an empty string and match all destinations.
+For clients that do not support request destinations, the client MUST treat it
+as an empty list and match all destinations.
 
-The "match-dest" value is optional and defaults to the empty string.
+The "match-dest" value is optional and defaults to an empty list.
 
 ### id
 
@@ -160,7 +159,7 @@ A response that contained a response header:
 NOTE: '\' line wrapping per RFC 8792
 
 Use-As-Dictionary: \
-  match="/product/*", match-dest="document"
+  match="/product/*", match-dest=("document")
 ~~~
 
 Would specify matching any document request for a URL with a path prefix of
@@ -218,8 +217,8 @@ algorithm will return TRUE for a successful match and FALSE for no-match:
     * Let DEST be the value of "match-dest" for the given dictionary.
     * Let REQUEST_DEST be the value of the destination for the current
     request.
-    * If DEST is not an empty string and If DEST and REQUEST_DEST are not the
-    same value, return FALSE
+    * If DEST is not an empty list and if REQUEST_DEST is not in the DEST list
+    of destinations, return FALSE
 1. Let BASEURL be the URL of the dictionary request.
 1. Let URL represent the URL of the outbound request being checked.
 1. If the {Origin} of BASEURL and the {Origin} of URL are not the same, return
