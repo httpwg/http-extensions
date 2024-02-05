@@ -84,8 +84,8 @@ The Use-As-Dictionary response header is a Structured Field
 
 ### match
 
-The "match" value of the Use-As-Dictionary header is a sf-string value
-that provides the URLPattern to use for request matching
+The "match" value of the Use-As-Dictionary header is a String value that
+provides the URLPattern to use for request matching
 (https://urlpattern.spec.whatwg.org/).
 
 The URLPattern used for matching does not support using Regular expressions.
@@ -102,14 +102,13 @@ and baseURL=URL (https://urlpattern.spec.whatwg.org/).
 1. Return True.
 
 The "match" value is required and MUST be included in the
-Use-As-Dictionary sf-dictionary for the dictionary to be considered valid.
+Use-As-Dictionary Dictionary for the dictionary to be considered valid.
 
 ### match-dest
 
-The "match-dest" value of the Use-As-Dictionary header is an inner list of
-sf-string values that provides a list of request destinations for the
-dictionary to match
-(https://fetch.spec.whatwg.org/#concept-request-destination).
+The "match-dest" value of the Use-As-Dictionary header is an Inner List of
+String values that provides a list of request destinations for the dictionary
+to match (https://fetch.spec.whatwg.org/#concept-request-destination).
 
 An empty list for "match-dest" MUST match all destinations.
 
@@ -120,10 +119,10 @@ The "match-dest" value is optional and defaults to an empty list.
 
 ### id
 
-The "id" value of the Use-As-Dictionary header is a sf-string value that
-specifies a server identifier for the dictionary. If an "id" value is present
-and has a string length longer than zero then it MUST be sent to the server in
-a "Dictionary-ID" request header when the dictionary is advertised as being
+The "id" value of the Use-As-Dictionary header is a String value that specifies
+a server identifier for the dictionary. If an "id" value is present and has a
+string length longer than zero then it MUST be sent to the server in a
+"Dictionary-ID" request header when the dictionary is advertised as being
 available.
 
 The server identifier MUST be treated as an opaque string by the client.
@@ -138,7 +137,7 @@ The "id" value is optional and defaults to the empty string.
 
 ### type
 
-The "type" value of the Use-As-Dictionary header is a sf-string value that
+The "type" value of the Use-As-Dictionary header is a Token value that
 describes the file format of the supplied dictionary.
 
 "raw" is the only defined dictionary format which represents an unformatted
@@ -147,7 +146,7 @@ blob of bytes suitable for any compression scheme to use.
 If a client receives a dictionary with a type that it does not understand, it
 MUST NOT use the dictionary.
 
-The "type" value is optional and defaults to "raw".
+The "type" value is optional and defaults to raw.
 
 ### Examples
 
@@ -184,8 +183,8 @@ to the request to indicate to the server that it has a dictionary available to
 use for compression.
 
 The "Available-Dictionary" request header is a Structured Field
-{{STRUCTURED-FIELDS}} sf-binary {{SHA-256}} hash of the contents of a single
-available dictionary.
+{{STRUCTURED-FIELDS}} Byte Sequence containing the {{SHA-256}} hash of the
+contents of a single available dictionary.
 
 The client MUST only send a single "Available-Dictionary" request header
 with a single hash value for the best available match that it has available.
@@ -249,8 +248,8 @@ appropriate dictionary and the dictionary was stored with a server-provided
 "id" in a "Dictionary-ID" request header.
 
 The "Dictionary-ID" request header is a Structured Field {{STRUCTURED-FIELDS}}
-sf-string of up to 1024 characters (after any decoding) and MUST be identical
-to the server-provided "id".
+String of up to 1024 characters (after any decoding) and MUST be identical to
+the server-provided "id".
 
 For example:
 
@@ -266,8 +265,8 @@ the server MUST send the hash of the dictionary that was used in the
 "Content-Dictionary" response header.
 
 The "Content-Dictionary" response header is a Structured Field
-{{STRUCTURED-FIELDS}} sf-dictionary {{SHA-256}} hash of the contents of the
-dictionary that was used to encode the response.
+{{STRUCTURED-FIELDS}} Byte Sequence containing the {{SHA-256}} hash of the
+contents of the dictionary that was used to encode the response.
 
 If the HTTP response contains a "Content-Dictionary" response header with the
 hash of a dictionary that the client does not have available then the client
