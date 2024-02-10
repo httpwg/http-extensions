@@ -1028,7 +1028,7 @@ Please add the following note to the "Hypertext Transfer Protocol (HTTP) Field N
 >
 > Note that field names beginning with characters other than ALPHA or "*" will not be able to be
 > represented as a Structured Fields Token, and therefore may be incompatible with being mapped into
-> fields that refer to it.
+> field values that refer to it.
 
 Then, add a new column, "Structured Type".
 
