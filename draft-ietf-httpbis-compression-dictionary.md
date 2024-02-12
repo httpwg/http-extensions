@@ -69,7 +69,20 @@ This document describes the HTTP headers used for negotiating dictionary usage
 and registers media types for content encoding Brotli and Zstandard using a
 negotiated dictionary.
 
-This document uses the line folding strategies described in [FOLDING].
+## Notational Conventions
+
+{::boilerplate bcp14-tagged}
+
+This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}} to
+specify syntax and parsing: Dictionary, String, Inner List, Token, and Byte Sequence.
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
+"RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in
+{{RFC2119}}.
+
+This document uses the line folding strategies described in {{FOLDING}}.
+
+This document also uses terminology from {{HTTP}} and {{HTTP-CACHING}}.
 
 # Dictionary Negotiation
 
@@ -80,7 +93,8 @@ be used as a dictionary for future requests for URLs that match the rules
 specified in the Use-As-Dictionary response header.
 
 The Use-As-Dictionary response header is a Structured Field
-{{STRUCTURED-FIELDS}} with values for "match", "match-dest", "id", and "type".
+{{STRUCTURED-FIELDS}} Dictionary with values for "match", "match-dest", "id",
+and "type".
 
 ### match
 
