@@ -35,6 +35,17 @@ author:
 normative:
   HTTP: RFC9110
 
+  UTF8:
+    title: UTF-8, a transformation format of ISO 10646
+    author:
+    - ins: F. Yergeau
+      name: F. Yergeau
+    date: 2003-11
+    seriesinfo:
+      STD: 63
+      RFC: 3629
+    target: http://www.rfc-editor.org/info/std63
+
 informative:
   IEEE754:
     target: https://ieeexplore.ieee.org/document/8766229
@@ -48,16 +59,6 @@ informative:
       DOI:  10.1109/IEEESTD.2019.8766229
       ISBN: 978-1-5044-5924-2
 
-  UTF8:
-    title: UTF-8, a transformation format of ISO 10646
-    author:
-    - ins: F. Yergeau
-      name: F. Yergeau
-    date: 2003-11
-    seriesinfo:
-      STD: 63
-      RFC: 3629
-    target: http://www.rfc-editor.org/info/std63
   RFC9113:
     display: HTTP/2
   HPACK: RFC7541
