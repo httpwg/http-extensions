@@ -64,9 +64,25 @@ This specification describes an alternative mechanism for proxying TCP in HTTP. 
 
 # Specification
 
-A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "tcp_port".  The client substitutes the destination host and port number into these variables to produce the request URI.
+A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "target_port".  This template MUST meet all the same requirements as a URI Template for UDP proxying ({{!RFC9298, Section 2}}) and is subject to the same validation rules.
 
-The "target_host" variable MUST be a domain name, an IP address literal, or a list of IP addresses.  The "tcp_port" variable MUST be a single integer.  If "target_host" is a list (as in {{Section 3.2.1 of !RFC6570}}), the server SHOULD perform the same connection procedure as if these IP addresses had been returned in response to A and AAAA queries for a domain name.
+The client MUST substitute the destination host and port number into this template to produce the request URI.  The "target_host" variable MUST contain a domain name, an IP address literal, or a comma-separated list of IP addresses.  If "target_host" is a list, the server SHOULD perform the same connection procedure as if these IP addresses had been returned in response to A and AAAA queries for a domain name.
+
+Using the terms `IPv6address`, `IPv4address`, `reg-name`, and `port` from {{!RFC3986}}, the "target_host" and "target_port" variables MUST adhere to the format in {{target-format}}, using notation from {{!ABNF=RFC2234}}:
+
+~~~ ABNF
+ip-addr = IPv6address / IPv4address
+ip-addr-list = *( ip-addr "," ) ip-addr
+target_host = reg-name / ip-addr-list
+target_port = port
+~~~
+{: #target-format title="URI Template Variable Format"}
+
+Additionally:
+
+* `target_host` and `target_port` MUST NOT be undefined or empty.
+* `target_port` MUST represent an integer between 1 and 65535 inclusive.
+* `target_host` MUST NOT contain any IPv6 scoped addressing zone identifier.
 
 ## In HTTP/1.1
 
@@ -91,7 +107,7 @@ After a success response is returned, the connection SHALL conform to all the us
 ~~~
 Client                                                 Proxy
 
-GET /proxy?target_host=192.0.2.1&tcp_port=443 HTTP/1.1
+GET /proxy?target_host=192.0.2.1&target_port=443 HTTP/1.1
 Host: example.com
 Connection: Upgrade
 Upgrade: connect-tcp
@@ -122,7 +138,7 @@ HEADERS
 :method = CONNECT
 :scheme = https
 :authority = request-proxy.example
-:path = /proxy?target_host=192.0.2.1,2001:db8::1&tcp_port=443
+:path = /proxy?target_host=192.0.2.1,2001%3Adb8%3A%3A1&target_port=443
 :protocol = connect-tcp
 ...
 ~~~
@@ -177,7 +193,7 @@ The URI template can also be structured to generate high-entropy Capability URLs
 
 Clients that support both classic HTTP CONNECT proxies and template-driven TCP proxies MAY accept both types via a single configuration string.  If the configuration string can be parsed as a URI Template containing the required variables, it is a template-driven TCP proxy.  Otherwise, it is presumed to represent a classic HTTP CONNECT proxy.
 
-In some cases, it is valuable to allow "connect-tcp" clients to reach "connect-tcp"-only proxies when using a legacy configuration method that cannot convey a URI template.  To support this arrangement, clients SHOULD treat certain errors during classic HTTP CONNECT as indications that the proxy might only support "connect-tcp":
+In some cases, it is valuable to allow "connect-tcp" clients to reach "connect-tcp"-only proxies when using a legacy configuration method that cannot convey a URI Template.  To support this arrangement, clients SHOULD treat certain errors during classic HTTP CONNECT as indications that the proxy might only support "connect-tcp":
 
 * In HTTP/1.1: the response status code is "426 (Upgrade Required)", with an "Upgrade: connect-tcp" response header.
 * In any HTTP version: the response status code is "501 (Not Implemented)".
@@ -187,7 +203,7 @@ If the client infers that classic HTTP CONNECT is not supported, it SHOULD retry
 
 ~~~
 https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
-                    /tcp/{target_host}/{tcp_port}/
+                 /tcp/{target_host}/{target_port}/
 ~~~
 {: title="Registered default template"}
 
@@ -195,13 +211,12 @@ If this request succeeds, the client SHOULD record a preference for "connect-tcp
 
 ## Multi-purpose proxies
 
-The names of the variables in the URI Template uniquely identify the capabilities of the proxy.  Undefined variables are permitted in URI Templates, so a single template can be used for multiple purposes.
+A single URI Template can be used for multiple purposes if it includes all the relevant variables.  Variables that are not relevant to a particular usage are left undefined, which is permitted when expanding a URI Template.
 
-Multipurpose templates can be useful when a single client may benefit from access to multiple complementary services (e.g., TCP and UDP), or when the proxy is used by a variety of clients with different needs.
+Multipurpose templates can be useful when a single client may benefit from access to multiple complementary services (e.g., TCP and UDP), or when the proxy is used by a variety of clients with different needs.  The contents of the URI Template are not necessarily sufficient to determine its purpose, so clients must determine this in some other way, such as by probing or via a separate usage indication.
 
 ~~~
-https://proxy.example/{?target_host,tcp_port,target_port,
-                        target,ipproto,dns}
+https://proxy.example/{?target_host,target_port,target,ipproto,dns}
 ~~~
 {: title="Example multipurpose template for a combined TCP, UDP, and IP proxy and DoH server"}
 
