@@ -39,6 +39,8 @@ author:
 normative:
   FOLDING: RFC8792
   HTTP: RFC9110
+  HTTP-CACHING: RFC9111
+  RFC5861: # Stale-While-Revalidate
 
 informative:
   Origin: RFC6454
@@ -67,7 +69,20 @@ This document describes the HTTP headers used for negotiating dictionary usage
 and registers media types for content encoding Brotli and Zstandard using a
 negotiated dictionary.
 
-This document uses the line folding strategies described in [FOLDING].
+## Notational Conventions
+
+{::boilerplate bcp14-tagged}
+
+This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}} to
+specify syntax and parsing: Dictionary, String, Inner List, Token, and Byte Sequence.
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
+"RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in
+{{RFC2119}}.
+
+This document uses the line folding strategies described in {{FOLDING}}.
+
+This document also uses terminology from {{HTTP}} and {{HTTP-CACHING}}.
 
 # Dictionary Negotiation
 
@@ -78,13 +93,13 @@ be used as a dictionary for future requests for URLs that match the rules
 specified in the Use-As-Dictionary response header.
 
 The Use-As-Dictionary response header is a Structured Field
-{{STRUCTURED-FIELDS}} sf-dictionary with values for "match", "match-dest",
-"ttl", "id", and "type".
+{{STRUCTURED-FIELDS}} Dictionary with values for "match", "match-dest", "id",
+and "type".
 
 ### match
 
-The "match" value of the Use-As-Dictionary header is a sf-string value
-that provides the URLPattern to use for request matching
+The "match" value of the Use-As-Dictionary header is a String value that
+provides the URLPattern to use for request matching
 (https://urlpattern.spec.whatwg.org/).
 
 The URLPattern used for matching does not support using Regular expressions.
@@ -101,45 +116,28 @@ and baseURL=URL (https://urlpattern.spec.whatwg.org/).
 1. Return True.
 
 The "match" value is required and MUST be included in the
-Use-As-Dictionary sf-dictionary for the dictionary to be considered valid.
+Use-As-Dictionary Dictionary for the dictionary to be considered valid.
 
 ### match-dest
 
-The "match-dest" value of the Use-As-Dictionary header is a sf-string value
-that provides a request destination
-(https://fetch.spec.whatwg.org/#concept-request-destination).
+The "match-dest" value of the Use-As-Dictionary header is an Inner List of
+String values that provides a list of request destinations for the dictionary
+to match (https://fetch.spec.whatwg.org/#concept-request-destination).
 
-An empty string for "match-dest" MUST match all destinations.
+An empty list for "match-dest" MUST match all destinations.
 
-For clients that do not support request destinations or if the value of
-"match-dest" is a value that is not supported by the client then the client
-MUST treat it as an empty string and match all destinations.
+For clients that do not support request destinations, the client MUST treat it
+as an empty list and match all destinations.
 
-The "match-dest" value is optional and defaults to the empty string.
-
-### ttl
-
-The "ttl" value of the Use-As-Dictionary header is a sf-integer value that
-provides the time in seconds that the dictionary is valid for (time to live).
-
-The "ttl" is independent of the cache lifetime of the resource being used for
-the dictionary. If the underlying resource is evicted from cache then it is
-also removed but this allows for setting an explicit time to live for use as a
-dictionary independent of the underlying resource in cache. Expired resources
-can still be useful as dictionaries while they are in cache and can be used for
-fetching updates of the expired resource. It can also be useful to artificially
-limit the life of a dictionary in cases where the dictionary is updated
-frequently which can help limit the number of possible incoming dictionary
-variations.
-
-The "ttl" value is optional and defaults to 1209600 (14 days).
+The "match-dest" value is optional and defaults to an empty list.
 
 ### id
 
-The "id" value of the Use-As-Dictionary header is a sf-string value that
-specifies a server identifier for the dictionary. If an "id" value is present
-then it MUST be sent to the server in a "Dictionary-ID" request header when
-the dictionary is advertised as being available.
+The "id" value of the Use-As-Dictionary header is a String value that specifies
+a server identifier for the dictionary. If an "id" value is present and has a
+string length longer than zero then it MUST be sent to the server in a
+"Dictionary-ID" request header when the dictionary is advertised as being
+available.
 
 The server identifier MUST be treated as an opaque string by the client.
 
@@ -149,11 +147,11 @@ contents of the dictionary. The dictionary hash MUST be validated before use.
 The "id" value string length (after any decoding) supports up to 1024
 characters.
 
-The "id" value is optional.
+The "id" value is optional and defaults to the empty string.
 
 ### type
 
-The "type" value of the Use-As-Dictionary header is a sf-string value that
+The "type" value of the Use-As-Dictionary header is a Token value that
 describes the file format of the supplied dictionary.
 
 "raw" is the only defined dictionary format which represents an unformatted
@@ -162,7 +160,7 @@ blob of bytes suitable for any compression scheme to use.
 If a client receives a dictionary with a type that it does not understand, it
 MUST NOT use the dictionary.
 
-The "type" value is optional and defaults to "raw".
+The "type" value is optional and defaults to raw.
 
 ### Examples
 
@@ -174,12 +172,11 @@ A response that contained a response header:
 NOTE: '\' line wrapping per RFC 8792
 
 Use-As-Dictionary: \
-  match="/product/*", match-dest="document", ttl=604800
+  match="/product/*", match-dest=("document")
 ~~~
 
 Would specify matching any document request for a URL with a path prefix of
-/product/ on the same {{Origin}} as the original request, and expiring as a
-dictionary in 7 days independent of the cache lifetime of the resource.
+/product/ on the same {{Origin}} as the original request.
 
 #### Versioned Directories
 
@@ -200,8 +197,8 @@ to the request to indicate to the server that it has a dictionary available to
 use for compression.
 
 The "Available-Dictionary" request header is a Structured Field
-{{STRUCTURED-FIELDS}} sf-binary {{SHA-256}} hash of the contents of a single
-available dictionary.
+{{STRUCTURED-FIELDS}} Byte Sequence containing the {{SHA-256}} hash of the
+contents of a single available dictionary.
 
 The client MUST only send a single "Available-Dictionary" request header
 with a single hash value for the best available match that it has available.
@@ -214,12 +211,8 @@ Available-Dictionary: :pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:
 
 ### Dictionary freshness requirement
 
-To be considered as a match, the dictionary must not yet be expired as a
-dictionary. When iterating through dictionaries looking for a match, the
-expiration time of the dictionary is calculated by taking the last time the
-dictionary was fetched and adding the "ttl" seconds from the
-"Use-As-Dictionary" response. If the current time is beyond the expiration time
-of the dictionary, it MUST be ignored.
+To be considered as a match, the dictionary resource MUST be either fresh
+[HTTP-CACHING] or allowed to be served stale (see eg [RFC5861]).
 
 ### Dictionary URL matching
 
@@ -237,8 +230,8 @@ algorithm will return TRUE for a successful match and FALSE for no-match:
     * Let DEST be the value of "match-dest" for the given dictionary.
     * Let REQUEST_DEST be the value of the destination for the current
     request.
-    * If DEST is not an empty string and If DEST and REQUEST_DEST are not the
-    same value, return FALSE
+    * If DEST is not an empty list and if REQUEST_DEST is not in the DEST list
+    of destinations, return FALSE
 1. Let BASEURL be the URL of the dictionary request.
 1. Let URL represent the URL of the outbound request being checked.
 1. If the {Origin} of BASEURL and the {Origin} of URL are not the same, return
@@ -269,8 +262,8 @@ appropriate dictionary and the dictionary was stored with a server-provided
 "id" in a "Dictionary-ID" request header.
 
 The "Dictionary-ID" request header is a Structured Field {{STRUCTURED-FIELDS}}
-sf-string of up to 1024 characters (after any decoding) and MUST be identical
-to the server-provided "id".
+String of up to 1024 characters (after any decoding) and MUST be identical to
+the server-provided "id".
 
 For example:
 
@@ -286,8 +279,8 @@ the server MUST send the hash of the dictionary that was used in the
 "Content-Dictionary" response header.
 
 The "Content-Dictionary" response header is a Structured Field
-{{STRUCTURED-FIELDS}} sf-dictionary {{SHA-256}} hash of the contents of the
-dictionary that was used to encode the response.
+{{STRUCTURED-FIELDS}} Byte Sequence containing the {{SHA-256}} hash of the
+contents of the dictionary that was used to encode the response.
 
 If the HTTP response contains a "Content-Dictionary" response header with the
 hash of a dictionary that the client does not have available then the client

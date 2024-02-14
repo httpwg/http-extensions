@@ -66,7 +66,7 @@ This specification describes an alternative mechanism for proxying TCP in HTTP. 
 
 A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "tcp_port".  The client substitutes the destination host and port number into these variables to produce the request URI.
 
-The "target_host" variable MUST be a domain name, an IP address literal, or a list of IP addresses.  The "tcp_port" variable MUST be a single integer.  If "target_host" is a list (as in {{Section 2.4.2 of !RFC6570}}), the server SHOULD perform the same connection procedure as if these addresses had been returned in response to A and AAAA queries for a domain name.
+The "target_host" variable MUST be a domain name, an IP address literal, or a list of IP addresses.  The "tcp_port" variable MUST be a single integer.  If "target_host" is a list (as in {{Section 3.2.1 of !RFC6570}}), the server SHOULD perform the same connection procedure as if these IP addresses had been returned in response to A and AAAA queries for a domain name.
 
 ## In HTTP/1.1
 
@@ -78,7 +78,7 @@ In HTTP/1.1, the client uses the proxy by issuing a request as follows:
 * The request SHALL include an "Upgrade" header field with the value "connect-tcp".
 * The request's target SHALL correspond to the URI derived from expansion of the proxy's URI Template.
 
-If the request is well-formed and permissible, the proxy MUST attempt the TCP connection before returning its response header.  If the TCP connection is successful, the response SHALL be as follows:
+If the request is well-formed and permissible, the proxy MUST attempt the TCP connection before sending any response status code other than "100 (Continue)" (see {{conveying-metadata}}).  If the TCP connection is successful, the response SHALL be as follows:
 
 * The HTTP status code SHALL be "101 (Switching Protocols)".
 * The response SHALL include a "Connection" header field with the value "Upgrade".
@@ -114,6 +114,8 @@ In HTTP/2 and HTTP/3, the client uses the proxy by issuing an "extended CONNECT"
 * The :path and :scheme pseudo-header fields SHALL contain the path and scheme of the request URI derived from the proxy's URI Template.
 
 From this point on, the request and response SHALL conform to all the usual requirements for classic CONNECT proxies in this HTTP version (see {{Section 8.5 of !RFC9113}} and {{Section 4.4 of !RFC9114}}).
+
+A templated TCP proxying request that does not conform to all of these requirements represents a client error (see {{!RFC9110, Section 15.5}}) and may be malformed (see {{Section 8.1.1 of !RFC9113}} and {{Section 4.1.2 of !RFC9114}}).
 
 ~~~
 HEADERS
@@ -159,7 +161,7 @@ Servers that host a proxy under this specification MAY offer support for TLS ear
 
 ## Conveying metadata
 
-This specification supports the "Expect: 100-continue" request header ({{?RFC9110, Section 10.1.1}}) in any HTTP version.  The "100 (Continue)" status code confirms receipt of a request at the proxy without waiting for the proxy-destination TCP handshake to succeed or fail.  This might be particularly helpful when the destination host is not responding, as TCP handshakes can hang for several minutes before failing.  Implementation of "100 (Continue)" support is OPTIONAL for clients and REQUIRED for proxies.
+This specification supports the "Expect: 100-continue" request header ({{?RFC9110, Section 10.1.1}}) in any HTTP version.  The "100 (Continue)" status code confirms receipt of a request at the proxy without waiting for the proxy-destination TCP handshake to succeed or fail.  This might be particularly helpful when the destination host is not responding, as TCP handshakes can hang for several minutes before failing.  Clients MAY send "Expect: 100-continue", and proxies MUST respect it by returning "100 (Continue)" if the request is not immediately rejected.
 
 Proxies implementing this specification SHOULD include a "Proxy-Status" response header {{!RFC9209}} in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  In HTTP/2 or HTTP/3, proxies MAY additionally send a "Proxy-Status" trailer in the event of an unclean shutdown.
 

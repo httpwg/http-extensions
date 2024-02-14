@@ -35,6 +35,17 @@ author:
 normative:
   HTTP: RFC9110
 
+  UTF8:
+    title: UTF-8, a transformation format of ISO 10646
+    author:
+    - ins: F. Yergeau
+      name: F. Yergeau
+    date: 2003-11
+    seriesinfo:
+      STD: 63
+      RFC: 3629
+    target: http://www.rfc-editor.org/info/std63
+
 informative:
   IEEE754:
     target: https://ieeexplore.ieee.org/document/8766229
@@ -48,16 +59,6 @@ informative:
       DOI:  10.1109/IEEESTD.2019.8766229
       ISBN: 978-1-5044-5924-2
 
-  UTF8:
-    title: UTF-8, a transformation format of ISO 10646
-    author:
-    - ins: F. Yergeau
-      name: F. Yergeau
-    date: 2003-11
-    seriesinfo:
-      STD: 63
-      RFC: 3629
-    target: http://www.rfc-editor.org/info/std63
   RFC9113:
     display: HTTP/2
   HPACK: RFC7541
@@ -229,7 +230,7 @@ For example, field instance might contain a syntactically valid Date ({{date}}),
 
 # Structured Data Types {#types}
 
-This section defines the abstract types for Structured Fields, and summarizes how those types are serialized into textual HTTP fields.
+This section provides an overview of the abstract types that Structured Fields use, and gives a brief description and examples of how each of those types are serialized into textual HTTP fields. {{text}} specifies the details of how they are parsed from and serialized into textual HTTP fields.
 
 In summary:
 
@@ -498,7 +499,7 @@ Parsers MUST support Dates whose values include all days in years 1 to 9999 (i.e
 
 ### Display Strings {#displaystring}
 
-Display Strings are similar to Strings, in that they consist of zero or more characters, but they allow Unicode content, unlike Strings.
+Display Strings are similar to Strings, in that they consist of zero or more characters, but they allow Unicode scalar values (i.e., all Unicode code points except for surrogates), unlike Strings.
 
 Display Strings are intended for use in cases where a value is displayed to end users, and therefore may need to carry non-ASCII content. It is NOT RECOMMENDED that they be used in situations where a String ({{string}}) or Token ({{token}}) would be adequate, because Unicode has processing considerations (e.g., normalization) and security considerations (e.g., homograph attacks) that make it more difficult to handle correctly.
 
@@ -516,7 +517,7 @@ See {{security}} for additional security considerations when handling Display St
 
 # Working with Structured Fields in HTTP {#text}
 
-This section defines how to serialize and parse Structured Fields in textual HTTP field values and other encodings compatible with them (e.g., in HTTP/2 {{RFC9113}} before compression with HPACK {{HPACK}}).
+This section defines how to serialize and parse the abstract types defined by {{types}} into textual HTTP field values and other encodings compatible with them (e.g., in HTTP/2 {{RFC9113}} before compression with HPACK {{HPACK}}).
 
 ## Serializing Structured Fields {#text-serialize}
 
@@ -720,7 +721,7 @@ Given a Date as input_date, return an ASCII string suitable for use in an HTTP f
 Given a sequence of Unicode codepoints as input_sequence, return an ASCII string suitable for use in an HTTP field value.
 
 0. If input_sequence is not a sequence of Unicode codepoints, fail serialization.
-1. Let byte_array be the result of applying UTF-8 encoding ({{Section 3 of UTF8}}) to input_sequence.
+1. Let byte_array be the result of applying UTF-8 encoding ({{Section 3 of UTF8}}) to input_sequence. If encoding fails, fail serialization.
 2. Let encoded_string be a string containing "%" followed by DQUOTE.
 3. For each byte in byte_array:
    1. If byte is %x25 ("%"), %x22 (DQUOTE), or in the ranges %x00-1f or %x7f-ff:
@@ -730,6 +731,8 @@ Given a sequence of Unicode codepoints as input_sequence, return an ASCII string
    2. Otherwise, decode byte as an ASCII character and append the result to encoded_string.
 4. Append DQUOTE to encoded_string.
 5. Return encoded_string.
+
+Note that {{UTF8}} prohibits the encoding of codepoints between U+D800 and U+DFFF (surrogates); if they occur in input_sequence, serialization will fail.
 
 
 ## Parsing Structured Fields {#text-parse}
@@ -1028,7 +1031,7 @@ Please add the following note to the "Hypertext Transfer Protocol (HTTP) Field N
 >
 > Note that field names beginning with characters other than ALPHA or "*" will not be able to be
 > represented as a Structured Fields Token, and therefore may be incompatible with being mapped into
-> fields that refer to it.
+> field values that refer to it.
 
 Then, add a new column, "Structured Type".
 
@@ -1056,7 +1059,7 @@ The size of most types defined by Structured Fields is not limited; as a result,
 It is possible for parties with the ability to inject new HTTP fields to change the meaning
 of a Structured Field. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
 
-The Display String type can convey any possible Unicode code point without sanitization; for example, they might contain unassigned code points, control points (including NUL), or noncharacters. Therefore, applications consuming Display Strings need to consider strategies such as filtering or escaping untrusted content before displaying it. See also {{UNICODE-SECURITY}} and {{?I-D.draft-bray-unichars}}.
+The Display String type can convey any possible Unicode code point without sanitization; for example, they might contain unassigned code points, control points (including NUL), or noncharacters. Therefore, applications consuming Display Strings need to consider strategies such as filtering or escaping untrusted content before displaying it. See also {{UNICODE-SECURITY}}.
 
 --- back
 
