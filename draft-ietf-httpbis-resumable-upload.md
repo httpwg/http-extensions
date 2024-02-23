@@ -208,6 +208,8 @@ If the request completes successfully but the entire upload is not yet complete,
 
 If the request includes an `Upload-Complete` field value set to true and a valid `Content-Length` header field, the client attempts to upload a fixed-length resource in one request. In this case, the upload's final size is the `Content-Length` field value and the server MUST record it to ensure its consistency.
 
+The following example shows an upload creation. The client transfers the entire 100 bytes in the first request. The server generates two informational responses to transmit the upload resource's URL and progress information, and one final response to acknowledge the completed upload.
+
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
@@ -231,6 +233,8 @@ HTTP/1.1 201 Created
 Location: https://example.com/upload/b530ce8ff
 Upload-Offset: 100
 ~~~
+
+The next example shows an upload creation, where only the first 25 bytes are transferred. The server acknowledges the received data and that the upload is not complete yet.
 
 ~~~ http-message
 POST /upload HTTP/1.1
@@ -299,6 +303,8 @@ If the server does not consider the upload resource to be active, it MUST respon
 
 The resumption offset can be less than or equal to the number of bytes the client has already sent. The client MAY reject an offset which is greater than the number of bytes it has already sent during this upload. The client is expected to handle backtracking of a reasonable length. If the offset is invalid for this upload, or if the client cannot backtrack to the offset and reproduce the same content it has already sent, the upload MUST be considered a failure. The client MAY cancel the upload ({{upload-cancellation}}) after rejecting the offset.
 
+The following example shows an offset retrieval request. The server indicates the new offset and that the upload is not complete yet.
+
 ~~~ http-message
 HEAD /upload/b530ce8ff HTTP/1.1
 Host: example.com
@@ -340,6 +346,8 @@ If the request completes successfully but the entire upload is not yet complete 
 
 If the request includes the `Upload-Complete` field value set to true  and a valid `Content-Length` header field, the client attempts to upload the remaining resource in one request. In this case, the upload's final size is the sum of the upload's offset and the `Content-Length` header field. If the server does not have a record of the upload's final size from creation or the previous append, the server MUST record the upload's final size to ensure its consistency. If the server does have a previous record, that value MUST match the upload's final size. If they do not match, the server MUST reject the request with a `400 (Bad Request)` status code.
 
+The following example shows an upload append. The client transfers the next 100 bytes at an offset of 100 and does not indicate that the upload is then completed. The server acknowledges the new offset.
+
 ~~~ http-message
 PATCH /upload/b530ce8ff HTTP/1.1
 Host: example.com
@@ -372,6 +380,8 @@ The server MAY terminate any in-flight requests to the upload resource before se
 If the server does not consider the upload resource to be active, it MUST respond with a `404 (Not Found)` status code.
 
 If the server does not support cancellation, it MUST respond with a `405 (Method Not Allowed)` status code.
+
+The following example shows an upload cancellation.
 
 ~~~ http-message
 DELETE /upload/b530ce8ff HTTP/1.1
