@@ -117,6 +117,12 @@ Host: example.org
     </t>
 
     <t>
+      Moreover, when query parameters contain personal identifiable information (PII)
+      or otherwise sensitive data, moving query parameters to the content reduces
+      the probability of this information to be logged, cached or stored by intermediaries.
+    </t>
+
+    <t>
       As an alternative to using GET, many implementations make use of the
       HTTP POST method to perform queries, as illustrated in the example
       below. In this case, the input parameters to the search operation are
