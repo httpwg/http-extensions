@@ -208,7 +208,7 @@ If the request completes successfully but the entire upload is not yet complete,
 
 If the request includes an `Upload-Complete` field value set to true and a valid `Content-Length` header field, the client attempts to upload a fixed-length resource in one request. In this case, the upload's final size is the `Content-Length` field value and the server MUST record it to ensure its consistency.
 
-The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty entity. If the `Upload-Complete` header field is then set to false, the client wants to obtain the upload resource's URL before transferring data. This is useful when the client is not able to retrieve the resource URL in an informational response.
+The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty entity. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring data, which can save client or server resources. Since informational responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
 
 ~~~ http-message
 POST /upload HTTP/1.1
@@ -410,7 +410,9 @@ The upload resource URL is the identifier used for modifying the upload. Without
 
 Some servers or intermediaries provide scanning of content uploaded by clients. Any scanning mechanism that relies on receiving a complete file in a single request message can be defeated by resumable uploads because content can be split across multiple messages. Servers or intermediaries wishing to perform content scanning SHOULD consider how resumable uploads can circumvent scanning and take appropriate measures. Possible strategies include waiting for the upload to complete before scanning a full file, or disabling resumable uploads.
 
-A malicious client may create upload resources and keep them alive by regularly sending `PATCH` requests with no or small content to the upload resources. The server SHOULD protect against such resource exhaustion attacks by limiting the lifetime of upload resources or the number of incomplete upload resources per client.
+Resumable uploads are vulnerable to Slowloris-style attacks [SLOWLORIS]. A malicious client may create upload resources and keep them alive by regularly sending `PATCH` requests with no or small content to the upload resources. This could be abused to exhaust server resources by creating and holding open uploads indefinately with minimal work.
+
+Servers SHOULD provide mitigations for Slowloris attacks, such as increasing the maximum number of clients the server will allow, limiting the number of uploads a single client is allowed to make, imposing restrictions on the minimum transfer speed an uploads is allowed to have, and restricting the length of time an upload resource can exist.
 
 # IANA Considerations
 
