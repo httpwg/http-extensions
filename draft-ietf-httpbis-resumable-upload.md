@@ -48,6 +48,15 @@ normative:
 
 informative:
 
+  SLOWLORIS:
+    title: "Welcome to Slowloris - the low bandwidth, yet greedy and poisonous HTTP client!"
+    author:
+      -
+        initials: R.
+        surname: "\"RSnake\" Hansen"
+    date: 2009-06
+    target:
+     "https://web.archive.org/web/20150315054838/http://ha.ckers.org/slowloris/"
 
 --- abstract
 
@@ -208,6 +217,8 @@ If the request completes successfully but the entire upload is not yet complete,
 
 If the request includes an `Upload-Complete` field value set to true and a valid `Content-Length` header field, the client attempts to upload a fixed-length resource in one request. In this case, the upload's final size is the `Content-Length` field value and the server MUST record it to ensure its consistency.
 
+The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty entity. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring data, which can save client or server resources. Since informational responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
+
 The following example shows an upload creation. The client transfers the entire 100 bytes in the first request. The server generates two informational responses to transmit the upload resource's URL and progress information, and one final response to acknowledge the completed upload:
 
 ~~~ http-message
@@ -344,7 +355,9 @@ If the request completes successfully and the entire upload is complete, the ser
 
 If the request completes successfully but the entire upload is not yet complete indicated by the `Upload-Complete` field value set to false, the server MUST acknowledge it by responding with a `201 (Created)` status code and the `Upload-Complete` field value set to true.
 
-If the request includes the `Upload-Complete` field value set to true  and a valid `Content-Length` header field, the client attempts to upload the remaining resource in one request. In this case, the upload's final size is the sum of the upload's offset and the `Content-Length` header field. If the server does not have a record of the upload's final size from creation or the previous append, the server MUST record the upload's final size to ensure its consistency. If the server does have a previous record, that value MUST match the upload's final size. If they do not match, the server MUST reject the request with a `400 (Bad Request)` status code.
+If the request includes the `Upload-Complete` field value set to true and a valid `Content-Length` header field, the client attempts to upload the remaining resource in one request. In this case, the upload's final size is the sum of the upload's offset and the `Content-Length` header field. If the server does not have a record of the upload's final size from creation or the previous append, the server MUST record the upload's final size to ensure its consistency. If the server does have a previous record, that value MUST match the upload's final size. If they do not match, the server MUST reject the request with a `400 (Bad Request)` status code.
+
+The request content MAY be empty. If the `Upload-Complete` field is then set to true, the client wants to complete the upload without appending additional data.
 
 The following example shows an upload append. The client transfers the next 100 bytes at an offset of 100 and does not indicate that the upload is then completed. The server acknowledges the new offset:
 
@@ -415,6 +428,10 @@ The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in
 The upload resource URL is the identifier used for modifying the upload. Without further protection of this URL, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can access the upload resource. In addition, the upload resource URL SHOULD be generated in such a way that makes it hard to be guessed by unauthorized clients.
 
 Some servers or intermediaries provide scanning of content uploaded by clients. Any scanning mechanism that relies on receiving a complete file in a single request message can be defeated by resumable uploads because content can be split across multiple messages. Servers or intermediaries wishing to perform content scanning SHOULD consider how resumable uploads can circumvent scanning and take appropriate measures. Possible strategies include waiting for the upload to complete before scanning a full file, or disabling resumable uploads.
+
+Resumable uploads are vulnerable to Slowloris-style attacks {{SLOWLORIS}}. A malicious client may create upload resources and keep them alive by regularly sending `PATCH` requests with no or small content to the upload resources. This could be abused to exhaust server resources by creating and holding open uploads indefinately with minimal work.
+
+Servers SHOULD provide mitigations for Slowloris attacks, such as increasing the maximum number of clients the server will allow, limiting the number of uploads a single client is allowed to make, imposing restrictions on the minimum transfer speed an uploads is allowed to have, and restricting the length of time an upload resource can exist.
 
 # IANA Considerations
 
