@@ -48,6 +48,15 @@ normative:
 
 informative:
 
+  SLOWLORIS:
+    title: "Welcome to Slowloris - the low bandwidth, yet greedy and poisonous HTTP client!"
+    author:
+      -
+        initials: R.
+        surname: "\"RSnake\" Hansen"
+    date: 2009-06
+    target:
+     "https://web.archive.org/web/20150315054838/http://ha.ckers.org/slowloris/"
 
 --- abstract
 
@@ -410,7 +419,7 @@ The upload resource URL is the identifier used for modifying the upload. Without
 
 Some servers or intermediaries provide scanning of content uploaded by clients. Any scanning mechanism that relies on receiving a complete file in a single request message can be defeated by resumable uploads because content can be split across multiple messages. Servers or intermediaries wishing to perform content scanning SHOULD consider how resumable uploads can circumvent scanning and take appropriate measures. Possible strategies include waiting for the upload to complete before scanning a full file, or disabling resumable uploads.
 
-Resumable uploads are vulnerable to Slowloris-style attacks [SLOWLORIS]. A malicious client may create upload resources and keep them alive by regularly sending `PATCH` requests with no or small content to the upload resources. This could be abused to exhaust server resources by creating and holding open uploads indefinately with minimal work.
+Resumable uploads are vulnerable to Slowloris-style attacks {{SLOWLORIS}}. A malicious client may create upload resources and keep them alive by regularly sending `PATCH` requests with no or small content to the upload resources. This could be abused to exhaust server resources by creating and holding open uploads indefinately with minimal work.
 
 Servers SHOULD provide mitigations for Slowloris attacks, such as increasing the maximum number of clients the server will allow, limiting the number of uploads a single client is allowed to make, imposing restrictions on the minimum transfer speed an uploads is allowed to have, and restricting the length of time an upload resource can exist.
 
