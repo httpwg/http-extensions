@@ -519,6 +519,9 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 
 * Add upload progress notifications via informational responses.
 * Add security consideration regarding request filtering.
+* Explain the use of empty requests for creation uploads and appending.
+* Extend security consideration to include resource exhaustion attacks.
+* Allow 200 status codes for offset retrieval.
 
 ## Since draft-ietf-httpbis-resumable-upload-01
 {:numbered="false"}
