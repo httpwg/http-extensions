@@ -423,6 +423,10 @@ The `Upload-Complete` header field MUST only be used if support by the resource 
 
 The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY return a `308 (Permanent Redirect)` status code and clients SHOULD use new permanent URI for subsequent requests. If the client receives a `307 (Temporary Redirect)` response to an offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
 
+# Transfer and Content Codings
+
+A message might have a content coding, indicated by the `Content-Encoding` header field, and/or a transfer coding, indicated by the `Transfer-Encoding` header field, applied, which modify the representation of uploaded data in a message. For correct interoperability, the client and server must share the same logic when counting bytes for the upload offset. From the client's perspective, the offset is counted after content coding but before transfer coding is applied. From the server's perspective, the offset is counted after the content's transfer coding is reversed but before the content coding is reversed.
+
 # Security Considerations
 
 The upload resource URL is the identifier used for modifying the upload. Without further protection of this URL, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can access the upload resource. In addition, the upload resource URL SHOULD be generated in such a way that makes it hard to be guessed by unauthorized clients.
