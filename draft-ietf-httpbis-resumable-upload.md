@@ -298,7 +298,7 @@ If an upload is interrupted, the client MAY attempt to fetch the offset of the i
 
 The request MUST NOT include an `Upload-Offset` or `Upload-Complete` header field. The server MUST reject requests with either of these fields by responding with a `400 (Bad Request)` status code.
 
-If the server considers the upload resource to be active, it MUST respond with a `204 (No Content)` status code. The response MUST include the `Upload-Offset` header field, with the value set to the current resumption offset for the target resource. The response MUST include the `Upload-Complete` header field; the value is set to true only if the upload is complete.
+If the server considers the upload resource to be active, it MUST respond with a `204 (No Content)` or `200 (OK)` status code. The response MUST include the `Upload-Offset` header field, with the value set to the current resumption offset for the target resource. The response MUST include the `Upload-Complete` header field; the value is set to true only if the upload is complete.
 
 An upload is considered complete only if the server completely and successfully received a corresponding creation request ({{upload-creation}}) or append request ({{upload-appending}}) with the `Upload-Complete` header value set to true.
 
