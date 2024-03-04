@@ -224,7 +224,7 @@ The following example shows an upload creation. The client transfers the entire 
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 Upload-Complete: ?1
 Content-Length: 100
 
@@ -233,11 +233,11 @@ Content-Length: 100
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 Location: https://example.com/upload/b530ce8ff
 
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 Upload-Offset: 50
 
 HTTP/1.1 201 Created
@@ -250,7 +250,7 @@ The next example shows an upload creation, where only the first 25 bytes are tra
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 Upload-Complete: ?0
 Content-Length: 25
 
@@ -280,7 +280,7 @@ Clients MUST NOT attempt to resume an upload unless they receive `104 (Upload Re
 
 > **RFC Editor's Note:**  Please remove this section and `Upload-Draft-Interop-Version` from all examples prior to publication of a final version of this document.
 
-The current interop version is 4.
+The current interop version is 5.
 
 Client implementations of draft versions of the protocol MUST send a header field `Upload-Draft-Interop-Version` with the interop version as its value to its requests. The `Upload-Draft-Interop-Version` field value is an Integer.
 
@@ -319,7 +319,7 @@ The following example shows an offset retrieval request. The server indicates th
 ~~~ http-message
 HEAD /upload/b530ce8ff HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 ~~~
 
 ~~~ http-message
@@ -365,7 +365,7 @@ The following example shows an upload append. The client transfers the next 100 
 PATCH /upload/b530ce8ff HTTP/1.1
 Host: example.com
 Upload-Offset: 100
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 Content-Length: 100
 
 [content (100 bytes)]
@@ -399,7 +399,7 @@ The following example shows an upload cancellation:
 ~~~ http-message
 DELETE /upload/b530ce8ff HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 ~~~
 
 ~~~ http-message
@@ -522,6 +522,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 * Explain the use of empty requests for creation uploads and appending.
 * Extend security consideration to include resource exhaustion attacks.
 * Allow 200 status codes for offset retrieval.
+* Increase the draft interop version.
 
 ## Since draft-ietf-httpbis-resumable-upload-01
 {:numbered="false"}
