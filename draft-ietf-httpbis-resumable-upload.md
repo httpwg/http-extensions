@@ -217,7 +217,7 @@ If the request completes successfully but the entire upload is not yet complete,
 
 If the request includes an `Upload-Complete` field value set to true and a valid `Content-Length` header field, the client attempts to upload a fixed-length resource in one request. In this case, the upload's final size is the `Content-Length` field value and the server MUST record it to ensure its consistency.
 
-The server MAY enforce a maximum size of an upload resource. This limit MAY be equal to the upload's final size, if `Upload-Complete: ?1` and `Content-Length` are present in the upload creation request, or an arbitrary value. The limit's value or its extistence MUST NOT change throughout the lifetime of the upload resource. The server MAY indicate such a limit to the client by including the `Upload-Limit` header field in the informational or final response to upload creation. If the client receives an `Upload-Limit` header field that is less than the amount of bytes it intends to upload to a resource, it SHOULD stop the current upload transfer immediately and cancel the upload ({{upload-cancellation}}).
+The server MAY enforce a maximum size of an upload resource. This limit MAY be equal to the upload's final size, if `Upload-Complete: ?1` and `Content-Length` are present in the upload creation request, or an arbitrary value. The limit's value or its extistence MUST NOT change throughout the lifetime of the upload resource. The server MAY indicate such a limit to the client by including the `Upload-Limit` header field in the informational or final response to upload creation. If the client receives an `Upload-Limit` header field indicating that the maximum size is less than the amount of bytes it intends to upload to a resource, it SHOULD stop the current upload transfer immediately and cancel the upload ({{upload-cancellation}}).
 
 The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty entity. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring data, which can save client or server resources. Since informational responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
 
@@ -263,7 +263,7 @@ HTTP/1.1 201 Created
 Location: https://example.com/upload/b530ce8ff
 Upload-Complete: ?0
 Upload-Offset: 25
-Upload-Limit: 1000000000
+Upload-Limit: bytes=1000000000
 ~~~
 
 If the client received an informational response with the upload URL in the Location field value, it MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status is received. The client SHOULD NOT automatically retry if it receives a 4xx status code.
@@ -300,7 +300,7 @@ If an upload is interrupted, the client MAY attempt to fetch the offset of the i
 
 The request MUST NOT include an `Upload-Offset` or `Upload-Complete` header field. The server MUST reject requests with either of these fields by responding with a `400 (Bad Request)` status code.
 
-If the server considers the upload resource to be active, it MUST respond with a `204 (No Content)` or `200 (OK)` status code. The response MUST include the `Upload-Offset` header field, with the value set to the current resumption offset for the target resource. The response MUST include the `Upload-Complete` header field; the value is set to true only if the upload is complete. The response MAY include the `Upload-Limit` header field if an upper limit of the upload resource's size exists.
+If the server considers the upload resource to be active, it MUST respond with a `204 (No Content)` or `200 (OK)` status code. The response MUST include the `Upload-Offset` header field, with the value set to the current resumption offset for the target resource. The response MUST include the `Upload-Complete` header field; the value is set to true only if the upload is complete. The response MAY include the `Upload-Limit` header field if corresponding limits on the upload resource exist.
 
 An upload is considered complete only if the server completely and successfully received a corresponding creation request ({{upload-creation}}) or append request ({{upload-appending}}) with the `Upload-Complete` header value set to true.
 
@@ -416,7 +416,9 @@ The `Upload-Offset` request and response header field indicates the resumption o
 
 ## Upload-Limit
 
-The `Upload-Limit` response header field indicates the maximum size that an upload resource is allowed to reach, counted in bytes. The `Upload-Limit` field value is an Integer.
+The `Upload-Limit` response header field indicates limits applying the upload resource. The `Upload-Limit` field value is a Dictionary. The following limits are defined:
+
+- The `bytes` key specifies a maximum size that an upload resource is allowed to reach, counted in bytes. The value is an Integer.
 
 ## Upload-Complete
 
