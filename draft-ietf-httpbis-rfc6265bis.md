@@ -17,7 +17,7 @@ venue:
   type: Working Group
   home: https://httpwg.org/
   mail: ietf-http-wg@w3.org
-  arch: https://lists.w3.org/Archives/Publi5.7.1. The Cookie Header Fieldc/ietf-http-wg/
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
   repo: https://github.com/httpwg/http-extensions/labels/6265bis
 github-issue-label: 6265bis
 
