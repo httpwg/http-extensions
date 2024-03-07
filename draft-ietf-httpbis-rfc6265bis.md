@@ -139,6 +139,8 @@ informative:
   RFC5895:
   RFC6265:
   RFC7034:
+  RFC9113:
+  RFC9114:
   UTS46:
     target: http://unicode.org/reports/tr46/
     title: "Unicode IDNA Compatibility Processing"
@@ -859,6 +861,10 @@ header field that conforms to the following grammar:
 cookie        = cookie-string
 cookie-string = cookie-pair *( ";" SP cookie-pair )
 ~~~
+
+Servers SHOULD be tolerant to potentially receiving multiple cookie
+headers. For example, if an HTTP/2 {{RFC9113}} or HTTP/3 {{RFC9114}} connection
+splits a cookie header to improve compression.
 
 ### Semantics
 
@@ -1821,18 +1827,16 @@ are defined below depending on the type of retrieval.
 
 The user agent includes stored cookies in the Cookie HTTP request header field.
 
-When the user agent generates an HTTP request, the user agent MUST NOT attach
-more than one Cookie header field.
-
 A user agent MAY omit the Cookie header field in its entirety.  For example, the
 user agent might wish to block sending cookies during "third-party" requests
 from setting cookies (see {{third-party-cookies}}).
 
 If the user agent does attach a Cookie header field to an HTTP request, the
-user agent MUST compute the cookie-string following the algorithm defined in
-{{retrieval-algorithm}}, where the retrieval's URI is the request-uri, the
-retrieval's same-site status is computed for the HTTP request as defined in
-{{same-site-requests}}, and the retrieval's type is "HTTP".
+user agent MUST generate a single cookie-string and the user agent MUST compute
+the cookie-string following the algorithm defined in {{retrieval-algorithm}},
+where the retrieval's URI is the request-uri, the retrieval's same-site status
+is computed for the HTTP request as defined in {{same-site-requests}}, and the
+retrieval's type is "HTTP".
 
 ### Non-HTTP APIs {#non-http}
 
