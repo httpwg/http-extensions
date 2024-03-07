@@ -862,7 +862,7 @@ cookie        = cookie-string
 cookie-string = cookie-pair *( ";" SP cookie-pair )
 ~~~
 
-Servers SHOULD be tolerant to potentially receiving multiple cookie
+Servers MUST be tolerant to potentially receiving multiple cookie
 headers. For example, if an HTTP/2 {{RFC9113}} or HTTP/3 {{RFC9114}} connection
 splits a cookie header to improve compression.
 
