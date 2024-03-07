@@ -2690,7 +2690,6 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 ## draft-ietf-httpbis-rfc6265bis-14
 
 * Remove consideration of same-site redirect chain
-  <Issue url>
 
 
 # Acknowledgements
