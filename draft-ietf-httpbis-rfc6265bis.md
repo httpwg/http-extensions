@@ -2695,6 +2695,11 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Use navigables concept
   <https://github.com/httpwg/http-extensions/pull/2478>
 
+## draft-ietf-httpbis-rfc6265bis-14
+
+* Refactor cookie header text
+  <https://github.com/httpwg/http-extensions/pull/2753>
+
 
 # Acknowledgements
 {:numbered="false"}
