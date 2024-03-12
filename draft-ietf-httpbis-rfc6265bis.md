@@ -2714,6 +2714,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Refactor cookie header text
   <https://github.com/httpwg/http-extensions/pull/2753>
 
+* Add additional developer warnings for SameSite cookies
+  <https://github.com/httpwg/http-extensions/pull/2758>
+
 
 # Acknowledgements
 {:numbered="false"}
