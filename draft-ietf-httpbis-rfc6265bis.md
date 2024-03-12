@@ -2700,6 +2700,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Refactor cookie header text
   <https://github.com/httpwg/http-extensions/pull/2753>
 
+* Support potentially trustworthy origins
+  <https://github.com/httpwg/http-extensions/pull/2759>
+
 
 # Acknowledgements
 {:numbered="false"}
