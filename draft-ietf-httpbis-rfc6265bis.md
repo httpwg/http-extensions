@@ -242,7 +242,7 @@ Although simple on their surface, cookies have a number of complexities. For
 example, the server indicates a scope for each cookie when sending it to the
 user agent. The scope indicates the maximum amount of time in which the user
 agent should return the cookie, the servers to which the user agent should
-return the cookie, and the URI schemes for which the cookie is applicable.
+return the cookie, and the connection types for which the cookie is applicable.
 
 For historical reasons, cookies contain a number of security and privacy
 infelicities. For example, a server can indicate that a given cookie is
@@ -1672,9 +1672,9 @@ user agent MUST process the cookie as follows:
     attribute-name of "Secure", set the cookie's secure-only-flag to true.
     Otherwise, set the cookie's secure-only-flag to false.
 
-13.  If the scheme component of the request-uri does not denote a "secure"
-    protocol (as defined by the user agent), and the cookie's secure-only-flag
-    is true, then abort these steps and ignore the cookie entirely.
+13. If the request-uri does not denote a "secure" connection (as defined by the
+    user agent), and the cookie's secure-only-flag is true, then abort these
+    steps and ignore the cookie entirely.
 
 14. If the cookie-attribute-list contains an attribute with an
     attribute-name of "HttpOnly", set the cookie's http-only-flag to true.
@@ -1683,10 +1683,10 @@ user agent MUST process the cookie as follows:
 15. If the cookie was received from a "non-HTTP" API and the cookie's
     http-only-flag is true, abort these steps and ignore the cookie entirely.
 
-16. If the cookie's secure-only-flag is false, and the scheme component of
-    request-uri does not denote a "secure" protocol, then abort these steps and
-    ignore the cookie entirely if the cookie store contains one or more cookies
-    that meet all of the following criteria:
+16. If the cookie's secure-only-flag is false, and the request-uri does not
+    denote a "secure" connection, then abort these steps and ignore the cookie
+    entirely if the cookie store contains one or more cookies that meet all of
+    the following criteria:
 
     1.  Their name matches the name of the newly-created cookie.
 
@@ -1884,14 +1884,14 @@ cookie-string from a given cookie store.
 
    * The retrieval's URI's path path-matches the cookie's path.
 
-   * If the cookie's secure-only-flag is true, then the retrieval's URI's
-     scheme must denote a "secure" protocol (as defined by the user agent).
+   * If the cookie's secure-only-flag is true, then the retrieval's URI must
+     denote a "secure" connection (as defined by the user agent).
 
-     NOTE: The notion of a "secure" protocol is not defined by this document.
-     Typically, user agents consider a protocol secure if the protocol makes
-     use of transport-layer security, such as SSL or TLS. For example, most
-     user agents consider "https" to be a scheme that denotes a secure
-     protocol.
+     NOTE: The notion of a "secure" connection is not defined by this document.
+     Typically, user agents consider a connection secure if the connection makes
+     use of transport-layer security, such as SSL or TLS, or if host is trusted.
+     For example, most user agents consider "https" to be a scheme that denotes
+     a secure protocol and "localhost" to be trusted host.
 
    * If the cookie's http-only-flag is true, then exclude the cookie if the
      retrieval's type is "non-HTTP".
@@ -2699,6 +2699,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * Refactor cookie header text
   <https://github.com/httpwg/http-extensions/pull/2753>
+
+* Support potentially trustworthy origins
+  <https://github.com/httpwg/http-extensions/pull/2759>
 
 
 # Acknowledgements
