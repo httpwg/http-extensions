@@ -45,6 +45,8 @@ author:
 
 normative:
   HTTP: RFC9110
+  RFC9112:
+    display: HTTP/1.1
 
 informative:
 
@@ -266,7 +268,7 @@ Upload-Offset: 25
 
 If the client received an informational response with the upload URL in the Location field value, it MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status is received. The client SHOULD NOT automatically retry if it receives a 4xx status code.
 
-File metadata can affect how servers might act on the uploaded file. Clients can send representation metadata (see {{Section 8.3 of HTTP}}) in the request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header field ({{Section 8.3 of HTTP}}) can be used to indicate the MIME type of the file. The `Content-Disposition` header field ({{!RFC6266}}) can be used to transmit a filename; if included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
+File metadata can affect how servers might act on the uploaded file. Clients can send representation metadata (see {{Section 8.3 of HTTP}}) in the request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header field ({{Section 8.3 of HTTP}}) can be used to indicate the MIME type of the file. The content coding of the representation is specified using the `Content-Encoding` header field and is retained throughout the entire upload. When resuming an interrupted upload, the same content coding is used for appending to the upload, producing a representation of the upload resource with one consistent content coding. The `Content-Disposition` header field ({{!RFC6266}}) can be used to transmit a filename; if included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
 
 ## Feature Detection {#feature-detection}
 
@@ -339,7 +341,7 @@ The request MUST use the `PATCH` method and be sent to the upload resource. The 
 
 If the end of the request content is not the end of the upload, the `Upload-Complete` field value ({{upload-complete}}) MUST be set to false.
 
-The server SHOULD respect representation metadata received during creation ({{upload-creation}}) and ignore any representation metadata received from appending ({{upload-appending}}).
+The server SHOULD respect representation metadata received during creation ({{upload-creation}}). A request for appending ({{upload-appending}}) to an upload resource MUST target the same representation and MUST use the same `Content-Encoding` header field from upload creation ({{upload-creation}}).
 
 If the server does not consider the upload associated with the upload resource active, it MUST respond with a `404 (Not Found)` status code.
 
@@ -422,6 +424,10 @@ The `Upload-Complete` header field MUST only be used if support by the resource 
 # Redirection
 
 The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY return a `308 (Permanent Redirect)` status code and clients SHOULD use new permanent URI for subsequent requests. If the client receives a `307 (Temporary Redirect)` response to an offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
+
+# Transfer and Content Codings
+
+A message might have a content coding, indicated by the `Content-Encoding` header field, and/or a transfer coding, indicated by the `Transfer-Encoding` header field ({{Section 6.1 of RFC9112}}), applied, which modify the representation of uploaded data in a message. For correct interoperability, the client and server must share the same logic when counting bytes for the upload offset. From the client's perspective, the offset is counted after content coding but before transfer coding is applied. From the server's perspective, the offset is counted after the content's transfer coding is reversed but before the content coding is reversed.
 
 # Security Considerations
 
