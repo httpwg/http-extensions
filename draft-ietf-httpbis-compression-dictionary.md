@@ -112,7 +112,7 @@ for an invalid pattern that MUST NOT be used:
 1. Let PATTERN be a URLPattern constructed by setting input=MATCH,
 and baseURL=URL (https://urlpattern.spec.whatwg.org/).
 1. If PATTERN has regexp groups then return FALSE
-(https://urlpattern.spec.whatwg.org/#urlpattern-has-regexp-groups).
+(https://urlpattern.spec.whatwg.org/#url-pattern-has-regexp-groups).
 1. Return True.
 
 The "match" value is required and MUST be included in the
