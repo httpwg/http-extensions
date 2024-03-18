@@ -1059,15 +1059,11 @@ following conditions holds:
 Two origins are same-site if they satisfy the "same site" criteria defined in
 {{SAMESITE}}. A request is "same-site" if the following criteria are true:
 
-1.  The request is not the result of a cross-site redirect. That is,
-    the origin of every url in the request's url list is same-site with the
-    request's current url's origin.
-
-2.  The request is not the result of a reload navigation triggered through a
+1.  The request is not the result of a reload navigation triggered through a
     user interface element (as defined by the user agent; e.g., a request
     triggered by the user clicking a refresh button on a toolbar).
 
-3.  The request's current url's origin is same-site with the request's
+2.  The request's current url's origin is same-site with the request's
     client's "site for cookies" (which is an origin), or if the request has no
     client or the request's client is null.
 
@@ -2719,6 +2715,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * Add additional developer warnings for SameSite cookies
   <https://github.com/httpwg/http-extensions/pull/2758>
+
+* Remove consideration of same-site redirect chain
+  <https://github.com/httpwg/http-extensions/pull/2750>
 
 # Acknowledgements
 {:numbered="false"}
