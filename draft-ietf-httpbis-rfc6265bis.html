@@ -2446,19 +2446,14 @@ of the request-path that is not included in the cookie-path is a %x2F
 <span>[<a href="#SAMESITE" class="cite xref">SAMESITE</a>]</span>. A request is "same-site" if the following criteria are true:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.2-2">
 <li id="section-5.2-2.1">
-            <p id="section-5.2-2.1.1">The request is not the result of a cross-site redirect. That is,
-the origin of every url in the request's url list is same-site with the
-request's current url's origin.<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-2.1.1">The request is not the result of a reload navigation triggered through a
+user interface element (as defined by the user agent; e.g., a request
+triggered by the user clicking a refresh button on a toolbar).<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.2-2.2">
-            <p id="section-5.2-2.2.1">The request is not the result of a reload navigation triggered through a
-user interface element (as defined by the user agent; e.g., a request
-triggered by the user clicking a refresh button on a toolbar).<a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-5.2-2.3">
-            <p id="section-5.2-2.3.1">The request's current url's origin is same-site with the request's
+            <p id="section-5.2-2.2.1">The request's current url's origin is same-site with the request's
 client's "site for cookies" (which is an origin), or if the request has no
-client or the request's client is null.<a href="#section-5.2-2.3.1" class="pilcrow">¶</a></p>
+client or the request's client is null.<a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <p id="section-5.2-3">Requests which are the result of a reload navigation triggered through a user
@@ -4886,6 +4881,10 @@ user interface elements:
           <li class="normal" id="appendix-A.14-1.3">
             <p id="appendix-A.14-1.3.1">Add additional developer warnings for SameSite cookies
 <a href="https://github.com/httpwg/http-extensions/pull/2758">https://github.com/httpwg/http-extensions/pull/2758</a><a href="#appendix-A.14-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.14-1.4">
+            <p id="appendix-A.14-1.4.1">Remove consideration of same-site redirect chain
+<a href="https://github.com/httpwg/http-extensions/pull/2750">https://github.com/httpwg/http-extensions/pull/2750</a><a href="#appendix-A.14-1.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
