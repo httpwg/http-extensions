@@ -486,7 +486,7 @@ Note that in Dictionary ({{dictionary}}) and Parameter ({{param}}) values, Boole
 
 Date values can be conveyed in Structured Fields.
 
-Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from 1970-01-01T00:00:00Z, excluding leap seconds.
+Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from 1970-01-01T00:00:00Z, excluding leap seconds. Accordingly, their serialization in textual HTTP fields is similar to that of Integers, distinguished from them with a leading "@".
 
 For example:
 
@@ -504,6 +504,8 @@ Display Strings are similar to Strings, in that they consist of zero or more cha
 Display Strings are intended for use in cases where a value is displayed to end users, and therefore may need to carry non-ASCII content. It is NOT RECOMMENDED that they be used in situations where a String ({{string}}) or Token ({{token}}) would be adequate, because Unicode has processing considerations (e.g., normalization) and security considerations (e.g., homograph attacks) that make it more difficult to handle correctly.
 
 Note that Display Strings do not indicate the language used in the value; that can be done separately if necessary (e.g., with a parameter).
+
+In textual HTTP headers, Display Strings are represented in a manner similar to Strings, except that non-ASCII characters are percent-encoded; there is a leading "%" to distinguish them from Strings.
 
 For example:
 
