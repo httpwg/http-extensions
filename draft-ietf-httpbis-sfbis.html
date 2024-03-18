@@ -11,11 +11,11 @@
        This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields, known as "Structured Fields", "Structured Headers", or "Structured Trailers". It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values. 
        This document obsoletes RFC 8941. 
     ' name="description">
-<meta content="xml2rfc 3.20.0" name="generator">
+<meta content="xml2rfc 3.20.1" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-httpbis-sfbis-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.20.0
+  xml2rfc 3.20.1
     Python 3.11.8
     ConfigArgParse 1.7
     google-i18n-address 3.1.0
@@ -1737,7 +1737,7 @@ Example-Boolean: ?1
 <a href="#section-3.3.7" class="section-number selfRef">3.3.7. </a><a href="#name-dates" class="section-name selfRef">Dates</a>
           </h4>
 <p id="section-3.3.7-1">Date values can be conveyed in Structured Fields.<a href="#section-3.3.7-1" class="pilcrow">¶</a></p>
-<p id="section-3.3.7-2">Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from 1970-01-01T00:00:00Z, excluding leap seconds.<a href="#section-3.3.7-2" class="pilcrow">¶</a></p>
+<p id="section-3.3.7-2">Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from 1970-01-01T00:00:00Z, excluding leap seconds. Accordingly, their serialization in textual HTTP fields is similar to that of Integers, distinguished from them with a leading "@".<a href="#section-3.3.7-2" class="pilcrow">¶</a></p>
 <p id="section-3.3.7-3">For example:<a href="#section-3.3.7-3" class="pilcrow">¶</a></p>
 <div class="lang-http-message-new sourcecode" id="section-3.3.7-4">
 <pre>
@@ -1755,13 +1755,14 @@ Example-Date: @1659578233
 <p id="section-3.3.8-1">Display Strings are similar to Strings, in that they consist of zero or more characters, but they allow Unicode scalar values (i.e., all Unicode code points except for surrogates), unlike Strings.<a href="#section-3.3.8-1" class="pilcrow">¶</a></p>
 <p id="section-3.3.8-2">Display Strings are intended for use in cases where a value is displayed to end users, and therefore may need to carry non-ASCII content. It is NOT RECOMMENDED that they be used in situations where a String (<a href="#string" class="auto internal xref">Section 3.3.3</a>) or Token (<a href="#token" class="auto internal xref">Section 3.3.4</a>) would be adequate, because Unicode has processing considerations (e.g., normalization) and security considerations (e.g., homograph attacks) that make it more difficult to handle correctly.<a href="#section-3.3.8-2" class="pilcrow">¶</a></p>
 <p id="section-3.3.8-3">Note that Display Strings do not indicate the language used in the value; that can be done separately if necessary (e.g., with a parameter).<a href="#section-3.3.8-3" class="pilcrow">¶</a></p>
-<p id="section-3.3.8-4">For example:<a href="#section-3.3.8-4" class="pilcrow">¶</a></p>
-<div class="lang-http-message-new sourcecode" id="section-3.3.8-5">
+<p id="section-3.3.8-4">In textual HTTP headers, Display Strings are represented in a manner similar to Strings, except that non-ASCII characters are percent-encoded; there is a leading "%" to distinguish them from Strings.<a href="#section-3.3.8-4" class="pilcrow">¶</a></p>
+<p id="section-3.3.8-5">For example:<a href="#section-3.3.8-5" class="pilcrow">¶</a></p>
+<div class="lang-http-message-new sourcecode" id="section-3.3.8-6">
 <pre>
 Example-DisplayString: %"This is intended for display to %c3%bcsers."
-</pre><a href="#section-3.3.8-5" class="pilcrow">¶</a>
+</pre><a href="#section-3.3.8-6" class="pilcrow">¶</a>
 </div>
-<p id="section-3.3.8-6">See <a href="#security" class="auto internal xref">Section 6</a> for additional security considerations when handling Display Strings.<a href="#section-3.3.8-6" class="pilcrow">¶</a></p>
+<p id="section-3.3.8-7">See <a href="#security" class="auto internal xref">Section 6</a> for additional security considerations when handling Display Strings.<a href="#section-3.3.8-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
