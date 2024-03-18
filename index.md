@@ -32,6 +32,22 @@ View [saved issues](issues.html), or the latest GitHub [issues](https://github.c
 | [The HTTP QUERY Method](self-references-distracting/draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](self-references-distracting/draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | same as main |
 | [Compression Dictionary Transport](self-references-distracting/draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](self-references-distracting/draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-compression-dictionary.txt&url_2=https://httpwg.github.io/http-extensions/self-references-distracting/draft-ietf-httpbis-compression-dictionary.txt) |
 
+## Preview for branch [mnot-precis](mnot-precis)
+
+| Draft |     |     |     |
+| ----- | --- | --- | --- |
+| [DNS Aliases Proxy-Status](mnot-precis/draft-ietf-httpbis-alias-proxy-status.html "HTTP Proxy-Status Parameter for Next-Hop Aliases (HTML)") | [plain text](mnot-precis/draft-ietf-httpbis-alias-proxy-status.txt "HTTP Proxy-Status Parameter for Next-Hop Aliases (Text)") | same as main |
+| [Templated CONNECT-TCP](mnot-precis/draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](mnot-precis/draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | same as main |
+| [Structured Field Values for HTTP](mnot-precis/draft-ietf-httpbis-sfbis.html "Structured Field Values for HTTP (HTML)") | [plain text](mnot-precis/draft-ietf-httpbis-sfbis.txt "Structured Field Values for HTTP (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-sfbis.txt&url_2=https://httpwg.github.io/http-extensions/mnot-precis/draft-ietf-httpbis-sfbis.txt) |
+| [Retrofit Structured Fields](mnot-precis/draft-ietf-httpbis-retrofit.html "Retrofit Structured Fields for HTTP (HTML)") | [plain text](mnot-precis/draft-ietf-httpbis-retrofit.txt "Retrofit Structured Fields for HTTP (Text)") | same as main |
+| [Resumable Uploads](mnot-precis/draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](mnot-precis/draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | same as main |
+| [HTTP Cache Groups](mnot-precis/draft-ietf-httpbis-cache-groups.html "HTTP Cache Groups (HTML)") | [plain text](mnot-precis/draft-ietf-httpbis-cache-groups.txt "HTTP Cache Groups (Text)") | same as main |
+| [Cookies: HTTP State Management Mechanism](mnot-precis/draft-ietf-httpbis-rfc6265bis.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](mnot-precis/draft-ietf-httpbis-rfc6265bis.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
+| [The Signature HTTP Authentication Scheme](mnot-precis/draft-ietf-httpbis-unprompted-auth.html "The Signature HTTP Authentication Scheme (HTML)") | [plain text](mnot-precis/draft-ietf-httpbis-unprompted-auth.txt "The Signature HTTP Authentication Scheme (Text)") | same as main |
+| [Optimistic HTTP Upgrade Security](mnot-precis/draft-ietf-httpbis-optimistic-upgrade.html "Security Considerations for Optimistic Use of HTTP Upgrade (HTML)") | [plain text](mnot-precis/draft-ietf-httpbis-optimistic-upgrade.txt "Security Considerations for Optimistic Use of HTTP Upgrade (Text)") | same as main |
+| [The HTTP QUERY Method](mnot-precis/draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](mnot-precis/draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | same as main |
+| [Compression Dictionary Transport](mnot-precis/draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](mnot-precis/draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | same as main |
+
 ## Preview for branch [sign_auth](sign_auth)
 
 ## Preview for branch [sign_auth/intermediary](sign_auth/intermediary)
