@@ -6,8 +6,8 @@ HTTP                                                     S. Bingler, Ed.
 Internet-Draft                                              M. West, Ed.
 Obsoletes: 6265 (if approved)                                 Google LLC
 Intended status: Standards Track                        J. Wilander, Ed.
-Expires: 14 September 2024                                    Apple, Inc
-                                                           13 March 2024
+Expires: 19 September 2024                                    Apple, Inc
+                                                           18 March 2024
 
 
                 Cookies: HTTP State Management Mechanism
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 September 2024.
+   This Internet-Draft will expire on 19 September 2024.
 
 Copyright Notice
 
@@ -2356,7 +2356,17 @@ Table of Contents
    however, prudent to ensure that this designation is not the extent of
    a site's defense against CSRF, as same-site navigations and
    submissions can certainly be executed in conjunction with other
-   attack vectors such as cross-site scripting.
+   attack vectors such as cross-site scripting or abuse of page
+   redirections.
+
+   Understanding how and when a request is considered same-site is also
+   important in order to properly design a site for SameSite cookies.
+   For example, if a top-level request is made to a sensitive page that
+   request will be considered cross-site and SameSite cookies won’t be
+   sent; that page’s sub-resources requests, however, are same-site and
+   would receive SameSite cookies.  Sites can avoid inadvertently
+   allowing access to these sub-resources by returning an error for the
+   initial page request if it doesn’t include the appropriate cookies.
 
    Developers are strongly encouraged to deploy the usual server-side
    defenses (CSRF tokens, ensuring that "safe" HTTP methods are
@@ -2453,6 +2463,12 @@ Table of Contents
    user interface may replay the original (potentially malicious)
    request.  Thus, the reload request should be considered cross-site,
    like the request that initially navigated to the page.
+
+   Because requests issued for, non-user initiated, reloads attach all
+   SameSite cookies, developers should be careful and thoughtful about
+   when to initiate a reload in order to avoid a CSRF attack.  For
+   example, the page could only initiate a reload if a CSRF token is
+   present on the initial request.
 
 8.8.6.  Top-level requests with "unsafe" methods
 
@@ -3040,6 +3056,10 @@ A.14.  draft-ietf-httpbis-rfc6265bis-14
    *  Support potentially trustworthy origins https://github.com/httpwg/
       http-extensions/pull/2759 (https://github.com/httpwg/http-
       extensions/pull/2759)
+
+   *  Add additional developer warnings for SameSite cookies
+      https://github.com/httpwg/http-extensions/pull/2758
+      (https://github.com/httpwg/http-extensions/pull/2758)
 
 Acknowledgements
 
