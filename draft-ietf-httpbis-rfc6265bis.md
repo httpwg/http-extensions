@@ -139,6 +139,8 @@ informative:
   RFC5895:
   RFC6265:
   RFC7034:
+  RFC9113:
+  RFC9114:
   UTS46:
     target: http://unicode.org/reports/tr46/
     title: "Unicode IDNA Compatibility Processing"
@@ -240,7 +242,7 @@ Although simple on their surface, cookies have a number of complexities. For
 example, the server indicates a scope for each cookie when sending it to the
 user agent. The scope indicates the maximum amount of time in which the user
 agent should return the cookie, the servers to which the user agent should
-return the cookie, and the URI schemes for which the cookie is applicable.
+return the cookie, and the connection types for which the cookie is applicable.
 
 For historical reasons, cookies contain a number of security and privacy
 infelicities. For example, a server can indicate that a given cookie is
@@ -859,6 +861,10 @@ header field that conforms to the following grammar:
 cookie        = cookie-string
 cookie-string = cookie-pair *( ";" SP cookie-pair )
 ~~~
+
+Servers MUST be tolerant of multiple cookie headers. For example, an HTTP/2
+{{RFC9113}} or HTTP/3 {{RFC9114}} connection might split a cookie header to
+improve compression.
 
 ### Semantics
 
@@ -1662,9 +1668,9 @@ user agent MUST process the cookie as follows:
     attribute-name of "Secure", set the cookie's secure-only-flag to true.
     Otherwise, set the cookie's secure-only-flag to false.
 
-13.  If the scheme component of the request-uri does not denote a "secure"
-    protocol (as defined by the user agent), and the cookie's secure-only-flag
-    is true, then abort these steps and ignore the cookie entirely.
+13. If the request-uri does not denote a "secure" connection (as defined by the
+    user agent), and the cookie's secure-only-flag is true, then abort these
+    steps and ignore the cookie entirely.
 
 14. If the cookie-attribute-list contains an attribute with an
     attribute-name of "HttpOnly", set the cookie's http-only-flag to true.
@@ -1673,10 +1679,10 @@ user agent MUST process the cookie as follows:
 15. If the cookie was received from a "non-HTTP" API and the cookie's
     http-only-flag is true, abort these steps and ignore the cookie entirely.
 
-16. If the cookie's secure-only-flag is false, and the scheme component of
-    request-uri does not denote a "secure" protocol, then abort these steps and
-    ignore the cookie entirely if the cookie store contains one or more cookies
-    that meet all of the following criteria:
+16. If the cookie's secure-only-flag is false, and the request-uri does not
+    denote a "secure" connection, then abort these steps and ignore the cookie
+    entirely if the cookie store contains one or more cookies that meet all of
+    the following criteria:
 
     1.  Their name matches the name of the newly-created cookie.
 
@@ -1817,18 +1823,16 @@ are defined below depending on the type of retrieval.
 
 The user agent includes stored cookies in the Cookie HTTP request header field.
 
-When the user agent generates an HTTP request, the user agent MUST NOT attach
-more than one Cookie header field.
-
 A user agent MAY omit the Cookie header field in its entirety.  For example, the
 user agent might wish to block sending cookies during "third-party" requests
 from setting cookies (see {{third-party-cookies}}).
 
 If the user agent does attach a Cookie header field to an HTTP request, the
-user agent MUST compute the cookie-string following the algorithm defined in
-{{retrieval-algorithm}}, where the retrieval's URI is the request-uri, the
-retrieval's same-site status is computed for the HTTP request as defined in
-{{same-site-requests}}, and the retrieval's type is "HTTP".
+user agent MUST generate a single cookie-string and the user agent MUST compute
+the cookie-string following the algorithm defined in {{retrieval-algorithm}},
+where the retrieval's URI is the request-uri, the retrieval's same-site status
+is computed for the HTTP request as defined in {{same-site-requests}}, and the
+retrieval's type is "HTTP".
 
 ### Non-HTTP APIs {#non-http}
 
@@ -1876,14 +1880,14 @@ cookie-string from a given cookie store.
 
    * The retrieval's URI's path path-matches the cookie's path.
 
-   * If the cookie's secure-only-flag is true, then the retrieval's URI's
-     scheme must denote a "secure" protocol (as defined by the user agent).
+   * If the cookie's secure-only-flag is true, then the retrieval's URI must
+     denote a "secure" connection (as defined by the user agent).
 
-     NOTE: The notion of a "secure" protocol is not defined by this document.
-     Typically, user agents consider a protocol secure if the protocol makes
-     use of transport-layer security, such as SSL or TLS. For example, most
-     user agents consider "https" to be a scheme that denotes a secure
-     protocol.
+     NOTE: The notion of a "secure" connection is not defined by this document.
+     Typically, user agents consider a connection secure if the connection makes
+     use of transport-layer security, such as SSL or TLS, or if host is trusted.
+     For example, most user agents consider "https" to be a scheme that denotes
+     a secure protocol and "localhost" to be trusted host.
 
    * If the cookie's http-only-flag is true, then exclude the cookie if the
      retrieval's type is "non-HTTP".
@@ -2268,7 +2272,16 @@ security properties required by applications.
 strict mode, and when supported by the client. It is, however, prudent to ensure
 that this designation is not the extent of a site's defense against CSRF, as
 same-site navigations and submissions can certainly be executed in conjunction
-with other attack vectors such as cross-site scripting.
+with other attack vectors such as cross-site scripting or abuse of page
+redirections.
+
+Understanding how and when a request is considered same-site is also important
+in order to properly design a site for SameSite cookies. For example, if a
+top-level request is made to a sensitive page that request will be considered
+cross-site and SameSite cookies won’t be sent; that page’s sub-resources
+requests, however, are same-site and would receive SameSite cookies. Sites can
+avoid inadvertently allowing access to these sub-resources by returning an error
+for the initial page request if it doesn’t include the appropriate cookies.
 
 Developers are strongly encouraged to deploy the usual server-side defenses
 (CSRF tokens, ensuring that "safe" HTTP methods are idempotent, etc) to mitigate
@@ -2357,6 +2370,11 @@ cookie would defeat the purpose of withholding it in the first place, as the
 reload navigation triggered through the user interface may replay the original
 (potentially malicious) request. Thus, the reload request should be considered
 cross-site, like the request that initially navigated to the page.
+
+Because requests issued for, non-user initiated, reloads attach all SameSite
+cookies, developers should be careful and thoughtful about when to initiate a
+reload in order to avoid a CSRF attack. For example, the page could only
+initiate a reload if a CSRF token is present on the initial request.
 
 ### Top-level requests with "unsafe" methods {#unsafe-top-level-requests}
 
@@ -2689,9 +2707,17 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 ## draft-ietf-httpbis-rfc6265bis-14
 
+* Refactor cookie header text
+  <https://github.com/httpwg/http-extensions/pull/2753>
+
+* Support potentially trustworthy origins
+  <https://github.com/httpwg/http-extensions/pull/2759>
+
+* Add additional developer warnings for SameSite cookies
+  <https://github.com/httpwg/http-extensions/pull/2758>
+
 * Remove consideration of same-site redirect chain
   <https://github.com/httpwg/http-extensions/pull/2750>
-
 
 # Acknowledgements
 {:numbered="false"}
