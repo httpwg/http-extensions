@@ -2276,7 +2276,16 @@ security properties required by applications.
 strict mode, and when supported by the client. It is, however, prudent to ensure
 that this designation is not the extent of a site's defense against CSRF, as
 same-site navigations and submissions can certainly be executed in conjunction
-with other attack vectors such as cross-site scripting.
+with other attack vectors such as cross-site scripting or abuse of page
+redirections.
+
+Understanding how and when a request is considered same-site is also important
+in order to properly design a site for SameSite cookies. For example, if a
+top-level request is made to a sensitive page that request will be considered
+cross-site and SameSite cookies won’t be sent; that page’s sub-resources
+requests, however, are same-site and would receive SameSite cookies. Sites can
+avoid inadvertently allowing access to these sub-resources by returning an error
+for the initial page request if it doesn’t include the appropriate cookies.
 
 Developers are strongly encouraged to deploy the usual server-side defenses
 (CSRF tokens, ensuring that "safe" HTTP methods are idempotent, etc) to mitigate
@@ -2365,6 +2374,11 @@ cookie would defeat the purpose of withholding it in the first place, as the
 reload navigation triggered through the user interface may replay the original
 (potentially malicious) request. Thus, the reload request should be considered
 cross-site, like the request that initially navigated to the page.
+
+Because requests issued for, non-user initiated, reloads attach all SameSite
+cookies, developers should be careful and thoughtful about when to initiate a
+reload in order to avoid a CSRF attack. For example, the page could only
+initiate a reload if a CSRF token is present on the initial request.
 
 ### Top-level requests with "unsafe" methods {#unsafe-top-level-requests}
 
@@ -2703,6 +2717,8 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Support potentially trustworthy origins
   <https://github.com/httpwg/http-extensions/pull/2759>
 
+* Add additional developer warnings for SameSite cookies
+  <https://github.com/httpwg/http-extensions/pull/2758>
 
 # Acknowledgements
 {:numbered="false"}
