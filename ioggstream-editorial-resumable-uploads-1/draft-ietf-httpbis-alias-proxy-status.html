@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>HTTP Proxy-Status Parameter for Next-Hop Aliases</title>
+<meta content="Tommy Pauly" name="author">
+<meta content="
+       This document defines the  next-hop-aliases  HTTP Proxy-Status Parameter. This parameter carries
+the list of aliases and canonical names an intermediary received during DNS resolution as part
+of establishing a connection to the next hop. 
+    " name="description">
+<meta content="xml2rfc 3.20.1" name="generator">
+<meta content="proxy status" name="keyword">
+<meta content="draft-ietf-httpbis-alias-proxy-status-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.20.1
+    Python 3.11.8
+    ConfigArgParse 1.7
+    google-i18n-address 3.1.0
+    intervaltree 3.1.0
+    Jinja2 3.1.2
+    lxml 4.9.3
+    platformdirs 4.2.0
+    pycountry 22.3.5
+    PyYAML 6.0.1
+    requests 2.31.0
+    setuptools 68.2.2
+    six 1.16.0
+    wcwidth 0.2.13
+-->
+<link href="draft-ietf-httpbis-alias-proxy-status.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Cabin Condensed", sans-serif;
+  font-weight: 600;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+}
+:is(ol, ul) :is(ol, ul) {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  line-height: 1;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+}
+dl.olPercent {
+  --indent: 5ch;
+}
+dl > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+dl.olPercent > dt {
+  min-width: calc(var(--indent) - 2ch);
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:first-child, .break:first-child + *) {
+  margin-top: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:last-child) {
+  margin-bottom: 0;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    overflow-x: auto;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+}
+a.pilcrow[href] { color: var(--pilcrow-weak); }
+a.pilcrow[href]:hover { text-decoration: none; }
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+}
+#identifiers dt {
+  width: var(--identifier-width);
+  min-width: var(--identifier-width);
+  clear: left;
+  float: left;
+  text-align: right;
+  margin-right: 1ch;
+}
+#identifiers dd {
+  margin: 0;
+  margin-left: calc(1em + var(--identifier-width)) !important;
+  min-width: 5em;
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+#toc nav ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+#toc nav li {
+  line-height: 1.3em;
+  margin: 2px 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+#toc a.xref {
+  white-space: normal;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 10ch;
+  margin-right: 1.5ch;
+}
+.references dt:target::before {
+  content: "⇒";
+  width: 15px;
+  margin: 0 10px 0 -25px;
+}
+.references dd {
+  margin-left: 12ch !important;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc.active {
+      opacity: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 8px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active nav {
+    display: block;
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin-top: 2px;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  #toc nav > ul  {
+    margin-bottom: 2em;
+  }
+  #toc ul {
+    margin: 0 0 0 4px;
+    font-size: var(--small-font-size);
+  }
+  #toc ul :is(p, li) {
+    margin: 2px 0;
+    line-height: 22px;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+  .toplink {
+    display: none;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Changes introduced to fix issues found during implementation */
+
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin: 8px 0.5em 0;
+}
+
+/* Provide styling for table cell text alignment */
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 20em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">DNS Aliases Proxy-Status</td>
+<td class="right">March 2024</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Pauly</td>
+<td class="center">Expires 21 September 2024</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">HTTP</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-ietf-httpbis-alias-proxy-status-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2024-03-20" class="published">20 March 2024</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Standards Track</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2024-09-21">21 September 2024</time></dd>
+<dt class="label-authors">Author:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">T. Pauly</div>
+<div class="org">Apple, Inc.</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">HTTP Proxy-Status Parameter for Next-Hop Aliases</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document defines the <code>next-hop-aliases</code> HTTP Proxy-Status Parameter. This parameter carries
+the list of aliases and canonical names an intermediary received during DNS resolution as part
+of establishing a connection to the next hop.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-ietf-httpbis-alias-proxy-status/">https://datatracker.ietf.org/doc/draft-ietf-httpbis-alias-proxy-status/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        HTTP Working Group mailing list (<span><a href="mailto:ietf-http-wg@w3.org">mailto:ietf-http-wg@w3.org</a></span>),
+        which is archived at <span><a href="https://lists.w3.org/Archives/Public/ietf-http-wg/">https://lists.w3.org/Archives/Public/ietf-http-wg/</a></span>.
+        Working Group information can be found at <span><a href="https://httpwg.org/">https://httpwg.org/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/httpwg/http-extensions/labels/alias-proxy-status">https://github.com/httpwg/http-extensions/labels/alias-proxy-status</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 21 September 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2024 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-requirements" class="internal xref">Requirements</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-next-hop-aliases-parameter" class="internal xref">next-hop-aliases Parameter</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
+                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-encoding-special-characters" class="internal xref">Encoding special characters</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-implementation-consideratio" class="internal xref">Implementation Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">The Proxy-Status HTTP response field <span>[<a href="#PROXY-STATUS" class="cite xref">PROXY-STATUS</a>]</span> allows intermediaries to convey
+information about how they handled the request in HTTP responses sent to clients.
+It defines a set of parameters that provide information, such as the name of the next
+hop.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2"><span>[<a href="#PROXY-STATUS" class="cite xref">PROXY-STATUS</a>]</span> defines a <code>next-hop</code> parameter, which can contain a hostname,
+IP address, or alias of the next hop. This parameter can contain only one such item,
+so it cannot be used to communicate a chain of aliases encountered during DNS resolution
+when connecting to the next hop.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">Knowing the full chain of names that were used during DNS resolution via CNAME records
+<span>[<a href="#DNS" class="cite xref">DNS</a>]</span> is particularly useful for clients of forward proxies, in which the
+client is requesting to connect to a specific target hostname using the CONNECT method
+<span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span> or UDP proxying <span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span>. CNAME records can be used to
+"cloak" hosts that perform tracking or malicious activity behind more innocuous hostnames,
+and clients such as web browsers use the chain of DNS names to influence behavior like cookie
+usage policies <span>[<a href="#COOKIES" class="cite xref">COOKIES</a>]</span> or blocking of malicious hosts.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">This document allows clients to receive the CNAME chain of DNS names for the next hop
+by including the list of names in a new <code>next-hop-aliases</code> Proxy-Status parameter.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<div id="requirements">
+<section id="section-1.1">
+        <h3 id="name-requirements">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-requirements" class="section-name selfRef">Requirements</a>
+        </h3>
+<p id="section-1.1-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+"MAY", and "OPTIONAL" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="parameter">
+<section id="section-2">
+      <h2 id="name-next-hop-aliases-parameter">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-next-hop-aliases-parameter" class="section-name selfRef">next-hop-aliases Parameter</a>
+      </h2>
+<p id="section-2-1">The <code>next-hop-aliases</code> parameter's value is a String <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> that contains
+one or more DNS names in a comma-separated list. The items in the list include all alias names and
+canonical names received in CNAME records <span>[<a href="#DNS" class="cite xref">DNS</a>]</span> during the course of resolving the next hop's
+hostname using DNS, and MAY include the original requested hostname itself. The names ought to
+appear in the order in which they were received in DNS, for the sake of consistency. If there
+are multiple CNAME records in the chain, the first name in the <code>next-hop-aliases</code> list would
+be the value in the CNAME record for the original hostname, and the final name in the
+<code>next-hop-aliases</code> list would be the name that ultimately resolved to one or more addresses.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">The list of DNS names in <code>next-hop-aliases</code> uses a comma (",") as a separator between names.
+Note that if a comma is included in a name itself, the comma must be encoded as described in
+<a href="#encoding" class="auto internal xref">Section 2.1</a>.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">For example, consider a proxy "proxy.example.net" that receives the following records when
+performing DNS resolution for the next hop "host.example.com":<a href="#section-2-3" class="pilcrow">¶</a></p>
+<div class="lang-dns-example sourcecode" id="section-2-4">
+<pre>
+host.example.com.           CNAME   tracker.example.com.
+tracker.example.com.        CNAME   service1.example.com.
+service1.example.com.       AAAA    2001:db8::1
+</pre><a href="#section-2-4" class="pilcrow">¶</a>
+</div>
+<p id="section-2-5">The proxy could include the following proxy status in its response:<a href="#section-2-5" class="pilcrow">¶</a></p>
+<div class="lang-http-message sourcecode" id="section-2-6">
+<pre>
+Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
+    next-hop-aliases="tracker.example.com,service1.example.com"
+</pre><a href="#section-2-6" class="pilcrow">¶</a>
+</div>
+<p id="section-2-7">This indicates that proxy.example.net, which used the IP address "2001:db8::1" as the next hop
+for this request, encountered the names "tracker.example.com" and "service1.example.com"
+in the DNS resolution chain. Note that while this example includes both the <code>next-hop</code> and
+<code>next-hop-aliases</code> parameters, <code>next-hop-aliases</code> can be included without including <code>next-hop</code>.<a href="#section-2-7" class="pilcrow">¶</a></p>
+<p id="section-2-8">The proxy can also include the name of the next hop as the first item in the list. This is
+particularly useful for reverse proxies when clients would not otherwise know the name of the
+next hop, and the <code>next-hop</code> header is used to convey an IP address.<a href="#section-2-8" class="pilcrow">¶</a></p>
+<p id="section-2-9">For example, consider a proxy "reverseproxy.example.net" that receives the following records
+when performing DNS resolution for the next hop "host.example.com":<a href="#section-2-9" class="pilcrow">¶</a></p>
+<div class="lang-dns-example sourcecode" id="section-2-10">
+<pre>
+host2.example.com.          CNAME   service2.example.com.
+service2.example.com.       AAAA    2001:db8::2
+</pre><a href="#section-2-10" class="pilcrow">¶</a>
+</div>
+<p id="section-2-11">The proxy could include the following proxy status in its response:<a href="#section-2-11" class="pilcrow">¶</a></p>
+<div class="lang-http-message sourcecode" id="section-2-12">
+<pre>
+Proxy-Status: reverseproxy.example.net; next-hop="2001:db8::2";
+    next-hop-aliases="host2.example.com,service2.example.com"
+</pre><a href="#section-2-12" class="pilcrow">¶</a>
+</div>
+<p id="section-2-13">The <code>next-hop-aliases</code> parameter only applies when DNS was used to resolve the next hop's name, and
+does not apply in all situations. Clients can use the information in this parameter to determine
+how to use the connection established through the proxy, but need to gracefully handle situations
+in which this parameter is not present.<a href="#section-2-13" class="pilcrow">¶</a></p>
+<p id="section-2-14">The proxy MAY send the empty string ("") as the value of <code>next-hop-aliases</code> to indicate that
+no CNAME records were encountered when resolving the next hop's name.<a href="#section-2-14" class="pilcrow">¶</a></p>
+<div id="encoding">
+<section id="section-2.1">
+        <h3 id="name-encoding-special-characters">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-encoding-special-characters" class="section-name selfRef">Encoding special characters</a>
+        </h3>
+<p id="section-2.1-1">DNS names commonly just contain alphanumeric characters and hyphens ("-"), although they
+are allowed to contain any character (<span>[<a href="#RFC1035" class="cite xref">RFC1035</a>], <a href="https://rfc-editor.org/rfc/rfc1035#section-3.1" class="relref">Section 3.1</a></span>), including a comma. To
+prevent commas or other special characters in names leading to incorrect parsing,
+any characters that appear in names in this list that do not belong to the set of URI
+Unreserved Characters (<span>[<a href="#RFC3986" class="cite xref">RFC3986</a>], <a href="https://rfc-editor.org/rfc/rfc3986#section-2.3" class="relref">Section 2.3</a></span>) MUST be percent-encoded as
+defined in <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>], <a href="https://rfc-editor.org/rfc/rfc3986#section-2.1" class="relref">Section 2.1</a></span>.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2">For example, consider the DNS name <code>comma,name.example.com</code>. This name would be encoded
+within a <code>next-hop-aliases</code> parameter as follows:<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+<div class="lang-http-message sourcecode" id="section-2.1-3">
+<pre>
+Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
+    next-hop-aliases="comma%2Cname.example.com,service1.example.com"
+</pre><a href="#section-2.1-3" class="pilcrow">¶</a>
+</div>
+<p id="section-2.1-4">It is also possible for a DNS name to include a period character (".") within a label,
+instead of as a label separator. In this case, the period character MUST be first escaped
+as "\.". Since the "\" character itself will be percent-encoded, the name
+"dot\.label.example.com" would be encoded within a <code>next-hop-aliases</code> parameter as follows:<a href="#section-2.1-4" class="pilcrow">¶</a></p>
+<div class="lang-http-message sourcecode" id="section-2.1-5">
+<pre>
+Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
+    next-hop-aliases="dot%5C.label.example.com,service1.example.com"
+</pre><a href="#section-2.1-5" class="pilcrow">¶</a>
+</div>
+<p id="section-2.1-6">Upon parsing this name, "dot%5C.label" MUST be treated as a single label.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
+<p id="section-2.1-7">Similarly the "\" character in a label MUST be escaped as "\\" and then percent-encoded.
+Other uses of "\" MUST NOT appear in the label after percent-decoding. For example,
+if there is a DNS name "backslash\name.example.com", it would first be escaped as
+"backslash\\name.example.com", and then percent-encoded as follows:<a href="#section-2.1-7" class="pilcrow">¶</a></p>
+<div class="lang-http-message sourcecode" id="section-2.1-8">
+<pre>
+Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
+    next-hop-aliases="backslash%5C%5Cname.example.com,service1.example.com"
+</pre><a href="#section-2.1-8" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="implementation-considerations">
+<section id="section-3">
+      <h2 id="name-implementation-consideratio">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-implementation-consideratio" class="section-name selfRef">Implementation Considerations</a>
+      </h2>
+<p id="section-3-1">In order to include the <code>next-hop-aliases</code> parameter, a proxy needs to have access to the chain
+of alias names and canonical names received in CNAME records.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">Implementations ought to note that the full chain of names might not be available in common DNS
+resolution APIs, such as <code>getaddrinfo</code> <span>[<a href="#POSIX" class="cite xref">POSIX</a>]</span>. <code>getaddrinfo</code> does have an option for <code>AI_CANONNAME</code>
+(<span><a href="https://rfc-editor.org/rfc/rfc3493#section-6.1" class="relref">Section 6.1</a> of [<a href="#RFC3493" class="cite xref">RFC3493</a>]</span>), but this will only return the last name in the chain
+(the canonical name), not the alias names.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">An implementation MAY include incomplete information in the <code>next-hop-aliases</code> parameter to accommodate cases where it is unable to include the full chain, such as only including the canonical name if the implementation can only use <code>getaddrinfo</code> as described above.<a href="#section-3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-considerations">
+<section id="section-4">
+      <h2 id="name-security-considerations">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-4-1">The <code>next-hop-aliases</code> parameter does not include any DNSSEC information or imply that DNSSEC was used.
+The information included in the parameter can only be trusted to be valid insofar as the client
+trusts the proxy to provide accurate information. This information is intended to be used as
+a hint, and SHOULD NOT be used for making security decisions about the identity of a resource accessed
+through the proxy.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">Inspecting CNAME chains can be used to detect cloaking of trackers or malicious hosts. However, the
+CNAME records could be omitted by a recursive or authoritative resolver that is trying to hide this form of cloaking.
+In particular, recursive or authoritative resolvers can omit these records for both clients directly performing DNS name
+resolution and proxies performing DNS name resolution on behalf of client. A malicious proxy could
+also choose to not report these CNAME chains in order to hide the cloaking. In general, clients can
+trust information included (or not included) in the <code>next-hop-aliases</code> parameter to the degree
+that the proxy and any resolvers used by the proxy are trusted.<a href="#section-4-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-5">
+      <h2 id="name-iana-considerations">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-5-1">This document registers the "next-hop-aliases" parameter
+in the "HTTP Proxy-Status Parameters" registry
+&lt;<span><a href="https://www.iana.org/assignments/http-proxy-status">https://www.iana.org/assignments/http-proxy-status</a></span>&gt;.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-5-2">
+        <dt id="section-5-2.1">Name:</dt>
+        <dd style="margin-left: 1.5em" id="section-5-2.2">
+          <p id="section-5-2.2.1">next-hop-aliases<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-5-2.3">Description:</dt>
+        <dd style="margin-left: 1.5em" id="section-5-2.4">
+          <p id="section-5-2.4.1">A string containing one or more DNS aliases or canonical names used to establish a
+proxied connection to the next hop.<a href="#section-5-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-5-2.5">Reference:</dt>
+        <dd style="margin-left: 1.5em" id="section-5-2.6">
+          <p id="section-5-2.6.1">This document<a href="#section-5-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<section id="section-6">
+      <h2 id="name-references">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-6.1">
+        <h3 id="name-normative-references">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="CONNECT-UDP">[CONNECT-UDP]</dt>
+        <dd>
+<span class="refAuthor">Schinazi, D.</span>, <span class="refTitle">"Proxying UDP in HTTP"</span>, <span class="seriesInfo">RFC 9298</span>, <span class="seriesInfo">DOI 10.17487/RFC9298</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9298">https://www.rfc-editor.org/rfc/rfc9298</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="DNS">[DNS]</dt>
+        <dd>
+<span class="refAuthor">Mockapetris, P.</span>, <span class="refTitle">"Domain names - concepts and facilities"</span>, <span class="seriesInfo">STD 13</span>, <span class="seriesInfo">RFC 1034</span>, <span class="seriesInfo">DOI 10.17487/RFC1034</span>, <time datetime="1987-11" class="refDate">November 1987</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1034">https://www.rfc-editor.org/rfc/rfc1034</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="HTTP">[HTTP]</dt>
+        <dd>
+<span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI 10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="PROXY-STATUS">[PROXY-STATUS]</dt>
+        <dd>
+<span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">P. Sikora</span>, <span class="refTitle">"The Proxy-Status HTTP Response Header Field"</span>, <span class="seriesInfo">RFC 9209</span>, <span class="seriesInfo">DOI 10.17487/RFC9209</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9209">https://www.rfc-editor.org/rfc/rfc9209</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3986">[RFC3986]</dt>
+        <dd>
+<span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="STRUCTURED-FIELDS">[STRUCTURED-FIELDS]</dt>
+      <dd>
+<span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">P. Kamp</span>, <span class="refTitle">"Structured Field Values for HTTP"</span>, <span class="seriesInfo">RFC 8941</span>, <span class="seriesInfo">DOI 10.17487/RFC8941</span>, <time datetime="2021-02" class="refDate">February 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8941">https://www.rfc-editor.org/rfc/rfc8941</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-6.2">
+        <h3 id="name-informative-references">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="COOKIES">[COOKIES]</dt>
+        <dd>
+<span class="refAuthor">Barth, A.</span>, <span class="refTitle">"HTTP State Management Mechanism"</span>, <span class="seriesInfo">RFC 6265</span>, <span class="seriesInfo">DOI 10.17487/RFC6265</span>, <time datetime="2011-04" class="refDate">April 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6265">https://www.rfc-editor.org/rfc/rfc6265</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="POSIX">[POSIX]</dt>
+        <dd>
+<span class="refAuthor">IEEE</span>, <span class="refTitle">"Standard for Information Technology Portable Operating System Interface (POSIX(R)) Base Specifications, Issue 7"</span>, <span class="seriesInfo">DOI 10.1109/ieeestd.2013.6506091</span>, <time datetime="2013-04" class="refDate">April 2013</time>, <span>&lt;<a href="http://ieeexplore.ieee.org/servlet/opac?punumber=6506089">http://ieeexplore.ieee.org/servlet/opac?punumber=6506089</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC1035">[RFC1035]</dt>
+        <dd>
+<span class="refAuthor">Mockapetris, P.</span>, <span class="refTitle">"Domain names - implementation and specification"</span>, <span class="seriesInfo">STD 13</span>, <span class="seriesInfo">RFC 1035</span>, <span class="seriesInfo">DOI 10.17487/RFC1035</span>, <time datetime="1987-11" class="refDate">November 1987</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1035">https://www.rfc-editor.org/rfc/rfc1035</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3493">[RFC3493]</dt>
+      <dd>
+<span class="refAuthor">Gilligan, R.</span>, <span class="refAuthor">Thomson, S.</span>, <span class="refAuthor">Bound, J.</span>, <span class="refAuthor">McCann, J.</span>, and <span class="refAuthor">W. Stevens</span>, <span class="refTitle">"Basic Socket Interface Extensions for IPv6"</span>, <span class="seriesInfo">RFC 3493</span>, <span class="seriesInfo">DOI 10.17487/RFC3493</span>, <time datetime="2003-02" class="refDate">February 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3493">https://www.rfc-editor.org/rfc/rfc3493</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+<div id="authors-addresses">
+<section id="appendix-A">
+      <h2 id="name-authors-address">
+<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Tommy Pauly</span></div>
+<div dir="auto" class="left"><span class="org">Apple, Inc.</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:tpauly@apple.com" class="email">tpauly@apple.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
