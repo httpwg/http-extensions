@@ -110,7 +110,7 @@ Client                                  Server
 |                                            |<----------------'
 |                                            |
 |            104 Upload Resumption Supported |
-|            with upload resouce URL         |
+|            with upload resource URL        |
 |<-------------------------------------------|
 |                                            |
 | Flow Interrupted                           |
@@ -211,13 +211,13 @@ Once the upload resource is available and while the request content is being upl
 
 The server MUST send the `Upload-Offset` header field in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The `Upload-Offset` field value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the response has a status code that indicates a success but the offset indicated in the `Upload-Offset` field value does not equal the total of begin offset plus the number of bytes uploaded in the request.
 
-If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a successful status code between 200 and 299 (inclusive). Servers are RECOMMENDED to use `201 (Created)` unless otherwise specified. The response MUST NOT include the `Upload-Complete` header field with the value of false.
+If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a 2xx (Successful) status code. Servers are RECOMMENDED to use `201 (Created)` unless otherwise specified. The response MUST NOT include the `Upload-Complete` header field with the value of false.
 
 If the request completes successfully but the entire upload is not yet complete, as indicated by an `Upload-Complete` field value of false in the request, the server MUST acknowledge it by responding with the `201 (Created)` status code and an `Upload-Complete` header value set to false.
 
 If the request includes an `Upload-Complete` field value set to true and a valid `Content-Length` header field, the client attempts to upload a fixed-length resource in one request. In this case, the upload's final size is the `Content-Length` field value and the server MUST record it to ensure its consistency.
 
-The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty entity. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring data, which can save client or server resources. Since informational responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
+The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty resource representation. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring data, which can save client or server resources. Since informational responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
 
 The following example shows an upload creation. The client transfers the entire 100 bytes in the first request. The server generates two informational responses to transmit the upload resource's URL and progress information, and one final response to acknowledge the completed upload:
 
@@ -266,7 +266,7 @@ Upload-Offset: 25
 
 If the client received an informational response with the upload URL in the Location field value, it MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status is received. The client SHOULD NOT automatically retry if it receives a 4xx status code.
 
-File metadata can affect how servers might act on the uploaded file. Clients can send representation metadata (see {{Section 8.3 of HTTP}}) in the request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header field ({{Section 8.3 of HTTP}}) can be used to indicate the MIME type of the file. The `Content-Disposition` header field ({{!RFC6266}}) can be used to transmit a filename; if included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
+File metadata can affect how servers might act on the uploaded file. Clients can send representation metadata (see {{Section 8.3 of HTTP}}) in the request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header field ({{Section 8.3 of HTTP}}) can be used to indicate the media type of the file. The `Content-Disposition` header field ({{!RFC6266}}) can be used to transmit a filename; if included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
 
 ## Feature Detection {#feature-detection}
 
@@ -304,7 +304,7 @@ An upload is considered complete only if the server completely and successfully 
 
 The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or append ({{upload-appending}}) is in progress.
 
-The offset MUST be accepted by a subsequent append ({{upload-appending}}). Due to network delay and reordering, the server might still be receiving data from an ongoing transfer for the same upload resource, which in the client perspective has failed. The server MAY terminate any transfers for the same upload resource before sending the response by abruptly terminating the HTTP connection or stream. Alternatively, the server MAY keep the ongoing transfer alive but ignore further bytes received past the offset.
+The offset MUST be accepted by a subsequent append ({{upload-appending}}). Due to network delay and reordering, the server might still be receiving data from an ongoing transfer for the same upload resource, which in the client's perspective has failed. The server MAY terminate any transfers for the same upload resource before sending the response by abruptly terminating the HTTP connection or stream. Alternatively, the server MAY keep the ongoing transfer alive but ignore further bytes received past the offset.
 
 The client MUST NOT start more than one append ({{upload-appending}}) based on the resumption offset from a single offset retrieving ({{offset-retrieving}}) request.
 
@@ -329,7 +329,7 @@ Upload-Complete: ?0
 Cache-Control: no-store
 ~~~
 
-The client SHOULD NOT automatically retry if a client error status code between 400 and 499 (inclusive) is received.
+The client SHOULD NOT automatically retry if a 4xx (Client Error) status code is received.
 
 # Upload Append {#upload-appending}
 
@@ -351,7 +351,7 @@ While the request content is being uploaded, the target resource MAY send one or
 
 The server MUST send the `Upload-Offset` header field in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the status code indicates a success but the offset indicated by the `Upload-Offset` field value does not equal the total of begin offset plus the number of bytes uploaded in the request.
 
-If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a successful status code between 200 and 299 (inclusive). Servers are RECOMMENDED to use a `201 (Created)` response if not otherwise specified. The response MUST NOT include the `Upload-Complete` header field with the value set to false.
+If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a 2xx (Successful) status code. Servers are RECOMMENDED to use a `201 (Created)` response if not otherwise specified. The response MUST NOT include the `Upload-Complete` header field with the value set to false.
 
 If the request completes successfully but the entire upload is not yet complete indicated by the `Upload-Complete` field value set to false, the server MUST acknowledge it by responding with a `201 (Created)` status code and the `Upload-Complete` field value set to true.
 
@@ -376,7 +376,7 @@ HTTP/1.1 201 Created
 Upload-Offset: 200
 ~~~
 
-The client MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a server error status code between 500 and 599 (inclusive) is received. The client SHOULD NOT automatically retry if a client error status code between 400 and 499 (inclusive) is received.
+The client MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx (Server Error) status code is received. The client SHOULD NOT automatically retry if a 4xx (Client Error) status code is received.
 
 # Upload Cancellation {#upload-cancellation}
 
