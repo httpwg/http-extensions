@@ -54,7 +54,7 @@
     <area>Web and Internet Transport</area>
     <workgroup>HTTP</workgroup>
     <keyword>http</keyword>
-    <keyword>search</keyword>
+    <keyword>query</keyword>
     <keyword>method</keyword>
 
     <abstract>
@@ -119,13 +119,13 @@ Host: example.org
     <t>
       As an alternative to using GET, many implementations make use of the
       HTTP POST method to perform queries, as illustrated in the example
-      below. In this case, the input parameters to the search operation are
+      below. In this case, the input parameters to the query operation are
       passed along within the request content as opposed to using the
       request URI.
     </t>
 
     <t>
-      A typical use of HTTP POST for requesting a search
+      A typical use of HTTP POST for requesting a query
     </t>
 <artwork type="http-message">
 POST /feed HTTP/1.1
@@ -159,7 +159,7 @@ q=foo&amp;limit=10&amp;sort=-published
 
   </section>
 
-  <section title="QUERY" anchor="search">
+  <section title="QUERY" anchor="query">
 
     <t>
       The QUERY method is used to initiate a server-side query. Unlike
@@ -209,7 +209,7 @@ q=foo&amp;limit=10&amp;sort=-published
       be performed only under the circumstances described by the conditional
       header field(s). It is important to note, however, that such conditions
       are evaluated against the state of the target resource itself as opposed
-      to the collected results of the search operation.
+      to the collected results of the query operation.
     </t>
 
     <section title="Caching">
@@ -370,7 +370,7 @@ Dubois, Camille, camille.dubois@example.net
           <td>QUERY</td>
           <td>Yes</td>
           <td>Yes</td>
-          <td><xref target="search"/></td>
+          <td><xref target="query"/></td>
         </tr>
       </tbody>
     </table>
