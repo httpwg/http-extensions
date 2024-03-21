@@ -206,7 +206,7 @@ q=foo&amp;limit=10&amp;sort=-published
       using an HTTP GET request. Various non-normative examples of successful
       QUERY responses are illustrated in <xref target="examples" />.
     </t>
-    
+
     <t>
       A successful response to a QUERY request &MAY; include a Content-Location
       header field (see <xref target="RFCHTTP" section="8.7"/>) containing an
