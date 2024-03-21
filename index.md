@@ -32,6 +32,22 @@ View [saved issues](issues.html), or the latest GitHub [issues](https://github.c
 | [The HTTP QUERY Method](reschke-sfbis-fields/draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](reschke-sfbis-fields/draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | same as main |
 | [Compression Dictionary Transport](reschke-sfbis-fields/draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](reschke-sfbis-fields/draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | same as main |
 
+## Preview for branch [i2765](i2765)
+
+| Draft |     |     |     |
+| ----- | --- | --- | --- |
+| [DNS Aliases Proxy-Status](i2765/draft-ietf-httpbis-alias-proxy-status.html "HTTP Proxy-Status Parameter for Next-Hop Aliases (HTML)") | [plain text](i2765/draft-ietf-httpbis-alias-proxy-status.txt "HTTP Proxy-Status Parameter for Next-Hop Aliases (Text)") | same as main |
+| [Templated CONNECT-TCP](i2765/draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](i2765/draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | same as main |
+| [Structured Field Values for HTTP](i2765/draft-ietf-httpbis-sfbis.html "Structured Field Values for HTTP (HTML)") | [plain text](i2765/draft-ietf-httpbis-sfbis.txt "Structured Field Values for HTTP (Text)") | same as main |
+| [Retrofit Structured Fields](i2765/draft-ietf-httpbis-retrofit.html "Retrofit Structured Fields for HTTP (HTML)") | [plain text](i2765/draft-ietf-httpbis-retrofit.txt "Retrofit Structured Fields for HTTP (Text)") | same as main |
+| [Resumable Uploads](i2765/draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](i2765/draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | same as main |
+| [HTTP Cache Groups](i2765/draft-ietf-httpbis-cache-groups.html "HTTP Cache Groups (HTML)") | [plain text](i2765/draft-ietf-httpbis-cache-groups.txt "HTTP Cache Groups (Text)") | same as main |
+| [Cookies: HTTP State Management Mechanism](i2765/draft-ietf-httpbis-rfc6265bis.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](i2765/draft-ietf-httpbis-rfc6265bis.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
+| [The Signature HTTP Authentication Scheme](i2765/draft-ietf-httpbis-unprompted-auth.html "The Signature HTTP Authentication Scheme (HTML)") | [plain text](i2765/draft-ietf-httpbis-unprompted-auth.txt "The Signature HTTP Authentication Scheme (Text)") | same as main |
+| [Optimistic HTTP Upgrade Security](i2765/draft-ietf-httpbis-optimistic-upgrade.html "Security Considerations for Optimistic Use of HTTP Upgrade (HTML)") | [plain text](i2765/draft-ietf-httpbis-optimistic-upgrade.txt "Security Considerations for Optimistic Use of HTTP Upgrade (Text)") | same as main |
+| [The HTTP QUERY Method](i2765/draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](i2765/draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-safe-method-w-body.txt&url_2=https://httpwg.github.io/http-extensions/i2765/draft-ietf-httpbis-safe-method-w-body.txt) |
+| [Compression Dictionary Transport](i2765/draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](i2765/draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | same as main |
+
 ## Preview for branch [ioggstream-editorial-resumable-uploads-1](ioggstream-editorial-resumable-uploads-1)
 
 | Draft |     |     |     |
