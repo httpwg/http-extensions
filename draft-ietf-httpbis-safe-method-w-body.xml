@@ -371,6 +371,15 @@ Dubois, Camille, camille.dubois@example.net
       considerations as all HTTP methods as described in
       <xref target="HTTP"/>.
     </t>
+
+    <t>
+      The QUERY method can be used as an alternative to passing query
+      information in the query portion of a URI. This is preferred in some
+      cases, as the URI is more likely to be logged than the request content. If
+      a server creates a temporary resource to represent the results of a QUERY
+      request (e.g. for use in the Content-Location field), the URI of this
+      resource SHOULD NOT expose the original request content in plaintext.
+    </t>
   </section>
 
   <section title="IANA Considerations">
