@@ -209,7 +209,7 @@ q=foo&amp;limit=10&amp;sort=-published
 
     <t>
       A successful response to a QUERY request &MAY; include a Content-Location
-      header field (see <xref target="RFCHTTP" section="8.7"/>) containing an
+      header field (see <xref target="HTTP" section="8.7"/>) containing an
       identifier for a specific resource corresponding to the results of the
       operation. A client can send a GET request for the indicated URI to repeat
       the query in the future without resending the query parameters. The
