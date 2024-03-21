@@ -505,7 +505,7 @@ Display Strings are intended for use in cases where a value is displayed to end 
 
 Note that Display Strings do not indicate the language used in the value; that can be done separately if necessary (e.g., with a parameter).
 
-In textual HTTP headers, Display Strings are represented in a manner similar to Strings, except that non-ASCII characters are percent-encoded; there is a leading "%" to distinguish them from Strings.
+In textual HTTP fields, Display Strings are represented in a manner similar to Strings, except that non-ASCII characters are percent-encoded; there is a leading "%" to distinguish them from Strings.
 
 For example:
 
