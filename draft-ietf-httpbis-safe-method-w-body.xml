@@ -208,7 +208,7 @@ q=foo&amp;limit=10&amp;sort=-published
       operation. A client can send a GET request for the indicated URI to repeat
       the query in the future without resending the query parameters. The
       indicated resource might be temporary; if a future request fails, the
-      client SHOULD retry using the original QUERY resource and the previously
+      client &SHOULD; retry using the original QUERY resource and the previously
       submitted parameters again.
     </t>
 
@@ -372,7 +372,7 @@ Dubois, Camille, camille.dubois@example.net
       cases, as the URI is more likely to be logged than the request content. If
       a server creates a temporary resource to represent the results of a QUERY
       request (e.g. for use in the Content-Location field), the URI of this
-      resource SHOULD NOT expose the original request content in plaintext.
+      resource &SHOULD-NOT; expose the original request content in plaintext.
     </t>
   </section>
 
