@@ -5,10 +5,10 @@
 HTTPBIS                                                      D. Schinazi
 Internet-Draft                                                Google LLC
 Intended status: Standards Track                               D. Oliver
-Expires: 19 September 2024                              Guardian Project
+Expires: 22 September 2024                              Guardian Project
                                                               J. Hoyland
                                                          Cloudflare Inc.
-                                                           18 March 2024
+                                                           21 March 2024
 
 
                 The Signature HTTP Authentication Scheme
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 September 2024.
+   This Internet-Draft will expire on 22 September 2024.
 
 Copyright Notice
 
