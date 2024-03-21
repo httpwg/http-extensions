@@ -16,7 +16,7 @@
     " name="description">
 <meta content="xml2rfc 3.20.1" name="generator">
 <meta content="http" name="keyword">
-<meta content="search" name="keyword">
+<meta content="query" name="keyword">
 <meta content="method" name="keyword">
 <meta content="draft-ietf-httpbis-safe-method-w-body-latest" name="ietf.draft">
 <!-- Generator version information:
@@ -1228,11 +1228,11 @@ Host: example.org
 <p id="section-1-6">
       As an alternative to using GET, many implementations make use of the
       HTTP POST method to perform queries, as illustrated in the example
-      below. In this case, the input parameters to the search operation are
+      below. In this case, the input parameters to the query operation are
       passed along within the request content as opposed to using the
       request URI.<a href="#section-1-6" class="pilcrow">¶</a></p>
 <p id="section-1-7">
-      A typical use of HTTP POST for requesting a search<a href="#section-1-7" class="pilcrow">¶</a></p>
+      A typical use of HTTP POST for requesting a query<a href="#section-1-7" class="pilcrow">¶</a></p>
 <div class="alignLeft art-http-message art-text artwork" id="section-1-8">
 <pre>
 POST /feed HTTP/1.1
@@ -1260,7 +1260,7 @@ q=foo&amp;limit=10&amp;sort=-published
       appear in all capitals, as shown here.<a href="#section-1-11" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="search">
+<div id="query">
 <section id="section-2">
       <h2 id="name-query">
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-query" class="section-name selfRef">QUERY</a>
@@ -1305,7 +1305,7 @@ q=foo&amp;limit=10&amp;sort=-published
       be performed only under the circumstances described by the conditional
       header field(s). It is important to note, however, that such conditions
       are evaluated against the state of the target resource itself as opposed
-      to the collected results of the search operation.<a href="#section-2-5" class="pilcrow">¶</a></p>
+      to the collected results of the query operation.<a href="#section-2-5" class="pilcrow">¶</a></p>
 <section id="section-2.1">
         <h3 id="name-caching">
 <a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-caching" class="section-name selfRef">Caching</a>
@@ -1475,7 +1475,7 @@ Dubois, Camille, camille.dubois@example.net
             <td class="text-left" rowspan="1" colspan="1">Yes</td>
             <td class="text-left" rowspan="1" colspan="1">Yes</td>
             <td class="text-left" rowspan="1" colspan="1">
-              <a href="#search" class="auto internal xref">Section 2</a>
+              <a href="#query" class="auto internal xref">Section 2</a>
 </td>
           </tr>
         </tbody>

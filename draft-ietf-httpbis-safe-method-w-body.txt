@@ -108,11 +108,11 @@ Table of Contents
 
    As an alternative to using GET, many implementations make use of the
    HTTP POST method to perform queries, as illustrated in the example
-   below.  In this case, the input parameters to the search operation
-   are passed along within the request content as opposed to using the
+   below.  In this case, the input parameters to the query operation are
+   passed along within the request content as opposed to using the
    request URI.
 
-   A typical use of HTTP POST for requesting a search
+   A typical use of HTTP POST for requesting a query
 
    POST /feed HTTP/1.1
    Host: example.org
@@ -179,7 +179,7 @@ Table of Contents
    performed only under the circumstances described by the conditional
    header field(s).  It is important to note, however, that such
    conditions are evaluated against the state of the target resource
-   itself as opposed to the collected results of the search operation.
+   itself as opposed to the collected results of the query operation.
 
 2.1.  Caching
 
