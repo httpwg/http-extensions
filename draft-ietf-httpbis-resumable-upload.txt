@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 22 September 2024                                    Apple Inc.
+Expires: 23 September 2024                                    Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                           21 March 2024
+                                                           22 March 2024
 
 
                        Resumable Uploads for HTTP
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 September 2024.
+   This Internet-Draft will expire on 23 September 2024.
 
 Copyright Notice
 
@@ -207,7 +207,7 @@ Table of Contents
    |                                            |<----------------'
    |                                            |
    |            104 Upload Resumption Supported |
-   |            with upload resouce URL         |
+   |            with upload resource URL        |
    |<-------------------------------------------|
    |                                            |
    | Flow Interrupted                           |
@@ -360,11 +360,10 @@ Table of Contents
    uploaded in the request.
 
    If the request completes successfully and the entire upload is
-   complete, the server MUST acknowledge it by responding with a
-   successful status code between 200 and 299 (inclusive).  Servers are
-   RECOMMENDED to use 201 (Created) unless otherwise specified.  The
-   response MUST NOT include the Upload-Complete header field with the
-   value of false.
+   complete, the server MUST acknowledge it by responding with a 2xx
+   (Successful) status code.  Servers are RECOMMENDED to use 201
+   (Created) unless otherwise specified.  The response MUST NOT include
+   the Upload-Complete header field with the value of false.
 
    If the request completes successfully but the entire upload is not
    yet complete, as indicated by an Upload-Complete field value of false
@@ -380,12 +379,12 @@ Table of Contents
 
    The request content MAY be empty.  If the Upload-Complete header
    field is then set to true, the client intends to upload an empty
-   entity.  An Upload-Complete header field is set to false is also
-   valid.  This can be used to create an upload resource URL before
-   transferring data, which can save client or server resources.  Since
-   informational responses are optional, this technique provides another
-   mechanism to learn the URL, at the cost of an additional round-trip
-   before data upload can commence.
+   resource representation.  An Upload-Complete header field is set to
+   false is also valid.  This can be used to create an upload resource
+   URL before transferring data, which can save client or server
+   resources.  Since informational responses are optional, this
+   technique provides another mechanism to learn the URL, at the cost of
+   an additional round-trip before data upload can commence.
 
    The following example shows an upload creation.  The client transfers
    the entire 100 bytes in the first request.  The server generates two
@@ -440,7 +439,7 @@ Table of Contents
    Clients can send representation metadata (see Section 8.3 of [HTTP])
    in the request that starts an upload.  Servers MAY interpret this
    metadata or MAY ignore it.  The Content-Type header field
-   (Section 8.3 of [HTTP]) can be used to indicate the MIME type of the
+   (Section 8.3 of [HTTP]) can be used to indicate the media type of the
    file.  The Content-Disposition header field ([RFC6266]) can be used
    to transmit a filename; if included, the parameters SHOULD be either
    filename, filename* or boundary.
@@ -525,7 +524,7 @@ Table of Contents
    The offset MUST be accepted by a subsequent append (Section 6).  Due
    to network delay and reordering, the server might still be receiving
    data from an ongoing transfer for the same upload resource, which in
-   the client perspective has failed.  The server MAY terminate any
+   the client's perspective has failed.  The server MAY terminate any
    transfers for the same upload resource before sending the response by
    abruptly terminating the HTTP connection or stream.  Alternatively,
    the server MAY keep the ongoing transfer alive but ignore further
@@ -563,8 +562,8 @@ Table of Contents
    Upload-Complete: ?0
    Cache-Control: no-store
 
-   The client SHOULD NOT automatically retry if a client error status
-   code between 400 and 499 (inclusive) is received.
+   The client SHOULD NOT automatically retry if a 4xx (Client Error)
+   status code is received.
 
 6.  Upload Append
 
@@ -620,11 +619,10 @@ Table of Contents
    plus the number of bytes uploaded in the request.
 
    If the request completes successfully and the entire upload is
-   complete, the server MUST acknowledge it by responding with a
-   successful status code between 200 and 299 (inclusive).  Servers are
-   RECOMMENDED to use a 201 (Created) response if not otherwise
-   specified.  The response MUST NOT include the Upload-Complete header
-   field with the value set to false.
+   complete, the server MUST acknowledge it by responding with a 2xx
+   (Successful) status code.  Servers are RECOMMENDED to use a 201
+   (Created) response if not otherwise specified.  The response MUST NOT
+   include the Upload-Complete header field with the value set to false.
 
    If the request completes successfully but the entire upload is not
    yet complete indicated by the Upload-Complete field value set to
@@ -663,10 +661,9 @@ Table of Contents
    Upload-Offset: 200
 
    The client MAY automatically attempt upload resumption when the
-   connection is terminated unexpectedly, or if a server error status
-   code between 500 and 599 (inclusive) is received.  The client SHOULD
-   NOT automatically retry if a client error status code between 400 and
-   499 (inclusive) is received.
+   connection is terminated unexpectedly, or if a 5xx (Server Error)
+   status code is received.  The client SHOULD NOT automatically retry
+   if a 4xx (Client Error) status code is received.
 
 7.  Upload Cancellation
 
