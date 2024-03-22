@@ -202,6 +202,17 @@ q=foo&amp;limit=10&amp;sort=-published
     </t>
 
     <t>
+      A successful response to a QUERY request &MAY; include a Content-Location
+      header field (see <xref target="HTTP" section="8.7"/>) containing an
+      identifier for a specific resource corresponding to the results of the
+      operation. A client can send a GET request for the indicated URI to repeat
+      the query in the future without resending the query parameters. The
+      indicated resource might be temporary; if a future request fails, the
+      client &SHOULD; retry using the original QUERY resource and the previously
+      submitted parameters again.
+    </t>
+
+    <t>
       The semantics of the QUERY method change to a "conditional QUERY" if
       the request message includes an If-Modified-Since, If-Unmodified-
       Since, If-Match, If-None-Match, or If-Range header field
@@ -235,6 +246,13 @@ q=foo&amp;limit=10&amp;sort=-published
       <t>
         Note that any such normalization is performed solely for the purpose of generating a cache key; it
         does not change the request itself.
+      </t>
+
+      <t>
+        If a successful response includes a Content-Location header field, the
+        response content also reflects the current state of the indicated
+        resource and MAY also be used to satisfy future requests for that
+        resource.
       </t>
 
     </section>
@@ -292,6 +310,7 @@ select surname, givenname, email limit 10
 <artwork type="http-message">
 HTTP/1.1 200 OK
 Content-Type: text/csv
+Content-Location: http://example.org/contacts/query123
 
 surname, givenname, email
 Smith, John, john.smith@example.org
@@ -345,6 +364,15 @@ Dubois, Camille, camille.dubois@example.net
       The QUERY method is subject to the same general security
       considerations as all HTTP methods as described in
       <xref target="HTTP"/>.
+    </t>
+
+    <t>
+      The QUERY method can be used as an alternative to passing query
+      information in the query portion of a URI. This is preferred in some
+      cases, as the URI is more likely to be logged than the request content. If
+      a server creates a temporary resource to represent the results of a QUERY
+      request (e.g. for use in the Content-Location field), the URI of this
+      resource &SHOULD-NOT; expose the original request content in plaintext.
     </t>
   </section>
 
