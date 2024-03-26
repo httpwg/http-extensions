@@ -453,8 +453,19 @@ HTTP intermediaries that support this specification have two options:
   {{output}}}), and forward it to the upstream HTTP server, then the upstream
   server performs the validation.
 
-The mechanism for the intermediary to communicate this information to the
-upstream HTTP server is out of scope for this document.
+This document defines the "Signature-Auth-Context" request header field for
+this latter purpose. The Signature-Auth-Context header field's value is a
+Structured Field Byte Sequence (see {{Section 3.3.5 of
+!STRUCTURED-FIELDS=RFC8941}}) that contains the 48-byte key exporter output
+(see {{output}}), without any parameters. For example:
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+Signature-Auth-Context: :VGhpcyBleGFtcGxlIFRMUyBleHBvcn\
+  RlciBvdXRwdXQgaXMgNDggYnl0ZXMgI/+h:
+~~~
+{: #fig-int-hdr-example title="Example Signature-Auth-Context Header Field"}
 
 Note that both of these mechanisms require the upstream HTTP server to trust
 the intermediary. This is usually the case because the intermediary already
@@ -533,6 +544,33 @@ Recommended:
 Reference:
 
 : This document
+{: spacing="compact"}
+
+## HTTP Field Name
+
+This document, if approved, requests IANA to register the following entry in
+the "Hypertext Transfer Protocol (HTTP) Field Name" registry maintained at
+<[](https://www.iana.org/assignments/http-fields/http-fields.xhtml)>:
+
+Field Name:
+
+: Signature-Auth-Context
+
+Template:
+
+: None
+
+Status:
+
+: permanent
+
+Reference:
+
+: This document
+
+Comments:
+
+: None
 {: spacing="compact"}
 
 --- back
