@@ -300,12 +300,12 @@ negotiating content encoding in HTTP.
 
 This document introduces two new content encoding algorithms:
 
-|------------------|----------------------------------------------------|
-| Content-Encoding | Description                                        |
-|------------------|----------------------------------------------------|
-| br-d             | Brotli using an external compression dictionary    |
-| zstd-d           | Zstandard using an external compression dictionary |
-|------------------|----------------------------------------------------|
+|------------------|--------------------------------------------------------------------------------------------|
+| Content-Encoding | Description                                                                                |
+|------------------|--------------------------------------------------------------------------------------------|
+| br-d             | Brotli using an external compression dictionary and a compression window of up to 16 MB.   |
+| zstd-d           | Zstandard using an external compression dictionary and a compression window of up to 8 MB. |
+|------------------|--------------------------------------------------------------------------------------------|
 
 The dictionary to use is negotiated separately and advertised in the
 "Available-Dictionary" request header.
@@ -345,12 +345,12 @@ Vary: accept-encoding, available-dictionary
 IANA is asked to update the "HTTP Content Coding Registry" registry
 ({{HTTP}}) according to the table below:
 
-|--------|---------------------------------------------------------------------------------------|-------------|
-| Name   | Description                                                                           | Reference   |
-|--------|---------------------------------------------------------------------------------------|-------------|
-| br-d   | A stream of bytes compressed using the Brotli protocol with an external dictionary    | {{RFC7932}} |
-| zstd-d | A stream of bytes compressed using the Zstandard protocol with an external dictionary | {{RFC8878}} |
-|--------|---------------------------------------------------------------------------------------|-------------|
+|--------|--------------------------------------------------------------------------------------------------------------------------------|-------------|
+| Name   | Description                                                                                                                    | Reference   |
+|--------|--------------------------------------------------------------------------------------------------------------------------------|-------------|
+| br-d   | A stream of bytes compressed using the Brotli protocol with an external dictionary and a compression window of up to 16 MB.    | {{RFC7932}} |
+| zstd-d | A stream of bytes compressed using the Zstandard protocol with an external dictionary and a compression window of up to 8 MB.  | {{RFC8878}} |
+|--------|--------------------------------------------------------------------------------------------------------------------------------|-------------|
 
 ## Header Field Registration
 
