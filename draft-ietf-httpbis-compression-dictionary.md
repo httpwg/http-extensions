@@ -342,14 +342,14 @@ Vary: accept-encoding, available-dictionary
 IANA is asked to enter the following into the "HTTP Content Coding Registry" registry ({{HTTP}}):
 
 - Name: br-d
-- Description: A stream of bytes compressed using the Brotli protocol with an external dictionary.
+- Description: A stream of bytes compressed using the Brotli protocol with an external dictionary of not more than 16 MB.
 - Reference: This document
 - Notes: {{compression-algorithms}}
 
 IANA is asked to enter the following into the "HTTP Content Coding Registry" registry ({{HTTP}}):
 
 - Name: zstd-d
-- Description: A stream of bytes compressed using the Zstandard protocol with an external dictionary.
+- Description: A stream of bytes compressed using the Zstandard protocol with an external dictionary of not more than 8 MB.
 - Reference: This document
 - Notes: {{compression-algorithms}}
 
