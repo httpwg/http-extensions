@@ -41,6 +41,10 @@ normative:
   HTTP: RFC9110
   HTTP-CACHING: RFC9111
   RFC5861: # Stale-While-Revalidate
+  URLPattern:
+    title: URL Pattern Standard
+    date: 18 March 2024
+    target: https://urlpattern.spec.whatwg.org/
 
 informative:
   Origin: RFC6454
@@ -99,20 +103,19 @@ and "type".
 ### match
 
 The "match" value of the Use-As-Dictionary header is a String value that
-provides the URLPattern to use for request matching
-(https://urlpattern.spec.whatwg.org/).
+provides the {{URLPattern}} to use for request matching.
 
-The URLPattern used for matching does not support using Regular expressions.
+The {{URLPattern}} used for matching does not support using Regular
+expressions.
 
 The following algorithm will return TRUE for a valid match pattern and FALSE
 for an invalid pattern that MUST NOT be used:
 
 1. Let MATCH be the value of "match" for the given dictionary.
 1. Let URL be the URL of the dictionary request.
-1. Let PATTERN be a URLPattern constructed by setting input=MATCH,
-and baseURL=URL (https://urlpattern.spec.whatwg.org/).
-1. If PATTERN has regexp groups then return FALSE
-(https://urlpattern.spec.whatwg.org/#urlpattern-has-regexp-groups).
+1. Let PATTERN be a {{URLPattern}} constructed by setting input=MATCH,
+and baseURL=URL.
+1. If PATTERN has regexp groups then return FALSE.
 1. Return True.
 
 The "match" value is required and MUST be included in the
@@ -237,10 +240,9 @@ algorithm will return TRUE for a successful match and FALSE for no-match:
 1. If the {Origin} of BASEURL and the {Origin} of URL are not the same, return
 FALSE.
 1. Let MATCH be the value of "match" for the given dictionary.
-1. Let PATTERN be a URLPattern constructed by setting input=MATCH,
-and baseURL=BASEURL (https://urlpattern.spec.whatwg.org/).
-1. Return the result of running the "test" method of PATTERN with input=URL
-(https://urlpattern.spec.whatwg.org/#ref-for-dom-urlpattern-test)
+1. Let PATTERN be a {{URLPattern}} constructed by setting input=MATCH,
+and baseURL=BASEURL.
+1. Return the result of running the "test" method of PATTERN with input=URL.
 
 ### Multiple matching dictionaries
 
@@ -419,7 +421,7 @@ return an error.
 ### Cross-origin protection
 
 To make sure that a dictionary can only impact content from the same origin
-where the dictionary was served, the URLPattern used for matching a
+where the dictionary was served, the {{URLPattern}} used for matching a
 dictionary to requests is guaranteed to be for the same origin that the
 dictionary is served from.
 
