@@ -298,17 +298,14 @@ When a compression dictionary is available for use for a given request, the
 algorithm to be used is negotiated through the regular mechanism for
 negotiating content encoding in HTTP.
 
-This document introduces two new content encoding algorithms:
-
-|------------------|----------------------------------------------------|
-| Content-Encoding | Description                                        |
-|------------------|----------------------------------------------------|
-| br-d             | Brotli using an external compression dictionary    |
-| zstd-d           | Zstandard using an external compression dictionary |
-|------------------|----------------------------------------------------|
-
 The dictionary to use is negotiated separately and advertised in the
 "Available-Dictionary" request header.
+
+## Compression Algorithms
+This document introduces two new content encoding algorithms:
+
+- br-d: Brotli {{RFC7932}} using an external compression dictionary and a compression window of not more than 16 MB.
+- zstd-d: Zstandard {{RFC8878}} using an external compression dictionary and a compression window of not more than 8 MB.
 
 ## Accept-Encoding
 
@@ -342,15 +339,19 @@ Vary: accept-encoding, available-dictionary
 
 ## Content Encoding
 
-IANA is asked to update the "HTTP Content Coding Registry" registry
-({{HTTP}}) according to the table below:
+IANA is asked to enter the following into the "HTTP Content Coding Registry" registry ({{HTTP}}):
 
-|--------|---------------------------------------------------------------------------------------|-------------|
-| Name   | Description                                                                           | Reference   |
-|--------|---------------------------------------------------------------------------------------|-------------|
-| br-d   | A stream of bytes compressed using the Brotli protocol with an external dictionary    | {{RFC7932}} |
-| zstd-d | A stream of bytes compressed using the Zstandard protocol with an external dictionary | {{RFC8878}} |
-|--------|---------------------------------------------------------------------------------------|-------------|
+- Name: br-d
+- Description: A stream of bytes compressed using the Brotli protocol with an external dictionary of not more than 16 MB.
+- Reference: This document
+- Notes: {{compression-algorithms}}
+
+IANA is asked to enter the following into the "HTTP Content Coding Registry" registry ({{HTTP}}):
+
+- Name: zstd-d
+- Description: A stream of bytes compressed using the Zstandard protocol with an external dictionary of not more than 8 MB.
+- Reference: This document
+- Notes: {{compression-algorithms}}
 
 ## Header Field Registration
 
