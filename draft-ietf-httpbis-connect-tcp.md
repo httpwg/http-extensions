@@ -106,7 +106,7 @@ Upgrade: connect-tcp
 
 ## In HTTP/2 and HTTP/3
 
-In HTTP/2 and HTTP/3, the client uses the proxy by issuing an "extended CONNECT" request as follows:
+In HTTP/2 and HTTP/3, the proxy MUST include SETTINGS_ENABLE_CONNECT_PROTOCOL in its SETTINGS frame {{!RFC8441}}{{!RFC9220}}.  The client uses the proxy by issuing an "extended CONNECT" request as follows:
 
 * The :method pseudo-header field SHALL be "CONNECT".
 * The :protocol pseudo-header field SHALL be "connect-tcp".
