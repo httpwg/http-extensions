@@ -52,8 +52,6 @@ HTTP clients can be configured to use proxies by selecting a proxy hostname, a p
 
 The absence of an explicit origin for the proxy also rules out the usual defenses against server port misdirection attacks (see {{Section 7.4 of ?RFC9110}}) and creates ambiguity about the use of origin-scoped response header fields (e.g., "Alt-Svc" {{?RFC7838}}, "Strict-Transport-Security" {{?RFC6797}}).
 
-Classic HTTP CONNECT proxies can be used to reach a target host that is specified as a domain name or an IP address.  However, because only a single target host can be specified, proxy-driven Happy Eyeballs and cross-IP fallback can only be used when the host is a domain name.  For IP-targeted requests to succeed, the client must know which address families are supported by the proxy via some out-of-band mechanism, or open multiple independent CONNECT requests and abandon any that prove unnecessary.
-
 ## Overview
 
 This specification describes an alternative mechanism for proxying TCP in HTTP.  Like {{?CONNECT-UDP}} and {{?CONNECT-IP}}, the proxy service is identified by a URI Template.  Proxy interactions reuse standard HTTP components and semantics, avoiding changes to the core HTTP protocol.
@@ -64,25 +62,7 @@ This specification describes an alternative mechanism for proxying TCP in HTTP. 
 
 # Specification
 
-A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "target_port".  This template MUST meet all the same requirements as a URI Template for UDP proxying ({{!RFC9298, Section 2}}) and is subject to the same validation rules.
-
-The client MUST substitute the destination host and port number into this template to produce the request URI.  The "target_host" variable MUST contain a domain name, an IP address literal, or a comma-separated list of IP addresses.  If "target_host" is a list, the server SHOULD perform the same connection procedure as if these IP addresses had been returned in response to A and AAAA queries for a domain name.
-
-Using the terms `IPv6address`, `IPv4address`, `reg-name`, and `port` from {{!RFC3986}}, the "target_host" and "target_port" variables MUST adhere to the format in {{target-format}}, using notation from {{!ABNF=RFC2234}}:
-
-~~~ ABNF
-ip-addr = IPv6address / IPv4address
-ip-addr-list = *( ip-addr "," ) ip-addr
-target_host = reg-name / ip-addr-list
-target_port = port
-~~~
-{: #target-format title="URI Template Variable Format"}
-
-Additionally:
-
-* `target_host` and `target_port` MUST NOT be undefined or empty.
-* `target_port` MUST represent an integer between 1 and 65535 inclusive.
-* `target_host` MUST NOT contain any IPv6 scoped addressing zone identifier.
+A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "target_port".  This URI Template and its variable values MUST meet all the same requirements as for UDP proxying ({{!RFC9298, Section 2}}), and are subject to the same validation rules.  The client MUST substitute the destination host and port number into this template to produce the request URI.
 
 ## In HTTP/1.1
 
@@ -138,7 +118,7 @@ HEADERS
 :method = CONNECT
 :scheme = https
 :authority = request-proxy.example
-:path = /proxy?target_host=192.0.2.1,2001%3Adb8%3A%3A1&target_port=443
+:path = /proxy?target_host=2001%3Adb8%3A%3A1&target_port=443
 :protocol = connect-tcp
 ...
 ~~~
