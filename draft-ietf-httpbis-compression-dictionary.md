@@ -326,9 +326,9 @@ maximum compression window as the br content encoding.
 Clients that announce support for br-d content encoding MUST be able to
 decompress resources that were compressed with a window size of up to 16 MB.
 
-### ZStandard Compression Window
+### Zstandard Compression Window
 
-ZStandard {{RFC8878}} makes the full dictionary available as long as the input
+Zstandard {{RFC8878}} makes the full dictionary available as long as the input
 is smaller than the compression window. Once the input grows beyond the
 compression window the dictionary becomes unavailable.
 
@@ -341,7 +341,7 @@ For dictionaries that exceed the amount of memory that a client is willing to
 allocate for decompression, the client can choose to not announce support for
 zstd-d content encoding.
 
-Clients that announce support for br-d content encoding MUST be able to
+Clients that announce support for zstd-d content encoding MUST be able to
 decompress resources that were compressed with a window size of up to the
 larger of 8 MB and the size of the dictionary.
 
@@ -382,7 +382,7 @@ registry ({{HTTP}}):
 
 - Name: br-d
 - Description: A stream of bytes compressed using the Brotli protocol with an
-external dictionary of not more than 16 MB.
+external dictionary and a compression window of not more than 16 MB.
 - Reference: This document
 - Notes: {{compression-algorithms}}
 
@@ -391,8 +391,8 @@ registry ({{HTTP}}):
 
 - Name: zstd-d
 - Description: A stream of bytes compressed using the Zstandard protocol with
-an external dictionary of not more than the larger of 8 MB and the size of the
-dictionary.
+an external dictionary and a compression window of not more than the larger of
+8 MB and the size of the dictionary.
 - Reference: This document
 - Notes: {{compression-algorithms}}
 
