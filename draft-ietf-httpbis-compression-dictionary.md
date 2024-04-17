@@ -305,8 +305,45 @@ The dictionary to use is negotiated separately and advertised in the
 ## Compression Algorithms
 This document introduces two new content encoding algorithms:
 
-- br-d: Brotli {{RFC7932}} using an external compression dictionary and a compression window of not more than 16 MB.
-- zstd-d: Zstandard {{RFC8878}} using an external compression dictionary and a compression window of not more than 8 MB.
+- br-d: Brotli {{RFC7932}} using an external compression dictionary.
+- zstd-d: Zstandard {{RFC8878}} using an external compression dictionary.
+
+The client and server need to agree on a maximum size to allow for the
+compression window before a request is made so that the server can be sure that
+the client will be able to decompress the response.
+
+Dictionary-based compression benefits from having the full dictionary available
+whenever possible, particularly for cases where a previous version of a
+resource is being used as a dictionary for the newer version (delta
+compression).
+
+### Brotli Compression Window
+
+Brotli {{RFC7932}} makes the full dictionary available independent of the
+compression window so the br-d content encoding allows for the same 16 MB
+maximum compression window as the br content encoding.
+
+Clients that announce support for br-d content encoding MUST be able to
+decompress resources that were compressed with a window size of up to 16 MB.
+
+### ZStandard Compression Window
+
+ZStandard {{RFC8878}} makes the full dictionary available as long as the input
+is smaller than the compression window. Once the input grows beyond the
+compression window the dictionary becomes unavailable.
+
+In order to allow for large resources to be dictionary-compressed while still
+giving clients control over how much memory they will consume, the zstd-d
+content encoding allows for a compression window of up to the larger of 8 MB
+and the size of the dictionary.
+
+For dictionaries that exceed the amount of memory that a client is willing to
+allocate for decompression, the client can choose to not announce support for
+zstd-d content encoding.
+
+Clients that announce support for br-d content encoding MUST be able to
+decompress resources that were compressed with a window size of up to the
+larger of 8 MB and the size of the dictionary.
 
 ## Accept-Encoding
 
@@ -340,17 +377,22 @@ Vary: accept-encoding, available-dictionary
 
 ## Content Encoding
 
-IANA is asked to enter the following into the "HTTP Content Coding Registry" registry ({{HTTP}}):
+IANA is asked to enter the following into the "HTTP Content Coding Registry"
+registry ({{HTTP}}):
 
 - Name: br-d
-- Description: A stream of bytes compressed using the Brotli protocol with an external dictionary of not more than 16 MB.
+- Description: A stream of bytes compressed using the Brotli protocol with an
+external dictionary of not more than 16 MB.
 - Reference: This document
 - Notes: {{compression-algorithms}}
 
-IANA is asked to enter the following into the "HTTP Content Coding Registry" registry ({{HTTP}}):
+IANA is asked to enter the following into the "HTTP Content Coding Registry"
+registry ({{HTTP}}):
 
 - Name: zstd-d
-- Description: A stream of bytes compressed using the Zstandard protocol with an external dictionary of not more than 8 MB.
+- Description: A stream of bytes compressed using the Zstandard protocol with
+an external dictionary of not more than the larger of 8 MB and the size of the
+dictionary.
 - Reference: This document
 - Notes: {{compression-algorithms}}
 
