@@ -6,6 +6,7 @@ category: std
 consensus: true
 v: 3
 area: ART
+submissiontype: IETF
 workgroup: HTTP
 keyword:
  - compression dictionary
@@ -247,6 +248,7 @@ input=MATCH, and baseURL=BASEURL.
 
 When there are multiple dictionaries that match a given request URL, the client
 MUST pick a single dictionary using the following rules:
+
 1. For clients that support request destinations, a dictionary that specifies
 and matches a "match-dest" takes precedence over a match that does not use a
 destination.
@@ -293,61 +295,57 @@ For example:
 Content-Dictionary: :pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:
 ~~~
 
-# Negotiating the compression algorithm
+# Dictionary-Compressed Brotli
 
-When a compression dictionary is available for use for a given request, the
-algorithm to be used is negotiated through the regular mechanism for
-negotiating content encoding in HTTP.
+The "br-d" content encoding identifies a resource that is a
+"Dictionary-Compressed Brotli" stream.
 
-The dictionary to use is negotiated separately and advertised in the
-"Available-Dictionary" request header.
-
-## Compression Algorithms
-This document introduces two new content encoding algorithms:
-
-- br-d: Brotli {{RFC7932}} using an external compression dictionary.
-- zstd-d: Zstandard {{RFC8878}} using an external compression dictionary.
-
-The client and server need to agree on a maximum size to allow for the
-compression window before a request is made so that the server can be sure that
-the client will be able to decompress the response.
-
-Dictionary-based compression benefits from having the full dictionary available
-whenever possible, particularly for cases where a previous version of a
-resource is being used as a dictionary for the newer version (delta
-compression).
-
-### Brotli Compression Window
-
-Brotli {{RFC7932}} makes the full dictionary available independent of the
-compression window so the br-d content encoding allows for the same 16 MB
-maximum compression window as the br content encoding.
+A "Dictionary-Compressed Brotli" stream is a Brotli {{RFC7932}} stream for a
+response that has been compressed with an external dictionary using a
+compression window not larger than 16 MB.
 
 Clients that announce support for br-d content encoding MUST be able to
 decompress resources that were compressed with a window size of up to 16 MB.
 
-### Zstandard Compression Window
+With Brotli compression, the full dictionary is available during compression
+and decompression independent of the compression window, allowing for
+delta-compression of resources larger than the compression window.
 
-Zstandard {{RFC8878}} makes the full dictionary available as long as the input
-is smaller than the compression window. Once the input grows beyond the
-compression window the dictionary becomes unavailable.
+# Dictionary-Compressed Zstandard
 
-In order to allow for large resources to be dictionary-compressed while still
-giving clients control over how much memory they will consume, the zstd-d
-content encoding allows for a compression window of up to the larger of 8 MB
-and the size of the dictionary.
+The "zstd-d" content encoding identifies a resource that is a
+"Dictionary-Compressed Zstandard" stream.
 
-For dictionaries that exceed the amount of memory that a client is willing to
-allocate for decompression, the client can choose to not announce support for
-zstd-d content encoding.
+A "Dictionary-Compressed Zstandard" stream is a Zstandard {{RFC8878}} stream
+for a response that has been compressed with an external dictionary using a
+compression window not larger than the larger of 8 MB and 1.25 times the size
+of the dictionary, not to exceed 128 MB.
 
 Clients that announce support for zstd-d content encoding MUST be able to
 decompress resources that were compressed with a window size of up to the
-larger of 8 MB and the size of the dictionary.
+larger of 8 MB and 1.25 times the size of the dictionary, not to exceed 128 MB.
+
+With Zstandard compression, the full dictionary is available during compression
+and decompression until the size of the input exceeds the compression window.
+Beyond that point the dictionary becomes unavailable. Using a compression
+window that is 1.25 times the size of the dictionary allows for full delta
+compression of resources that have grown by 25% between releases while still
+giving the client control over the memory it will need to allocate for a given
+response.
+
+# Negotiating the content encoding
+
+When a compression dictionary is available for use for a given request, the
+encoding to be used is negotiated through the regular mechanism for
+negotiating content encoding in HTTP through the "Accept-Encoding" request
+header and "Content-Encoding" response header.
+
+The dictionary to use is negotiated separately and advertised in the
+"Available-Dictionary" request header and "Content-Dictionary" response header.
 
 ## Accept-Encoding
 
-The client adds the algorithms that it supports to the "Accept-Encoding"
+The client adds the content encodings that it supports to the "Accept-Encoding"
 request header. e.g.:
 
 ~~~ http-message
@@ -356,7 +354,7 @@ Accept-Encoding: gzip, deflate, br, zstd, br-d, zstd-d
 
 ## Content-Encoding
 
-If a server supports one of the dictionary algorithms advertised by the client
+If a server supports one of the dictionary encodings advertised by the client
 and chooses to compress the content of the response using the dictionary that
 the client has advertised then it sets the "Content-Encoding" response header
 to the appropriate value for the algorithm selected. e.g.:
@@ -381,20 +379,17 @@ IANA is asked to enter the following into the "HTTP Content Coding Registry"
 registry ({{HTTP}}):
 
 - Name: br-d
-- Description: A stream of bytes compressed using the Brotli protocol with an
-external dictionary and a compression window of not more than 16 MB.
+- Description: "Dictionary-Compressed Brotli" data format.
 - Reference: This document
-- Notes: {{compression-algorithms}}
+- Notes: {{dictionary-compressed-brotli}}
 
 IANA is asked to enter the following into the "HTTP Content Coding Registry"
 registry ({{HTTP}}):
 
 - Name: zstd-d
-- Description: A stream of bytes compressed using the Zstandard protocol with
-an external dictionary and a compression window of not more than the larger of
-8 MB and the size of the dictionary.
+- Description: "Dictionary-Compressed Zstandard" data format.
 - Reference: This document
-- Notes: {{compression-algorithms}}
+- Notes: {{dictionary-compressed-zstandard}}
 
 ## Header Field Registration
 
