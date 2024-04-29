@@ -317,13 +317,15 @@ The "zstd-d" content encoding identifies a resource that is a
 "Dictionary-Compressed Zstandard" stream.
 
 A "Dictionary-Compressed Zstandard" stream is a Zstandard {{RFC8878}} stream
-for a response that has been compressed with an external dictionary using a
-compression window not larger than the larger of 8 MB and 1.25 times the size
-of the dictionary, not to exceed 128 MB.
+for a response that has been compressed with an external dictionary.
 
 Clients that announce support for zstd-d content encoding MUST be able to
-decompress resources that were compressed with a window size of up to the
-larger of 8 MB and 1.25 times the size of the dictionary, not to exceed 128 MB.
+decompress resources that were compressed with a window size of at least 8 MB
+or 1.25 times the size of the dictionary, which ever is greater, up to a
+maximum of 128 MB.
+
+If 1.25 times the size of the dictionary results in a fractional byte window
+size, the window size should be rounded down to the nearest byte.
 
 With Zstandard compression, the full dictionary is available during compression
 and decompression until the size of the input exceeds the compression window.
