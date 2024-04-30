@@ -324,8 +324,9 @@ decompress resources that were compressed with a window size of at least 8 MB
 or 1.25 times the size of the dictionary, which ever is greater, up to a
 maximum of 128 MB.
 
-If 1.25 times the size of the dictionary results in a fractional byte window
-size, the window size should be rounded down to the nearest byte.
+The window size used will be encoded in the content (currently, this can be expressed
+in powers of two only) and it MUST be lower than this limit. An implementation MAY
+treat a window size that exceeds the limit as a decoding error.
 
 With Zstandard compression, the full dictionary is available during compression
 and decompression until the size of the input exceeds the compression window.
