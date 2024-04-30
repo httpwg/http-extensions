@@ -46,6 +46,7 @@ normative:
     title: URL Pattern Standard
     date: 18 March 2024
     target: https://urlpattern.spec.whatwg.org/
+  WEB-LINKING: RFC8288
 
 informative:
   Origin: RFC6454
@@ -295,6 +296,38 @@ For example:
 Content-Dictionary: :pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:
 ~~~
 
+# The 'compression-dictionary' Link Relation Type
+
+This specification defines the 'compression-dictionary' link relation type
+{{WEB-LINKING}} that provides a mechanism for a HTTP response to provide a URL
+for a compression dictionary that is related to, but not directly used by the
+current HTTP response.
+
+The 'compression-dictionary' link relation type indicates that fetching and
+caching the specified resource is likely to be beneficial as future requests
+are likely to support using the provided compression dictionary for encoding
+responses.
+
+Clients SHOULD fetch the provided resource at a time that they determine would
+be appropriate.
+
+The response to the fetch for the compression dictionary is responsible for
+including the appropriate "Use-As-Dictionary" and caching response headers. The
+link relation only provides the mechanism for triggering the fetch of the
+dictionary.
+
+## Example
+For example:
+
+~~~ http-message
+Link: <https://example.org/dictionary.dat>;
+      rel="compression-dictionary"
+~~~
+
+indicates that the resource at https://example.org/dictionary.dat is a
+compression dictionary that is likely to be beneficial to use for future
+requests related to the current one.
+
 # Dictionary-Compressed Brotli
 
 The "br-d" content encoding identifies a resource that is a
@@ -408,6 +441,15 @@ IANA is asked to update the
 | Dictionary-ID        | permanent | {{dictionary-id}} of this document        |
 | Content-Dictionary   | permanent | {{content-dictionary}} of this document   |
 |----------------------|-----------|-------------------------------------------|
+
+## Link Relation Registration
+
+IANA is asked to update the "Link Relation Type Registry" registry
+({{WEB-LINKING}}):
+
+- Relation Name: compression-dictionary
+- Description: Refers to a compression dictionary used for content encoding.
+- Reference: This document, {{the-compression-dictionary-link-relation-type}}
 
 # Compatibility Considerations
 
