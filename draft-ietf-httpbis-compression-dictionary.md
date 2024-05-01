@@ -34,8 +34,8 @@ author:
     ins: Y. Weiss
     name: Yoav Weiss
     role: editor
-    organization: Google LLC
-    email: yoavweiss@google.com
+    organization: Shopify Inc
+    email: yoav.weiss@shopify.com
 
 normative:
   FOLDING: RFC8792
@@ -304,29 +304,25 @@ for a compression dictionary that is related to, but not directly used by the
 current HTTP response.
 
 The 'compression-dictionary' link relation type indicates that fetching and
-caching the specified resource is likely to be beneficial as future requests
-are likely to support using the provided compression dictionary for encoding
-responses.
+caching the specified resource is likely to be beneficial for future requests.
+The response to some of those future requests are likely to be able to use
+the indicated resource as a compression dictionary.
 
-Clients SHOULD fetch the provided resource at a time that they determine would
+Clients can fetch the provided resource at a time that they determine would
 be appropriate.
 
-The response to the fetch for the compression dictionary is responsible for
-including the appropriate "Use-As-Dictionary" and caching response headers. The
-link relation only provides the mechanism for triggering the fetch of the
-dictionary.
+The response to the fetch for the compression dictionary needs to include a
+"Use-As-Dictionary" and caching response headers for it to be usable as a
+compression dictionary. The link relation only provides the mechanism for
+triggering the fetch of the dictionary.
 
-## Example
-For example:
+The following example shows a link to a resource at
+https://example.org/dict.dat that is expected to produce a compression
+dictionary:
 
 ~~~ http-message
-Link: <https://example.org/dictionary.dat>;
-      rel="compression-dictionary"
+Link: <https://example.org/dict.dat>; rel="compression-dictionary"
 ~~~
-
-indicates that the resource at https://example.org/dictionary.dat is a
-compression dictionary that is likely to be beneficial to use for future
-requests related to the current one.
 
 # Dictionary-Compressed Brotli
 
