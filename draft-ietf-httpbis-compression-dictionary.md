@@ -34,8 +34,8 @@ author:
     ins: Y. Weiss
     name: Yoav Weiss
     role: editor
-    organization: Google LLC
-    email: yoavweiss@google.com
+    organization: Shopify Inc
+    email: yoav.weiss@shopify.com
 
 normative:
   FOLDING: RFC8792
@@ -46,6 +46,7 @@ normative:
     title: URL Pattern Standard
     date: 18 March 2024
     target: https://urlpattern.spec.whatwg.org/
+  WEB-LINKING: RFC8288
 
 informative:
   Origin: RFC6454
@@ -295,6 +296,34 @@ For example:
 Content-Dictionary: :pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:
 ~~~
 
+# The 'compression-dictionary' Link Relation Type
+
+This specification defines the 'compression-dictionary' link relation type
+{{WEB-LINKING}} that provides a mechanism for a HTTP response to provide a URL
+for a compression dictionary that is related to, but not directly used by the
+current HTTP response.
+
+The 'compression-dictionary' link relation type indicates that fetching and
+caching the specified resource is likely to be beneficial for future requests.
+The response to some of those future requests are likely to be able to use
+the indicated resource as a compression dictionary.
+
+Clients can fetch the provided resource at a time that they determine would
+be appropriate.
+
+The response to the fetch for the compression dictionary needs to include a
+"Use-As-Dictionary" and caching response headers for it to be usable as a
+compression dictionary. The link relation only provides the mechanism for
+triggering the fetch of the dictionary.
+
+The following example shows a link to a resource at
+https://example.org/dict.dat that is expected to produce a compression
+dictionary:
+
+~~~ http-message
+Link: <https://example.org/dict.dat>; rel="compression-dictionary"
+~~~
+
 # Dictionary-Compressed Brotli
 
 The "br-d" content encoding identifies a resource that is a
@@ -408,6 +437,15 @@ IANA is asked to update the
 | Dictionary-ID        | permanent | {{dictionary-id}} of this document        |
 | Content-Dictionary   | permanent | {{content-dictionary}} of this document   |
 |----------------------|-----------|-------------------------------------------|
+
+## Link Relation Registration
+
+IANA is asked to update the "Link Relation Type Registry" registry
+({{WEB-LINKING}}):
+
+- Relation Name: compression-dictionary
+- Description: Refers to a compression dictionary used for content encoding.
+- Reference: This document, {{the-compression-dictionary-link-relation-type}}
 
 # Compatibility Considerations
 
