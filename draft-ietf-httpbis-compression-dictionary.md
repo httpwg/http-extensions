@@ -42,6 +42,7 @@ normative:
   HTTP: RFC9110
   HTTP-CACHING: RFC9111
   RFC5861: # Stale-While-Revalidate
+  SHA-256: RFC6234
   URLPattern:
     title: URL Pattern Standard
     date: 18 March 2024
@@ -51,7 +52,6 @@ normative:
 informative:
   Origin: RFC6454
   STRUCTURED-FIELDS: RFC8941
-  SHA-256: RFC6234
   RFC7932:  # Brotli
   RFC8878:  # Zstandard
 
@@ -276,26 +276,6 @@ Available-Dictionary: :pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:
 Dictionary-ID: "/v1/main.js 33a64df551425fcc55e4d42a148795d9f25f89d4"
 ~~~
 
-## Content-Dictionary
-
-When a HTTP server responds with a resource that is encoded with a dictionary
-the server MUST send the hash of the dictionary that was used in the
-"Content-Dictionary" response header.
-
-The "Content-Dictionary" response header is a Structured Field
-{{STRUCTURED-FIELDS}} Byte Sequence containing the {{SHA-256}} hash of the
-contents of the dictionary that was used to encode the response.
-
-If the HTTP response contains a "Content-Dictionary" response header with the
-hash of a dictionary that the client does not have available then the client
-cannot decode or use the HTTP response.
-
-For example:
-
-~~~ http-message
-Content-Dictionary: :pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:
-~~~
-
 # The 'compression-dictionary' Link Relation Type
 
 This specification defines the 'compression-dictionary' link relation type
@@ -326,14 +306,27 @@ Link: <https://example.org/dict.dat>; rel="compression-dictionary"
 
 # Dictionary-Compressed Brotli
 
-The "br-d" content encoding identifies a resource that is a
+The "dcb" content encoding identifies a resource that is a
 "Dictionary-Compressed Brotli" stream.
 
-A "Dictionary-Compressed Brotli" stream is a Brotli {{RFC7932}} stream for a
-response that has been compressed with an external dictionary using a
-compression window not larger than 16 MB.
+A "Dictionary-Compressed Brotli" stream is a binary stream that starts with a
+36-byte header and is followed by a Brotli {{RFC7932}} stream of the response
+that has been compressed with an external dictionary using a compression window
+not larger than 16 MB.
 
-Clients that announce support for br-d content encoding MUST be able to
+The 36-byte stream header consists of a 4-byte signature followed by the
+32-byte SHA-256 hash of the external dictionary that was used to compress the
+resource:
+
+|  Field             | Size       |
+|--------------------|------------|
+|  Magic_Number      | 4 bytes    |
+|  SHA_256_Hash      | 32 bytes   |
+
+Magic_Number: 4 bytes, little-endian format.  Value: 0x424344FF
+SHA_256_Hash: 32 Bytes. SHA-256 hash digest of the dictionary {{SHA-256}}.
+
+Clients that announce support for dcb content encoding MUST be able to
 decompress resources that were compressed with a window size of up to 16 MB.
 
 With Brotli compression, the full dictionary is available during compression
@@ -342,13 +335,26 @@ delta-compression of resources larger than the compression window.
 
 # Dictionary-Compressed Zstandard
 
-The "zstd-d" content encoding identifies a resource that is a
+The "dcz" content encoding identifies a resource that is a
 "Dictionary-Compressed Zstandard" stream.
 
-A "Dictionary-Compressed Zstandard" stream is a Zstandard {{RFC8878}} stream
-for a response that has been compressed with an external dictionary.
+A "Dictionary-Compressed Zstandard" stream is a binary stream that starts with a
+36-byte header and is followed by a Zstandard {{RFC8878}} stream
+of the response that has been compressed with an external dictionary.
 
-Clients that announce support for zstd-d content encoding MUST be able to
+The 36-byte stream header consists of a 4-byte signature followed by the
+32-byte SHA-256 hash of the external dictionary that was used to compress the
+resource:
+
+|  Field             | Size       |
+|--------------------|------------|
+|  Magic_Number      | 4 bytes    |
+|  SHA_256_Hash      | 32 bytes   |
+
+Magic_Number: 4 bytes, little-endian format.  Value: 0x5A4344FF
+SHA_256_Hash: 32 Bytes. SHA-256 hash digest of the dictionary {{SHA-256}}.
+
+Clients that announce support for dcz content encoding MUST be able to
 decompress resources that were compressed with a window size of at least 8 MB
 or 1.25 times the size of the dictionary, which ever is greater, up to a
 maximum of 128 MB.
@@ -373,7 +379,7 @@ negotiating content encoding in HTTP through the "Accept-Encoding" request
 header and "Content-Encoding" response header.
 
 The dictionary to use is negotiated separately and advertised in the
-"Available-Dictionary" request header and "Content-Dictionary" response header.
+"Available-Dictionary" request header.
 
 ## Accept-Encoding
 
@@ -381,7 +387,7 @@ The client adds the content encodings that it supports to the "Accept-Encoding"
 request header. e.g.:
 
 ~~~ http-message
-Accept-Encoding: gzip, deflate, br, zstd, br-d, zstd-d
+Accept-Encoding: gzip, deflate, br, zstd, dcb, dcz
 ~~~
 
 ## Content-Encoding
@@ -392,7 +398,7 @@ the client has advertised then it sets the "Content-Encoding" response header
 to the appropriate value for the algorithm selected. e.g.:
 
 ~~~ http-message
-Content-Encoding: br-d
+Content-Encoding: dcb
 ~~~
 
 If the response is cacheable, it MUST include a "Vary" header to prevent caches
@@ -410,7 +416,7 @@ Vary: accept-encoding, available-dictionary
 IANA is asked to enter the following into the "HTTP Content Coding Registry"
 registry ({{HTTP}}):
 
-- Name: br-d
+- Name: dcb
 - Description: "Dictionary-Compressed Brotli" data format.
 - Reference: This document
 - Notes: {{dictionary-compressed-brotli}}
@@ -418,7 +424,7 @@ registry ({{HTTP}}):
 IANA is asked to enter the following into the "HTTP Content Coding Registry"
 registry ({{HTTP}}):
 
-- Name: zstd-d
+- Name: dcz
 - Description: "Dictionary-Compressed Zstandard" data format.
 - Reference: This document
 - Notes: {{dictionary-compressed-zstandard}}
@@ -435,7 +441,6 @@ IANA is asked to update the
 | Use-As-Dictionary    | permanent | {{use-as-dictionary}} of this document    |
 | Available-Dictionary | permanent | {{available-dictionary}} of this document |
 | Dictionary-ID        | permanent | {{dictionary-id}} of this document        |
-| Content-Dictionary   | permanent | {{content-dictionary}} of this document   |
 |----------------------|-----------|-------------------------------------------|
 
 ## Link Relation Registration
