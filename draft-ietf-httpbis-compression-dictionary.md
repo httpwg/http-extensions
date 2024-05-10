@@ -309,22 +309,19 @@ Link: <https://example.org/dict.dat>; rel="compression-dictionary"
 The "dcb" content encoding identifies a resource that is a
 "Dictionary-Compressed Brotli" stream.
 
-A "Dictionary-Compressed Brotli" stream is a binary stream that starts with a
-36-byte header and is followed by a Brotli {{RFC7932}} stream of the response
-that has been compressed with an external dictionary using a compression window
-not larger than 16 MB.
+A "Dictionary-Compressed Brotli" stream has a fixed header that is followed by
+a Brotli {{RFC7932}} stream. The header consists of a fixed 4 byte sequence
+and a 32 byte hash of the external dictionary that was used.  The Brotli stream
+is created using the referenced external dictionary and a compression window
+that is at most 16 MB in size.
 
-The 36-byte stream header consists of a 4-byte signature followed by the
-32-byte SHA-256 hash of the external dictionary that was used to compress the
-resource:
+The 36-byte fixed header is as follows:
 
-|  Field             | Size       |
-|--------------------|------------|
-|  Magic_Number      | 4 bytes    |
-|  SHA_256_Hash      | 32 bytes   |
+Magic_Number:
+: 4 fixed bytes: 0xff, 0x44, 0x43, 0x42.
 
-Magic_Number: 4 bytes, little-endian format.  Value: 0x424344FF
-SHA_256_Hash: 32 Bytes. SHA-256 hash digest of the dictionary {{SHA-256}}.
+SHA_256_Hash:
+: 32 Bytes. SHA-256 hash digest of the dictionary {{SHA-256}}.
 
 Clients that announce support for dcb content encoding MUST be able to
 decompress resources that were compressed with a window size of up to 16 MB.
@@ -339,20 +336,18 @@ The "dcz" content encoding identifies a resource that is a
 "Dictionary-Compressed Zstandard" stream.
 
 A "Dictionary-Compressed Zstandard" stream is a binary stream that starts with a
-36-byte header and is followed by a Zstandard {{RFC8878}} stream
+36-byte fixed header and is followed by a Zstandard {{RFC8878}} stream
 of the response that has been compressed with an external dictionary.
 
 The 36-byte stream header consists of a 4-byte signature followed by the
 32-byte SHA-256 hash of the external dictionary that was used to compress the
 resource:
 
-|  Field             | Size       |
-|--------------------|------------|
-|  Magic_Number      | 4 bytes    |
-|  SHA_256_Hash      | 32 bytes   |
+Magic_Number:
+: 4 fixed bytes: 0xff, 0x44, 0x45, 0x5a.
 
-Magic_Number: 4 bytes, little-endian format.  Value: 0x5A4344FF
-SHA_256_Hash: 32 Bytes. SHA-256 hash digest of the dictionary {{SHA-256}}.
+SHA_256_Hash:
+: 32 Bytes. SHA-256 hash digest of the dictionary {{SHA-256}}.
 
 Clients that announce support for dcz content encoding MUST be able to
 decompress resources that were compressed with a window size of at least 8 MB
