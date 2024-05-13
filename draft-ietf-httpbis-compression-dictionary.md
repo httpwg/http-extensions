@@ -53,6 +53,10 @@ informative:
   Origin: RFC6454
   STRUCTURED-FIELDS: RFC8941
   RFC7932:  # Brotli
+  SHARED-BROTLI:
+    title: Shared Brotli Compressed Data Format
+    date: 28 September 2022
+    target: https://datatracker.ietf.org/doc/draft-vandevenne-shared-brotli-format/
   RFC8878:  # Zstandard
 
 --- abstract
@@ -310,10 +314,10 @@ The "dcb" content encoding identifies a resource that is a
 "Dictionary-Compressed Brotli" stream.
 
 A "Dictionary-Compressed Brotli" stream has a fixed header that is followed by
-a Brotli {{RFC7932}} stream. The header consists of a fixed 4 byte sequence
-and a 32 byte hash of the external dictionary that was used.  The Brotli stream
-is created using the referenced external dictionary and a compression window
-that is at most 16 MB in size.
+a Shared Brotli {{SHARED-BROTLI}} stream. The header consists of a fixed 4 byte
+sequence and a 32 byte hash of the external dictionary that was used.  The
+Shared Brotli stream is created using the referenced external dictionary and a
+compression window that is at most 16 MB in size.
 
 The 36-byte fixed header is as follows:
 
@@ -455,9 +459,9 @@ be used in secure contexts (HTTPS).
 
 # Security Considerations
 
-The security considerations for Brotli {{RFC7932}} and Zstandard
-{{RFC8878}} apply to the dictionary-based versions of the respective
-algorithms.
+The security considerations for Brotli {{RFC7932}}, Shared Brotli
+{{SHARED-BROTLI}} and Zstandard {{RFC8878}} apply to the
+dictionary-based versions of the respective algorithms.
 
 ## Changing content
 
