@@ -340,18 +340,22 @@ The "dcz" content encoding identifies a resource that is a
 "Dictionary-Compressed Zstandard" stream.
 
 A "Dictionary-Compressed Zstandard" stream is a binary stream that starts with a
-36-byte fixed header and is followed by a Zstandard {{RFC8878}} stream
+40-byte fixed header and is followed by a Zstandard {{RFC8878}} stream
 of the response that has been compressed with an external dictionary.
 
-The 36-byte stream header consists of a 4-byte signature followed by the
+The 40-byte header consists of a fixed 8-byte sequence followed by the
 32-byte SHA-256 hash of the external dictionary that was used to compress the
 resource:
 
 Magic_Number:
-: 4 fixed bytes: 0xff, 0x44, 0x45, 0x5a.
+: 8 fixed bytes: 0x5e, 0x2a, 0x4d, 0x18, 0x20, 0x00, 0x00, 0x00.
 
 SHA_256_Hash:
 : 32 Bytes. SHA-256 hash digest of the dictionary {{SHA-256}}.
+
+The 40-byte header is a Zstandard skippable frame (little-endian 0x184D2A5E)
+with a 32-byte length (little-endian 0x00000020) that is compatible with existing
+Zstandard decoders.
 
 Clients that announce support for dcz content encoding MUST be able to
 decompress resources that were compressed with a window size of at least 8 MB
