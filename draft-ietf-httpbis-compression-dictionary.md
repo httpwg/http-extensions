@@ -386,12 +386,18 @@ The dictionary to use is negotiated separately and advertised in the
 
 ## Accept-Encoding
 
-The client adds the content encodings that it supports to the "Accept-Encoding"
-request header. e.g.:
+When a dictionary is available for use on a given request, and the client
+chooses to make dictionary-based content-encoding available, the client adds
+the dictionary-aware content encodings that it supports to the
+"Accept-Encoding" request header. e.g.:
 
 ~~~ http-message
 Accept-Encoding: gzip, deflate, br, zstd, dcb, dcz
 ~~~
+
+When a client does not have a stored dictionary that matches the request, or
+chooses not to use one for the request, the client MUST NOT send its
+dictionary-aware content-encodings in the "Accept-Encoding" request header.
 
 ## Content-Encoding
 
