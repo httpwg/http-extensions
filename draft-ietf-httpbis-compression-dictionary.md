@@ -532,15 +532,26 @@ the CORS check (https://fetch.spec.whatwg.org/#cors-check).
 
 ### Server Responsibility
 
-A timing attack may still be possible on non-readable responses to extract
-information from them if they were compressed using a dictionary. To mitigate
-this risk, a server MUST NOT use dictionary compression on a response when the
-HTTP headers indicate that the request is a "cors" request and that the
-response would not be readable by the client.
+As with any usage of compressed content in a secure context, a potential
+timing attack exists if the attacker can control any part of the dictionary,
+or if it can read the dictionary and control any part of the content being
+compressed, while performing multiple requests that vary the dictionary or
+injected content. Under such an attack, the changing size of the response
+reveals information about the content, which might be sufficient to read
+the supposedly secure response.
 
-The following algorithm will return TRUE if a response MAY use a
-dictionary-based content-encoding and FALSE if a response MUST NOT use a
-dictionary-based content-encoding:
+In general, a server can mitigate such attacks by preventing variations per
+request, as in preventing active use of multiple dictionaries for the same
+content, disabling compression when any portion of the content comes from
+uncontrolled sources, and securing access and control over the dictionary
+content in the same way as the response content. In addition, the following
+requirements on a server are intended to disable dictionary-aware compression
+when the client provides CORS request header fields that indicate a
+cross-origin request context.
+
+The following algorithm will return FALSE for cross-origin requests where
+precautions such as not using dictionary-based compression should be
+considered:
 
 1. If there is no "Sec-Fetch-Site" request header then return TRUE.
 1. if the value of the "Sec-Fetch-Site" request header is "same-origin" then
