@@ -536,7 +536,7 @@ As with any usage of compressed content in a secure context, a potential
 timing attack exists if the attacker can control any part of the dictionary,
 or if it can read the dictionary and control any part of the content being
 compressed, while performing multiple requests that vary the dictionary or
-injected content. Under such an attack, the changing size of the response
+injected content. Under such an attack, the changing size or processing time of the response
 reveals information about the content, which might be sufficient to read
 the supposedly secure response.
 
