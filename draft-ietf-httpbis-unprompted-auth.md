@@ -470,6 +470,8 @@ Signature-Auth-Context: :VGhpcyBleGFtcGxlIFRMUyBleHBvcn\
 Note that both of these mechanisms require the upstream HTTP server to trust
 the intermediary. This is usually the case because the intermediary already
 needs access to the TLS certificate private key in order to respond to requests.
+HTTP servers that parse the Signature-Auth-Context header field MUST ignore it
+unless they have already established that they trust the sender.
 
 # Security Considerations {#security}
 
