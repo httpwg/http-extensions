@@ -306,6 +306,9 @@ and WSP (whitespace).
 The OWS (optional whitespace) and BWS (bad whitespace) rules are defined in
 Section 5.6.3 of {{!HTTPSEM=I-D.ietf-httpbis-semantics}}.
 
+Note that per {{RFC5234}}, all strings literals used in the grammars are
+case-insensitive (e.g. "Secure" is equivalent to "secure" and "sEcUrE").
+
 ## Terminology
 
 The terms "user agent", "client", "server", "proxy", and "origin server" have
@@ -548,12 +551,15 @@ Cookie and Set-Cookie header fields.
 The Set-Cookie HTTP response header field is used to send cookies from the server to
 the user agent.
 
-### Syntax {#abnf-syntax}
+### Syntax {#server-abnf-syntax}
 
 Informally, the Set-Cookie response header field contains a cookie, which begins with a
 name-value-pair, followed by zero or more attribute-value pairs. Servers
-SHOULD NOT send Set-Cookie header fields that fail to conform to the following
-grammar:
+SHOULD NOT send Set-Cookie header fields that fail to conform to the grammar
+immediately below.
+
+Note that the grammar used by the user agent when processing Set-Cookie header fields
+is more permissive than this grammar. (See {{ua-abnf-syntax}} for more details.)
 
 ~~~ abnf
 set-cookie        = set-cookie-string
@@ -1272,7 +1278,8 @@ in {{sane-set-cookie}} forbids whitespace in these positions. In addition, the
 algorithm below accommodates some characters that are not cookie-octets
 according to the grammar in {{sane-set-cookie}}. User agents use this algorithm
 so as to interoperate with servers that do not follow the recommendations in
-{{sane-profile}}.
+{{sane-profile}}. See {{ua-abnf-syntax}} for a grammar that corresponds to
+the algorithm.
 
 NOTE: As set-cookie-string may originate from a non-HTTP API, it is not
 guaranteed to be free of CTL characters, so this algorithm handles them
@@ -1368,6 +1375,39 @@ said to "receive a cookie" from the request-uri with name cookie-name,
 value cookie-value, and attributes cookie-attribute-list. (See {{storage-model}}
 for additional requirements triggered by receiving a cookie.)
 
+### Syntax {#ua-abnf-syntax}
+
+Based on the parsing algorithms defined above, the following grammar defines
+the syntax requirements enforced by user agents when parsing set-cookie-strings:
+
+~~~ abnf
+set-cookie            = set-cookie-string
+set-cookie-string     = cookie-pair *( BWS ";" OWS cookie-av)
+cookie-pair           = *1(BWS cookie-name BWS "=") BWS cookie-value BWS
+                          ; the sum of the lengths of cookie-name and
+                          ; cookie-value must be less than or equal to 4096
+                          ; octets.
+
+cookie-name           = *4096(cookie-name-octet)
+cookie-value          = *4096(cookie-value-octet)
+cookie-name-octet     = %x09 / %x20-3A / %x3C / %x3E-7E / %x80-FF
+                          ; octets excluding non-whitespace CTLs,
+                          ; semicolon, and equals.
+cookie-value-octet    = %x09 / %x20-3A / %x3C-7E / %x80-FF
+                          ; octets excluding non-whitespace CTLs and
+                          ; semicolon.
+
+cookie-attr           = 1*cookie-name-octet BWS cookie-attr-eq-value BWS
+cookie-attr-eq-value  = "" / ("=" BWS optional-attr-value)
+    ; cookie-attr defines the base syntax for all cookie attributes. More
+    ; specific grammars for each of the recognized attribute names can be
+    ; found in the sections below.
+
+optional-attr-value   = *1024(cookie-value-octet)
+ignored-attr-eq-value = "" / ("=" BWS ignored-atrr-value)
+ignored-attr-value    = optional-attr-value
+~~~
+
 ### The Expires Attribute
 
 If the attribute-name case-insensitively matches the string "Expires", the
@@ -1391,6 +1431,15 @@ user agent MUST process the cookie-av as follows.
 
 6.  Append an attribute to the cookie-attribute-list with an attribute-name
     of Expires and an attribute-value of expiry-time.
+
+Based on the parsing algorithm above, the syntax requirements for the Expires
+attribute are represented by the grammar below. Expires attributes not
+conforming to this grammar are ignored.
+
+~~~ abnf
+expires-av = "Expires" BWS "=" BWS cookie-date BWS
+               ; cookie-date is defined in the "Dates" section.
+~~~
 
 ### The Max-Age Attribute
 
@@ -1419,6 +1468,16 @@ user agent MUST process the cookie-av as follows.
 8.  Append an attribute to the cookie-attribute-list with an attribute-name
     of Max-Age and an attribute-value of expiry-time.
 
+Based on the parsing algorithm above, the syntax requirements for the Max-Age
+attribute are represented by the grammar below. Max-Age attributes not
+conforming to this grammar are ignored.
+
+~~~ abnf
+max-age-av       = "Max-Age" BWS max-age-eq-value BWS
+max-age-eq-value = "" / ("=" BWS max-age-value)
+max-age-value    = *1024(DIGIT) / ("-" *1023(DIGIT))
+~~~
+
 ### The Domain Attribute
 
 If the attribute-name case-insensitively matches the string "Domain", the user
@@ -1433,6 +1492,18 @@ agent MUST process the cookie-av as follows.
 
 4.  Append an attribute to the cookie-attribute-list with an attribute-name
     of Domain and an attribute-value of cookie-domain.
+
+Based on the parsing algorithm above, the syntax requirements for the Domain
+attribute are represented by the grammar below. Domain attributes not
+conforming to this grammar are ignored.
+
+~~~ abnf
+domain-av       = "Domain" BWS domain-eq-value BWS
+domain-eq-value = "" / ("=" BWS domain-value)
+domain-value    = optional-attr-value
+                    ; a leading %x2E (period) in domain-value will be
+                    ; removed if present.
+~~~
 
 ### The Path Attribute
 
@@ -1451,17 +1522,41 @@ agent MUST process the cookie-av as follows.
 2.  Append an attribute to the cookie-attribute-list with an attribute-name
     of Path and an attribute-value of cookie-path.
 
+Based on the parsing algorithm above, the syntax requirements for the Path
+attribute are represented by the grammar below. Path attributes not conforming
+to this grammar are ignored.
+
+~~~ abnf
+path-av       = "Path" BWS path-eq-value BWS
+path-eq-value = "" / ("=" BWS path-value)
+path-value    = optional-attr-value
+~~~
+
 ### The Secure Attribute
 
 If the attribute-name case-insensitively matches the string "Secure", the
 user agent MUST append an attribute to the cookie-attribute-list with an
 attribute-name of Secure and an empty attribute-value.
 
+The syntax requirements for the Secure attribute are represented by the
+grammar below. Secure attributes not conforming to this grammar are ignored.
+
+~~~ abnf
+secure-av = "Secure" BWS ignored-attr-eq-value BWS
+~~~
+
 ### The HttpOnly Attribute
 
 If the attribute-name case-insensitively matches the string "HttpOnly", the
 user agent MUST append an attribute to the cookie-attribute-list with an
 attribute-name of HttpOnly and an empty attribute-value.
+
+The syntax requirements for the HttpOnly attribute are represented by the
+grammar below. HttpOnly attributes not conforming to this grammar are ignored.
+
+~~~ abnf
+httponly-av = "HttpOnly" BWS ignored-attr-eq-value BWS
+~~~
 
 ### The SameSite Attribute
 
@@ -1481,6 +1576,16 @@ user agent MUST process the cookie-av as follows:
 
 5.  Append an attribute to the cookie-attribute-list with an attribute-name
     of "SameSite" and an attribute-value of `enforcement`.
+
+Based on the parsing algorithm above, the syntax requirements for the SameSite
+attribute are represented by the grammar below. SameSite attributes not
+conforming to this grammar are ignored.
+
+~~~ abnf
+samesite-av       = "SameSite" BWS samesite-eq-value BWS
+samesite-eq-value = "" / ("=" BWS samesite-value)
+samesite-value    = "Strict" / "Lax" / "None" / ignored-attr-value
+~~~
 
 #### "Strict" and "Lax" enforcement {#strict-lax}
 
@@ -2459,7 +2564,7 @@ reference detailing how the attribute is to be processed and stored.
 
 New registrations happen on a "RFC Required" basis (see Section 4.7 of
 {{RFC8126}}). The attribute to be registered MUST match the `extension-av`
-syntax defined in {{abnf-syntax}}. Note that attribute names are generally
+syntax defined in {{server-abnf-syntax}}. Note that attribute names are generally
 defined in CamelCase, but technically accepted case-insensitively.
 
 ### Registration
