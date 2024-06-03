@@ -665,28 +665,18 @@ ignore unrecognized cookie attributes (but not the entire cookie).
 #### The Expires Attribute {#attribute-expires}
 
 The Expires attribute indicates the maximum lifetime of the cookie,
-represented as the date and time at which the cookie expires. The user agent is
-not required to retain the cookie until the specified date has passed. In fact,
-user agents often evict cookies due to memory pressure or privacy concerns.
-
-The user agent MUST limit the maximum value of the Expires attribute.
-The limit SHOULD NOT be greater than 400 days (34560000 seconds) in the future.
-The RECOMMENDED limit is 400 days in the future, but the user agent MAY adjust
-the limit (see {{cookie-policy}}).
-Expires attributes that are greater than the limit MUST be reduced to the limit.
+represented as the date and time at which the cookie expires. The user agent
+may adjust the specified date and is not required to retain the cookie until
+that date has passed. In fact, user agents often evict cookies due to memory
+pressure or privacy concerns.
 
 #### The Max-Age Attribute {#attribute-max-age}
 
 The Max-Age attribute indicates the maximum lifetime of the cookie,
-represented as the number of seconds until the cookie expires. The user agent is
-not required to retain the cookie for the specified duration. In fact, user
-agents often evict cookies due to memory pressure or privacy concerns.
-
-The user agent MUST limit the maximum value of the Max-Age attribute.
-The limit SHOULD NOT be greater than 400 days (34560000 seconds) in duration.
-The RECOMMENDED limit is 400 days in duration, but the user agent MAY adjust
-the limit (see {{cookie-policy}}).
-Max-Age attributes that are greater than the limit MUST be reduced to the limit.
+represented as the number of seconds until the cookie expires. The user agent
+may adjust the specified duration and is not required to retain the cookie for
+that duration. In fact, user agents often evict cookies due to memory pressure
+or privacy concerns.
 
 NOTE: Some existing user agents do not support the Max-Age attribute. User
 agents that do not support the Max-Age attribute ignore the attribute.
@@ -1255,6 +1245,15 @@ Set-Cookie: __host-SID=12345; Secure; Path=/
 Set-Cookie: __HOST-SID=12345; Secure; Path=/
 ~~~
 
+## Cookie Lifetime Limits {#cookie-lifetime-limits}
+
+When processing cookies with a specified lifetime, either with the Expires or
+with the Max-Age attribute, the user agent MUST limit the maximum age of the
+cookie. The limit SHOULD NOT be greater than 400 days (34560000 seconds) in the
+future. The RECOMMENDED limit is 400 days in the future, but the user agent MAY
+adjust the limit (see {{cookie-policy}}). Expires or Max-Age attributes that
+specify a lifetime longer than the limit MUST be reduced to the limit.
+
 ## The Set-Cookie Header Field {#set-cookie}
 
 When a user agent receives a Set-Cookie header field in an HTTP response, the
@@ -1380,7 +1379,7 @@ user agent MUST process the cookie-av as follows.
     cookie-av.
 
 3.  Let cookie-age-limit be the maximum age of the cookie (which SHOULD be 400 days
-    in the future or sooner, see {{attribute-expires}}).
+    in the future or sooner, see {{cookie-lifetime-limits}}).
 
 4.  If the expiry-time is more than cookie-age-limit, the user agent MUST set the
     expiry time to cookie-age-limit in seconds.
@@ -1408,7 +1407,7 @@ user agent MUST process the cookie-av as follows.
 4.  Let delta-seconds be the attribute-value converted to a base 10 integer.
 
 5.  Let cookie-age-limit be the maximum age of the cookie (which SHOULD be 400 days
-    or less, see {{attribute-max-age}}).
+    or less, see {{cookie-lifetime-limits}}).
 
 6.  Set delta-seconds to the smaller of its present value and cookie-age-limit.
 
@@ -2046,7 +2045,7 @@ cookies may be used or ignored (see {{ignoring-cookies}}).
 A cookie policy may govern which domains or parties, as in first and third parties
 (see {{third-party-cookies}}), for which the user agent will allow cookie access.
 The policy can also define limits on cookie size, cookie expiry (see
-{{attribute-expires}} and {{attribute-max-age}}), and the number of cookies per
+{{cookie-lifetime-limits}}), and the number of cookies per
 domain or in total.
 
 The recommended cookie expiry upper limit is 400 days. User agents may set
