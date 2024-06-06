@@ -2719,6 +2719,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * Remove consideration of same-site redirect chain
   <https://github.com/httpwg/http-extensions/pull/2750>
+  
+* Update IANA Considerations
+  <https://github.com/httpwg/http-extensions/pull/2793>
 
 # Acknowledgements
 {:numbered="false"}
