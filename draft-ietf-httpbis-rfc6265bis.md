@@ -64,6 +64,7 @@ normative:
   RFC6454:
   RFC8126:
   RFC9110:
+     display: HTTP
   USASCII:
     title: "Coded Character Set -- 7-bit American Standard Code for Information Interchange"
     seriesinfo:
