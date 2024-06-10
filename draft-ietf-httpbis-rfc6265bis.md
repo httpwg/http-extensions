@@ -63,6 +63,8 @@ normative:
   RFC5890:
   RFC6454:
   RFC8126:
+  RFC9110:
+     display: HTTP
   USASCII:
     title: "Coded Character Set -- 7-bit American Standard Code for Information Interchange"
     seriesinfo:
@@ -304,12 +306,12 @@ CHAR (any {{USASCII}} character), VCHAR (any visible {{USASCII}} character),
 and WSP (whitespace).
 
 The OWS (optional whitespace) and BWS (bad whitespace) rules are defined in
-Section 5.6.3 of {{!HTTPSEM=I-D.ietf-httpbis-semantics}}.
+Section 5.6.3 of {{RFC9110}}.
 
 ## Terminology
 
 The terms "user agent", "client", "server", "proxy", and "origin server" have
-the same meaning as in the HTTP/1.1 specification ({{HTTPSEM}}, Section 3).
+the same meaning as in the HTTP/1.1 specification ({{RFC9110}}, Section 3).
 
 The request-host is the name of the host, as known by the user agent, to which
 the user agent is sending an HTTP request or from which it is receiving an HTTP
@@ -317,7 +319,7 @@ response (i.e., the name of the host to which it sent the corresponding HTTP
 request).
 
 The term request-uri refers to "target URI" as defined in Section 7.1 of
-{{HTTPSEM}}.
+{{RFC9110}}.
 
 Two sequences of octets are said to case-insensitively match each other if and
 only if they are equivalent under the i;ascii-casemap collation defined in
@@ -338,7 +340,7 @@ The term "origin", the mechanism of deriving an origin from a URI, and the "the
 same" matching algorithm for origins are defined in {{RFC6454}}.
 
 "Safe" HTTP methods include `GET`, `HEAD`, `OPTIONS`, and `TRACE`, as defined
-in Section 9.2.1 of {{HTTPSEM}}.
+in Section 9.2.1 of {{RFC9110}}.
 
 A domain's "public suffix" is the portion of a domain that is controlled by a
 public registry, such as "com", "co.uk", and "pvt.k12.wy.us". A domain's
@@ -376,7 +378,7 @@ caches from storing and reusing a response.
 
 Origin servers SHOULD NOT fold multiple Set-Cookie header fields into a single
 header field. The usual mechanism for folding HTTP headers fields (i.e., as
-defined in Section 5.3 of {{HTTPSEM}}) might change the semantics of the Set-Cookie header
+defined in Section 5.3 of {{RFC9110}}) might change the semantics of the Set-Cookie header
 field because the %x2C (",") character is used by Set-Cookie in a way that
 conflicts with such folding.
 
@@ -571,7 +573,7 @@ cookie-av         = expires-av / max-age-av / domain-av /
                     samesite-av / extension-av
 expires-av        = "Expires" BWS "=" BWS sane-cookie-date
 sane-cookie-date  =
-    <IMF-fixdate, defined in [HTTPSEM], Section 5.6.7>
+    <IMF-fixdate, defined in [RFC9110], Section 5.6.7>
 max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
 non-zero-digit    = %x31-39
                       ; digits 1 through 9
@@ -1490,9 +1492,9 @@ with existing session management systems. In the interests of providing a
 drop-in mechanism that mitigates the risk of CSRF attacks, developers may set
 the `SameSite` attribute in a "Lax" enforcement mode that carves out an
 exception which sends same-site cookies along with cross-site requests if and
-only if they are top-level navigations which use a "safe" (in the {{HTTPSEM}}
+only if they are top-level navigations which use a "safe" (in the {{RFC9110}}
 sense) HTTP method. (Note that a request's method may be changed from POST
-to GET for some redirects (see Sections 15.4.2 and 15.4.3 of {{HTTPSEM}}); in
+to GET for some redirects (see Sections 15.4.2 and 15.4.3 of {{RFC9110}}); in
 these cases, a request's "safe"ness is determined based on the method of the
 current redirect hop.)
 
@@ -2717,6 +2719,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * Remove consideration of same-site redirect chain
   <https://github.com/httpwg/http-extensions/pull/2750>
+
+* Update HTTPSEM to RFC9110
+  <https://github.com/httpwg/http-extensions/pull/2795>
 
 # Acknowledgements
 {:numbered="false"}
