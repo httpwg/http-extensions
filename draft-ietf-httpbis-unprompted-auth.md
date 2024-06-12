@@ -193,7 +193,7 @@ Key ID:
 Public Key:
 
 : The public key used by the server to validate the signature provided by the
-client (the encoding is described below).
+client. Its encoding is described in {{public-key-encoding}}.
 
 Scheme:
 
@@ -227,8 +227,11 @@ represents their length in bytes. These length fields are encoded using the
 variable-length integer encoding from {{Section 16 of QUIC}} and MUST be
 encoded in the minimum number of bytes necessary.
 
-The encoding of the public key is determined by the Signature Algorithm in use
-as follows:
+### Public Key Encoding {#public-key-encoding}
+
+Both the "Public Key" field of the TLS key exporter context (see above) and the
+`a` Parameter (see {{parameter-a}}) carry the same public key. The encoding of
+the public key is determined by the Signature Algorithm in use as follows:
 
 RSASSA-PSS algorithms:
 
@@ -335,10 +338,10 @@ point to an entry in a server-side database of known keys.
 
 ## The a Parameter {#parameter-a}
 
-The REQUIRED "a" (public key) parameter is a byte sequence that contains the
+The REQUIRED "a" (public key) parameter is a byte sequence that specifies the
 public key used by the server to validate the signature provided by the client.
 This avoids key confusion issues (see {{SEEMS-LEGIT}}). The encoding of the
-public key is described in {{context}}.
+public key is described in {{public-key-encoding}}.
 
 ## The p Parameter {#parameter-p}
 
