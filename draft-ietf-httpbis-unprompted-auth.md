@@ -270,7 +270,7 @@ key (see {{computation}}).
 
 Verification:
 
-: The verification is transmitted to the server using the v Parameter (see
+: The verification is transmitted to the server using the `v` Parameter (see
 {{parameter-v}}).
 
 ## Signature Computation {#computation}
@@ -349,7 +349,7 @@ its key ID.
 ## The s Parameter {#parameter-s}
 
 The REQUIRED "s" (signature) parameter is an integer that specifies the
-signature scheme used to compute the proof transmitted in the "p" directive.
+signature scheme used to compute the proof transmitted in the `p` Parameter.
 Its value is an integer between 0 and 65535 inclusive from the IANA "TLS
 SignatureScheme" registry maintained at
 <[](https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-signaturescheme)>.
