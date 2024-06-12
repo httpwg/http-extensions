@@ -2740,6 +2740,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Update HTTPSEM to RFC9110
   <https://github.com/httpwg/http-extensions/pull/2795>
 
+* Add multiple cookie header tolerance suggestions & length limit warnings
+  <https://github.com/httpwg/http-extensions/pull/2804>
+
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
