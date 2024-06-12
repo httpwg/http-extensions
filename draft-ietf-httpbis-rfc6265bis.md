@@ -855,11 +855,11 @@ cookie-string = cookie-pair *( ";" SP cookie-pair )
 ~~~
 
 While Section 5.4 of {{RFC9110}} does not define a length limit for header
-fields it is likely that the web server's implementation does impose a limit,
+fields it is likely that the web server's implementation does impose a limit;
 many popular implementations have default limits of 8K. Server SHOULD avoid
 setting a large number of large cookies such that the final cookie-string
-would exceed their header field limit. Not doing so could result in the request
-failing.
+would exceed their header field limit. Not doing so could result in requests
+to server failing.
 
 Servers MUST be tolerant of multiple cookie headers. For example, an HTTP/2
 {{RFC9113}} or HTTP/3 {{RFC9114}} connection might split a cookie header to
