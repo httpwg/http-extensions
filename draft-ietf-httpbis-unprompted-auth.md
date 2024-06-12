@@ -530,6 +530,11 @@ authentication for some resources. It also allows authentication without the
 client leaking the presence of authentication to observers due to clear-text
 TLS Client Hello extensions.
 
+Since the freshness described above is provided by a TLS key exporter, it can
+be as old as the underlying TLS connection. Servers can require better
+freshness by forcing clients to create new connections using mechanisms such as
+the GOAWAY frame (see {{Section 5.2 of H3}}).
+
 The authentication proofs described in this document are not bound to
 individual HTTP requests; if the key is used for authentication proofs on
 multiple requests on the same connection, they will all be identical. This
