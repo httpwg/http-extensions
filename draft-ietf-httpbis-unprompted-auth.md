@@ -299,7 +299,7 @@ covered by the signature (in hexadecimal format) would be:
 ~~~
 {: #fig-sig-example title="Example Content Covered by Signature"}
 
-This constructions mirrors that of the TLS 1.3 CertificateVerify message
+This construction mirrors that of the TLS 1.3 CertificateVerify message
 defined in {{Section 4.4.3 of TLS}}.
 
 The resulting signature is then transmitted to the server using the `p`
@@ -311,11 +311,11 @@ This specification defines the following authentication parameters.
 
 All of the byte sequences below are encoded using base64url (see {{Section 5 of
 !BASE64=RFC4648}}) without quotes and without padding. In other words, these
-byte sequence authentication parameters values MUST NOT include any characters
+byte-sequence authentication parameters' values MUST NOT include any characters
 other then ASCII letters, digits, dash and underscore.
 
 The integer below is encoded without a minus and without leading zeroes. In
-other words, the integer authentication parameters value MUST NOT include any
+other words, the integer authentication parameter's value MUST NOT include any
 characters other than digits, and MUST NOT start with a zero unless the full
 value is "0".
 
@@ -330,8 +330,8 @@ concealed-integer-param-value =  %x31-39 1*4( DIGIT ) / "0"
 ## The k Parameter {#parameter-k}
 
 The REQUIRED "k" (key ID) parameter is a byte sequence that identifies which
-key the client wishes to use to authenticate. This can for example be used to
-point to an entry into a server-side database of known keys.
+key the client wishes to use to authenticate. This can, for example, be used to
+point to an entry in a server-side database of known keys.
 
 ## The a Parameter {#parameter-a}
 
