@@ -335,7 +335,7 @@ The client SHOULD NOT automatically retry if a 4xx (Client Error) status code is
 
 Upload appending is used for resuming an existing upload.
 
-The request MUST use the `PATCH` method and `application/partial-upload` media type and be sent to the upload resource. The `Upload-Offset` field value ({{upload-offset}}) MUST be set to the resumption offset.
+The request MUST use the `PATCH` method with the `application/partial-upload` media type and MUST be sent to the upload resource. The `Upload-Offset` field value ({{upload-offset}}) MUST be set to the resumption offset.
 
 If the end of the request content is not the end of the upload, the `Upload-Complete` field value ({{upload-complete}}) MUST be set to false.
 
@@ -347,7 +347,7 @@ The client MUST NOT perform multiple upload transfers for the same upload resour
 
 If the offset indicated by the `Upload-Offset` field value does not match the offset provided by the immediate previous offset retrieval ({{offset-retrieving}}), or the end offset of the immediate previous incomplete successful transfer, the server MUST respond with a `409 (Conflict)` status code.
 
-The server applies the patch document of the `application/partial-upload` media type by appending the unmodified request content to the targeted upload resource.
+The server applies the patch document of the `application/partial-upload` media type by appending the request content to the targeted upload resource. If the server does not receive the entire patch document, for example because of canceled requests or dropped connections, it SHOULD append as much of the patch document as was received.
 
 While the request content is being uploaded, the target resource MAY send one or more informational responses with a `104 (Upload Resumption Supported)` status code to the client. These informational responses MUST NOT contain the `Location` header field. They MAY include the `Upload-Offset` header field with the current upload offset as the value to inform the client about the upload progress. The same restrictions on the `Upload-Offset` header field in informational responses from the upload creation ({{upload-creation}}) apply.
 
@@ -424,7 +424,7 @@ The `Upload-Complete` header field MUST only be used if support by the resource 
 
 # Media Type `application/partial-upload`
 
-The `application/partial-upload` media type describes a contiguous block of data that should be uploaded to a resource. There is no minimum size on the block of data and it might be empty. The start and end of block of data might align with the start and end of the file that should be uploaded, but are not required to do so.
+The `application/partial-upload` media type describes a contiguous block of data that should be uploaded to a resource. There is no minimum block size and the block might be empty. The start and end of the block might align with the start and end of the file that should be uploaded, but they are not required to be aligned.
 
 # Redirection
 
