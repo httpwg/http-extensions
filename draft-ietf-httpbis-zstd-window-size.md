@@ -23,7 +23,7 @@ venue:
   type: Working Group
   mail: ietf-http-wg@w3.org
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
-  github: https://github.com/httpwg/http-extensions/labels/zstd-window-size
+  github: httpwg/http-extensions/labels/zstd-window-size
   latest: "https://httpwg.org/http-extensions/draft-ietf-httpbis-zstd-window-size.html"
 github-issue-label: zstd-window-size
 
