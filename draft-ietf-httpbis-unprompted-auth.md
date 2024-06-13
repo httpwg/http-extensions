@@ -329,26 +329,26 @@ concealed-integer-param-value =  %x31-39 1*4( DIGIT ) / "0"
 
 ## The k Parameter {#parameter-k}
 
-The REQUIRED "k" (key ID) parameter is a byte sequence that identifies which
+The REQUIRED "k" (key ID) Parameter is a byte sequence that identifies which
 key the client wishes to use to authenticate. This can, for example, be used to
 point to an entry in a server-side database of known keys.
 
 ## The a Parameter {#parameter-a}
 
-The REQUIRED "a" (public key) parameter is a byte sequence that contains the
+The REQUIRED "a" (public key) Parameter is a byte sequence that contains the
 public key used by the server to validate the signature provided by the client.
 This avoids key confusion issues (see {{SEEMS-LEGIT}}). The encoding of the
 public key is described in {{context}}.
 
 ## The p Parameter {#parameter-p}
 
-The REQUIRED "p" (proof) parameter is a byte sequence that specifies the proof
+The REQUIRED "p" (proof) Parameter is a byte sequence that specifies the proof
 that the client provides to attest to possessing the credential that matches
 its key ID.
 
 ## The s Parameter {#parameter-s}
 
-The REQUIRED "s" (signature) parameter is an integer that specifies the
+The REQUIRED "s" (signature) Parameter is an integer that specifies the
 signature scheme used to compute the proof transmitted in the `p` Parameter.
 Its value is an integer between 0 and 65535 inclusive from the IANA "TLS
 SignatureScheme" registry maintained at
@@ -356,7 +356,7 @@ SignatureScheme" registry maintained at
 
 ## The v Parameter {#parameter-v}
 
-The REQUIRED "v" (verification) parameter is a byte sequence that specifies the
+The REQUIRED "v" (verification) Parameter is a byte sequence that specifies the
 verification that the client provides to attest to possessing the key exporter
 output (see {{output}} for details). This avoids issues with signature schemes
 where certain keys can generate signatures that are valid for multiple inputs
