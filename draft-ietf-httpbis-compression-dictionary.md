@@ -319,6 +319,11 @@ sequence and a 32 byte hash of the external dictionary that was used.  The
 Shared Brotli stream is created using the referenced external dictionary and a
 compression window that is at most 16 MB in size.
 
+The dictionary used for the "dcb" content encoding is a "raw" dictionary type
+as defined in {{type}} and is treated as a prefix dictionary as defined in
+section 9.2 of the Shared Brotli Compressed Data Format draft.
+{{SHARED-BROTLI}}
+
 The 36-byte fixed header is as follows:
 
 Magic_Number:
@@ -339,9 +344,13 @@ delta-compression of resources larger than the compression window.
 The "dcz" content encoding identifies a resource that is a
 "Dictionary-Compressed Zstandard" stream.
 
-A "Dictionary-Compressed Zstandard" stream is a binary stream that starts with a
-40-byte fixed header and is followed by a Zstandard {{RFC8878}} stream
-of the response that has been compressed with an external dictionary.
+A "Dictionary-Compressed Zstandard" stream is a binary stream that starts with
+a 40-byte fixed header and is followed by a Zstandard {{RFC8878}} stream of the
+response that has been compressed with an external dictionary.
+
+The dictionary used for the "dcz" content encoding is a "raw" dictionary type
+as defined in {{type}} and is treated as a raw dictionary as per section 5 of
+RFC 8878.
 
 The 40-byte header consists of a fixed 8-byte sequence followed by the
 32-byte SHA-256 hash of the external dictionary that was used to compress the
