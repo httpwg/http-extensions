@@ -56,13 +56,11 @@ HTTP caching {{HTTP-CACHING}} operates at the granularity of a single resource; 
 
 However, there are also cases where the relationship between stored responses could be used to improve cache efficiency.
 
-For example, it's common for a set of closely-related resources to be deployed on a site, such as is the case for many JavaScript libraries and frameworks. These resources are typically deployed with long freshness lifetimes for caching. When that period passes, the cache will need to revalidate each stored response in a short period of time. Grouping these resources can be used to allow a cache to consider them all as being revalidated when any single response in the group is revalidated, removing the need to revalidate all of them individually and avoiding the associated overhead.
+For example, it is often necessary to invalidate a set of related resources. This might be because a state-changing request has side effects on other resources, or it might be purely for administrative convenience (e.g., "invalidate this part of the site"). Grouping responses together provides a dedicated way to express these relationships, instead of relying on things like URL structure.
 
-Likewise, when some resources change, it implies that other resources may have also changed. This might be because a state-changing request has side effects on other resources, or it might be purely for administrative convenience (e.g., "invalidate this part of the site"). Grouping responses together provides a dedicated way to express these relationships, instead of relying on things like URL structure.
+In addition to sharing invalidation events, the relationships indicated by grouping can also be used by caches to optimise their operation; for example, it could be used to inform the operation of cache eviction algorithms.
 
-In addition to sharing revalidation and invalidation events, the relationships indicated by grouping can also be used by caches to optimise their operation; for example, it could be used to inform the operation of cache eviction algorithms.
-
-{{cache-groups}} introduces a means of describing the relationships between a set of stored responses in HTTP caches by associating them with one or more opaque strings. It also describes how caches can use that information to apply revalidation and invalidation events to members of a group.
+{{cache-groups}} introduces a means of describing the relationships between a set of stored responses in HTTP caches by associating them with one or more opaque strings. It also describes how caches can use that information to apply invalidation events to members of a group.
 
 {{cache-group-invalidation}} introduces one new source of such events: a HTTP response header that allows a state-changing response to trigger a group invalidation.
 
@@ -84,12 +82,10 @@ The Cache-Groups HTTP Response Header is a List of Strings {{STRUCTURED-FIELDS}}
 HTTP/1.1 200 OK
 Content-Type: application/javascript
 Cache-Control: max-age=3600
-Cache-Groups: "ExampleJS";revalidate, "scripts"
+Cache-Groups: "scripts"
 ~~~
 
-This specification defines one Parameter for Cache-Groups, "revalidate", that indicates that the resources associated with that group share revalidation; see {{revalidation}}.
-
-The ordering of members of Cache-Groups is not significant.
+The ordering of members of Cache-Groups is not significant. Unrecognised Parameters MUST be ignored.
 
 
 ## Identifying Grouped Responses {#identify}
@@ -98,17 +94,9 @@ Two responses stored in the same cache are considered to have the same group whe
 
 1. They both contain a Cache-Groups response header field that contains the same String (in any position in the List), when compared character-by-character.
 2. The both share the same URI origin (per {{Section 4.3.1 of HTTP}}).
-3. If being considered for revalidation ({{revalidation}}), they both have the "revalidate" Parameter.
 
 
 ## Cache Behaviour
-
-### Revalidation {#revalidation}
-
-A cache that successfully revalidates a stored response MAY consider any stored responses that share a group (per {{identify}}) as also being revalidated at the same time.
-
-Cache extensions can explicitly strengthen the requirement above. For example, a targeted cache control header field {{TARGETED}} might specify that caches processing it are required to revalidate such responses.
-
 
 ### Invalidation {#invalidation}
 
@@ -159,7 +147,7 @@ Enter the following into the Hypertext Transfer Protocol (HTTP) Field Name Regis
 
 This mechanism allows resources that share an origin to invalidate each other. Because of this,
 origins that represent multiple parties (sometimes referred to as "shared hosting") might allow
-one party to group its resources with those of others, or to send signals which have side effects upon them -- either invalidating stored responses or extending their lifetime.
+one party to group its resources with those of others, or to send signals which have side effects upon them.
 
 Shared hosts that wish to mitigate these risks can control access to the header fields defined in this specification.
 
