@@ -1846,12 +1846,6 @@ where the retrieval's URI is the request-uri, the retrieval's same-site status
 is computed for the HTTP request as defined in {{same-site-requests}}, and the
 retrieval's type is "HTTP".
 
-Note: While this spec requires that a single cookie-string be produced, a user
-agent may consider splitting large request headers within their {{RFC9110}}
-implementation. This is due to potential server header length limits (See
-{{server-syntax}}) being exceeded due to servers setting too many large
-cookies.
-
 ### Non-HTTP APIs {#non-http}
 
 The user agent MAY implement "non-HTTP" APIs that can be used to access
