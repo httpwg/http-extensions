@@ -854,7 +854,7 @@ cookie        = cookie-string
 cookie-string = cookie-pair *( ";" SP cookie-pair )
 ~~~
 
-While Section 5.4 of {{RFC9110}} does not define a length limit for header
+While {{Section 5.4 of RFC9110}} does not define a length limit for header
 fields it is likely that the web server's implementation does impose a limit;
 many popular implementations have default limits of 8K. Server SHOULD avoid
 setting a large number of large cookies such that the final cookie-string
@@ -1845,6 +1845,12 @@ the cookie-string following the algorithm defined in {{retrieval-algorithm}},
 where the retrieval's URI is the request-uri, the retrieval's same-site status
 is computed for the HTTP request as defined in {{same-site-requests}}, and the
 retrieval's type is "HTTP".
+
+Note: Previous versions of this specification required that only one Cookie
+header field be sent in requests. This is no longer a requirement. While this
+specification requires that a single cookie-string be produced, some user agents
+may split that string across multiple cookie header fields. For examples, see
+{{Section 8.2.3 of RFC9113}} and {{Section 4.2.1 of RFC9114}}.
 
 ### Non-HTTP APIs {#non-http}
 
