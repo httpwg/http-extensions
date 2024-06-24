@@ -193,7 +193,7 @@ Key ID:
 Public Key:
 
 : The public key used by the server to validate the signature provided by the
-client (the encoding is described below).
+client. Its encoding is described in {{public-key-encoding}}.
 
 Scheme:
 
@@ -227,8 +227,11 @@ represents their length in bytes. These length fields are encoded using the
 variable-length integer encoding from {{Section 16 of QUIC}} and MUST be
 encoded in the minimum number of bytes necessary.
 
-The encoding of the public key is determined by the Signature Algorithm in use
-as follows:
+### Public Key Encoding {#public-key-encoding}
+
+Both the "Public Key" field of the TLS key exporter context (see above) and the
+`a` Parameter (see {{parameter-a}}) carry the same public key. The encoding of
+the public key is determined by the Signature Algorithm in use as follows:
 
 RSASSA-PSS algorithms:
 
@@ -270,7 +273,7 @@ key (see {{computation}}).
 
 Verification:
 
-: The verification is transmitted to the server using the v Parameter (see
+: The verification is transmitted to the server using the `v` Parameter (see
 {{parameter-v}}).
 
 ## Signature Computation {#computation}
@@ -299,7 +302,7 @@ covered by the signature (in hexadecimal format) would be:
 ~~~
 {: #fig-sig-example title="Example Content Covered by Signature"}
 
-This constructions mirrors that of the TLS 1.3 CertificateVerify message
+This construction mirrors that of the TLS 1.3 CertificateVerify message
 defined in {{Section 4.4.3 of TLS}}.
 
 The resulting signature is then transmitted to the server using the `p`
@@ -310,14 +313,14 @@ Parameter (see {{parameter-p}}).
 This specification defines the following authentication parameters.
 
 All of the byte sequences below are encoded using base64url (see {{Section 5 of
-!BASE64=RFC4648}}) without quotes and without padding. In other words, these
-byte sequence authentication parameters values MUST NOT include any characters
-other then ASCII letters, digits, dash and underscore.
+!BASE64=RFC4648}}) without quotes and without padding. In other words, the
+values of these byte-sequence authentication parameters MUST NOT include any
+characters other then ASCII letters, digits, dash and underscore.
 
 The integer below is encoded without a minus and without leading zeroes. In
-other words, the integer authentication parameters value MUST NOT include any
-characters other than digits, and MUST NOT start with a zero unless the full
-value is "0".
+other words, the value of this integer authentication parameter MUST NOT
+include any characters other than digits, and MUST NOT start with a zero unless
+the full value is "0".
 
 Using the syntax from {{!ABNF=RFC5234}}:
 
@@ -329,34 +332,34 @@ concealed-integer-param-value =  %x31-39 1*4( DIGIT ) / "0"
 
 ## The k Parameter {#parameter-k}
 
-The REQUIRED "k" (key ID) parameter is a byte sequence that identifies which
-key the client wishes to use to authenticate. This can for example be used to
-point to an entry into a server-side database of known keys.
+The REQUIRED "k" (key ID) Parameter is a byte sequence that identifies which
+key the client wishes to use to authenticate. This can, for example, be used to
+point to an entry in a server-side database of known keys.
 
 ## The a Parameter {#parameter-a}
 
-The REQUIRED "a" (public key) parameter is a byte sequence that contains the
+The REQUIRED "a" (public key) Parameter is a byte sequence that specifies the
 public key used by the server to validate the signature provided by the client.
 This avoids key confusion issues (see {{SEEMS-LEGIT}}). The encoding of the
-public key is described in {{context}}.
+public key is described in {{public-key-encoding}}.
 
 ## The p Parameter {#parameter-p}
 
-The REQUIRED "p" (proof) parameter is a byte sequence that specifies the proof
+The REQUIRED "p" (proof) Parameter is a byte sequence that specifies the proof
 that the client provides to attest to possessing the credential that matches
 its key ID.
 
 ## The s Parameter {#parameter-s}
 
-The REQUIRED "s" (signature) parameter is an integer that specifies the
-signature scheme used to compute the proof transmitted in the "p" directive.
+The REQUIRED "s" (signature) Parameter is an integer that specifies the
+signature scheme used to compute the proof transmitted in the `p` Parameter.
 Its value is an integer between 0 and 65535 inclusive from the IANA "TLS
 SignatureScheme" registry maintained at
 <[](https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-signaturescheme)>.
 
 ## The v Parameter {#parameter-v}
 
-The REQUIRED "v" (verification) parameter is a byte sequence that specifies the
+The REQUIRED "v" (verification) Parameter is a byte sequence that specifies the
 verification that the client provides to attest to possessing the key exporter
 output (see {{output}} for details). This avoids issues with signature schemes
 where certain keys can generate signatures that are valid for multiple inputs
@@ -529,6 +532,11 @@ authenticated clients without revealing that it supports or expects
 authentication for some resources. It also allows authentication without the
 client leaking the presence of authentication to observers due to clear-text
 TLS Client Hello extensions.
+
+Since the freshness described above is provided by a TLS key exporter, it can
+be as old as the underlying TLS connection. Servers can require better
+freshness by forcing clients to create new connections using mechanisms such as
+the GOAWAY frame (see {{Section 5.2 of H3}}).
 
 The authentication proofs described in this document are not bound to
 individual HTTP requests; if the key is used for authentication proofs on

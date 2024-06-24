@@ -306,7 +306,7 @@ The client MUST NOT perform offset retrieval while creation ({{upload-creation}}
 
 The offset MUST be accepted by a subsequent append ({{upload-appending}}). Due to network delay and reordering, the server might still be receiving data from an ongoing transfer for the same upload resource, which in the client's perspective has failed. The server MAY terminate any transfers for the same upload resource before sending the response by abruptly terminating the HTTP connection or stream. Alternatively, the server MAY keep the ongoing transfer alive but ignore further bytes received past the offset.
 
-The client MUST NOT start more than one append ({{upload-appending}}) based on the resumption offset from a single offset retrieving ({{offset-retrieving}}) request.
+The client MUST NOT start more than one append ({{upload-appending}}) based on the resumption offset from a single offset retrieving request.
 
 In order to prevent HTTP caching, the response SHOULD include a `Cache-Control` header field with the value `no-store`.
 
@@ -339,11 +339,11 @@ The request MUST use the `PATCH` method with the `application/partial-upload` me
 
 If the end of the request content is not the end of the upload, the `Upload-Complete` field value ({{upload-complete}}) MUST be set to false.
 
-The server SHOULD respect representation metadata received during creation ({{upload-creation}}) and ignore any representation metadata received from appending ({{upload-appending}}).
+The server SHOULD respect representation metadata received during creation ({{upload-creation}}) and ignore any representation metadata received from appending.
 
 If the server does not consider the upload associated with the upload resource active, it MUST respond with a `404 (Not Found)` status code.
 
-The client MUST NOT perform multiple upload transfers for the same upload resource in parallel. This helps avoid race conditions, and data loss or corruption. The server is RECOMMENDED to take measures to avoid parallel upload transfers: The server MAY terminate any creation ({{upload-creation}}) or append ({{upload-appending}}) for the same upload URL. Since the client is not allowed to perform multiple transfers in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
+The client MUST NOT perform multiple upload transfers for the same upload resource in parallel. This helps avoid race conditions, and data loss or corruption. The server is RECOMMENDED to take measures to avoid parallel upload transfers: The server MAY terminate any creation ({{upload-creation}}) or append for the same upload URL. Since the client is not allowed to perform multiple transfers in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
 
 If the offset indicated by the `Upload-Offset` field value does not match the offset provided by the immediate previous offset retrieval ({{offset-retrieving}}), or the end offset of the immediate previous incomplete successful transfer, the server MUST respond with a `409 (Conflict)` status code.
 
@@ -429,6 +429,10 @@ The `application/partial-upload` media type describes a contiguous block of data
 # Redirection
 
 The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY return a `308 (Permanent Redirect)` status code and clients SHOULD use new permanent URI for subsequent requests. If the client receives a `307 (Temporary Redirect)` response to an offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
+
+# Subsequent Resources
+
+The server might process the uploaded data and make its results available in another resource during or after the upload. This subsequent resource is different from the upload resource created by the upload creation request ({{upload-creation}}). The subsequent resource does not handle the upload process itself, but instead facilitates further interaction with the uploaded data. The server MAY indicate the location of this subsequent resource by including the `Content-Location` header field in informational or final responses generated while creating ({{upload-creation}}), appending to ({{upload-appending}}), or retrieving the offset ({{offset-retrieving}}) of an upload. For example, a subsequent resource could allow the client to fetch information extracted from the uploaded data.
 
 # Security Considerations
 
@@ -583,7 +587,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-03
 {:numbered="false"}
 
-None yet.
+* Add note about `Content-Location` for referring to subsequent resources.
 
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
