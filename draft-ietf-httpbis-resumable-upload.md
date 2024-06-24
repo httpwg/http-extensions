@@ -588,6 +588,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 {:numbered="false"}
 
 * Add note about `Content-Location` for referring to subsequent resources.
+* Require `application/partial-upload` for appending to uploads.
 
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
