@@ -521,7 +521,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-03
 {:numbered="false"}
 
-None yet.
+* Add note about `Content-Location` for referring to subsequent resources.
 
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
