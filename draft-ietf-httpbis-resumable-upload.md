@@ -45,6 +45,7 @@ author:
 
 normative:
   HTTP: RFC9110
+  RFC5789:
 
 informative:
 
@@ -219,6 +220,8 @@ If the request includes an `Upload-Complete` field value set to true and a valid
 
 The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty resource representation. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring data, which can save client or server resources. Since informational responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
 
+If the server does not receive the entire request content, for example because of canceled requests or dropped connections, it SHOULD append as much of the request content starting at its beginning and without discontinuities as possible. If the server did not append the entire request content, the upload MUST NOT be considered complete.
+
 The following example shows an upload creation. The client transfers the entire 100 bytes in the first request. The server generates two informational responses to transmit the upload resource's URL and progress information, and one final response to acknowledge the completed upload:
 
 ~~~ http-message
@@ -335,7 +338,7 @@ The client SHOULD NOT automatically retry if a 4xx (Client Error) status code is
 
 Upload appending is used for resuming an existing upload.
 
-The request MUST use the `PATCH` method and be sent to the upload resource. The `Upload-Offset` field value ({{upload-offset}}) MUST be set to the resumption offset.
+The request MUST use the `PATCH` method with the `application/partial-upload` media type and MUST be sent to the upload resource. The `Upload-Offset` field value ({{upload-offset}}) MUST be set to the resumption offset.
 
 If the end of the request content is not the end of the upload, the `Upload-Complete` field value ({{upload-complete}}) MUST be set to false.
 
@@ -346,6 +349,8 @@ If the server does not consider the upload associated with the upload resource a
 The client MUST NOT perform multiple upload transfers for the same upload resource in parallel. This helps avoid race conditions, and data loss or corruption. The server is RECOMMENDED to take measures to avoid parallel upload transfers: The server MAY terminate any creation ({{upload-creation}}) or append for the same upload URL. Since the client is not allowed to perform multiple transfers in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
 
 If the offset indicated by the `Upload-Offset` field value does not match the offset provided by the immediate previous offset retrieval ({{offset-retrieving}}), or the end offset of the immediate previous incomplete successful transfer, the server MUST respond with a `409 (Conflict)` status code.
+
+The server applies the patch document of the `application/partial-upload` media type by appending the request content to the targeted upload resource. If the server does not receive the entire patch document, for example because of canceled requests or dropped connections, it SHOULD append as much of the patch document starting at its beginning and without discontinuities as possible. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of RFC5789}}. If the server did not receive and apply the entire patch document, the upload MUST NOT be considered complete.
 
 While the request content is being uploaded, the target resource MAY send one or more informational responses with a `104 (Upload Resumption Supported)` status code to the client. These informational responses MUST NOT contain the `Location` header field. They MAY include the `Upload-Offset` header field with the current upload offset as the value to inform the client about the upload progress. The same restrictions on the `Upload-Offset` header field in informational responses from the upload creation ({{upload-creation}}) apply.
 
@@ -367,6 +372,7 @@ Host: example.com
 Upload-Offset: 100
 Upload-Draft-Interop-Version: 5
 Content-Length: 100
+Content-Type: application/partial-upload
 
 [content (100 bytes)]
 ~~~
@@ -419,6 +425,10 @@ The `Upload-Complete` request and response header field indicates whether the co
 
 The `Upload-Complete` header field MUST only be used if support by the resource is known to the client ({{feature-detection}}).
 
+# Media Type `application/partial-upload`
+
+The `application/partial-upload` media type describes a contiguous block of data that should be uploaded to a resource. There is no minimum block size and the block might be empty. The start and end of the block might align with the start and end of the file that should be uploaded, but they are not required to be aligned.
+
 # Redirection
 
 The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY return a `308 (Permanent Redirect)` status code and clients SHOULD use new permanent URI for subsequent requests. If the client receives a `307 (Temporary Redirect)` response to an offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
@@ -458,6 +468,65 @@ Description:
 
 Specification:
 : This document
+
+IANA is asked to register the following entry in the "Media Types" registry:
+
+Type name:
+: application
+
+Subtype name:
+: partial-upload
+
+Required parameters:
+: N/A
+
+Optional parameters:
+: N/A
+
+Encoding considerations:
+: binary
+
+Security considerations:
+: see {{security-considerations}} of this document
+
+Interoperability considerations:
+: N/A
+
+Published specification:
+: This document
+
+Applications that use this media type:
+: Applications that transfer files over unreliable networks or want pause- and resumable uploads.
+
+Fragment identifier considerations:
+: N/A
+
+Additional information:
+
+- Deprecated alias names for this type: N/A
+
+- Magic number(s): N/A
+
+- File extension(s): N/A
+
+- Macintosh file type code(s): N/A
+
+- Windows Clipboard Name: N/A
+
+Person and email address to contact for further information:
+: See the Authors' Addresses section of this document.
+
+Intended usage:
+: COMMON
+
+Restrictions on usage:
+: N/A
+
+Author:
+: See the Authors' Addresses section of this document.
+
+Change controller:
+: IETF
 
 --- back
 
@@ -522,6 +591,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 {:numbered="false"}
 
 * Add note about `Content-Location` for referring to subsequent resources.
+* Require `application/partial-upload` for appending to uploads.
 
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
