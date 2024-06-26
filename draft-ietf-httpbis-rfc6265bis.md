@@ -856,18 +856,24 @@ cookie-string = cookie-pair *( ";" SP cookie-pair )
 
 While {{Section 5.4 of RFC9110}} does not define a length limit for header
 fields it is likely that the web server's implementation does impose a limit;
-many popular implementations have default limits of 8K. Server SHOULD avoid
+many popular implementations have default limits of 8K. Servers SHOULD avoid
 setting a large number of large cookies such that the final cookie-string
 would exceed their header field limit. Not doing so could result in requests
 to the server failing.
 
 Servers MUST be tolerant of multiple cookie headers. For example, an HTTP/2
-{{RFC9113}} or HTTP/3 {{RFC9114}} connection might split a cookie header to
-improve compression. Servers are free to determine what form this tolerance
-takes. For example, the server could process each cookie header individually
-or the server could concatenate all the cookie headers into one and then
-process that final, single, header. The server should be mindful of any
-header field limits when deciding which approach to take.
+{{RFC9113}} or HTTP/3 {{RFC9114}} client or intermediary might split a cookie
+header to improve compression. Servers are free to determine what form this
+tolerance takes. For example, the server could process each cookie header
+individually or the server could concatenate all the cookie headers into one
+and then process that final, single, header. The server should be mindful of
+any header field limits when deciding which approach to take.
+
+Note: Since intermediaries can modify cookie headers they should also be
+mindful of common server header field limits in order to avoid sending servers
+headers that they cannot process. For example, by concatenating multiple cookie
+headers into a single header larger than a server's limit.
+
 
 ### Semantics
 
