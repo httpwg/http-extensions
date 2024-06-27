@@ -433,6 +433,16 @@ The `application/partial-upload` media type describes a contiguous block of data
 
 The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY return a `308 (Permanent Redirect)` status code and clients SHOULD use new permanent URI for subsequent requests. If the client receives a `307 (Temporary Redirect)` response to an offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
 
+# Integrity Digests
+
+The integrity of an entire upload or individual upload requests can be verifying using digests from {{!DIGEST-FIELDS=RFC9530}}.
+
+If the client knows the integrity digest of the entire data before creating an upload resource, it MAY include the `Repr-Digest` header field when creating an upload ({{upload-creation}}). Once the upload is completed, the server can compute the integrity digest of the received upload representation and compare it to the provided digest. If the digests don't match the server SHOULD consider the transfer failed and not process the uploaded data further. This way, the integrity of the entire uploaded data can be protected.
+
+If the client knows the integrity digest of the content from an upload creation ({{upload-creation}}) or upload appending ({{upload-appending}}) request, it MAY include the `Content-Digest` header field in the request. Once the content has been received, the server can compute the integrity digest of the received content and compare it to the provided digest. If the digests don't match the server SHOULD consider the transfer failed and not append the content to the upload resource. This way, the integrity of an individual request can be protected.
+
+If the client does not know the integrity digest of the content from an upload creation ({{upload-creation}}) or upload appending ({{upload-appending}}) request, it MAY request the integrity digest from the server by including the `Want-Content-Digest` header field. While transferring the content, the client can compute the integrity digest of the transferred content and compare it to the digest provided by the server in the response. If the digests don't match the client SHOULD consider the transfer failed and cancel the upload ({{upload-cancellation}}).
+
 # Subsequent Resources
 
 The server might process the uploaded data and make its results available in another resource during or after the upload. This subsequent resource is different from the upload resource created by the upload creation request ({{upload-creation}}). The subsequent resource does not handle the upload process itself, but instead facilitates further interaction with the uploaded data. The server MAY indicate the location of this subsequent resource by including the `Content-Location` header field in informational or final responses generated while creating ({{upload-creation}}), appending to ({{upload-appending}}), or retrieving the offset ({{offset-retrieving}}) of an upload. For example, a subsequent resource could allow the client to fetch information extracted from the uploaded data.
@@ -592,6 +602,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 
 * Add note about `Content-Location` for referring to subsequent resources.
 * Require `application/partial-upload` for appending to uploads.
+* Describe interaction with Digest Fields from RFC9530.
 
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
