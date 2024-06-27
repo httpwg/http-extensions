@@ -464,6 +464,7 @@ Content-Type: application/problem+json
   "type":"https://iana.org/assignments/http-problem-types#completed-upload",
   "title": "upload is already completed"
 }
+
 ~~~
 
 # Redirection
@@ -586,6 +587,7 @@ Recommended HTTP status code:
 : 400
 Reference:
 : This document
+
 --- back
 
 # Informational Response
