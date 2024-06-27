@@ -602,6 +602,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 
 * Add note about `Content-Location` for referring to subsequent resources.
 * Require `application/partial-upload` for appending to uploads.
+* Describe interaction with Digest Fields from RFC9530.
 
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
