@@ -2412,12 +2412,12 @@ not explicitly specifying a `SameSite` attribute being included on top-level
 cross-site requests with "unsafe" HTTP methods (as was the case prior to the
 introduction of the `SameSite` attribute).
 
-For example, a login flow may involve a cross-site top-level `POST` request to
-an endpoint which expects a cookie with login information. For such a cookie,
-"Lax" enforcement is not appropriate, as it would cause the cookie to be
-excluded due to the unsafe HTTP request method. On the other hand, "None"
-enforcement would allow the cookie to be sent with all cross-site requests,
-which may not be desirable due to the cookie's sensitive contents.
+For example, the concluding step of a login flow may involve a cross-site top-level
+`POST` request to an endpoint which expects a cookie with transactional state
+information necessary to securely complete the login. For such a cookie, "Lax"
+enforcement is not appropriate, as it would cause the cookie to be excluded due
+to the unsafe HTTP request method, resulting in an unrecoverable failure of the
+whole login flow.
 
 The "Lax-allowing-unsafe" enforcement mode described in {{lax-allowing-unsafe}}
 retains some of the protections of "Lax" enforcement (as compared to "None")
