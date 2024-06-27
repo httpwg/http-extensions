@@ -424,6 +424,10 @@ The `Upload-Offset` request and response header field indicates the resumption o
 The `Upload-Limit` response header field indicates limits applying the upload resource. The `Upload-Limit` field value is a Dictionary. The following limits are defined:
 
 - The `max-size` key specifies a maximum size that an upload resource is allowed to reach, counted in bytes. The value is an Integer.
+- The `min-size` key specifies a minimum size that for a resumable upload counted in bytes. The server will not create an upload resource if the client indicates that the uploaded data is smaller than the minimum size. The value is an Integer.
+- The `max-append-size` key specifies a maximum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server MAY reject request exceeding this limit and a client SHOULD NOT send larger upload append requests. The value is an Integer.
+- The `min-append-size` key specifies a minimum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server MAY reject request below this limit and a client SHOULD NOT send smaller upload append requests. The value is an Integer.
+- The `expires` key specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response by the server. After the resource's lifetime is reached, the server MAY make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource. The lifetime MAY be extended but SHOULD NOT be reduced once the upload resource is created. The value is an Integer.
 
 When parsing this header field, unrecognized keys MUST be ignored and MUST NOT fail the parsing to facilitate the addition of new limits in the future.
 
