@@ -425,6 +425,8 @@ The `Upload-Limit` response header field indicates limits applying the upload re
 
 - The `max-size` key specifies a maximum size that an upload resource is allowed to reach, counted in bytes. The value is an Integer.
 
+When parsing this header field, unrecognized keys MUST be ignored and MUST NOT fail the parsing to facilitate the addition of new limits in the future.
+
 ## Upload-Complete
 
 The `Upload-Complete` request and response header field indicates whether the corresponding upload is considered complete. The `Upload-Complete` field value is a Boolean.
