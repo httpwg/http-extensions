@@ -265,7 +265,7 @@ HTTP/1.1 201 Created
 Location: https://example.com/upload/b530ce8ff
 Upload-Complete: ?0
 Upload-Offset: 25
-Upload-Limit: bytes=1000000000
+Upload-Limit: max-size=1000000000
 ~~~
 
 If the client received an informational response with the upload URL in the Location field value, it MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status is received. The client SHOULD NOT automatically retry if it receives a 4xx status code.
@@ -423,7 +423,7 @@ The `Upload-Offset` request and response header field indicates the resumption o
 
 The `Upload-Limit` response header field indicates limits applying the upload resource. The `Upload-Limit` field value is a Dictionary. The following limits are defined:
 
-- The `bytes` key specifies a maximum size that an upload resource is allowed to reach, counted in bytes. The value is an Integer.
+- The `max-size` key specifies a maximum size that an upload resource is allowed to reach, counted in bytes. The value is an Integer.
 
 ## Upload-Complete
 
