@@ -137,7 +137,6 @@ informative:
   RFC3986:
   RFC6265:
   RFC4648:
-  RFC3864:
   RFC5895:
   RFC6265:
   RFC7034:
@@ -218,6 +217,9 @@ informative:
   PSL:
     target: https://publicsuffix.org/list/
     title: "Public Suffix List"
+  HttpFieldNameRegistry:
+    title: "Hypertext Transfer Protocol (HTTP) Field Name Registry"
+    target: https://www.iana.org/assignments/http-fields/
 
 --- abstract
 
@@ -2431,7 +2433,7 @@ to ease adoption of "Lax" enforcement by default.
 
 ## Cookie {#iana-cookie}
 
-The permanent message header field registry (see {{RFC3864}}) needs to be
+The HTTP Field Name Registry (see {{HttpFieldNameRegistry}}) needs to be
 updated with the following registration:
 
 Header field name:
@@ -2451,7 +2453,7 @@ Specification document:
 
 ## Set-Cookie {#iana-set-cookie}
 
-The permanent message header field registry (see {{RFC3864}}) needs to be
+The permanent message header field registry (see {{HttpFieldNameRegistry}}) needs to be
 updated with the following registration:
 
 Header field name:
@@ -2471,7 +2473,7 @@ Specification document:
 
 ## Cookie Attribute Registry
 
-IANA is requested to create the "Cookie Attribute Registry", defining the
+IANA is requested to create the "Cookie Attribute" registry, defining the
 name space of attribute used to control cookies' behavior.
 The registry should be maintained at
 <https://www.iana.org/assignments/cookie-attribute-names>.
@@ -2745,6 +2747,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * Update HTTPSEM to RFC9110
   <https://github.com/httpwg/http-extensions/pull/2795>
+
+* Update IANA Considerations
+  <https://github.com/httpwg/http-extensions/pull/2793>
 
 * Add multiple cookie header tolerance suggestions & length limit warnings
   <https://github.com/httpwg/http-extensions/pull/2804>
