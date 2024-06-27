@@ -344,7 +344,7 @@ The request MUST use the `PATCH` method with the `application/partial-upload` me
 
 If the end of the request content is not the end of the upload, the `Upload-Complete` field value ({{upload-complete}}) MUST be set to false.
 
-The server SHOULD respect representation metadata received during creation ({{upload-creation}}). A request for appending ({{upload-appending}}) to an upload resource MUST target the same representation and MUST use the same `Content-Encoding` header field from upload creation ({{upload-creation}}).
+The server SHOULD respect representation metadata received during creation ({{upload-creation}}). An upload append request continues uploading the same representation as used in the upload creation ({{upload-creation}}) and thus uses the same content coding, if one was applied. For example, if the initial upload creation included the `Content-Encoding: gzip` header field, the upload append request resumes the transfer of the gzipped data without indicating again that the gzip coding is applied.
 
 If the server does not consider the upload associated with the upload resource active, it MUST respond with a `404 (Not Found)` status code.
 
