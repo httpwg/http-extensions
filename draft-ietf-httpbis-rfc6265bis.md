@@ -871,8 +871,8 @@ any header field limits when deciding which approach to take.
 
 Note: Since intermediaries can modify cookie headers they should also be
 mindful of common server header field limits in order to avoid sending servers
-headers that they cannot process. For example, by concatenating multiple cookie
-headers into a single header larger than a server's limit.
+headers that they cannot process. For example, concatenating multiple cookie
+headers into a single header might exceed a server's size limit.
 
 
 ### Semantics
