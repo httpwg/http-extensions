@@ -434,7 +434,9 @@ The `application/partial-upload` media type describes a contiguous block of data
 
 ## Mismatching Offset
 
-This section defines the "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" problem type {{PROBLEM}}. An upload resource MAY use this problem type in a response to an upload append request ({{upload-appending}}) to indicate that the `Upload-Offset` header field in the request does not match the upload resource's offset. The resource SHOULD provide its offset in the `expected-offset` member and the offset from the upload append request in the `provided-offset` member.
+This section defines the "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" problem type {{PROBLEM}}. A server MAY use this problem type when responding to an upload append request ({{upload-appending}}) to indicate that the `Upload-Offset` header field in the request does not match the upload resource's offset.
+
+Two problem type extension members are defined: the `expected-offset` and `provided-offset` members. A response using this problem type SHOULD populate both members, with the value of `expected-offset` taken from the upload resource and the value of `provided-offset` taken from the upload append request.
 
 The following example shows an example response, where the resource's offset was 100, but the client attempted to append at offset 200:
 
@@ -452,9 +454,9 @@ Content-Type: application/problem+json
 
 ## Completed Upload
 
-This section defines the `https://iana.org/assignments/http-problem-types#completed-upload` problem type {{PROBLEM}}. An server MAY use this problem type in a response to an upload append request ({{upload-appending}}) to indicate that the upload has already been completed and cannot be modified.
+This section defines the "https://iana.org/assignments/http-problem-types#completed-upload" problem type {{PROBLEM}}. A server MAY use this problem type when responding to an upload append request ({{upload-appending}}) to indicate that the upload has already been completed and cannot be modified.
 
-The following example shows an example response, where the resource's offset was 100, but the client attempted to append at offset 200:
+The following example shows an example response:
 
 ~~~ http-message
 HTTP/1.1 400 Bad Request
