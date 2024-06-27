@@ -450,6 +450,22 @@ Content-Type: application/problem+json
 }
 ~~~
 
+## Completed Upload
+
+This section defines the `https://iana.org/assignments/http-problem-types#completed-upload` problem type {{PROBLEM}}. An upload resource MAY use this problem type in a response to an upload append request ({{upload-appending}}) to indicate that the upload has already been completed and cannot be modified.
+
+The following example shows an example response, where the resource's offset was 100, but the client attempted to append at offset 200:
+
+~~~ http-message
+HTTP/1.1 400 Bad Request
+Content-Type: application/problem+json
+
+{
+  "type":"https://iana.org/assignments/http-problem-types#completed-upload",
+  "title": "upload is already completed"
+}
+~~~
+
 # Redirection
 
 The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY return a `308 (Permanent Redirect)` status code and clients SHOULD use new permanent URI for subsequent requests. If the client receives a `307 (Temporary Redirect)` response to an offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
@@ -556,10 +572,20 @@ Type URI:
 Title:
 : Mismatching Upload Offset
 Recommended HTTP status code:
-: 409 Conflict
+: 409
 Reference:
 : This document
 
+IANA is asked to register the following entry in the "HTTP Problem Types" registry:
+
+Type URI:
+: https://iana.org/assignments/http-problem-types#completed-upload
+Title:
+: Upload Is Completed
+Recommended HTTP status code:
+: 400
+Reference:
+: This document
 --- back
 
 # Informational Response
