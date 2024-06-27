@@ -45,6 +45,7 @@ author:
 
 normative:
   HTTP: RFC9110
+  RFC5789:
 
 informative:
 
@@ -110,7 +111,7 @@ Client                                  Server
 |                                            |<----------------'
 |                                            |
 |            104 Upload Resumption Supported |
-|            with upload resouce URL         |
+|            with upload resource URL        |
 |<-------------------------------------------|
 |                                            |
 | Flow Interrupted                           |
@@ -211,20 +212,22 @@ Once the upload resource is available and while the request content is being upl
 
 The server MUST send the `Upload-Offset` header field in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The `Upload-Offset` field value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the response has a status code that indicates a success but the offset indicated in the `Upload-Offset` field value does not equal the total of begin offset plus the number of bytes uploaded in the request.
 
-If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a successful status code between 200 and 299 (inclusive). Servers are RECOMMENDED to use `201 (Created)` unless otherwise specified. The response MUST NOT include the `Upload-Complete` header field with the value of false.
+If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a 2xx (Successful) status code. Servers are RECOMMENDED to use `201 (Created)` unless otherwise specified. The response MUST NOT include the `Upload-Complete` header field with the value of false.
 
 If the request completes successfully but the entire upload is not yet complete, as indicated by an `Upload-Complete` field value of false in the request, the server MUST acknowledge it by responding with the `201 (Created)` status code and an `Upload-Complete` header value set to false.
 
 If the request includes an `Upload-Complete` field value set to true and a valid `Content-Length` header field, the client attempts to upload a fixed-length resource in one request. In this case, the upload's final size is the `Content-Length` field value and the server MUST record it to ensure its consistency.
 
-The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty entity. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring data, which can save client or server resources. Since informational responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
+The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty resource representation. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring data, which can save client or server resources. Since informational responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
+
+If the server does not receive the entire request content, for example because of canceled requests or dropped connections, it SHOULD append as much of the request content starting at its beginning and without discontinuities as possible. If the server did not append the entire request content, the upload MUST NOT be considered complete.
 
 The following example shows an upload creation. The client transfers the entire 100 bytes in the first request. The server generates two informational responses to transmit the upload resource's URL and progress information, and one final response to acknowledge the completed upload:
 
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 Upload-Complete: ?1
 Content-Length: 100
 
@@ -233,11 +236,11 @@ Content-Length: 100
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 Location: https://example.com/upload/b530ce8ff
 
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 Upload-Offset: 50
 
 HTTP/1.1 201 Created
@@ -250,7 +253,7 @@ The next example shows an upload creation, where only the first 25 bytes are tra
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 Upload-Complete: ?0
 Content-Length: 25
 
@@ -266,7 +269,7 @@ Upload-Offset: 25
 
 If the client received an informational response with the upload URL in the Location field value, it MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status is received. The client SHOULD NOT automatically retry if it receives a 4xx status code.
 
-File metadata can affect how servers might act on the uploaded file. Clients can send representation metadata (see {{Section 8.3 of HTTP}}) in the request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header field ({{Section 8.3 of HTTP}}) can be used to indicate the MIME type of the file. The `Content-Disposition` header field ({{!RFC6266}}) can be used to transmit a filename; if included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
+File metadata can affect how servers might act on the uploaded file. Clients can send representation metadata (see {{Section 8.3 of HTTP}}) in the request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header field ({{Section 8.3 of HTTP}}) can be used to indicate the media type of the file. The `Content-Disposition` header field ({{!RFC6266}}) can be used to transmit a filename; if included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
 
 ## Feature Detection {#feature-detection}
 
@@ -280,7 +283,7 @@ Clients MUST NOT attempt to resume an upload unless they receive `104 (Upload Re
 
 > **RFC Editor's Note:**  Please remove this section and `Upload-Draft-Interop-Version` from all examples prior to publication of a final version of this document.
 
-The current interop version is 4.
+The current interop version is 5.
 
 Client implementations of draft versions of the protocol MUST send a header field `Upload-Draft-Interop-Version` with the interop version as its value to its requests. The `Upload-Draft-Interop-Version` field value is an Integer.
 
@@ -304,9 +307,9 @@ An upload is considered complete only if the server completely and successfully 
 
 The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or append ({{upload-appending}}) is in progress.
 
-The offset MUST be accepted by a subsequent append ({{upload-appending}}). Due to network delay and reordering, the server might still be receiving data from an ongoing transfer for the same upload resource, which in the client perspective has failed. The server MAY terminate any transfers for the same upload resource before sending the response by abruptly terminating the HTTP connection or stream. Alternatively, the server MAY keep the ongoing transfer alive but ignore further bytes received past the offset.
+The offset MUST be accepted by a subsequent append ({{upload-appending}}). Due to network delay and reordering, the server might still be receiving data from an ongoing transfer for the same upload resource, which in the client's perspective has failed. The server MAY terminate any transfers for the same upload resource before sending the response by abruptly terminating the HTTP connection or stream. Alternatively, the server MAY keep the ongoing transfer alive but ignore further bytes received past the offset.
 
-The client MUST NOT start more than one append ({{upload-appending}}) based on the resumption offset from a single offset retrieving ({{offset-retrieving}}) request.
+The client MUST NOT start more than one append ({{upload-appending}}) based on the resumption offset from a single offset retrieving request.
 
 In order to prevent HTTP caching, the response SHOULD include a `Cache-Control` header field with the value `no-store`.
 
@@ -319,7 +322,7 @@ The following example shows an offset retrieval request. The server indicates th
 ~~~ http-message
 HEAD /upload/b530ce8ff HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 ~~~
 
 ~~~ http-message
@@ -329,29 +332,31 @@ Upload-Complete: ?0
 Cache-Control: no-store
 ~~~
 
-The client SHOULD NOT automatically retry if a client error status code between 400 and 499 (inclusive) is received.
+The client SHOULD NOT automatically retry if a 4xx (Client Error) status code is received.
 
 # Upload Append {#upload-appending}
 
 Upload appending is used for resuming an existing upload.
 
-The request MUST use the `PATCH` method and be sent to the upload resource. The `Upload-Offset` field value ({{upload-offset}}) MUST be set to the resumption offset.
+The request MUST use the `PATCH` method with the `application/partial-upload` media type and MUST be sent to the upload resource. The `Upload-Offset` field value ({{upload-offset}}) MUST be set to the resumption offset.
 
 If the end of the request content is not the end of the upload, the `Upload-Complete` field value ({{upload-complete}}) MUST be set to false.
 
-The server SHOULD respect representation metadata received during creation ({{upload-creation}}) and ignore any representation metadata received from appending ({{upload-appending}}).
+The server SHOULD respect representation metadata received during creation ({{upload-creation}}) and ignore any representation metadata received from appending.
 
 If the server does not consider the upload associated with the upload resource active, it MUST respond with a `404 (Not Found)` status code.
 
-The client MUST NOT perform multiple upload transfers for the same upload resource in parallel. This helps avoid race conditions, and data loss or corruption. The server is RECOMMENDED to take measures to avoid parallel upload transfers: The server MAY terminate any creation ({{upload-creation}}) or append ({{upload-appending}}) for the same upload URL. Since the client is not allowed to perform multiple transfers in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
+The client MUST NOT perform multiple upload transfers for the same upload resource in parallel. This helps avoid race conditions, and data loss or corruption. The server is RECOMMENDED to take measures to avoid parallel upload transfers: The server MAY terminate any creation ({{upload-creation}}) or append for the same upload URL. Since the client is not allowed to perform multiple transfers in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
 
 If the offset indicated by the `Upload-Offset` field value does not match the offset provided by the immediate previous offset retrieval ({{offset-retrieving}}), or the end offset of the immediate previous incomplete successful transfer, the server MUST respond with a `409 (Conflict)` status code.
+
+The server applies the patch document of the `application/partial-upload` media type by appending the request content to the targeted upload resource. If the server does not receive the entire patch document, for example because of canceled requests or dropped connections, it SHOULD append as much of the patch document starting at its beginning and without discontinuities as possible. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of RFC5789}}. If the server did not receive and apply the entire patch document, the upload MUST NOT be considered complete.
 
 While the request content is being uploaded, the target resource MAY send one or more informational responses with a `104 (Upload Resumption Supported)` status code to the client. These informational responses MUST NOT contain the `Location` header field. They MAY include the `Upload-Offset` header field with the current upload offset as the value to inform the client about the upload progress. The same restrictions on the `Upload-Offset` header field in informational responses from the upload creation ({{upload-creation}}) apply.
 
 The server MUST send the `Upload-Offset` header field in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the status code indicates a success but the offset indicated by the `Upload-Offset` field value does not equal the total of begin offset plus the number of bytes uploaded in the request.
 
-If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a successful status code between 200 and 299 (inclusive). Servers are RECOMMENDED to use a `201 (Created)` response if not otherwise specified. The response MUST NOT include the `Upload-Complete` header field with the value set to false.
+If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a 2xx (Successful) status code. Servers are RECOMMENDED to use a `201 (Created)` response if not otherwise specified. The response MUST NOT include the `Upload-Complete` header field with the value set to false.
 
 If the request completes successfully but the entire upload is not yet complete indicated by the `Upload-Complete` field value set to false, the server MUST acknowledge it by responding with a `201 (Created)` status code and the `Upload-Complete` field value set to true.
 
@@ -365,8 +370,9 @@ The following example shows an upload append. The client transfers the next 100 
 PATCH /upload/b530ce8ff HTTP/1.1
 Host: example.com
 Upload-Offset: 100
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 Content-Length: 100
+Content-Type: application/partial-upload
 
 [content (100 bytes)]
 ~~~
@@ -376,7 +382,7 @@ HTTP/1.1 201 Created
 Upload-Offset: 200
 ~~~
 
-The client MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a server error status code between 500 and 599 (inclusive) is received. The client SHOULD NOT automatically retry if a client error status code between 400 and 499 (inclusive) is received.
+The client MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx (Server Error) status code is received. The client SHOULD NOT automatically retry if a 4xx (Client Error) status code is received.
 
 # Upload Cancellation {#upload-cancellation}
 
@@ -399,7 +405,7 @@ The following example shows an upload cancellation:
 ~~~ http-message
 DELETE /upload/b530ce8ff HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 4
+Upload-Draft-Interop-Version: 5
 ~~~
 
 ~~~ http-message
@@ -419,6 +425,10 @@ The `Upload-Complete` request and response header field indicates whether the co
 
 The `Upload-Complete` header field MUST only be used if support by the resource is known to the client ({{feature-detection}}).
 
+# Media Type `application/partial-upload`
+
+The `application/partial-upload` media type describes a contiguous block of data that should be uploaded to a resource. There is no minimum block size and the block might be empty. The start and end of the block might align with the start and end of the file that should be uploaded, but they are not required to be aligned.
+
 # Redirection
 
 The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY return a `308 (Permanent Redirect)` status code and clients SHOULD use new permanent URI for subsequent requests. If the client receives a `307 (Temporary Redirect)` response to an offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
@@ -432,6 +442,10 @@ If the client knows the integrity digest of the entire data before creating an u
 If the client knows the integrity digest of the content from an upload creation ({{upload-creation}}) or upload appending ({{upload-appending}}) request, it MAY include the `Content-Digest` header field in the request. Once the content has been received, the server can compute the integrity digest of the received content and compare it to the provided digest. If the digests don't match the server SHOULD consider the transfer failed and not append the content to the upload resource. This way, the integrity of an individual request can be protected.
 
 If the client does not know the integrity digest of the content from an upload creation ({{upload-creation}}) or upload appending ({{upload-appending}}) request, it MAY request the integrity digest from the server by including the `Want-Content-Digest` header field. While transferring the content, the client can compute the integrity digest of the transferred content and compare it to the digest provided by the server in the response. If the digests don't match the client SHOULD consider the transfer failed and cancel the upload ({{upload-cancellation}}).
+
+# Subsequent Resources
+
+The server might process the uploaded data and make its results available in another resource during or after the upload. This subsequent resource is different from the upload resource created by the upload creation request ({{upload-creation}}). The subsequent resource does not handle the upload process itself, but instead facilitates further interaction with the uploaded data. The server MAY indicate the location of this subsequent resource by including the `Content-Location` header field in informational or final responses generated while creating ({{upload-creation}}), appending to ({{upload-appending}}), or retrieving the offset ({{offset-retrieving}}) of an upload. For example, a subsequent resource could allow the client to fetch information extracted from the uploaded data.
 
 # Security Considerations
 
@@ -464,6 +478,65 @@ Description:
 
 Specification:
 : This document
+
+IANA is asked to register the following entry in the "Media Types" registry:
+
+Type name:
+: application
+
+Subtype name:
+: partial-upload
+
+Required parameters:
+: N/A
+
+Optional parameters:
+: N/A
+
+Encoding considerations:
+: binary
+
+Security considerations:
+: see {{security-considerations}} of this document
+
+Interoperability considerations:
+: N/A
+
+Published specification:
+: This document
+
+Applications that use this media type:
+: Applications that transfer files over unreliable networks or want pause- and resumable uploads.
+
+Fragment identifier considerations:
+: N/A
+
+Additional information:
+
+- Deprecated alias names for this type: N/A
+
+- Magic number(s): N/A
+
+- File extension(s): N/A
+
+- Macintosh file type code(s): N/A
+
+- Windows Clipboard Name: N/A
+
+Person and email address to contact for further information:
+: See the Authors' Addresses section of this document.
+
+Intended usage:
+: COMMON
+
+Restrictions on usage:
+: N/A
+
+Author:
+: See the Authors' Addresses section of this document.
+
+Change controller:
+: IETF
 
 --- back
 
@@ -524,11 +597,21 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 # Changes
 {:numbered="false" removeinrfc="true"}
 
+## Since draft-ietf-httpbis-resumable-upload-03
+{:numbered="false"}
+
+* Add note about `Content-Location` for referring to subsequent resources.
+* Require `application/partial-upload` for appending to uploads.
+
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
 
 * Add upload progress notifications via informational responses.
 * Add security consideration regarding request filtering.
+* Explain the use of empty requests for creation uploads and appending.
+* Extend security consideration to include resource exhaustion attacks.
+* Allow 200 status codes for offset retrieval.
+* Increase the draft interop version.
 
 ## Since draft-ietf-httpbis-resumable-upload-01
 {:numbered="false"}
