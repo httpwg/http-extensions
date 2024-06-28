@@ -2754,6 +2754,11 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Add multiple cookie header tolerance suggestions & length limit warnings
   <https://github.com/httpwg/http-extensions/pull/2804>
 
+## draft-ietf-httpbis-rfc6265bis-15
+
+* Update example in the explanation of "Lax-allowing-unsafe"
+  <https://github.com/httpwg/http-extensions/pull/2812>
+
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
