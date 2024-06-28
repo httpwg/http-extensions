@@ -359,6 +359,8 @@ While the request content is being uploaded, the target resource MAY send one or
 
 The server MUST send the `Upload-Offset` header field in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the status code indicates a success but the offset indicated by the `Upload-Offset` field value does not equal the total of begin offset plus the number of bytes uploaded in the request.
 
+If the upload is already complete, the server MUST NOT modify the upload resource and MUST respond with a `400 (Bad Request)` status code. The server MAY use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#completed-upload" in the response; see {{completed-upload}}.
+
 If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a 2xx (Successful) status code. Servers are RECOMMENDED to use a `201 (Created)` response if not otherwise specified. The response MUST NOT include the `Upload-Complete` header field with the value set to false.
 
 If the request completes successfully but the entire upload is not yet complete indicated by the `Upload-Complete` field value set to false, the server MUST acknowledge it by responding with a `201 (Created)` status code and the `Upload-Complete` field value set to true.
@@ -662,6 +664,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 * Require `application/partial-upload` for appending to uploads.
 * Explain handling of content and transfer codings.
 * Add problem types for mismatching offsets and completed uploads.
+* Clarify that completed uploads must not be appended to.
 
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
