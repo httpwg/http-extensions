@@ -2421,8 +2421,8 @@ resulting in an unrecoverable failure of the whole login flow.
 
 The "Lax-allowing-unsafe" enforcement mode described in {{lax-allowing-unsafe}}
 retains some of the protections of "Lax" enforcement (as compared to "None")
-while still allowing cookies to be sent cross-site with unsafe top-level
-requests.
+while still allowing recently created cookies to be sent cross-site with unsafe
+top-level requests.
 
 As a more permissive variant of "Lax" mode, "Lax-allowing-unsafe" mode
 necessarily provides fewer protections against CSRF. Ultimately, the provision
