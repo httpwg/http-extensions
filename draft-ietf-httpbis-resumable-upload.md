@@ -48,6 +48,7 @@ normative:
   RFC9112:
     display: HTTP/1.1
   RFC5789:
+  PROBLEM: RFC9457
 
 informative:
 
@@ -350,7 +351,7 @@ If the server does not consider the upload associated with the upload resource a
 
 The client MUST NOT perform multiple upload transfers for the same upload resource in parallel. This helps avoid race conditions, and data loss or corruption. The server is RECOMMENDED to take measures to avoid parallel upload transfers: The server MAY terminate any creation ({{upload-creation}}) or append for the same upload URL. Since the client is not allowed to perform multiple transfers in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
 
-If the offset indicated by the `Upload-Offset` field value does not match the offset provided by the immediate previous offset retrieval ({{offset-retrieving}}), or the end offset of the immediate previous incomplete successful transfer, the server MUST respond with a `409 (Conflict)` status code.
+If the offset indicated by the `Upload-Offset` field value does not match the offset provided by the immediate previous offset retrieval ({{offset-retrieving}}), or the end offset of the immediate previous incomplete successful transfer, the server MUST respond with a `409 (Conflict)` status code. The server MAY use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" in the response; see {{mismatching-offset}}.
 
 The server applies the patch document of the `application/partial-upload` media type by appending the request content to the targeted upload resource. If the server does not receive the entire patch document, for example because of canceled requests or dropped connections, it SHOULD append as much of the patch document starting at its beginning and without discontinuities as possible. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of RFC5789}}. If the server did not receive and apply the entire patch document, the upload MUST NOT be considered complete.
 
@@ -430,6 +431,45 @@ The `Upload-Complete` header field MUST only be used if support by the resource 
 # Media Type `application/partial-upload`
 
 The `application/partial-upload` media type describes a contiguous block of data that should be uploaded to a resource. There is no minimum block size and the block might be empty. The start and end of the block might align with the start and end of the file that should be uploaded, but they are not required to be aligned.
+
+# Problem Types
+
+## Mismatching Offset
+
+This section defines the "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" problem type {{PROBLEM}}. A server MAY use this problem type when responding to an upload append request ({{upload-appending}}) to indicate that the `Upload-Offset` header field in the request does not match the upload resource's offset.
+
+Two problem type extension members are defined: the `expected-offset` and `provided-offset` members. A response using this problem type SHOULD populate both members, with the value of `expected-offset` taken from the upload resource and the value of `provided-offset` taken from the upload append request.
+
+The following example shows an example response, where the resource's offset was 100, but the client attempted to append at offset 200:
+
+~~~ http-message
+HTTP/1.1 409 Conflict
+Content-Type: application/problem+json
+
+{
+  "type":"https://iana.org/assignments/http-problem-types#mismatching-upload-offset",
+  "title": "offset from request does not match offset of resource",
+  "expected-offset": 100,
+  "provided-offset": 200
+}
+~~~
+
+## Completed Upload
+
+This section defines the "https://iana.org/assignments/http-problem-types#completed-upload" problem type {{PROBLEM}}. A server MAY use this problem type when responding to an upload append request ({{upload-appending}}) to indicate that the upload has already been completed and cannot be modified.
+
+The following example shows an example response:
+
+~~~ http-message
+HTTP/1.1 400 Bad Request
+Content-Type: application/problem+json
+
+{
+  "type":"https://iana.org/assignments/http-problem-types#completed-upload",
+  "title": "upload is already completed"
+}
+
+~~~
 
 # Redirection
 
@@ -534,6 +574,28 @@ Author:
 Change controller:
 : IETF
 
+IANA is asked to register the following entry in the "HTTP Problem Types" registry:
+
+Type URI:
+: https://iana.org/assignments/http-problem-types#mismatching-upload-offset
+Title:
+: Mismatching Upload Offset
+Recommended HTTP status code:
+: 409
+Reference:
+: This document
+
+IANA is asked to register the following entry in the "HTTP Problem Types" registry:
+
+Type URI:
+: https://iana.org/assignments/http-problem-types#completed-upload
+Title:
+: Upload Is Completed
+Recommended HTTP status code:
+: 400
+Reference:
+: This document
+
 --- back
 
 # Informational Response
@@ -599,6 +661,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 * Add note about `Content-Location` for referring to subsequent resources.
 * Require `application/partial-upload` for appending to uploads.
 * Explain handling of content and transfer codings.
+* Add problem types for mismatching offsets and completed uploads.
 
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
