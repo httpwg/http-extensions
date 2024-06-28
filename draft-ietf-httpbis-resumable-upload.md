@@ -661,6 +661,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 * Add note about `Content-Location` for referring to subsequent resources.
 * Require `application/partial-upload` for appending to uploads.
 * Explain handling of content and transfer codings.
+* Add problem types for mismatching offsets and completed uploads.
 
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
