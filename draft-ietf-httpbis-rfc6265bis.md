@@ -2406,7 +2406,7 @@ necessarily provides fewer protections against CSRF. Ultimately, the provision
 of such an enforcement mode should be seen as a temporary, transitional measure
 to ease adoption of "Lax" enforcement by default.
 
-# IANA Considerations {#iana}
+# IANA Considerations
 
 ## Cookie {#iana-cookie}
 
@@ -2448,7 +2448,7 @@ Author/Change controller:
 Specification document:
 : this specification ({{set-cookie}})
 
-## Cookie Attribute Registry {#cookie-attribute-registry}
+## Cookie Attribute Registry
 
 IANA is requested to create the "Cookie Attribute" registry, defining the
 name space of attribute used to control cookies' behavior.
@@ -2483,26 +2483,24 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 # Changes from RFC 6265
 
-*  Address errata 3444 by updating the path-value andextension-av grammar,
-errata 4148 by updating the day-of-month, year, and time grammar, and errata
-3663 by adding the requested note. ({{sane-set-cookie}} and {{cookie-path}})
-
-*  Removes Cookie2 and Set-Cookie2 from IANA Considerations. ({{iana}})
-
-*  Prohibits non-secure origins from setting cookies with a 'secure' flag or
-overwriting cookies with this flag. ({{storage-model}})
+*  Adds the same-site concept and the SameSite attribute.
+({{same-site-requests}} and {{attribute-samesite}})
 
 *  Introduces cookie prefixes and prohibits nameless cookies from setting a
 value that would mimic a cookie prefix. ({{server-name-prefixes}} and
 {{storage-model}})
 
+*  Prohibits non-secure origins from setting cookies with a 'secure' flag or
+overwriting cookies with this flag. ({{storage-model}})
+
+*  Limits maximum cookie size. ({{storage-model}})
+
+*  Limits maximum values for max-age and expire. ({{ua-attribute-expires}} and {{ua-attribute-max-age}})
+
 *  Includes the host-only-flag as part of a cookie’s uniqueness computation.
 ({{storage-model}})
 
-*  Adds the same-site concept and the SameSite attribute.
-({{same-site-requests}} and {{attribute-samesite}})
-
-*  Establishes a registry for cookie attribute names. ({{cookie-attribute-registry}})
+*  Considers potentially trustworthy origins as "secure". ({{storage-model}})
 
 * Improves cookie syntax
   *  Treats Set-Cookie: token as creating the cookie ("", "token").
@@ -2517,10 +2515,6 @@ value that would mimic a cookie prefix. ({{server-name-prefixes}} and
 
 *  Refactors cookie retrieval algorithm to support non-HTTP APIs. ({{non-http}})
 
-*  Limits maximum cookie size. ({{storage-model}})
-
-*  Limits maximum values for max-age and expire. ({{ua-attribute-expires}} and {{ua-attribute-max-age}})
-
 *  Specifies that the Set-Cookie line should not be decoded. ({{set-cookie}})
 
 *  Adds an advisory section to assist implementers in deciding which requirements
@@ -2529,9 +2523,11 @@ to implement. ({{implementation-advisory}})
 *  Advises against sending invalid cookies due to public suffix list changes.
 ({{retrieval-algorithm}})
 
-*  Considers potentially trustworthy origins as "secure". ({{storage-model}})
-
 *  Removes the single cookie header requirement. ({{cookie}})
+
+*  Address errata 3444 by updating the path-value andextension-av grammar,
+errata 4148 by updating the day-of-month, year, and time grammar, and errata
+3663 by adding the requested note. ({{sane-set-cookie}} and {{cookie-path}})
 
 # Acknowledgements
 {:numbered="false"}
