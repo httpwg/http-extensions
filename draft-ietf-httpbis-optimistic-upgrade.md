@@ -14,7 +14,7 @@ workgroup: "HTTPBIS"
 keyword:
 venue:
   github: "httpwg/http-extensions"
-updates: 9298
+updates: 9298, 2817
 
 author:
  -
@@ -89,15 +89,15 @@ At the time of writing, there are four distinct Upgrade Tokens that are register
 
 ## "HTTP"
 
-{{!RFC9110}} is the source of the requirement quoted in {{background}}.  It also defines the "HTTP/\*.\*" family of Upgrade Tokens.  In HTTP/1.1, the only potentially applicable versions of this token are "0.9", "1.0", "1.1", and "2.0".
+{{!RFC9110}} is the source of the requirement quoted in {{background}}.  It also defines the "HTTP/\*.\*" family of Upgrade Tokens, in its IANA Considerations ({{RFC9110, Section 18.10}}).  In HTTP/1.1, the only potentially applicable versions of this token are "0.9", "1.0", "1.1", and "2.0".  However, versions 0.9, 1.0 and 1.1 would not represent an "upgrade" from HTTP/1.1, so they are not relevant.  The "HTTP/2.0" upgrade token was never adopted for HTTP/2. The token "h2c" was selected instead {{?RFC7540}}, and subsequently deprecated {{?RFC9113}}.  As a result, there are no known or anticipated use cases for the "HTTP/\*.\*" family of upgrade tokens.  Accordingly, {{iana-considerations}} deprecates the use of these tokens.
 
-Versions "0.9" and "1.0" are sufficiently syntactically similar to HTTP/1.1 that any such "downward upgrade" would be unlikely to result in the security concerns discussed here.  (An "upgrade" to version 1.1 has no effect at all.)
-
-A version number of "2.0" corresponds to HTTP/2.  Every HTTP/2 connection begins with a Client Connection Preface ({{Section 3.4 of ?RFC9113}}) that was selected to ensure that a compliant HTTP/1.1 server will not process further data on this connection.  This avoids security issues if an "HTTP/2.0" Upgrade Token is used optimistically.
+If any upgrade token were defined for HTTP/2, it would not be vulnerable to attacks on optimistic upgrade.  Every HTTP/2 connection begins with a Client Connection Preface ({{Section 3.4 of ?RFC9113}}) that was selected to ensure that a compliant HTTP/1.1 server will not process further data on this connection.
 
 ## "TLS"
 
 {{?RFC2817}} defines the "TLS/*.*" family of Upgrade Tokens, and correctly highlights the possibility of the server rejecting the upgrade.  The security considerations documented here are applicable to any use of the "TLS" Upgrade Token, but no change is required in {{?RFC2817}}.
+
+The "TLS" upgrade token was intended to enable "virtual hosting" for https: origins.  This solution was not widely adopted.  Instead, virtual hosting was accomplished by means of the TLS Server Name Indication (SNI), first defined in {{?RFC3546}}, rendering the "TLS" upgrade token obsolete.  Accordingly, this document marks {{?RFC2817}} as Historic and deprecates the corresponding upgrade token (see {{iana-considerations}}).
 
 ## "WebSocket"/"websocket"
 
@@ -141,7 +141,12 @@ Future specifications for Upgrade Tokens MUST account for the security issues di
 
 # IANA Considerations
 
-This document has no IANA actions.
+This document requests the following modifications to the Hypertext Transfer Protocol (HTTP) Upgrade Token Registry:
+
+| Value    | Description | Expected Version Tokens | Reference |
+| -------- | ----------- | ----------------------- | --------- |
+| HTTP     | Hypertext Transfer Protocol (OBSOLETE TOKEN) | any DIGIT.DIGIT | (this document, {{http}}) |
+| TLS     | Transport Layer Security (OBSOLETE TOKEN) | any DIGIT.DIGIT | (this document, {{tls}}) |
 
 
 --- back
