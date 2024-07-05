@@ -125,6 +125,10 @@ However, this could be interpreted as an instruction to abort the underlying TLS
 
 > If any of these requirements are not met, the client MUST treat this proxying attempt as failed.  If the "Upgrade" response header field is absent, the client MAY reuse the connection for further HTTP/1.1 requests; otherwise it MUST abort the underlying connection.
 
+## "connect-ip"
+
+{{Section 11 of !RFC9484}} forbids clients from using optimistic upgrade, avoiding this issue.
+
 # Guidance for Future Upgrade Tokens
 
 There are now several good examples of designs that prevent the security concerns discussed in this document and may be applicable in future specifications:
