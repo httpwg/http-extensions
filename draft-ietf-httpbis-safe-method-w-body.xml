@@ -125,7 +125,7 @@ Host: example.org
     </t>
 
     <t>
-      A typical use of HTTP POST for requesting a query
+      A typical use of HTTP POST for requesting a query:
     </t>
 <artwork type="http-message">
 POST /feed HTTP/1.1
