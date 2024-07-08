@@ -221,11 +221,11 @@ If the request completes successfully but the entire upload is not yet complete,
 
 If the request includes an `Upload-Complete` field value set to true and a valid `Content-Length` header field, the client attempts to upload a fixed-length resource in one request. In this case, the upload's final size is the `Content-Length` field value and the server MUST record it to ensure its consistency.
 
+The server MAY enforce a maximum size of an upload resource. This limit MAY be equal to the upload's final size, if `Upload-Complete: ?1` and `Content-Length` are present in the upload creation request, or an arbitrary value. The limit's value or its existence MUST NOT change throughout the lifetime of the upload resource. The server MAY indicate such a limit to the client by including the `Upload-Limit` header field in the informational or final response to upload creation. If the client receives an `Upload-Limit` header field indicating that the maximum size is less than the amount of bytes it intends to upload to a resource, it SHOULD stop the current upload transfer immediately and cancel the upload ({{upload-cancellation}}).
+
 The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty resource representation. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring data, which can save client or server resources. Since informational responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
 
 If the server does not receive the entire request content, for example because of canceled requests or dropped connections, it SHOULD append as much of the request content starting at its beginning and without discontinuities as possible. If the server did not append the entire request content, the upload MUST NOT be considered complete.
-
-The following example shows an upload creation. The client transfers the entire 100 bytes in the first request. The server generates two informational responses to transmit the upload resource's URL and progress information, and one final response to acknowledge the completed upload:
 
 ~~~ http-message
 POST /upload HTTP/1.1
@@ -268,6 +268,7 @@ HTTP/1.1 201 Created
 Location: https://example.com/upload/b530ce8ff
 Upload-Complete: ?0
 Upload-Offset: 25
+Upload-Limit: max-size=1000000000
 ~~~
 
 If the client received an informational response with the upload URL in the Location field value, it MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status is received. The client SHOULD NOT automatically retry if it receives a 4xx status code.
@@ -304,7 +305,7 @@ If an upload is interrupted, the client MAY attempt to fetch the offset of the i
 
 The request MUST NOT include an `Upload-Offset` or `Upload-Complete` header field. The server MUST reject requests with either of these fields by responding with a `400 (Bad Request)` status code.
 
-If the server considers the upload resource to be active, it MUST respond with a `204 (No Content)` or `200 (OK)` status code. The response MUST include the `Upload-Offset` header field, with the value set to the current resumption offset for the target resource. The response MUST include the `Upload-Complete` header field; the value is set to true only if the upload is complete.
+If the server considers the upload resource to be active, it MUST respond with a `204 (No Content)` or `200 (OK)` status code. The response MUST include the `Upload-Offset` header field, with the value set to the current resumption offset for the target resource. The response MUST include the `Upload-Complete` header field; the value is set to true only if the upload is complete. The response MAY include the `Upload-Limit` header field if corresponding limits on the upload resource exist.
 
 An upload is considered complete only if the server completely and successfully received a corresponding creation request ({{upload-creation}}) or append request ({{upload-appending}}) with the `Upload-Complete` header value set to true.
 
@@ -423,6 +424,17 @@ HTTP/1.1 204 No Content
 
 The `Upload-Offset` request and response header field indicates the resumption offset of corresponding upload, counted in bytes. The `Upload-Offset` field value is an Integer.
 
+## Upload-Limit
+
+The `Upload-Limit` response header field indicates limits applying the upload resource. The `Upload-Limit` field value is a Dictionary. The following limits are defined:
+
+- The `max-size` key specifies a maximum size that an upload resource is allowed to reach, counted in bytes. The value is an Integer.
+- The `min-size` key specifies a minimum size for a resumable upload, counted in bytes. The server will not create an upload resource if the client indicates that the uploaded data is smaller than the minimum size. The value is an Integer.
+- The `max-append-size` key specifies a maximum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server MAY reject requests exceeding this limit and a client SHOULD NOT send larger upload append requests. The value is an Integer.
+- The `min-append-size` key specifies a minimum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server MAY reject requests below this limit and a client SHOULD NOT send smaller upload append requests. The value is an Integer.
+- The `expires` key specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response by the server. After the resource's lifetime is reached, the server MAY make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource. The lifetime MAY be extended but SHOULD NOT be reduced once the upload resource is created. The value is an Integer.
+
+When parsing this header field, unrecognized keys MUST be ignored and MUST NOT fail the parsing to facilitate the addition of new limits in the future.
 
 ## Upload-Complete
 
@@ -518,6 +530,7 @@ IANA is asked to register the following entries in the "Hypertext Transfer Proto
 |----------------------|-----------|-------------------------------------------|
 | Upload-Complete      | permanent | {{upload-complete}} of this document      |
 | Upload-Offset        | permanent | {{upload-offset}} of this document        |
+| Upload-Limit         | permanent | {{upload-limit}} of this document         |
 |----------------------|-----------|-------------------------------------------|
 
 IANA is asked to register the following entry in the "HTTP Status Codes" registry:
@@ -681,6 +694,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 * Clarify that completed uploads must not be appended to.
 * Describe interaction with Digest Fields from RFC9530.
 * Require that upload offset does not decrease over time.
+* Add Upload-Limit header field.
 
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
