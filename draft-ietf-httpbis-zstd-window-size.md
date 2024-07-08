@@ -91,7 +91,7 @@ of up to 8 MB, and that encoders not generate frames using a Window_Size larger
 than 8 MB. However, it imposes no requirements.
 
 This document updates {{RFC8878}} to enforce Window_Size limits on the encoder
-and decoder for the "zstd" content coding.
+and decoder for the "zstd" HTTP content coding.
 
 
 # Conventions and Definitions
