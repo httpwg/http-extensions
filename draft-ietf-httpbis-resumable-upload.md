@@ -478,6 +478,7 @@ Content-Type: application/problem+json
 The offset of an upload resource is the number of bytes that have been appended to the upload resource. Appended data cannot be removed from an upload and, therefore, the upload offset MUST NOT decrease. A server MUST NOT generate responses containing an `Upload-Offset` header field with a value that is smaller than was included in previous responses for the same upload resource. This includes informational and final responses for upload creation ({{upload-creation}}), upload appending ({{upload-appending}}), and offset retrieval ({{offset-retrieving}}).
 
 If a server loses data that has been appended to an upload, it MUST consider the upload resource invalid and reject further use of the upload resource. The `Upload-Offset` header field in responses serves as an acknowledgement of the append operation and as a guarantee that no retransmission of the data will be necessary. Client can use this guarantee to free resources associated to already uploaded data while the upload is still ongoing.
+
 # Redirection
 
 The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY return a `308 (Permanent Redirect)` status code and clients SHOULD use new permanent URI for subsequent requests. If the client receives a `307 (Temporary Redirect)` response to an offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
@@ -679,6 +680,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 * Add problem types for mismatching offsets and completed uploads.
 * Clarify that completed uploads must not be appended to.
 * Describe interaction with Digest Fields from RFC9530.
+* Require that upload offset does not decrease over time.
 
 ## Since draft-ietf-httpbis-resumable-upload-02
 {:numbered="false"}
