@@ -125,7 +125,7 @@ Host: example.org
     </t>
 
     <t>
-      A typical use of HTTP POST for requesting a query
+      A typical use of HTTP POST for requesting a query:
     </t>
 <artwork type="http-message">
 POST /feed HTTP/1.1
@@ -430,10 +430,15 @@ Dubois, Camille, camille.dubois@example.net
   <li>Updated references (<eref target="https://github.com/httpwg/http-extensions/issues/2157"/>)</li>
 </ul>
 </section>
-<section title="Since draft-ietf-httpbis-safe-method-w-body-02" anchor="changes.since.03">
+<section title="Since draft-ietf-httpbis-safe-method-w-body-03" anchor="changes.since.03">
 <ul>
   <li>In <xref target="field.accept-query"/>, clarify scope (<eref target="https://github.com/httpwg/http-extensions/issues/1913"/>)</li>
 </ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-04" anchor="changes.since.04">
+<t>
+  None yet.
+</t>
 </section>
 </section>
 

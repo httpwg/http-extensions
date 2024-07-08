@@ -45,7 +45,10 @@ author:
 
 normative:
   HTTP: RFC9110
+  RFC9112:
+    display: HTTP/1.1
   RFC5789:
+  PROBLEM: RFC9457
 
 informative:
 
@@ -269,7 +272,7 @@ Upload-Offset: 25
 
 If the client received an informational response with the upload URL in the Location field value, it MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status is received. The client SHOULD NOT automatically retry if it receives a 4xx status code.
 
-File metadata can affect how servers might act on the uploaded file. Clients can send representation metadata (see {{Section 8.3 of HTTP}}) in the request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header field ({{Section 8.3 of HTTP}}) can be used to indicate the media type of the file. The `Content-Disposition` header field ({{!RFC6266}}) can be used to transmit a filename; if included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
+File metadata can affect how servers might act on the uploaded file. Clients can send representation metadata (see {{Section 8.3 of HTTP}}) in the request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header field ({{Section 8.3 of HTTP}}) can be used to indicate the media type of the file. The content coding of the representation is specified using the `Content-Encoding` header field and is retained throughout the entire upload. When resuming an interrupted upload, the same content coding is used for appending to the upload, producing a representation of the upload resource with one consistent content coding. The `Content-Disposition` header field ({{!RFC6266}}) can be used to transmit a filename; if included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
 
 ## Feature Detection {#feature-detection}
 
@@ -342,19 +345,21 @@ The request MUST use the `PATCH` method with the `application/partial-upload` me
 
 If the end of the request content is not the end of the upload, the `Upload-Complete` field value ({{upload-complete}}) MUST be set to false.
 
-The server SHOULD respect representation metadata received during creation ({{upload-creation}}) and ignore any representation metadata received from appending.
+The server SHOULD respect representation metadata received during creation ({{upload-creation}}). An upload append request continues uploading the same representation as used in the upload creation ({{upload-creation}}) and thus uses the same content coding, if one was applied. For example, if the initial upload creation included the `Content-Encoding: gzip` header field, the upload append request resumes the transfer of the gzipped data without indicating again that the gzip coding is applied.
 
 If the server does not consider the upload associated with the upload resource active, it MUST respond with a `404 (Not Found)` status code.
 
 The client MUST NOT perform multiple upload transfers for the same upload resource in parallel. This helps avoid race conditions, and data loss or corruption. The server is RECOMMENDED to take measures to avoid parallel upload transfers: The server MAY terminate any creation ({{upload-creation}}) or append for the same upload URL. Since the client is not allowed to perform multiple transfers in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
 
-If the offset indicated by the `Upload-Offset` field value does not match the offset provided by the immediate previous offset retrieval ({{offset-retrieving}}), or the end offset of the immediate previous incomplete successful transfer, the server MUST respond with a `409 (Conflict)` status code.
+If the offset indicated by the `Upload-Offset` field value does not match the offset provided by the immediate previous offset retrieval ({{offset-retrieving}}), or the end offset of the immediate previous incomplete successful transfer, the server MUST respond with a `409 (Conflict)` status code. The server MAY use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" in the response; see {{mismatching-offset}}.
 
 The server applies the patch document of the `application/partial-upload` media type by appending the request content to the targeted upload resource. If the server does not receive the entire patch document, for example because of canceled requests or dropped connections, it SHOULD append as much of the patch document starting at its beginning and without discontinuities as possible. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of RFC5789}}. If the server did not receive and apply the entire patch document, the upload MUST NOT be considered complete.
 
 While the request content is being uploaded, the target resource MAY send one or more informational responses with a `104 (Upload Resumption Supported)` status code to the client. These informational responses MUST NOT contain the `Location` header field. They MAY include the `Upload-Offset` header field with the current upload offset as the value to inform the client about the upload progress. The same restrictions on the `Upload-Offset` header field in informational responses from the upload creation ({{upload-creation}}) apply.
 
 The server MUST send the `Upload-Offset` header field in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the status code indicates a success but the offset indicated by the `Upload-Offset` field value does not equal the total of begin offset plus the number of bytes uploaded in the request.
+
+If the upload is already complete, the server MUST NOT modify the upload resource and MUST respond with a `400 (Bad Request)` status code. The server MAY use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#completed-upload" in the response; see {{completed-upload}}.
 
 If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a 2xx (Successful) status code. Servers are RECOMMENDED to use a `201 (Created)` response if not otherwise specified. The response MUST NOT include the `Upload-Complete` header field with the value set to false.
 
@@ -429,9 +434,52 @@ The `Upload-Complete` header field MUST only be used if support by the resource 
 
 The `application/partial-upload` media type describes a contiguous block of data that should be uploaded to a resource. There is no minimum block size and the block might be empty. The start and end of the block might align with the start and end of the file that should be uploaded, but they are not required to be aligned.
 
+# Problem Types
+
+## Mismatching Offset
+
+This section defines the "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" problem type {{PROBLEM}}. A server MAY use this problem type when responding to an upload append request ({{upload-appending}}) to indicate that the `Upload-Offset` header field in the request does not match the upload resource's offset.
+
+Two problem type extension members are defined: the `expected-offset` and `provided-offset` members. A response using this problem type SHOULD populate both members, with the value of `expected-offset` taken from the upload resource and the value of `provided-offset` taken from the upload append request.
+
+The following example shows an example response, where the resource's offset was 100, but the client attempted to append at offset 200:
+
+~~~ http-message
+HTTP/1.1 409 Conflict
+Content-Type: application/problem+json
+
+{
+  "type":"https://iana.org/assignments/http-problem-types#mismatching-upload-offset",
+  "title": "offset from request does not match offset of resource",
+  "expected-offset": 100,
+  "provided-offset": 200
+}
+~~~
+
+## Completed Upload
+
+This section defines the "https://iana.org/assignments/http-problem-types#completed-upload" problem type {{PROBLEM}}. A server MAY use this problem type when responding to an upload append request ({{upload-appending}}) to indicate that the upload has already been completed and cannot be modified.
+
+The following example shows an example response:
+
+~~~ http-message
+HTTP/1.1 400 Bad Request
+Content-Type: application/problem+json
+
+{
+  "type":"https://iana.org/assignments/http-problem-types#completed-upload",
+  "title": "upload is already completed"
+}
+
+~~~
+
 # Redirection
 
 The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY return a `308 (Permanent Redirect)` status code and clients SHOULD use new permanent URI for subsequent requests. If the client receives a `307 (Temporary Redirect)` response to an offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
+
+# Transfer and Content Codings
+
+A message might have a content coding, indicated by the `Content-Encoding` header field, and/or a transfer coding, indicated by the `Transfer-Encoding` header field ({{Section 6.1 of RFC9112}}), applied, which modify the representation of uploaded data in a message. For correct interoperability, the client and server must share the same logic when counting bytes for the upload offset. From the client's perspective, the offset is counted after content coding but before transfer coding is applied. From the server's perspective, the offset is counted after the content's transfer coding is reversed but before the content coding is reversed.
 
 # Integrity Digests
 
@@ -538,6 +586,28 @@ Author:
 Change controller:
 : IETF
 
+IANA is asked to register the following entry in the "HTTP Problem Types" registry:
+
+Type URI:
+: https://iana.org/assignments/http-problem-types#mismatching-upload-offset
+Title:
+: Mismatching Upload Offset
+Recommended HTTP status code:
+: 409
+Reference:
+: This document
+
+IANA is asked to register the following entry in the "HTTP Problem Types" registry:
+
+Type URI:
+: https://iana.org/assignments/http-problem-types#completed-upload
+Title:
+: Upload Is Completed
+Recommended HTTP status code:
+: 400
+Reference:
+: This document
+
 --- back
 
 # Informational Response
@@ -602,6 +672,9 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 
 * Add note about `Content-Location` for referring to subsequent resources.
 * Require `application/partial-upload` for appending to uploads.
+* Explain handling of content and transfer codings.
+* Add problem types for mismatching offsets and completed uploads.
+* Clarify that completed uploads must not be appended to.
 * Describe interaction with Digest Fields from RFC9530.
 
 ## Since draft-ietf-httpbis-resumable-upload-02
