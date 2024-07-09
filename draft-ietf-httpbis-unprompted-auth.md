@@ -47,7 +47,7 @@ author:
     email: jonathan.hoyland@gmail.com
 
 normative:
-  FOLDING: RFC8792
+  RFC8792:
   X.690:
     title: "Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"
     date: 2021-02
