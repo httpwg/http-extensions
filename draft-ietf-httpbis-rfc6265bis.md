@@ -2552,14 +2552,6 @@ to implement. ({{implementation-advisory}})
 errata 4148 by updating the day-of-month, year, and time grammar, and errata
 3663 by adding the requested note. ({{sane-set-cookie}} and {{cookie-path}})
 
-* Add multiple cookie header tolerance suggestions & length limit warnings
-  <https://github.com/httpwg/http-extensions/pull/2804>
-
-## draft-ietf-httpbis-rfc6265bis-15
-
-* Update example in the explanation of "Lax-allowing-unsafe"
-  <https://github.com/httpwg/http-extensions/pull/2812>
-
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
