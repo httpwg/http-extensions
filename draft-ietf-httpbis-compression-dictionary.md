@@ -38,26 +38,42 @@ author:
     email: yoav.weiss@shopify.com
 
 normative:
+  FETCH:
+    target: https://fetch.spec.whatwg.org
+    title: Fetch - Living Standard
+    date: 17 June 2024
+    author:
+     -
+        org: WHATWG
   FOLDING: RFC8792
   HTTP: RFC9110
   HTTP-CACHING: RFC9111
-  RFC5861: # Stale-While-Revalidate
   SHA-256: RFC6234
+  STRUCTURED-FIELDS:
+    title: Structured Field Values for HTTP
+    date: 1 May 2024
+    target: https://datatracker.ietf.org/doc/draft-ietf-httpbis-sfbis/
   URLPattern:
-    title: URL Pattern Standard
+    title: URL Pattern - Living Standard
     date: 18 March 2024
     target: https://urlpattern.spec.whatwg.org/
+    author:
+     -
+        org: WHATWG
   WEB-LINKING: RFC8288
 
 informative:
-  Origin: RFC6454
-  STRUCTURED-FIELDS: RFC8941
+  RFC5861:  # Stale-While-Revalidate
+  RFC6265:  # Cookies
+  RFC6454:  # Origin
+  RFC7457:  # TLS Attacks
   RFC7932:  # Brotli
+  RFC8792:  # Line wrapping
+  RFC8878:  # Zstandard
   SHARED-BROTLI:
     title: Shared Brotli Compressed Data Format
     date: 28 September 2022
     target: https://datatracker.ietf.org/doc/draft-vandevenne-shared-brotli-format/
-  RFC8878:  # Zstandard
 
 --- abstract
 
@@ -83,12 +99,9 @@ negotiated dictionary.
 
 {::boilerplate bcp14-tagged}
 
-This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}} to
-specify syntax and parsing: Dictionary, String, Inner List, Token, and Byte Sequence.
-
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
-"RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in
-{{RFC2119}}.
+This document uses the following terminology from Section 3 of
+{{STRUCTURED-FIELDS}} to specify syntax and parsing: Dictionary, String,
+Inner List, Token, and Byte Sequence.
 
 This document uses the line folding strategies described in {{FOLDING}}.
 
@@ -129,8 +142,8 @@ Use-As-Dictionary Dictionary for the dictionary to be considered valid.
 ### match-dest
 
 The "match-dest" value of the Use-As-Dictionary header is an Inner List of
-String values that provides a list of request destinations for the dictionary
-to match (https://fetch.spec.whatwg.org/#concept-request-destination).
+String values that provides a list of {{FETCH}} request destinations for the
+dictionary to match.
 
 An empty list for "match-dest" MUST match all destinations.
 
@@ -184,7 +197,7 @@ Use-As-Dictionary: \
 ~~~
 
 Would specify matching any document request for a URL with a path prefix of
-/product/ on the same {{Origin}} as the original request.
+/product/ on the same Origin {{RFC6454}} as the original request.
 
 #### Versioned Directories
 
@@ -228,8 +241,8 @@ When a dictionary is stored as a result of a "Use-As-Dictionary" directive, it
 includes "match" and "match-dest" strings that are used to match an outgoing
 request from a client to the available dictionaries.
 
-Dictionaries MUST have been served from the same {Origin} as the outgoing
-request to match.
+Dictionaries MUST have been served from the same Origin {{RFC6454}} as the
+outgoing request to match.
 
 To see if an outbound request matches a given dictionary, the following
 algorithm will return TRUE for a successful match and FALSE for no-match:
@@ -242,7 +255,7 @@ algorithm will return TRUE for a successful match and FALSE for no-match:
     of destinations, return FALSE
 1. Let BASEURL be the URL of the dictionary request.
 1. Let URL represent the URL of the outbound request being checked.
-1. If the {Origin} of BASEURL and the {Origin} of URL are not the same, return
+1. If the Origin of BASEURL and the Origin of URL are not the same, return
 FALSE.
 1. Let MATCH be the value of "match" for the given dictionary.
 1. Let PATTERN be a URL Pattern {{URLPattern}} constructed by setting
@@ -500,10 +513,10 @@ that do not use the updated hash.
 
 ## Reading content
 
-The CRIME attack shows that it's a bad idea to compress data from
-mixed (e.g. public and private) sources -- the data sources include
-not only the compressed data but also the dictionaries. For example,
-if you compress secret cookies using a public-data-only dictionary,
+The compression attacks in {{Section 2.6 of RFC7457}} show that it's a bad idea
+to compress data from mixed (e.g. public and private) sources -- the data
+sources include not only the compressed data but also the dictionaries. For
+example, if you compress secret cookies using a public-data-only dictionary,
 you still leak information about the cookies.
 
 Not only can the dictionary reveal information about the compressed
@@ -537,7 +550,7 @@ dictionary and the compressed response are fully readable by the client.
 
 In browser terms, that means that both are either same-origin to the context
 they are being fetched from or that the response is cross-origin and passes
-the CORS check (https://fetch.spec.whatwg.org/#cors-check).
+the CORS check as defined in {{FETCH}}.
 
 ### Server Responsibility
 
@@ -582,9 +595,9 @@ content of the dictionary, it is possible to abuse the dictionary to turn it
 into a tracking cookie.
 
 To mitigate any additional tracking concerns, clients MUST treat dictionaries
-in the same way that they treat cookies. This includes partitioning the storage
-as cookies are partitioned as well as clearing the dictionaries whenever
-cookies are cleared.
+in the same way that they treat cookies [RFC6265]. This includes partitioning
+the storage as cookies are partitioned as well as clearing the dictionaries
+whenever cookies are cleared.
 
 --- back
 
