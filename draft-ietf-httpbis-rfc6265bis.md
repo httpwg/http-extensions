@@ -844,7 +844,7 @@ Set-Cookie: __Host-SID=12345; Secure; Path=/
 
 ## Cookie {#sane-cookie}
 
-### Syntax
+### Syntax {#server-syntax}
 
 The user agent sends stored cookies to the origin server in the Cookie header field.
 If the server conforms to the requirements in {{sane-set-cookie}} (and the user agent
@@ -856,9 +856,26 @@ cookie        = cookie-string
 cookie-string = cookie-pair *( ";" SP cookie-pair )
 ~~~
 
+While {{Section 5.4 of RFC9110}} does not define a length limit for header
+fields it is likely that the web server's implementation does impose a limit;
+many popular implementations have default limits of 8K. Servers SHOULD avoid
+setting a large number of large cookies such that the final cookie-string
+would exceed their header field limit. Not doing so could result in requests
+to the server failing.
+
 Servers MUST be tolerant of multiple cookie headers. For example, an HTTP/2
-{{RFC9113}} or HTTP/3 {{RFC9114}} connection might split a cookie header to
-improve compression.
+{{RFC9113}} or HTTP/3 {{RFC9114}} client or intermediary might split a cookie
+header to improve compression. Servers are free to determine what form this
+tolerance takes. For example, the server could process each cookie header
+individually or the server could concatenate all the cookie headers into one
+and then process that final, single, header. The server should be mindful of
+any header field limits when deciding which approach to take.
+
+Note: Since intermediaries can modify cookie headers they should also be
+mindful of common server header field limits in order to avoid sending servers
+headers that they cannot process. For example, concatenating multiple cookie
+headers into a single header might exceed a server's size limit.
+
 
 ### Semantics
 
@@ -1837,6 +1854,12 @@ where the retrieval's URI is the request-uri, the retrieval's same-site status
 is computed for the HTTP request as defined in {{same-site-requests}}, and the
 retrieval's type is "HTTP".
 
+Note: Previous versions of this specification required that only one Cookie
+header field be sent in requests. This is no longer a requirement. While this
+specification requires that a single cookie-string be produced, some user agents
+may split that string across multiple cookie header fields. For examples, see
+{{Section 8.2.3 of RFC9113}} and {{Section 4.2.1 of RFC9114}}.
+
 ### Non-HTTP APIs {#non-http}
 
 The user agent MAY implement "non-HTTP" APIs that can be used to access
@@ -2389,17 +2412,17 @@ not explicitly specifying a `SameSite` attribute being included on top-level
 cross-site requests with "unsafe" HTTP methods (as was the case prior to the
 introduction of the `SameSite` attribute).
 
-For example, a login flow may involve a cross-site top-level `POST` request to
-an endpoint which expects a cookie with login information. For such a cookie,
-"Lax" enforcement is not appropriate, as it would cause the cookie to be
-excluded due to the unsafe HTTP request method. On the other hand, "None"
-enforcement would allow the cookie to be sent with all cross-site requests,
-which may not be desirable due to the cookie's sensitive contents.
+For example, the concluding step of a login flow may involve a cross-site top-level
+`POST` request to an endpoint; this endpoint expects a recently created cookie
+containing transactional state information, necessary to securely complete the
+login. For such a cookie, "Lax" enforcement is not appropriate, as it would
+cause the cookie to be excluded due to the unsafe HTTP request method,
+resulting in an unrecoverable failure of the whole login flow.
 
 The "Lax-allowing-unsafe" enforcement mode described in {{lax-allowing-unsafe}}
 retains some of the protections of "Lax" enforcement (as compared to "None")
-while still allowing cookies to be sent cross-site with unsafe top-level
-requests.
+while still allowing recently created cookies to be sent cross-site with unsafe
+top-level requests.
 
 As a more permissive variant of "Lax" mode, "Lax-allowing-unsafe" mode
 necessarily provides fewer protections against CSRF. Ultimately, the provision
@@ -2528,6 +2551,14 @@ to implement. ({{implementation-advisory}})
 *  Address errata 3444 by updating the path-value andextension-av grammar,
 errata 4148 by updating the day-of-month, year, and time grammar, and errata
 3663 by adding the requested note. ({{sane-set-cookie}} and {{cookie-path}})
+
+* Add multiple cookie header tolerance suggestions & length limit warnings
+  <https://github.com/httpwg/http-extensions/pull/2804>
+
+## draft-ietf-httpbis-rfc6265bis-15
+
+* Update example in the explanation of "Lax-allowing-unsafe"
+  <https://github.com/httpwg/http-extensions/pull/2812>
 
 # Acknowledgements
 {:numbered="false"}
