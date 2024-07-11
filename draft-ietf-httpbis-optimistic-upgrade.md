@@ -97,7 +97,7 @@ A version number of "2.0" corresponds to HTTP/2.  Every HTTP/2 connection begins
 
 ## "TLS"
 
-{{?RFC2817}} correctly highlights the possibility of the server rejecting the upgrade.  The security considerations documented here are applicable to any use of the "TLS" Upgrade Token, but no change is required in {{?RFC2817}}.
+{{?RFC2817}} defines the "TLS/*.*" family of Upgrade Tokens, and correctly highlights the possibility of the server rejecting the upgrade.  The security considerations documented here are applicable to any use of the "TLS" Upgrade Token, but no change is required in {{?RFC2817}}.
 
 ## "WebSocket"/"websocket"
 
@@ -127,7 +127,7 @@ However, this could be interpreted as an instruction to abort the underlying TLS
 
 ## "connect-ip"
 
-{{Section 11 of !RFC9484}} forbids clients from using optimistic upgrade, avoiding this issue.
+The "connect-ip" Upgrade Token is defined in {{!RFC9484}}.  {{Section 11 of !RFC9484}} forbids clients from using optimistic upgrade, avoiding this issue.
 
 # Guidance for Future Upgrade Tokens
 
