@@ -90,7 +90,7 @@ In a Request Smuggling attack ({{?RFC9112, Section 11.2}}) the attacker-controll
 
 If the server accepts a protocol transition request, it interprets the subsequent bytes in accordance with the new protocol.  If it rejects the request, it interprets those bytes as HTTP/1.1.  However, the client doesn't know which interpretation the server will take until it receives the server's response status code.  If it uses the new protocol optimistically, this creates a risk that the server will interpret attacker-controlled data in the new protocol as an additional HTTP request issued by the client.
 
-As a trivial example, consider an HTTP CONNECT client providing connectivity to an untrusted application.  If the client is authenticated to the server using a connection-level authentication method such as TLS Client Certificates, the attacker could send an HTTP/1.1 POST request in the post-upgrade payload.  If the client delivers this payload optimistically, and the upgrade request fails, the server would interpret the payload as a subsequent authenticated request issued by the client.
+As a trivial example, consider an HTTP CONNECT client providing connectivity to an untrusted application.  If the client is authenticated to the proxy server using a connection-level authentication method such as TLS Client Certificates, the attacker could send an HTTP/1.1 POST request for the proxy server at the beginning of its TCP connection.  If the client delivers this data optimistically, and the CONNECT request fails, the server would misinterpret the application's data as a subsequent authenticated request issued by the client.
 
 ## Parser Exploits
 
