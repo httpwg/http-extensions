@@ -14,7 +14,7 @@ workgroup: "HTTPBIS"
 keyword:
 venue:
   github: "httpwg/http-extensions"
-updates: 9298, 2817
+updates: 9298
 
 author:
  -
@@ -97,8 +97,6 @@ If any upgrade token were defined for HTTP/2, it would not be vulnerable to atta
 
 {{?RFC2817}} defines the "TLS/*.*" family of Upgrade Tokens, and correctly highlights the possibility of the server rejecting the upgrade.  The security considerations documented here are applicable to any use of the "TLS" Upgrade Token, but no change is required in {{?RFC2817}}.
 
-The "TLS" upgrade token was intended to enable "virtual hosting" for https: origins.  This solution was not widely adopted.  Instead, virtual hosting was accomplished by means of the TLS Server Name Indication (SNI), first defined in {{?RFC3546}}, rendering the "TLS" upgrade token obsolete.  Accordingly, this document marks {{?RFC2817}} as Historic and deprecates the corresponding upgrade token (see {{iana-considerations}}).
-
 ## "WebSocket"/"websocket"
 
 {{Section 4.1 of ?RFC6455}} says:
@@ -141,12 +139,12 @@ Future specifications for Upgrade Tokens MUST account for the security issues di
 
 # IANA Considerations
 
-This document requests the following modifications to the Hypertext Transfer Protocol (HTTP) Upgrade Token Registry:
+This document requests the following modification to the Hypertext Transfer Protocol (HTTP) Upgrade Token Registry:
 
 | Value    | Description | Expected Version Tokens | Reference |
 | -------- | ----------- | ----------------------- | --------- |
 | HTTP     | Hypertext Transfer Protocol (OBSOLETE TOKEN) | any DIGIT.DIGIT | (this document, {{http}}) |
-| TLS     | Transport Layer Security (OBSOLETE TOKEN) | any DIGIT.DIGIT | (this document, {{tls}}) |
+
 
 
 --- back
