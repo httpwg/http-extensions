@@ -97,7 +97,7 @@ A version number of "2.0" corresponds to HTTP/2.  Every HTTP/2 connection begins
 
 ## "TLS"
 
-{{?RFC2817}} defines the "TLS/*.*" family of Upgrade Tokens, and correctly highlights the possibility of the server rejecting the upgrade.  The security considerations documented here are applicable to any use of the "TLS" Upgrade Token, but no change is required in {{?RFC2817}}.
+The "TLS" family of upgrade tokens was defined in {{?RFC2817}}, which correctly highlights the possibility of the server rejecting the upgrade. If a client ignores this possibility and sends TLS data optimistically, confusion between TLS and HTTP/1.1 is still prevented: the first octet of a TLS connection must be 22 (ContentType.handshake), but this is not an allowed character in an HTTP/1.1 method.
 
 ## "WebSocket"/"websocket"
 
