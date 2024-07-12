@@ -258,7 +258,7 @@ different ports.
 
 This specification applies to developers of both cookie-producing servers and
 cookie-consuming user agents. {{implementation-advisory}} helps to clarify the
-intended target audience for a given implementation type.
+intended target audience for each implementation type.
 
 To maximize interoperability with user agents, servers SHOULD limit themselves
 to the well-behaved profile defined in {{sane-profile}} when generating cookies.
