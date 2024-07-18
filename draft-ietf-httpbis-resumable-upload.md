@@ -245,10 +245,12 @@ Location: https://example.com/upload/b530ce8ff
 HTTP/1.1 104 Upload Resumption Supported
 Upload-Draft-Interop-Version: 6
 Upload-Offset: 50
+Upload-Limit: max-size=1000000000
 
 HTTP/1.1 201 Created
 Location: https://example.com/upload/b530ce8ff
 Upload-Offset: 100
+Upload-Limit: max-size=1000000000
 ~~~
 
 The next example shows an upload creation, where only the first 25 bytes are transferred. The server acknowledges the received data and that the upload is not complete yet:
