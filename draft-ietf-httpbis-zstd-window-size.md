@@ -8,6 +8,7 @@ submissiontype: IETF
 number:
 date:
 consensus: true
+updates: 8878
 v: 3
 area: Web and Internet Transport
 workgroup: HTTPBIS
