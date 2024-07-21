@@ -48,7 +48,7 @@ HTTP/3 uses a UDP transport, so it cannot be forwarded using the pre-existing CO
 
 ## Problems
 
-HTTP clients can be configured to use proxies by selecting a proxy hostname, a port, and whether to use a security protocol. However, CONNECT requests using the proxy do not carry this configuration information. Instead, they only indicate the hostname and port of the target. This prevents any HTTP server from hosting multiple distinct proxy services, as the server cannot distinguish them by path (as with distinct resources) or by origin (as in "virtual hosting").
+HTTP clients can be configured to use proxies by selecting a proxy hostname, a port, and whether to use a security protocol. However, Classic HTTP CONNECT requests using the proxy do not carry this configuration information. Instead, they only indicate the hostname and port of the target. This prevents any HTTP server from hosting multiple distinct proxy services, as the server cannot distinguish them by path (as with distinct resources) or by origin (as in "virtual hosting").
 
 The absence of an explicit origin for the proxy also rules out the usual defenses against server port misdirection attacks (see {{Section 7.4 of ?RFC9110}}) and creates ambiguity about the use of origin-scoped response header fields (e.g., "Alt-Svc" {{?RFC7838}}, "Strict-Transport-Security" {{?RFC6797}}).
 
@@ -78,7 +78,7 @@ In HTTP/1.1, the client uses the proxy by issuing a request as follows:
 * The request SHALL include an "Upgrade" header field with the value "connect-tcp".
 * The request's target SHALL correspond to the URI derived from expansion of the proxy's URI Template.
 
-If the request is well-formed and permissible, the proxy MUST attempt the TCP connection before sending any response status code other than "100 (Continue)" (see {{conveying-metadata}}).  If the TCP connection is successful, the response SHALL be as follows:
+If the request is well-formed and permissible, the proxy MUST attempt to establish the TCP connection before sending any response status code other than "100 (Continue)" (see {{conveying-metadata}}).  If the TCP connection is successful, the response SHALL be as follows:
 
 * The HTTP status code SHALL be "101 (Switching Protocols)".
 * The response SHALL include a "Connection" header field with the value "Upgrade".
