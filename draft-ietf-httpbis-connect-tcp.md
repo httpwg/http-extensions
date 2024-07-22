@@ -52,8 +52,6 @@ HTTP clients can be configured to use proxies by selecting a proxy hostname, a p
 
 The absence of an explicit origin for the proxy also rules out the usual defenses against server port misdirection attacks (see {{Section 7.4 of ?RFC9110}}) and creates ambiguity about the use of origin-scoped response header fields (e.g., "Alt-Svc" {{?RFC7838}}, "Strict-Transport-Security" {{?RFC6797}}).
 
-Classic HTTP CONNECT proxies can be used to reach a target host that is specified as a domain name or an IP address.  However, because only a single target host can be specified, proxy-driven Happy Eyeballs and cross-IP fallback can only be used when the host is a domain name.  For IP-targeted requests to succeed, the client must know which address families are supported by the proxy via some out-of-band mechanism, or open multiple independent CONNECT requests and abandon any that prove unnecessary.
-
 ## Overview
 
 This specification describes an alternative mechanism for proxying TCP in HTTP.  Like {{?CONNECT-UDP}} and {{?CONNECT-IP}}, the proxy service is identified by a URI Template.  Proxy interactions reuse standard HTTP components and semantics, avoiding changes to the core HTTP protocol.
@@ -64,9 +62,7 @@ This specification describes an alternative mechanism for proxying TCP in HTTP. 
 
 # Specification
 
-A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "tcp_port".  The client substitutes the destination host and port number into these variables to produce the request URI.
-
-The "target_host" variable MUST be a domain name, an IP address literal, or a list of IP addresses.  The "tcp_port" variable MUST be a single integer.  If "target_host" is a list (as in {{Section 3.2.1 of !RFC6570}}), the server SHOULD perform the same connection procedure as if these IP addresses had been returned in response to A and AAAA queries for a domain name.
+A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "target_port".  This URI Template and its variable values MUST meet all the same requirements as for UDP proxying ({{!RFC9298, Section 2}}), and are subject to the same validation rules.  The client MUST substitute the destination host and port number into this template to produce the request URI.
 
 ## In HTTP/1.1
 
@@ -91,7 +87,7 @@ After a success response is returned, the connection SHALL conform to all the us
 ~~~
 Client                                                 Proxy
 
-GET /proxy?target_host=192.0.2.1&tcp_port=443 HTTP/1.1
+GET /proxy?target_host=192.0.2.1&target_port=443 HTTP/1.1
 Host: example.com
 Connection: Upgrade
 Upgrade: connect-tcp
@@ -122,7 +118,7 @@ HEADERS
 :method = CONNECT
 :scheme = https
 :authority = request-proxy.example
-:path = /proxy?target_host=192.0.2.1,2001:db8::1&tcp_port=443
+:path = /proxy?target_host=2001%3Adb8%3A%3A1&target_port=443
 :protocol = connect-tcp
 ...
 ~~~
@@ -183,7 +179,7 @@ The URI template can also be structured to generate high-entropy Capability URLs
 
 Clients that support both classic HTTP CONNECT proxies and template-driven TCP proxies MAY accept both types via a single configuration string.  If the configuration string can be parsed as a URI Template containing the required variables, it is a template-driven TCP proxy.  Otherwise, it is presumed to represent a classic HTTP CONNECT proxy.
 
-In some cases, it is valuable to allow "connect-tcp" clients to reach "connect-tcp"-only proxies when using a legacy configuration method that cannot convey a URI template.  To support this arrangement, clients SHOULD treat certain errors during classic HTTP CONNECT as indications that the proxy might only support "connect-tcp":
+In some cases, it is valuable to allow "connect-tcp" clients to reach "connect-tcp"-only proxies when using a legacy configuration method that cannot convey a URI Template.  To support this arrangement, clients SHOULD treat certain errors during classic HTTP CONNECT as indications that the proxy might only support "connect-tcp":
 
 * In HTTP/1.1: the response status code is "426 (Upgrade Required)", with an "Upgrade: connect-tcp" response header.
 * In any HTTP version: the response status code is "501 (Not Implemented)".
@@ -193,23 +189,11 @@ If the client infers that classic HTTP CONNECT is not supported, it SHOULD retry
 
 ~~~
 https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
-                    /tcp/{target_host}/{tcp_port}/
+                 /tcp/{target_host}/{target_port}/
 ~~~
 {: title="Registered default template"}
 
 If this request succeeds, the client SHOULD record a preference for "connect-tcp" to avoid further retry delays.
-
-## Multi-purpose proxies
-
-The names of the variables in the URI Template uniquely identify the capabilities of the proxy.  Undefined variables are permitted in URI Templates, so a single template can be used for multiple purposes.
-
-Multipurpose templates can be useful when a single client may benefit from access to multiple complementary services (e.g., TCP and UDP), or when the proxy is used by a variety of clients with different needs.
-
-~~~
-https://proxy.example/{?target_host,tcp_port,target_port,
-                        target,ipproto,dns}
-~~~
-{: title="Example multipurpose template for a combined TCP, UDP, and IP proxy and DoH server"}
 
 # Security Considerations
 
