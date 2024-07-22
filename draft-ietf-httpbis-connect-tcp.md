@@ -195,17 +195,6 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 
 If this request succeeds, the client SHOULD record a preference for "connect-tcp" to avoid further retry delays.
 
-## Multi-purpose proxies
-
-A single URI Template can be used for multiple purposes if it includes all the relevant variables.  Variables that are not relevant to a particular usage are left undefined, which is permitted when expanding a URI Template.
-
-Multipurpose templates can be useful when a single client may benefit from access to multiple complementary services (e.g., TCP and UDP), or when the proxy is used by a variety of clients with different needs.  The contents of the URI Template are not necessarily sufficient to determine its purpose, so clients must determine this in some other way, such as by probing or via a separate usage indication.
-
-~~~
-https://proxy.example/{?target_host,target_port,target,ipproto,dns}
-~~~
-{: title="Example multipurpose template for a combined TCP, UDP, and IP proxy and DoH server"}
-
 # Security Considerations
 
 Template-driven TCP proxying is largely subject to the same security risks as classic HTTP CONNECT.  For example, any restrictions on authorized use of the proxy (see {{?RFC9110, Section 9.3.6}}) apply equally to both.
