@@ -378,8 +378,8 @@ Authorization: Concealed \
   a=VGhpcyBpcyBh-HB1YmxpYyBrZXkgaW4gdXNl_GhlcmU, \
   s=2055, \
   v=dmVyaWZpY2F0aW9u_zE2Qg, \
-  p=SW5zZXJ0_HNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo\
-    aWNoIHRha2VzIDUxMiBiaXRz-GZvciBFZDI1NTE5IQ
+  p=QzpcV2luZG93c_xTeXN0ZW0zMlxkcml2ZXJz-ENyb3dkU\
+    3RyaWtlXEMtMDAwMDAwMDAyOTEtMD-wMC0w_DAwLnN5cw
 ~~~
 {: #fig-hdr-example title="Example Header Field"}
 
