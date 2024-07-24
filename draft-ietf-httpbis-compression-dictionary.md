@@ -65,7 +65,6 @@ normative:
 informative:
   RFC5861:  # Stale-While-Revalidate
   RFC6265:  # Cookies
-  RFC6454:  # Origin
   RFC7457:  # TLS Attacks
   RFC7932:  # Brotli
   RFC8792:  # Line wrapping
@@ -197,7 +196,8 @@ Use-As-Dictionary: \
 ~~~
 
 Would specify matching any document request for a URL with a path prefix of
-/product/ on the same Origin {{RFC6454}} as the original request.
+/product/ on the same Origin ({{Section 4.3.1 of HTTP}}) as the original
+request.
 
 #### Versioned Directories
 
@@ -241,8 +241,8 @@ When a dictionary is stored as a result of a "Use-As-Dictionary" directive, it
 includes "match" and "match-dest" strings that are used to match an outgoing
 request from a client to the available dictionaries.
 
-Dictionaries MUST have been served from the same Origin {{RFC6454}} as the
-outgoing request to match.
+Dictionaries MUST have been served from the same Origin
+({{Section 4.3.1 of HTTP}}) as the outgoing request to match.
 
 To see if an outbound request matches a given dictionary, the following
 algorithm will return TRUE for a successful match and FALSE for no-match:
