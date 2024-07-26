@@ -160,7 +160,7 @@ Future specifications for Upgrade Tokens MUST account for the security issues di
 
 Clients that send HTTP CONNECT requests on behalf of untrusted TCP clients MUST wait for a 2xx (Successful) response before sending any TCP payload data.
 
-To mitigate vulnerabilities from clients that do not conform to this requirement, proxy servers MAY close the underlying connection when rejecting an HTTP CONNECT request, without processing any further data sent to the proxy server on that connection.  Note that this behavior may impair performance, especially when returning a "407 (Proxy Authentication Required)" response.
+To mitigate vulnerabilities from any clients that do not conform to this requirement, proxy servers MAY close the underlying connection when rejecting an HTTP CONNECT request, without processing any further data sent to the proxy server on that connection.  Note that this behavior may impair performance, especially when returning a "407 (Proxy Authentication Required)" response.
 
 # IANA Considerations
 
