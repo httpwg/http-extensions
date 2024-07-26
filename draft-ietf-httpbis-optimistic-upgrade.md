@@ -100,7 +100,11 @@ A related category of attacks use protocol disagreement to exploit vulnerabiliti
 
 If the server rejects the transition request, the connection can continue to be used for HTTP/1.1.  There is no requirement to close the connection in response to a rejected transition, and keeping the connection open has performance advantages if additional HTTP requests to this server are likely.  Thus, it is normally inappropriate to close the connection in response to a rejected transition.
 
+<<<<<<< HEAD
 # Impact on HTTP Upgrade with Existing Upgrade Tokens
+=======
+# Impact on Existing Upgrade Tokens {#existing}
+>>>>>>> ac690a6f (Remove normative SHOULD and clarify rationale)
 
 This section describes the impact of this document's considerations on some registered Upgrade Tokens that are believed to be in use at the time of writing.
 
