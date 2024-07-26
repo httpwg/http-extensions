@@ -93,11 +93,11 @@ At the time of writing, there are four distinct Upgrade Tokens that are register
 
 Versions "0.9" and "1.0" are sufficiently syntactically similar to HTTP/1.1 that any such "downward upgrade" would be unlikely to result in the security concerns discussed here.  (An "upgrade" to version 1.1 has no effect at all.)
 
-A version number of "2.0" corresponds to HTTP/2.  Every HTTP/2 connection begins with a Client Connection Preface ({{Section 3.4 of ?RFC9113}}) that was selected to ensure that a compliant HTTP/1.1 server will not process further data on this connection.  This avoids security issues if an "HTTP/2.0" Upgrade Token is used optimistically.
+A version number of "2.0" corresponds to HTTP/2.  Every HTTP/2 connection begins with a Client Connection Preface ({{Section 3.4 of ?RFC9113}}) that was selected to ensure that a compliant HTTP/1.1 server will not process further data on this connection.  This reduces the risk of protocol confusion if an "HTTP/2.0" Upgrade Token is used optimistically.
 
 ## "TLS"
 
-The "TLS" family of upgrade tokens was defined in {{?RFC2817}}, which correctly highlights the possibility of the server rejecting the upgrade. If a client ignores this possibility and sends TLS data optimistically, confusion between TLS and HTTP/1.1 is still prevented: the first octet of a TLS connection must be 22 (ContentType.handshake), but this is not an allowed character in an HTTP/1.1 method.
+The "TLS" family of Upgrade Tokens was defined in {{?RFC2817}}, which correctly highlights the possibility of the server rejecting the upgrade. If a client ignores this possibility and sends TLS data optimistically, the result cannot be valid HTTP/1.1: the first octet of a TLS connection must be 22 (ContentType.handshake), but this is not an allowed character in an HTTP/1.1 method.
 
 ## "WebSocket"/"websocket"
 
@@ -131,13 +131,13 @@ The "connect-ip" Upgrade Token is defined in {{!RFC9484}}.  {{Section 11 of !RFC
 
 # Guidance for Future Upgrade Tokens
 
-There are now several good examples of designs that prevent the security concerns discussed in this document and may be applicable in future specifications:
+There are now several good examples of designs that reduce or eliminate the security concerns discussed in this document and may be applicable in future specifications:
 
 * Forbid optimistic use of HTTP Upgrade (WebSocket, {{Section 4.1 of ?RFC6455}}).
 * Embed a fixed preamble that terminates HTTP/1.1 processing (HTTP/2, {{Section 3.4 of ?RFC9113}}).
 * Apply high-entropy masking of client-to-server data (WebSocket, {{Section 5.1 of ?RFC6455}}).
 
-Future specifications for Upgrade Tokens MUST account for the security issues discussed here and provide clear guidance on how clients can avoid them.
+Future specifications for Upgrade Tokens should account for the security issues discussed here and provide clear guidance on how implementations can avoid them.
 
 # IANA Considerations
 
