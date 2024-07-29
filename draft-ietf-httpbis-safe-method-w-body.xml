@@ -212,10 +212,19 @@ q=foo&amp;limit=10&amp;sort=-published
       header field (see <xref target="HTTP" section="8.7"/>) containing an
       identifier for a specific resource corresponding to the results of the
       operation. This represents a claim from the server that a client can send
-      a GET request for the indicated URI to repeat the query in the future
-      without resending the query parameters. The indicated resource might be
-      temporary; if a future request fails, the client &SHOULD; retry using the
-      original QUERY resource and the previously submitted parameters again.
+      a GET request for the indicated URI to retrieve the results of the query
+      operation just performed. The indicated resource might be temporary.
+    </t>
+
+    <t>
+      A server &MAY; create or locate a resource that identifies the query
+      operation for future use. If the server does so, the server claims that a
+      client can send a GET request to the indicated URI to repeat the query
+      operation just performed without resending the query parameters. The URI
+      of the resource can be included in the Location header field of the
+      response. This resource might be temporary; if a future request fails, the
+      client &SHOULD; retry using the original QUERY resource and the previously
+      submitted parameters again.
     </t>
 
     <t>
@@ -377,7 +386,7 @@ Dubois, Camille, camille.dubois@example.net
       information in the query portion of a URI. This is preferred in some
       cases, as the URI is more likely to be logged than the request content. If
       a server creates a temporary resource to represent the results of a QUERY
-      request (e.g. for use in the Content-Location field), the URI of this
+      request (e.g. for use in the Location or Content-Location field), the URI of this
       resource &SHOULD-NOT; expose the original request content in plaintext.
     </t>
   </section>
