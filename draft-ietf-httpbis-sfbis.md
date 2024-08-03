@@ -71,6 +71,7 @@ informative:
     seriesinfo:
       'Unicode Technical Report': '#16'
     target: http://www.unicode.org/reports/tr36/
+  PRECIS: RFC8264
 
 venue:
   group: HTTP
@@ -149,6 +150,8 @@ To specify an HTTP field as a Structured Field, its authors need to:
 * Specify any additional constraints upon the field value, as well as the consequences when those constraints are violated.
 
 Typically, this means that a field definition will specify the top-level type -- List, Dictionary, or Item -- and then define its allowable types and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q", or strings in lowercase. Likewise, Inner Lists ({{inner-list}}) are only valid when a field definition explicitly allows them.
+
+Fields that use the Display String type are advised to carefully specify their allowable unicode code points; for example, specifying the use of a profile from {{PRECIS}}.
 
 Field definitions can only use this specification for the entire field value, not a portion thereof.
 
@@ -505,7 +508,7 @@ Display Strings are intended for use in cases where a value is displayed to end 
 
 Note that Display Strings do not indicate the language used in the value; that can be done separately if necessary (e.g., with a parameter).
 
-In textual HTTP headers, Display Strings are represented in a manner similar to Strings, except that non-ASCII characters are percent-encoded; there is a leading "%" to distinguish them from Strings.
+In textual HTTP fields, Display Strings are represented in a manner similar to Strings, except that non-ASCII characters are percent-encoded; there is a leading "%" to distinguish them from Strings.
 
 For example:
 
@@ -1061,7 +1064,7 @@ The size of most types defined by Structured Fields is not limited; as a result,
 It is possible for parties with the ability to inject new HTTP fields to change the meaning
 of a Structured Field. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
 
-The Display String type can convey any possible Unicode code point without sanitization; for example, they might contain unassigned code points, control points (including NUL), or noncharacters. Therefore, applications consuming Display Strings need to consider strategies such as filtering or escaping untrusted content before displaying it. See also {{UNICODE-SECURITY}}.
+The Display String type can convey any possible Unicode code point without sanitization; for example, they might contain unassigned code points, control points (including NUL), or noncharacters. Therefore, applications consuming Display Strings need to consider strategies such as filtering or escaping untrusted content before displaying it. See {{PRECIS}} and {{UNICODE-SECURITY}}.
 
 --- back
 

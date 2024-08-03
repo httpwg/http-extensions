@@ -97,7 +97,7 @@ A version number of "2.0" corresponds to HTTP/2.  Every HTTP/2 connection begins
 
 ## "TLS"
 
-{{?RFC2817}} correctly highlights the possibility of the server rejecting the upgrade.  The security considerations documented here are applicable to any use of the "TLS" Upgrade Token, but no change is required in {{?RFC2817}}.
+{{?RFC2817}} defines the "TLS/*.*" family of Upgrade Tokens, and correctly highlights the possibility of the server rejecting the upgrade.  The security considerations documented here are applicable to any use of the "TLS" Upgrade Token, but no change is required in {{?RFC2817}}.
 
 ## "WebSocket"/"websocket"
 
@@ -124,6 +124,10 @@ However, in HTTP/1.1, this "proxying request" is an HTTP Upgrade request.  This 
 However, this could be interpreted as an instruction to abort the underlying TLS and TCP connections in the event of an unsuccessful response such as "407 ("Proxy Authentication Required)".  To avoid an unnecessary delay in this case, this text is hereby updated as follows:
 
 > If any of these requirements are not met, the client MUST treat this proxying attempt as failed.  If the "Upgrade" response header field is absent, the client MAY reuse the connection for further HTTP/1.1 requests; otherwise it MUST abort the underlying connection.
+
+## "connect-ip"
+
+The "connect-ip" Upgrade Token is defined in {{!RFC9484}}.  {{Section 11 of !RFC9484}} forbids clients from using optimistic upgrade, avoiding this issue.
 
 # Guidance for Future Upgrade Tokens
 
