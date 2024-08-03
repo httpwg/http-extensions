@@ -223,7 +223,7 @@ q=foo&amp;limit=10&amp;sort=-published
       target="HTTP" section="10.2.2"/>). This represents a claim that a client can
       send a GET request to the indicated URI to repeat the query operation just
       performed without resending the query parameters. This resource might be
-      temporary; if a future request fails, the client &SHOULD; retry using the
+      temporary; if a future request fails, the client can retry using the
       original QUERY resource and the previously submitted parameters again.
     </t>
 
