@@ -293,7 +293,7 @@ Accept-Query = 1#media-type
   </section>
 
   <section title="Examples" anchor="examples">
-
+<!-- TODO: add Content-Length fields once examples are stable -->
     <t>
       The non-normative examples in this section make use of a simple,
       hypothetical plain-text based query syntax based on SQL with results
@@ -318,10 +318,63 @@ select surname, givenname, email limit 10
 <artwork type="http-message">
 HTTP/1.1 200 OK
 Content-Type: text/csv
-Content-Location: /contacts/query123
 
 surname, givenname, email
 Smith, John, john.smith@example.org
+Jones, Sally, sally.jones@example.com
+Dubois, Camille, camille.dubois@example.net
+</artwork>
+
+    </section>
+
+    <section title="Simple QUERY with a Direct Response and Location fields">
+
+      <t>A simple query with a direct response:</t>
+<artwork type="http-message">
+QUERY /contacts HTTP/1.1
+Host: example.org
+Content-Type: example/query
+Accept: text/csv
+
+select surname, givenname, email limit 10
+</artwork>
+
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: text/csv
+Content-Location: /contacts/responses/42
+Location: /contacts/queries/17
+
+surname, givenname, email
+Smith, John, john.smith@example.org
+Jones, Sally, sally.jones@example.com
+Dubois, Camille, camille.dubois@example.net
+</artwork>
+
+    <t>
+      A subsequent GET request on /contacts/responses/42 would return
+      the same response, until the server decides to remove that
+      resource.
+    </t>
+    <t>
+      A GET request on /contacts/queries/17 however would execute the same
+      query again, and return a fresh result for that query:
+    </t>
+
+<artwork type="http-message">
+GET /contacts/queries/17 HTTP/1.1
+Host: example.org
+Accept: text/csv
+</artwork>
+
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: text/csv
+Content-Location: /contacts/responses/43
+
+surname, givenname, email
 Jones, Sally, sally.jones@example.com
 Dubois, Camille, camille.dubois@example.net
 </artwork>
