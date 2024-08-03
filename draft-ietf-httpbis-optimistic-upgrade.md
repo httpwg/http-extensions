@@ -83,7 +83,7 @@ A related category of attacks use protocol disagreement to exploit vulnerabiliti
 
 If the server rejects the upgrade, the connection can continue to be used for HTTP/1.1.  There is no requirement to close the connection in response to an upgrade rejection, and keeping the connection open has performance advantages if additional HTTP requests to this server are likely.  Thus, it is normally inappropriate to close the connection in response to a rejected upgrade.
 
-# Impact on Existing Upgrade Tokens
+# Impact on Existing Upgrade Tokens {#existing}
 
 At the time of writing, there are four distinct Upgrade Tokens that are registered, associated with published documents, and not marked obsolete.  This section considers the impact of this document's considerations on each registered Upgrade Token.
 
@@ -138,6 +138,20 @@ There are now several good examples of designs that prevent the security concern
 * Apply high-entropy masking of client-to-server data (WebSocket, {{Section 5.1 of ?RFC6455}}).
 
 Future specifications for Upgrade Tokens MUST account for the security issues discussed here and provide clear guidance on how clients can avoid them.
+
+## Selection of Request Methods with Upgrade
+
+<!-- If #2845 is merged, change this to:
+Some Upgrade Tokens, such as "TLS", are defined for use with any ordinary HTTP Method.  The upgraded protocol continues to provide HTTP semantics, and will convey the response to this HTTP request.
+
+The other Upgrade Tokens mentioned in {{existing}} do not preserve HTTP semantics, so the method is not relevant.  All of these Upgrade Tokens are specified only for use with the "GET" method.
+-->
+
+The "HTTP" and "TLS" Upgrade Tokens can be used with any ordinary HTTP Method.  The upgraded protocol continues to provide HTTP semantics, and will convey the response to this HTTP request.
+
+The other Upgrade Tokens presently defined do not preserve HTTP semantics, so the method is not relevant.  All of these Upgrade Tokens are specified only for use with the "GET" method.
+
+Future specifications for Upgrade Tokens should restrict their use to "GET" requests if the HTTP method is otherwise irrelevant and a request body is not required.  This improves consistency with other Upgrade Tokens and avoids the possibility that a faulty server implementation might process the request body as the new protocol.
 
 # IANA Considerations
 
