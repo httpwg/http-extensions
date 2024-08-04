@@ -219,12 +219,12 @@ q=foo&amp;limit=10&amp;sort=-published
     <t>
       A server &MAY; create or locate a resource that identifies the query
       operation for future use. If the server does so, the URI of the resource
-      can be included in the Location header field of the response (see <xref
-      target="HTTP" section="10.2.2"/>). This represents a claim that a client can
-      send a GET request to the indicated URI to repeat the query operation just
-      performed without resending the query parameters. This resource might be
-      temporary; if a future request fails, the client &SHOULD; retry using the
-      original QUERY resource and the previously submitted parameters again.
+      can be included in the Location header field of the response. This
+      represents a claim that a client can send a GET request to the indicated
+      URI to repeat the query operation just performed without resending the
+      query parameters. This resource might be temporary; if a future request
+      fails, the client &SHOULD; retry using the original QUERY resource and the
+      previously submitted parameters again.
     </t>
 
     <t>
