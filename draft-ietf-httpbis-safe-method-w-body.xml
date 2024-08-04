@@ -212,10 +212,7 @@ q=foo&amp;limit=10&amp;sort=-published
       header field (see <xref target="RFCHTTP" section="8.7"/>) containing an
       identifier for a specific resource corresponding to the results of the
       operation. A client can send a GET request for the indicated URI to repeat
-      the query in the future without resending the query parameters. The
-      indicated resource might be temporary; if a future request fails, the
-      client SHOULD retry using the original QUERY resource and the previously
-      submitted parameters again.
+      the query in the future without resending the query parameters.
     </t>
 
     <t>
