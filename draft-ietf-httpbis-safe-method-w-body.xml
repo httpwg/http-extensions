@@ -263,6 +263,13 @@ q=foo&amp;limit=10&amp;sort=-published
         does not change the request itself.
       </t>
 
+      <t>
+        If a successful response includes a Content-Location header field with
+        the same origin as the requested resource, the response content also
+        reflects the current state of the indicated resource and MAY also be
+        used to satisfy future requests for that resource.
+      </t>
+
     </section>
 
   </section>
