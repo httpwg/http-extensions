@@ -208,7 +208,7 @@ q=foo&amp;limit=10&amp;sort=-published
     </t>
 
     <t>
-      A successful response to a QUERY request can include a Content-Location
+      A successful response to a QUERY request &MAY; include a Content-Location
       header field (see <xref target="HTTP" section="8.7"/>) containing an
       identifier for a specific resource corresponding to the results of the
       operation. This represents a claim from the server that a client can send
@@ -316,7 +316,7 @@ select surname, givenname, email limit 10
 <artwork type="http-message">
 HTTP/1.1 200 OK
 Content-Type: text/csv
-Content-Location: /contacts/query123
+Content-Location: http://example.org/contacts/query123
 
 surname, givenname, email
 Smith, John, john.smith@example.org
