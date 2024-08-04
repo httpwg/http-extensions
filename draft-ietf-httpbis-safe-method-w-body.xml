@@ -306,7 +306,6 @@ select surname, givenname, email limit 10
 <artwork type="http-message">
 HTTP/1.1 200 OK
 Content-Type: text/csv
-Content-Location: http://example.org/contacts/query123
 
 surname, givenname, email
 Smith, John, john.smith@example.org
