@@ -67,7 +67,6 @@ informative:
   RFC6265:  # Cookies
   RFC7457:  # TLS Attacks
   RFC7932:  # Brotli
-  RFC8792:  # Line wrapping
   RFC8878:  # Zstandard
   SHARED-BROTLI:
     title: Shared Brotli Compressed Data Format
@@ -90,9 +89,22 @@ as an external dictionary for future HTTP responses for compression schemes
 that support using external dictionaries (e.g., Brotli {{RFC7932}} and
 Zstandard {{RFC8878}}).
 
+Using a previous version of a file as a dictionary for a newer version enables
+delivery of a delta-compressed version of the changes, usually resulting in
+significantly smaller responses than can be achieved by compression alone.
+
+If several resources share common patterns in their responses then it can be
+useful to reference an external dictionary that contains those common patterns,
+effectively compressing them out of the responses. Some examples of this are
+common template HTML for similar pages across a site and common keys and values
+in API calls.
+
 This document describes the HTTP headers used for negotiating dictionary usage
 and registers media types for content encoding Brotli and Zstandard using a
 negotiated dictionary.
+
+The negotiation of dictionary usage leverages HTTP's content negotiation
+(see {{Section 12 of HTTP}}) and is usable with all versions of HTTP.
 
 ## Notational Conventions
 
@@ -123,10 +135,13 @@ and "type".
 The "match" value of the Use-As-Dictionary header is a String value that
 provides the URL Pattern {{URLPattern}} to use for request matching.
 
-The URL Pattern used for matching does not support using Regular expressions.
+The URL Pattern used for matching does not support using regular expressions.
 
-The following algorithm will return TRUE for a valid match pattern and FALSE
-for an invalid pattern that MUST NOT be used:
+The following algorithm is used to validate that a given String value is a
+valid URL Pattern that does not use regular expressions and is for the same
+Origin ({{Section 4.3.1 of HTTP}}) as the dictionary. It will return TRUE
+for a valid match pattern and FALSE for an invalid pattern that MUST NOT be
+used:
 
 1. Let MATCH be the value of "match" for the given dictionary.
 1. Let URL be the URL of the dictionary request.
@@ -207,8 +222,7 @@ A response that contained a response header:
 Use-As-Dictionary: match="/app/*/main.js"
 ~~~
 
-Would match main.js in any directory under /app/ and expiring as a dictionary
-in one year.
+Would match main.js in any directory under /app/.
 
 ## Available-Dictionary
 
