@@ -111,6 +111,10 @@ generate frames requiring a Window_Size larger than 8 MB (see
 This document introduces no new security considerations beyond those discussed
 in {{RFC8878}}.
 
+Note that decoders still need to take into account that they can receive
+oversized frames that do not follow the window size limit specified in this
+document and fail decoding when such invalid frames are received.
+
 # IANA Considerations
 
 ## Content Encoding {#zstd-iana-token}
