@@ -208,26 +208,6 @@ q=foo&amp;limit=10&amp;sort=-published
     </t>
 
     <t>
-      A successful response to a QUERY request can include a Content-Location
-      header field (see <xref target="HTTP" section="8.7"/>) containing an
-      identifier for a resource corresponding to the results of the
-      operation. This represents a claim from the server that a client can send
-      a GET request for the indicated URI to retrieve the results of the query
-      operation just performed. The indicated resource might be temporary.
-    </t>
-
-    <t>
-      A server &MAY; create or locate a resource that identifies the query
-      operation for future use. If the server does so, the URI of the resource
-      can be included in the Location header field of the response (see <xref
-      target="HTTP" section="10.2.2"/>). This represents a claim that a client can
-      send a GET request to the indicated URI to repeat the query operation just
-      performed without resending the query parameters. This resource might be
-      temporary; if a future request fails, the client can retry using the
-      original QUERY resource and the previously submitted parameters again.
-    </t>
-
-    <t>
       The semantics of the QUERY method change to a "conditional QUERY" if
       the request message includes an If-Modified-Since, If-Unmodified-
       Since, If-Match, If-None-Match, or If-Range header field
@@ -293,7 +273,7 @@ Accept-Query = 1#media-type
   </section>
 
   <section title="Examples" anchor="examples">
-<!-- TODO: add Content-Length fields once examples are stable -->
+
     <t>
       The non-normative examples in this section make use of a simple,
       hypothetical plain-text based query syntax based on SQL with results
@@ -321,60 +301,6 @@ Content-Type: text/csv
 
 surname, givenname, email
 Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</artwork>
-
-    </section>
-
-    <section title="Simple QUERY with a Direct Response and Location fields">
-
-      <t>A simple query with a direct response:</t>
-<artwork type="http-message">
-QUERY /contacts HTTP/1.1
-Host: example.org
-Content-Type: example/query
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 200 OK
-Content-Type: text/csv
-Content-Location: /contacts/responses/42
-Location: /contacts/queries/17
-
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</artwork>
-
-    <t>
-      A subsequent GET request on /contacts/responses/42 would return
-      the same response, until the server decides to remove that
-      resource.
-    </t>
-    <t>
-      A GET request on /contacts/queries/17 however would execute the same
-      query again, and return a fresh result for that query:
-    </t>
-
-<artwork type="http-message">
-GET /contacts/queries/17 HTTP/1.1
-Host: example.org
-Accept: text/csv
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 200 OK
-Content-Type: text/csv
-Content-Location: /contacts/responses/43
-
-surname, givenname, email
 Jones, Sally, sally.jones@example.com
 Dubois, Camille, camille.dubois@example.net
 </artwork>
@@ -425,15 +351,6 @@ Dubois, Camille, camille.dubois@example.net
       The QUERY method is subject to the same general security
       considerations as all HTTP methods as described in
       <xref target="HTTP"/>.
-    </t>
-
-    <t>
-      The QUERY method can be used as an alternative to passing query
-      information in the query portion of a URI. This is preferred in some
-      cases, as the URI is more likely to be logged than the request content. If
-      a server creates a temporary resource to represent the results of a QUERY
-      request (e.g., for use in the Location or Content-Location field), the URI of this
-      resource &SHOULD-NOT; expose the original request content in plaintext.
     </t>
   </section>
 
@@ -526,7 +443,6 @@ Dubois, Camille, camille.dubois@example.net
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-04" anchor="changes.since.04">
 <ul>
-  <li>Describe role of Content-Location and Location fields (<eref target="https://github.com/httpwg/http-extensions/issues/1745"/>)</li>
   <li>Added Mike Bishop as author (<eref target="https://github.com/httpwg/http-extensions/issues/2837"/>)</li>
 </ul>
 </section>
