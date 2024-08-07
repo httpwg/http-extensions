@@ -99,8 +99,8 @@
 
     <t>
       Most often, this is desirable when the data conveyed in a request is
-      too voluminous to be encoded into the request's URI. For example, while
-      this is an common and interoperable query:
+      too voluminous to be encoded into the request's URI. For example,
+      this is a common and interoperable query:
     </t>
 
 <artwork type="http-message">
@@ -109,18 +109,15 @@ Host: example.org
 </artwork>
 
     <t>
-      if the query parameters extend to several kilobytes or more of
-      data it may not be, because many implementations place limits on their size. Often these limits are not
-      known or discoverable ahead of time, because a request can pass through many uncoordinated
-      systems. Additionally, expressing certain kinds of data in the target URI is inefficient, because it
-      needs to be encoded to be a valid URI.
+      However, for a query with parameters that are complex or large in size,
+      encoding it in the request URI may not be the best option because
     </t>
-
-    <t>
-      Encoding query parameters directly into the request URI also effectively
-      casts every possible combination of query inputs as distinct
-      resources. Depending on the application, that may not be desirable.
-    </t>
+      <ul>
+        <li>often these limites are not known ahead of time,</li>
+        <li>expressing some data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and</li>
+        <li>encoding query parameters directly into the request URI effectively casts every possible combination of query inputs as distinct
+            resources.</li>
+      </ul>
 
     <t>
       As an alternative to using GET, many implementations make use of the
