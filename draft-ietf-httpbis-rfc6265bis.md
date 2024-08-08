@@ -118,19 +118,6 @@ normative:
     author:
     -
       org: WHATWG
-  SERVICE-WORKERS:
-    target: http://www.w3.org/TR/service-workers/
-    title: Service Workers
-    author:
-    -
-      ins: A. Russell
-      name: Alex Russell
-    -
-      ins: J. Song
-      name: Jungkee Song
-    -
-      ins: J. Archibald
-      name: Jake Archibald
 
 informative:
   RFC2818:
@@ -220,6 +207,19 @@ informative:
   HttpFieldNameRegistry:
     title: "Hypertext Transfer Protocol (HTTP) Field Name Registry"
     target: https://www.iana.org/assignments/http-fields/
+  SERVICE-WORKERS:
+    target: http://www.w3.org/TR/service-workers/
+    title: Service Workers
+    author:
+    -
+      ins: A. Russell
+      name: Alex Russell
+    -
+      ins: J. Song
+      name: Jungkee Song
+    -
+      ins: J. Archibald
+      name: Jake Archibald
 
 --- abstract
 
