@@ -568,7 +568,7 @@ cookie-name       = token
 cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
 cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                       ; US-ASCII characters excluding CTLs,
-                      ; whitespace DQUOTE, comma, semicolon,
+                      ; whitespace, DQUOTE, comma, semicolon,
                       ; and backslash
 token             = <token, defined in [RFC7230], Section 3.2.6>
 
@@ -1290,13 +1290,14 @@ the user agent MUST parse the field-value of the Set-Cookie header field as a
 set-cookie-string (defined below).
 
 NOTE: The algorithm below is more permissive than the grammar in {{sane-set-cookie}}.
-For example, the algorithm strips leading and trailing whitespace from the
-cookie name and value (but maintains internal whitespace), whereas the grammar
-in {{sane-set-cookie}} forbids whitespace in these positions. In addition, the
-algorithm below accommodates some characters that are not cookie-octets
-according to the grammar in {{sane-set-cookie}}. User agents use this algorithm
-so as to interoperate with servers that do not follow the recommendations in
-{{sane-profile}}.
+For example, the algorithm allows cookie-name to be comprised of cookie-octets
+instead of being a token as specified in {{sane-set-cookie}} and the algorithm
+accommodates some characters that are not cookie-octets according to the
+grammar in {{sane-set-cookie}}. In addition, the algorithm below also strips
+leading and trailing whitespace from the cookie name and value (but maintains
+internal whitespace), whereas the grammar in {{sane-set-cookie}} forbids
+whitespace in these positions. User agents use this algorithm so as to
+interoperate with servers that do not follow the recommendations in {{sane-profile}}.
 
 NOTE: As set-cookie-string may originate from a non-HTTP API, it is not
 guaranteed to be free of CTL characters, so this algorithm handles them
