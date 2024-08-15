@@ -119,8 +119,10 @@ document and fail decoding when such invalid frames are received.
 
 ## Content Encoding {#zstd-iana-token}
 
-This document updates the entry added in {{RFC8878}} to the "HTTP Content
-Coding Registry" within the "Hypertext Transfer Protocol (HTTP) Parameters"
+This document updates the entry added in {{RFC8878}} to the ["HTTP Content
+Coding Registry"](https://www.iana.org/assignments/http-parameters/http-parameters.xhtml#content-coding)
+within the ["Hypertext Transfer Protocol (HTTP)
+Parameters"](https://www.iana.org/assignments/http-parameters/http-parameters.xhtml)
 registry:
 
 Name:
