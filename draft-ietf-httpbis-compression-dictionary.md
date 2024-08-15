@@ -224,11 +224,12 @@ used:
 1. Let URL be the URL of the dictionary request.
 1. Let PATTERN be a URL Pattern {{URLPattern}} constructed by setting
 input=MATCH, and baseURL=URL.
-1. If PATTERN has regexp groups then return FALSE.
+1. If PATTERN has regexp groups then return FALSE (see hasRegExpGroups in
+{{URLPattern}}).
 1. Return True.
 
 The "match" value is required and MUST be included in the
-Use-As-Dictionary Dictionary for the dictionary to be considered valid.
+Use-As-Dictionary response header for the dictionary to be considered valid.
 
 ### match-dest
 
