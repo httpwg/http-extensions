@@ -111,31 +111,33 @@ compression alone.
 
 For example:
 
-~~~~~~~~~~ ascii-art
-+--------+                                                +--------+
-|        |----------------------------------------------->|        |
-|        |  GET /app.v1.js                                |        |
-|        |                                                |        |
-| Client |<-----------------------------------------------| Server |
-|        |  OK                                            |        |
-|        |  Use-As-Dictionary: match="/app.*.js"          |        |
-|        |  <full app.v1.js resource - 100KB compressed>  |        |
-+--------+                                                +--------+
+~~~ aasvg
+Client                                        Server
+|                                                  |
+| GET /app.v1.js                                   |
+|------------------------------------------------->|
+|                                                  |
+|     200 OK                                       |
+|     Use-As-Dictionary: match="/app*js"           |
+|     <full app.v1.js resource - 100KB compressed> |
+|<-------------------------------------------------|
+|                                                  |
 
- Some time later ...
+Some time later ...
 
-+--------+                                                +--------+
-|        |----------------------------------------------->|        |
-|        |  GET /app.v2.js                                |        |
-|        |  Available-Dictionary: :pZGm1A...2a2fFG4=:     |        |
-|        |  Accept-Encoding: gzip, br, zstd, dcb, dcz     |        |
-| Client |                                                | Server |
-|        |<-----------------------------------------------|        |
-|        |  OK                                            |        |
-|        |  Content-Encoding: dcb                         |        |
-|        |  <delta-compressed app.v2.js resource - 1KB>   |        |
-+--------+                                                +--------+
-~~~~~~~~~~
+Client                                        Server
+|                                                  |
+| GET /app.v2.js                                   |
+| Available-Dictionary: :pZGm1A...2a2fFG4=:        |
+| Accept-Encoding: gzip, br, zstd, dcb, dcz        |
+|------------------------------------------------->|
+|                                                  |
+|      200 OK                                      |
+|      Content-Encoding: dcb                       |
+|      <delta-compressed app.v2.js resource - 1KB> |
+|<-------------------------------------------------|
+|                                                  |
+~~~
 {: title="Version Upgrade Example"}
 
 ### Common Content
@@ -148,39 +150,40 @@ in API calls.
 
 For example:
 
-~~~~~~~~~~ ascii-art
-+--------+                                                 +--------+
-|        |------------------------------------------------>|        |
-|        |  GET /index.html                                |        |
-|        |                                                 |        |
-| Client |<------------------------------------------------| Server |
-|        |  OK                                             |        |
-|        |  Link: <.../dict>; rel="compression-dictionary" |        |
-|        |  <full index.html resource - 100KB compressed>  |        |
-|        |                                                 |        |
-|        |                                                 |        |
-|        |------------------------------------------------>|        |
-|        |  GET /dict                                      |        |
-|        |                                                 |        |
-|        |<------------------------------------------------|        |
-|        |  OK                                             |        |
-|        |  Use-As-Dictionary: match="*.html"              |        |
-+--------+                                                 +--------+
+~~~ aasvg
+Client                                          Server
+|                                                    |
+| GET /index.html                                    |
+|--------------------------------------------------->|
+|                                                    |
+|     200 OK                                         |
+|     Link: <.../dict>; rel="compression-dictionary" |
+|     <full app.v1.js resource - 100KB compressed>   |
+|<---------------------------------------------------|
+|                                                    |
+| GET /dict                                          |
+|--------------------------------------------------->|
+|                                                    |
+|                  200 OK                            |
+|                  Use-As-Dictionary: match="/*html" |
+|<---------------------------------------------------|
+|                                                    |
 
- Some time later ...
+Some time later ...
 
-+--------+                                                 +--------+
-|        |------------------------------------------------>|        |
-|        |  GET /page2.html                                |        |
-|        |  Available-Dictionary: :pZGm1A...2a2fFG4=:      |        |
-|        |  Accept-Encoding: gzip, br, zstd, dcb, dcz      |        |
-| Client |                                                 | Server |
-|        |<------------------------------------------------|        |
-|        |  OK                                             |        |
-|        |  Content-Encoding: dcb                          |        |
-|        |  <delta-compressed page2.html resource - 10KB>  |        |
-+--------+                                                 +--------+
-~~~~~~~~~~
+Client                                          Server
+|                                                    |
+| GET /page2.html                                    |
+| Available-Dictionary: :pZGm1A...2a2fFG4=:          |
+| Accept-Encoding: gzip, br, zstd, dcb, dcz          |
+|--------------------------------------------------->|
+|                                                    |
+|      200 OK                                        |
+|      Content-Encoding: dcb                         |
+|      <delta-compressed page2.html resource - 10KB> |
+|<---------------------------------------------------|
+|                                                    |
+~~~
 {: title="Common Content Example"}
 
 ## Notational Conventions
