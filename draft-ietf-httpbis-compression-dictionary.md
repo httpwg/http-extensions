@@ -236,7 +236,7 @@ input=MATCH, and baseURL=URL.
 The "match" value is required and MUST be included in the
 Use-As-Dictionary response header for the dictionary to be considered valid.
 
-Operating at the HTTP level, the specified match patterns will operate on the
+Operating at the HTTP-level, the specified match patterns will operate on the
 percent-encoded version of the URL path (see {{Section 2 of URL}}).
 
 For example the URL "http://www.example.com/düsseldorf" would be encoded as
