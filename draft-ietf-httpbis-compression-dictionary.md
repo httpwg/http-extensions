@@ -53,6 +53,7 @@ normative:
     title: Structured Field Values for HTTP
     date: 1 May 2024
     target: https://datatracker.ietf.org/doc/draft-ietf-httpbis-sfbis/
+  URL: RFC3986
   URLPattern:
     title: URL Pattern - Living Standard
     date: 18 March 2024
@@ -75,10 +76,12 @@ informative:
 
 --- abstract
 
-This specification defines a mechanism for using designated HTTP responses
-as an external dictionary for future HTTP responses for compression schemes
-that support using external dictionaries (e.g., Brotli (RFC 7932) and
-Zstandard (RFC 8878)).
+This document specifies a mechanism for dictionary-based compression in the
+Hypertext Transfer Protocol (HTTP). By utilizing this technique, clients and
+servers can reduce the size of transmitted data, leading to improved performance
+and reduced bandwidth consumption. This document extends existing HTTP compression
+methods and provides guidelines for the delivery and use of compression
+dictionaries within the HTTP protocol.
 
 --- middle
 
@@ -233,6 +236,16 @@ input=MATCH, and baseURL=URL.
 The "match" value is required and MUST be included in the
 Use-As-Dictionary response header for the dictionary to be considered valid.
 
+Operating at the HTTP level, the specified match patterns will operate on the
+percent-encoded version of the URL path (see {{Section 2 of URL}}).
+
+For example the URL "http://www.example.com/düsseldorf" would be encoded as
+"http://www.example.com/d%C3%BCsseldorf" and a relevant match pattern would be:
+
+~~~ http-message
+Use-As-Dictionary: match="/d%C3%BCsseldorf"
+~~~
+
 ### match-dest
 
 The "match-dest" value of the Use-As-Dictionary header is an Inner List of
@@ -352,7 +365,7 @@ algorithm will return TRUE for a successful match and FALSE for no-match:
 1. If the Origin of BASEURL and the Origin of URL are not the same, return
 FALSE.
 1. Let MATCH be the value of "match" for the given dictionary.
-1. Let PATTERN be a URL Pattern {{URLPattern}} constructed by setting
+1. Let PATTERN be a URLPattern {{URLPattern}} constructed by setting
 input=MATCH, and baseURL=BASEURL.
 1. Return the result of running the "test" method of PATTERN with input=URL.
 
