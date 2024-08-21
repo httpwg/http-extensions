@@ -38,8 +38,15 @@ author:
     email: yoav.weiss@shopify.com
 
 normative:
-  FETCH:
-    target: https://fetch.spec.whatwg.org
+  CORS-CHECK:
+    target: https://fetch.spec.whatwg.org/#cors-check
+    title: Fetch - Living Standard
+    date: 17 June 2024
+    author:
+     -
+        org: WHATWG
+  REQUEST-DESTINATION:
+    target: https://fetch.spec.whatwg.org/#requestdestination
     title: Fetch - Living Standard
     date: 17 June 2024
     author:
@@ -48,7 +55,12 @@ normative:
   FOLDING: RFC8792
   HTTP: RFC9110
   HTTP-CACHING: RFC9111
+  RFC8878:  # Zstandard
   SHA-256: RFC6234
+  SHARED-BROTLI:
+    title: Shared Brotli Compressed Data Format
+    date: 28 September 2022
+    target: https://datatracker.ietf.org/doc/draft-vandevenne-shared-brotli-format/
   STRUCTURED-FIELDS:
     title: Structured Field Values for HTTP
     date: 1 May 2024
@@ -68,11 +80,6 @@ informative:
   RFC6265:  # Cookies
   RFC7457:  # TLS Attacks
   RFC7932:  # Brotli
-  RFC8878:  # Zstandard
-  SHARED-BROTLI:
-    title: Shared Brotli Compressed Data Format
-    date: 28 September 2022
-    target: https://datatracker.ietf.org/doc/draft-vandevenne-shared-brotli-format/
 
 --- abstract
 
@@ -249,8 +256,8 @@ Use-As-Dictionary: match="/d%C3%BCsseldorf"
 ### match-dest
 
 The "match-dest" value of the Use-As-Dictionary header is an Inner List of
-String values that provides a list of {{FETCH}} request destinations for the
-dictionary to match.
+String values that provides a list of Fetch request destinations for the
+dictionary to match (see {{REQUEST-DESTINATION}}).
 
 An empty list for "match-dest" MUST match all destinations.
 
@@ -669,7 +676,7 @@ dictionary and the compressed response are fully readable by the client.
 
 In browser terms, that means that both are either same-origin to the context
 they are being fetched from or that the response is cross-origin and passes
-the CORS check as defined in {{FETCH}}.
+the CORS check (see {{CORS-CHECK}}).
 
 ### Server Responsibility
 
