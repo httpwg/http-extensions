@@ -41,14 +41,12 @@ normative:
   CORS-CHECK:
     target: https://fetch.spec.whatwg.org/#cors-check
     title: Fetch - Living Standard
-    date: 17 June 2024
     author:
      -
         org: WHATWG
   REQUEST-DESTINATION:
     target: https://fetch.spec.whatwg.org/#requestdestination
     title: Fetch - Living Standard
-    date: 17 June 2024
     author:
      -
         org: WHATWG
@@ -68,7 +66,6 @@ normative:
   URL: RFC3986
   URLPattern:
     title: URL Pattern - Living Standard
-    date: 18 March 2024
     target: https://urlpattern.spec.whatwg.org/
     author:
      -
