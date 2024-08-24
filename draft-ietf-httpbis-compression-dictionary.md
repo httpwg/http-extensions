@@ -39,14 +39,16 @@ author:
 
 normative:
   CORS-CHECK:
-    target: https://fetch.spec.whatwg.org/#cors-check
     title: Fetch - Living Standard
+    date: false
+    target: https://fetch.spec.whatwg.org/#cors-check
     author:
      -
         org: WHATWG
   REQUEST-DESTINATION:
-    target: https://fetch.spec.whatwg.org/#requestdestination
     title: Fetch - Living Standard
+    date: false
+    target: https://fetch.spec.whatwg.org/#requestdestination
     author:
      -
         org: WHATWG
@@ -66,6 +68,7 @@ normative:
   URL: RFC3986
   URLPattern:
     title: URL Pattern - Living Standard
+    date: false
     target: https://urlpattern.spec.whatwg.org/
     author:
      -
