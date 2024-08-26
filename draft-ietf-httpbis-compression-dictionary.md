@@ -66,10 +66,31 @@ normative:
     date: 1 May 2024
     target: https://datatracker.ietf.org/doc/draft-ietf-httpbis-sfbis/
   URL: RFC3986
-  URLPattern:
+  URLPATTERN:
     title: URL Pattern - Living Standard
     date: false
     target: https://urlpattern.spec.whatwg.org/
+    author:
+     -
+        org: WHATWG
+  URLPATTERN-CLASS:
+    title: URL Pattern - Living Standard
+    date: false
+    target: https://urlpattern.spec.whatwg.org/#urlpattern-class
+    author:
+     -
+        org: WHATWG
+  URLPATTERN-REGEXP:
+    title: URL Pattern - Living Standard
+    date: false
+    target: https://urlpattern.spec.whatwg.org/#dom-urlpattern-hasregexpgroups
+    author:
+     -
+        org: WHATWG
+  URLPATTERN-TEST:
+    title: URL Pattern - Living Standard
+    date: false
+    target: https://urlpattern.spec.whatwg.org/#dom-urlpattern-test
     author:
      -
         org: WHATWG
@@ -100,8 +121,8 @@ that support using external dictionaries (e.g., Brotli {{RFC7932}} and
 Zstandard {{RFC8878}}).
 
 This document describes the HTTP headers used for negotiating dictionary usage
-and registers media types for content encoding Brotli and Zstandard using a
-negotiated dictionary.
+and registers content encoding values for compressing with Brotli and Zstandard
+using a negotiated dictionary.
 
 The negotiation of dictionary usage leverages HTTP's content negotiation
 (see {{Section 12 of HTTP}}) and is usable with all versions of HTTP.
@@ -168,7 +189,7 @@ Client                                          Server
 |                                                    |
 |     200 OK                                         |
 |     Link: <.../dict>; rel="compression-dictionary" |
-|     <full app.v1.js resource - 100KB compressed>   |
+|     <full index.html resource - 100KB compressed>  |
 |<---------------------------------------------------|
 |                                                    |
 | GET /dict                                          |
@@ -223,7 +244,7 @@ and "type".
 ### match
 
 The "match" value of the Use-As-Dictionary header is a String value that
-provides the URL Pattern {{URLPattern}} to use for request matching.
+provides the URL Pattern to use for request matching (see {{URLPATTERN}}).
 
 The URL Pattern used for matching does not support using regular expressions.
 
@@ -235,9 +256,10 @@ used:
 
 1. Let MATCH be the value of "match" for the given dictionary.
 1. Let URL be the URL of the dictionary request.
-1. Let PATTERN be a URL Pattern {{URLPattern}} constructed by setting
-input=MATCH, and baseURL=URL.
-1. If the hasRegExpGroups attribute of PATTERN is TRUE then return FALSE.
+1. Let PATTERN be an instance of the URLPattern class constructed by setting
+input=MATCH, and baseURL=URL (see {{URLPATTERN-CLASS}}).
+1. If the hasRegExpGroups attribute of PATTERN is TRUE then return FALSE
+(see {{URLPATTERN-REGEXP}}).
 1. Return TRUE.
 
 The "match" value is required and MUST be included in the
@@ -289,8 +311,8 @@ The "id" value is optional and defaults to the empty string.
 The "type" value of the Use-As-Dictionary header is a Token value that
 describes the file format of the supplied dictionary.
 
-"raw" is the only defined dictionary format which represents an unformatted
-blob of bytes suitable for any compression scheme to use.
+"raw" is defined as a dictionary format which represents an unformatted blob of
+bytes suitable for any compression scheme to use.
 
 If a client receives a dictionary with a type that it does not understand, it
 MUST NOT use the dictionary.
@@ -322,7 +344,7 @@ A response that contained a response header:
 Use-As-Dictionary: match="/app/*/main.js"
 ~~~
 
-Would match main.js in any directory under /app/.
+Would match any path that starts with "/app/" and ends with "main.js".
 
 ## Available-Dictionary
 
@@ -352,16 +374,14 @@ To be considered as a match, the dictionary resource MUST be either fresh
 ### Dictionary URL matching
 
 When a dictionary is stored as a result of a "Use-As-Dictionary" directive, it
-includes "match" and "match-dest" strings that are used to match an outgoing
-request from a client to the available dictionaries.
-
-Dictionaries MUST have been served from the same Origin
-({{Section 4.3.1 of HTTP}}) as the outgoing request to match.
+includes a "match" string and optional "match-dest" string that are used to
+match an outgoing request from a client to the available dictionaries.
 
 To see if an outbound request matches a given dictionary, the following
 algorithm will return TRUE for a successful match and FALSE for no-match:
 
-1. If the current client supports request destinations:
+1. If the current client supports request destinations and a "match-dest"
+string was provided with the dictionary:
     * Let DEST be the value of "match-dest" for the given dictionary.
     * Let REQUEST_DEST be the value of the destination for the current
     request.
@@ -370,11 +390,13 @@ algorithm will return TRUE for a successful match and FALSE for no-match:
 1. Let BASEURL be the URL of the dictionary request.
 1. Let URL represent the URL of the outbound request being checked.
 1. If the Origin of BASEURL and the Origin of URL are not the same, return
-FALSE.
+FALSE (see {{Section 4.3.1 of HTTP}}).
 1. Let MATCH be the value of "match" for the given dictionary.
-1. Let PATTERN be a URLPattern {{URLPattern}} constructed by setting
-input=MATCH, and baseURL=BASEURL.
-1. Return the result of running the "test" method of PATTERN with input=URL.
+1. Let PATTERN be an instance of the URLPattern class constructed by setting
+input=MATCH, and baseURL=BASEURL (see {{URLPATTERN-CLASS}}).
+1. Return the result of running the "test" method of PATTERN with input=URL
+which will check for a match between the request URL and the supplied "match"
+URL Pattern (see {{URLPATTERN-TEST}}).
 
 ### Multiple matching dictionaries
 
@@ -497,17 +519,18 @@ SHA_256_Hash:
 : 32 bytes. SHA-256 hash digest of the dictionary {{SHA-256}}.
 
 The 40-byte header is a Zstandard skippable frame (little-endian 0x184D2A5E)
-with a 32-byte length (little-endian 0x00000020) that is compatible with existing
-Zstandard decoders.
+with a 32-byte length (little-endian 0x00000020) that is compatible with
+existing Zstandard decoders.
 
 Clients that announce support for dcz content encoding MUST be able to
 decompress resources that were compressed with a window size of at least 8 MB
 or 1.25 times the size of the dictionary, which ever is greater, up to a
 maximum of 128 MB.
 
-The window size used will be encoded in the content (currently, this can be expressed
-in powers of two only) and it MUST be lower than this limit. An implementation MAY
-treat a window size that exceeds the limit as a decoding error.
+The window size used will be encoded in the content (currently, this can be
+expressed in powers of two only) and it MUST be lower than this limit. An
+implementation MAY treat a window size that exceeds the limit as a decoding
+error.
 
 With Zstandard compression, the full dictionary is available during compression
 and decompression until the size of the input exceeds the compression window.
@@ -519,10 +542,10 @@ response.
 
 # Negotiating the content encoding
 
-When a compression dictionary is available for use for a given request, the
-encoding to be used is negotiated through the regular mechanism for
-negotiating content encoding in HTTP through the "Accept-Encoding" request
-header and "Content-Encoding" response header.
+When a compression dictionary is available for use compressing the response to
+a given request, the encoding to be used is negotiated through the regular
+mechanism for negotiating content encoding in HTTP through the "Accept-Encoding"
+request header and "Content-Encoding" response header.
 
 The dictionary to use is negotiated separately and advertised in the
 "Available-Dictionary" request header.
