@@ -319,7 +319,7 @@ A response that contained a response header:
 Use-As-Dictionary: match="/app/*/main.js"
 ~~~
 
-Would match any path that starts with "/app/" and ends with "main.js".
+Would match any path that starts with "/app/" and ends with "/main.js".
 
 ## Available-Dictionary
 
