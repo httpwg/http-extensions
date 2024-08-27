@@ -38,17 +38,10 @@ author:
     email: yoav.weiss@shopify.com
 
 normative:
-  CORS-CHECK:
+  FETCH:
     title: Fetch - Living Standard
     date: false
-    target: https://fetch.spec.whatwg.org/#cors-check
-    author:
-     -
-        org: WHATWG
-  REQUEST-DESTINATION:
-    title: Fetch - Living Standard
-    date: false
-    target: https://fetch.spec.whatwg.org/#requestdestination
+    target: https://fetch.spec.whatwg.org/
     author:
      -
         org: WHATWG
@@ -70,27 +63,6 @@ normative:
     title: URL Pattern - Living Standard
     date: false
     target: https://urlpattern.spec.whatwg.org/
-    author:
-     -
-        org: WHATWG
-  URLPATTERN-CLASS:
-    title: URL Pattern - Living Standard
-    date: false
-    target: https://urlpattern.spec.whatwg.org/#urlpattern-class
-    author:
-     -
-        org: WHATWG
-  URLPATTERN-REGEXP:
-    title: URL Pattern - Living Standard
-    date: false
-    target: https://urlpattern.spec.whatwg.org/#dom-urlpattern-hasregexpgroups
-    author:
-     -
-        org: WHATWG
-  URLPATTERN-TEST:
-    title: URL Pattern - Living Standard
-    date: false
-    target: https://urlpattern.spec.whatwg.org/#dom-urlpattern-test
     author:
      -
         org: WHATWG
@@ -257,9 +229,11 @@ used:
 1. Let MATCH be the value of "match" for the given dictionary.
 1. Let URL be the URL of the dictionary request.
 1. Let PATTERN be an instance of the URLPattern class constructed by setting
-input=MATCH, and baseURL=URL (see {{URLPATTERN-CLASS}}).
+input=MATCH, and baseURL=URL (see {{URLPATTERN}}{:section="The URLPattern
+class" relative="#urlpattern-class"}).
 1. If the hasRegExpGroups attribute of PATTERN is TRUE then return FALSE
-(see {{URLPATTERN-REGEXP}}).
+(see {{URLPATTERN}}{:section="hasRegExpGroups"
+relative="#dom-urlpattern-hasregexpgroups"}).
 1. Return TRUE.
 
 The "match" value is required and MUST be included in the
@@ -279,7 +253,8 @@ Use-As-Dictionary: match="/d%C3%BCsseldorf"
 
 The "match-dest" value of the Use-As-Dictionary header is an Inner List of
 String values that provides a list of Fetch request destinations for the
-dictionary to match (see {{REQUEST-DESTINATION}}).
+dictionary to match (see {{FETCH}}{:section="RequestDestination"
+relative="#requestdestination"}).
 
 An empty list for "match-dest" MUST match all destinations.
 
@@ -393,10 +368,12 @@ string was provided with the dictionary:
 FALSE (see {{Section 4.3.1 of HTTP}}).
 1. Let MATCH be the value of "match" for the given dictionary.
 1. Let PATTERN be an instance of the URLPattern class constructed by setting
-input=MATCH, and baseURL=BASEURL (see {{URLPATTERN-CLASS}}).
+input=MATCH, and baseURL=BASEURL (see {{URLPATTERN}}{:section="The URLPattern
+class" relative="#urlpattern-class"}).
 1. Return the result of running the "test" method of PATTERN with input=URL
 which will check for a match between the request URL and the supplied "match"
-URL Pattern (see {{URLPATTERN-TEST}}).
+URL Pattern (see {{URLPATTERN}}{:section="test(input, baseURL) method"
+relative="#dom-urlpattern-test"}).
 
 ### Multiple matching dictionaries
 
@@ -699,7 +676,7 @@ dictionary and the compressed response are fully readable by the client.
 
 In browser terms, that means that both are either same-origin to the context
 they are being fetched from or that the response is cross-origin and passes
-the CORS check (see {{CORS-CHECK}}).
+the CORS check (see {{FETCH}}{:section="CORS check" relative="#cors-check"}).
 
 ### Server Responsibility
 
@@ -749,4 +726,3 @@ the storage as cookies are partitioned as well as clearing the dictionaries
 whenever cookies are cleared.
 
 --- back
-
