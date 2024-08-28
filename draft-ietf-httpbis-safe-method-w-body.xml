@@ -174,9 +174,9 @@ q=foo&amp;limit=10&amp;sort=-published
       (as defined by <xref target="HTTP" section="7.1"/>), the QUERY
       method is used to ask the server to perform a query operation
       (described by the request content) over some set of data scoped to the
-      effective request URI. The content returned in response to a QUERY
+      target URI. The content returned in response to a QUERY
       cannot be assumed to be a representation of the resource identified by
-      the effective request URI.
+      the target URI.
     </t>
 
     <t>
