@@ -495,9 +495,18 @@ If a server loses data that has been appended to an upload, it MUST consider the
 
 The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY return a `308 (Permanent Redirect)` status code and clients SHOULD use the new permanent URI for subsequent requests. If the client receives a `307 (Temporary Redirect)` response to an offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
 
-# Transfer and Content Codings
+# Content Codings
 
-A message might have a content coding, indicated by the `Content-Encoding` header field, and/or a transfer coding, indicated by the `Transfer-Encoding` header field ({{Section 6.1 of RFC9112}}), applied, which modify the representation of uploaded data in a message. For correct interoperability, the client and server must share the same logic when counting bytes for the upload offset. From the client's perspective, the offset is counted after content coding but before transfer coding is applied. From the server's perspective, the offset is counted after the content's transfer coding is reversed but before the content coding is reversed.
+Since the codings listed in `Content-Encoding` are a characteristic of the representation (see {{Section 8.4 of HTTP}}), both the client and the server always compute the upload offset on the content coded data (that is, the representation data);
+moreover, the content codings are retained throughout the entire upload: this means that the server is not required to decode the representation data to support resumable uploads.
+See {{Appendix A of DIGEST-FIELDS}} for more information.
+
+# Transfer Codings
+
+Unlike `Content-Encoding` (see {{Section 8.4.1 of HTTP}}), `Transfer-Encoding` (see {{Section 6.1 of RFC9112}}) is a property of the message, not of the representation;
+moreover transfer codings can be applied in transit (e.g., by proxies).
+This means that a client does not have to consider the transfer codings to compute the upload offset, while a server is responsible for transfer decoding the message before computing the upload offset.
+Please note that the `Content-Length` header field cannot be used in conjunction with the `Transfer-Encoding` header field.
 
 # Integrity Digests
 
