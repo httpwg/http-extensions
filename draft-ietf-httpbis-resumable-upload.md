@@ -45,6 +45,7 @@ author:
 
 normative:
   HTTP: RFC9110
+  CACHING: RFC9111
   RFC9112:
     display: HTTP/1.1
   RFC5789:
@@ -315,7 +316,7 @@ The offset MUST be accepted by a subsequent append ({{upload-appending}}). Due t
 
 The client MUST NOT start more than one append ({{upload-appending}}) based on the resumption offset from a single offset retrieving request.
 
-In order to prevent HTTP caching, the response SHOULD include a `Cache-Control` header field with the value `no-store`.
+In order to prevent HTTP caching ({{CACHING}}), the response SHOULD include a `Cache-Control` header field with the value `no-store`.
 
 If the server does not consider the upload resource to be active, it MUST respond with a `404 (Not Found)` status code.
 
