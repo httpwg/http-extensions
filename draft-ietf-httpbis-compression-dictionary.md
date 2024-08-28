@@ -253,8 +253,8 @@ Use-As-Dictionary: match="/d%C3%BCsseldorf"
 
 The "match-dest" value of the Use-As-Dictionary header is an Inner List of
 String values that provides a list of Fetch request destinations for the
-dictionary to match (see {{FETCH}}{:section="RequestDestination"
-relative="#requestdestination"}).
+dictionary to match (see {{FETCH}}{:section="destination"
+relative="#concept-request-destination"}).
 
 An empty list for "match-dest" MUST match all destinations.
 
