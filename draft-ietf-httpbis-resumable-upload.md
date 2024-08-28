@@ -85,7 +85,7 @@ This document defines an optional mechanism for HTTP that enables resumable uplo
 The terms Byte Sequence, Item, String, Token, Integer, and Boolean are imported from
 {{!STRUCTURED-FIELDS=RFC8941}}.
 
-The terms client and server are from {{HTTP}}.
+The terms "representation", "representation data", "representation metadata", "content", "client" and "server" are from {{HTTP}}.
 
 # Overview
 
