@@ -228,12 +228,12 @@ used:
 
 1. Let MATCH be the value of "match" for the given dictionary.
 1. Let URL be the URL of the dictionary request.
-1. Let PATTERN be an instance of the URLPattern class constructed by setting
-input=MATCH, and baseURL=URL (see {{URLPATTERN}}{:section="The URLPattern
-class" relative="#urlpattern-class"}).
-1. If the hasRegExpGroups attribute of PATTERN is TRUE then return FALSE
-(see {{URLPATTERN}}{:section="hasRegExpGroups"
-relative="#dom-urlpattern-hasregexpgroups"}).
+1. Let PATTERN be a URL pattern created by running the steps to create a
+URL pattern by setting input=MATCH, and baseURL=URL (see
+{{URLPATTERN}}{:section="create" relative="#url-pattern-create"}).
+1. If the result of running the "has regexp groups" steps for PATTERN returns
+TRUE then return FALSE (see {{URLPATTERN}}{:section="has regexp groups"
+relative="#url-pattern-has-regexp-groups"}).
 1. Return TRUE.
 
 The "match" value is required and MUST be included in the
@@ -367,13 +367,12 @@ string was provided with the dictionary:
 1. If the Origin of BASEURL and the Origin of URL are not the same, return
 FALSE (see {{Section 4.3.1 of HTTP}}).
 1. Let MATCH be the value of "match" for the given dictionary.
-1. Let PATTERN be an instance of the URLPattern class constructed by setting
-input=MATCH, and baseURL=BASEURL (see {{URLPATTERN}}{:section="The URLPattern
-class" relative="#urlpattern-class"}).
-1. Return the result of running the "test" method of PATTERN with input=URL
+1. Let PATTERN be a URL pattern created by running the steps to create a
+URL pattern by setting input=MATCH, and baseURL=URL (see
+{{URLPATTERN}}{:section="create" relative="#url-pattern-create"}).
+1. Return the result of running the "match" steps on PATTERN with input=URL
 which will check for a match between the request URL and the supplied "match"
-URL Pattern (see {{URLPATTERN}}{:section="test(input, baseURL) method"
-relative="#dom-urlpattern-test"}).
+string (see {{URLPATTERN}}{:section="match" relative="#url-pattern-match"}).
 
 ### Multiple matching dictionaries
 
