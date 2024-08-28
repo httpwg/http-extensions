@@ -152,13 +152,17 @@ exchanged using authentication parameters (see {{auth-params}}).
 
 When a client wishes to uses the Concealed HTTP authentication scheme with a
 request, it SHALL compute the authentication proof using a TLS keying material
-exporter {{!KEY-EXPORT=RFC5705}} with the following parameters:
+exporter with the following parameters:
 
 * the label is set to "EXPORTER-HTTP-Concealed-Authentication"
 
 * the context is set to the structure described in {{context}}
 
 * the exporter output length is set to 48 bytes (see {{output}})
+
+Note that TLS 1.3 keying material exporters are defined in {{Section 7.5 of
+TLS}}, while TLS 1.2 keying material exporters are defined in
+{{!KEY-EXPORT=RFC5705}}.
 
 ## Key Exporter Context {#context}
 
@@ -264,7 +268,7 @@ right values. This is described in {{fig-output}}:
 ~~~
 {: #fig-output title="Key Exporter Output Format"}
 
-The key exporter context contains the following fields:
+The key exporter output contains the following fields:
 
 Signature Input:
 
