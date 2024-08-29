@@ -617,13 +617,17 @@ Field Name:
 
 : Concealed-Auth-Export
 
-Template:
-
-: None
-
 Status:
 
 : permanent
+
+Structured Type:
+
+: Item
+
+Template:
+
+: None
 
 Reference:
 
