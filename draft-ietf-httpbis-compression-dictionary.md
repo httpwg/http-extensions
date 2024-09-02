@@ -230,9 +230,9 @@ used:
 1. Let URL be the URL of the dictionary request.
 1. Let PATTERN be a URL pattern created by running the steps to create a
 URL pattern by setting input=MATCH, and baseURL=URL (see
-{{URLPATTERN}}{:section="create" relative="#url-pattern-create"}).
+{{URLPATTERN}}{:section="\"create\"" relative="#url-pattern-create"}).
 1. If the result of running the "has regexp groups" steps for PATTERN returns
-TRUE then return FALSE (see {{URLPATTERN}}{:section="has regexp groups"
+TRUE then return FALSE (see {{URLPATTERN}}{:section="\"has regexp groups\""
 relative="#url-pattern-has-regexp-groups"}).
 1. Return TRUE.
 
@@ -253,7 +253,7 @@ Use-As-Dictionary: match="/d%C3%BCsseldorf"
 
 The "match-dest" value of the Use-As-Dictionary header is an Inner List of
 String values that provides a list of Fetch request destinations for the
-dictionary to match (see {{FETCH}}{:section="destination"
+dictionary to match (see {{FETCH}}{:section="\"destination\""
 relative="#concept-request-destination"}).
 
 An empty list for "match-dest" MUST match all destinations.
@@ -369,10 +369,10 @@ FALSE (see {{Section 4.3.1 of HTTP}}).
 1. Let MATCH be the value of "match" for the given dictionary.
 1. Let PATTERN be a URL pattern created by running the steps to create a
 URL pattern by setting input=MATCH, and baseURL=URL (see
-{{URLPATTERN}}{:section="create" relative="#url-pattern-create"}).
+{{URLPATTERN}}{:section="\"create\"" relative="#url-pattern-create"}).
 1. Return the result of running the "match" steps on PATTERN with input=URL
 which will check for a match between the request URL and the supplied "match"
-string (see {{URLPATTERN}}{:section="match" relative="#url-pattern-match"}).
+string (see {{URLPATTERN}}{:section="\"match\"" relative="#url-pattern-match"}).
 
 ### Multiple matching dictionaries
 
@@ -675,7 +675,7 @@ dictionary and the compressed response are fully readable by the client.
 
 In browser terms, that means that both are either same-origin to the context
 they are being fetched from or that the response is cross-origin and passes
-the CORS check (see {{FETCH}}{:section="CORS check" relative="#cors-check"}).
+the CORS check (see {{FETCH}}{:section="\"CORS check\"" relative="#cors-check"}).
 
 ### Server Responsibility
 
