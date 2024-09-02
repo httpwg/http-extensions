@@ -528,6 +528,7 @@ Dubois, Camille, camille.dubois@example.net
 <ul>
   <li>Describe role of Content-Location and Location fields (<eref target="https://github.com/httpwg/http-extensions/issues/1745"/>)</li>
   <li>Added Mike Bishop as author (<eref target="https://github.com/httpwg/http-extensions/issues/2837"/>)</li>
+  <li>Use "target URI" instead of "effective request URI" (<eref target="https://github.com/httpwg/http-extensions/issues/2883"/>)</li>
 </ul>
 </section>
 </section>
