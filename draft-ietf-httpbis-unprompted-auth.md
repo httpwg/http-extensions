@@ -140,8 +140,8 @@ This document uses the notation from {{Section 1.3 of !QUIC=RFC9000}}.
 
 This document defines the "Concealed" HTTP authentication scheme. It uses
 asymmetric cryptography. Clients possess a key ID and a public/private key
-pair, and origin servers maintain a mapping of authorized key IDs to their
-associated public keys.
+pair, and origin servers maintain a mapping of authorized key IDs to associated
+public keys.
 
 The client uses a TLS keying material exporter to generate data to be signed
 (see {{client}}) then sends the signature using the Authorization or
