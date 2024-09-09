@@ -337,8 +337,8 @@ concealed-integer-param-value =  %x31-39 1*4( DIGIT ) / "0"
 ## The k Parameter {#parameter-k}
 
 The REQUIRED "k" (key ID) Parameter is a byte sequence that identifies which
-key the client wishes to use to authenticate. This can, for example, be used to
-point to an entry in a server-side database of known keys.
+key the client wishes to use to authenticate. This is used by the backend to
+point to an entry in a server-side database of known keys, see {{backend}}.
 
 ## The a Parameter {#parameter-a}
 
