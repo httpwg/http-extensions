@@ -117,11 +117,11 @@ rely on an externally-defined mechanism by which keys are distributed. For
 example, a company might offer remote employee access to company services
 directly via its website using their employee credentials, or offer access to
 limited special capabilities for specific employees, while making discovering
-(or probing for) such capabilities difficult. Members of less well-defined
-communities might use more ephemeral keys to acquire access to geography- or
-capability-specific resources, as issued by an entity whose user base is larger
-than the available resources can support (by having that entity metering the
-availability of keys temporally or geographically).
+(or probing for) such capabilities difficult. As another example, members of
+less well-defined communities might use more ephemeral keys to acquire access
+to geography- or capability-specific resources, as issued by an entity whose
+user base is larger than the available resources can support (by having that
+entity metering the availability of keys temporally or geographically).
 
 While digital-signature-based HTTP authentication schemes already exist (e.g.,
 {{?HOBA=RFC7486}}), they rely on the origin explicitly sending a fresh
@@ -146,7 +146,11 @@ public keys.
 The client uses a TLS keying material exporter to generate data to be signed
 (see {{client}}) then sends the signature using the Authorization or
 Proxy-Authorization header field. The signature and additional information are
-exchanged using authentication parameters (see {{auth-params}}).
+exchanged using authentication parameters (see {{auth-params}}). Once the
+server receives these, it can check whether the signature validates against an
+entry in its database of known keys. The server can then use the validation
+result to influence its response to the client, for example by restricting
+access to certain resources.
 
 # Client Handling {#client}
 
@@ -645,10 +649,10 @@ Comments:
 
 The authors would like to thank many members of the IETF community, as this
 document is the fruit of many hallway conversations. In particular, the authors
-would like to thank {{{David Benjamin}}}, {{{Nick Harper}}}, {{{Dennis
-Jackson}}}, {{{Ilari Liusvaara}}}, {{{François Michel}}}, {{{Lucas Pardue}}},
-{{{Justin Richer}}}, {{{Ben Schwartz}}}, {{{Martin Thomson}}}, and
-{{{Chris A. Wood}}} for their reviews and contributions. The mechanism
-described in this document was originally part of the first iteration of MASQUE
-{{?MASQUE-ORIGINAL=I-D.schinazi-masque-00}}.
+would like to thank {{{David Benjamin}}}, {{{Reese Enghardt}}}, {{{Nick
+Harper}}}, {{{Dennis Jackson}}}, {{{Ilari Liusvaara}}}, {{{François Michel}}},
+{{{Lucas Pardue}}}, {{{Justin Richer}}}, {{{Ben Schwartz}}}, {{{Martin
+Thomson}}}, and {{{Chris A. Wood}}} for their reviews and contributions. The
+mechanism described in this document was originally part of the first iteration
+of MASQUE {{?MASQUE-ORIGINAL=I-D.schinazi-masque-00}}.
 
