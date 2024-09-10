@@ -116,7 +116,7 @@ Host: example.org
         <li>many implementations place limitations on query size that are not discoverable ahead of time,</li>
         <li>expressing some data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and</li>
         <li>encoding query parameters directly into the request URI effectively casts every possible combination of query inputs as distinct
-            resources (for more information, see <xref target="NO-VARY-SEARCH"/>).</li>
+            resources (though there is work to mitigate these effects <xref target="NO-VARY-SEARCH"/>).</li>
       </ul>
 
     <t>
