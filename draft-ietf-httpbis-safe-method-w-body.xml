@@ -109,8 +109,8 @@ Host: example.org
 </artwork>
 
     <t>
-      However, for a query with parameters that extend to several kilobytes or more of
-      data, encoding it in the request URI may not be the best option because
+      However, for a query with parameters that are complex or large in size,
+      encoding it in the request URI may not be the best option because
     </t>
       <ul>
         <li>many implementations place limitations on query size that are not discoverable ahead of time,</li>
