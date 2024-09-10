@@ -97,10 +97,10 @@ for an unauthenticated client to probe whether an origin serves resources that
 require authentication. It is possible for an origin to hide the fact that it
 requires authentication by not generating Unauthorized status codes, however
 that only works with non-cryptographic authentication schemes: cryptographic
-signatures require a fresh nonce to be signed. At the time of writing, there
+signatures require a fresh nonce to be signed. Prior to this document, there
 was no existing way for the origin to share such a nonce without exposing the
 fact that it serves resources that require authentication. This document
-proposes a new non-probeable cryptographic authentication scheme.
+defines a new non-probeable cryptographic authentication scheme.
 
 --- middle
 
@@ -144,17 +144,17 @@ pair, and origin servers maintain a mapping of authorized key IDs to associated
 public keys.
 
 The client uses a TLS keying material exporter to generate data to be signed
-(see {{client}}) then sends the signature using the Authorization or
-Proxy-Authorization header field. The signature and additional information are
-exchanged using authentication parameters (see {{auth-params}}). Once the
-server receives these, it can check whether the signature validates against an
-entry in its database of known keys. The server can then use the validation
-result to influence its response to the client, for example by restricting
-access to certain resources.
+(see {{client}}) then sends the signature using the Authorization (or
+Proxy-Authorization) header field (see {{Section 11 of HTTP}}). The signature
+and additional information are exchanged using authentication parameters (see
+{{auth-params}}). Once the server receives these, it can check whether the
+signature validates against an entry in its database of known keys. The server
+can then use the validation result to influence its response to the client, for
+example by restricting access to certain resources.
 
 # Client Handling {#client}
 
-When a client wishes to uses the Concealed HTTP authentication scheme with a
+When a client wishes to use the Concealed HTTP authentication scheme with a
 request, it SHALL compute the authentication proof using a TLS keying material
 exporter with the following parameters:
 
