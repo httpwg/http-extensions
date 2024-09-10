@@ -7,7 +7,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 <?rfc-ext xml2rfc-backend="202007"?>
-<?github-issue-label safe-method-w-body?>
+<?github-issue-label query-methody?>
 <!DOCTYPE rfc [
   <!ENTITY MAY "<bcp14>MAY</bcp14>">
   <!ENTITY MUST "<bcp14>MUST</bcp14>">
@@ -79,7 +79,7 @@
       <t>
         Working Group information can be found at <eref target="https://httpwg.org/"/>;
         source code and issues list for this draft can be found at
-        <eref target="https://github.com/httpwg/http-extensions/labels/safe-method-w-body"/>.
+        <eref target="https://github.com/httpwg/http-extensions/labels/query-method"/>.
       </t>
       <t>
         The changes in this draft are summarized in <xref target="changes.since.02"/>.
