@@ -433,13 +433,14 @@ send it. This document defines the "Concealed-Auth-Export" request header field
 for this purpose. The Concealed-Auth-Export header field's value is a
 Structured Field Byte Sequence (see {{Section 3.3.5 of
 !STRUCTURED-FIELDS=RFC8941}}) that contains the 48-byte key exporter output
-(see {{output}}), without any parameters. For example:
+(see {{output}}), without any parameters. Note that Structured Field Byte
+Sequences are encoded using the non-URL-safe variant of base64. For example:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Concealed-Auth-Export: :VGhpcyBleGFtcGxlIFRMUyBleHBvcn\
-  RlciBvdXRwdXQgaXMgNDggYnl0ZXMgI/+h:
+Concealed-Auth-Export: :VGhpc+BleGFtcGxlIFRMU/BleHBvcn\
+  Rlc+BvdXRwdXQ/aXMgNDggYnl0ZXMgI/+h:
 ~~~
 {: #fig-int-hdr-example title="Example Concealed-Auth-Export Header Field"}
 
