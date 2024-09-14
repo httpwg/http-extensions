@@ -82,7 +82,7 @@
         <eref target="https://github.com/httpwg/http-extensions/labels/query-method"/>.
       </t>
       <t>
-        The changes in this draft are summarized in <xref target="changes.since.02"/>.
+        The changes in this draft are summarized in <xref target="changes.since.05"/>.
       </t>
     </note>
 
@@ -530,6 +530,9 @@ Dubois, Camille, camille.dubois@example.net
   <li>Added Mike Bishop as author (<eref target="https://github.com/httpwg/http-extensions/issues/2837"/>)</li>
   <li>Use "target URI" instead of "effective request URI" (<eref target="https://github.com/httpwg/http-extensions/issues/2883"/>)</li>
 </ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-04" anchor="changes.since.05">
+<t>None yet.</t>
 </section>
 </section>
 
