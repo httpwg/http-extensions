@@ -630,10 +630,6 @@ Structured Type:
 
 : Item
 
-Template:
-
-: None
-
 Reference:
 
 : This document
