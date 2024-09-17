@@ -327,7 +327,7 @@ This specification defines the following authentication parameters.
 All of the byte sequences below are encoded using base64url (see {{Section 5 of
 !BASE64=RFC4648}}) without quotes and without padding. In other words, the
 values of these byte-sequence authentication parameters MUST NOT include any
-characters other then ASCII letters, digits, dash and underscore.
+characters other than ASCII letters, digits, dash and underscore.
 
 The integer below is encoded without a minus and without leading zeroes. In
 other words, the value of this integer authentication parameter MUST NOT
