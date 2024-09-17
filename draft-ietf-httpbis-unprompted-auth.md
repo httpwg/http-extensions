@@ -170,7 +170,8 @@ TLS}}, while TLS 1.2 keying material exporters are defined in
 
 ## Key Exporter Context {#context}
 
-The TLS key exporter context is described in {{fig-context}}:
+The TLS key exporter context is described in {{fig-context}}, using the
+notation from {{Section 1.3 of QUIC}}:
 
 ~~~
   Signature Algorithm (16),
@@ -264,7 +265,8 @@ scheme, its public key encoding needs to be defined in a corresponding document.
 The key exporter output is 48 bytes long. Of those, the first 32 bytes are part
 of the input to the signature and the next 16 bytes are sent alongside the
 signature. This allows the recipient to confirm that the exporter produces the
-right values. This is described in {{fig-output}}:
+right values. This is described in {{fig-output}}, using the notation from
+{{Section 1.3 of QUIC}}:
 
 ~~~
   Signature Input (256),
