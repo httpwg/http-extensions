@@ -289,8 +289,8 @@ Verification:
 ## Signature Computation {#computation}
 
 Once the Signature Input has been extracted from the key exporter output (see
-{{output}}), it is prefixed with static data before being signed to mitigate
-issues caused by key reuse. The signature is computed over the concatenation of:
+{{output}}), it is prefixed with static data before being signed. The signature
+is computed over the concatenation of:
 
 * A string that consists of octet 32 (0x20) repeated 64 times
 
@@ -312,8 +312,10 @@ covered by the signature (in hexadecimal format) would be:
 ~~~
 {: #fig-sig-example title="Example Content Covered by Signature"}
 
-This construction mirrors that of the TLS 1.3 CertificateVerify message
-defined in {{Section 4.4.3 of TLS}}.
+The purpose of this static prefix is to mitigate issues that could arise if
+authentication asymmetric keys were accidentally reused across protocols (even
+though this is forbidden, see {{security}}). This construction mirrors that of
+the TLS 1.3 CertificateVerify message defined in {{Section 4.4.3 of TLS}}.
 
 The resulting signature is then transmitted to the server using the `p`
 Parameter (see {{parameter-p}}).
@@ -562,9 +564,11 @@ context's memory, the attacker might also be able to access the corresponding
 key, so binding authentication to requests would not provide much benefit in
 practice.
 
-Key material used for the Concealed HTTP authentication scheme MUST NOT be
-reused in other protocols. Doing so can undermine the security guarantees of
-the authentication.
+Authentication asymmetric keys used for the Concealed HTTP authentication
+scheme MUST NOT be reused in other protocols. Even though we attempt to
+mitigate these issues by adding a static prefix to the signed data (see
+{{computation}}), reusing keys could undermine the security guarantees of the
+authentication.
 
 Origins offering this scheme can link requests that use the same key.
 However, requests are not linkable across origins if the keys used are specific
