@@ -433,7 +433,8 @@ Dubois, Camille, camille.dubois@example.net
       cases, as the URI is more likely to be logged than the request content. If
       a server creates a temporary resource to represent the results of a QUERY
       request (e.g., for use in the Location or Content-Location field), the URI of this
-      resource &SHOULD-NOT; expose the original request content in plaintext.
+      resource &SHOULD; be chosen such that it does not expose any sensitive
+      portions of the original request content.
     </t>
   </section>
 
