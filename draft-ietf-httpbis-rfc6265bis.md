@@ -208,18 +208,15 @@ informative:
     title: "Hypertext Transfer Protocol (HTTP) Field Name Registry"
     target: https://www.iana.org/assignments/http-fields/
   SERVICE-WORKERS:
-    target: http://www.w3.org/TR/service-workers/
+    target: https://www.w3.org/TR/service-workers/
     title: Service Workers
     author:
     -
-      ins: A. Russell
-      name: Alex Russell
-    -
-      ins: J. Song
-      name: Jungkee Song
-    -
       ins: J. Archibald
       name: Jake Archibald
+    -
+      ins: M. Kruisselbrink
+      name: Marijn Kruisselbrink
 
 --- abstract
 
