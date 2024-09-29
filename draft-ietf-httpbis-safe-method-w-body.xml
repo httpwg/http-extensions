@@ -99,8 +99,8 @@
 
     <t>
       Most often, this is desirable when the data conveyed in a request is
-      too voluminous to be encoded into the request's URI. For example, while
-      this is an common and interoperable query:
+      too voluminous to be encoded into the request's URI. For example,
+      this is a common and interoperable query:
     </t>
 
 <artwork type="http-message">
@@ -109,18 +109,15 @@ Host: example.org
 </artwork>
 
     <t>
-      if the query parameters extend to several kilobytes or more of
-      data it may not be, because many implementations place limits on their size. Often these limits are not
-      known or discoverable ahead of time, because a request can pass through many uncoordinated
-      systems. Additionally, expressing some data in the target URI is inefficient, because it
-      needs to be encoded to be a valid URI.
+      However, for a query with parameters that are complex or large in size,
+      encoding it in the request URI may not be the best option because
     </t>
-
-    <t>
-      Encoding query parameters directly into the request URI also effectively
-      casts every possible combination of query inputs as distinct
-      resources. Depending on the application, that may not be desirable.
-    </t>
+      <ul>
+        <li>many implementations place limitations on query size that are not discoverable ahead of time,</li>
+        <li>expressing some data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and</li>
+        <li>encoding query parameters directly into the request URI effectively casts every possible combination of query inputs as distinct
+            resources (though there is work to mitigate these effects <xref target="NO-VARY-SEARCH"/>).</li>
+      </ul>
 
     <t>
       As an alternative to using GET, many implementations make use of the
@@ -491,6 +488,22 @@ Dubois, Camille, camille.dubois@example.net
       </front>
       <seriesInfo name="STD" value="98"/>
       <seriesInfo name="RFC" value="9111"/>
+    </reference>
+  </references>
+  <references title="Informative References">
+    <reference anchor="NO-VARY-SEARCH"
+      target="https://datatracker.ietf.org/doc/html/draft-wicg-http-no-vary-search-01">
+      <front>
+        <title>No-Vary-Search</title>
+        <author initials="D." surname="Denicola" fullname="Domenic Denicola">
+          <organization>Google LLC</organization>
+        </author>
+        <author initials="J." surname="Roman" fullname="Jeremy Roman">
+          <organization>Google LLC</organization>
+        </author>
+        <date month="June" day="4" year="2024" />
+      </front>
+      <seriesInfo name="Internet-Draft" value="draft-wicg-http-no-vary-search-01" />
     </reference>
   </references>
 
