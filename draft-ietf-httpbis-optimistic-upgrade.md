@@ -85,15 +85,7 @@ If the server rejects the upgrade, the connection can continue to be used for HT
 
 # Impact on Existing Upgrade Tokens
 
-At the time of writing, there are four distinct Upgrade Tokens that are registered, associated with published documents, and not marked obsolete.  This section considers the impact of this document's considerations on each registered Upgrade Token.
-
-## "HTTP"
-
-{{!RFC9110}} is the source of the requirement quoted in {{background}}.  It also defines the "HTTP/\*.\*" family of Upgrade Tokens.  In HTTP/1.1, the only potentially applicable versions of this token are "0.9", "1.0", "1.1", and "2.0".
-
-Versions "0.9" and "1.0" are sufficiently syntactically similar to HTTP/1.1 that any such "downward upgrade" would be unlikely to result in the security concerns discussed here.  (An "upgrade" to version 1.1 has no effect at all.)
-
-A version number of "2.0" corresponds to HTTP/2.  Every HTTP/2 connection begins with a Client Connection Preface ({{Section 3.4 of ?RFC9113}}) that was selected to ensure that a compliant HTTP/1.1 server will not process further data on this connection.  This avoids security issues if an "HTTP/2.0" Upgrade Token is used optimistically.
+This section describes the impact of this document's considerations on some registered Upgrade Tokens that are believed to be in use at the time of writing.
 
 ## "TLS"
 
