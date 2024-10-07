@@ -97,10 +97,10 @@ for an unauthenticated client to probe whether an origin serves resources that
 require authentication. It is possible for an origin to hide the fact that it
 requires authentication by not generating Unauthorized status codes, however
 that only works with non-cryptographic authentication schemes: cryptographic
-signatures require a fresh nonce to be signed. At the time of writing, there
+signatures require a fresh nonce to be signed. Prior to this document, there
 was no existing way for the origin to share such a nonce without exposing the
 fact that it serves resources that require authentication. This document
-proposes a new non-probeable cryptographic authentication scheme.
+defines a new non-probeable cryptographic authentication scheme.
 
 --- middle
 
@@ -117,11 +117,11 @@ rely on an externally-defined mechanism by which keys are distributed. For
 example, a company might offer remote employee access to company services
 directly via its website using their employee credentials, or offer access to
 limited special capabilities for specific employees, while making discovering
-(or probing for) such capabilities difficult. Members of less well-defined
-communities might use more ephemeral keys to acquire access to geography- or
-capability-specific resources, as issued by an entity whose user base is larger
-than the available resources can support (by having that entity metering the
-availability of keys temporally or geographically).
+(or probing for) such capabilities difficult. As another example, members of
+less well-defined communities might use more ephemeral keys to acquire access
+to geography- or capability-specific resources, as issued by an entity whose
+user base is larger than the available resources can support (by having that
+entity metering the availability of keys temporally or geographically).
 
 While digital-signature-based HTTP authentication schemes already exist (e.g.,
 {{?HOBA=RFC7486}}), they rely on the origin explicitly sending a fresh
@@ -140,19 +140,23 @@ This document uses the notation from {{Section 1.3 of !QUIC=RFC9000}}.
 
 This document defines the "Concealed" HTTP authentication scheme. It uses
 asymmetric cryptography. Clients possess a key ID and a public/private key
-pair, and origin servers maintain a mapping of authorized key IDs to their
-associated public keys.
+pair, and origin servers maintain a mapping of authorized key IDs to associated
+public keys.
 
 The client uses a TLS keying material exporter to generate data to be signed
-(see {{client}}) then sends the signature using the Authorization or
-Proxy-Authorization header field. The signature and additional information are
-exchanged using authentication parameters (see {{auth-params}}).
+(see {{client}}) then sends the signature using the Authorization (or
+Proxy-Authorization) header field (see {{Section 11 of HTTP}}). The signature
+and additional information are exchanged using authentication parameters (see
+{{auth-params}}). Once the server receives these, it can check whether the
+signature validates against an entry in its database of known keys. The server
+can then use the validation result to influence its response to the client, for
+example by restricting access to certain resources.
 
 # Client Handling {#client}
 
-When a client wishes to uses the Concealed HTTP authentication scheme with a
+When a client wishes to use the Concealed HTTP authentication scheme with a
 request, it SHALL compute the authentication proof using a TLS keying material
-exporter {{!KEY-EXPORT=RFC5705}} with the following parameters:
+exporter with the following parameters:
 
 * the label is set to "EXPORTER-HTTP-Concealed-Authentication"
 
@@ -160,9 +164,14 @@ exporter {{!KEY-EXPORT=RFC5705}} with the following parameters:
 
 * the exporter output length is set to 48 bytes (see {{output}})
 
+Note that TLS 1.3 keying material exporters are defined in {{Section 7.5 of
+TLS}}, while TLS 1.2 keying material exporters are defined in
+{{!KEY-EXPORT=RFC5705}}.
+
 ## Key Exporter Context {#context}
 
-The TLS key exporter context is described in {{fig-context}}:
+The TLS key exporter context is described in {{fig-context}}, using the
+notation from {{Section 1.3 of QUIC}}:
 
 ~~~
   Signature Algorithm (16),
@@ -256,7 +265,8 @@ scheme, its public key encoding needs to be defined in a corresponding document.
 The key exporter output is 48 bytes long. Of those, the first 32 bytes are part
 of the input to the signature and the next 16 bytes are sent alongside the
 signature. This allows the recipient to confirm that the exporter produces the
-right values. This is described in {{fig-output}}:
+right values. This is described in {{fig-output}}, using the notation from
+{{Section 1.3 of QUIC}}:
 
 ~~~
   Signature Input (256),
@@ -264,7 +274,7 @@ right values. This is described in {{fig-output}}:
 ~~~
 {: #fig-output title="Key Exporter Output Format"}
 
-The key exporter context contains the following fields:
+The key exporter output contains the following fields:
 
 Signature Input:
 
@@ -279,8 +289,8 @@ Verification:
 ## Signature Computation {#computation}
 
 Once the Signature Input has been extracted from the key exporter output (see
-{{output}}), it is prefixed with static data before being signed to mitigate
-issues caused by key reuse. The signature is computed over the concatenation of:
+{{output}}), it is prefixed with static data before being signed. The signature
+is computed over the concatenation of:
 
 * A string that consists of octet 32 (0x20) repeated 64 times
 
@@ -302,8 +312,10 @@ covered by the signature (in hexadecimal format) would be:
 ~~~
 {: #fig-sig-example title="Example Content Covered by Signature"}
 
-This construction mirrors that of the TLS 1.3 CertificateVerify message
-defined in {{Section 4.4.3 of TLS}}.
+The purpose of this static prefix is to mitigate issues that could arise if
+authentication asymmetric keys were accidentally reused across protocols (even
+though this is forbidden, see {{security}}). This construction mirrors that of
+the TLS 1.3 CertificateVerify message defined in {{Section 4.4.3 of TLS}}.
 
 The resulting signature is then transmitted to the server using the `p`
 Parameter (see {{parameter-p}}).
@@ -315,7 +327,7 @@ This specification defines the following authentication parameters.
 All of the byte sequences below are encoded using base64url (see {{Section 5 of
 !BASE64=RFC4648}}) without quotes and without padding. In other words, the
 values of these byte-sequence authentication parameters MUST NOT include any
-characters other then ASCII letters, digits, dash and underscore.
+characters other than ASCII letters, digits, dash and underscore.
 
 The integer below is encoded without a minus and without leading zeroes. In
 other words, the value of this integer authentication parameter MUST NOT
@@ -333,8 +345,8 @@ concealed-integer-param-value =  %x31-39 1*4( DIGIT ) / "0"
 ## The k Parameter {#parameter-k}
 
 The REQUIRED "k" (key ID) Parameter is a byte sequence that identifies which
-key the client wishes to use to authenticate. This can, for example, be used to
-point to an entry in a server-side database of known keys.
+key the client wishes to use to authenticate. This is used by the backend to
+point to an entry in a server-side database of known keys, see {{backend}}.
 
 ## The a Parameter {#parameter-a}
 
@@ -425,13 +437,14 @@ send it. This document defines the "Concealed-Auth-Export" request header field
 for this purpose. The Concealed-Auth-Export header field's value is a
 Structured Field Byte Sequence (see {{Section 3.3.5 of
 !STRUCTURED-FIELDS=RFC8941}}) that contains the 48-byte key exporter output
-(see {{output}}), without any parameters. For example:
+(see {{output}}), without any parameters. Note that Structured Field Byte
+Sequences are encoded using the non-URL-safe variant of base64. For example:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Concealed-Auth-Export: :VGhpcyBleGFtcGxlIFRMUyBleHBvcn\
-  RlciBvdXRwdXQgaXMgNDggYnl0ZXMgI/+h:
+Concealed-Auth-Export: :VGhpc+BleGFtcGxlIFRMU/BleHBvcn\
+  Rlc+BvdXRwdXQ/aXMgNDggYnl0ZXMgI/+h:
 ~~~
 {: #fig-int-hdr-example title="Example Concealed-Auth-Export Header Field"}
 
@@ -551,9 +564,11 @@ context's memory, the attacker might also be able to access the corresponding
 key, so binding authentication to requests would not provide much benefit in
 practice.
 
-Key material used for the Concealed HTTP authentication scheme MUST NOT be
-reused in other protocols. Doing so can undermine the security guarantees of
-the authentication.
+Authentication asymmetric keys used for the Concealed HTTP authentication
+scheme MUST NOT be reused in other protocols. Even though we attempt to
+mitigate these issues by adding a static prefix to the signed data (see
+{{computation}}), reusing keys could undermine the security guarantees of the
+authentication.
 
 Origins offering this scheme can link requests that use the same key.
 However, requests are not linkable across origins if the keys used are specific
@@ -613,13 +628,13 @@ Field Name:
 
 : Concealed-Auth-Export
 
-Template:
-
-: None
-
 Status:
 
 : permanent
+
+Structured Type:
+
+: Item
 
 Reference:
 
@@ -637,10 +652,10 @@ Comments:
 
 The authors would like to thank many members of the IETF community, as this
 document is the fruit of many hallway conversations. In particular, the authors
-would like to thank {{{David Benjamin}}}, {{{Nick Harper}}}, {{{Dennis
-Jackson}}}, {{{Ilari Liusvaara}}}, {{{François Michel}}}, {{{Lucas Pardue}}},
-{{{Justin Richer}}}, {{{Ben Schwartz}}}, {{{Martin Thomson}}}, and
-{{{Chris A. Wood}}} for their reviews and contributions. The mechanism
-described in this document was originally part of the first iteration of MASQUE
-{{?MASQUE-ORIGINAL=I-D.schinazi-masque-00}}.
+would like to thank {{{David Benjamin}}}, {{{Reese Enghardt}}}, {{{Nick
+Harper}}}, {{{Dennis Jackson}}}, {{{Ilari Liusvaara}}}, {{{François Michel}}},
+{{{Lucas Pardue}}}, {{{Justin Richer}}}, {{{Ben Schwartz}}}, {{{Martin
+Thomson}}}, and {{{Chris A. Wood}}} for their reviews and contributions. The
+mechanism described in this document was originally part of the first iteration
+of MASQUE {{?MASQUE-ORIGINAL=I-D.schinazi-masque-00}}.
 
