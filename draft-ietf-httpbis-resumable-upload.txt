@@ -96,14 +96,15 @@ Table of Contents
      10.2.  Completed Upload
    11. Offset values
    12. Redirection
-   13. Transfer and Content Codings
-   14. Integrity Digests
-   15. Subsequent Resources
-   16. Security Considerations
-   17. IANA Considerations
-   18. References
-     18.1.  Normative References
-     18.2.  Informative References
+   13. Content Codings
+   14. Transfer Codings
+   15. Integrity Digests
+   16. Subsequent Resources
+   17. Security Considerations
+   18. IANA Considerations
+   19. References
+     19.1.  Normative References
+     19.2.  Informative References
    Appendix A.  Informational Response
    Appendix B.  Feature Detection
    Appendix C.  Upload Metadata
@@ -892,20 +893,30 @@ Table of Contents
    (Section 5) request, it MAY apply the redirection directly in an
    immediate subsequent upload append (Section 6).
 
-13.  Transfer and Content Codings
+13.  Content Codings
 
-   A message might have a content coding, indicated by the Content-
-   Encoding header field, and/or a transfer coding, indicated by the
-   Transfer-Encoding header field (Section 6.1 of [HTTP/1.1]), applied,
-   which modify the representation of uploaded data in a message.  For
-   correct interoperability, the client and server must share the same
-   logic when counting bytes for the upload offset.  From the client's
-   perspective, the offset is counted after content coding but before
-   transfer coding is applied.  From the server's perspective, the
-   offset is counted after the content's transfer coding is reversed but
-   before the content coding is reversed.
+   Since the codings listed in Content-Encoding are a characteristic of
+   the representation (see Section 8.4 of [HTTP]), both the client and
+   the server always compute the upload offset on the content coded data
+   (that is, the representation data).  Moreover, the content codings
+   are retained throughout the entire upload, meaning thats that the
+   server is not required to decode the representation data to support
+   resumable uploads.  See Appendix A of [DIGEST-FIELDS] for more
+   information.
 
-14.  Integrity Digests
+14.  Transfer Codings
+
+   Unlike Content-Encoding (see Section 8.4.1 of [HTTP]), Transfer-
+   Encoding (see Section 6.1 of [HTTP/1.1]) is a property of the
+   message, not of the representation.  Moreover. transfer codings can
+   be applied in transit (e.g., by proxies).  This means that a client
+   does not have to consider the transfer codings to compute the upload
+   offset, while a server is responsible for transfer decoding the
+   message before computing the upload offset.  Please note that the
+   Content-Length header field cannot be used in conjunction with the
+   Transfer-Encoding header field.
+
+15.  Integrity Digests
 
    The integrity of an entire upload or individual upload requests can
    be verifying using digests from [DIGEST-FIELDS].
@@ -928,7 +939,7 @@ Table of Contents
    failed and not append the content to the upload resource.  This way,
    the integrity of an individual request can be protected.
 
-15.  Subsequent Resources
+16.  Subsequent Resources
 
    The server might process the uploaded data and make its results
    available in another resource during or after the upload.  This
@@ -943,7 +954,7 @@ Table of Contents
    subsequent resource could allow the client to fetch information
    extracted from the uploaded data.
 
-16.  Security Considerations
+17.  Security Considerations
 
    The upload resource URL is the identifier used for modifying the
    upload.  Without further protection of this URL, an attacker may
@@ -977,7 +988,7 @@ Table of Contents
    allowed to have, and restricting the length of time an upload
    resource can exist.
 
-17.  IANA Considerations
+18.  IANA Considerations
 
    IANA is asked to register the following entries in the "Hypertext
    Transfer Protocol (HTTP) Field Name Registry":
@@ -1016,7 +1027,7 @@ Table of Contents
 
    Encoding considerations:  binary
 
-   Security considerations:  see Section 16 of this document
+   Security considerations:  see Section 17 of this document
 
    Interoperability considerations:  N/A
 
@@ -1075,9 +1086,9 @@ Table of Contents
 
       This document
 
-18.  References
+19.  References
 
-18.1.  Normative References
+19.1.  Normative References
 
    [CACHING]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Caching", STD 98, RFC 9111,
@@ -1125,7 +1136,7 @@ Table of Contents
               HTTP", RFC 8941, DOI 10.17487/RFC8941, February 2021,
               <https://www.rfc-editor.org/rfc/rfc8941>.
 
-18.2.  Informative References
+19.2.  Informative References
 
    [SLOWLORIS]
               "RSnake" Hansen, R., "Welcome to Slowloris - the low
