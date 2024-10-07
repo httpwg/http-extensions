@@ -512,6 +512,34 @@ If the client knows the integrity digest of the content from an upload creation 
 
 The server might process the uploaded data and make its results available in another resource during or after the upload. This subsequent resource is different from the upload resource created by the upload creation request ({{upload-creation}}). The subsequent resource does not handle the upload process itself, but instead facilitates further interaction with the uploaded data. The server MAY indicate the location of this subsequent resource by including the `Content-Location` header field in the informational or final responses generated while creating ({{upload-creation}}), appending to ({{upload-appending}}), or retrieving the offset ({{offset-retrieving}}) of an upload. For example, a subsequent resource could allow the client to fetch information extracted from the uploaded data.
 
+# Upload Strategies
+
+The definition of the upload creation request ({{upload-creation}}) provides the client with flexibility to choose whether the file is fully or partially transferred in the first request, or if no file data is included at all. The decision which behavior is best largely depends on the client's capabilities, its intention to avoid data transmission, and its knowledge about the server's support for resumable uploads.
+
+The following subsections describe three different, typical upload strategies that are suited for common environments. Note that these modes are never explicitly communicated to the server and clients are not required to stick to one strategy, but can mix and adapt them to their needs.
+
+## Optimistic Upload Creation
+
+An "optimistic upload creation" can be used if the client knows or assumes with a high degree of confidence that the server supports resumable uploads under the target URI and that the client is capable of handling and processing interim responses. The upload creation request then includes the full file because the client assumes that the file will be transferred without interruptions.
+
+The benefit of this method is that if the upload creation request succeeds, the file was transferred in a single request avoiding additional round trips. A drawback is that the client may be restricted in its ability to resume that upload. If the upload was interrupted before the client received a `104 (Upload Resumption Supported)` intermediate response with the upload URL, the client cannot resume that upload due to the missing upload URL. The intermediate response might not be received if the interruption happens too early in the message exchange, the server does not support sending the `104 (Upload Resumption Supported)` intermediate response, or an intermediary dropped the intermediate response. The client must either ultimately fail the entire upload or retry the upload creation request if this is allowed by the application at the expense of transferring file data again.
+
+The "optimistic upload creation" attempts to upload the file in one request at the potential expense of either not finishing the upload at all or re-transmitting file data again.
+
+## Careful Upload Creation
+
+With a "careful upload creation" the client sends an empty upload creation request without including any file data. Upon successful response receival, the client can use the included upload URL to transmit the file data ({{upload-appending}}) and resume the upload at any stage if an interruption occurs. The retransmission of file data or the ultimate upload failure that can happen with an "optimistic upload creation" is therefore avoided at the expense of an additional request that does not carry file data.
+
+This approach best suited if the client cannot receive intermediate response, e.g. due to a limitation in the provided HTTP interface, or if large files are transferred where the cost of the additional request is miniscule compared to the effort of transferring the large file itself.
+
+## Upgrading To Resumable Uploads
+
+The approach specified in this document allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the file is transferred in a single request, usually `POST` or `PUT`, without any ability to resume from interruptions. The client can offer the server to upgrade such an upload to a resumable upload. If supported by the server, the file transfer benefits from the gained ability to resume. Otherwise, the transfer falls back to a non-resumable upload without additional cost.
+
+To perform an upgrade, the client adds the `Upload-Complete: ?1` header field to the original request, which attempts to transmit the entire file in one request. A server that supports resumable uploads at the target URI, can create a resumable upload resource and send its upload URL in a `104 (Upload Resumption Supported)` intermediate response for the client to resume the upload after interruptions. On the other hand, if the server does not support resumable uploads or does not want to upgrade to a resumable upload for this request, it can ignore the `Upload-Complete: ?1` header and treat the request as a non-resumable upload, where the client cannot recover from interruptions.
+
+This upgrade can also be performed transparently by the client without the user taking an active role. When a user asks the client to send a non-resumable request, the client can add the `Upload-Complete: ?1` and handle potential interruptions and resumptions under the hood without involving the user. If the client has to resume that upload, the response to the last upload appending request is considered the response for the entire file upload and should be presented to the user.
+
 # Security Considerations
 
 The upload resource URL is the identifier used for modifying the upload. Without further protection of this URL, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can access the upload resource. In addition, the upload resource URL SHOULD be generated in such a way that makes it hard to be guessed by unauthorized clients.
