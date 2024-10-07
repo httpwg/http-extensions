@@ -461,14 +461,13 @@ Table of Contents
    in the request that starts an upload.  Servers MAY interpret this
    metadata or MAY ignore it.  The Content-Type header field
    (Section 8.3 of [HTTP]) can be used to indicate the media type of the
-   file.  The content coding of the representation is specified using
-   the Content-Encoding header field and is retained throughout the
-   entire upload.  When resuming an interrupted upload, the same content
-   coding is used for appending to the upload, producing a
-   representation of the upload resource with one consistent content
-   coding.  The Content-Disposition header field ([RFC6266]) can be used
-   to transmit a filename; if included, the parameters SHOULD be either
-   filename, filename* or boundary.
+   file.  The applied content codings are specified using the Content-
+   Encoding header field and are retained throughout the entire upload.
+   When resuming an interrupted upload, the same content codings are
+   used for appending to the upload, producing a representation of the
+   upload resource.  The Content-Disposition header field ([RFC6266])
+   can be used to transmit a filename; if included, the parameters
+   SHOULD be either filename, filename* or boundary.
 
 4.1.  Feature Detection
 
@@ -607,7 +606,7 @@ Table of Contents
    The server SHOULD respect representation metadata received during
    creation (Section 4).  An upload append request continues uploading
    the same representation as used in the upload creation (Section 4)
-   and thus uses the same content coding, if one was applied.  For
+   and thus uses the same content codings, if they were applied.  For
    example, if the initial upload creation included the Content-
    Encoding: gzip header field, the upload append request resumes the
    transfer of the gzipped data without indicating again that the gzip
