@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Secondary Certificate Authentication of HTTP Servers</title>
+<meta content="Eric Gorbaty" name="author">
+<meta content="Mike Bishop" name="author">
+<meta content="
+       This document defines a way for HTTP/2 and HTTP/3 servers to send additional
+certificate-based credentials after a TLS connection is established, based
+on TLS Exported Authenticators. 
+    " name="description">
+<meta content="xml2rfc 3.23.2" name="generator">
+<meta content="exported authenticators" name="keyword">
+<meta content="masque" name="keyword">
+<meta content="draft-ietf-httpbis-secondary-server-certs-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.23.2
+    Python 3.12.6
+    ConfigArgParse 1.7
+    google-i18n-address 3.1.1
+    intervaltree 3.1.0
+    Jinja2 3.1.4
+    lxml 4.9.4
+    platformdirs 4.3.6
+    pycountry 22.3.5
+    PyYAML 6.0.1
+    requests 2.32.3
+    setuptools 70.3.0
+    wcwidth 0.2.13
+-->
+<link href="draft-ietf-httpbis-secondary-server-certs.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Cabin Condensed", sans-serif;
+  font-weight: 600;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+}
+:is(ol, ul) :is(ol, ul) {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  line-height: 1;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+}
+dl.olPercent {
+  --indent: 5ch;
+}
+dl > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+dl.olPercent > dt {
+  min-width: calc(var(--indent) - 2ch);
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:first-child, .break:first-child + *) {
+  margin-top: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:last-child) {
+  margin-bottom: 0;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    overflow-x: auto;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+}
+a.pilcrow[href] { color: var(--pilcrow-weak); }
+a.pilcrow[href]:hover { text-decoration: none; }
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+}
+#identifiers dt {
+  width: var(--identifier-width);
+  min-width: var(--identifier-width);
+  clear: left;
+  float: left;
+  text-align: right;
+  margin-right: 1ch;
+}
+#identifiers dd {
+  margin: 0;
+  margin-left: calc(1em + var(--identifier-width)) !important;
+  min-width: 5em;
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+#toc nav ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+#toc nav li {
+  line-height: 1.3em;
+  margin: 2px 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+#toc a.xref {
+  white-space: normal;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 10ch;
+  margin-right: 1.5ch;
+}
+.references dt:target::before {
+  content: "⇒";
+  width: 15px;
+  margin: 0 10px 0 -25px;
+}
+.references dd {
+  margin-left: 12ch !important;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc.active {
+      opacity: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 8px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active nav {
+    display: block;
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin-top: 2px;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  #toc nav > ul  {
+    margin-bottom: 2em;
+  }
+  #toc ul {
+    margin: 0 0 0 4px;
+    font-size: var(--small-font-size);
+  }
+  #toc ul :is(p, li) {
+    margin: 2px 0;
+    line-height: 22px;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+  .toplink {
+    display: none;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Changes introduced to fix issues found during implementation */
+
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin: 8px 0.5em 0;
+}
+
+/* Provide styling for table cell text alignment */
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 20em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">HTTP Server Secondary Cert Auth</td>
+<td class="right">October 2024</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Gorbaty &amp; Bishop</td>
+<td class="center">Expires 11 April 2025</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">HTTP</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-ietf-httpbis-secondary-server-certs-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2024-10-08" class="published">8 October 2024</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Standards Track</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2025-04-11">11 April 2025</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">E. Gorbaty, <span class="editor">Ed.</span>
+</div>
+<div class="org">Apple</div>
+</div>
+<div class="author">
+      <div class="author-name">M. Bishop, <span class="editor">Ed.</span>
+</div>
+<div class="org">Akamai</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Secondary Certificate Authentication of HTTP Servers</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document defines a way for HTTP/2 and HTTP/3 servers to send additional
+certificate-based credentials after a TLS connection is established, based
+on TLS Exported Authenticators.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        The latest revision of this draft can be found at <span><a href="https://httpwg.org/http-extensions/draft-ietf-httpbis-secondary-server-certs.html">https://httpwg.org/http-extensions/draft-ietf-httpbis-secondary-server-certs.html</a></span>.
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-ietf-httpbis-secondary-server-certs/">https://datatracker.ietf.org/doc/draft-ietf-httpbis-secondary-server-certs/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        HTTP Working Group mailing list (<span><a href="mailto:ietf-http-wg@w3.org">mailto:ietf-http-wg@w3.org</a></span>),
+        which is archived at <span><a href="https://lists.w3.org/Archives/Public/ietf-http-wg/">https://lists.w3.org/Archives/Public/ietf-http-wg/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/httpwg/http-extensions/labels/secondary-server-certs">https://github.com/httpwg/http-extensions/labels/secondary-server-certs</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 11 April 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2024 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-server-certificate-authenti" class="internal xref">Server Certificate Authentication</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
+                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-tls-exported-authenticators" class="internal xref">TLS Exported Authenticators</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.3">
+                <p id="section-toc.1-1.1.2.3.1" class="keepWithNext"><a href="#section-1.3" class="auto internal xref">1.3</a>.  <a href="#name-http-layer-certificate-auth" class="internal xref">HTTP-Layer Certificate Authentication</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-discovering-additional-cert" class="internal xref">Discovering Additional Certificates at the HTTP Layer</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-indicating-support-for-http" class="internal xref">Indicating Support for HTTP-Layer Certificate Authentication</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-making-certificates-availab" class="internal xref">Making Certificates Available</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-settings_http_server_cert_a" class="internal xref">SETTINGS_HTTP_SERVER_CERT_AUTH</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-the-settings_http_server_ce" class="internal xref">The SETTINGS_HTTP_SERVER_CERT_AUTH HTTP/2 SETTINGS Parameter{#http2-setting}</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-the-settings_http_server_cer" class="internal xref">The SETTINGS_HTTP_SERVER_CERT_AUTH HTTP/3 SETTINGS Parameter{#http3-setting}</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-certificate-frame" class="internal xref">CERTIFICATE frame</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-http-2-certificate-frame" class="internal xref">HTTP/2 CERTIFICATE frame</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-http-3-certificate-frame" class="internal xref">HTTP/3 CERTIFICATE frame</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-exported-authenticator-char" class="internal xref">Exported Authenticator Characteristics</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-indicating-failures-during-" class="internal xref">Indicating Failures During HTTP-Layer Certificate Authentication</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-misbehavior" class="internal xref">Misbehavior</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-invalid-certificates" class="internal xref">Invalid Certificates</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-impersonation" class="internal xref">Impersonation</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-fingerprinting" class="internal xref">Fingerprinting</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-persistence-of-service" class="internal xref">Persistence of Service</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
+                <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="auto internal xref">7.4</a>.  <a href="#name-confusion-about-state" class="internal xref">Confusion About State</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-frame-types" class="internal xref">Frame Types</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
+                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-settings-parameters" class="internal xref">Settings Parameters</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">HTTP <span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span> clients need to know that the content they receive on a
+connection comes from the origin from which they intended to retrieve it. The
+traditional form of server authentication in HTTP has been in the form of a
+single X.509 certificate provided during the TLS <span>[<a href="#TLS13" class="cite xref">TLS13</a>]</span> handshake.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">TLS supports one server and one client certificate on a connection. These
+certificates may contain multiple identities, but only one certificate may be
+provided.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">Many HTTP servers host content from several origins. HTTP/2 <span>[<a href="#H2" class="cite xref">H2</a>]</span> and
+HTTP/3 <span>[<a href="#H3" class="cite xref">H3</a>]</span> permit clients to reuse an existing HTTP connection to a
+server provided that the secondary origin is also in the certificate provided
+during the TLS handshake. In many cases, servers choose to maintain separate
+certificates for different origins but still desire the benefits of a shared
+HTTP connection. This document defines a capability for servers to use and
+to authenticate with those seperate certificates over a shared connection.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">The ability to maintain seperate certificates for different origins can also
+allow proxies that cache content from secondary origins to communicate to
+clients that they can service some of those origins directly, allowing the
+proxy to behave as a TLS-terminating reverse proxy for those origins instead of
+establishing a TLS encrypted tunnel through the proxy.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<div id="server-certificate-authentication">
+<section id="section-1.1">
+        <h3 id="name-server-certificate-authenti">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-server-certificate-authenti" class="section-name selfRef">Server Certificate Authentication</a>
+        </h3>
+<p id="section-1.1-1"><span><a href="https://rfc-editor.org/rfc/rfc9113#section-9.1.1" class="relref">Section 9.1.1</a> of [<a href="#H2" class="cite xref">H2</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc9114#section-3.3" class="relref">Section 3.3</a> of [<a href="#H3" class="cite xref">H3</a>]</span> describe how connections may
+be used to make requests from multiple origins as long as the server is
+authoritative for both. A server is considered authoritative for an origin if
+DNS resolves the origin to the IP address of the server and (for TLS) if the
+certificate presented by the server contains the origin in the Subject
+Alternative Names field.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-2"><span>[<a href="#ALTSVC" class="cite xref">ALTSVC</a>]</span> enables a step of abstraction from the DNS resolution. If
+both hosts have provided an Alternative Service at hostnames which resolve to
+the IP address of the server, they are considered authoritative just as if DNS
+resolved the origin itself to that address. However, the server's one TLS
+certificate is still required to contain the name of each origin in question.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+<p id="section-1.1-3"><span>[<a href="#ORIGIN" class="cite xref">ORIGIN</a>]</span> relaxes the requirement to perform the DNS lookup if already
+connected to a server with an appropriate certificate which claims support for
+a particular origin.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
+<p id="section-1.1-4">Servers which host many origins often would prefer to have separate certificates
+for some sets of origins. This may be for ease of certificate management
+(the ability to separately revoke or renew them), due to different sources of
+certificates (a CDN acting on behalf of multiple origins), or other factors
+which might drive this administrative decision. Clients connecting to such
+origins cannot currently reuse connections, even if both client and server
+would prefer to do so.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.1-5">Because the TLS SNI extension is exchanged in the clear, clients might also
+prefer to retrieve certificates inside the encrypted context. When this
+information is sensitive, it might be advantageous to request a general-purpose
+certificate or anonymous ciphersuite at the TLS layer, while acquiring the
+"real" certificate in HTTP after the connection is established.<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="tls-exported-authenticators">
+<section id="section-1.2">
+        <h3 id="name-tls-exported-authenticators">
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-tls-exported-authenticators" class="section-name selfRef">TLS Exported Authenticators</a>
+        </h3>
+<p id="section-1.2-1">TLS Exported Authenticators <span>[<a href="#EXPORTED-AUTH" class="cite xref">EXPORTED-AUTH</a>]</span> are structured messages
+that can be exported by either party of a TLS connection and validated by the
+other party. Given an established TLS connection, an authenticator message can
+be constructed proving possession of a certificate and a corresponding private
+key. The mechanisms that this document defines are primarily focused on the
+server's ability to generate TLS Exported Authenticators.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2-2">Each Authenticator is computed using a Handshake Context and Finished MAC Key
+derived from the TLS session. The Handshake Context is identical for both
+parties of the TLS connection, while the Finished MAC Key is dependent on
+whether the Authenticator is created by the client or the server.<a href="#section-1.2-2" class="pilcrow">¶</a></p>
+<p id="section-1.2-3">Successfully verified Authenticators result in certificate chains, with verified
+possession of the corresponding private key, which can be supplied into a
+collection of available certificates. Likewise, descriptions of desired
+certificates can also be supplied into these collections.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="http-layer-certificate-authentication">
+<section id="section-1.3">
+        <h3 id="name-http-layer-certificate-auth">
+<a href="#section-1.3" class="section-number selfRef">1.3. </a><a href="#name-http-layer-certificate-auth" class="section-name selfRef">HTTP-Layer Certificate Authentication</a>
+        </h3>
+<p id="section-1.3-1">This document defines HTTP/2 and HTTP/3 <code>CERTIFICATE</code> frames (<a href="#certs-http" class="auto internal xref">Section 5</a>) to
+carry the relevant certificate messages, enabling certificate-based
+authentication of servers independent of TLS version. This mechanism can be
+implemented at the HTTP layer without breaking the existing interface between
+HTTP and applications above it.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
+<p id="section-1.3-2">TLS Exported Authenticators <span>[<a href="#EXPORTED-AUTH" class="cite xref">EXPORTED-AUTH</a>]</span> allow the opportunity for an
+HTTP/2 and HTTP/3 servers to send certificate frames which can be used to prove
+the servers authenticity for multiple origins.<a href="#section-1.3-2" class="pilcrow">¶</a></p>
+<p id="section-1.3-3">This document additionally defines SETTINGS parameters for HTTP/2 and HTTP/3
+(<a href="#settings" class="auto internal xref">Section 4</a>) that allow the client and server to indicate support for
+HTTP-Layer certificate authentication.<a href="#section-1.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="conventions-and-definitions">
+<section id="section-2">
+      <h2 id="name-conventions-and-definitions">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+      </h2>
+<p id="section-2-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="discovery">
+<section id="section-3">
+      <h2 id="name-discovering-additional-cert">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-discovering-additional-cert" class="section-name selfRef">Discovering Additional Certificates at the HTTP Layer</a>
+      </h2>
+<p id="section-3-1">A certificate chain with proof of possession of the private key corresponding to
+the end-entity certificate is sent as a sequence of <code>CERTIFICATE</code> frames (see
+<a href="#http2-cert" class="auto internal xref">Section 5.1</a>, <a href="#http3-cert" class="auto internal xref">Section 5.2</a>) to the client. Once the holder of a certificate
+has sent the chain and proof, this certificate chain is cached by the recipient
+and available for future use.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<div id="settings-usage">
+<section id="section-3.1">
+        <h3 id="name-indicating-support-for-http">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-indicating-support-for-http" class="section-name selfRef">Indicating Support for HTTP-Layer Certificate Authentication</a>
+        </h3>
+<p id="section-3.1-1">The <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> parameters for HTTP/2 and HTTP/3 are
+defined in <a href="#settings" class="auto internal xref">Section 4</a> so that clients and servers can indicate support for
+secondary certificate authentication of servers.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">HTTP/2 and HTTP/3 endpoints who wish to indicate support for HTTP-Layer
+certificate authentication <span class="bcp14">MUST</span> send a <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code>
+parameter set to "1" in their SETTINGS frame. Endpoints <span class="bcp14">MUST NOT</span> use any of the
+authentication functionality described in this document unless the parameter has
+been negotiated by both sides.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">Endpoints <span class="bcp14">MUST NOT</span> send a <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> parameter with a
+value of 0 after previously sending a value of 1.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-4"><code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> indicates that servers are able to offer
+additional certificates to demonstrate control over other origin hostnames, and
+that clients are able to make requests for hostnames received in a TLS Exported
+Authenticator that the server sends.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="cert-available">
+<section id="section-3.2">
+        <h3 id="name-making-certificates-availab">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-making-certificates-availab" class="section-name selfRef">Making Certificates Available</a>
+        </h3>
+<p id="section-3.2-1">When both peers have advertised support for HTTP-layer certificates in a given
+direction as in <a href="#settings-usage" class="auto internal xref">Section 3.1</a>, the indicated endpoint can supply
+additional certificates into the connection at any time. That is, if both
+endpoints have sent <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> and validated the value
+received from the peer, the server may send certificates spontaneously, at any
+time, as described by the <code>Spontaneous Server Authentication</code> message sequence
+in <span><a href="https://rfc-editor.org/rfc/rfc9261#section-3" class="relref">Section 3</a> of [<a href="#EXPORTED-AUTH" class="cite xref">EXPORTED-AUTH</a>]</span>.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">This does mean that if a server knows it supports secondary certificate
+authentication, and it receives <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> from the
+client, that it can enqueue certificates immediately following the received
+SETTINGS frame.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">Certificates supplied by servers can be considered by clients without further
+action by the server. A server <span class="bcp14">SHOULD NOT</span> send certificates which do not cover
+origins which it is prepared to service on the current connection, and <span class="bcp14">SHOULD NOT</span> send them if the client has not indicated support with
+<code>SETTINGS_HTTP_SERVER_CERT_AUTH</code>.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">A client <span class="bcp14">MUST NOT</span> send certificates to the server. The server <span class="bcp14">SHOULD</span> close the
+connection upon receipt of a CERTIFICATE frame from a client.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<span id="name-simple-unprompted-server-au"></span><div id="ex-http-server-unprompted-basic">
+<figure id="figure-1">
+          <div class="lang-drawing sourcecode" id="section-3.2-5.1">
+<pre>
+Client                                        Server
+   &lt;-- (stream 0 / control stream) CERTIFICATE --
+   ...
+   -- (stream N) GET /from-new-origin ----------&gt;
+   &lt;----------------------- (stream N) 200 OK ---
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-simple-unprompted-server-au" class="selfRef">Simple unprompted server authentication</a>
+          </figcaption></figure>
+</div>
+<p id="section-3.2-6">A server <span class="bcp14">MAY</span> send a <code>CERTIFICATE</code> immediately after sending its <code>SETTINGS</code>.
+However, it <span class="bcp14">MAY</span> also send certificates at any time later. For example, a proxy
+might discover that a client is interested in an origin that it can reverse
+proxy at the time that a client sends a <code>CONNECT</code> request. It can then send
+certificates for those origins to allow for TLS-terminated reverse proxying to
+those origins for the remainder of the connection lifetime.
+<a href="#ex-http-server-unprompted-reverse" class="auto internal xref">Figure 2</a> illustrates this behavior.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
+<span id="name-reverse-proxy-server-authen"></span><div id="ex-http-server-unprompted-reverse">
+<figure id="figure-2">
+          <div class="lang-drawing sourcecode" id="section-3.2-7.1">
+<pre>
+Client                                        Server
+   -- (stream N) CONNECT /to-new-origin --------&gt;
+   &lt;-- (stream 0 / control stream) CERTIFICATE --
+   &lt;-- (stream 0 / control stream) 200 OK -------
+   ...
+   -- (stream M) GET /to-new-origin ------------&gt;
+   &lt;--- (stream M, direct from server) 200 OK ---
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-reverse-proxy-server-authen" class="selfRef">Reverse proxy server authentication</a>
+          </figcaption></figure>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="settings">
+<section id="section-4">
+      <h2 id="name-settings_http_server_cert_a">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-settings_http_server_cert_a" class="section-name selfRef">SETTINGS_HTTP_SERVER_CERT_AUTH</a>
+      </h2>
+<p id="section-4-1">SETTINGS parameters for HTTP/2 and HTTP/3 seperately are defined below.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<div id="the-settingshttpservercertauth-http2-settings-parameterhttp2-setting">
+<section id="section-4.1">
+        <h3 id="name-the-settings_http_server_ce">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-the-settings_http_server_ce" class="section-name selfRef">The SETTINGS_HTTP_SERVER_CERT_AUTH HTTP/2 SETTINGS Parameter{#http2-setting}</a>
+        </h3>
+<p id="section-4.1-1">This document adds a new HTTP/2 SETTINGS(0xTBD) parameter to those defined by
+<span><a href="https://rfc-editor.org/rfc/rfc9113#section-6.5.2" class="relref">Section 6.5.2</a> of [<a href="#H2" class="cite xref">H2</a>]</span>.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">The new parameter name is <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code>. The value of the
+parameter <span class="bcp14">MUST</span> be 0 or 1.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1-3">The usage of this parameter is described in <a href="#settings-usage" class="auto internal xref">Section 3.1</a>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="the-settingshttpservercertauth-http3-settings-parameterhttp3-setting">
+<section id="section-4.2">
+        <h3 id="name-the-settings_http_server_cer">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-the-settings_http_server_cer" class="section-name selfRef">The SETTINGS_HTTP_SERVER_CERT_AUTH HTTP/3 SETTINGS Parameter{#http3-setting}</a>
+        </h3>
+<p id="section-4.2-1">This document adds a new HTTP/3 SETTINGS(0xTBD) parameter to those defined by
+<span><a href="https://rfc-editor.org/rfc/rfc9114#section-7.2.4.1" class="relref">Section 7.2.4.1</a> of [<a href="#H3" class="cite xref">H3</a>]</span>.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">The new parameter name is <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code>. The value of the
+parameter <span class="bcp14">MUST</span> be 0 or 1.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">The usage of this parameter is described in <a href="#settings-usage" class="auto internal xref">Section 3.1</a>.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="certs-http">
+<section id="section-5">
+      <h2 id="name-certificate-frame">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-certificate-frame" class="section-name selfRef">CERTIFICATE frame</a>
+      </h2>
+<p id="section-5-1">The CERTIFICATE frame contains an exported authenticator message from the TLS
+layer that provides a chain of certificates and associated extensions, proving
+possession of the private key corresponding to the end-entity certificate.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">A server sends a CERTIFICATE frame on stream 0 for HTTP/2 and on the control
+stream for HTTP/3. The client is permitted to make subsequent requests for
+resources upon receipt of a CERTIFICATE frame without further action from the
+server.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">Upon receiving a complete series of CERTIFICATE frames, the receiver may
+validate the Exported Authenticator value by using the exported authenticator
+API. This returns either an error indicating that the message was invalid or
+the certificate chain and extensions used to create the message.<a href="#section-5-3" class="pilcrow">¶</a></p>
+<div id="http2-cert">
+<section id="section-5.1">
+        <h3 id="name-http-2-certificate-frame">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-http-2-certificate-frame" class="section-name selfRef">HTTP/2 CERTIFICATE frame</a>
+        </h3>
+<p id="section-5.1-1">A CERTIFICATE frame in HTTP/2 (type=0xTBD) carrries a TLS Exported authenticator
+that clients can use to authenticate secondary origins from a sending server.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-2">The CERTIFICATE frame <span class="bcp14">MUST</span> be sent on stream 0. A CERTIFICATE frame received on
+any other stream <span class="bcp14">MUST</span> not be used for server authentication.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<span id="name-http-2-certificate-frame-2"></span><figure id="figure-3">
+          <div class="alignLeft art-ascii-art art-text artwork" id="section-5.1-3.1">
+<pre>
+CERTIFICATE Frame {
+  Length (24),
+  Type (8) = 0xTBD,
+
+  Unused Flags (8),
+
+  Reserved (1),
+  Stream Identifier (31) = 0,
+
+  Authenticator (..),
+}
+</pre>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-http-2-certificate-frame-2" class="selfRef">HTTP/2 CERTIFICATE Frame</a>
+          </figcaption></figure>
+<p id="section-5.1-4">The Length, Type, Unused Flag(s), Reserved, and Stream Identifier fields are
+described in <span><a href="https://rfc-editor.org/rfc/rfc9113#section-4" class="relref">Section 4</a> of [<a href="#H2" class="cite xref">H2</a>]</span>.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
+<p id="section-5.1-5">The CERTIFICATE frame does not define any flags.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
+<p id="section-5.1-6">The authenticator field is a portion of the opaque data returned from the TLS
+connection exported authenticator authenticate API. See <a href="#exp-auth" class="auto internal xref">Section 5.3</a> for more
+details on the input to this API.<a href="#section-5.1-6" class="pilcrow">¶</a></p>
+<p id="section-5.1-7">The CERTIFICATE frame applies to the connection, not a specific stream. An
+endpoint <span class="bcp14">MUST</span> treat a CERTIFICATE frame with a stream identifier other than
+0x00 as a connection error.<a href="#section-5.1-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="http3-cert">
+<section id="section-5.2">
+        <h3 id="name-http-3-certificate-frame">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-http-3-certificate-frame" class="section-name selfRef">HTTP/3 CERTIFICATE frame</a>
+        </h3>
+<p id="section-5.2-1">A CERTIFICATE frame in HTTP/3 (type=0xTBD) carrries a TLS Exported authenticator
+that clients can use to authenticate secondary origins from a sending server.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">The CERTIFICATE frame <span class="bcp14">MUST</span> be sent on the control stream. A CERTIFICATE frame
+received on any other stream <span class="bcp14">MUST</span> not be used for server authentication.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<span id="name-http-3-certificate-frame-2"></span><figure id="figure-4">
+          <div class="alignLeft art-ascii-art art-text artwork" id="section-5.2-3.1">
+<pre>
+CERTIFICATE Frame {
+  Type (i) = 0xTBD,
+  Length (i),
+  Authenticator (...),
+}
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-http-3-certificate-frame-2" class="selfRef">HTTP/3 CERTIFICATE Frame</a>
+          </figcaption></figure>
+<p id="section-5.2-4">The Type and Length fields are described in <span><a href="https://rfc-editor.org/rfc/rfc9114#section-7.1" class="relref">Section 7.1</a> of [<a href="#H3" class="cite xref">H3</a>]</span>.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
+<p id="section-5.2-5">The authenticator field is a portion of the opaque data returned from the TLS
+connection exported authenticator authenticate API. See <a href="#exp-auth" class="auto internal xref">Section 5.3</a> for more
+details on the input to this API.<a href="#section-5.2-5" class="pilcrow">¶</a></p>
+<p id="section-5.2-6">The CERTIFICATE frame applies to the connection, not a specific stream. An
+endpoint <span class="bcp14">MUST</span> treat a CERTIFICATE frame received on any stream other than the
+control stream as a connection error.<a href="#section-5.2-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="exp-auth">
+<section id="section-5.3">
+        <h3 id="name-exported-authenticator-char">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-exported-authenticator-char" class="section-name selfRef">Exported Authenticator Characteristics</a>
+        </h3>
+<p id="section-5.3-1">The Exported Authenticator API defined in <span>[<a href="#EXPORTED-AUTH" class="cite xref">EXPORTED-AUTH</a>]</span> takes as input a
+request, a set of certificates, and supporting information about the
+certificate (OCSP, SCT, etc.). The result is an opaque token which is used
+when generating the <code>CERTIFICATE</code> frame.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-2">Upon receipt of a <code>CERTIFICATE</code> frame, an endpoint which has negotiated support
+for secondary certfiicates <span class="bcp14">MUST</span> perform the following steps to validate the
+token it contains:<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-3.1">
+            <p id="section-5.3-3.1.1">Using the <code>get context</code> API, retrieve the <code>certificate_request_context</code> used
+to generate the authenticator, if any. Because the <code>certificate_request_context</code>
+for spontaneous server certificates is chosen by the server, the usage of
+the <code>certificate_request_context</code> is implementation-dependent. For details,
+see <span><a href="https://rfc-editor.org/rfc/rfc9261#section-5" class="relref">Section 5</a> of [<a href="#EXPORTED-AUTH" class="cite xref">EXPORTED-AUTH</a>]</span>.<a href="#section-5.3-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-3.2">
+            <p id="section-5.3-3.2.1">Use the <code>validate</code> API to confirm the validity of the authenticator with
+regard to the generated request, if any.<a href="#section-5.3-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.3-4">If the authenticator cannot be validated, this <span class="bcp14">SHOULD</span> be treated as a connection
+error.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
+<p id="section-5.3-5">Once the authenticator is accepted, the endpoint can perform any other checks
+for the acceptability of the certificate itself.<a href="#section-5.3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="errors">
+<section id="section-6">
+      <h2 id="name-indicating-failures-during-">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-indicating-failures-during-" class="section-name selfRef">Indicating Failures During HTTP-Layer Certificate Authentication</a>
+      </h2>
+<p id="section-6-1">Because this document permits certificates to be exchanged at the HTTP framing
+layer instead of the TLS layer, several certificate-related errors which are
+defined at the TLS layer might now occur at the HTTP framing layer.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">There are two classes of errors which might be encountered, and they are handled
+differently.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<div id="misbehavior">
+<section id="section-6.1">
+        <h3 id="name-misbehavior">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-misbehavior" class="section-name selfRef">Misbehavior</a>
+        </h3>
+<p id="section-6.1-1">This category of errors could indicate a peer failing to follow requirements in
+this document or might indicate that the connection is not fully secure. These
+errors are fatal to stream or connection, as appropriate.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-6.1-2">
+          <dt id="section-6.1-2.1">CERTIFICATE_UNREADABLE (0xERROR-TBD):</dt>
+          <dd style="margin-left: 1.5em" id="section-6.1-2.2">
+            <p id="section-6.1-2.2.1">An exported authenticator could not be validated.<a href="#section-6.1-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="invalid-certificates">
+<section id="section-6.2">
+        <h3 id="name-invalid-certificates">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-invalid-certificates" class="section-name selfRef">Invalid Certificates</a>
+        </h3>
+<p id="section-6.2-1">Unacceptable certificates (expired, revoked, or insufficient to satisfy the
+request) are not treated as stream or connection errors. This is typically not
+an indication of a protocol failure. Clients <span class="bcp14">SHOULD</span> establish a new connection
+in an attempt to reach an authoritative server if they deem a
+certificate from the server unacceptable.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="security">
+<section id="section-7">
+      <h2 id="name-security-considerations">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-7-1">This mechanism defines an alternate way to obtain server and client certificates
+other than in the initial TLS handshake. While the signature of exported
+authenticator values is expected to be equally secure, it is important to
+recognize that a vulnerability in this code path is at least equal to a
+vulnerability in the TLS handshake.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<div id="impersonation">
+<section id="section-7.1">
+        <h3 id="name-impersonation">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-impersonation" class="section-name selfRef">Impersonation</a>
+        </h3>
+<p id="section-7.1-1">This mechanism could increase the impact of a key compromise. Rather than
+needing to subvert DNS or IP routing in order to use a compromised certificate,
+a malicious server now only needs a client to connect to <em>some</em> HTTPS site
+under its control in order to present the compromised certificate. Clients
+<span class="bcp14">SHOULD</span> consult DNS for hostnames presented in secondary certificates if they
+would have done so for the same hostname if it were present in the primary
+certificate.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-2">As recommended in <span>[<a href="#ORIGIN" class="cite xref">ORIGIN</a>]</span>, clients opting not to consult DNS ought to employ
+some alternative means to increase confidence that the certificate is
+legitimate, such as an <code>ORIGIN</code> frame.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.1-3">As noted in the Security Considerations of <span>[<a href="#EXPORTED-AUTH" class="cite xref">EXPORTED-AUTH</a>]</span>, it is difficult to
+formally prove that an endpoint is jointly authoritative over multiple
+certificates, rather than individually authoritative on each certificate. As a
+result, clients <span class="bcp14">MUST NOT</span> assume that because one origin was previously
+colocated with another, those origins will be reachable via the same endpoints
+in the future. Clients <span class="bcp14">MUST NOT</span> consider previous secondary certificates to be
+validated after TLS session resumption. Servers <span class="bcp14">MAY</span> re-present certificates
+if a TLS Session is resumed.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="fingerprinting">
+<section id="section-7.2">
+        <h3 id="name-fingerprinting">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-fingerprinting" class="section-name selfRef">Fingerprinting</a>
+        </h3>
+<p id="section-7.2-1">This document defines a mechanism which could be used to probe servers for origins
+they support, but it opens no new attack that was not already possible by
+making repeat TLS connections with different SNI values.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="persistence-of-service">
+<section id="section-7.3">
+        <h3 id="name-persistence-of-service">
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-persistence-of-service" class="section-name selfRef">Persistence of Service</a>
+        </h3>
+<p id="section-7.3-1">CNAME records in the DNS are frequently used to delegate authority for an origin
+to a third-party provider. This delegation can be changed without notice, even
+to the third-party provider, simply by modifying the CNAME record in question.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+<p id="section-7.3-2">After the owner of the domain has redirected traffic elsewhere by changing the
+CNAME, new connections will not arrive for that origin, but connections which
+are properly directed to this provider for other origins would continue to
+claim control of this origin (via Secondary Certificates). This is proper
+behavior based on the third-party provider's configuration, but would likely
+not be what is intended by the owner of the origin.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
+<p id="section-7.3-3">This is not an issue which can be mitigated by the protocol, but something about
+which third-party providers <span class="bcp14">SHOULD</span> educate their customers before using the
+features described in this document.<a href="#section-7.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="confusion-about-state">
+<section id="section-7.4">
+        <h3 id="name-confusion-about-state">
+<a href="#section-7.4" class="section-number selfRef">7.4. </a><a href="#name-confusion-about-state" class="section-name selfRef">Confusion About State</a>
+        </h3>
+<p id="section-7.4-1">Implementations need to be aware of the potential for confusion about the state
+of a connection. The presence or absence of a validated certificate can change
+during the processing of a request, potentially multiple times, as
+<code>CERTIFICATE</code> frames are received. A client that uses certificate
+authentication needs to be prepared to reevaluate the authorization state of a
+request as the set of certificates changes.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
+<p id="section-7.4-2">Behavior for TLS-Terminated reverse proxies is also worth considering. If a
+server which situationally reverse-proxies wishes for the client to view a
+request made prior to receipt of certificates as TLS-Terminated, or wishes for
+the client to start a new tunnel alternatively, this document does not currently
+define formal mechanisms to facilitate that intention.<a href="#section-7.4-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-8">
+      <h2 id="name-iana-considerations">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-8-1">This document registers the <code>CERTIFICATE</code> frame type and
+<code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> setting for both <span>[<a href="#H2" class="cite xref">H2</a>]</span> and <span>[<a href="#H3" class="cite xref">H3</a>]</span>.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<div id="frame-types">
+<section id="section-8.1">
+        <h3 id="name-frame-types">
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-frame-types" class="section-name selfRef">Frame Types</a>
+        </h3>
+<p id="section-8.1-1">This specification registers the following entry in the "HTTP/2 Frame Type"
+registry defined in <span>[<a href="#H2" class="cite xref">H2</a>]</span>:<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">Code: : TBD<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-3">Frame Type: : CERTIFICATE<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-4">Reference: : This document<a href="#section-8.1-4" class="pilcrow">¶</a></p>
+<p id="section-8.1-5">This specification registers the following entry in the "HTTP/3 Frame Types"
+registry established by <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a href="#section-8.1-5" class="pilcrow">¶</a></p>
+<p id="section-8.1-6">Value: : TBD<a href="#section-8.1-6" class="pilcrow">¶</a></p>
+<p id="section-8.1-7">Frame Type: : CERTIFICATE<a href="#section-8.1-7" class="pilcrow">¶</a></p>
+<p id="section-8.1-8">Status: : permanent<a href="#section-8.1-8" class="pilcrow">¶</a></p>
+<p id="section-8.1-9">Reference: : This document<a href="#section-8.1-9" class="pilcrow">¶</a></p>
+<p id="section-8.1-10">Change Controller: : IETF<a href="#section-8.1-10" class="pilcrow">¶</a></p>
+<p id="section-8.1-11">Contact: : ietf-http-wg@w3.org<a href="#section-8.1-11" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="settings-parameters">
+<section id="section-8.2">
+        <h3 id="name-settings-parameters">
+<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-settings-parameters" class="section-name selfRef">Settings Parameters</a>
+        </h3>
+<p id="section-8.2-1">This specification registers the following entry in the "HTTP/2 Settings"
+registry defined in <span>[<a href="#H2" class="cite xref">H2</a>]</span>:<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.2-2">Code: : TBD<a href="#section-8.2-2" class="pilcrow">¶</a></p>
+<p id="section-8.2-3">Name: : SETTINGS_HTTP_SERVER_CERT_AUTH<a href="#section-8.2-3" class="pilcrow">¶</a></p>
+<p id="section-8.2-4">Initial Value: : 0<a href="#section-8.2-4" class="pilcrow">¶</a></p>
+<p id="section-8.2-5">Reference: : This document<a href="#section-8.2-5" class="pilcrow">¶</a></p>
+<p id="section-8.2-6">This specification registers the following entry in the "HTTP/3 Settings"
+registry defined in <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a href="#section-8.2-6" class="pilcrow">¶</a></p>
+<p id="section-8.2-7">Code: : TBD<a href="#section-8.2-7" class="pilcrow">¶</a></p>
+<p id="section-8.2-8">Name: : SETTINGS_HTTP_SERVER_CERT_AUTH<a href="#section-8.2-8" class="pilcrow">¶</a></p>
+<p id="section-8.2-9">Default: : 0<a href="#section-8.2-9" class="pilcrow">¶</a></p>
+<p id="section-8.2-10">Reference: : This document<a href="#section-8.2-10" class="pilcrow">¶</a></p>
+<p id="section-8.2-11">Change Controller: : IETF<a href="#section-8.2-11" class="pilcrow">¶</a></p>
+<p id="section-8.2-12">Contact: : ietf-http-wg@w3.org<a href="#section-8.2-12" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-combined-references">
+<section id="section-9">
+      <h2 id="name-references">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-9.1">
+        <h3 id="name-normative-references">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="EXPORTED-AUTH">[EXPORTED-AUTH]</dt>
+        <dd>
+<span class="refAuthor">Sullivan, N.</span>, <span class="refTitle">"Exported Authenticators in TLS"</span>, <span class="seriesInfo">RFC 9261</span>, <span class="seriesInfo">DOI 10.17487/RFC9261</span>, <time datetime="2022-07" class="refDate">July 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9261">https://www.rfc-editor.org/rfc/rfc9261</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="H2">[H2]</dt>
+        <dd>
+<span class="refAuthor">Thomson, M., Ed.</span> and <span class="refAuthor">C. Benfield, Ed.</span>, <span class="refTitle">"HTTP/2"</span>, <span class="seriesInfo">RFC 9113</span>, <span class="seriesInfo">DOI 10.17487/RFC9113</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9113">https://www.rfc-editor.org/rfc/rfc9113</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="H3">[H3]</dt>
+        <dd>
+<span class="refAuthor">Bishop, M., Ed.</span>, <span class="refTitle">"HTTP/3"</span>, <span class="seriesInfo">RFC 9114</span>, <span class="seriesInfo">DOI 10.17487/RFC9114</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9114">https://www.rfc-editor.org/rfc/rfc9114</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="HTTP">[HTTP]</dt>
+        <dd>
+<span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI 10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="TLS13">[TLS13]</dt>
+      <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-9.2">
+        <h3 id="name-informative-references">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="ALTSVC">[ALTSVC]</dt>
+        <dd>
+<span class="refAuthor">Nottingham, M.</span>, <span class="refAuthor">McManus, P.</span>, and <span class="refAuthor">J. Reschke</span>, <span class="refTitle">"HTTP Alternative Services"</span>, <span class="seriesInfo">RFC 7838</span>, <span class="seriesInfo">DOI 10.17487/RFC7838</span>, <time datetime="2016-04" class="refDate">April 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7838">https://www.rfc-editor.org/rfc/rfc7838</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="ORIGIN">[ORIGIN]</dt>
+      <dd>
+<span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">E. Nygren</span>, <span class="refTitle">"The ORIGIN HTTP/2 Frame"</span>, <span class="seriesInfo">RFC 8336</span>, <span class="seriesInfo">DOI 10.17487/RFC8336</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8336">https://www.rfc-editor.org/rfc/rfc8336</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="acknowledgments">
+<section id="appendix-A">
+      <h2 id="name-acknowledgments">
+<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="appendix-A-1">Thanks to Mike Bishop, Nick Sullivan, Martin Thomson and other
+contributors for their work on the document that this is based on.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">And thanks to Eric Kinnear, Tommy Pauly, and Lucas Pardue for their guidance and
+editorial contributions to this document.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-B">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Eric Gorbaty (<span class="role">editor</span>)</span></div>
+<div dir="auto" class="left"><span class="org">Apple</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:e_gorbaty@apple.com" class="email">e_gorbaty@apple.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Mike Bishop (<span class="role">editor</span>)</span></div>
+<div dir="auto" class="left"><span class="org">Akamai</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:mbishop@evequefou.be" class="email">mbishop@evequefou.be</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>

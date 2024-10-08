@@ -1,0 +1,199 @@
+
+
+
+
+HTTPBIS                                                     N. Jaju, Ed.
+Internet-Draft                                                    Google
+Updates: 8878 (if approved)                               F. Handte, Ed.
+Intended status: Informational                      Meta Platforms, Inc.
+Expires: 11 April 2025                                    8 October 2024
+
+
+              Window Sizing for Zstandard Content Encoding
+               draft-ietf-httpbis-zstd-window-size-latest
+
+Abstract
+
+   Deployments of Zstandard, or "zstd", can use different window sizes
+   to limit memory usage during compression and decompression.  Some
+   browsers and user agents limit window sizes to mitigate memory usage
+   concerns, causing interoperability issues.  This document updates the
+   window size limit in RFC8878 from a recommendation to a requirement
+   in HTTP contexts.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at https://httpwg.org/
+   http-extensions/draft-ietf-httpbis-zstd-window-size.html.  Status
+   information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-ietf-httpbis-zstd-window-
+   size/.
+
+   Discussion of this document takes place on the HTTP Working Group
+   mailing list (mailto:ietf-http-wg@w3.org), which is archived at
+   https://lists.w3.org/Archives/Public/ietf-http-wg/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/httpwg/http-extensions/labels/zstd-window-size.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 11 April 2025.
+
+Copyright Notice
+
+   Copyright (c) 2024 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Definitions
+   3.  Window Size
+   4.  Security Considerations
+   5.  IANA Considerations
+     5.1.  Content Encoding
+   6.  Normative References
+   Acknowledgments
+   Authors' Addresses
+
+1.  Introduction
+
+   Zstandard, or "zstd", specified in [RFC8878], is a lossless data
+   compression mechanism similar to gzip.  When used with HTTP, the
+   "zstd" content coding token signals to the decoder that the content
+   is Zstandard-compressed.
+
+   An important property of Zstandard-compressed content is its
+   Window_Size ([RFC8878], Section 3.1.1.1.2), which describes the
+   maximum distance for back-references and therefore how much of the
+   content must be kept in memory during decompression.
+
+   The minimum Window_Size is 1 KB.  The maximum Window_Size is (1<<41)
+   + 7*(1<<38) bytes, which is 3.75 TB.  Larger Window_Size values tend
+   to improve the compression ratio, but at the cost of increased memory
+   usage.
+
+   To protect against unreasonable memory usage, some browsers and user
+   agents limit the maximum Window_Size they will handle.  This causes
+   failures to decode responses when the content is compressed with a
+   larger Window_Size than the recipient allows, leading to decreased
+   interoperability.
+
+   [RFC8878], Section 3.1.1.1.2 recommends that decoders support a
+   Window_Size of up to 8 MB, and that encoders not generate frames
+   using a Window_Size larger than 8 MB.  However, it imposes no
+   requirements.
+
+   This document updates [RFC8878] to enforce Window_Size limits on the
+   encoder and decoder for the "zstd" HTTP content coding.
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+3.  Window Size
+
+   To ensure interoperability, when using the "zstd" content coding,
+   decoders MUST support a Window_Size of up to and including 8 MB, and
+   encoders MUST NOT generate frames requiring a Window_Size larger than
+   8 MB (see Section 5.1).
+
+4.  Security Considerations
+
+   This document introduces no new security considerations beyond those
+   discussed in [RFC8878].
+
+   Note that decoders still need to take into account that they can
+   receive oversized frames that do not follow the window size limit
+   specified in this document and fail decoding when such invalid frames
+   are received.
+
+5.  IANA Considerations
+
+5.1.  Content Encoding
+
+   This document updates the entry added in [RFC8878] to the "HTTP
+   Content Coding Registry" (https://www.iana.org/assignments/http-
+   parameters/http-parameters.xhtml#content-coding) within the
+   "Hypertext Transfer Protocol (HTTP) Parameters"
+   (https://www.iana.org/assignments/http-parameters/http-
+   parameters.xhtml) registry:
+
+   Name:  zstd
+
+   Description:  A stream of bytes compressed using the Zstandard
+      protocol with a Window_Size of not more than 8 MB.
+
+   Reference:  This document and [RFC8878]
+
+6.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8878]  Collet, Y. and M. Kucherawy, Ed., "Zstandard Compression
+              and the 'application/zstd' Media Type", RFC 8878,
+              DOI 10.17487/RFC8878, February 2021,
+              <https://www.rfc-editor.org/rfc/rfc8878>.
+
+Acknowledgments
+
+   Zstandard was developed by Yann Collet.
+
+   The authors would like to thank Yann Collet, Klaus Post, Adam Rice,
+   and members of the Web Performance Working Group in the W3C for
+   collaborating on the window size issue and helping to formulate a
+   solution.  Also, thank you to Nick Terrell for providing feedback
+   that went into RFC 8478 and RFC 8878.
+
+Authors' Addresses
+
+   Nidhi Jaju (editor)
+   Google
+   Shibuya Stream, 3 Chome-21-3 Shibuya, Shibuya City, Tokyo
+   150-0002
+   Japan
+   Email: nidhijaju@google.com
+
+
+   W. Felix P. Handte (editor)
+   Meta Platforms, Inc.
+   380 W 33rd St
+   New York, NY 10001
+   United States of America
+   Email: felixh@meta.com
