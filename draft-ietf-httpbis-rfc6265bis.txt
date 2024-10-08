@@ -6,8 +6,8 @@ HTTP                                                     S. Bingler, Ed.
 Internet-Draft                                              M. West, Ed.
 Obsoletes: 6265 (if approved)                                 Google LLC
 Intended status: Standards Track                        J. Wilander, Ed.
-Expires: 10 April 2025                                        Apple, Inc
-                                                          7 October 2024
+Expires: 11 April 2025                                        Apple, Inc
+                                                          8 October 2024
 
 
                 Cookies: HTTP State Management Mechanism
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 April 2025.
+   This Internet-Draft will expire on 11 April 2025.
 
 Copyright Notice
 

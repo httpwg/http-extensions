@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 10 April 2025                                                  
+Expires: 11 April 2025                                                  
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                          7 October 2024
+                                                          8 October 2024
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 April 2025.
+   This Internet-Draft will expire on 11 April 2025.
 
 Copyright Notice
 
@@ -361,8 +361,10 @@ Table of Contents
    cases, as the URI is more likely to be logged than the request
    content.  If a server creates a temporary resource to represent the
    results of a QUERY request (e.g., for use in the Location or Content-
-   Location field), the URI of this resource SHOULD NOT expose the
-   original request content in plaintext.
+   Location field) and the request contains sensitive information that
+   cannot be logged, then the URI of this resource SHOULD be chosen such
+   that it does not include any sensitive portions of the original
+   request content.
 
 6.  IANA Considerations
 

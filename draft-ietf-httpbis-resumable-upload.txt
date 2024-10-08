@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 10 April 2025                                        Apple Inc.
+Expires: 11 April 2025                                        Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                          7 October 2024
+                                                          8 October 2024
 
 
                        Resumable Uploads for HTTP
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 April 2025.
+   This Internet-Draft will expire on 11 April 2025.
 
 Copyright Notice
 
