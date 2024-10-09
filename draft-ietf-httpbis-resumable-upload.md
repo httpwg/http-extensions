@@ -514,7 +514,7 @@ The server might process the uploaded data and make its results available in ano
 
 # Upload Strategies
 
-The definition of the upload creation request ({{upload-creation}}) provides the client with flexibility to choose whether the file is fully or partially transferred in the first request, or if no file data is included at all. The decision which behavior is best largely depends on the client's capabilities, its intention to avoid data transmission, and its knowledge about the server's support for resumable uploads.
+The definition of the upload creation request ({{upload-creation}}) provides the client with flexibility to choose whether the file is fully or partially transferred in the first request, or if no file data is included at all. Which behavior is best largely depends on the client's capabilities, its intention to avoid data transmission, and its knowledge about the server's support for resumable uploads.
 
 The following subsections describe three different, typical upload strategies that are suited for common environments. Note that these modes are never explicitly communicated to the server and clients are not required to stick to one strategy, but can mix and adapt them to their needs.
 
@@ -522,9 +522,9 @@ The following subsections describe three different, typical upload strategies th
 
 An "optimistic upload creation" can be used if the client knows or assumes with a high degree of confidence that the server supports resumable uploads under the target URI and that the client is capable of handling and processing interim responses. The upload creation request then includes the full file because the client assumes that the file will be transferred without interruptions.
 
-The benefit of this method is that if the upload creation request succeeds, the file was transferred in a single request avoiding additional round trips. A drawback is that the client may be restricted in its ability to resume that upload. If the upload was interrupted before the client received a `104 (Upload Resumption Supported)` intermediate response with the upload URL, the client cannot resume that upload due to the missing upload URL. The intermediate response might not be received if the interruption happens too early in the message exchange, the server does not support sending the `104 (Upload Resumption Supported)` intermediate response, or an intermediary dropped the intermediate response. The client must either ultimately fail the entire upload or retry the upload creation request if this is allowed by the application at the expense of transferring file data again.
+The benefit of this method is that if the upload creation request succeeds, the file was transferred in a single request without additional round trips.
 
-The "optimistic upload creation" attempts to upload the file in one request at the potential expense of either not finishing the upload at all or re-transmitting file data again.
+A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client received a `104 (Upload Resumption Supported)` intermediate response with the upload URL, the client cannot resume that upload due to the missing upload URL. The intermediate response might not be received if the interruption happens too early in the message exchange, the server does not support sending the 104 (Upload Resumption Supported) intermediate response, or an intermediary dropped the intermediate response. Without a 104 response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.
 
 ## Careful Upload Creation
 
@@ -536,7 +536,9 @@ This approach best suited if the client cannot receive intermediate responses, e
 
 The approach specified in this document allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the file is transferred in a single request, usually `POST` or `PUT`, without any ability to resume from interruptions. The client can offer the server to upgrade such an upload to a resumable upload. If supported by the server, the file transfer benefits from the gained ability to resume. Otherwise, the transfer falls back to a non-resumable upload without additional cost.
 
-To perform an upgrade, the client adds the `Upload-Complete: ?1` header field to the original request, which attempts to transmit the entire file in one request. A server that supports resumable uploads at the target URI, can create a resumable upload resource and send its upload URL in a `104 (Upload Resumption Supported)` intermediate response for the client to resume the upload after interruptions. On the other hand, if the server does not support resumable uploads or does not want to upgrade to a resumable upload for this request, it can ignore the `Upload-Complete: ?1` header and treat the request as a non-resumable upload, where the client cannot recover from interruptions.
+To perform an upgrade, the client adds the `Upload-Complete: ?1` header field to the original request, which attempts to transmit the entire file in one request. A server that supports resumable uploads at the target URI, can create a resumable upload resource and send its upload URL in a 104 (Upload Resumption Supported) intermediate response for the client to resume the upload after interruptions.
+
+A server that does not support resumable uploads or does not want to upgrade to a resumable upload for this request can ignore the `Upload-Complete: ?1` header and treat the request as a non-resumable upload.
 
 This upgrade can also be performed transparently by the client without the user taking an active role. When a user asks the client to send a non-resumable request, the client can add the `Upload-Complete: ?1` and handle potential interruptions and resumptions under the hood without involving the user. If the client has to resume that upload, the response to the last upload appending request is considered the response for the entire file upload and should be presented to the user.
 
