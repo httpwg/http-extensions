@@ -6,7 +6,7 @@ HTTPBIS                                                     N. Jaju, Ed.
 Internet-Draft                                                    Google
 Updates: 8878 (if approved)                               F. Handte, Ed.
 Intended status: Informational                      Meta Platforms, Inc.
-Expires: 10 April 2025                                    7 October 2024
+Expires: 12 April 2025                                    9 October 2024
 
 
               Window Sizing for Zstandard Content Encoding
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 April 2025.
+   This Internet-Draft will expire on 12 April 2025.
 
 Copyright Notice
 

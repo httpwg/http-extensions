@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 10 April 2025                                        Apple Inc.
+Expires: 12 April 2025                                        Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                          7 October 2024
+                                                          9 October 2024
 
 
                        Resumable Uploads for HTTP
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 April 2025.
+   This Internet-Draft will expire on 12 April 2025.
 
 Copyright Notice
 
@@ -951,10 +951,9 @@ Table of Contents
    The definition of the upload creation request (Section 4) provides
    the client with flexibility to choose whether the file is fully or
    partially transferred in the first request, or if no file data is
-   included at all.  The decision which behavior is best largely depends
-   on the client's capabilities, its intention to avoid data
-   transmission, and its knowledge about the server's support for
-   resumable uploads.
+   included at all.  Which behavior is best largely depends on the
+   client's capabilities, its intention to avoid data transmission, and
+   its knowledge about the server's support for resumable uploads.
 
    The following subsections describe three different, typical upload
    strategies that are suited for common environments.  Note that these
@@ -972,23 +971,20 @@ Table of Contents
    the file will be transferred without interruptions.
 
    The benefit of this method is that if the upload creation request
-   succeeds, the file was transferred in a single request avoiding
-   additional round trips.  A drawback is that the client may be
-   restricted in its ability to resume that upload.  If the upload was
-   interrupted before the client received a 104 (Upload Resumption
-   Supported) intermediate response with the upload URL, the client
-   cannot resume that upload due to the missing upload URL.  The
-   intermediate response might not be received if the interruption
-   happens too early in the message exchange, the server does not
-   support sending the 104 (Upload Resumption Supported) intermediate
-   response, or an intermediary dropped the intermediate response.  The
-   client must either ultimately fail the entire upload or retry the
-   upload creation request if this is allowed by the application at the
-   expense of transferring file data again.
+   succeeds, the file was transferred in a single request without
+   additional round trips.
 
-   The "optimistic upload creation" attempts to upload the file in one
-   request at the potential expense of either not finishing the upload
-   at all or re-transmitting file data again.
+   A possible drawback is that the client might be unable to resume an
+   upload.  If an upload is interrupted before the client received a 104
+   (Upload Resumption Supported) intermediate response with the upload
+   URL, the client cannot resume that upload due to the missing upload
+   URL.  The intermediate response might not be received if the
+   interruption happens too early in the message exchange, the server
+   does not support sending the 104 (Upload Resumption Supported)
+   intermediate response, or an intermediary dropped the intermediate
+   response.  Without a 104 response, the client needs to either treat
+   the upload as failed or retry the entire upload creation request if
+   this is allowed by the application.
 
 16.2.  Careful Upload Creation
 
@@ -1024,12 +1020,11 @@ Table of Contents
    file in one request.  A server that supports resumable uploads at the
    target URI, can create a resumable upload resource and send its
    upload URL in a 104 (Upload Resumption Supported) intermediate
-   response for the client to resume the upload after interruptions.  On
-   the other hand, if the server does not support resumable uploads or
-   does not want to upgrade to a resumable upload for this request, it
-   can ignore the Upload-Complete: ?1 header and treat the request as a
-   non-resumable upload, where the client cannot recover from
-   interruptions.
+   response for the client to resume the upload after interruptions.
+
+   A server that does not support resumable uploads or does not want to
+   upgrade to a resumable upload for this request can ignore the Upload-
+   Complete: ?1 header and treat the request as a non-resumable upload.
 
    This upgrade can also be performed transparently by the client
    without the user taking an active role.  When a user asks the client
