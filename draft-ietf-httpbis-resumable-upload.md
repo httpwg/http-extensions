@@ -520,7 +520,7 @@ The following subsections describe two typical upload strategies that are suited
 
 ## Optimistic Upload Creation
 
-An "optimistic upload creation" can be used if the client or assumes that the server supports resumable uploads under the target URI and that the client is capable of handling and processing interim responses. The upload creation request then includes the full file because the client assumes that the file will be transferred without interruptions.
+An "optimistic upload creation" can be used if the client or assumes that the server supports resumable uploads under the target URI and that the client is capable of handling and processing interim responses. The upload creation request then includes the full file because the client assumes that the file will be transferred without interruptions or resumed if an interruption occurs.
 
 The benefit of this method is that if the upload creation request succeeds, the file was transferred in a single request without additional round trips.
 
