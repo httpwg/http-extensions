@@ -1222,12 +1222,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.1">
                 <p id="section-toc.1-1.16.2.1.1"><a href="#section-16.1" class="auto internal xref">16.1</a>.  <a href="#name-optimistic-upload-creation" class="internal xref">Optimistic Upload Creation</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.1.2.1">
+                    <p id="section-toc.1-1.16.2.1.2.1.1"><a href="#section-16.1.1" class="auto internal xref">16.1.1</a>.  <a href="#name-upgrading-to-resumable-uplo" class="internal xref">Upgrading To Resumable Uploads</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.2">
                 <p id="section-toc.1-1.16.2.2.1"><a href="#section-16.2" class="auto internal xref">16.2</a>.  <a href="#name-careful-upload-creation" class="internal xref">Careful Upload Creation</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.3">
-                <p id="section-toc.1-1.16.2.3.1"><a href="#section-16.3" class="auto internal xref">16.3</a>.  <a href="#name-upgrading-to-resumable-uplo" class="internal xref">Upgrading To Resumable Uploads</a></p>
 </li>
             </ul>
 </li>
@@ -1924,16 +1926,26 @@ Content-Type: application/problem+json
       <h2 id="name-upload-strategies">
 <a href="#section-16" class="section-number selfRef">16. </a><a href="#name-upload-strategies" class="section-name selfRef">Upload Strategies</a>
       </h2>
-<p id="section-16-1">The definition of the upload creation request (<a href="#upload-creation" class="auto internal xref">Section 4</a>) provides the client with flexibility to choose whether the file is fully or partially transferred in the first request, or if no file data is included at all. Which behavior is best largely depends on the client's capabilities, its intention to avoid data transmission, and its knowledge about the server's support for resumable uploads.<a href="#section-16-1" class="pilcrow">¶</a></p>
-<p id="section-16-2">The following subsections describe three different, typical upload strategies that are suited for common environments. Note that these modes are never explicitly communicated to the server and clients are not required to stick to one strategy, but can mix and adapt them to their needs.<a href="#section-16-2" class="pilcrow">¶</a></p>
+<p id="section-16-1">The definition of the upload creation request (<a href="#upload-creation" class="auto internal xref">Section 4</a>) provides the client with flexibility to choose whether the file is fully or partially transferred in the first request, or if no file data is included at all. Which behavior is best largely depends on the client's capabilities, its intention to avoid data re-transmission, and its knowledge about the server's support for resumable uploads.<a href="#section-16-1" class="pilcrow">¶</a></p>
+<p id="section-16-2">The following subsections describe two typical upload strategies that are suited for common environments. Note that these modes are never explicitly communicated to the server and clients are not required to stick to one strategy, but can mix and adapt them to their needs.<a href="#section-16-2" class="pilcrow">¶</a></p>
 <div id="optimistic-upload-creation">
 <section id="section-16.1">
         <h3 id="name-optimistic-upload-creation">
 <a href="#section-16.1" class="section-number selfRef">16.1. </a><a href="#name-optimistic-upload-creation" class="section-name selfRef">Optimistic Upload Creation</a>
         </h3>
-<p id="section-16.1-1">An "optimistic upload creation" can be used if the client knows or assumes with a high degree of confidence that the server supports resumable uploads under the target URI and that the client is capable of handling and processing interim responses. The upload creation request then includes the full file because the client assumes that the file will be transferred without interruptions.<a href="#section-16.1-1" class="pilcrow">¶</a></p>
+<p id="section-16.1-1">An "optimistic upload creation" can be used if the client assumes that the server supports resumable uploads under the target URI and that the client is capable of handling and processing interim responses. The upload creation request then includes the full file because the client anticipates that the file will be transferred without interruptions or resumed if an interruption occurs.<a href="#section-16.1-1" class="pilcrow">¶</a></p>
 <p id="section-16.1-2">The benefit of this method is that if the upload creation request succeeds, the file was transferred in a single request without additional round trips.<a href="#section-16.1-2" class="pilcrow">¶</a></p>
-<p id="section-16.1-3">A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client received a <code>104 (Upload Resumption Supported)</code> intermediate response with the upload URL, the client cannot resume that upload due to the missing upload URL. The intermediate response might not be received if the interruption happens too early in the message exchange, the server does not support sending the 104 (Upload Resumption Supported) intermediate response, or an intermediary dropped the intermediate response. Without a 104 response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.<a href="#section-16.1-3" class="pilcrow">¶</a></p>
+<p id="section-16.1-3">A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client received a <code>104 (Upload Resumption Supported)</code> intermediate response with the upload URL, the client cannot resume that upload due to the missing upload URL. The intermediate response might not be received if the interruption happens too early in the message exchange, the server does not support sending the <code>104 (Upload Resumption Supported)</code> intermediate response, or an intermediary dropped the intermediate response. Without a 104 response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.<a href="#section-16.1-3" class="pilcrow">¶</a></p>
+<div id="upgrading-to-resumable-uploads">
+<section id="section-16.1.1">
+          <h4 id="name-upgrading-to-resumable-uplo">
+<a href="#section-16.1.1" class="section-number selfRef">16.1.1. </a><a href="#name-upgrading-to-resumable-uplo" class="section-name selfRef">Upgrading To Resumable Uploads</a>
+          </h4>
+<p id="section-16.1.1-1">Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the file is transferred in a single request, usually <code>POST</code> or <code>PUT</code>, without any ability to resume from interruptions. The client can offer the server to upgrade such a request to a resumable upload by adding the <code>Upload-Complete: ?1</code> header field to the original request. The request is not changed otherwise.<a href="#section-16.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-16.1.1-2">A server that supports resumable uploads at the target URI can create a resumable upload resource and send its upload URL in a <code>104 (Upload Resumption Supported)</code> intermediate response for the client to resume the upload after interruptions. A server that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the <code>Upload-Complete: ?1</code> header. The transfer then falls back to a non-resumable upload without additional cost.<a href="#section-16.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-16.1.1-3">This upgrade can also be performed transparently by the client without the user taking an active role. When a user asks the client to send a non-resumable request, the client can perform the upgrade and handle potential interruptions and resumptions under the hood without involving the user. The last response received by the client is considered the response for the entire file upload and should be presented to the user.<a href="#section-16.1.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="careful-upload-creation">
@@ -1941,19 +1953,9 @@ Content-Type: application/problem+json
         <h3 id="name-careful-upload-creation">
 <a href="#section-16.2" class="section-number selfRef">16.2. </a><a href="#name-careful-upload-creation" class="section-name selfRef">Careful Upload Creation</a>
         </h3>
-<p id="section-16.2-1">With a "careful upload creation" the client sends an empty upload creation request without including any file data. Upon successful response reception, the client can use the included upload URL to transmit the file data (<a href="#upload-appending" class="auto internal xref">Section 6</a>) and resume the upload at any stage if an interruption occurs. The retransmission of file data or the ultimate upload failure that can happen with an "optimistic upload creation" is therefore avoided at the expense of an additional request that does not carry file data.<a href="#section-16.2-1" class="pilcrow">¶</a></p>
-<p id="section-16.2-2">This approach best suited if the client cannot receive intermediate responses, e.g. due to a limitation in the provided HTTP interface, or if large files are transferred where the cost of the additional request is miniscule compared to the effort of transferring the large file itself.<a href="#section-16.2-2" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="upgrading-to-resumable-uploads">
-<section id="section-16.3">
-        <h3 id="name-upgrading-to-resumable-uplo">
-<a href="#section-16.3" class="section-number selfRef">16.3. </a><a href="#name-upgrading-to-resumable-uplo" class="section-name selfRef">Upgrading To Resumable Uploads</a>
-        </h3>
-<p id="section-16.3-1">The approach specified in this document allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the file is transferred in a single request, usually <code>POST</code> or <code>PUT</code>, without any ability to resume from interruptions. The client can offer the server to upgrade such an upload to a resumable upload. If supported by the server, the file transfer benefits from the gained ability to resume. Otherwise, the transfer falls back to a non-resumable upload without additional cost.<a href="#section-16.3-1" class="pilcrow">¶</a></p>
-<p id="section-16.3-2">To perform an upgrade, the client adds the <code>Upload-Complete: ?1</code> header field to the original request, which attempts to transmit the entire file in one request. A server that supports resumable uploads at the target URI, can create a resumable upload resource and send its upload URL in a 104 (Upload Resumption Supported) intermediate response for the client to resume the upload after interruptions.<a href="#section-16.3-2" class="pilcrow">¶</a></p>
-<p id="section-16.3-3">A server that does not support resumable uploads or does not want to upgrade to a resumable upload for this request can ignore the <code>Upload-Complete: ?1</code> header and treat the request as a non-resumable upload.<a href="#section-16.3-3" class="pilcrow">¶</a></p>
-<p id="section-16.3-4">This upgrade can also be performed transparently by the client without the user taking an active role. When a user asks the client to send a non-resumable request, the client can add the <code>Upload-Complete: ?1</code> and handle potential interruptions and resumptions under the hood without involving the user. If the client has to resume that upload, the response to the last upload appending request is considered the response for the entire file upload and should be presented to the user.<a href="#section-16.3-4" class="pilcrow">¶</a></p>
+<p id="section-16.2-1">With a "careful upload creation" the client sends an empty upload creation request without including any file data. Upon successful response reception, the client can use the included upload URL to transmit the file data (<a href="#upload-appending" class="auto internal xref">Section 6</a>) and resume the upload at any stage if an interruption occurs. The client should inspect the response for the <code>Upload-Limit</code> header field, which would indicate limits applying to the remaining upload procedure.<a href="#section-16.2-1" class="pilcrow">¶</a></p>
+<p id="section-16.2-2">The retransmission of file data or the ultimate upload failure that can happen with an "optimistic upload creation" is therefore avoided at the expense of an additional request that does not carry file data.<a href="#section-16.2-2" class="pilcrow">¶</a></p>
+<p id="section-16.2-3">This approach best suited if the client cannot receive intermediate responses, e.g. due to a limitation in the provided HTTP interface, or if large files are transferred where the cost of the additional request is miniscule compared to the effort of transferring the large file itself.<a href="#section-16.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
