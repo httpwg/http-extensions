@@ -3,9 +3,9 @@
 
 
 HTTP                                                       M. Nottingham
-Internet-Draft                                            8 October 2024
+Internet-Draft                                            9 October 2024
 Intended status: Standards Track                                        
-Expires: 11 April 2025
+Expires: 12 April 2025
 
 
                   Retrofit Structured Fields for HTTP
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 April 2025.
+   This Internet-Draft will expire on 12 April 2025.
 
 Copyright Notice
 

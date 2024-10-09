@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 11 April 2025                                                  
+Expires: 12 April 2025                                                  
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                          8 October 2024
+                                                          9 October 2024
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 April 2025.
+   This Internet-Draft will expire on 12 April 2025.
 
 Copyright Notice
 
@@ -465,7 +465,8 @@ A.5.  Since draft-ietf-httpbis-safe-method-w-body-04
 
 A.6.  Since draft-ietf-httpbis-safe-method-w-body-04
 
-   None yet.
+   *  Update "Sensitive information in QUERY URLs"
+      (https://github.com/httpwg/http-extensions/issues/2853)
 
 Authors' Addresses
 
