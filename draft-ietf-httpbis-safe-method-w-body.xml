@@ -534,7 +534,9 @@ Dubois, Camille, camille.dubois@example.net
 </ul>
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-04" anchor="changes.since.05">
-<t>None yet.</t>
+<ul>
+  <li>Update "Sensitive information in QUERY URLs" (<eref target="https://github.com/httpwg/http-extensions/issues/2853"/>)</li>
+</ul>
 </section>
 </section>
 
