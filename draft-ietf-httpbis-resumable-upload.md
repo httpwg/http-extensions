@@ -246,10 +246,12 @@ Location: https://example.com/upload/b530ce8ff
 HTTP/1.1 104 Upload Resumption Supported
 Upload-Draft-Interop-Version: 6
 Upload-Offset: 50
+Upload-Limit: max-size=1000000000
 
 HTTP/1.1 201 Created
 Location: https://example.com/upload/b530ce8ff
 Upload-Offset: 100
+Upload-Limit: max-size=1000000000
 ~~~
 
 The next example shows an upload creation, where only the first 25 bytes are transferred. The server acknowledges the received data and that the upload is not complete yet:
@@ -430,9 +432,9 @@ The `Upload-Offset` request and response header field indicates the resumption o
 The `Upload-Limit` response header field indicates limits applying the upload resource. The `Upload-Limit` field value is a Dictionary. The following limits are defined:
 
 - The `max-size` key specifies a maximum size that an upload resource is allowed to reach, counted in bytes. The value is an Integer.
-- The `min-size` key specifies a minimum size for a resumable upload, counted in bytes. The server will not create an upload resource if the client indicates that the uploaded data is smaller than the minimum size. The value is an Integer.
+- The `min-size` key specifies a minimum size for a resumable upload, counted in bytes. The server MAY NOT create an upload resource if the client indicates that the uploaded data is smaller than the minimum size by including the `Content-Length` and `Upload-Complete: ?1` fields, but the server MAY still accept the uploaded data. The value is an Integer.
 - The `max-append-size` key specifies a maximum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server MAY reject requests exceeding this limit and a client SHOULD NOT send larger upload append requests. The value is an Integer.
-- The `min-append-size` key specifies a minimum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server MAY reject requests below this limit and a client SHOULD NOT send smaller upload append requests. The value is an Integer.
+- The `min-append-size` key specifies a minimum size counted in bytes for the request content in a single upload append request ({{upload-appending}}) that does not complete the upload by setting the `Upload-Complete: ?1` field. The server MAY reject non-completing requests below this limit and a client SHOULD NOT send smaller non-completing upload append requests. A server MUST NOT reject an upload append request due to smaller size if the request includes the `Upload-Complete: ?1` field. The value is an Integer.
 - The `expires` key specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response by the server. After the resource's lifetime is reached, the server MAY make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource. The lifetime MAY be extended but SHOULD NOT be reduced once the upload resource is created. The value is an Integer.
 
 When parsing this header field, unrecognized keys MUST be ignored and MUST NOT fail the parsing to facilitate the addition of new limits in the future.
