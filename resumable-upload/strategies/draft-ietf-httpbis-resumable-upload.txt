@@ -962,11 +962,11 @@ Table of Contents
 
 16.1.  Optimistic Upload Creation
 
-   An "optimistic upload creation" can be used if the client assumes
-   that the server supports resumable uploads under the target URI and
-   that the client is capable of handling and processing interim
-   responses.  The upload creation request then includes the full file
-   because the client anticipates that the file will be transferred
+   An "optimistic upload creation" can be used independent of the
+   client's knowledge about the server's support for resumable uploads.
+   However, the client must be capable of handling and processing
+   interim responses.  An upload creation request then includes the full
+   file because the client anticipates that the file will be transferred
    without interruptions or resumed if an interruption occurs.
 
    The benefit of this method is that if the upload creation request
@@ -979,11 +979,12 @@ Table of Contents
    URL, the client cannot resume that upload due to the missing upload
    URL.  The intermediate response might not be received if the
    interruption happens too early in the message exchange, the server
-   does not support sending the 104 (Upload Resumption Supported)
-   intermediate response, or an intermediary dropped the intermediate
-   response.  Without a 104 response, the client needs to either treat
-   the upload as failed or retry the entire upload creation request if
-   this is allowed by the application.
+   does not support resumable uploads at all, the server does not
+   support sending the 104 (Upload Resumption Supported) intermediate
+   response, or an intermediary dropped the intermediate response.
+   Without a 104 response, the client needs to either treat the upload
+   as failed or retry the entire upload creation request if this is
+   allowed by the application.
 
 16.1.1.  Upgrading To Resumable Uploads
 
@@ -992,9 +993,9 @@ Table of Contents
    non-resumable upload, the file is transferred in a single request,
    usually POST or PUT, without any ability to resume from
    interruptions.  The client can offer the server to upgrade such a
-   request to a resumable upload by adding the Upload-Complete: ?1
-   header field to the original request.  The request is not changed
-   otherwise.
+   request to a resumable upload (see Section 4.1) by adding the Upload-
+   Complete: ?1 header field to the original request.  The request is
+   not changed otherwise.
 
    A server that supports resumable uploads at the target URI can create
    a resumable upload resource and send its upload URL in a 104 (Upload
@@ -1015,13 +1016,14 @@ Table of Contents
 
 16.2.  Careful Upload Creation
 
-   With a "careful upload creation" the client sends an empty upload
-   creation request without including any file data.  Upon successful
-   response reception, the client can use the included upload URL to
-   transmit the file data (Section 6) and resume the upload at any stage
-   if an interruption occurs.  The client should inspect the response
-   for the Upload-Limit header field, which would indicate limits
-   applying to the remaining upload procedure.
+   For a "careful upload creation" the client knows that the server
+   supports resumable uploads and sends an empty upload creation request
+   without including any file data.  Upon successful response reception,
+   the client can use the included upload URL to transmit the file data
+   (Section 6) and resume the upload at any stage if an interruption
+   occurs.  The client should inspect the response for the Upload-Limit
+   header field, which would indicate limits applying to the remaining
+   upload procedure.
 
    The retransmission of file data or the ultimate upload failure that
    can happen with an "optimistic upload creation" is therefore avoided
