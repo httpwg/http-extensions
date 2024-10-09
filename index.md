@@ -39,6 +39,24 @@ View [saved issues](issues.html), or the latest GitHub [issues](https://github.c
 
 ## Preview for branch [resumable-upload](resumable-upload)
 
+## Preview for branch [resumable-upload/limit-upfront](resumable-upload/limit-upfront)
+
+| Draft |     |     |     |
+| ----- | --- | --- | --- |
+| [Retrofit Structured Fields](resumable-upload/limit-upfront/draft-ietf-httpbis-retrofit.html "Retrofit Structured Fields for HTTP (HTML)") | [plain text](resumable-upload/limit-upfront/draft-ietf-httpbis-retrofit.txt "Retrofit Structured Fields for HTTP (Text)") | same as main |
+| [Resumable Uploads](resumable-upload/limit-upfront/draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](resumable-upload/limit-upfront/draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-resumable-upload.txt&url_2=https://httpwg.github.io/http-extensions/resumable-upload/limit-upfront/draft-ietf-httpbis-resumable-upload.txt) |
+| [The Concealed HTTP Authentication Scheme](resumable-upload/limit-upfront/draft-ietf-httpbis-unprompted-auth.html "The Concealed HTTP Authentication Scheme (HTML)") | [plain text](resumable-upload/limit-upfront/draft-ietf-httpbis-unprompted-auth.txt "The Concealed HTTP Authentication Scheme (Text)") | same as main |
+| [Compression Dictionary Transport](resumable-upload/limit-upfront/draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](resumable-upload/limit-upfront/draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | same as main |
+| [Zstd Window Size](resumable-upload/limit-upfront/draft-ietf-httpbis-zstd-window-size.html "Window Sizing for Zstandard Content Encoding (HTML)") | [plain text](resumable-upload/limit-upfront/draft-ietf-httpbis-zstd-window-size.txt "Window Sizing for Zstandard Content Encoding (Text)") | same as main |
+| [Templated CONNECT-TCP](resumable-upload/limit-upfront/draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](resumable-upload/limit-upfront/draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | same as main |
+| [HTTP Server Secondary Cert Auth](resumable-upload/limit-upfront/draft-ietf-httpbis-secondary-server-certs.html "Secondary Certificate Authentication of HTTP Servers (HTML)") | [plain text](resumable-upload/limit-upfront/draft-ietf-httpbis-secondary-server-certs.txt "Secondary Certificate Authentication of HTTP Servers (Text)") | same as main |
+| [HTTP Cache Groups](resumable-upload/limit-upfront/draft-ietf-httpbis-cache-groups.html "HTTP Cache Groups (HTML)") | [plain text](resumable-upload/limit-upfront/draft-ietf-httpbis-cache-groups.txt "HTTP Cache Groups (Text)") | same as main |
+| [Cookies: HTTP State Management Mechanism](resumable-upload/limit-upfront/draft-ietf-httpbis-rfc6265bis.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](resumable-upload/limit-upfront/draft-ietf-httpbis-rfc6265bis.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
+| [Optimistic HTTP Upgrade Security](resumable-upload/limit-upfront/draft-ietf-httpbis-optimistic-upgrade.html "Security Considerations for Optimistic Use of HTTP Upgrade (HTML)") | [plain text](resumable-upload/limit-upfront/draft-ietf-httpbis-optimistic-upgrade.txt "Security Considerations for Optimistic Use of HTTP Upgrade (Text)") | same as main |
+| [The HTTP QUERY Method](resumable-upload/limit-upfront/draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](resumable-upload/limit-upfront/draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | same as main |
+| [Structured Field Values for HTTP](resumable-upload/limit-upfront/draft-ietf-httpbis-sfbis.html "Structured Field Values for HTTP (HTML)") | [plain text](resumable-upload/limit-upfront/draft-ietf-httpbis-sfbis.txt "Structured Field Values for HTTP (Text)") | same as main |
+| [No-Vary-Search](resumable-upload/limit-upfront/draft-ietf-httpbis-no-vary-search.html "No-Vary-Search (HTML)") | [plain text](resumable-upload/limit-upfront/draft-ietf-httpbis-no-vary-search.txt "No-Vary-Search (Text)") | same as main |
+
 ## Preview for branch [resumable-upload/strategies](resumable-upload/strategies)
 
 | Draft |     |     |     |

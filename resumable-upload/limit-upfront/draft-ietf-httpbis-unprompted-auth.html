@@ -1,0 +1,2154 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>The Concealed HTTP Authentication Scheme</title>
+<meta content="David Schinazi" name="author">
+<meta content="David M. Oliver" name="author">
+<meta content="Jonathan Hoyland" name="author">
+<meta content="
+       Most HTTP authentication schemes are probeable in the sense that it is possible
+for an unauthenticated client to probe whether an origin serves resources that
+require authentication. It is possible for an origin to hide the fact that it
+requires authentication by not generating Unauthorized status codes, however
+that only works with non-cryptographic authentication schemes: cryptographic
+signatures require a fresh nonce to be signed. Prior to this document, there
+was no existing way for the origin to share such a nonce without exposing the
+fact that it serves resources that require authentication. This document
+defines a new non-probeable cryptographic authentication scheme. 
+    " name="description">
+<meta content="xml2rfc 3.23.2" name="generator">
+<meta content="secure" name="keyword">
+<meta content="tunnels" name="keyword">
+<meta content="masque" name="keyword">
+<meta content="http-ng" name="keyword">
+<meta content="draft-ietf-httpbis-unprompted-auth-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.23.2
+    Python 3.12.7
+    ConfigArgParse 1.7
+    google-i18n-address 3.1.1
+    intervaltree 3.1.0
+    Jinja2 3.1.4
+    lxml 4.9.4
+    platformdirs 4.3.6
+    pycountry 22.3.5
+    PyYAML 6.0.1
+    requests 2.32.3
+    setuptools 70.3.0
+    wcwidth 0.2.13
+-->
+<link href="draft-ietf-httpbis-unprompted-auth.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Cabin Condensed", sans-serif;
+  font-weight: 600;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+}
+:is(ol, ul) :is(ol, ul) {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  line-height: 1;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+}
+dl.olPercent {
+  --indent: 5ch;
+}
+dl > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+dl.olPercent > dt {
+  min-width: calc(var(--indent) - 2ch);
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:first-child, .break:first-child + *) {
+  margin-top: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:last-child) {
+  margin-bottom: 0;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    overflow-x: auto;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+}
+a.pilcrow[href] { color: var(--pilcrow-weak); }
+a.pilcrow[href]:hover { text-decoration: none; }
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+}
+#identifiers dt {
+  width: var(--identifier-width);
+  min-width: var(--identifier-width);
+  clear: left;
+  float: left;
+  text-align: right;
+  margin-right: 1ch;
+}
+#identifiers dd {
+  margin: 0;
+  margin-left: calc(1em + var(--identifier-width)) !important;
+  min-width: 5em;
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+#toc nav ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+#toc nav li {
+  line-height: 1.3em;
+  margin: 2px 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+#toc a.xref {
+  white-space: normal;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 10ch;
+  margin-right: 1.5ch;
+}
+.references dt:target::before {
+  content: "⇒";
+  width: 15px;
+  margin: 0 10px 0 -25px;
+}
+.references dd {
+  margin-left: 12ch !important;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc.active {
+      opacity: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 8px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active nav {
+    display: block;
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin-top: 2px;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  #toc nav > ul  {
+    margin-bottom: 2em;
+  }
+  #toc ul {
+    margin: 0 0 0 4px;
+    font-size: var(--small-font-size);
+  }
+  #toc ul :is(p, li) {
+    margin: 2px 0;
+    line-height: 22px;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+  .toplink {
+    display: none;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Changes introduced to fix issues found during implementation */
+
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin: 8px 0.5em 0;
+}
+
+/* Provide styling for table cell text alignment */
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 20em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">The Concealed HTTP Authentication Scheme</td>
+<td class="right">October 2024</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Schinazi, et al.</td>
+<td class="center">Expires 12 April 2025</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">HTTPBIS</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-ietf-httpbis-unprompted-auth-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2024-10-09" class="published">9 October 2024</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Standards Track</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2025-04-12">12 April 2025</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">D. Schinazi</div>
+<div class="org">Google LLC</div>
+</div>
+<div class="author">
+      <div class="author-name">D. Oliver</div>
+<div class="org">Guardian Project</div>
+</div>
+<div class="author">
+      <div class="author-name">J. Hoyland</div>
+<div class="org">Cloudflare Inc.</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">The Concealed HTTP Authentication Scheme</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">Most HTTP authentication schemes are probeable in the sense that it is possible
+for an unauthenticated client to probe whether an origin serves resources that
+require authentication. It is possible for an origin to hide the fact that it
+requires authentication by not generating Unauthorized status codes, however
+that only works with non-cryptographic authentication schemes: cryptographic
+signatures require a fresh nonce to be signed. Prior to this document, there
+was no existing way for the origin to share such a nonce without exposing the
+fact that it serves resources that require authentication. This document
+defines a new non-probeable cryptographic authentication scheme.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        The latest revision of this draft can be found at <span><a href="https://httpwg.org/http-extensions/draft-ietf-httpbis-unprompted-auth.html">https://httpwg.org/http-extensions/draft-ietf-httpbis-unprompted-auth.html</a></span>.
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-ietf-httpbis-unprompted-auth/">https://datatracker.ietf.org/doc/draft-ietf-httpbis-unprompted-auth/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        HTTP Working Group mailing list (<span><a href="mailto:ietf-http-wg@w3.org">mailto:ietf-http-wg@w3.org</a></span>),
+        which is archived at <span><a href="https://lists.w3.org/Archives/Public/ietf-http-wg/">https://lists.w3.org/Archives/Public/ietf-http-wg/</a></span>.
+        Working Group information can be found at <span><a href="https://httpwg.org/">https://httpwg.org/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/httpwg/http-extensions/labels/unprompted-auth">https://github.com/httpwg/http-extensions/labels/unprompted-auth</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 12 April 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2024 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-the-concealed-authenticatio" class="internal xref">The Concealed Authentication Scheme</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-client-handling" class="internal xref">Client Handling</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-key-exporter-context" class="internal xref">Key Exporter Context</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.1">
+                    <p id="section-toc.1-1.3.2.1.2.1.1"><a href="#section-3.1.1" class="auto internal xref">3.1.1</a>.  <a href="#name-public-key-encoding" class="internal xref">Public Key Encoding</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-key-exporter-output" class="internal xref">Key Exporter Output</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-signature-computation" class="internal xref">Signature Computation</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-authentication-parameters" class="internal xref">Authentication Parameters</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-the-k-parameter" class="internal xref">The k Parameter</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-the-a-parameter" class="internal xref">The a Parameter</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-the-p-parameter" class="internal xref">The p Parameter</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
+                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-the-s-parameter" class="internal xref">The s Parameter</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.5">
+                <p id="section-toc.1-1.4.2.5.1"><a href="#section-4.5" class="auto internal xref">4.5</a>.  <a href="#name-the-v-parameter" class="internal xref">The v Parameter</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-example" class="internal xref">Example</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-server-handling" class="internal xref">Server Handling</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-frontend-handling" class="internal xref">Frontend Handling</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-communication-between-front" class="internal xref">Communication between Frontend and Backend</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-backend-handling" class="internal xref">Backend Handling</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4">
+                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-non-probeable-server-handli" class="internal xref">Non-Probeable Server Handling</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-requirements-on-tls-usage" class="internal xref">Requirements on TLS Usage</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-http-authentication-schemes" class="internal xref">HTTP Authentication Schemes Registry</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-tls-keying-material-exporte" class="internal xref">TLS Keying Material Exporter Labels</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.3">
+                <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="auto internal xref">9.3</a>.  <a href="#name-http-field-name" class="internal xref">HTTP Field Name</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">HTTP authentication schemes (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-11" class="relref">Section 11</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) allow origins
+to restrict access for some resources to only authenticated requests. While
+these schemes commonly involve a challenge where the origin asks the client to
+provide authentication information, it is possible for clients to send such
+information unprompted. This is particularly useful in cases where an origin
+wants to offer a service or capability only to "those who know" while all
+others are given no indication the service or capability exists. Such designs
+rely on an externally-defined mechanism by which keys are distributed. For
+example, a company might offer remote employee access to company services
+directly via its website using their employee credentials, or offer access to
+limited special capabilities for specific employees, while making discovering
+(or probing for) such capabilities difficult. As another example, members of
+less well-defined communities might use more ephemeral keys to acquire access
+to geography- or capability-specific resources, as issued by an entity whose
+user base is larger than the available resources can support (by having that
+entity metering the availability of keys temporally or geographically).<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">While digital-signature-based HTTP authentication schemes already exist (e.g.,
+<span>[<a href="#HOBA" class="cite xref">HOBA</a>]</span>), they rely on the origin explicitly sending a fresh
+challenge to the client, to ensure that the signature input is fresh. That
+makes the origin probeable as it sends the challenge to unauthenticated
+clients. This document defines a new signature-based authentication scheme that
+is not probeable.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<div id="conventions">
+<section id="section-1.1">
+        <h3 id="name-conventions-and-definitions">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+        </h3>
+<p id="section-1.1-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-2">This document uses the notation from <span><a href="https://rfc-editor.org/rfc/rfc9000#section-1.3" class="relref">Section 1.3</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="the-concealed-authentication-scheme">
+<section id="section-2">
+      <h2 id="name-the-concealed-authenticatio">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-the-concealed-authenticatio" class="section-name selfRef">The Concealed Authentication Scheme</a>
+      </h2>
+<p id="section-2-1">This document defines the "Concealed" HTTP authentication scheme. It uses
+asymmetric cryptography. Clients possess a key ID and a public/private key
+pair, and origin servers maintain a mapping of authorized key IDs to associated
+public keys.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">The client uses a TLS keying material exporter to generate data to be signed
+(see <a href="#client" class="auto internal xref">Section 3</a>) then sends the signature using the Authorization (or
+Proxy-Authorization) header field (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-11" class="relref">Section 11</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). The signature
+and additional information are exchanged using authentication parameters (see
+<a href="#auth-params" class="auto internal xref">Section 4</a>). Once the server receives these, it can check whether the
+signature validates against an entry in its database of known keys. The server
+can then use the validation result to influence its response to the client, for
+example by restricting access to certain resources.<a href="#section-2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="client">
+<section id="section-3">
+      <h2 id="name-client-handling">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-client-handling" class="section-name selfRef">Client Handling</a>
+      </h2>
+<p id="section-3-1">When a client wishes to use the Concealed HTTP authentication scheme with a
+request, it <span class="bcp14">SHALL</span> compute the authentication proof using a TLS keying material
+exporter with the following parameters:<a href="#section-3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3-2.1">
+          <p id="section-3-2.1.1">the label is set to "EXPORTER-HTTP-Concealed-Authentication"<a href="#section-3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-3-2.2">
+          <p id="section-3-2.2.1">the context is set to the structure described in <a href="#context" class="auto internal xref">Section 3.1</a><a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-3-2.3">
+          <p id="section-3-2.3.1">the exporter output length is set to 48 bytes (see <a href="#output" class="auto internal xref">Section 3.2</a>)<a href="#section-3-2.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-3-3">Note that TLS 1.3 keying material exporters are defined in <span><a href="https://rfc-editor.org/rfc/rfc8446#section-7.5" class="relref">Section 7.5</a> of [<a href="#TLS" class="cite xref">TLS</a>]</span>, while TLS 1.2 keying material exporters are defined in
+<span>[<a href="#KEY-EXPORT" class="cite xref">KEY-EXPORT</a>]</span>.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<div id="context">
+<section id="section-3.1">
+        <h3 id="name-key-exporter-context">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-key-exporter-context" class="section-name selfRef">Key Exporter Context</a>
+        </h3>
+<p id="section-3.1-1">The TLS key exporter context is described in <a href="#fig-context" class="auto internal xref">Figure 1</a>, using the
+notation from <span><a href="https://rfc-editor.org/rfc/rfc9000#section-1.3" class="relref">Section 1.3</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>:<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<span id="name-key-exporter-context-format"></span><div id="fig-context">
+<figure id="figure-1">
+          <div class="alignLeft art-text artwork" id="section-3.1-2.1">
+<pre>
+  Signature Algorithm (16),
+  Key ID Length (i),
+  Key ID (..),
+  Public Key Length (i),
+  Public Key (..),
+  Scheme Length (i),
+  Scheme (..),
+  Host Length (i),
+  Host (..),
+  Port (16),
+  Realm Length (i),
+  Realm (..),
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-key-exporter-context-format" class="selfRef">Key Exporter Context Format</a>
+          </figcaption></figure>
+</div>
+<p id="section-3.1-3">The key exporter context contains the following fields:<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-3.1-4">
+          <dt id="section-3.1-4.1">Signature Algorithm:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-4.2">
+            <p id="section-3.1-4.2.1">The signature scheme sent in the <code>s</code> Parameter (see <a href="#parameter-s" class="auto internal xref">Section 4.4</a>).<a href="#section-3.1-4.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.1-4.3">Key ID:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-4.4">
+            <p id="section-3.1-4.4.1">The key ID sent in the <code>k</code> Parameter (see <a href="#parameter-k" class="auto internal xref">Section 4.1</a>).<a href="#section-3.1-4.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.1-4.5">Public Key:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-4.6">
+            <p id="section-3.1-4.6.1">The public key used by the server to validate the signature provided by the
+client. Its encoding is described in <a href="#public-key-encoding" class="auto internal xref">Section 3.1.1</a>.<a href="#section-3.1-4.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.1-4.7">Scheme:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-4.8">
+            <p id="section-3.1-4.8.1">The scheme for this request, encoded using the format of the scheme portion
+of a URI as defined in <span><a href="https://rfc-editor.org/rfc/rfc3986#section-3.1" class="relref">Section 3.1</a> of [<a href="#URI" class="cite xref">URI</a>]</span>.<a href="#section-3.1-4.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.1-4.9">Host:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-4.10">
+            <p id="section-3.1-4.10.1">The host for this request, encoded using the format of the host portion of a
+URI as defined in <span><a href="https://rfc-editor.org/rfc/rfc3986#section-3.2.2" class="relref">Section 3.2.2</a> of [<a href="#URI" class="cite xref">URI</a>]</span>.<a href="#section-3.1-4.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.1-4.11">Port:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-4.12">
+            <p id="section-3.1-4.12.1">The port for this request, encoded in network byte order. Note that the port
+is either included in the URI, or is the default port for the scheme in use;
+see <span><a href="https://rfc-editor.org/rfc/rfc3986#section-3.2.3" class="relref">Section 3.2.3</a> of [<a href="#URI" class="cite xref">URI</a>]</span>.<a href="#section-3.1-4.12.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.1-4.13">Realm:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.1-4.14">
+            <p id="section-3.1-4.14.1">The realm of authentication that is sent in the realm authentication
+parameter (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-11.5" class="relref">Section 11.5</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). If the realm authentication parameter is
+not present, this <span class="bcp14">SHALL</span> be empty. This document does not define a means for the
+origin to communicate a realm to the client. If a client is not configured to
+use a specific realm, it <span class="bcp14">SHALL</span> use an empty realm and <span class="bcp14">SHALL NOT</span> send the realm
+authentication parameter.<a href="#section-3.1-4.14.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-3.1-5">The Signature Algorithm and Port fields are encoded as unsigned 16-bit integers
+in network byte order. The Key ID, Public Key, Scheme, Host, and Realm fields
+are length prefixed strings; they are preceded by a Length field that
+represents their length in bytes. These length fields are encoded using the
+variable-length integer encoding from <span><a href="https://rfc-editor.org/rfc/rfc9000#section-16" class="relref">Section 16</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span> and <span class="bcp14">MUST</span> be
+encoded in the minimum number of bytes necessary.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<div id="public-key-encoding">
+<section id="section-3.1.1">
+          <h4 id="name-public-key-encoding">
+<a href="#section-3.1.1" class="section-number selfRef">3.1.1. </a><a href="#name-public-key-encoding" class="section-name selfRef">Public Key Encoding</a>
+          </h4>
+<p id="section-3.1.1-1">Both the "Public Key" field of the TLS key exporter context (see above) and the
+<code>a</code> Parameter (see <a href="#parameter-a" class="auto internal xref">Section 4.2</a>) carry the same public key. The encoding of
+the public key is determined by the Signature Algorithm in use as follows:<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-3.1.1-2">
+            <dt id="section-3.1.1-2.1">RSASSA-PSS algorithms:</dt>
+            <dd style="margin-left: 1.5em" id="section-3.1.1-2.2">
+              <p id="section-3.1.1-2.2.1">The public key is an RSAPublicKey structure <span>[<a href="#PKCS1" class="cite xref">PKCS1</a>]</span> encoded in DER
+<span>[<a href="#X.690" class="cite xref">X.690</a>]</span>. BER encodings which are not DER <span class="bcp14">MUST</span> be rejected.<a href="#section-3.1.1-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-3.1.1-2.3">ECDSA algorithms:</dt>
+            <dd style="margin-left: 1.5em" id="section-3.1.1-2.4">
+              <p id="section-3.1.1-2.4.1">The public key is a UncompressedPointRepresentation structure defined in
+<span><a href="https://rfc-editor.org/rfc/rfc8446#section-4.2.8.2" class="relref">Section 4.2.8.2</a> of [<a href="#TLS" class="cite xref">TLS</a>]</span>, using the curve specified by the SignatureScheme.<a href="#section-3.1.1-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-3.1.1-2.5">EdDSA algorithms:</dt>
+            <dd style="margin-left: 1.5em" id="section-3.1.1-2.6">
+              <p id="section-3.1.1-2.6.1">The public key is the byte string encoding defined in <span>[<a href="#EdDSA" class="cite xref">EdDSA</a>]</span>.<a href="#section-3.1.1-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+<p id="section-3.1.1-3">This document does not define the public key encodings for other algorithms. In
+order for a SignatureScheme to be usable with the Concealed HTTP authentication
+scheme, its public key encoding needs to be defined in a corresponding document.<a href="#section-3.1.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="output">
+<section id="section-3.2">
+        <h3 id="name-key-exporter-output">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-key-exporter-output" class="section-name selfRef">Key Exporter Output</a>
+        </h3>
+<p id="section-3.2-1">The key exporter output is 48 bytes long. Of those, the first 32 bytes are part
+of the input to the signature and the next 16 bytes are sent alongside the
+signature. This allows the recipient to confirm that the exporter produces the
+right values. This is described in <a href="#fig-output" class="auto internal xref">Figure 2</a>, using the notation from
+<span><a href="https://rfc-editor.org/rfc/rfc9000#section-1.3" class="relref">Section 1.3</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<span id="name-key-exporter-output-format"></span><div id="fig-output">
+<figure id="figure-2">
+          <div class="alignLeft art-text artwork" id="section-3.2-2.1">
+<pre>
+  Signature Input (256),
+  Verification (128),
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-key-exporter-output-format" class="selfRef">Key Exporter Output Format</a>
+          </figcaption></figure>
+</div>
+<p id="section-3.2-3">The key exporter output contains the following fields:<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-3.2-4">
+          <dt id="section-3.2-4.1">Signature Input:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.2-4.2">
+            <p id="section-3.2-4.2.1">This is part of the data signed using the client's chosen asymmetric private
+key (see <a href="#computation" class="auto internal xref">Section 3.3</a>).<a href="#section-3.2-4.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-3.2-4.3">Verification:</dt>
+          <dd style="margin-left: 1.5em" id="section-3.2-4.4">
+            <p id="section-3.2-4.4.1">The verification is transmitted to the server using the <code>v</code> Parameter (see
+<a href="#parameter-v" class="auto internal xref">Section 4.5</a>).<a href="#section-3.2-4.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="computation">
+<section id="section-3.3">
+        <h3 id="name-signature-computation">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-signature-computation" class="section-name selfRef">Signature Computation</a>
+        </h3>
+<p id="section-3.3-1">Once the Signature Input has been extracted from the key exporter output (see
+<a href="#output" class="auto internal xref">Section 3.2</a>), it is prefixed with static data before being signed. The signature
+is computed over the concatenation of:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.3-2.1">
+            <p id="section-3.3-2.1.1">A string that consists of octet 32 (0x20) repeated 64 times<a href="#section-3.3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.3-2.2">
+            <p id="section-3.3-2.2.1">The context string "HTTP Concealed Authentication"<a href="#section-3.3-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.3-2.3">
+            <p id="section-3.3-2.3.1">A single 0 byte which serves as a separator<a href="#section-3.3-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.3-2.4">
+            <p id="section-3.3-2.4.1">The Signature Input extracted from the key exporter output (see <a href="#output" class="auto internal xref">Section 3.2</a>)<a href="#section-3.3-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.3-3">For example, if the Signature Input has all its 32 bytes set to 01, the content
+covered by the signature (in hexadecimal format) would be:<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<span id="name-example-content-covered-by-"></span><div id="fig-sig-example">
+<figure id="figure-3">
+          <div class="alignLeft art-text artwork" id="section-3.3-4.1">
+<pre>
+2020202020202020202020202020202020202020202020202020202020202020
+2020202020202020202020202020202020202020202020202020202020202020
+48545450205369676E61747572652041757468656E7469636174696F6E
+00
+0101010101010101010101010101010101010101010101010101010101010101
+</pre>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-example-content-covered-by-" class="selfRef">Example Content Covered by Signature</a>
+          </figcaption></figure>
+</div>
+<p id="section-3.3-5">The purpose of this static prefix is to mitigate issues that could arise if
+authentication asymmetric keys were accidentally reused across protocols (even
+though this is forbidden, see <a href="#security" class="auto internal xref">Section 8</a>). This construction mirrors that of
+the TLS 1.3 CertificateVerify message defined in <span><a href="https://rfc-editor.org/rfc/rfc8446#section-4.4.3" class="relref">Section 4.4.3</a> of [<a href="#TLS" class="cite xref">TLS</a>]</span>.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.3-6">The resulting signature is then transmitted to the server using the <code>p</code>
+Parameter (see <a href="#parameter-p" class="auto internal xref">Section 4.3</a>).<a href="#section-3.3-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="auth-params">
+<section id="section-4">
+      <h2 id="name-authentication-parameters">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-authentication-parameters" class="section-name selfRef">Authentication Parameters</a>
+      </h2>
+<p id="section-4-1">This specification defines the following authentication parameters.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">All of the byte sequences below are encoded using base64url (see <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#BASE64" class="cite xref">BASE64</a>]</span>) without quotes and without padding. In other words, the
+values of these byte-sequence authentication parameters <span class="bcp14">MUST NOT</span> include any
+characters other than ASCII letters, digits, dash and underscore.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-3">The integer below is encoded without a minus and without leading zeroes. In
+other words, the value of this integer authentication parameter <span class="bcp14">MUST NOT</span>
+include any characters other than digits, and <span class="bcp14">MUST NOT</span> start with a zero unless
+the full value is "0".<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-4">Using the syntax from <span>[<a href="#ABNF" class="cite xref">ABNF</a>]</span>:<a href="#section-4-4" class="pilcrow">¶</a></p>
+<span id="name-authentication-parameter-va"></span><div id="fig-param">
+<figure id="figure-4">
+        <div class="alignLeft art-text artwork" id="section-4-5.1">
+<pre>
+concealed-byte-sequence-param-value = *( ALPHA / DIGIT / "-" / "_" )
+concealed-integer-param-value =  %x31-39 1*4( DIGIT ) / "0"
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-authentication-parameter-va" class="selfRef">Authentication Parameter Value ABNF</a>
+        </figcaption></figure>
+</div>
+<div id="parameter-k">
+<section id="section-4.1">
+        <h3 id="name-the-k-parameter">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-the-k-parameter" class="section-name selfRef">The k Parameter</a>
+        </h3>
+<p id="section-4.1-1">The <span class="bcp14">REQUIRED</span> "k" (key ID) Parameter is a byte sequence that identifies which
+key the client wishes to use to authenticate. This is used by the backend to
+point to an entry in a server-side database of known keys, see <a href="#backend" class="auto internal xref">Section 6.3</a>.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="parameter-a">
+<section id="section-4.2">
+        <h3 id="name-the-a-parameter">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-the-a-parameter" class="section-name selfRef">The a Parameter</a>
+        </h3>
+<p id="section-4.2-1">The <span class="bcp14">REQUIRED</span> "a" (public key) Parameter is a byte sequence that specifies the
+public key used by the server to validate the signature provided by the client.
+This avoids key confusion issues (see <span>[<a href="#SEEMS-LEGIT" class="cite xref">SEEMS-LEGIT</a>]</span>). The encoding of the
+public key is described in <a href="#public-key-encoding" class="auto internal xref">Section 3.1.1</a>.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="parameter-p">
+<section id="section-4.3">
+        <h3 id="name-the-p-parameter">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-the-p-parameter" class="section-name selfRef">The p Parameter</a>
+        </h3>
+<p id="section-4.3-1">The <span class="bcp14">REQUIRED</span> "p" (proof) Parameter is a byte sequence that specifies the proof
+that the client provides to attest to possessing the credential that matches
+its key ID.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="parameter-s">
+<section id="section-4.4">
+        <h3 id="name-the-s-parameter">
+<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-the-s-parameter" class="section-name selfRef">The s Parameter</a>
+        </h3>
+<p id="section-4.4-1">The <span class="bcp14">REQUIRED</span> "s" (signature) Parameter is an integer that specifies the
+signature scheme used to compute the proof transmitted in the <code>p</code> Parameter.
+Its value is an integer between 0 and 65535 inclusive from the IANA "TLS
+SignatureScheme" registry maintained at
+&lt;<span><a href="https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-signaturescheme">https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-signaturescheme</a></span>&gt;.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="parameter-v">
+<section id="section-4.5">
+        <h3 id="name-the-v-parameter">
+<a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-the-v-parameter" class="section-name selfRef">The v Parameter</a>
+        </h3>
+<p id="section-4.5-1">The <span class="bcp14">REQUIRED</span> "v" (verification) Parameter is a byte sequence that specifies the
+verification that the client provides to attest to possessing the key exporter
+output (see <a href="#output" class="auto internal xref">Section 3.2</a> for details). This avoids issues with signature schemes
+where certain keys can generate signatures that are valid for multiple inputs
+(see <span>[<a href="#SEEMS-LEGIT" class="cite xref">SEEMS-LEGIT</a>]</span>).<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="example">
+<section id="section-5">
+      <h2 id="name-example">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-example" class="section-name selfRef">Example</a>
+      </h2>
+<p id="section-5-1">For example, the key ID "basement" authenticating using Ed25519
+<span>[<a href="#ED25519" class="cite xref">ED25519</a>]</span> could produce the following header field:<a href="#section-5-1" class="pilcrow">¶</a></p>
+<span id="name-example-header-field"></span><div id="fig-hdr-example">
+<figure id="figure-5">
+        <div class="lang-http-message sourcecode" id="section-5-2.1">
+<pre>
+NOTE: '\' line wrapping per RFC 8792
+
+Authorization: Concealed \
+  k=YmFzZW1lbnQ, \
+  a=VGhpcyBpcyBh-HB1YmxpYyBrZXkgaW4gdXNl_GhlcmU, \
+  s=2055, \
+  v=dmVyaWZpY2F0aW9u_zE2Qg, \
+  p=QzpcV2luZG93c_xTeXN0ZW0zMlxkcml2ZXJz-ENyb3dkU\
+    3RyaWtlXEMtMDAwMDAwMDAyOTEtMD-wMC0w_DAwLnN5cw
+</pre>
+</div>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-example-header-field" class="selfRef">Example Header Field</a>
+        </figcaption></figure>
+</div>
+</section>
+</div>
+<div id="server-handling">
+<section id="section-6">
+      <h2 id="name-server-handling">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-server-handling" class="section-name selfRef">Server Handling</a>
+      </h2>
+<p id="section-6-1">In this section, we subdivide the server role in two:<a href="#section-6-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6-2.1">
+          <p id="section-6-2.1.1">the "frontend" runs in the HTTP server that terminates the TLS or QUIC
+connection created by the client.<a href="#section-6-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-6-2.2">
+          <p id="section-6-2.2.1">the "backend" runs in the HTTP server that has access to the database of
+accepted key identifiers and public keys.<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-6-3">In most deployments, we expect the frontend and backend roles to both be
+implemented in a single HTTP origin server (as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-3.6" class="relref">Section 3.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). However, these roles can be split such that the frontend is an HTTP
+gateway (as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-3.7" class="relref">Section 3.7</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) and the backend is an HTTP
+origin server.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<div id="frontend-handling">
+<section id="section-6.1">
+        <h3 id="name-frontend-handling">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-frontend-handling" class="section-name selfRef">Frontend Handling</a>
+        </h3>
+<p id="section-6.1-1">If a frontend is configured to check the Concealed authentication scheme, it
+will parse the Authorization (or Proxy-Authorization) header field. If the
+authentication scheme is set to "Concealed", the frontend <span class="bcp14">MUST</span> validate that
+all the required authentication parameters are present and can be parsed
+correctly as defined in <a href="#auth-params" class="auto internal xref">Section 4</a>. If any parameter is missing or fails
+to parse, the frontend <span class="bcp14">MUST</span> ignore the entire Authorization (or
+Proxy-Authorization) header field.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1-2">The frontend then uses the data from these authentication parameters to compute
+the key exporter output, as defined in <a href="#output" class="auto internal xref">Section 3.2</a>. The frontend then shares the
+header field and the key exporter output with the backend.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="communication-between-frontend-and-backend">
+<section id="section-6.2">
+        <h3 id="name-communication-between-front">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-communication-between-front" class="section-name selfRef">Communication between Frontend and Backend</a>
+        </h3>
+<p id="section-6.2-1">If the frontend and backend roles are implemented in the same machine, this can
+be handled by a simple function call.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2-2">If the roles are split between two separate HTTP servers, then the backend
+won't be able to directly access the TLS keying material exporter from the TLS
+connection between the client and frontend, so the frontend needs to explictly
+send it. This document defines the "Concealed-Auth-Export" request header field
+for this purpose. The Concealed-Auth-Export header field's value is a
+Structured Field Byte Sequence (see <span><a href="https://rfc-editor.org/rfc/rfc8941#section-3.3.5" class="relref">Section 3.3.5</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>) that contains the 48-byte key exporter output
+(see <a href="#output" class="auto internal xref">Section 3.2</a>), without any parameters. Note that Structured Field Byte
+Sequences are encoded using the non-URL-safe variant of base64. For example:<a href="#section-6.2-2" class="pilcrow">¶</a></p>
+<span id="name-example-concealed-auth-expo"></span><div id="fig-int-hdr-example">
+<figure id="figure-6">
+          <div class="lang-http-message sourcecode" id="section-6.2-3.1">
+<pre>
+NOTE: '\' line wrapping per RFC 8792
+
+Concealed-Auth-Export: :VGhpc+BleGFtcGxlIFRMU/BleHBvcn\
+  Rlc+BvdXRwdXQ/aXMgNDggYnl0ZXMgI/+h:
+</pre>
+</div>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-example-concealed-auth-expo" class="selfRef">Example Concealed-Auth-Export Header Field</a>
+          </figcaption></figure>
+</div>
+<p id="section-6.2-4">The frontend <span class="bcp14">SHALL</span> forward the HTTP request to the backend, including the
+original unmodified Authorization (or Proxy-Authorization) header field and the
+newly added Concealed-Auth-Export header field.<a href="#section-6.2-4" class="pilcrow">¶</a></p>
+<p id="section-6.2-5">Note that, since the security of this mechanism requires the key exporter
+output to be correct, backends need to trust frontends to send it truthfully.
+This trust relationship is common because the frontend already needs access to
+the TLS certificate private key in order to respond to requests. HTTP servers
+that parse the Concealed-Auth-Export header field <span class="bcp14">MUST</span> ignore it unless they
+have already established that they trust the sender. Similarly, frontends that
+send the Concealed-Auth-Export header field <span class="bcp14">MUST</span> ensure that they do not
+forward any Concealed-Auth-Export header field received from the client.<a href="#section-6.2-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="backend">
+<section id="section-6.3">
+        <h3 id="name-backend-handling">
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-backend-handling" class="section-name selfRef">Backend Handling</a>
+        </h3>
+<p id="section-6.3-1">Once the backend receives the Authorization (or Proxy-Authorization) header
+field and the key exporter output, it looks up the key ID in its database of
+public keys. The backend <span class="bcp14">SHALL</span> then perform the following checks:<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.3-2.1">
+            <p id="section-6.3-2.1.1">validate that all the required authentication parameters are present and can
+be parsed correctly as defined in <a href="#auth-params" class="auto internal xref">Section 4</a><a href="#section-6.3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.3-2.2">
+            <p id="section-6.3-2.2.1">ensure the key ID is present in the backend's database and maps to a
+corresponding public key<a href="#section-6.3-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.3-2.3">
+            <p id="section-6.3-2.3.1">validate that the public key from the database is equal to the one in the
+Authorization (or Proxy-Authorization) header field<a href="#section-6.3-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.3-2.4">
+            <p id="section-6.3-2.4.1">validate that the verification field from the Authorization (or
+Proxy-Authorization) header field matches the one extracted from the key
+exporter output<a href="#section-6.3-2.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.3-2.5">
+            <p id="section-6.3-2.5.1">verify the cryptographic signature as defined in <a href="#computation" class="auto internal xref">Section 3.3</a><a href="#section-6.3-2.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-6.3-3">If all of these checks succeed, the backend can consider the request to be
+properly authenticated, and can reply accordingly (the backend can also forward
+the request to another HTTP server).<a href="#section-6.3-3" class="pilcrow">¶</a></p>
+<p id="section-6.3-4">If any of the above checks fail, the backend <span class="bcp14">MUST</span> treat it as if the
+Authorization (or Proxy-Authorization) header field was missing.<a href="#section-6.3-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="non-probeable-server-handling">
+<section id="section-6.4">
+        <h3 id="name-non-probeable-server-handli">
+<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-non-probeable-server-handli" class="section-name selfRef">Non-Probeable Server Handling</a>
+        </h3>
+<p id="section-6.4-1">Servers that wish to introduce resources whose existence cannot be probed need
+to ensure that they do not reveal any information about those resources to
+unauthenticated clients. In particular, such servers <span class="bcp14">MUST</span> respond to
+authentication failures with the exact same response that they would have used
+for non-existent resources. For example, this can mean using HTTP status code
+404 (Not Found) instead of 401 (Unauthorized).<a href="#section-6.4-1" class="pilcrow">¶</a></p>
+<p id="section-6.4-2">The authentication checks described above can take time to compute, and an
+attacker could detect use of this mechanism if that time is observable by
+comparing the timing of a request for a known non-existent resource to the
+timing of a request for a potentially authenticated resource. Servers can
+mitigate this observability by slightly delaying responses to some non-existent
+resources such that the timing of the authentication verification is not
+observable. This delay needs to be carefully considered to avoid having the
+delay itself leak the fact that this origin uses this mechanism at all.<a href="#section-6.4-2" class="pilcrow">¶</a></p>
+<p id="section-6.4-3">Non-probeable resources also need to be non-discoverable for unauthenticated
+users. For example, if a server operator wishes to hide an authenticated
+resource by pretending it does not exist to unauthenticated users, then the
+server operator needs to ensure there are no unauthenticated pages with links
+to that resource, and no other out-of-band ways for unauthenticated users to
+discover this resource.<a href="#section-6.4-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="requirements-on-tls-usage">
+<section id="section-7">
+      <h2 id="name-requirements-on-tls-usage">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-requirements-on-tls-usage" class="section-name selfRef">Requirements on TLS Usage</a>
+      </h2>
+<p id="section-7-1">This authentication scheme is only defined for uses of HTTP with TLS
+<span>[<a href="#TLS" class="cite xref">TLS</a>]</span>. This includes any use of HTTP over TLS as typically used for
+HTTP/2 <span>[<a href="#H2" class="cite xref">HTTP/2</a>]</span>, or HTTP/3 <span>[<a href="#H3" class="cite xref">HTTP/3</a>]</span> where the transport protocol uses TLS as its
+authentication and key exchange mechanism <span>[<a href="#QUIC-TLS" class="cite xref">QUIC-TLS</a>]</span>.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">Because the TLS keying material exporter is only secure for authentication when
+it is uniquely bound to the TLS session <span>[<a href="#RFC7627" class="cite xref">RFC7627</a>]</span>, the Concealed
+authentication scheme requires either one of the following properties:<a href="#section-7-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7-3.1">
+          <p id="section-7-3.1.1">The TLS version in use is greater or equal to 1.3 <span>[<a href="#TLS" class="cite xref">TLS</a>]</span>.<a href="#section-7-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-7-3.2">
+          <p id="section-7-3.2.1">The TLS version in use is 1.2 and the Extended Master Secret extension
+<span>[<a href="#RFC7627" class="cite xref">RFC7627</a>]</span> has been negotiated.<a href="#section-7-3.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-7-4">Clients <span class="bcp14">MUST NOT</span> use the Concealed authentication scheme on connections that do
+not meet one of the two properties above. If a server receives a request that
+uses this authentication scheme on a connection that meets neither of the above
+properties, the server <span class="bcp14">MUST</span> treat the request as if the authentication were not
+present.<a href="#section-7-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security">
+<section id="section-8">
+      <h2 id="name-security-considerations">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-8-1">The Concealed HTTP authentication scheme allows a client to authenticate to an
+origin server while guaranteeing freshness and without the need for the server
+to transmit a nonce to the client. This allows the server to accept
+authenticated clients without revealing that it supports or expects
+authentication for some resources. It also allows authentication without the
+client leaking the presence of authentication to observers due to clear-text
+TLS Client Hello extensions.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">Since the freshness described above is provided by a TLS key exporter, it can
+be as old as the underlying TLS connection. Servers can require better
+freshness by forcing clients to create new connections using mechanisms such as
+the GOAWAY frame (see <span><a href="https://rfc-editor.org/rfc/rfc9114#section-5.2" class="relref">Section 5.2</a> of [<a href="#H3" class="cite xref">HTTP/3</a>]</span>).<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-3">The authentication proofs described in this document are not bound to
+individual HTTP requests; if the key is used for authentication proofs on
+multiple requests on the same connection, they will all be identical. This
+allows for better compression when sending over the wire, but implies that
+client implementations that multiplex different security contexts over a single
+HTTP connection need to ensure that those contexts cannot read each other's
+header fields. Otherwise, one context would be able to replay the Authorization
+header field of another. This constraint is met by modern Web browsers. If an
+attacker were to compromise the browser such that it could access another
+context's memory, the attacker might also be able to access the corresponding
+key, so binding authentication to requests would not provide much benefit in
+practice.<a href="#section-8-3" class="pilcrow">¶</a></p>
+<p id="section-8-4">Authentication asymmetric keys used for the Concealed HTTP authentication
+scheme <span class="bcp14">MUST NOT</span> be reused in other protocols. Even though we attempt to
+mitigate these issues by adding a static prefix to the signed data (see
+<a href="#computation" class="auto internal xref">Section 3.3</a>), reusing keys could undermine the security guarantees of the
+authentication.<a href="#section-8-4" class="pilcrow">¶</a></p>
+<p id="section-8-5">Origins offering this scheme can link requests that use the same key.
+However, requests are not linkable across origins if the keys used are specific
+to the individual origins using this scheme.<a href="#section-8-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana">
+<section id="section-9">
+      <h2 id="name-iana-considerations">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<div id="iana-schemes">
+<section id="section-9.1">
+        <h3 id="name-http-authentication-schemes">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-http-authentication-schemes" class="section-name selfRef">HTTP Authentication Schemes Registry</a>
+        </h3>
+<p id="section-9.1-1">This document, if approved, requests IANA to register the following entry in
+the "HTTP Authentication Schemes" Registry maintained at
+&lt;<span><a href="https://www.iana.org/assignments/http-authschemes">https://www.iana.org/assignments/http-authschemes</a></span>&gt;:<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-9.1-2">
+          <dt id="section-9.1-2.1">Authentication Scheme Name:</dt>
+          <dd style="margin-left: 1.5em" id="section-9.1-2.2">
+            <p id="section-9.1-2.2.1">Concealed<a href="#section-9.1-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-9.1-2.3">Reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-9.1-2.4">
+            <p id="section-9.1-2.4.1">This document<a href="#section-9.1-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-9.1-2.5">Notes:</dt>
+          <dd style="margin-left: 1.5em" id="section-9.1-2.6">
+            <p id="section-9.1-2.6.1">None<a href="#section-9.1-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="iana-exporter-label">
+<section id="section-9.2">
+        <h3 id="name-tls-keying-material-exporte">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-tls-keying-material-exporte" class="section-name selfRef">TLS Keying Material Exporter Labels</a>
+        </h3>
+<p id="section-9.2-1">This document, if approved, requests IANA to register the following entry in
+the "TLS Exporter Labels" registry maintained at
+&lt;<span><a href="https://www.iana.org/assignments/tls-parameters#exporter-labels">https://www.iana.org/assignments/tls-parameters#exporter-labels</a></span>&gt;:<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-9.2-2">
+          <dt id="section-9.2-2.1">Value:</dt>
+          <dd style="margin-left: 1.5em" id="section-9.2-2.2">
+            <p id="section-9.2-2.2.1">EXPORTER-HTTP-Concealed-Authentication<a href="#section-9.2-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-9.2-2.3">DTLS-OK:</dt>
+          <dd style="margin-left: 1.5em" id="section-9.2-2.4">
+            <p id="section-9.2-2.4.1">N<a href="#section-9.2-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-9.2-2.5">Recommended:</dt>
+          <dd style="margin-left: 1.5em" id="section-9.2-2.6">
+            <p id="section-9.2-2.6.1">Y<a href="#section-9.2-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-9.2-2.7">Reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-9.2-2.8">
+            <p id="section-9.2-2.8.1">This document<a href="#section-9.2-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="http-field-name">
+<section id="section-9.3">
+        <h3 id="name-http-field-name">
+<a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-http-field-name" class="section-name selfRef">HTTP Field Name</a>
+        </h3>
+<p id="section-9.3-1">This document, if approved, requests IANA to register the following entry in
+the "Hypertext Transfer Protocol (HTTP) Field Name" registry maintained at
+&lt;<span><a href="https://www.iana.org/assignments/http-fields/http-fields.xhtml">https://www.iana.org/assignments/http-fields/http-fields.xhtml</a></span>&gt;:<a href="#section-9.3-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-9.3-2">
+          <dt id="section-9.3-2.1">Field Name:</dt>
+          <dd style="margin-left: 1.5em" id="section-9.3-2.2">
+            <p id="section-9.3-2.2.1">Concealed-Auth-Export<a href="#section-9.3-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-9.3-2.3">Status:</dt>
+          <dd style="margin-left: 1.5em" id="section-9.3-2.4">
+            <p id="section-9.3-2.4.1">permanent<a href="#section-9.3-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-9.3-2.5">Structured Type:</dt>
+          <dd style="margin-left: 1.5em" id="section-9.3-2.6">
+            <p id="section-9.3-2.6.1">Item<a href="#section-9.3-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-9.3-2.7">Reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-9.3-2.8">
+            <p id="section-9.3-2.8.1">This document<a href="#section-9.3-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-9.3-2.9">Comments:</dt>
+          <dd style="margin-left: 1.5em" id="section-9.3-2.10">
+            <p id="section-9.3-2.10.1">None<a href="#section-9.3-2.10.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-combined-references">
+<section id="section-10">
+      <h2 id="name-references">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-10.1">
+        <h3 id="name-normative-references">
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="ABNF">[ABNF]</dt>
+        <dd>
+<span class="refAuthor">Crocker, D., Ed.</span> and <span class="refAuthor">P. Overell</span>, <span class="refTitle">"Augmented BNF for Syntax Specifications: ABNF"</span>, <span class="seriesInfo">STD 68</span>, <span class="seriesInfo">RFC 5234</span>, <span class="seriesInfo">DOI 10.17487/RFC5234</span>, <time datetime="2008-01" class="refDate">January 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5234">https://www.rfc-editor.org/rfc/rfc5234</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="BASE64">[BASE64]</dt>
+        <dd>
+<span class="refAuthor">Josefsson, S.</span>, <span class="refTitle">"The Base16, Base32, and Base64 Data Encodings"</span>, <span class="seriesInfo">RFC 4648</span>, <span class="seriesInfo">DOI 10.17487/RFC4648</span>, <time datetime="2006-10" class="refDate">October 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4648">https://www.rfc-editor.org/rfc/rfc4648</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="EdDSA">[EdDSA]</dt>
+        <dd>
+<span class="refAuthor">Josefsson, S.</span> and <span class="refAuthor">I. Liusvaara</span>, <span class="refTitle">"Edwards-Curve Digital Signature Algorithm (EdDSA)"</span>, <span class="seriesInfo">RFC 8032</span>, <span class="seriesInfo">DOI 10.17487/RFC8032</span>, <time datetime="2017-01" class="refDate">January 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8032">https://www.rfc-editor.org/rfc/rfc8032</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="HTTP">[HTTP]</dt>
+        <dd>
+<span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI 10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="KEY-EXPORT">[KEY-EXPORT]</dt>
+        <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"Keying Material Exporters for Transport Layer Security (TLS)"</span>, <span class="seriesInfo">RFC 5705</span>, <span class="seriesInfo">DOI 10.17487/RFC5705</span>, <time datetime="2010-03" class="refDate">March 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5705">https://www.rfc-editor.org/rfc/rfc5705</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="PKCS1">[PKCS1]</dt>
+        <dd>
+<span class="refAuthor">Moriarty, K., Ed.</span>, <span class="refAuthor">Kaliski, B.</span>, <span class="refAuthor">Jonsson, J.</span>, and <span class="refAuthor">A. Rusch</span>, <span class="refTitle">"PKCS #1: RSA Cryptography Specifications Version 2.2"</span>, <span class="seriesInfo">RFC 8017</span>, <span class="seriesInfo">DOI 10.17487/RFC8017</span>, <time datetime="2016-11" class="refDate">November 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8017">https://www.rfc-editor.org/rfc/rfc8017</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="QUIC">[QUIC]</dt>
+        <dd>
+<span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">M. Thomson, Ed.</span>, <span class="refTitle">"QUIC: A UDP-Based Multiplexed and Secure Transport"</span>, <span class="seriesInfo">RFC 9000</span>, <span class="seriesInfo">DOI 10.17487/RFC9000</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9000">https://www.rfc-editor.org/rfc/rfc9000</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7627">[RFC7627]</dt>
+        <dd>
+<span class="refAuthor">Bhargavan, K., Ed.</span>, <span class="refAuthor">Delignat-Lavaud, A.</span>, <span class="refAuthor">Pironti, A.</span>, <span class="refAuthor">Langley, A.</span>, and <span class="refAuthor">M. Ray</span>, <span class="refTitle">"Transport Layer Security (TLS) Session Hash and Extended Master Secret Extension"</span>, <span class="seriesInfo">RFC 7627</span>, <span class="seriesInfo">DOI 10.17487/RFC7627</span>, <time datetime="2015-09" class="refDate">September 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7627">https://www.rfc-editor.org/rfc/rfc7627</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8792">[RFC8792]</dt>
+        <dd>
+<span class="refAuthor">Watsen, K.</span>, <span class="refAuthor">Auerswald, E.</span>, <span class="refAuthor">Farrel, A.</span>, and <span class="refAuthor">Q. Wu</span>, <span class="refTitle">"Handling Long Lines in Content of Internet-Drafts and RFCs"</span>, <span class="seriesInfo">RFC 8792</span>, <span class="seriesInfo">DOI 10.17487/RFC8792</span>, <time datetime="2020-06" class="refDate">June 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8792">https://www.rfc-editor.org/rfc/rfc8792</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="STRUCTURED-FIELDS">[STRUCTURED-FIELDS]</dt>
+        <dd>
+<span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">P. Kamp</span>, <span class="refTitle">"Structured Field Values for HTTP"</span>, <span class="seriesInfo">RFC 8941</span>, <span class="seriesInfo">DOI 10.17487/RFC8941</span>, <time datetime="2021-02" class="refDate">February 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8941">https://www.rfc-editor.org/rfc/rfc8941</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="TLS">[TLS]</dt>
+        <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="URI">[URI]</dt>
+        <dd>
+<span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="X.690">[X.690]</dt>
+      <dd>
+<span class="refAuthor">ITU-T</span>, <span class="refTitle">"Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"</span>, <span class="seriesInfo">ISO/IEC 8824-1:2021 </span>, <time datetime="2021-02" class="refDate">February 2021</time>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-10.2">
+        <h3 id="name-informative-references">
+<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="ED25519">[ED25519]</dt>
+        <dd>
+<span class="refAuthor">Josefsson, S.</span> and <span class="refAuthor">J. Schaad</span>, <span class="refTitle">"Algorithm Identifiers for Ed25519, Ed448, X25519, and X448 for Use in the Internet X.509 Public Key Infrastructure"</span>, <span class="seriesInfo">RFC 8410</span>, <span class="seriesInfo">DOI 10.17487/RFC8410</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8410">https://www.rfc-editor.org/rfc/rfc8410</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="HOBA">[HOBA]</dt>
+        <dd>
+<span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Hoffman, P.</span>, and <span class="refAuthor">M. Thomas</span>, <span class="refTitle">"HTTP Origin-Bound Authentication (HOBA)"</span>, <span class="seriesInfo">RFC 7486</span>, <span class="seriesInfo">DOI 10.17487/RFC7486</span>, <time datetime="2015-03" class="refDate">March 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7486">https://www.rfc-editor.org/rfc/rfc7486</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="H2">[HTTP/2]</dt>
+        <dd>
+<span class="refAuthor">Thomson, M., Ed.</span> and <span class="refAuthor">C. Benfield, Ed.</span>, <span class="refTitle">"HTTP/2"</span>, <span class="seriesInfo">RFC 9113</span>, <span class="seriesInfo">DOI 10.17487/RFC9113</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9113">https://www.rfc-editor.org/rfc/rfc9113</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="H3">[HTTP/3]</dt>
+        <dd>
+<span class="refAuthor">Bishop, M., Ed.</span>, <span class="refTitle">"HTTP/3"</span>, <span class="seriesInfo">RFC 9114</span>, <span class="seriesInfo">DOI 10.17487/RFC9114</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9114">https://www.rfc-editor.org/rfc/rfc9114</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="MASQUE-ORIGINAL">[MASQUE-ORIGINAL]</dt>
+        <dd>
+<span class="refAuthor">Schinazi, D.</span>, <span class="refTitle">"The MASQUE Protocol"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-schinazi-masque-00</span>, <time datetime="2019-02-28" class="refDate">28 February 2019</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-schinazi-masque-00">https://datatracker.ietf.org/doc/html/draft-schinazi-masque-00</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="QUIC-TLS">[QUIC-TLS]</dt>
+        <dd>
+<span class="refAuthor">Thomson, M., Ed.</span> and <span class="refAuthor">S. Turner, Ed.</span>, <span class="refTitle">"Using TLS to Secure QUIC"</span>, <span class="seriesInfo">RFC 9001</span>, <span class="seriesInfo">DOI 10.17487/RFC9001</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9001">https://www.rfc-editor.org/rfc/rfc9001</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SEEMS-LEGIT">[SEEMS-LEGIT]</dt>
+      <dd>
+<span class="refAuthor">Jackson, D.</span>, <span class="refAuthor">Cremers, C.</span>, <span class="refAuthor">Cohn-Gordon, K.</span>, and <span class="refAuthor">R. Sasse</span>, <span class="refTitle">"Seems Legit: Automated Analysis of Subtle Attacks on Protocols That Use Signatures"</span>, <span class="refContent">CCS '19: Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security</span>, <span class="refContent">pp. 2165–2180</span>, <span class="seriesInfo">DOI 10.1145/3319535.3339813</span>, <time datetime="2019" class="refDate">2019</time>, <span>&lt;<a href="https://doi.org/10.1145/3319535.3339813">https://doi.org/10.1145/3319535.3339813</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="acknowledgments">
+<section id="appendix-A">
+      <h2 id="name-acknowledgments">
+<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="appendix-A-1">The authors would like to thank many members of the IETF community, as this
+document is the fruit of many hallway conversations. In particular, the authors
+would like to thank <span class="contact-name">David Benjamin</span>, <span class="contact-name">Reese Enghardt</span>, <span class="contact-name">Nick Harper</span>, <span class="contact-name">Dennis Jackson</span>, <span class="contact-name">Ilari Liusvaara</span>, <span class="contact-name">François Michel</span>,
+<span class="contact-name">Lucas Pardue</span>, <span class="contact-name">Justin Richer</span>, <span class="contact-name">Ben Schwartz</span>, <span class="contact-name">Martin Thomson</span>, and <span class="contact-name">Chris A. Wood</span> for their reviews and contributions. The
+mechanism described in this document was originally part of the first iteration
+of MASQUE <span>[<a href="#MASQUE-ORIGINAL" class="cite xref">MASQUE-ORIGINAL</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-B">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">David Schinazi</span></div>
+<div dir="auto" class="left"><span class="org">Google LLC</span></div>
+<div dir="auto" class="left"><span class="street-address">1600 Amphitheatre Parkway</span></div>
+<div dir="auto" class="left">
+<span class="locality">Mountain View</span>, <span class="region">CA</span> <span class="postal-code">94043</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">United States of America</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:dschinazi.ietf@gmail.com" class="email">dschinazi.ietf@gmail.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">David M. Oliver</span></div>
+<div dir="auto" class="left"><span class="org">Guardian Project</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:david@guardianproject.info" class="email">david@guardianproject.info</a>
+</div>
+<div class="url">
+<span>URI:</span>
+<a href="https://guardianproject.info" class="url">https://guardianproject.info</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Jonathan Hoyland</span></div>
+<div dir="auto" class="left"><span class="org">Cloudflare Inc.</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:jonathan.hoyland@gmail.com" class="email">jonathan.hoyland@gmail.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
