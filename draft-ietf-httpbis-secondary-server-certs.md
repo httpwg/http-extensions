@@ -231,7 +231,7 @@ Client                                        Server
 # SETTINGS_HTTP_SERVER_CERT_AUTH {#settings}
 SETTINGS parameters for HTTP/2 and HTTP/3 seperately are defined below.
 
-## The SETTINGS_HTTP_SERVER_CERT_AUTH HTTP/2 SETTINGS Parameter{#http2-setting}
+## The SETTINGS_HTTP_SERVER_CERT_AUTH HTTP/2 SETTINGS Parameter {#http2-setting}
 This document adds a new HTTP/2 SETTINGS(0xTBD) parameter to those defined by
 {{Section 6.5.2 of H2}}.
 
@@ -240,7 +240,7 @@ parameter MUST be 0 or 1.
 
 The usage of this parameter is described in {{settings-usage}}.
 
-## The SETTINGS_HTTP_SERVER_CERT_AUTH HTTP/3 SETTINGS Parameter{#http3-setting}
+## The SETTINGS_HTTP_SERVER_CERT_AUTH HTTP/3 SETTINGS Parameter {#http3-setting}
 This document adds a new HTTP/3 SETTINGS(0xTBD) parameter to those defined by
 {{Section 7.2.4.1 of H3}}.
 
