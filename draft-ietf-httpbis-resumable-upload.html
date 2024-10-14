@@ -1795,6 +1795,7 @@ HTTP/1.1 204 No Content
 </li>
         </ul>
 <p id="section-8.2-3">When parsing this header field, unrecognized keys <span class="bcp14">MUST</span> be ignored and <span class="bcp14">MUST NOT</span> fail the parsing to facilitate the addition of new limits in the future.<a href="#section-8.2-3" class="pilcrow">¶</a></p>
+<p id="section-8.2-4">A server that supports the creation of a resumable upload resource (<a href="#upload-creation" class="auto internal xref">Section 4</a>) under a target URI <span class="bcp14">MUST</span> include the <code>Upload-Limit</code> header field with the corresponding limits in a response to an <code>OPTIONS</code> request sent to this target URI. If a server supports the creation of upload resources for any target URI, it <span class="bcp14">MUST</span> include the <code>Upload-Limit</code> header field with the corresponding limits in a response to an <code>OPTIONS</code> request with the <code>*</code> target. The limits announced in an <code>OPTIONS</code> response <span class="bcp14">SHOULD NOT</span> be less restrictive than the limits applied to an upload once the upload resource has been created. If the server does not apply any limits, it <span class="bcp14">MUST</span> use <code>min-size=0</code> instead of an empty header value. A client can use an <code>OPTIONS</code> request to discover support for resumable uploads and potential limits before creating an upload resource.<a href="#section-8.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="upload-complete">
@@ -2288,6 +2289,9 @@ Reference:<a href="#section-18-13.6.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-F.1-1.1">
             <p id="appendix-F.1-1.1.1">Clarify implications of <code>Upload-Limit</code> header.<a href="#appendix-F.1-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-F.1-1.2">
+            <p id="appendix-F.1-1.2.1">Allow client to fetch upload limits upfront via <code>OPTIONS</code>.<a href="#appendix-F.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>

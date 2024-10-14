@@ -805,6 +805,20 @@ Table of Contents
    MUST NOT fail the parsing to facilitate the addition of new limits in
    the future.
 
+   A server that supports the creation of a resumable upload resource
+   (Section 4) under a target URI MUST include the Upload-Limit header
+   field with the corresponding limits in a response to an OPTIONS
+   request sent to this target URI.  If a server supports the creation
+   of upload resources for any target URI, it MUST include the Upload-
+   Limit header field with the corresponding limits in a response to an
+   OPTIONS request with the * target.  The limits announced in an
+   OPTIONS response SHOULD NOT be less restrictive than the limits
+   applied to an upload once the upload resource has been created.  If
+   the server does not apply any limits, it MUST use min-size=0 instead
+   of an empty header value.  A client can use an OPTIONS request to
+   discover support for resumable uploads and potential limits before
+   creating an upload resource.
+
 8.3.  Upload-Complete
 
    The Upload-Complete request and response header field indicates
@@ -1318,6 +1332,8 @@ Changes
 Since draft-ietf-httpbis-resumable-upload-04
 
    *  Clarify implications of Upload-Limit header.
+
+   *  Allow client to fetch upload limits upfront via OPTIONS.
 
 Since draft-ietf-httpbis-resumable-upload-03
 
