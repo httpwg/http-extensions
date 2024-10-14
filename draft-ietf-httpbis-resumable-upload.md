@@ -728,6 +728,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 
 * Clarify implications of `Upload-Limit` header.
 * Allow client to fetch upload limits upfront via `OPTIONS`.
+* Add guidance on upload creation strategy.
 
 ## Since draft-ietf-httpbis-resumable-upload-03
 {:numbered="false"}
