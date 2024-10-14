@@ -919,16 +919,15 @@ Table of Contents
    the representation (see Section 8.4 of [HTTP]), both the client and
    the server always compute the upload offset on the content coded data
    (that is, the representation data).  Moreover, the content codings
-   are retained throughout the entire upload, meaning thats that the
-   server is not required to decode the representation data to support
-   resumable uploads.  See Appendix A of [DIGEST-FIELDS] for more
-   information.
+   are retained throughout the entire upload, meaning that the server is
+   not required to decode the representation data to support resumable
+   uploads.  See Appendix A of [DIGEST-FIELDS] for more information.
 
 14.  Transfer Codings
 
    Unlike Content-Encoding (see Section 8.4.1 of [HTTP]), Transfer-
    Encoding (see Section 6.1 of [HTTP/1.1]) is a property of the
-   message, not of the representation.  Moreover. transfer codings can
+   message, not of the representation.  Moreover, transfer codings can
    be applied in transit (e.g., by proxies).  This means that a client
    does not have to consider the transfer codings to compute the upload
    offset, while a server is responsible for transfer decoding the
