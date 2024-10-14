@@ -4,9 +4,9 @@
 
 HTTPBIS                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Updates: 9298 (if approved)                              12 October 2024
+Updates: 9298 (if approved)                              14 October 2024
 Intended status: Standards Track                                        
-Expires: 15 April 2025
+Expires: 17 April 2025
 
 
        Security Considerations for Optimistic Use of HTTP Upgrade
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 April 2025.
+   This Internet-Draft will expire on 17 April 2025.
 
 Copyright Notice
 
