@@ -694,7 +694,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-04
 {:numbered="false"}
 
-None yet
+* Clarify implications of `Upload-Limit` header.
 
 ## Since draft-ietf-httpbis-resumable-upload-03
 {:numbered="false"}
