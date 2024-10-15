@@ -7,7 +7,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 <?rfc-ext xml2rfc-backend="202007"?>
-<?github-issue-label query-methody?>
+<?github-issue-label query-method?>
 <!DOCTYPE rfc [
   <!ENTITY MAY "<bcp14>MAY</bcp14>">
   <!ENTITY MUST "<bcp14>MUST</bcp14>">
