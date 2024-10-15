@@ -50,6 +50,7 @@ normative:
     display: HTTP/1.1
   RFC5789:
   PROBLEM: RFC9457
+  DIGEST-FIELDS: RFC9530
 
 informative:
 
@@ -510,7 +511,7 @@ Unlike `Content-Encoding` (see {{Section 8.4.1 of HTTP}}), `Transfer-Encoding` (
 
 # Integrity Digests
 
-The integrity of an entire upload or individual upload requests can be verifying using digests from {{!DIGEST-FIELDS=RFC9530}}.
+The integrity of an entire upload or individual upload requests can be verifying using digests from {{DIGEST-FIELDS}}.
 
 If the client knows the integrity digest of the entire data before creating an upload resource, it MAY include the `Repr-Digest` header field when creating an upload ({{upload-creation}}). Once the upload is completed, the server can compute the integrity digest of the received upload representation and compare it to the provided digest. If the digests don't match the server SHOULD consider the transfer failed and not process the uploaded data further. This way, the integrity of the entire uploaded data can be protected.
 
