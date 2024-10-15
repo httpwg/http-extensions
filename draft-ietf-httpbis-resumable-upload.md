@@ -239,6 +239,7 @@ Host: example.com
 Upload-Draft-Interop-Version: 6
 Upload-Complete: ?1
 Content-Length: 100
+Upload-Length: 100
 
 [content (100 bytes)]
 ~~~
@@ -259,7 +260,7 @@ Upload-Offset: 100
 Upload-Limit: max-size=1000000000
 ~~~
 
-The next example shows an upload creation, where only the first 25 bytes are transferred. The server acknowledges the received data and that the upload is not complete yet:
+The next example shows an upload creation, where only the first 25 bytes of a 100 bytes upload are transferred. The server acknowledges the received data and that the upload is not complete yet:
 
 ~~~ http-message
 POST /upload HTTP/1.1
@@ -267,6 +268,7 @@ Host: example.com
 Upload-Draft-Interop-Version: 6
 Upload-Complete: ?0
 Content-Length: 25
+Upload-Length: 100
 
 [partial content (25 bytes)]
 ~~~
