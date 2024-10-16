@@ -108,7 +108,7 @@ In this example, the client first attempts to upload a file with a known size in
 
 1) The client notifies the server that it wants to begin an upload ({{upload-creation}}). The server reserves the required resources to accept the upload from the client, and the client begins transferring the entire file in the request content.
 
-An informational response can be sent to the client, which signals the server's support of resumable upload as well as the upload resource URL via the Location header field ({{Section 10.2.2 of HTTP}}).
+An informational response can be sent to the client, which signals the server's support of resumable upload as well as the upload resource URL via the `Location` header field ({{Section 10.2.2 of HTTP}}).
 
 ~~~ aasvg
 Client                                  Server
