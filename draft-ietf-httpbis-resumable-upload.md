@@ -86,13 +86,19 @@ This document defines an optional mechanism for HTTP that enables resumable uplo
 
 {::boilerplate bcp14-tagged}
 
-The terms Byte Sequence, Item, String, Token, Integer, and Boolean are imported from {{STRUCTURED-FIELDS}}.
+The terms _Byte Sequence_, _Item_, _String_, _Token_, _Integer_, and _Boolean_ are imported from {{STRUCTURED-FIELDS}}.
 
-The terms "representation", "representation data", "representation metadata", "content", "client" and "server" are from {{HTTP}}.
+The terms _representation_, _representation data_, _representation metadata_, _content_, _client_ and _server_ are imported from {{HTTP}}.
+
+A _file_ is a collection of bytes that a client intends to upload to a server. Additional metadata, such as a filename or media type, may be associated with it. A file is often stored as a static block of data on disk or in memory, but in the context of this document, a file can also be dynamically streamed from another source (e.g. a live video recording) or generated on-demand (e.g. a multipart-encoded form). Depending on the source of the file data, the file's length may be known upfront or be discovered once the end of the file has been reached.
+
+An _upload resource_ is a temporary resource on the server that facilitates the upload of one file. The upload resource is created when the upload begins and allows the client to resume the specific upload after interruptions.
+
+The upload resource is separate from the _target resource_, which is the resource responsible for processing the uploaded file. The upload begins by creating an upload resource through a request to the target resource.
 
 # Overview
 
-Resumable uploads are supported in HTTP through use of a temporary resource, an _upload resource_, that is separate from the resource being uploaded to (hereafter, the _target resource_) and specific to that upload. By interacting with the upload resource, a client can retrieve the current offset of the upload ({{offset-retrieving}}), append to the upload ({{upload-appending}}), and cancel the upload ({{upload-cancellation}}).
+Resumable uploads are supported in HTTP through use of a temporary resource, the _upload resource_, that is separate from the resource being uploaded to, the _target resource_, and specific to that upload. By interacting with the upload resource, a client can retrieve the current offset of the upload ({{offset-retrieving}}), append to the upload ({{upload-appending}}), and cancel the upload ({{upload-cancellation}}).
 
 The remainder of this section uses an example of a file upload to illustrate different interactions with the upload resource. Note, however, that HTTP message exchanges use representation data (see {{Section 8.1 of HTTP}}), which means that resumable uploads can be used with many forms of content -- not just static files.
 
