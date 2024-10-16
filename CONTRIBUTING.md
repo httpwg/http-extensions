@@ -35,9 +35,9 @@ The HTTP Working Group has a few venues for discussion:
 
 * We have a session at most [IETF meetings](https://www.ietf.org/meeting/), and sometimes in between (called an "interim" meeting). See our [meeting materials repository](https://httpwg.org/wg-materials), and the [official IETF proceedings](https://datatracker.ietf.org/wg/httpbis/meetings/) for details.
 
-* Our [mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/) is used for notifications of meetings, adoption of documents, consensus calls, issue discussion, and other business. It's not mandatory to subscribe, but you're likely to miss important things if you don't.
+* Our [mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/) ([subscribe](mailto:ietf-http-wg-request@w3.org?subject=subscribe)) is used for notifications of meetings, adoption of documents, consensus calls, issue discussion, and other business. It's not mandatory to subscribe, but you're likely to miss important things if you don't; also, note that e-mail sent to this list will be manually moderated (and thus delayed) if you are not subscribed.
 
-* We discuss most document issues on [GitHub](https://github.com/httpwg/). If you don't want to use Github to follow these discussions, you can subscribe to the [issue announce list](https://www.ietf.org/mailman/listinfo/http-issues).
+* We discuss most document issues on [GitHub](https://github.com/httpwg/).
 
 You can participate in any or all of these places.
 
@@ -50,9 +50,9 @@ We use GitHub to track discussion items and their resolution. Before filing a ne
 
 * There may be an existing duplicate issue, so please review the issues list first.
 
-* If you're not sure how to phrase your issue, please ask on the [mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/).
+* If you're not sure how to phrase your issue, please ask on the [mailing list](#following-discussion).
 
-Issues can also be raised on the [Working Group mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/) by clearly marking them as such (e.g., with `New issue` in the `Subject:` line).
+Issues can also be raised on the [mailing list](#following-discussion) by clearly marking them as such (e.g., with `New issue` in the `Subject:` line).
 
 Be aware that issues might be rephrased, changed in scope, or combined with others. If you feel that an important part of your original issue has been lost, please bring it up (on the issue or on the list).
 
@@ -85,13 +85,13 @@ Please do not use a pull request to open a new issue. Instead, file an issue and
 
 ## Proposing New Work
 
-If you'd like to propose a new HTTP extension (e.g., method, header, status code, HTTP/2 or HTTP/3 SETTINGS), it's best to first describe your use case on the mailing list. Often, there's an existing HTTP feature that can be used.
+If you'd like to propose a new HTTP extension (e.g., method, header, status code, HTTP/2 or HTTP/3 SETTINGS), it's best to first describe your use case on the [mailing list](#following-discussion). Often, there's an existing HTTP feature that can be used.
 
-If a new extension is necessary, we usually discuss them in Internet-Draft form. However, if you're unfamiliar with that format, write down your proposal precisely but succinctly and send it to the mailing list.
+If a new extension is necessary, we usually discuss them in Internet-Draft form. However, if you're unfamiliar with that format, write down your proposal precisely but succinctly and send it to the [mailing list](#following-discussion).
 
 If there is interest in the proposal, the Chairs will issue a _Call for Adoption_, where Working Group participants comment on whether or not they support adoption, and whether or not they might implement it.
 
-Upcoming proposals and calls for adoption are tracked in the [admin repository](https://github.com/httpwg/admin/labels/adoption).
+Upcoming proposals and calls for adoption are tracked by the Chairs in the [admin repository](https://github.com/httpwg/admin/labels/adoption).
 
 If the Chairs determine that there is consensus to adopt the document, the Working Group will start discussing it.
 
