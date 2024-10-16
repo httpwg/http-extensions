@@ -279,7 +279,7 @@ Accept-Query = 1#media-type
     <t>
       The Accept-Query header field specifies a comma-separated listing of media
       types (with optional parameters) as defined by
-      <xref target="HTTP" section="8.3.1"/>.
+      <xref target="HTTP" section="8.3.1"/>. <cref>field syntax currently discussed in <eref target="https://github.com/httpwg/http-extensions/issues/2860"/></cref>
     </t>
     <t>
       The order of types listed by the Accept-Query header field is not significant.
@@ -439,34 +439,62 @@ Dubois, Camille, camille.dubois@example.net
     </t>
   </section>
 
-  <section title="IANA Considerations">
+  <section title="IANA Considerations" anchor="iana.considerations">
 
-    <t>
-      IANA is requested to add QUERY method in the
-      permanent registry at &lt;http://www.iana.org/assignments/http-methods&gt;
-      (see <xref target="HTTP" section="16.1.1"/>).
-    </t>
+    <section title="Registration of QUERY method" anchor="method.registration">
+      <t>
+        IANA is requested to add the QUERY method to the HTTP
+        Method Registry at <eref brackets="angle" target="http://www.iana.org/assignments/http-methods"/>
+        (see <xref target="HTTP" section="16.3.1"/>).
+      </t>
+      <table>
+        <thead>
+          <tr>
+            <th>Method Name</th>
+            <th>Safe</th>
+            <th>Idempotent</th>
+            <th>Specification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>QUERY</td>
+            <td>Yes</td>
+            <td>Yes</td>
+            <td><xref target="query"/></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Method Name</th>
-          <th>Safe</th>
-          <th>Idempotent</th>
-          <th>Specification</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>QUERY</td>
-          <td>Yes</td>
-          <td>Yes</td>
-          <td><xref target="query"/></td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
+    <section title="Registration of Accept-Query field" anchor="field.registration">
+      <t>
+        IANA is requested to add the Accept-Query field to the HTTP Field Name
+        Registry at <eref brackets="angle" target="https://www.iana.org/assignments/http-fields"/>
+        (see <xref target="HTTP" section="16.1.1"/>).
+      </t>
+      <table>
+        <thead>
+          <tr>
+            <th>Field Name</th>
+            <th>Status</th>
+            <th>Structured Type</th>
+            <th>Reference</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Accept-Query</td>
+            <td>permanent</td>
+            <td></td>
+            <td><xref target="field.accept-query"/> of this document.</td>
+            <td><cref>field syntax currently discussed in <eref target="https://github.com/httpwg/http-extensions/issues/2860"/></cref></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+</section>
 </middle>
 <back>
   <references title="Normative References">
@@ -533,9 +561,10 @@ Dubois, Camille, camille.dubois@example.net
   <li>Use "target URI" instead of "effective request URI" (<eref target="https://github.com/httpwg/http-extensions/issues/2883"/>)</li>
 </ul>
 </section>
-<section title="Since draft-ietf-httpbis-safe-method-w-body-04" anchor="changes.since.05">
+<section title="Since draft-ietf-httpbis-safe-method-w-body-05" anchor="changes.since.05">
 <ul>
   <li>Update "Sensitive information in QUERY URLs" (<eref target="https://github.com/httpwg/http-extensions/issues/2853"/>)</li>
+  <li>Field registration for "Accept-Query" (<eref target="https://github.com/httpwg/http-extensions/issues/2903"/>)</li>
 </ul>
 </section>
 </section>
