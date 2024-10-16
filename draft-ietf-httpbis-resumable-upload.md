@@ -48,8 +48,11 @@ normative:
   CACHING: RFC9111
   RFC9112:
     display: HTTP/1.1
-  RFC5789:
+  STRUCTURED-FIELDS: RFC8941
+  PATCH: RFC5789
   PROBLEM: RFC9457
+  DIGEST-FIELDS: RFC9530
+  CONTENT-DISPOSITION: RFC6266
 
 informative:
 
@@ -83,8 +86,7 @@ This document defines an optional mechanism for HTTP that enables resumable uplo
 
 {::boilerplate bcp14-tagged}
 
-The terms Byte Sequence, Item, String, Token, Integer, and Boolean are imported from
-{{!STRUCTURED-FIELDS=RFC8941}}.
+The terms Byte Sequence, Item, String, Token, Integer, and Boolean are imported from {{STRUCTURED-FIELDS}}.
 
 The terms "representation", "representation data", "representation metadata", "content", "client" and "server" are from {{HTTP}}.
 
@@ -276,7 +278,7 @@ Upload-Limit: max-size=1000000000
 
 If the client received an informational response with the upload URL in the Location field value, it MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status is received. The client SHOULD NOT automatically retry if it receives a 4xx status code.
 
-File metadata can affect how servers might act on the uploaded file. Clients can send representation metadata (see {{Section 8.3 of HTTP}}) in the request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header field ({{Section 8.3 of HTTP}}) can be used to indicate the media type of the file. The applied content codings are specified using the `Content-Encoding` header field and are retained throughout the entire upload. When resuming an interrupted upload, the same content codings are used for appending to the upload, producing a representation of the upload resource. The `Content-Disposition` header field ({{!RFC6266}}) can be used to transmit a filename; if included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
+File metadata can affect how servers might act on the uploaded file. Clients can send representation metadata (see {{Section 8.3 of HTTP}}) in the request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header field ({{Section 8.3 of HTTP}}) can be used to indicate the media type of the file. The applied content codings are specified using the `Content-Encoding` header field and are retained throughout the entire upload. When resuming an interrupted upload, the same content codings are used for appending to the upload, producing a representation of the upload resource. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename; if included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
 
 ## Feature Detection {#feature-detection}
 
@@ -357,7 +359,7 @@ The client MUST NOT perform multiple upload transfers for the same upload resour
 
 If the offset indicated by the `Upload-Offset` field value does not match the offset provided by the immediate previous offset retrieval ({{offset-retrieving}}), or the end offset of the immediate previous incomplete successful transfer, the server MUST respond with a `409 (Conflict)` status code. The server MAY use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" in the response; see {{mismatching-offset}}.
 
-The server applies the patch document of the `application/partial-upload` media type by appending the request content to the targeted upload resource. If the server does not receive the entire patch document, for example because of canceled requests or dropped connections, it SHOULD append as much of the patch document starting at its beginning and without discontinuities as possible. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of RFC5789}}. If the server did not receive and apply the entire patch document, the upload MUST NOT be considered complete.
+The server applies the patch document of the `application/partial-upload` media type by appending the request content to the targeted upload resource. If the server does not receive the entire patch document, for example because of canceled requests or dropped connections, it SHOULD append as much of the patch document starting at its beginning and without discontinuities as possible. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of PATCH}}. If the server did not receive and apply the entire patch document, the upload MUST NOT be considered complete.
 
 While the request content is being uploaded, the target resource MAY send one or more informational responses with a `104 (Upload Resumption Supported)` status code to the client. These informational responses MUST NOT contain the `Location` header field. They MAY include the `Upload-Offset` header field with the current upload offset as the value to inform the client about the upload progress.
 
@@ -510,7 +512,7 @@ Unlike `Content-Encoding` (see {{Section 8.4.1 of HTTP}}), `Transfer-Encoding` (
 
 # Integrity Digests
 
-The integrity of an entire upload or individual upload requests can be verifying using digests from {{!DIGEST-FIELDS=RFC9530}}.
+The integrity of an entire upload or individual upload requests can be verifying using digests from {{DIGEST-FIELDS}}.
 
 If the client knows the integrity digest of the entire data before creating an upload resource, it MAY include the `Repr-Digest` header field when creating an upload ({{upload-creation}}). Once the upload is completed, the server can compute the integrity digest of the received upload representation and compare it to the provided digest. If the digests don't match the server SHOULD consider the transfer failed and not process the uploaded data further. This way, the integrity of the entire uploaded data can be protected.
 
