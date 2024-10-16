@@ -7,7 +7,7 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 <?rfc-ext xml2rfc-backend="202007"?>
-<?github-issue-label safe-method-w-body?>
+<?github-issue-label query-method?>
 <!DOCTYPE rfc [
   <!ENTITY MAY "<bcp14>MAY</bcp14>">
   <!ENTITY MUST "<bcp14>MUST</bcp14>">
@@ -48,13 +48,19 @@
         <email>jasnell@gmail.com</email>
       </address>
     </author>
+    <author initials="M." surname="Bishop" fullname="Mike Bishop">
+      <organization>Akamai</organization>
+      <address>
+        <email>mbishop@evequefou.be</email>
+      </address>
+    </author>
 
     <date/>
 
-    <area>Applications and Real-Time</area>
+    <area>Web and Internet Transport</area>
     <workgroup>HTTP</workgroup>
     <keyword>http</keyword>
-    <keyword>search</keyword>
+    <keyword>query</keyword>
     <keyword>method</keyword>
 
     <abstract>
@@ -73,10 +79,10 @@
       <t>
         Working Group information can be found at <eref target="https://httpwg.org/"/>;
         source code and issues list for this draft can be found at
-        <eref target="https://github.com/httpwg/http-extensions/labels/safe-method-w-body"/>.
+        <eref target="https://github.com/httpwg/http-extensions/labels/query-method"/>.
       </t>
       <t>
-        The changes in this draft are summarized in <xref target="changes.since.02"/>.
+        The changes in this draft are summarized in <xref target="changes.since.05"/>.
       </t>
     </note>
 
@@ -119,13 +125,13 @@ Host: example.org
     <t>
       As an alternative to using GET, many implementations make use of the
       HTTP POST method to perform queries, as illustrated in the example
-      below. In this case, the input parameters to the search operation are
+      below. In this case, the input parameters to the query operation are
       passed along within the request content as opposed to using the
       request URI.
     </t>
 
     <t>
-      A typical use of HTTP POST for requesting a search
+      A typical use of HTTP POST for requesting a query:
     </t>
 <artwork type="http-message">
 POST /feed HTTP/1.1
@@ -171,7 +177,7 @@ q=foo&amp;limit=10&amp;sort=-published
 
   </section>
 
-  <section title="QUERY" anchor="search">
+  <section title="QUERY" anchor="query">
 
     <t>
       The QUERY method is used to initiate a server-side query. Unlike
@@ -180,9 +186,9 @@ q=foo&amp;limit=10&amp;sort=-published
       (as defined by <xref target="HTTP" section="7.1"/>), the QUERY
       method is used to ask the server to perform a query operation
       (described by the request content) over some set of data scoped to the
-      effective request URI. The content returned in response to a QUERY
+      target URI. The content returned in response to a QUERY
       cannot be assumed to be a representation of the resource identified by
-      the effective request URI.
+      the target URI.
     </t>
 
     <t>
@@ -214,6 +220,26 @@ q=foo&amp;limit=10&amp;sort=-published
     </t>
 
     <t>
+      A successful response to a QUERY request can include a Content-Location
+      header field (see <xref target="HTTP" section="8.7"/>) containing an
+      identifier for a resource corresponding to the results of the
+      operation. This represents a claim from the server that a client can send
+      a GET request for the indicated URI to retrieve the results of the query
+      operation just performed. The indicated resource might be temporary.
+    </t>
+
+    <t>
+      A server &MAY; create or locate a resource that identifies the query
+      operation for future use. If the server does so, the URI of the resource
+      can be included in the Location header field of the response (see <xref
+      target="HTTP" section="10.2.2"/>). This represents a claim that a client can
+      send a GET request to the indicated URI to repeat the query operation just
+      performed without resending the query parameters. This resource might be
+      temporary; if a future request fails, the client can retry using the
+      original QUERY resource and the previously submitted parameters again.
+    </t>
+
+    <t>
       The semantics of the QUERY method change to a "conditional QUERY" if
       the request message includes an If-Modified-Since, If-Unmodified-
       Since, If-Match, If-None-Match, or If-Range header field
@@ -221,7 +247,7 @@ q=foo&amp;limit=10&amp;sort=-published
       be performed only under the circumstances described by the conditional
       header field(s). It is important to note, however, that such conditions
       are evaluated against the state of the target resource itself as opposed
-      to the collected results of the search operation.
+      to the collected results of the query operation.
     </t>
 
     <section title="Caching">
@@ -255,7 +281,7 @@ q=foo&amp;limit=10&amp;sort=-published
 
   <section title="The &quot;Accept-Query&quot; Header Field" anchor="field.accept-query">
     <t>
-      The "Accept-Query" response header field &MAY; be used by a server to
+      The "Accept-Query" response header field &MAY; be used by a resource to
       directly signal support for the QUERY method while identifying
       the specific query format media type(s) that may be used.
     </t>
@@ -270,10 +296,16 @@ Accept-Query = 1#media-type
     <t>
       The order of types listed by the Accept-Query header field is not significant.
     </t>
+    <t>
+      Accept-Query's value applies to every URI on the server that shares the same path; in
+      other words, the query component is ignored. If requests to the same resource return
+      different Accept-Query values, the most recently received fresh (per
+      <xref target="HTTP-CACHING" section="4.2"/>) value is used.
+    </t>
   </section>
 
   <section title="Examples" anchor="examples">
-
+<!-- TODO: add Content-Length fields once examples are stable -->
     <t>
       The non-normative examples in this section make use of a simple,
       hypothetical plain-text based query syntax based on SQL with results
@@ -301,6 +333,60 @@ Content-Type: text/csv
 
 surname, givenname, email
 Smith, John, john.smith@example.org
+Jones, Sally, sally.jones@example.com
+Dubois, Camille, camille.dubois@example.net
+</artwork>
+
+    </section>
+
+    <section title="Simple QUERY with a Direct Response and Location fields">
+
+      <t>A simple query with a direct response:</t>
+<artwork type="http-message">
+QUERY /contacts HTTP/1.1
+Host: example.org
+Content-Type: example/query
+Accept: text/csv
+
+select surname, givenname, email limit 10
+</artwork>
+
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: text/csv
+Content-Location: /contacts/responses/42
+Location: /contacts/queries/17
+
+surname, givenname, email
+Smith, John, john.smith@example.org
+Jones, Sally, sally.jones@example.com
+Dubois, Camille, camille.dubois@example.net
+</artwork>
+
+    <t>
+      A subsequent GET request on /contacts/responses/42 would return
+      the same response, until the server decides to remove that
+      resource.
+    </t>
+    <t>
+      A GET request on /contacts/queries/17 however would execute the same
+      query again, and return a fresh result for that query:
+    </t>
+
+<artwork type="http-message">
+GET /contacts/queries/17 HTTP/1.1
+Host: example.org
+Accept: text/csv
+</artwork>
+
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: text/csv
+Content-Location: /contacts/responses/43
+
+surname, givenname, email
 Jones, Sally, sally.jones@example.com
 Dubois, Camille, camille.dubois@example.net
 </artwork>
@@ -352,6 +438,17 @@ Dubois, Camille, camille.dubois@example.net
       considerations as all HTTP methods as described in
       <xref target="HTTP"/>.
     </t>
+
+    <t>
+      The QUERY method can be used as an alternative to passing query
+      information in the query portion of a URI. This is preferred in some
+      cases, as the URI is more likely to be logged than the request content. If
+      a server creates a temporary resource to represent the results of a QUERY
+      request (e.g., for use in the Location or Content-Location field) and the request
+      contains sensitive information that cannot be logged, then the URI of this
+      resource &SHOULD; be chosen such that it does not include any sensitive
+      portions of the original request content.
+    </t>
   </section>
 
   <section title="IANA Considerations">
@@ -376,7 +473,7 @@ Dubois, Camille, camille.dubois@example.net
           <td>QUERY</td>
           <td>Yes</td>
           <td>Yes</td>
-          <td><xref target="search"/></td>
+          <td><xref target="query"/></td>
         </tr>
       </tbody>
     </table>
@@ -434,6 +531,23 @@ Dubois, Camille, camille.dubois@example.net
   <li>In <xref target="field.accept-query"/>, slightly rephrase statement about significance of ordering (<eref target="https://github.com/httpwg/http-extensions/issues/1896"/>)</li>
   <li>Throughout: use "content" instead of "payload" or "body" (<eref target="https://github.com/httpwg/http-extensions/issues/1915"/>)</li>
   <li>Updated references (<eref target="https://github.com/httpwg/http-extensions/issues/2157"/>)</li>
+</ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-03" anchor="changes.since.03">
+<ul>
+  <li>In <xref target="field.accept-query"/>, clarify scope (<eref target="https://github.com/httpwg/http-extensions/issues/1913"/>)</li>
+</ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-04" anchor="changes.since.04">
+<ul>
+  <li>Describe role of Content-Location and Location fields (<eref target="https://github.com/httpwg/http-extensions/issues/1745"/>)</li>
+  <li>Added Mike Bishop as author (<eref target="https://github.com/httpwg/http-extensions/issues/2837"/>)</li>
+  <li>Use "target URI" instead of "effective request URI" (<eref target="https://github.com/httpwg/http-extensions/issues/2883"/>)</li>
+</ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-04" anchor="changes.since.05">
+<ul>
+  <li>Update "Sensitive information in QUERY URLs" (<eref target="https://github.com/httpwg/http-extensions/issues/2853"/>)</li>
 </ul>
 </section>
 </section>

@@ -1,16 +1,15 @@
 # Automatically generated CODEOWNERS
 # Regenerate with `make update-codeowners`
-draft-ietf-httpbis-bcp56bis.md mnot@mnot.net
-draft-ietf-httpbis-cache-header.md mnot@mnot.net
+draft-ietf-httpbis-alias-proxy-status.md tpauly@apple.com
 draft-ietf-httpbis-client-cert-field.md bcampbell@pingidentity.com mbishop@evequefou.be
 draft-ietf-httpbis-digest-headers.md robipolli@gmail.com lucaspardue.24.7@gmail.com
-draft-ietf-httpbis-expect-ct.md estark@google.com
-draft-ietf-httpbis-h3-websockets.md rch@google.com
 draft-ietf-httpbis-message-signatures.md richanna@amazon.com ietf@justin.richer.org msporny@digitalbazaar.com
-draft-ietf-httpbis-priority.md kazuhooku@gmail.com lucaspardue.24.7@gmail.com
-draft-ietf-httpbis-proxy-status.md mnot@mnot.net piotrsikora@google.com
-draft-ietf-httpbis-rfc6265bis.md chlily@google.com senglehardt@mozilla.com mkwst@google.com wilander@apple.com
+draft-ietf-httpbis-origin-h3.md mbishop@evequefou.be
+draft-ietf-httpbis-resumable-upload.md marius@transloadit.com guoye_zhang@apple.com lucaspardue.24.7@gmail.com
+draft-ietf-httpbis-retrofit.md mnot@mnot.net
+draft-ietf-httpbis-rfc6265bis.md bingler@google.com mkwst@google.com wilander@apple.com
 draft-ietf-httpbis-rfc7838bis.md mbishop@evequefou.be mt@lowentropy.net
 draft-ietf-httpbis-safe-method-w-body.xml julian.reschke@greenbytes.de malhotrasahib@gmail.com jasnell@gmail.com
-draft-ietf-httpbis-targeted-cache-control.md sludin@ludin.org mnot@mnot.net me@yuchenwu.net
+draft-ietf-httpbis-sfbis.md mnot@mnot.net phk@varnish-cache.org
+draft-ietf-httpbis-unprompted-auth.md dschinazi.ietf@gmail.com david@guardianproject.info jonathan.hoyland@gmail.com
 draft-ietf-httpbis-variants.md mnot@mnot.net
