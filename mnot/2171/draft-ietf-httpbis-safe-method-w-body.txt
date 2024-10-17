@@ -500,6 +500,9 @@ A.5.  Since draft-ietf-httpbis-safe-method-w-body-04
 
 A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
 
+   *  Update QUERY example to introduction (https://github.com/httpwg/
+      http-extensions/issues/2171)
+
    *  Update "Sensitive information in QUERY URLs"
       (https://github.com/httpwg/http-extensions/issues/2853)
 
