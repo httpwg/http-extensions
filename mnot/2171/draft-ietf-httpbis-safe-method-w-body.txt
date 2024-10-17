@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 19 April 2025                                                  
+Expires: 20 April 2025                                                  
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                         16 October 2024
+                                                         17 October 2024
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 April 2025.
+   This Internet-Draft will expire on 20 April 2025.
 
 Copyright Notice
 
@@ -78,6 +78,8 @@ Table of Contents
      4.3.  Simple QUERY with indirect response (303 See Other)
    5.  Security Considerations
    6.  IANA Considerations
+     6.1.  Registration of QUERY method
+     6.2.  Registration of Accept-Query field
    7.  Normative References
    Appendix A.  Change Log
      A.1.  Since draft-ietf-httpbis-safe-method-w-body-00
@@ -85,7 +87,7 @@ Table of Contents
      A.3.  Since draft-ietf-httpbis-safe-method-w-body-02
      A.4.  Since draft-ietf-httpbis-safe-method-w-body-03
      A.5.  Since draft-ietf-httpbis-safe-method-w-body-04
-     A.6.  Since draft-ietf-httpbis-safe-method-w-body-04
+     A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
    Authors' Addresses
 
 1.  Introduction
@@ -245,6 +247,8 @@ Table of Contents
    The Accept-Query header field specifies a comma-separated listing of
    media types (with optional parameters) as defined by Section 8.3.1 of
    [HTTP].
+   // field syntax currently discussed in https://github.com/httpwg/
+   // http-extensions/issues/2860
 
    The order of types listed by the Accept-Query header field is not
    significant.
@@ -375,9 +379,11 @@ Table of Contents
 
 6.  IANA Considerations
 
-   IANA is requested to add QUERY method in the permanent registry at
-   <http://www.iana.org/assignments/http-methods> (see Section 16.1.1 of
-   [HTTP]).
+6.1.  Registration of QUERY method
+
+   IANA is requested to add the QUERY method to the HTTP Method Registry
+   at <http://www.iana.org/assignments/http-methods> (see Section 16.3.1
+   of [HTTP]).
 
             +=============+======+============+===============+
             | Method Name | Safe | Idempotent | Specification |
@@ -386,6 +392,28 @@ Table of Contents
             +-------------+------+------------+---------------+
 
                                   Table 1
+
+6.2.  Registration of Accept-Query field
+
+   IANA is requested to add the Accept-Query field to the HTTP Field
+   Name Registry at <https://www.iana.org/assignments/http-fields> (see
+   Section 16.1.1 of [HTTP]).
+
+    +============+=========+==========+=========+=====================+
+    |Field Name  |Status   |Structured|Reference| Comments            |
+    |            |         |Type      |         |                     |
+    +============+=========+==========+=========+=====================+
+    |Accept-Query|permanent|          |Section 3|                     |
+    |            |         |          |of this  | // field syntax     |
+    |            |         |          |document.| currently discussed |
+    |            |         |          |         | in                  |
+    |            |         |          |         | https://github.com/ |
+    |            |         |          |         | httpwg/             |
+    |            |         |          |         | // http-extensions/ |
+    |            |         |          |         | issues/2860         |
+    +------------+---------+----------+---------+---------------------+
+
+                                  Table 2
 
 7.  Normative References
 
@@ -470,10 +498,13 @@ A.5.  Since draft-ietf-httpbis-safe-method-w-body-04
    *  Use "target URI" instead of "effective request URI"
       (https://github.com/httpwg/http-extensions/issues/2883)
 
-A.6.  Since draft-ietf-httpbis-safe-method-w-body-04
+A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
 
    *  Update "Sensitive information in QUERY URLs"
       (https://github.com/httpwg/http-extensions/issues/2853)
+
+   *  Field registration for "Accept-Query" (https://github.com/httpwg/
+      http-extensions/issues/2903)
 
 Authors' Addresses
 
