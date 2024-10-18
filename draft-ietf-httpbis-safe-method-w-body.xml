@@ -193,29 +193,21 @@ q=foo&amp;limit=10&amp;sort=-published
       resources or even create additional HTTP resources through which the
       response can be retrieved.
     </t>
-
     <t>
       A successful response to a QUERY request is expected to provide some
       indication as to the final disposition of the operation. For
       instance, a successful query that yields no results can be represented
       by a 204 No Content response. If the response includes content,
       it is expected to describe the results of the operation.
-      In some cases, the server may choose to respond indirectly to the QUERY
-      request by returning a 3xx Redirection with a Location header field specifying
-      an alternate Request URI from which the results can be retrieved
-      using an HTTP GET request. Various non-normative examples of successful
-      QUERY responses are illustrated in <xref target="examples" />.
     </t>
-
     <t>
-      A successful response to a QUERY request can include a Content-Location
+      Furthermore, a successful response can include a Content-Location
       header field (see <xref target="HTTP" section="8.7"/>) containing an
       identifier for a resource corresponding to the results of the
       operation. This represents a claim from the server that a client can send
       a GET request for the indicated URI to retrieve the results of the query
       operation just performed. The indicated resource might be temporary.
     </t>
-
     <t>
       A server &MAY; create or locate a resource that identifies the query
       operation for future use. If the server does so, the URI of the resource
@@ -226,7 +218,21 @@ q=foo&amp;limit=10&amp;sort=-published
       temporary; if a future request fails, the client can retry using the
       original QUERY resource and the previously submitted parameters again.
     </t>
-
+    <t>
+      In some cases, the server may choose to respond indirectly to the QUERY
+      request by redirecting the user agent to a different URI (see 
+      <xref target="HTTP" section="15.4"/>). The semantics of the redirect
+      response do not differ from other methods. For instance, a 303 (See Other)
+      response would indicate that the Location field identifies an
+      alternate URI from which the results can be retrieved
+      using a GET request (this use case is also covered by the
+      use of the Location response field in a 2xx response).
+      On the other hand, response codes 307 (Temporary Redirect) and 308 
+      (Permanent Redirect) can be used to request the user agent to redo
+      the QUERY request on the URI specified by the Location field.
+      Various non-normative examples of successful
+      QUERY responses are illustrated in <xref target="examples" />.
+    </t>
     <t>
       The semantics of the QUERY method change to a "conditional QUERY" if
       the request message includes an If-Modified-Since, If-Unmodified-
@@ -327,7 +333,7 @@ Dubois, Camille, camille.dubois@example.net
 
     </section>
 
-    <section title="Simple QUERY with a Direct Response and Location fields">
+    <section title="Simple QUERY with a Direct Response and Location Fields">
 
       <t>A simple query with a direct response:</t>
 <artwork type="http-message">
@@ -381,7 +387,7 @@ Dubois, Camille, camille.dubois@example.net
 
     </section>
 
-    <section title="Simple QUERY with indirect response (303 See Other)">
+    <section title="Simple QUERY with Indirect Response (303 See Other)">
 
       <t>A simple query with an Indirect Response (303 See Other):</t>
 <artwork type="http-message">
@@ -396,10 +402,10 @@ select surname, givenname, email limit 10
       <t>Response:</t>
 <artwork type="http-message">
 HTTP/1.1 303 See Other
-Location: http://example.org/contacts/query123
+Location: /contacts/query123
 </artwork>
 
-      <t>Fetch Query Response:</t>
+      <t>Retrieval of the Query Response:</t>
 <artwork type="http-message">
 GET /contacts/query123 HTTP/1.1
 Host: example.org
@@ -418,6 +424,46 @@ Dubois, Camille, camille.dubois@example.net
 
     </section>
 
+    <section title="Simple QUERY with Redirect Response (308 Moved Permanently)">
+
+      <t>A simple query being redirected:</t>
+<artwork type="http-message">
+QUERY /contacts HTTP/1.1
+Host: example.org
+Content-Type: example/query
+Accept: text/csv
+
+select surname, givenname, email limit 10
+</artwork>
+
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 308 Moved Permanently
+Location: /morecontacts
+</artwork>
+
+      <t>Redirected request:</t>
+<artwork type="http-message">
+QUERY /morecontacts contacts HTTP/1.1
+Host: example.org
+Content-Type: example/query
+Accept: text/csv
+
+select surname, givenname, email limit 10
+</artwork>
+
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: text/csv
+
+surname, givenname, email
+Smith, John, john.smith@example.org
+Jones, Sally, sally.jones@example.com
+Dubois, Camille, camille.dubois@example.net
+</artwork>
+
+    </section>
   </section>
 
   <section title="Security Considerations">
