@@ -428,10 +428,11 @@ Dubois, Camille, camille.dubois@example.net
     </t>
 
     <t>
-      The QUERY method can be used as an alternative to passing query
-      information in the query portion of a URI. This is preferred in some
-      cases, as the URI is more likely to be logged than the request content. If
-      a server creates a temporary resource to represent the results of a QUERY
+      The QUERY method can be used as an alternative to passing request
+      information in the URI (e.g., in the query section). This is preferred in some
+      cases, as the URI is more likely to be logged or otherwise processed
+      by intermediaries than the request content.
+      If a server creates a temporary resource to represent the results of a QUERY
       request (e.g., for use in the Location or Content-Location field) and the request
       contains sensitive information that cannot be logged, then the URI of this
       resource &SHOULD; be chosen such that it does not include any sensitive
