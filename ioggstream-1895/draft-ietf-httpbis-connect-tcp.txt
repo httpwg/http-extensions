@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                         16 October 2024
-Expires: 19 April 2025
+Intended status: Standards Track                         18 October 2024
+Expires: 21 April 2025
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 April 2025.
+   This Internet-Draft will expire on 21 April 2025.
 
 Copyright Notice
 
@@ -293,18 +293,14 @@ Table of Contents
 
 3.3.3.  Use of the Capsule Protocol
 
-   In this specification, use of the Capsule Protocol [RFC9297] is
-   OPTIONAL.  Clients MAY request use of the Capsule Protocol by
-   including a "Capsule-Protocol: ?1" header field in the request.
+   In this specification, support for the Capsule Protocol [RFC9297] is
+   OPTIONAL for clients.  Clients MAY request use of the Capsule
+   Protocol by including a "Capsule-Protocol: ?1" header field in the
+   request.
 
-   Server support for the Capsule Protocol is also OPTIONAL.  If the
-   request includes "Capsule-Protocol: ?1", and the server does not
-   support the Capsule Protocol, the server MUST respond with a 4xx
-   (Client Error) status and a "Capsule-Protocol: ?0" response header
-   field, and MUST discard any data received on this request stream.
-   Upon receiving such a response, the client MUST retry the request
-   without the Capsule Protocol and MAY disable use of the Capsule
-   Protocol with this URI Template for the remainder of the session.
+   Server support for the Capsule Protocol is REQUIRED.  Servers MUST
+   confirm use of the Capsule Protocol by echoing the "Capsule-Protocol:
+   ?1" header in their response.
 
    When using the Capsule Protocol, TCP payload data is sent in the
    payload of a new Capsule Type named DATA (Section 8.3).  The ordered
