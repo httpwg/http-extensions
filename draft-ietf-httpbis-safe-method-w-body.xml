@@ -112,7 +112,7 @@ Host: example.org
       if the query parameters extend to several kilobytes or more of
       data it may not be, because many implementations place limits on their size. Often these limits are not
       known or discoverable ahead of time, because a request can pass through many uncoordinated
-      systems. Additionally, expressing certain kinds of data in the target URI is inefficient, because it
+      systems. Additionally, expressing some data in the target URI is inefficient, because it
       needs to be encoded to be a valid URI.
     </t>
 
