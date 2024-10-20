@@ -106,8 +106,8 @@ Table of Contents
    it may not be, because many implementations place limits on their
    size.  Often these limits are not known or discoverable ahead of
    time, because a request can pass through many uncoordinated systems.
-   Additionally, expressing certain kinds of data in the target URI is
-   inefficient, because it needs to be encoded to be a valid URI.
+   Additionally, expressing some data in the target URI is inefficient,
+   because it needs to be encoded to be a valid URI.
 
    Encoding query parameters directly into the request URI also
    effectively casts every possible combination of query inputs as
