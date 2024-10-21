@@ -9,13 +9,13 @@ Intended status: Standards Track
 Expires: 24 April 2025
 
 
-       Security Considerations for Optimistic Use of HTTP Upgrade
+Security Considerations for Optimistic Protocol Transitions in HTTP/1.1
               draft-ietf-httpbis-optimistic-upgrade-latest
 
 Abstract
 
-   The HTTP/1.1 Upgrade mechanism allows the client to request a change
-   to a new protocol.  This document discusses the security
+   In HTTP/1.1, the client can request a change to a new protocol on the
+   existing connection.  This document discusses the security
    considerations that apply to data sent by the client before this
    request is confirmed, and updates RFC 9298 to avoid related security
    issues.
@@ -70,16 +70,17 @@ Table of Contents
      3.1.  Request Smuggling
      3.2.  Parser Exploits
    4.  Operational Issues
-   5.  Impact on Existing Upgrade Tokens
+   5.  Impact on HTTP Upgrade with Existing Upgrade Tokens
      5.1.  "TLS"
      5.2.  "WebSocket"/"websocket"
      5.3.  "connect-udp"
      5.4.  "connect-ip"
    6.  Guidance for Future Upgrade Tokens
-   7.  IANA Considerations
-   8.  References
-     8.1.  Normative References
-     8.2.  Informative References
+   7.  Guidance for HTTP CONNECT
+   8.  IANA Considerations
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
    Acknowledgments
    Author's Address
 
@@ -93,18 +94,39 @@ Table of Contents
 
 2.  Background
 
-   In HTTP/1.1, a client is permitted to send an "Upgrade" request
-   header field ([RFC9110], Section 7.8) to indicate that it would like
-   to use this connection for a protocol other than HTTP/1.1.  The
-   server replies with a "101 (Switching Protocols)" status code if it
-   accepts the protocol change.  However, that specification also
-   permits the server to reject the upgrade request:
+   In HTTP/1.1, a single connection is often used for many requests, one
+   after another.  After each request, the connection is returned to its
+   initial state, ready to send more HTTP requests.  However, HTTP/1.1
+   also contains two mechanisms that allow the client to change the
+   protocol used for the remainder of the connection.
+
+   One such mechanism is the "Upgrade" request header field ([RFC9110],
+   Section 7.8), which indicates that the client would like to use this
+   connection for a protocol other than HTTP/1.1.  The server replies
+   with a "101 (Switching Protocols)" status code if it accepts the
+   protocol change.
+
+   The other mechanism is the HTTP "CONNECT" method.  This method
+   indicates that the client wishes to establish a TCP connection to the
+   specified host and port.  The server replies with a 2xx (Successful)
+   response to indicate that the request was accepted and a TCP
+   connection was established.  After this point, the TCP connection is
+   acting as a TCP tunnel, not an HTTP/1.1 connection.
+
+   Both of these mechanisms also permit the server to reject the
+   request.  For example, [RFC9110] says:
 
       A server MAY ignore a received Upgrade header field if it wishes
       to continue using the current protocol on that connection.
 
-   This rejection of the upgrade is common, and can happen for a variety
-   of reasons:
+   and
+
+      A server MUST reject a CONNECT request that targets an empty or
+      invalid port number, typically by responding with a 400 (Bad
+      Request) status code.
+
+   Rejections are common, and can happen for a variety of reasons.  An
+   "upgrade" request might be rejected if:
 
    *  The server does not support any of the client's indicated Upgrade
       Tokens (i.e., the client's proposed new protocols), so it
@@ -122,7 +144,18 @@ Table of Contents
    *  The resource has moved, so the server replies with a 3XX redirect
       status code ([RFC9110], Section 3.4).
 
-   After rejecting the upgrade, the server will continue to interpret
+   Similarly, a CONNECT request might be rejected if:
+
+   *  The server does not support HTTP CONNECT.
+
+   *  The specified destination is not allowed under server policy.
+
+   *  The destination cannot be resolved, is unreachable, or does not
+      accept the connection.
+
+   *  The proxy requires the client to authenticate before proceeding.
+
+   After rejecting a request, the server will continue to interpret
    subsequent bytes on that connection in accordance with HTTP/1.1.
 
    [RFC9110] also states:
@@ -133,32 +166,32 @@ Table of Contents
       message).
 
    However, because of the possibility of rejection, the converse is not
-   true: a client cannot necessarily begin using an upgraded protocol
-   merely because it has finished sending the upgrade request message.
+   true: a client cannot necessarily begin using a new protocol merely
+   because it has finished sending the corresponding request message.
 
-   In some cases, the client might expect that the upgrade will succeed.
-   If this expectation is correct, the client might be able to reduce
-   delay by immediately sending the first bytes of the upgraded protocol
-   "optimistically", without waiting for the server's response.  This
-   document explores the security implications of this "optimistic"
-   behavior.
+   In some cases, the client might expect that the protocol transition
+   will succeed.  If this expectation is correct, the client might be
+   able to reduce delay by immediately sending the first bytes of the
+   new protocol "optimistically", without waiting for the server's
+   response.  This document explores the security implications of this
+   "optimistic" behavior.
 
 3.  Possible Security Issues
 
    When there are only two distinct parties involved in an HTTP/1.1
-   connection (i.e., the client and the server), HTTP Upgrade introduces
-   no new security issues: each party must already be prepared for the
-   other to send arbitrary data on the connection at any time.  However,
-   HTTP connections often involve more than two parties, if the requests
-   or responses include third-party data.  For example, a browser (party
-   1) might send an HTTP request to an origin (party 2) with path,
-   headers, or body controlled by a website from a different origin
-   (party 3).  Post-upgrade protocols such as WebSocket similarly are
-   often used to convey data chosen by a third party.
+   connection (i.e., the client and the server), protocol transitions
+   introduce no new security issues: each party must already be prepared
+   for the other to send arbitrary data on the connection at any time.
+   However, HTTP connections often involve more than two parties, if the
+   requests or responses include third-party data.  For example, a
+   browser (party 1) might send an HTTP request to an origin (party 2)
+   with path, headers, or body controlled by a website from a different
+   origin (party 3).  Post-transition protocols such as WebSocket
+   similarly are often used to convey data chosen by a third party.
 
    If the third-party data source is untrusted, we call the data it
    provides "attacker-controlled".  The combination of attacker-
-   controlled data and optimistic HTTP Upgrade results in two
+   controlled data and optimistic protocol transitions results in two
    significant security issues.
 
 3.1.  Request Smuggling
@@ -171,46 +204,47 @@ Table of Contents
    Smuggling can occur if the client and server have distinct
    interpretations of the data that flows between them.
 
-   If the server accepts an HTTP Upgrade, it interprets the subsequent
-   bytes in accordance with the new protocol.  If it rejects the
-   upgrade, it interprets those bytes as HTTP/1.1.  However, the client
-   doesn't know which interpretation the server will take until it
-   receives the server's response status code.  If it uses the new
-   protocol optimistically, this creates a risk that the server will
-   interpret attacker-controlled data in the upgraded protocol as an
+   If the server accepts a protocol transition request, it interprets
+   the subsequent bytes in accordance with the new protocol.  If it
+   rejects the request, it interprets those bytes as HTTP/1.1.  However,
+   the client doesn't know which interpretation the server will take
+   until it receives the server's response status code.  If it uses the
+   new protocol optimistically, this creates a risk that the server will
+   interpret attacker-controlled data in the new protocol as an
    additional HTTP request issued by the client.
 
-   As a trivial example, consider an upgraded protocol in which the
-   entire post-upgrade content might be freely attacker-controlled
-   (e.g., "connect-tcp" [I-D.ietf-httpbis-connect-tcp]).  If the client
-   is authenticated to the server using a connection-level
+   As a trivial example, consider an HTTP CONNECT client providing
+   connectivity to an untrusted application.  If the client is
+   authenticated to the proxy server using a connection-level
    authentication method such as TLS Client Certificates, the attacker
-   could send an HTTP/1.1 POST request in the post-upgrade payload.  If
-   the client delivers this payload optimistically, and the upgrade
-   request fails, the server would interpret the payload as a subsequent
-   authenticated request issued by the client.
+   could send an HTTP/1.1 POST request for the proxy server at the
+   beginning of its TCP connection.  If the client delivers this data
+   optimistically, and the CONNECT request fails, the server would
+   misinterpret the application's data as a subsequent authenticated
+   request issued by the client.
 
 3.2.  Parser Exploits
 
    A related category of attacks use protocol disagreement to exploit
    vulnerabilities in the server's request parsing logic.  These attacks
    apply when the HTTP client is trusted by the server, but the post-
-   upgrade data source is not.  If the server software was developed
+   transition data source is not.  If the server software was developed
    under the assumption that some or all of the HTTP request data is not
-   attacker-controlled, optimistic use of HTTP Upgrade can cause this
+   attacker-controlled, optimistic transmission can cause this
    assumption to be violated, exposing vulnerabilities in the server's
    HTTP request parser.
 
 4.  Operational Issues
 
-   If the server rejects the upgrade, the connection can continue to be
-   used for HTTP/1.1.  There is no requirement to close the connection
-   in response to an upgrade rejection, and keeping the connection open
-   has performance advantages if additional HTTP requests to this server
-   are likely.  Thus, it is normally inappropriate to close the
-   connection in response to a rejected upgrade.
+   If the server rejects the transition request, the connection can
+   continue to be used for HTTP/1.1.  There is no requirement to close
+   the connection in response to a rejected transition, and keeping the
+   connection open has performance advantages if additional HTTP
+   requests to this server are likely.  Thus, it is normally
+   inappropriate to close the connection in response to a rejected
+   transition.
 
-5.  Impact on Existing Upgrade Tokens
+5.  Impact on HTTP Upgrade with Existing Upgrade Tokens
 
    This section describes the impact of this document's considerations
    on some registered Upgrade Tokens that are believed to be in use at
@@ -300,13 +334,26 @@ Table of Contents
    security issues discussed here and provide clear guidance on how
    clients can avoid them.
 
-7.  IANA Considerations
+7.  Guidance for HTTP CONNECT
+
+   Clients that send HTTP CONNECT requests on behalf of untrusted TCP
+   clients MUST wait for a 2xx (Successful) response before sending any
+   TCP payload data.
+
+   To mitigate vulnerabilities from any clients that do not conform to
+   this requirement, proxy servers MAY close the underlying connection
+   when rejecting an HTTP CONNECT request, without processing any
+   further data sent to the proxy server on that connection.  Note that
+   this behavior may impair performance, especially when returning a
+   "407 (Proxy Authentication Required)" response.
+
+8.  IANA Considerations
 
    This document has no IANA actions.
 
-8.  References
+9.  References
 
-8.1.  Normative References
+9.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -331,14 +378,7 @@ Table of Contents
               RFC 9484, DOI 10.17487/RFC9484, October 2023,
               <https://www.rfc-editor.org/rfc/rfc9484>.
 
-8.2.  Informative References
-
-   [I-D.ietf-httpbis-connect-tcp]
-              Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
-              for TCP", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-connect-tcp-05, 2 August 2024,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              connect-tcp-05>.
+9.2.  Informative References
 
    [RFC2817]  Khare, R. and S. Lawrence, "Upgrading to TLS Within
               HTTP/1.1", RFC 2817, DOI 10.17487/RFC2817, May 2000,
