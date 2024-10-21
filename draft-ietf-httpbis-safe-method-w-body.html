@@ -1147,10 +1147,19 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-query" class="internal xref">QUERY</a></p>
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-query" class="internal xref">QUERY</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
-                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-caching" class="internal xref">Caching</a></p>
+                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-content-location-and-locati" class="internal xref">Content-Location and Location Fields</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
+                <p id="section-toc.1-1.2.2.2.1" class="keepWithNext"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-redirection" class="internal xref">Redirection</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3">
+                <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="auto internal xref">2.3</a>.  <a href="#name-conditional-requests" class="internal xref">Conditional Requests</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4">
+                <p id="section-toc.1-1.2.2.4.1"><a href="#section-2.4" class="auto internal xref">2.4</a>.  <a href="#name-caching" class="internal xref">Caching</a></p>
 </li>
             </ul>
 </li>
@@ -1164,10 +1173,13 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-simple-query-with-a-direct-" class="internal xref">Simple QUERY with a Direct Response</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
-                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-simple-query-with-a-direct-r" class="internal xref">Simple QUERY with a Direct Response and Location fields</a></p>
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-simple-query-with-a-direct-r" class="internal xref">Simple QUERY with a Direct Response and Location Fields</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
-                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-simple-query-with-indirect-" class="internal xref">Simple QUERY with indirect response (303 See Other)</a></p>
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-simple-query-with-indirect-" class="internal xref">Simple QUERY with Indirect Response (303 See Other)</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
+                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-simple-query-with-redirect-" class="internal xref">Simple QUERY with Redirect Response (308 Moved Permanently)</a></p>
 </li>
             </ul>
 </li>
@@ -1323,28 +1335,56 @@ q=foo&amp;limit=10&amp;sort=-published
       indication as to the final disposition of the operation. For
       instance, a successful query that yields no results can be represented
       by a 204 No Content response. If the response includes content,
-      it is expected to describe the results of the operation.
-      In some cases, the server may choose to respond indirectly to the QUERY
-      request by returning a 3xx Redirection with a Location header field specifying
-      an alternate Request URI from which the results can be retrieved
-      using an HTTP GET request. Various non-normative examples of successful
-      QUERY responses are illustrated in <a href="#examples" class="auto internal xref">Section 4</a>.<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">
-      A successful response to a QUERY request can include a Content-Location
+      it is expected to describe the results of the operation.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<div id="location">
+<section id="section-2.1">
+        <h3 id="name-content-location-and-locati">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-content-location-and-locati" class="section-name selfRef">Content-Location and Location Fields</a>
+        </h3>
+<p id="section-2.1-1">
+      Furthermore, a successful response can include a Content-Location
       header field (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.7" class="relref">Section 8.7</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) containing an
       identifier for a resource corresponding to the results of the
       operation. This represents a claim from the server that a client can send
       a GET request for the indicated URI to retrieve the results of the query
-      operation just performed. The indicated resource might be temporary.<a href="#section-2-5" class="pilcrow">¶</a></p>
-<p id="section-2-6">
+      operation just performed. The indicated resource might be temporary.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2">
       A server <span class="bcp14">MAY</span> create or locate a resource that identifies the query
       operation for future use. If the server does so, the URI of the resource
       can be included in the Location header field of the response (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). This represents a claim that a client can
       send a GET request to the indicated URI to repeat the query operation just
       performed without resending the query parameters. This resource might be
       temporary; if a future request fails, the client can retry using the
-      original QUERY resource and the previously submitted parameters again.<a href="#section-2-6" class="pilcrow">¶</a></p>
-<p id="section-2-7">
+      original QUERY resource and the previously submitted parameters again.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="redirection">
+<section id="section-2.2">
+        <h3 id="name-redirection">
+<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-redirection" class="section-name selfRef">Redirection</a>
+        </h3>
+<p id="section-2.2-1">
+      In some cases, the server may choose to respond indirectly to the QUERY
+      request by redirecting the user agent to a different URI (see
+      <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4" class="relref">Section 15.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). The semantics of the redirect
+      response do not differ from other methods. For instance, a 303 (See Other)
+      response would indicate that the Location field identifies an
+      alternate URI from which the results can be retrieved
+      using a GET request (this use case is also covered by the
+      use of the Location response field in a 2xx response).
+      On the other hand, response codes 307 (Temporary Redirect) and 308
+      (Permanent Redirect) can be used to request the user agent to redo
+      the QUERY request on the URI specified by the Location field.
+      Various non-normative examples of successful
+      QUERY responses are illustrated in <a href="#examples" class="auto internal xref">Section 4</a>.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="conditional">
+<section id="section-2.3">
+        <h3 id="name-conditional-requests">
+<a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-conditional-requests" class="section-name selfRef">Conditional Requests</a>
+        </h3>
+<p id="section-2.3-1">
       The semantics of the QUERY method change to a "conditional QUERY" if
       the request message includes an If-Modified-Since, If-Unmodified-
       Since, If-Match, If-None-Match, or If-Range header field
@@ -1352,31 +1392,35 @@ q=foo&amp;limit=10&amp;sort=-published
       be performed only under the circumstances described by the conditional
       header field(s). It is important to note, however, that such conditions
       are evaluated against the state of the target resource itself as opposed
-      to the collected results of the query operation.<a href="#section-2-7" class="pilcrow">¶</a></p>
-<section id="section-2.1">
+      to the collected results of the query operation.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="caching">
+<section id="section-2.4">
         <h3 id="name-caching">
-<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-caching" class="section-name selfRef">Caching</a>
+<a href="#section-2.4" class="section-number selfRef">2.4. </a><a href="#name-caching" class="section-name selfRef">Caching</a>
         </h3>
-<p id="section-2.1-1">
+<p id="section-2.4-1">
         The response to a QUERY method is cacheable; a cache <span class="bcp14">MAY</span> use it to satisfy subsequent
-        QUERY requests as per <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>).<a href="#section-2.1-1" class="pilcrow">¶</a></p>
-<p id="section-2.1-2">
+        QUERY requests as per <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>).<a href="#section-2.4-1" class="pilcrow">¶</a></p>
+<p id="section-2.4-2">
         The cache key for a query (see <span><a href="https://rfc-editor.org/rfc/rfc9111#section-2" class="relref">Section 2</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>) <span class="bcp14">MUST</span>
         incorporate the request content. When doing so, caches <span class="bcp14">SHOULD</span> first normalize request
         content to remove semantically insignificant differences, thereby improving cache
-        efficiency, by:<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+        efficiency, by:<a href="#section-2.4-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-2.1-3.1">Removing content encoding(s)<a href="#section-2.1-3.1" class="pilcrow">¶</a>
+<li class="normal" id="section-2.4-3.1">Removing content encoding(s)<a href="#section-2.4-3.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-2.1-3.2">Normalizing based upon knowledge of format conventions, as indicated by the any media type suffix in the request's Content-Type field (e.g., "+json")<a href="#section-2.1-3.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-2.4-3.2">Normalizing based upon knowledge of format conventions, as indicated by the any media type suffix in the request's Content-Type field (e.g., "+json")<a href="#section-2.4-3.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-2.1-3.3">Normalizing based upon knowledge of the semantics of the content itself, as indicated by the request's Content-Type field.<a href="#section-2.1-3.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-2.4-3.3">Normalizing based upon knowledge of the semantics of the content itself, as indicated by the request's Content-Type field.<a href="#section-2.4-3.3" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-2.1-4">
+<p id="section-2.4-4">
         Note that any such normalization is performed solely for the purpose of generating a cache key; it
-        does not change the request itself.<a href="#section-2.1-4" class="pilcrow">¶</a></p>
+        does not change the request itself.<a href="#section-2.4-4" class="pilcrow">¶</a></p>
 </section>
+</div>
 </section>
 </div>
 <div id="field.accept-query">
@@ -1447,7 +1491,7 @@ Dubois, Camille, camille.dubois@example.net
 </section>
 <section id="section-4.2">
         <h3 id="name-simple-query-with-a-direct-r">
-<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-simple-query-with-a-direct-r" class="section-name selfRef">Simple QUERY with a Direct Response and Location fields</a>
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-simple-query-with-a-direct-r" class="section-name selfRef">Simple QUERY with a Direct Response and Location Fields</a>
         </h3>
 <p id="section-4.2-1">A simple query with a direct response:<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-http-message art-text artwork" id="section-4.2-2">
@@ -1503,7 +1547,7 @@ Dubois, Camille, camille.dubois@example.net
 </section>
 <section id="section-4.3">
         <h3 id="name-simple-query-with-indirect-">
-<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-simple-query-with-indirect-" class="section-name selfRef">Simple QUERY with indirect response (303 See Other)</a>
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-simple-query-with-indirect-" class="section-name selfRef">Simple QUERY with Indirect Response (303 See Other)</a>
         </h3>
 <p id="section-4.3-1">A simple query with an Indirect Response (303 See Other):<a href="#section-4.3-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-http-message art-text artwork" id="section-4.3-2">
@@ -1520,10 +1564,10 @@ select surname, givenname, email limit 10
 <div class="alignLeft art-http-message art-text artwork" id="section-4.3-4">
 <pre>
 HTTP/1.1 303 See Other
-Location: http://example.org/contacts/query123
+Location: /contacts/query123
 </pre><a href="#section-4.3-4" class="pilcrow">¶</a>
 </div>
-<p id="section-4.3-5">Fetch Query Response:<a href="#section-4.3-5" class="pilcrow">¶</a></p>
+<p id="section-4.3-5">Retrieval of the Query Response:<a href="#section-4.3-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-http-message art-text artwork" id="section-4.3-6">
 <pre>
 GET /contacts/query123 HTTP/1.1
@@ -1541,6 +1585,52 @@ Smith, John, john.smith@example.org
 Jones, Sally, sally.jones@example.com
 Dubois, Camille, camille.dubois@example.net
 </pre><a href="#section-4.3-8" class="pilcrow">¶</a>
+</div>
+</section>
+<section id="section-4.4">
+        <h3 id="name-simple-query-with-redirect-">
+<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-simple-query-with-redirect-" class="section-name selfRef">Simple QUERY with Redirect Response (308 Moved Permanently)</a>
+        </h3>
+<p id="section-4.4-1">A simple query being redirected:<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-http-message art-text artwork" id="section-4.4-2">
+<pre>
+QUERY /contacts HTTP/1.1
+Host: example.org
+Content-Type: example/query
+Accept: text/csv
+
+select surname, givenname, email limit 10
+</pre><a href="#section-4.4-2" class="pilcrow">¶</a>
+</div>
+<p id="section-4.4-3">Response:<a href="#section-4.4-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-http-message art-text artwork" id="section-4.4-4">
+<pre>
+HTTP/1.1 308 Moved Permanently
+Location: /morecontacts
+</pre><a href="#section-4.4-4" class="pilcrow">¶</a>
+</div>
+<p id="section-4.4-5">Redirected request:<a href="#section-4.4-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-http-message art-text artwork" id="section-4.4-6">
+<pre>
+QUERY /morecontacts HTTP/1.1
+Host: example.org
+Content-Type: example/query
+Accept: text/csv
+
+select surname, givenname, email limit 10
+</pre><a href="#section-4.4-6" class="pilcrow">¶</a>
+</div>
+<p id="section-4.4-7">Response:<a href="#section-4.4-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-http-message art-text artwork" id="section-4.4-8">
+<pre>
+HTTP/1.1 200 OK
+Content-Type: text/csv
+
+surname, givenname, email
+Smith, John, john.smith@example.org
+Jones, Sally, sally.jones@example.com
+Dubois, Camille, camille.dubois@example.net
+</pre><a href="#section-4.4-8" class="pilcrow">¶</a>
 </div>
 </section>
 </section>
@@ -1749,11 +1839,13 @@ Dubois, Camille, camille.dubois@example.net
 <a href="#appendix-A.6" class="section-number selfRef">A.6. </a><a href="#name-since-draft-ietf-httpbis-safe-me" class="section-name selfRef">Since draft-ietf-httpbis-safe-method-w-body-05</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-A.6-1.1">Update QUERY example to introduction (<span><a href="https://github.com/httpwg/http-extensions/issues/2171">https://github.com/httpwg/http-extensions/issues/2171</a></span>)<a href="#appendix-A.6-1.1" class="pilcrow">¶</a>
+<li class="normal" id="appendix-A.6-1.1">Updated language and examples about redirects and method rewriting (<span><a href="https://github.com/httpwg/http-extensions/issues/1917">https://github.com/httpwg/http-extensions/issues/1917</a></span>)<a href="#appendix-A.6-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-A.6-1.2">Update "Sensitive information in QUERY URLs" (<span><a href="https://github.com/httpwg/http-extensions/issues/2853">https://github.com/httpwg/http-extensions/issues/2853</a></span>)<a href="#appendix-A.6-1.2" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-A.6-1.2">Add QUERY example to introduction (<span><a href="https://github.com/httpwg/http-extensions/issues/2171">https://github.com/httpwg/http-extensions/issues/2171</a></span>)<a href="#appendix-A.6-1.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-A.6-1.3">Field registration for "Accept-Query" (<span><a href="https://github.com/httpwg/http-extensions/issues/2903">https://github.com/httpwg/http-extensions/issues/2903</a></span>)<a href="#appendix-A.6-1.3" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-A.6-1.3">Update "Sensitive information in QUERY URLs" (<span><a href="https://github.com/httpwg/http-extensions/issues/2853">https://github.com/httpwg/http-extensions/issues/2853</a></span>)<a href="#appendix-A.6-1.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="appendix-A.6-1.4">Field registration for "Accept-Query" (<span><a href="https://github.com/httpwg/http-extensions/issues/2903">https://github.com/httpwg/http-extensions/issues/2903</a></span>)<a href="#appendix-A.6-1.4" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
