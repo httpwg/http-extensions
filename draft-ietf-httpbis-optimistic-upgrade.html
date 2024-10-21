@@ -1311,7 +1311,7 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
         <h3 id="name-tls">
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-tls" class="section-name selfRef">"TLS"</a>
         </h3>
-<p id="section-5.1-1"><span>[<a href="#RFC2817" class="cite xref">RFC2817</a>]</span> defines the "TLS/<em>.</em>" family of Upgrade Tokens, and correctly highlights the possibility of the server rejecting the upgrade.  The security considerations documented here are applicable to any use of the "TLS" Upgrade Token, but no change is required in <span>[<a href="#RFC2817" class="cite xref">RFC2817</a>]</span>.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-1">The "TLS" family of Upgrade Tokens was defined in <span>[<a href="#RFC2817" class="cite xref">RFC2817</a>]</span>, which correctly highlights the possibility of the server rejecting the upgrade. If a client ignores this possibility and sends TLS data optimistically, the result cannot be valid HTTP/1.1: the first octet of a TLS connection must be 22 (ContentType.handshake), but this is not an allowed character in an HTTP/1.1 method.  A compliant HTTP/1.1 server will treat this as a parsing error and close the connection without processing further requests.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="websocketwebsocket">
@@ -1374,7 +1374,7 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
       <h2 id="name-guidance-for-future-upgrade">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-guidance-for-future-upgrade" class="section-name selfRef">Guidance for Future Upgrade Tokens</a>
       </h2>
-<p id="section-6-1">There are now several good examples of designs that prevent the security concerns discussed in this document and may be applicable in future specifications:<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-1">There are now several good examples of designs that reduce or eliminate the security concerns discussed in this document and may be applicable in future specifications:<a href="#section-6-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6-2.1">
           <p id="section-6-2.1.1">Forbid optimistic use of HTTP Upgrade (WebSocket, <span><a href="https://rfc-editor.org/rfc/rfc6455#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC6455" class="cite xref">RFC6455</a>]</span>).<a href="#section-6-2.1.1" class="pilcrow">¶</a></p>
@@ -1386,7 +1386,7 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
           <p id="section-6-2.3.1">Apply high-entropy masking of client-to-server data (WebSocket, <span><a href="https://rfc-editor.org/rfc/rfc6455#section-5.1" class="relref">Section 5.1</a> of [<a href="#RFC6455" class="cite xref">RFC6455</a>]</span>).<a href="#section-6-2.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-6-3">Future specifications for Upgrade Tokens <span class="bcp14">MUST</span> account for the security issues discussed here and provide clear guidance on how clients can avoid them.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-3">Future specifications for Upgrade Tokens should account for the security issues discussed here and provide clear guidance on how implementations can avoid them.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <div id="selection-of-request-methods">
 <section id="section-6.1">
         <h3 id="name-selection-of-request-method">
