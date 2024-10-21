@@ -70,12 +70,16 @@ Table of Contents
 
    1.  Introduction
    2.  QUERY
-     2.1.  Caching
+     2.1.  Content-Location and Location Fields
+     2.2.  Redirection
+     2.3.  Conditional Requests
+     2.4.  Caching
    3.  The "Accept-Query" Header Field
    4.  Examples
      4.1.  Simple QUERY with a Direct Response
-     4.2.  Simple QUERY with a Direct Response and Location fields
-     4.3.  Simple QUERY with indirect response (303 See Other)
+     4.2.  Simple QUERY with a Direct Response and Location Fields
+     4.3.  Simple QUERY with Indirect Response (303 See Other)
+     4.4.  Simple QUERY with Redirect Response (308 Moved Permanently)
    5.  Security Considerations
    6.  IANA Considerations
      6.1.  Registration of QUERY method
@@ -179,20 +183,16 @@ Table of Contents
    indication as to the final disposition of the operation.  For
    instance, a successful query that yields no results can be
    represented by a 204 No Content response.  If the response includes
-   content, it is expected to describe the results of the operation.  In
-   some cases, the server may choose to respond indirectly to the QUERY
-   request by returning a 3xx Redirection with a Location header field
-   specifying an alternate Request URI from which the results can be
-   retrieved using an HTTP GET request.  Various non-normative examples
-   of successful QUERY responses are illustrated in Section 4.
+   content, it is expected to describe the results of the operation.
 
-   A successful response to a QUERY request can include a Content-
-   Location header field (see Section 8.7 of [HTTP]) containing an
-   identifier for a resource corresponding to the results of the
-   operation.  This represents a claim from the server that a client can
-   send a GET request for the indicated URI to retrieve the results of
-   the query operation just performed.  The indicated resource might be
-   temporary.
+2.1.  Content-Location and Location Fields
+
+   Furthermore, a successful response can include a Content-Location
+   header field (see Section 8.7 of [HTTP]) containing an identifier for
+   a resource corresponding to the results of the operation.  This
+   represents a claim from the server that a client can send a GET
+   request for the indicated URI to retrieve the results of the query
+   operation just performed.  The indicated resource might be temporary.
 
    A server MAY create or locate a resource that identifies the query
    operation for future use.  If the server does so, the URI of the
@@ -204,6 +204,23 @@ Table of Contents
    fails, the client can retry using the original QUERY resource and the
    previously submitted parameters again.
 
+2.2.  Redirection
+
+   In some cases, the server may choose to respond indirectly to the
+   QUERY request by redirecting the user agent to a different URI (see
+   Section 15.4 of [HTTP]).  The semantics of the redirect response do
+   not differ from other methods.  For instance, a 303 (See Other)
+   response would indicate that the Location field identifies an
+   alternate URI from which the results can be retrieved using a GET
+   request (this use case is also covered by the use of the Location
+   response field in a 2xx response).  On the other hand, response codes
+   307 (Temporary Redirect) and 308 (Permanent Redirect) can be used to
+   request the user agent to redo the QUERY request on the URI specified
+   by the Location field.  Various non-normative examples of successful
+   QUERY responses are illustrated in Section 4.
+
+2.3.  Conditional Requests
+
    The semantics of the QUERY method change to a "conditional QUERY" if
    the request message includes an If-Modified-Since, If-Unmodified-
    Since, If-Match, If-None-Match, or If-Range header field ([HTTP],
@@ -213,7 +230,7 @@ Table of Contents
    conditions are evaluated against the state of the target resource
    itself as opposed to the collected results of the query operation.
 
-2.1.  Caching
+2.4.  Caching
 
    The response to a QUERY method is cacheable; a cache MAY use it to
    satisfy subsequent QUERY requests as per Section 4 of
@@ -288,7 +305,7 @@ Table of Contents
    Jones, Sally, sally.jones@example.com
    Dubois, Camille, camille.dubois@example.net
 
-4.2.  Simple QUERY with a Direct Response and Location fields
+4.2.  Simple QUERY with a Direct Response and Location Fields
 
    A simple query with a direct response:
 
@@ -331,7 +348,7 @@ Table of Contents
    Jones, Sally, sally.jones@example.com
    Dubois, Camille, camille.dubois@example.net
 
-4.3.  Simple QUERY with indirect response (303 See Other)
+4.3.  Simple QUERY with Indirect Response (303 See Other)
 
    A simple query with an Indirect Response (303 See Other):
 
@@ -345,12 +362,47 @@ Table of Contents
    Response:
 
    HTTP/1.1 303 See Other
-   Location: http://example.org/contacts/query123
+   Location: /contacts/query123
 
-   Fetch Query Response:
+   Retrieval of the Query Response:
 
    GET /contacts/query123 HTTP/1.1
    Host: example.org
+
+   Response:
+
+   HTTP/1.1 200 OK
+   Content-Type: text/csv
+
+   surname, givenname, email
+   Smith, John, john.smith@example.org
+   Jones, Sally, sally.jones@example.com
+   Dubois, Camille, camille.dubois@example.net
+
+4.4.  Simple QUERY with Redirect Response (308 Moved Permanently)
+
+   A simple query being redirected:
+
+   QUERY /contacts HTTP/1.1
+   Host: example.org
+   Content-Type: example/query
+   Accept: text/csv
+
+   select surname, givenname, email limit 10
+
+   Response:
+
+   HTTP/1.1 308 Moved Permanently
+   Location: /morecontacts
+
+   Redirected request:
+
+   QUERY /morecontacts HTTP/1.1
+   Host: example.org
+   Content-Type: example/query
+   Accept: text/csv
+
+   select surname, givenname, email limit 10
 
    Response:
 
@@ -500,8 +552,11 @@ A.5.  Since draft-ietf-httpbis-safe-method-w-body-04
 
 A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
 
-   *  Update QUERY example to introduction (https://github.com/httpwg/
-      http-extensions/issues/2171)
+   *  Updated language and examples about redirects and method rewriting
+      (https://github.com/httpwg/http-extensions/issues/1917)
+
+   *  Add QUERY example to introduction (https://github.com/httpwg/http-
+      extensions/issues/2171)
 
    *  Update "Sensitive information in QUERY URLs"
       (https://github.com/httpwg/http-extensions/issues/2853)
