@@ -64,7 +64,7 @@ Table of Contents
      3.3.  Use of Relevant Headers
        3.3.1.  Origin-scoped Headers
        3.3.2.  Authentication Headers
-       3.3.3.  Use of the Capsule Protocol
+     3.4.  Use of the Capsule Protocol
    4.  Additional Connection Setup Behaviors
      4.1.  Latency optimizations
      4.2.  Conveying metadata
@@ -74,7 +74,7 @@ Table of Contents
    6.  Security Considerations
    7.  Operational Considerations
    8.  IANA Considerations
-     8.1.  New Upgrade Token
+     8.1.  New Upgrade Tokens
      8.2.  New MASQUE Default Template
      8.3.  New Capsule Type
    9.  References
@@ -291,23 +291,28 @@ Table of Contents
    client to avoid waiting for a "401 (Unauthorized)" response before
    each new connection through the proxy.
 
-3.3.3.  Use of the Capsule Protocol
+3.4.  Use of the Capsule Protocol
 
-   In this specification, support for the Capsule Protocol [RFC9297] is
-   OPTIONAL for clients.  Clients MAY request use of the Capsule
-   Protocol by including a "Capsule-Protocol: ?1" header field in the
-   request.
+   When using the "connect-tcp" Upgrade Token, templated TCP proxies do
+   not use the Capsule Protocol [RFC9297].  Clients MAY request use of
+   the Capsule Protocol by offering the Upgrade Token "connect-tcp-
+   capsule" instead.  When offering or accepting the "connect-tcp-
+   capsule" Upgrade Token, clients and servers SHOULD including a
+   "Capsule-Protocol: ?1" header to facilitate processing by
+   intermediaries.
 
-   Server support for the Capsule Protocol is REQUIRED.  Servers MUST
-   confirm use of the Capsule Protocol by echoing the "Capsule-Protocol:
-   ?1" header in their response.
+   Clients of this specification MAY implement "connect-tcp", "connect-
+   tcp-capsule", or both.  Accordingly, a templated TCP proxy server
+   MUST implement both Upgrade Tokens unless its use is restricted to a
+   subset of compatible clients.
 
-   When using the Capsule Protocol, TCP payload data is sent in the
+   When using "connect-tcp-capsule", TCP payload data is sent in the
    payload of a new Capsule Type named DATA (Section 8.3).  The ordered
-   concatenation of DATA capsule payloads has the same semantics as what
-   would have been sent on the data stream if the Capsule Protocol were
-   not in use.  It is applicable whenever use of the Capsule Protocol is
-   optional.
+   concatenation of DATA capsule payloads represents the main payload
+   data stream in any protocol where this is well-defined.
+   Intermediaries MAY split or merge DATA capsules.  Endpoints MAY
+   indicate a TCP connection error by sending an incomplete DATA
+   capsule, as an alternative to using TCP, TLS, or HTTP stream errors.
 
 4.  Additional Connection Setup Behaviors
 
@@ -445,19 +450,25 @@ Table of Contents
 
 8.  IANA Considerations
 
-8.1.  New Upgrade Token
+8.1.  New Upgrade Tokens
 
-   IF APPROVED, IANA is requested to add the following entry to the HTTP
-   Upgrade Token Registry:
+   IF APPROVED, IANA is requested to add the following entries to the
+   HTTP Upgrade Token Registry:
 
-   *  Value: "connect-tcp"
+     +=======================+==========================+===========+
+     | Value                 | Description              | Reference |
+     +=======================+==========================+===========+
+     | "connect-tcp"         | Proxying of TCP payloads | (This     |
+     |                       |                          | document) |
+     +-----------------------+--------------------------+-----------+
+     | "connect-tcp-capsule" | Proxying of TCP payloads | (This     |
+     |                       | in HTTP Capsules         | document) |
+     +-----------------------+--------------------------+-----------+
 
-   *  Description: Proxying of TCP payloads
-
-   *  Reference: (This document)
+                                 Table 1
 
    For interoperability testing of this draft version, implementations
-   SHALL use the value "connect-tcp-05".
+   SHALL use the values "connect-tcp-06" and "connect-tcp-capsule-06.
 
 8.2.  New MASQUE Default Template
 
@@ -470,24 +481,23 @@ Table of Contents
              | tcp          | TCP Proxying | (This document) |
              +--------------+--------------+-----------------+
 
-                                  Table 1
+                                  Table 2
 
 8.3.  New Capsule Type
 
    IF APPROVED, IANA is requested to add the following entry to the
    "HTTP Capsule Types" registry:
 
-    +=======+=========+===========+============+============+=========+
-    | Value | Capsule | Status    | Reference  | Change     | Contact |
-    |       | Type    |           |            | Controller |         |
-    +=======+=========+===========+============+============+=========+
-    | (TBD) | DATA    | permanent | (This      | IETF       | HTTPBIS |
-    |       |         |           | document), |            |         |
-    |       |         |           | Section    |            |         |
-    |       |         |           | 3.3.3      |            |         |
-    +-------+---------+-----------+------------+------------+---------+
+   +=======+=========+===========+=============+============+=========+
+   | Value | Capsule | Status    | Reference   | Change     | Contact |
+   |       | Type    |           |             | Controller |         |
+   +=======+=========+===========+=============+============+=========+
+   | (TBD) | DATA    | permanent | (This       | IETF       | HTTPBIS |
+   |       |         |           | document),  |            |         |
+   |       |         |           | Section 3.4 |            |         |
+   +-------+---------+-----------+-------------+------------+---------+
 
-                                  Table 2
+                                 Table 3
 
    For this draft version of the protocol, the Capsule Type value
    0xb739a6d0 shall be used provisionally for testing, under the name
@@ -548,6 +558,10 @@ Table of Contents
               RFC 9220, DOI 10.17487/RFC9220, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9220>.
 
+   [RFC9297]  Schinazi, D. and L. Pardue, "HTTP Datagrams and the
+              Capsule Protocol", RFC 9297, DOI 10.17487/RFC9297, August
+              2022, <https://www.rfc-editor.org/rfc/rfc9297>.
+
    [RFC9298]  Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
               DOI 10.17487/RFC9298, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9298>.
@@ -593,10 +607,6 @@ Table of Contents
    [RFC8942]  Grigorik, I. and Y. Weiss, "HTTP Client Hints", RFC 8942,
               DOI 10.17487/RFC8942, February 2021,
               <https://www.rfc-editor.org/rfc/rfc8942>.
-
-   [RFC9297]  Schinazi, D. and L. Pardue, "HTTP Datagrams and the
-              Capsule Protocol", RFC 9297, DOI 10.17487/RFC9297, August
-              2022, <https://www.rfc-editor.org/rfc/rfc9297>.
 
 Acknowledgments
 
