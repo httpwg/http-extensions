@@ -1269,16 +1269,27 @@ q=foo&amp;limit=10&amp;sort=-published
       resource and server to which the request is being sent -- that a safe,
       idempotent query is being performed.<a href="#section-1-9" class="pilcrow">¶</a></p>
 <p id="section-1-10">
-      The QUERY method provides a solution that spans the gap between the use of GET and POST. As
-      with POST, the input to the query operation is passed along within the content of the request
+      The QUERY method provides a solution that spans the gap between the use of GET and POST, with
+      the example above being expressed as:<a href="#section-1-10" class="pilcrow">¶</a></p>
+<div class="alignLeft art-http-message art-text artwork" id="section-1-11">
+<pre>
+QUERY /feed HTTP/1.1
+Host: example.org
+Content-Type: application/x-www-form-urlencoded
+
+q=foo&amp;limit=10&amp;sort=-published
+</pre><a href="#section-1-11" class="pilcrow">¶</a>
+</div>
+<p id="section-1-12">
+      As with POST, the input to the query operation is passed along within the content of the request
       rather than as part of the request URI. Unlike POST, however, the method is explicitly safe
-      and idempotent, allowing functions like caching and automatic retries to operate.<a href="#section-1-10" class="pilcrow">¶</a></p>
-<p id="section-1-11">
+      and idempotent, allowing functions like caching and automatic retries to operate.<a href="#section-1-12" class="pilcrow">¶</a></p>
+<p id="section-1-13">
       The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
       NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
       "MAY", and "OPTIONAL" in this document are to be interpreted as
       described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
-      appear in all capitals, as shown here.<a href="#section-1-11" class="pilcrow">¶</a></p>
+      appear in all capitals, as shown here.<a href="#section-1-13" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="query">
@@ -1738,9 +1749,11 @@ Dubois, Camille, camille.dubois@example.net
 <a href="#appendix-A.6" class="section-number selfRef">A.6. </a><a href="#name-since-draft-ietf-httpbis-safe-me" class="section-name selfRef">Since draft-ietf-httpbis-safe-method-w-body-05</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-A.6-1.1">Update "Sensitive information in QUERY URLs" (<span><a href="https://github.com/httpwg/http-extensions/issues/2853">https://github.com/httpwg/http-extensions/issues/2853</a></span>)<a href="#appendix-A.6-1.1" class="pilcrow">¶</a>
+<li class="normal" id="appendix-A.6-1.1">Update QUERY example to introduction (<span><a href="https://github.com/httpwg/http-extensions/issues/2171">https://github.com/httpwg/http-extensions/issues/2171</a></span>)<a href="#appendix-A.6-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-A.6-1.2">Field registration for "Accept-Query" (<span><a href="https://github.com/httpwg/http-extensions/issues/2903">https://github.com/httpwg/http-extensions/issues/2903</a></span>)<a href="#appendix-A.6-1.2" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-A.6-1.2">Update "Sensitive information in QUERY URLs" (<span><a href="https://github.com/httpwg/http-extensions/issues/2853">https://github.com/httpwg/http-extensions/issues/2853</a></span>)<a href="#appendix-A.6-1.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="appendix-A.6-1.3">Field registration for "Accept-Query" (<span><a href="https://github.com/httpwg/http-extensions/issues/2903">https://github.com/httpwg/http-extensions/issues/2903</a></span>)<a href="#appendix-A.6-1.3" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
