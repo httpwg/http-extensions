@@ -622,7 +622,7 @@ Dubois, Camille, camille.dubois@example.net
 <section title="Since draft-ietf-httpbis-safe-method-w-body-05" anchor="changes.since.05">
 <ul>
   <li>Updated language and examples about redirects and method rewriting (<eref target="https://github.com/httpwg/http-extensions/issues/1917"/>)</li>
-  <li>Update QUERY example to introduction (<eref target="https://github.com/httpwg/http-extensions/issues/2171"/>)</li>
+  <li>Add QUERY example to introduction (<eref target="https://github.com/httpwg/http-extensions/issues/2171"/>)</li>
   <li>Update "Sensitive information in QUERY URLs" (<eref target="https://github.com/httpwg/http-extensions/issues/2853"/>)</li>
   <li>Field registration for "Accept-Query" (<eref target="https://github.com/httpwg/http-extensions/issues/2903"/>)</li>
 </ul>
