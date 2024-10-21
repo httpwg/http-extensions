@@ -555,8 +555,8 @@ A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
    *  Updated language and examples about redirects and method rewriting
       (https://github.com/httpwg/http-extensions/issues/1917)
 
-   *  Update QUERY example to introduction (https://github.com/httpwg/
-      http-extensions/issues/2171)
+   *  Add QUERY example to introduction (https://github.com/httpwg/http-
+      extensions/issues/2171)
 
    *  Update "Sensitive information in QUERY URLs"
       (https://github.com/httpwg/http-extensions/issues/2853)
