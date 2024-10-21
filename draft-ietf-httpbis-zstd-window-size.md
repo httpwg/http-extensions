@@ -8,6 +8,7 @@ submissiontype: IETF
 number:
 date:
 consensus: true
+updates: 8878
 v: 3
 area: Web and Internet Transport
 workgroup: HTTPBIS
@@ -110,12 +111,18 @@ generate frames requiring a Window_Size larger than 8 MB (see
 This document introduces no new security considerations beyond those discussed
 in {{RFC8878}}.
 
+Note that decoders still need to take into account that they can receive
+oversized frames that do not follow the window size limit specified in this
+document and fail decoding when such invalid frames are received.
+
 # IANA Considerations
 
 ## Content Encoding {#zstd-iana-token}
 
-This document updates the entry added in {{RFC8878}} to the "HTTP Content
-Coding Registry" within the "Hypertext Transfer Protocol (HTTP) Parameters"
+This document updates the entry added in {{RFC8878}} to the ["HTTP Content
+Coding Registry"](https://www.iana.org/assignments/http-parameters/http-parameters.xhtml#content-coding)
+within the ["Hypertext Transfer Protocol (HTTP)
+Parameters"](https://www.iana.org/assignments/http-parameters/http-parameters.xhtml)
 registry:
 
 Name:
@@ -129,7 +136,7 @@ Description:
 
 Reference:
 
-: This document
+: This document and {{RFC8878}}
 
 
 --- back

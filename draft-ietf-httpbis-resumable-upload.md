@@ -45,6 +45,7 @@ author:
 
 normative:
   HTTP: RFC9110
+  CACHING: RFC9111
   RFC9112:
     display: HTTP/1.1
   RFC5789:
@@ -85,7 +86,7 @@ This document defines an optional mechanism for HTTP that enables resumable uplo
 The terms Byte Sequence, Item, String, Token, Integer, and Boolean are imported from
 {{!STRUCTURED-FIELDS=RFC8941}}.
 
-The terms client and server are from {{HTTP}}.
+The terms "representation", "representation data", "representation metadata", "content", "client" and "server" are from {{HTTP}}.
 
 # Overview
 
@@ -245,10 +246,12 @@ Location: https://example.com/upload/b530ce8ff
 HTTP/1.1 104 Upload Resumption Supported
 Upload-Draft-Interop-Version: 6
 Upload-Offset: 50
+Upload-Limit: max-size=1000000000
 
 HTTP/1.1 201 Created
 Location: https://example.com/upload/b530ce8ff
 Upload-Offset: 100
+Upload-Limit: max-size=1000000000
 ~~~
 
 The next example shows an upload creation, where only the first 25 bytes are transferred. The server acknowledges the received data and that the upload is not complete yet:
@@ -273,7 +276,7 @@ Upload-Limit: max-size=1000000000
 
 If the client received an informational response with the upload URL in the Location field value, it MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status is received. The client SHOULD NOT automatically retry if it receives a 4xx status code.
 
-File metadata can affect how servers might act on the uploaded file. Clients can send representation metadata (see {{Section 8.3 of HTTP}}) in the request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header field ({{Section 8.3 of HTTP}}) can be used to indicate the media type of the file. The content coding of the representation is specified using the `Content-Encoding` header field and is retained throughout the entire upload. When resuming an interrupted upload, the same content coding is used for appending to the upload, producing a representation of the upload resource with one consistent content coding. The `Content-Disposition` header field ({{!RFC6266}}) can be used to transmit a filename; if included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
+File metadata can affect how servers might act on the uploaded file. Clients can send representation metadata (see {{Section 8.3 of HTTP}}) in the request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header field ({{Section 8.3 of HTTP}}) can be used to indicate the media type of the file. The applied content codings are specified using the `Content-Encoding` header field and are retained throughout the entire upload. When resuming an interrupted upload, the same content codings are used for appending to the upload, producing a representation of the upload resource. The `Content-Disposition` header field ({{!RFC6266}}) can be used to transmit a filename; if included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
 
 ## Feature Detection {#feature-detection}
 
@@ -315,7 +318,7 @@ The offset MUST be accepted by a subsequent append ({{upload-appending}}). Due t
 
 The client MUST NOT start more than one append ({{upload-appending}}) based on the resumption offset from a single offset retrieving request.
 
-In order to prevent HTTP caching, the response SHOULD include a `Cache-Control` header field with the value `no-store`.
+In order to prevent HTTP caching ({{CACHING}}), the response SHOULD include a `Cache-Control` header field with the value `no-store`.
 
 If the server does not consider the upload resource to be active, it MUST respond with a `404 (Not Found)` status code.
 
@@ -346,7 +349,7 @@ The request MUST use the `PATCH` method with the `application/partial-upload` me
 
 If the end of the request content is not the end of the upload, the `Upload-Complete` field value ({{upload-complete}}) MUST be set to false.
 
-The server SHOULD respect representation metadata received during creation ({{upload-creation}}). An upload append request continues uploading the same representation as used in the upload creation ({{upload-creation}}) and thus uses the same content coding, if one was applied. For example, if the initial upload creation included the `Content-Encoding: gzip` header field, the upload append request resumes the transfer of the gzipped data without indicating again that the gzip coding is applied.
+The server SHOULD respect representation metadata received during creation ({{upload-creation}}). An upload append request continues uploading the same representation as used in the upload creation ({{upload-creation}}) and thus uses the same content codings, if they were applied. For example, if the initial upload creation included the `Content-Encoding: gzip` header field, the upload append request resumes the transfer of the gzipped data without indicating again that the gzip coding is applied.
 
 If the server does not consider the upload associated with the upload resource active, it MUST respond with a `404 (Not Found)` status code.
 
@@ -429,12 +432,14 @@ The `Upload-Offset` request and response header field indicates the resumption o
 The `Upload-Limit` response header field indicates limits applying the upload resource. The `Upload-Limit` field value is a Dictionary. The following limits are defined:
 
 - The `max-size` key specifies a maximum size that an upload resource is allowed to reach, counted in bytes. The value is an Integer.
-- The `min-size` key specifies a minimum size for a resumable upload, counted in bytes. The server will not create an upload resource if the client indicates that the uploaded data is smaller than the minimum size. The value is an Integer.
+- The `min-size` key specifies a minimum size for a resumable upload, counted in bytes. The server MAY NOT create an upload resource if the client indicates that the uploaded data is smaller than the minimum size by including the `Content-Length` and `Upload-Complete: ?1` fields, but the server MAY still accept the uploaded data. The value is an Integer.
 - The `max-append-size` key specifies a maximum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server MAY reject requests exceeding this limit and a client SHOULD NOT send larger upload append requests. The value is an Integer.
-- The `min-append-size` key specifies a minimum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server MAY reject requests below this limit and a client SHOULD NOT send smaller upload append requests. The value is an Integer.
+- The `min-append-size` key specifies a minimum size counted in bytes for the request content in a single upload append request ({{upload-appending}}) that does not complete the upload by setting the `Upload-Complete: ?1` field. The server MAY reject non-completing requests below this limit and a client SHOULD NOT send smaller non-completing upload append requests. A server MUST NOT reject an upload append request due to smaller size if the request includes the `Upload-Complete: ?1` field. The value is an Integer.
 - The `expires` key specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response by the server. After the resource's lifetime is reached, the server MAY make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource. The lifetime MAY be extended but SHOULD NOT be reduced once the upload resource is created. The value is an Integer.
 
 When parsing this header field, unrecognized keys MUST be ignored and MUST NOT fail the parsing to facilitate the addition of new limits in the future.
+
+A server that supports the creation of a resumable upload resource ({{upload-creation}}) under a target URI MUST include the `Upload-Limit` header field with the corresponding limits in a response to an `OPTIONS` request sent to this target URI. If a server supports the creation of upload resources for any target URI, it MUST include the `Upload-Limit` header field with the corresponding limits in a response to an `OPTIONS` request with the `*` target. The limits announced in an `OPTIONS` response SHOULD NOT be less restrictive than the limits applied to an upload once the upload resource has been created. If the server does not apply any limits, it MUST use `min-size=0` instead of an empty header value. A client can use an `OPTIONS` request to discover support for resumable uploads and potential limits before creating an upload resource.
 
 ## Upload-Complete
 
@@ -493,11 +498,15 @@ If a server loses data that has been appended to an upload, it MUST consider the
 
 # Redirection
 
-The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY return a `308 (Permanent Redirect)` status code and clients SHOULD use new permanent URI for subsequent requests. If the client receives a `307 (Temporary Redirect)` response to an offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
+The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY return a `308 (Permanent Redirect)` status code and clients SHOULD use the new permanent URI for subsequent requests. If the client receives a `307 (Temporary Redirect)` response to an offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
 
-# Transfer and Content Codings
+# Content Codings
 
-A message might have a content coding, indicated by the `Content-Encoding` header field, and/or a transfer coding, indicated by the `Transfer-Encoding` header field ({{Section 6.1 of RFC9112}}), applied, which modify the representation of uploaded data in a message. For correct interoperability, the client and server must share the same logic when counting bytes for the upload offset. From the client's perspective, the offset is counted after content coding but before transfer coding is applied. From the server's perspective, the offset is counted after the content's transfer coding is reversed but before the content coding is reversed.
+Since the codings listed in `Content-Encoding` are a characteristic of the representation (see {{Section 8.4 of HTTP}}), both the client and the server always compute the upload offset on the content coded data (that is, the representation data). Moreover, the content codings are retained throughout the entire upload, meaning that the server is not required to decode the representation data to support resumable uploads. See {{Appendix A of DIGEST-FIELDS}} for more information.
+
+# Transfer Codings
+
+Unlike `Content-Encoding` (see {{Section 8.4.1 of HTTP}}), `Transfer-Encoding` (see {{Section 6.1 of RFC9112}}) is a property of the message, not of the representation. Moreover, transfer codings can be applied in transit (e.g., by proxies). This means that a client does not have to consider the transfer codings to compute the upload offset, while a server is responsible for transfer decoding the message before computing the upload offset. Please note that the `Content-Length` header field cannot be used in conjunction with the `Transfer-Encoding` header field.
 
 # Integrity Digests
 
@@ -509,7 +518,37 @@ If the client knows the integrity digest of the content from an upload creation 
 
 # Subsequent Resources
 
-The server might process the uploaded data and make its results available in another resource during or after the upload. This subsequent resource is different from the upload resource created by the upload creation request ({{upload-creation}}). The subsequent resource does not handle the upload process itself, but instead facilitates further interaction with the uploaded data. The server MAY indicate the location of this subsequent resource by including the `Content-Location` header field in informational or final responses generated while creating ({{upload-creation}}), appending to ({{upload-appending}}), or retrieving the offset ({{offset-retrieving}}) of an upload. For example, a subsequent resource could allow the client to fetch information extracted from the uploaded data.
+The server might process the uploaded data and make its results available in another resource during or after the upload. This subsequent resource is different from the upload resource created by the upload creation request ({{upload-creation}}). The subsequent resource does not handle the upload process itself, but instead facilitates further interaction with the uploaded data. The server MAY indicate the location of this subsequent resource by including the `Content-Location` header field in the informational or final responses generated while creating ({{upload-creation}}), appending to ({{upload-appending}}), or retrieving the offset ({{offset-retrieving}}) of an upload. For example, a subsequent resource could allow the client to fetch information extracted from the uploaded data.
+
+# Upload Strategies
+
+The definition of the upload creation request ({{upload-creation}}) provides the client with flexibility to choose whether the file is fully or partially transferred in the first request, or if no file data is included at all. Which behavior is best largely depends on the client's capabilities, its intention to avoid data re-transmission, and its knowledge about the server's support for resumable uploads.
+
+The following subsections describe two typical upload strategies that are suited for common environments. Note that these modes are never explicitly communicated to the server and clients are not required to stick to one strategy, but can mix and adapt them to their needs.
+
+## Optimistic Upload Creation
+
+An "optimistic upload creation" can be used independent of the client's knowledge about the server's support for resumable uploads. However, the client must be capable of handling and processing interim responses. An upload creation request then includes the full file because the client anticipates that the file will be transferred without interruptions or resumed if an interruption occurs.
+
+The benefit of this method is that if the upload creation request succeeds, the file was transferred in a single request without additional round trips.
+
+A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client received a `104 (Upload Resumption Supported)` intermediate response with the upload URL, the client cannot resume that upload due to the missing upload URL. The intermediate response might not be received if the interruption happens too early in the message exchange, the server does not support resumable uploads at all, the server does not support sending the `104 (Upload Resumption Supported)` intermediate response, or an intermediary dropped the intermediate response. Without a 104 response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.
+
+### Upgrading To Resumable Uploads
+
+Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the file is transferred in a single request, usually `POST` or `PUT`, without any ability to resume from interruptions. The client can offer the server to upgrade such a request to a resumable upload (see {{feature-detection}}) by adding the `Upload-Complete: ?1` header field to the original request. The request is not changed otherwise.
+
+A server that supports resumable uploads at the target URI can create a resumable upload resource and send its upload URL in a `104 (Upload Resumption Supported)` intermediate response for the client to resume the upload after interruptions. A server that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the `Upload-Complete: ?1` header. The transfer then falls back to a non-resumable upload without additional cost.
+
+This upgrade can also be performed transparently by the client without the user taking an active role. When a user asks the client to send a non-resumable request, the client can perform the upgrade and handle potential interruptions and resumptions under the hood without involving the user. The last response received by the client is considered the response for the entire file upload and should be presented to the user.
+
+## Careful Upload Creation
+
+For a "careful upload creation" the client knows that the server supports resumable uploads and sends an empty upload creation request without including any file data. Upon successful response reception, the client can use the included upload URL to transmit the file data ({{upload-appending}}) and resume the upload at any stage if an interruption occurs. The client should inspect the response for the `Upload-Limit` header field, which would indicate limits applying to the remaining upload procedure.
+
+The retransmission of file data or the ultimate upload failure that can happen with an "optimistic upload creation" is therefore avoided at the expense of an additional request that does not carry file data.
+
+This approach best suited if the client cannot receive intermediate responses, e.g. due to a limitation in the provided HTTP interface, or if large files are transferred where the cost of the additional request is miniscule compared to the effort of transferring the large file itself.
 
 # Security Considerations
 
@@ -687,7 +726,9 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-04
 {:numbered="false"}
 
-None yet
+* Clarify implications of `Upload-Limit` header.
+* Allow client to fetch upload limits upfront via `OPTIONS`.
+* Add guidance on upload creation strategy.
 
 ## Since draft-ietf-httpbis-resumable-upload-03
 {:numbered="false"}

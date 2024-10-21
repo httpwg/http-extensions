@@ -39,23 +39,29 @@ author:
 
 normative:
   FETCH:
-    target: https://fetch.spec.whatwg.org
     title: Fetch - Living Standard
-    date: 17 June 2024
+    date: false
+    target: https://fetch.spec.whatwg.org/
     author:
      -
         org: WHATWG
   FOLDING: RFC8792
   HTTP: RFC9110
   HTTP-CACHING: RFC9111
+  RFC8878:  # Zstandard
   SHA-256: RFC6234
+  SHARED-BROTLI:
+    title: Shared Brotli Compressed Data Format
+    date: 28 September 2022
+    target: https://datatracker.ietf.org/doc/draft-vandevenne-shared-brotli-format/
   STRUCTURED-FIELDS:
     title: Structured Field Values for HTTP
     date: 1 May 2024
     target: https://datatracker.ietf.org/doc/draft-ietf-httpbis-sfbis/
-  URLPattern:
+  URL: RFC3986
+  URLPATTERN:
     title: URL Pattern - Living Standard
-    date: 18 March 2024
+    date: false
     target: https://urlpattern.spec.whatwg.org/
     author:
      -
@@ -65,22 +71,17 @@ normative:
 informative:
   RFC5861:  # Stale-While-Revalidate
   RFC6265:  # Cookies
-  RFC6454:  # Origin
   RFC7457:  # TLS Attacks
   RFC7932:  # Brotli
-  RFC8792:  # Line wrapping
-  RFC8878:  # Zstandard
-  SHARED-BROTLI:
-    title: Shared Brotli Compressed Data Format
-    date: 28 September 2022
-    target: https://datatracker.ietf.org/doc/draft-vandevenne-shared-brotli-format/
 
 --- abstract
 
-This specification defines a mechanism for using designated HTTP responses
-as an external dictionary for future HTTP responses for compression schemes
-that support using external dictionaries (e.g., Brotli (RFC 7932) and
-Zstandard (RFC 8878)).
+This document specifies a mechanism for dictionary-based compression in the
+Hypertext Transfer Protocol (HTTP). By utilizing this technique, clients and
+servers can reduce the size of transmitted data, leading to improved performance
+and reduced bandwidth consumption. This document extends existing HTTP compression
+methods and provides guidelines for the delivery and use of compression
+dictionaries within the HTTP protocol.
 
 --- middle
 
@@ -92,8 +93,101 @@ that support using external dictionaries (e.g., Brotli {{RFC7932}} and
 Zstandard {{RFC8878}}).
 
 This document describes the HTTP headers used for negotiating dictionary usage
-and registers media types for content encoding Brotli and Zstandard using a
-negotiated dictionary.
+and registers content encoding values for compressing with Brotli and Zstandard
+using a negotiated dictionary.
+
+The negotiation of dictionary usage leverages HTTP's content negotiation
+(see {{Section 12 of HTTP}}) and is usable with all versions of HTTP.
+
+## Use Cases
+
+Any HTTP response can be specified to be used as a compression dictionary for
+future HTTP requests which provides a lot of flexibility. There are two common
+use cases that are seen frequently:
+
+### Version Upgrade
+
+Using a previous version of a resource as a dictionary for a newer version
+enables delivery of a delta-compressed version of the changes, usually
+resulting in significantly smaller responses than can be achieved by
+compression alone.
+
+For example:
+
+~~~ aasvg
+Client                                        Server
+|                                                  |
+| GET /app.v1.js                                   |
+|------------------------------------------------->|
+|                                                  |
+|     200 OK                                       |
+|     Use-As-Dictionary: match="/app*js"           |
+|     <full app.v1.js resource - 100KB compressed> |
+|<-------------------------------------------------|
+|                                                  |
+
+Some time later ...
+
+Client                                        Server
+|                                                  |
+| GET /app.v2.js                                   |
+| Available-Dictionary: :pZGm1A...2a2fFG4=:        |
+| Accept-Encoding: gzip, br, zstd, dcb, dcz        |
+|------------------------------------------------->|
+|                                                  |
+|      200 OK                                      |
+|      Content-Encoding: dcb                       |
+|      <delta-compressed app.v2.js resource - 1KB> |
+|<-------------------------------------------------|
+|                                                  |
+~~~
+{: title="Version Upgrade Example"}
+
+### Common Content
+
+If several resources share common patterns in their responses then it can be
+useful to reference an external dictionary that contains those common patterns,
+effectively compressing them out of the responses. Some examples of this are
+common template HTML for similar pages across a site and common keys and values
+in API calls.
+
+For example:
+
+~~~ aasvg
+Client                                          Server
+|                                                    |
+| GET /index.html                                    |
+|--------------------------------------------------->|
+|                                                    |
+|     200 OK                                         |
+|     Link: <.../dict>; rel="compression-dictionary" |
+|     <full index.html resource - 100KB compressed>  |
+|<---------------------------------------------------|
+|                                                    |
+| GET /dict                                          |
+|--------------------------------------------------->|
+|                                                    |
+|                  200 OK                            |
+|                  Use-As-Dictionary: match="/*html" |
+|<---------------------------------------------------|
+|                                                    |
+
+Some time later ...
+
+Client                                          Server
+|                                                    |
+| GET /page2.html                                    |
+| Available-Dictionary: :pZGm1A...2a2fFG4=:          |
+| Accept-Encoding: gzip, br, zstd, dcb, dcz          |
+|--------------------------------------------------->|
+|                                                    |
+|      200 OK                                        |
+|      Content-Encoding: dcb                         |
+|      <delta-compressed page2.html resource - 10KB> |
+|<---------------------------------------------------|
+|                                                    |
+~~~
+{: title="Common Content Example"}
 
 ## Notational Conventions
 
@@ -122,28 +216,45 @@ and "type".
 ### match
 
 The "match" value of the Use-As-Dictionary header is a String value that
-provides the URL Pattern {{URLPattern}} to use for request matching.
+provides the URL Pattern to use for request matching (see {{URLPATTERN}}).
 
-The URL Pattern used for matching does not support using Regular expressions.
+The URL Pattern used for matching does not support using regular expressions.
 
-The following algorithm will return TRUE for a valid match pattern and FALSE
-for an invalid pattern that MUST NOT be used:
+The following algorithm is used to validate that a given String value is a
+valid URL Pattern that does not use regular expressions and is for the same
+Origin ({{Section 4.3.1 of HTTP}}) as the dictionary. It will return TRUE
+for a valid match pattern and FALSE for an invalid pattern that MUST NOT be
+used:
 
 1. Let MATCH be the value of "match" for the given dictionary.
 1. Let URL be the URL of the dictionary request.
-1. Let PATTERN be a URL Pattern {{URLPattern}} constructed by setting
-input=MATCH, and baseURL=URL.
-1. If PATTERN has regexp groups then return FALSE.
-1. Return True.
+1. Let PATTERN be a URL pattern created by running the steps to create a
+URL pattern by setting input=MATCH, and baseURL=URL (see
+{{URLPATTERN}}{:section="\"create\"" relative="#url-pattern-create"}).
+1. If the result of running the "has regexp groups" steps for PATTERN returns
+TRUE then return FALSE (see {{URLPATTERN}}{:section="\"has regexp groups\""
+relative="#url-pattern-has-regexp-groups"}).
+1. Return TRUE.
 
 The "match" value is required and MUST be included in the
-Use-As-Dictionary Dictionary for the dictionary to be considered valid.
+Use-As-Dictionary response header for the dictionary to be considered valid.
+
+Operating at the HTTP-level, the specified match patterns will operate on the
+percent-encoded version of the URL path (see {{Section 2 of URL}}).
+
+For example the URL "http://www.example.com/düsseldorf" would be encoded as
+"http://www.example.com/d%C3%BCsseldorf" and a relevant match pattern would be:
+
+~~~ http-message
+Use-As-Dictionary: match="/d%C3%BCsseldorf"
+~~~
 
 ### match-dest
 
 The "match-dest" value of the Use-As-Dictionary header is an Inner List of
-String values that provides a list of {{FETCH}} request destinations for the
-dictionary to match.
+String values that provides a list of Fetch request destinations for the
+dictionary to match (see {{FETCH}}{:section="\"destination\""
+relative="#concept-request-destination"}).
 
 An empty list for "match-dest" MUST match all destinations.
 
@@ -157,8 +268,8 @@ The "match-dest" value is optional and defaults to an empty list.
 The "id" value of the Use-As-Dictionary header is a String value that specifies
 a server identifier for the dictionary. If an "id" value is present and has a
 string length longer than zero then it MUST be sent to the server in a
-"Dictionary-ID" request header when the dictionary is advertised as being
-available.
+"Dictionary-ID" request header when the client sends an "Available-Dictionary"
+request header for the same dictionary (see {{available-dictionary}}).
 
 The server identifier MUST be treated as an opaque string by the client.
 
@@ -175,13 +286,13 @@ The "id" value is optional and defaults to the empty string.
 The "type" value of the Use-As-Dictionary header is a Token value that
 describes the file format of the supplied dictionary.
 
-"raw" is the only defined dictionary format which represents an unformatted
-blob of bytes suitable for any compression scheme to use.
+"raw" is defined as a dictionary format which represents an unformatted blob of
+bytes suitable for any compression scheme to use.
 
 If a client receives a dictionary with a type that it does not understand, it
 MUST NOT use the dictionary.
 
-The "type" value is optional and defaults to raw.
+The "type" value is optional and defaults to "raw".
 
 ### Examples
 
@@ -197,7 +308,8 @@ Use-As-Dictionary: \
 ~~~
 
 Would specify matching any document request for a URL with a path prefix of
-/product/ on the same Origin {{RFC6454}} as the original request.
+/product/ on the same Origin ({{Section 4.3.1 of HTTP}}) as the original
+request.
 
 #### Versioned Directories
 
@@ -207,8 +319,7 @@ A response that contained a response header:
 Use-As-Dictionary: match="/app/*/main.js"
 ~~~
 
-Would match main.js in any directory under /app/ and expiring as a dictionary
-in one year.
+Would match any path that starts with "/app/" and ends with "/main.js".
 
 ## Available-Dictionary
 
@@ -238,16 +349,14 @@ To be considered as a match, the dictionary resource MUST be either fresh
 ### Dictionary URL matching
 
 When a dictionary is stored as a result of a "Use-As-Dictionary" directive, it
-includes "match" and "match-dest" strings that are used to match an outgoing
-request from a client to the available dictionaries.
-
-Dictionaries MUST have been served from the same Origin {{RFC6454}} as the
-outgoing request to match.
+includes a "match" string and optional "match-dest" string that are used to
+match an outgoing request from a client to the available dictionaries.
 
 To see if an outbound request matches a given dictionary, the following
 algorithm will return TRUE for a successful match and FALSE for no-match:
 
-1. If the current client supports request destinations:
+1. If the current client supports request destinations and a "match-dest"
+string was provided with the dictionary:
     * Let DEST be the value of "match-dest" for the given dictionary.
     * Let REQUEST_DEST be the value of the destination for the current
     request.
@@ -256,11 +365,14 @@ algorithm will return TRUE for a successful match and FALSE for no-match:
 1. Let BASEURL be the URL of the dictionary request.
 1. Let URL represent the URL of the outbound request being checked.
 1. If the Origin of BASEURL and the Origin of URL are not the same, return
-FALSE.
+FALSE (see {{Section 4.3.1 of HTTP}}).
 1. Let MATCH be the value of "match" for the given dictionary.
-1. Let PATTERN be a URL Pattern {{URLPattern}} constructed by setting
-input=MATCH, and baseURL=BASEURL.
-1. Return the result of running the "test" method of PATTERN with input=URL.
+1. Let PATTERN be a URL pattern created by running the steps to create a
+URL pattern by setting input=MATCH, and baseURL=URL (see
+{{URLPATTERN}}{:section="\"create\"" relative="#url-pattern-create"}).
+1. Return the result of running the "match" steps on PATTERN with input=URL
+which will check for a match between the request URL and the supplied "match"
+string (see {{URLPATTERN}}{:section="\"match\"" relative="#url-pattern-match"}).
 
 ### Multiple matching dictionaries
 
@@ -286,11 +398,18 @@ The "Dictionary-ID" request header is a Structured Field {{STRUCTURED-FIELDS}}
 String of up to 1024 characters (after any decoding) and MUST be identical to
 the server-provided "id".
 
-For example:
+For example, given a HTTP response that set a dictionary ID:
+
+~~~ http-message
+Use-As-Dictionary: match="/app/*/main.js", id="dictionary-12345"
+~~~
+
+A future request that matches the given dictionary will include both the hash
+and the ID:
 
 ~~~ http-message
 Available-Dictionary: :pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:
-Dictionary-ID: "/v1/main.js 33a64df551425fcc55e4d42a148795d9f25f89d4"
+Dictionary-ID: "dictionary-12345"
 ~~~
 
 # The 'compression-dictionary' Link Relation Type
@@ -327,8 +446,8 @@ The "dcb" content encoding identifies a resource that is a
 "Dictionary-Compressed Brotli" stream.
 
 A "Dictionary-Compressed Brotli" stream has a fixed header that is followed by
-a Shared Brotli {{SHARED-BROTLI}} stream. The header consists of a fixed 4 byte
-sequence and a 32 byte hash of the external dictionary that was used.  The
+a Shared Brotli {{SHARED-BROTLI}} stream. The header consists of a fixed 4-byte
+sequence and a 32-byte hash of the external dictionary that was used.  The
 Shared Brotli stream is created using the referenced external dictionary and a
 compression window that is at most 16 MB in size.
 
@@ -343,7 +462,7 @@ Magic_Number:
 : 4 fixed bytes: 0xff, 0x44, 0x43, 0x42.
 
 SHA_256_Hash:
-: 32 Bytes. SHA-256 hash digest of the dictionary {{SHA-256}}.
+: 32 bytes. SHA-256 hash digest of the dictionary {{SHA-256}}.
 
 Clients that announce support for dcb content encoding MUST be able to
 decompress resources that were compressed with a window size of up to 16 MB.
@@ -373,20 +492,21 @@ Magic_Number:
 : 8 fixed bytes: 0x5e, 0x2a, 0x4d, 0x18, 0x20, 0x00, 0x00, 0x00.
 
 SHA_256_Hash:
-: 32 Bytes. SHA-256 hash digest of the dictionary {{SHA-256}}.
+: 32 bytes. SHA-256 hash digest of the dictionary {{SHA-256}}.
 
 The 40-byte header is a Zstandard skippable frame (little-endian 0x184D2A5E)
-with a 32-byte length (little-endian 0x00000020) that is compatible with existing
-Zstandard decoders.
+with a 32-byte length (little-endian 0x00000020) that is compatible with
+existing Zstandard decoders.
 
 Clients that announce support for dcz content encoding MUST be able to
 decompress resources that were compressed with a window size of at least 8 MB
 or 1.25 times the size of the dictionary, which ever is greater, up to a
 maximum of 128 MB.
 
-The window size used will be encoded in the content (currently, this can be expressed
-in powers of two only) and it MUST be lower than this limit. An implementation MAY
-treat a window size that exceeds the limit as a decoding error.
+The window size used will be encoded in the content (currently, this can be
+expressed in powers of two only) and it MUST be lower than this limit. An
+implementation MAY treat a window size that exceeds the limit as a decoding
+error.
 
 With Zstandard compression, the full dictionary is available during compression
 and decompression until the size of the input exceeds the compression window.
@@ -398,10 +518,10 @@ response.
 
 # Negotiating the content encoding
 
-When a compression dictionary is available for use for a given request, the
-encoding to be used is negotiated through the regular mechanism for
-negotiating content encoding in HTTP through the "Accept-Encoding" request
-header and "Content-Encoding" response header.
+When a compression dictionary is available for use compressing the response to
+a given request, the encoding to be used is negotiated through the regular
+mechanism for negotiating content encoding in HTTP through the "Accept-Encoding"
+request header and "Content-Encoding" response header.
 
 The dictionary to use is negotiated separately and advertised in the
 "Available-Dictionary" request header.
@@ -445,7 +565,8 @@ Vary: accept-encoding, available-dictionary
 ## Content Encoding
 
 IANA is asked to enter the following into the "HTTP Content Coding Registry"
-registry ({{HTTP}}):
+registry maintained at
+<[](https://www.iana.org/assignments/http-parameters/http-parameters.xhtml)>:
 
 - Name: dcb
 - Description: "Dictionary-Compressed Brotli" data format.
@@ -453,7 +574,8 @@ registry ({{HTTP}}):
 - Notes: {{dictionary-compressed-brotli}}
 
 IANA is asked to enter the following into the "HTTP Content Coding Registry"
-registry ({{HTTP}}):
+registry maintained at
+<[](https://www.iana.org/assignments/http-parameters/http-parameters.xhtml)>:
 
 - Name: dcz
 - Description: "Dictionary-Compressed Zstandard" data format.
@@ -463,8 +585,9 @@ registry ({{HTTP}}):
 ## Header Field Registration
 
 IANA is asked to update the
-"Hypertext Transfer Protocol (HTTP) Field Name Registry" registry
-({{HTTP}}) according to the table below:
+"Hypertext Transfer Protocol (HTTP) Field Name Registry" registry maintained at
+<[](https://www.iana.org/assignments/http-fields/http-fields.xhtml)> according
+to the table below:
 
 |----------------------|-----------|-------------------------------------------|
 | Field Name           | Status    |                 Reference                 |
@@ -476,8 +599,8 @@ IANA is asked to update the
 
 ## Link Relation Registration
 
-IANA is asked to update the "Link Relation Type Registry" registry
-({{WEB-LINKING}}):
+IANA is asked to update the "Link Relation Types" registry maintained at
+<[](https://www.iana.org/assignments/link-relations/link-relations.xhtml)>:
 
 - Relation Name: compression-dictionary
 - Description: Refers to a compression dictionary used for content encoding.
@@ -485,9 +608,11 @@ IANA is asked to update the "Link Relation Type Registry" registry
 
 # Compatibility Considerations
 
-To minimize the risk of middle-boxes incorrectly processing
-dictionary-compressed responses, compression dictionary transport MUST only
-be used in secure contexts (HTTPS).
+It is not unusual for there to be devices on the network path that intercept,
+inspect and process HTTP requests (web proxies, firewalls, intrusion detection
+systems, etc). To minimize the risk of these devices incorrectly processing
+dictionary-compressed responses, compression dictionary transport MUST only be
+used in secure contexts (HTTPS).
 
 # Security Considerations
 
@@ -550,7 +675,7 @@ dictionary and the compressed response are fully readable by the client.
 
 In browser terms, that means that both are either same-origin to the context
 they are being fetched from or that the response is cross-origin and passes
-the CORS check as defined in {{FETCH}}.
+the CORS check (see {{FETCH}}{:section="\"CORS check\"" relative="#cors-check"}).
 
 ### Server Responsibility
 
@@ -600,4 +725,3 @@ the storage as cookies are partitioned as well as clearing the dictionaries
 whenever cookies are cleared.
 
 --- back
-

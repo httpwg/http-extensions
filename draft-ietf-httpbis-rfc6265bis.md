@@ -118,19 +118,6 @@ normative:
     author:
     -
       org: WHATWG
-  SERVICE-WORKERS:
-    target: http://www.w3.org/TR/service-workers/
-    title: Service Workers
-    author:
-    -
-      ins: A. Russell
-      name: Alex Russell
-    -
-      ins: J. Song
-      name: Jungkee Song
-    -
-      ins: J. Archibald
-      name: Jake Archibald
 
 informative:
   RFC2818:
@@ -220,6 +207,16 @@ informative:
   HttpFieldNameRegistry:
     title: "Hypertext Transfer Protocol (HTTP) Field Name Registry"
     target: https://www.iana.org/assignments/http-fields/
+  SERVICE-WORKERS:
+    target: https://www.w3.org/TR/service-workers/
+    title: Service Workers
+    author:
+    -
+      ins: J. Archibald
+      name: Jake Archibald
+    -
+      ins: M. Kruisselbrink
+      name: Marijn Kruisselbrink
 
 --- abstract
 
@@ -256,13 +253,15 @@ for a given host are shared across all the ports on that host, even though the
 usual "same-origin policy" used by web browsers isolates content retrieved via
 different ports.
 
-There are two audiences for this specification: developers of cookie-generating
-servers and developers of cookie-consuming user agents.
+This specification applies to developers of both cookie-producing servers and
+cookie-consuming user agents. {{implementation-advisory}} helps to clarify the
+intended target audience for each implementation type.
 
 To maximize interoperability with user agents, servers SHOULD limit themselves
 to the well-behaved profile defined in {{sane-profile}} when generating cookies.
 
-User agents MUST implement the more liberal processing rules defined in {{ua-requirements}}, in order to maximize interoperability with existing servers that do not
+User agents MUST implement the more liberal processing rules defined in {{ua-requirements}},
+in order to maximize interoperability with existing servers that do not
 conform to the well-behaved profile defined in {{sane-profile}}.
 
 This document specifies the syntax and semantics of these header fields as they are
@@ -308,7 +307,7 @@ CHAR (any {{USASCII}} character), VCHAR (any visible {{USASCII}} character),
 and WSP (whitespace).
 
 The OWS (optional whitespace) and BWS (bad whitespace) rules are defined in
-Section 5.6.3 of {{RFC9110}}.
+{{Section 5.6.3 of RFC9110}}.
 
 ## Terminology
 
@@ -320,8 +319,7 @@ the user agent is sending an HTTP request or from which it is receiving an HTTP
 response (i.e., the name of the host to which it sent the corresponding HTTP
 request).
 
-The term request-uri refers to "target URI" as defined in Section 7.1 of
-{{RFC9110}}.
+The term request-uri refers to "target URI" as defined in {{Section 7.1 of RFC9110}}.
 
 Two sequences of octets are said to case-insensitively match each other if and
 only if they are equivalent under the i;ascii-casemap collation defined in
@@ -342,7 +340,7 @@ The term "origin", the mechanism of deriving an origin from a URI, and the "the
 same" matching algorithm for origins are defined in {{RFC6454}}.
 
 "Safe" HTTP methods include `GET`, `HEAD`, `OPTIONS`, and `TRACE`, as defined
-in Section 9.2.1 of {{RFC9110}}.
+in {{Section 9.2.1 of RFC9110}}.
 
 A domain's "public suffix" is the portion of a domain that is controlled by a
 public registry, such as "com", "co.uk", and "pvt.k12.wy.us". A domain's
@@ -380,7 +378,7 @@ caches from storing and reusing a response.
 
 Origin servers SHOULD NOT fold multiple Set-Cookie header fields into a single
 header field. The usual mechanism for folding HTTP headers fields (i.e., as
-defined in Section 5.3 of {{RFC9110}}) might change the semantics of the Set-Cookie header
+defined in {{Section 5.3 of RFC9110}}) might change the semantics of the Set-Cookie header
 field because the %x2C (",") character is used by Set-Cookie in a way that
 conflicts with such folding.
 
@@ -490,7 +488,7 @@ help readers develop an intuitive understanding of the use cases.
 
 An implementer should choose {{sane-profile}} whenever cookies are created and
 will be sent to a user agent, such as a web browser. These implementations are
-frequently referred to as Servers by the spec but that term includes anything
+frequently referred to as servers by the spec but that term includes anything
 which primarily produces cookies. Some potential examples:
 
 * Server applications hosting a website or API
@@ -563,12 +561,13 @@ grammar:
 set-cookie        = set-cookie-string
 set-cookie-string = BWS cookie-pair *( BWS ";" OWS cookie-av )
 cookie-pair       = cookie-name BWS "=" BWS cookie-value
-cookie-name       = 1*cookie-octet
+cookie-name       = token
 cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
 cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                       ; US-ASCII characters excluding CTLs,
-                      ; whitespace DQUOTE, comma, semicolon,
+                      ; whitespace, DQUOTE, comma, semicolon,
                       ; and backslash
+token             = <token, defined in [RFC7230], Section 3.2.6>
 
 cookie-av         = expires-av / max-age-av / domain-av /
                     path-av / secure-av / httponly-av /
@@ -767,7 +766,9 @@ with same-site requests, and with "cross-site" top-level navigations, as
 described in {{strict-lax}}. If the value is "None", the cookie will be sent
 with same-site and cross-site requests. If the "SameSite" attribute's value is
 something other than these three known keywords, the attribute's value will be
-subject to a default enforcement mode that is equivalent to "Lax".
+subject to a default enforcement mode that is equivalent to "Lax". If a user
+agent uses "Lax-allowing-unsafe" enforcement (See {{lax-allowing-unsafe}}) then
+this default enforcement mode will instead be equivalent to "Lax-allowing-unsafe".
 
 The "SameSite" attribute affects cookie creation as well as delivery. Cookies
 which assert "SameSite=Lax" or "SameSite=Strict" cannot be set in responses to
@@ -1008,9 +1009,9 @@ A canonicalized host name is the string generated by the following algorithm:
 1.  Convert the host name to a sequence of individual domain name labels.
 
 2.  Convert each label that is not a Non-Reserved LDH (NR-LDH) label, to an
-    A-label (see Section 2.3.2.1 of {{RFC5890}} for the former and latter), or
+    A-label (see {{Section 2.3.2.1 of RFC5890}} for the former and latter), or
     to a "punycode label" (a label resulting from the "ToASCII" conversion in
-    Section 4 of {{RFC3490}}), as appropriate (see {{idna-migration}} of this
+    {{Section 4 of RFC3490}}), as appropriate (see {{idna-migration}} of this
     specification).
 
 3.  Concatenate the resulting labels, separated by a %x2E (".") character.
@@ -1100,7 +1101,7 @@ document's "site for cookies" is the top-level origin.
 
 For container documents, we need to audit the origins of each of a document's
 ancestor navigables' active documents in order to account for the
-"multiple-nested scenarios" described in Section 4 of {{RFC7034}}. A document's
+"multiple-nested scenarios" described in {{Section 4 of RFC7034}}. A document's
 "site for cookies" is the top-level origin if and only if the top-level origin
 is same-site with the document's origin, and with each of the document's
 ancestor documents' origins. Otherwise its "site for cookies" is an origin set
@@ -1199,7 +1200,7 @@ case-insensitively.
 The normative requirements for the prefixes are detailed in the storage model
 algorithm defined in {{storage-model}}.
 
-This is because some servers will process cookie case-insensitively, resulting
+This is because some servers will process cookies case-insensitively, resulting
 in them unintentionally miscapitalizing and accepting miscapitalized prefixes.
 
 For example, if a server sends the following `Set-Cookie` header field
@@ -1286,13 +1287,14 @@ the user agent MUST parse the field-value of the Set-Cookie header field as a
 set-cookie-string (defined below).
 
 NOTE: The algorithm below is more permissive than the grammar in {{sane-set-cookie}}.
-For example, the algorithm strips leading and trailing whitespace from the
-cookie name and value (but maintains internal whitespace), whereas the grammar
-in {{sane-set-cookie}} forbids whitespace in these positions. In addition, the
-algorithm below accommodates some characters that are not cookie-octets
-according to the grammar in {{sane-set-cookie}}. User agents use this algorithm
-so as to interoperate with servers that do not follow the recommendations in
-{{sane-profile}}.
+For example, the algorithm allows cookie-name to be comprised of cookie-octets
+instead of being a token as specified in {{sane-set-cookie}} and the algorithm
+accommodates some characters that are not cookie-octets according to the
+grammar in {{sane-set-cookie}}. In addition, the algorithm below also strips
+leading and trailing whitespace from the cookie name and value (but maintains
+internal whitespace), whereas the grammar in {{sane-set-cookie}} forbids
+whitespace in these positions. User agents use this algorithm so as to
+interoperate with servers that do not follow the recommendations in {{sane-profile}}.
 
 NOTE: As set-cookie-string may originate from a non-HTTP API, it is not
 guaranteed to be free of CTL characters, so this algorithm handles them
@@ -1513,7 +1515,7 @@ the `SameSite` attribute in a "Lax" enforcement mode that carves out an
 exception which sends same-site cookies along with cross-site requests if and
 only if they are top-level navigations which use a "safe" (in the {{RFC9110}}
 sense) HTTP method. (Note that a request's method may be changed from POST
-to GET for some redirects (see Sections 15.4.2 and 15.4.3 of {{RFC9110}}); in
+to GET for some redirects (see {{Sections 15.4.2 and 15.4.3 of RFC9110}}); in
 these cases, a request's "safe"ness is determined based on the method of the
 current redirect hop.)
 
@@ -1769,7 +1771,7 @@ user agent MUST process the cookie as follows:
         of "Path", and the cookie's path is `/`.
 
 22. If the cookie-name is empty and either of the following conditions are
-    true, abort these steps and ignore the cookie:
+    true, abort these steps and ignore the cookie entirely:
 
     * the cookie-value begins with a case-insensitive match for the string
       "__Secure-"
@@ -1911,9 +1913,9 @@ cookie-string from a given cookie store.
 
      NOTE: The notion of a "secure" connection is not defined by this document.
      Typically, user agents consider a connection secure if the connection makes
-     use of transport-layer security, such as SSL or TLS, or if host is trusted.
-     For example, most user agents consider "https" to be a scheme that denotes
-     a secure protocol and "localhost" to be trusted host.
+     use of transport-layer security, such as SSL or TLS, or if the host is
+     trusted. For example, most user agents consider "https" to be a scheme that
+     denotes a secure protocol and "localhost" to be trusted host.
 
    * If the cookie's http-only-flag is true, then exclude the cookie if the
      retrieval's type is "non-HTTP".
@@ -1975,8 +1977,9 @@ the stored cookies, due to the length limits which MUST be enforced in
 {{set-cookie}}.
 
 Servers SHOULD use as few and as small cookies as possible to avoid reaching
-these implementation limits and to minimize network bandwidth due to the
-Cookie header field being included in every request.
+these implementation limits, minimize network bandwidth due to the
+Cookie header field being included in every request, and to avoid reaching
+server header field limits (See {{server-syntax}}).
 
 Servers SHOULD gracefully degrade if the user agent fails to return one or more
 cookies in the Cookie header field because the user agent might evict any cookie
@@ -2303,11 +2306,12 @@ redirections.
 
 Understanding how and when a request is considered same-site is also important
 in order to properly design a site for SameSite cookies. For example, if a
-top-level request is made to a sensitive page that request will be considered
-cross-site and SameSite cookies won’t be sent; that page’s sub-resources
-requests, however, are same-site and would receive SameSite cookies. Sites can
-avoid inadvertently allowing access to these sub-resources by returning an error
-for the initial page request if it doesn’t include the appropriate cookies.
+cross-site top-level request is made to a sensitive page that request will be
+considered cross-site and `SameSite=Strict` cookies won’t be sent; that page’s
+sub-resources requests, however, are same-site and would receive `SameSite=Strict`
+cookies. Sites can avoid inadvertently allowing access to these sub-resources
+by returning an error for the initial page request if it doesn’t include the
+appropriate cookies.
 
 Developers are strongly encouraged to deploy the usual server-side defenses
 (CSRF tokens, ensuring that "safe" HTTP methods are idempotent, etc) to mitigate
@@ -2359,7 +2363,7 @@ same-site cookies and will also require `SameSite=None`.
 ### Server-controlled
 
 SameSite cookies in and of themselves don't do anything to address the
-general privacy concerns outlined in Section 7.1 of {{RFC6265}}. The "SameSite"
+general privacy concerns outlined in {{Section 7.1 of RFC6265}}. The "SameSite"
 attribute is set by the server, and serves to mitigate the risk of certain kinds
 of attacks that the server is worried about. The user is not involved in this
 decision. Moreover, a number of side-channels exist which could allow a server
@@ -2513,7 +2517,7 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 value that would mimic a cookie prefix. ({{server-name-prefixes}} and
 {{storage-model}})
 
-*  Prohibits non-secure origins from setting cookies with a 'secure' flag or
+*  Prohibits non-secure origins from setting cookies with a `Secure` flag or
 overwriting cookies with this flag. ({{storage-model}})
 
 *  Limits maximum cookie size. ({{storage-model}})
