@@ -76,6 +76,7 @@ Table of Contents
      5.3.  "connect-udp"
      5.4.  "connect-ip"
    6.  Guidance for Future Upgrade Tokens
+     6.1.  Selection of Request Methods
    7.  Guidance for HTTP CONNECT
    8.  IANA Considerations
    9.  References
@@ -333,6 +334,22 @@ Table of Contents
    Future specifications for Upgrade Tokens MUST account for the
    security issues discussed here and provide clear guidance on how
    clients can avoid them.
+
+6.1.  Selection of Request Methods
+
+   Some Upgrade Tokens, such as "TLS", are defined for use with any
+   ordinary HTTP Method.  The upgraded protocol continues to provide
+   HTTP semantics, and will convey the response to this HTTP request.
+
+   The other Upgrade Tokens mentioned in Section 5 do not preserve HTTP
+   semantics, so the method is not relevant.  All of these Upgrade
+   Tokens are specified only for use with the "GET" method.
+
+   Future specifications for Upgrade Tokens should restrict their use to
+   "GET" requests if the HTTP method is otherwise irrelevant and a
+   request body is not required.  This improves consistency with other
+   Upgrade Tokens and reduces the likelihood that a faulty server
+   implementation might process the request body as the new protocol.
 
 7.  Guidance for HTTP CONNECT
 
