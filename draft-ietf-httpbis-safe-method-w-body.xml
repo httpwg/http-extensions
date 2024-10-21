@@ -82,7 +82,7 @@
         <eref target="https://github.com/httpwg/http-extensions/labels/query-method"/>.
       </t>
       <t>
-        The changes in this draft are summarized in <xref target="changes.since.05"/>.
+        The changes in this draft are summarized in <xref target="changes.since.06"/>.
       </t>
     </note>
 
@@ -626,6 +626,11 @@ Dubois, Camille, camille.dubois@example.net
   <li>Update "Sensitive information in QUERY URLs" (<eref target="https://github.com/httpwg/http-extensions/issues/2853"/>)</li>
   <li>Field registration for "Accept-Query" (<eref target="https://github.com/httpwg/http-extensions/issues/2903"/>)</li>
 </ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-06" anchor="changes.since.06">
+<t>
+  None yet.
+</t>
 </section>
 </section>
 
