@@ -220,9 +220,14 @@ If the request completes successfully and the entire upload is complete, the ser
 
 If the request completes successfully but the entire upload is not yet complete, as indicated by an `Upload-Complete` field value of false in the request, the server MUST acknowledge it by responding with the `201 (Created)` status code and an `Upload-Complete` header value set to false.
 
-If the request includes an `Upload-Complete` field value set to true and a valid `Content-Length` header field, the client attempts to upload a fixed-length resource in one request. In this case, the upload's final size is the `Content-Length` field value and the server MUST record it to ensure its consistency.
+The request can indicate the upload's final size in two different ways. Both indicators may be present in the same request as long as they convey the same size. If the sizes are inconsistent, the server MUST reject the request by responding with a `400 (Bad Request)` status code.
 
-The server MAY enforce a maximum size of an upload resource. This limit MAY be equal to the upload's final size, if `Upload-Complete: ?1` and `Content-Length` are present in the upload creation request, or an arbitrary value. The limit's value or its existence MUST NOT change throughout the lifetime of the upload resource. The server MAY indicate such a limit to the client by including the `Upload-Limit` header field in the informational or final response to upload creation. If the client receives an `Upload-Limit` header field indicating that the maximum size is less than the amount of bytes it intends to upload to a resource, it SHOULD stop the current upload transfer immediately and cancel the upload ({{upload-cancellation}}).
+- If the request includes an `Upload-Complete` field value set to true and a valid `Content-Length` header field, the client attempts to upload a fixed-length resource in one request. In this case, the upload's final size is the `Content-Length` field value and the server MUST record it to ensure its consistency. The value can therefore not be used if the upload is split across multiple requests.
+- If the request includes the `Upload-Length` header field, the server MUST record its value as the upload's final size. A client SHOULD provide this header field if the upload length is known at the time of upload creation.
+
+The upload is not automatically completed if the offset reaches the upload's final size. Instead, a client MUST indicate the completion of an upload through the `Upload-Complete` header field. Indicating an upload's final size can help the server allocate necessary resources for the upload and provide early feedback if the size does not match the server's limits ({{upload-limit}}).
+
+The server MAY enforce a maximum size of an upload resource. This limit MAY be equal to the upload's final size, if available, or an arbitrary value. The limit's value or its existence MUST NOT change throughout the lifetime of the upload resource. The server MAY indicate such a limit to the client by including the `Upload-Limit` header field in the informational or final response to upload creation. If the client receives an `Upload-Limit` header field indicating that the maximum size is less than the amount of bytes it intends to upload to a resource, it SHOULD stop the current upload transfer immediately and cancel the upload ({{upload-cancellation}}).
 
 The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty resource representation. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring data, which can save client or server resources. Since informational responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
 
@@ -234,6 +239,7 @@ Host: example.com
 Upload-Draft-Interop-Version: 6
 Upload-Complete: ?1
 Content-Length: 100
+Upload-Length: 100
 
 [content (100 bytes)]
 ~~~
@@ -254,7 +260,7 @@ Upload-Offset: 100
 Upload-Limit: max-size=1000000000
 ~~~
 
-The next example shows an upload creation, where only the first 25 bytes are transferred. The server acknowledges the received data and that the upload is not complete yet:
+The next example shows an upload creation, where only the first 25 bytes of a 100 bytes upload are transferred. The server acknowledges the received data and that the upload is not complete yet:
 
 ~~~ http-message
 POST /upload HTTP/1.1
@@ -262,6 +268,7 @@ Host: example.com
 Upload-Draft-Interop-Version: 6
 Upload-Complete: ?0
 Content-Length: 25
+Upload-Length: 100
 
 [partial content (25 bytes)]
 ~~~
@@ -306,9 +313,9 @@ The reason both the client and the server are sending and checking the draft ver
 
 If an upload is interrupted, the client MAY attempt to fetch the offset of the incomplete upload by sending a `HEAD` request to the upload resource.
 
-The request MUST NOT include an `Upload-Offset` or `Upload-Complete` header field. The server MUST reject requests with either of these fields by responding with a `400 (Bad Request)` status code.
+The request MUST NOT include an `Upload-Offset`, `Upload-Complete`, or `Upload-Length` header field. The server MUST reject requests with either of these fields by responding with a `400 (Bad Request)` status code.
 
-If the server considers the upload resource to be active, it MUST respond with a `204 (No Content)` or `200 (OK)` status code. The response MUST include the `Upload-Offset` header field, with the value set to the current resumption offset for the target resource. The response MUST include the `Upload-Complete` header field; the value is set to true only if the upload is complete. The response MAY include the `Upload-Limit` header field if corresponding limits on the upload resource exist.
+If the server considers the upload resource to be active, it MUST respond with a `204 (No Content)` or `200 (OK)` status code. The response MUST include the `Upload-Offset` header field, with the value set to the current resumption offset for the target resource. The response MUST include the `Upload-Complete` header field; the value is set to true only if the upload is complete. The response MUST include the `Upload-Length` header field set to the upload's final size if one was recorded during the upload creation ({{upload-creation}}). The response MAY include the `Upload-Limit` header field if corresponding limits on the upload resource exist.
 
 An upload is considered complete only if the server completely and successfully received a corresponding creation request ({{upload-creation}}) or append request ({{upload-appending}}) with the `Upload-Complete` header value set to true.
 
@@ -370,6 +377,8 @@ If the request completes successfully and the entire upload is complete, the ser
 If the request completes successfully but the entire upload is not yet complete indicated by the `Upload-Complete` field value set to false, the server MUST acknowledge it by responding with a `201 (Created)` status code and the `Upload-Complete` field value set to true.
 
 If the request includes the `Upload-Complete` field value set to true and a valid `Content-Length` header field, the client attempts to upload the remaining resource in one request. In this case, the upload's final size is the sum of the upload's offset and the `Content-Length` header field. If the server does not have a record of the upload's final size from creation or the previous append, the server MUST record the upload's final size to ensure its consistency. If the server does have a previous record, that value MUST match the upload's final size. If they do not match, the server MUST reject the request with a `400 (Bad Request)` status code.
+
+The server MUST prevent that the offset exceeds the upload's final size when appending. If a final size has been recorded and the upload append request exceeds this value, the server MUST stop appending bytes to the upload once the offset reaches the final size and reject the request with a `400 (Bad Request)` status code. It is not sufficient to rely on the `Content-Length` header field for enforcement because the header field might not be present.
 
 The request content MAY be empty. If the `Upload-Complete` field is then set to true, the client wants to complete the upload without appending additional data.
 
@@ -447,6 +456,10 @@ The `Upload-Complete` request and response header field indicates whether the co
 
 The `Upload-Complete` header field MUST only be used if support by the resource is known to the client ({{feature-detection}}).
 
+## Upload-Length
+
+The `Upload-Length` request and response header field indicates the number of bytes to be uploaded for the corresponding upload resource, counted in bytes. The `Upload-Length` field value is an Integer.
+
 # Media Type `application/partial-upload`
 
 The `application/partial-upload` media type describes a contiguous block of data that should be uploaded to a resource. There is no minimum block size and the block might be empty. The start and end of the block might align with the start and end of the file that should be uploaded, but they are not required to be aligned.
@@ -502,11 +515,11 @@ The `301 (Moved Permanently)` and `302 (Found)` status codes MUST NOT be used in
 
 # Content Codings
 
-Since the codings listed in `Content-Encoding` are a characteristic of the representation (see {{Section 8.4 of HTTP}}), both the client and the server always compute the upload offset on the content coded data (that is, the representation data). Moreover, the content codings are retained throughout the entire upload, meaning that the server is not required to decode the representation data to support resumable uploads. See {{Appendix A of DIGEST-FIELDS}} for more information.
+Since the codings listed in `Content-Encoding` are a characteristic of the representation (see {{Section 8.4 of HTTP}}), both the client and the server always compute the values for `Upload-Offset` and optionally `Upload-Length` on the content coded data (that is, the representation data). Moreover, the content codings are retained throughout the entire upload, meaning that the server is not required to decode the representation data to support resumable uploads. See {{Appendix A of DIGEST-FIELDS}} for more information.
 
 # Transfer Codings
 
-Unlike `Content-Encoding` (see {{Section 8.4.1 of HTTP}}), `Transfer-Encoding` (see {{Section 6.1 of RFC9112}}) is a property of the message, not of the representation. Moreover, transfer codings can be applied in transit (e.g., by proxies). This means that a client does not have to consider the transfer codings to compute the upload offset, while a server is responsible for transfer decoding the message before computing the upload offset. Please note that the `Content-Length` header field cannot be used in conjunction with the `Transfer-Encoding` header field.
+Unlike `Content-Encoding` (see {{Section 8.4.1 of HTTP}}), `Transfer-Encoding` (see {{Section 6.1 of RFC9112}}) is a property of the message, not of the representation. Moreover, transfer codings can be applied in transit (e.g., by proxies). This means that a client does not have to consider the transfer codings to compute the upload offset, while a server is responsible for transfer decoding the message before computing the upload offset. The same applies to the value of `Upload-Length`. Please note that the `Content-Length` header field cannot be used in conjunction with the `Transfer-Encoding` header field.
 
 # Integrity Digests
 
@@ -536,7 +549,7 @@ A possible drawback is that the client might be unable to resume an upload. If a
 
 ### Upgrading To Resumable Uploads
 
-Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the file is transferred in a single request, usually `POST` or `PUT`, without any ability to resume from interruptions. The client can offer the server to upgrade such a request to a resumable upload (see {{feature-detection}}) by adding the `Upload-Complete: ?1` header field to the original request. The request is not changed otherwise.
+Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the file is transferred in a single request, usually `POST` or `PUT`, without any ability to resume from interruptions. The client can offer the server to upgrade such a request to a resumable upload (see {{feature-detection}}) by adding the `Upload-Complete: ?1` header field to the original request. The `Upload-Length` header field SHOULD be added if the upload's final size is known upfront. The request is not changed otherwise.
 
 A server that supports resumable uploads at the target URI can create a resumable upload resource and send its upload URL in a `104 (Upload Resumption Supported)` intermediate response for the client to resume the upload after interruptions. A server that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the `Upload-Complete: ?1` header. The transfer then falls back to a non-resumable upload without additional cost.
 
@@ -570,6 +583,7 @@ IANA is asked to register the following entries in the "Hypertext Transfer Proto
 | Upload-Complete      | permanent | {{upload-complete}} of this document      |
 | Upload-Offset        | permanent | {{upload-offset}} of this document        |
 | Upload-Limit         | permanent | {{upload-limit}} of this document         |
+| Upload-Length        | permanent | {{upload-length}} of this document        |
 |----------------------|-----------|-------------------------------------------|
 
 IANA is asked to register the following entry in the "HTTP Status Codes" registry:
@@ -729,6 +743,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 * Clarify implications of `Upload-Limit` header.
 * Allow client to fetch upload limits upfront via `OPTIONS`.
 * Add guidance on upload creation strategy.
+* Add `Upload-Length` header to indicate length during creation.
 
 ## Since draft-ietf-httpbis-resumable-upload-03
 {:numbered="false"}
