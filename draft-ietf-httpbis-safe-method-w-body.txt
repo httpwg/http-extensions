@@ -134,11 +134,18 @@ Table of Contents
    a safe, idempotent query is being performed.
 
    The QUERY method provides a solution that spans the gap between the
-   use of GET and POST.  As with POST, the input to the query operation
-   is passed along within the content of the request rather than as part
-   of the request URI.  Unlike POST, however, the method is explicitly
-   safe and idempotent, allowing functions like caching and automatic
-   retries to operate.
+   use of GET and POST, with the example above being expressed as:
+
+   QUERY /feed HTTP/1.1
+   Host: example.org
+   Content-Type: application/x-www-form-urlencoded
+
+   q=foo&limit=10&sort=-published
+
+   As with POST, the input to the query operation is passed along within
+   the content of the request rather than as part of the request URI.
+   Unlike POST, however, the method is explicitly safe and idempotent,
+   allowing functions like caching and automatic retries to operate.
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -492,6 +499,9 @@ A.5.  Since draft-ietf-httpbis-safe-method-w-body-04
       (https://github.com/httpwg/http-extensions/issues/2883)
 
 A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
+
+   *  Update QUERY example to introduction (https://github.com/httpwg/
+      http-extensions/issues/2171)
 
    *  Update "Sensitive information in QUERY URLs"
       (https://github.com/httpwg/http-extensions/issues/2853)
