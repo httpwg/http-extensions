@@ -50,6 +50,7 @@ normative:
     display: HTTP/1.1
   RFC5789:
   PROBLEM: RFC9457
+  DIGEST-FIELDS: RFC9530
 
 informative:
 
@@ -523,9 +524,24 @@ Unlike `Content-Encoding` (see {{Section 8.4.1 of HTTP}}), `Transfer-Encoding` (
 
 # Integrity Digests
 
-The integrity of an entire upload or individual upload requests can be verifying using digests from {{!DIGEST-FIELDS=RFC9530}}.
+The integrity of an entire upload or individual upload requests can be verifying using digests from {{DIGEST-FIELDS}}.
+
+## Representation Digests
+
+Representation digests help verify the integrity of the entire data that has been uploaded so far, which might strech across multiple requests.
 
 If the client knows the integrity digest of the entire data before creating an upload resource, it MAY include the `Repr-Digest` header field when creating an upload ({{upload-creation}}). Once the upload is completed, the server can compute the integrity digest of the received upload representation and compare it to the provided digest. If the digests don't match the server SHOULD consider the transfer failed and not process the uploaded data further. This way, the integrity of the entire uploaded data can be protected.
+
+Alternatively, when creating an upload ({{upload-creation}}), the client MAY ask the server to compute and return the integrity digests using a `Want-Repr-Digest` field conveying the preferred algorithms.
+The response SHOULD include at least one of the requested digests, but MAY not include it.
+The server SHOULD compute the representation digests using the preferred algorithms once the upload is complete and include the corresponding `Repr-Digest` header field in the response.
+Alternatively, the server MAY compute the digest continuously during the upload and include the `Repr-Digest` header field in responses to upload creation ({{upload-creation}}) and upload appending requests ({{upload-appending}}) even when the upload is not completed yet.
+This allows the client to simultaneously compute the digest of the transmitted upload data, compare its digest to the server's digest, and spot data integrity issues.
+If an upload is spread across multiple requests, data integrity issues can be found even before the upload is fully completed.
+
+## Content Digests
+
+Content digests help verify the integrity of the content in an individual request.
 
 If the client knows the integrity digest of the content from an upload creation ({{upload-creation}}) or upload appending ({{upload-appending}}) request, it MAY include the `Content-Digest` header field in the request. Once the content has been received, the server can compute the integrity digest of the received content and compare it to the provided digest. If the digests don't match the server SHOULD consider the transfer failed and not append the content to the upload resource. This way, the integrity of an individual request can be protected.
 
@@ -744,6 +760,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 * Allow client to fetch upload limits upfront via `OPTIONS`.
 * Add guidance on upload creation strategy.
 * Add `Upload-Length` header to indicate length during creation.
+* Describe possible usage of `Want-Repr-Digest`.
 
 ## Since draft-ietf-httpbis-resumable-upload-03
 {:numbered="false"}
