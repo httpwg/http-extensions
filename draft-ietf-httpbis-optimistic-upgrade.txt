@@ -71,11 +71,10 @@ Table of Contents
      3.2.  Parser Exploits
    4.  Operational Issues
    5.  Impact on Existing Upgrade Tokens
-     5.1.  "HTTP"
-     5.2.  "TLS"
-     5.3.  "WebSocket"/"websocket"
-     5.4.  "connect-udp"
-     5.5.  "connect-ip"
+     5.1.  "TLS"
+     5.2.  "WebSocket"/"websocket"
+     5.3.  "connect-udp"
+     5.4.  "connect-ip"
    6.  Guidance for Future Upgrade Tokens
    7.  IANA Considerations
    8.  References
@@ -213,31 +212,11 @@ Table of Contents
 
 5.  Impact on Existing Upgrade Tokens
 
-   At the time of writing, there are four distinct Upgrade Tokens that
-   are registered, associated with published documents, and not marked
-   obsolete.  This section considers the impact of this document's
-   considerations on each registered Upgrade Token.
+   This section describes the impact of this document's considerations
+   on some registered Upgrade Tokens that are believed to be in use at
+   the time of writing.
 
-5.1.  "HTTP"
-
-   [RFC9110] is the source of the requirement quoted in Section 2.  It
-   also defines the "HTTP/*.*" family of Upgrade Tokens.  In HTTP/1.1,
-   the only potentially applicable versions of this token are "0.9",
-   "1.0", "1.1", and "2.0".
-
-   Versions "0.9" and "1.0" are sufficiently syntactically similar to
-   HTTP/1.1 that any such "downward upgrade" would be unlikely to result
-   in the security concerns discussed here.  (An "upgrade" to version
-   1.1 has no effect at all.)
-
-   A version number of "2.0" corresponds to HTTP/2.  Every HTTP/2
-   connection begins with a Client Connection Preface (Section 3.4 of
-   [RFC9113]) that was selected to ensure that a compliant HTTP/1.1
-   server will not process further data on this connection.  This avoids
-   security issues if an "HTTP/2.0" Upgrade Token is used
-   optimistically.
-
-5.2.  "TLS"
+5.1.  "TLS"
 
    [RFC2817] defines the "TLS/_._" family of Upgrade Tokens, and
    correctly highlights the possibility of the server rejecting the
@@ -245,7 +224,7 @@ Table of Contents
    to any use of the "TLS" Upgrade Token, but no change is required in
    [RFC2817].
 
-5.3.  "WebSocket"/"websocket"
+5.2.  "WebSocket"/"websocket"
 
    Section 4.1 of [RFC6455] says:
 
@@ -258,7 +237,7 @@ Table of Contents
    high-entropy masking of client-to-server frames (Section 5.1 of
    [RFC6455]).
 
-5.4.  "connect-udp"
+5.3.  "connect-udp"
 
    Section 5 of [RFC9298] says:
 
@@ -296,7 +275,7 @@ Table of Contents
       HTTP/1.1 requests; otherwise it MUST abort the underlying
       connection.
 
-5.5.  "connect-ip"
+5.4.  "connect-ip"
 
    The "connect-ip" Upgrade Token is defined in [RFC9484].  Section 11
    of [RFC9484] forbids clients from using optimistic upgrade, avoiding

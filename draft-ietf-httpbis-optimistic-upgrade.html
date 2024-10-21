@@ -1145,19 +1145,16 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-impact-on-existing-upgrade-" class="internal xref">Impact on Existing Upgrade Tokens</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-http" class="internal xref">"HTTP"</a></p>
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-tls" class="internal xref">"TLS"</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-tls" class="internal xref">"TLS"</a></p>
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-websocket-websocket" class="internal xref">"WebSocket"/"websocket"</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
-                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-websocket-websocket" class="internal xref">"WebSocket"/"websocket"</a></p>
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-connect-udp" class="internal xref">"connect-udp"</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
-                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-connect-udp" class="internal xref">"connect-udp"</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.5">
-                <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="auto internal xref">5.5</a>.  <a href="#name-connect-ip" class="internal xref">"connect-ip"</a></p>
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-connect-ip" class="internal xref">"connect-ip"</a></p>
 </li>
             </ul>
 </li>
@@ -1276,76 +1273,66 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
       <h2 id="name-impact-on-existing-upgrade-">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-impact-on-existing-upgrade-" class="section-name selfRef">Impact on Existing Upgrade Tokens</a>
       </h2>
-<p id="section-5-1">At the time of writing, there are four distinct Upgrade Tokens that are registered, associated with published documents, and not marked obsolete.  This section considers the impact of this document's considerations on each registered Upgrade Token.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<div id="http">
-<section id="section-5.1">
-        <h3 id="name-http">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-http" class="section-name selfRef">"HTTP"</a>
-        </h3>
-<p id="section-5.1-1"><span>[<a href="#RFC9110" class="cite xref">RFC9110</a>]</span> is the source of the requirement quoted in <a href="#background" class="auto internal xref">Section 2</a>.  It also defines the "HTTP/*.*" family of Upgrade Tokens.  In HTTP/1.1, the only potentially applicable versions of this token are "0.9", "1.0", "1.1", and "2.0".<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.1-2">Versions "0.9" and "1.0" are sufficiently syntactically similar to HTTP/1.1 that any such "downward upgrade" would be unlikely to result in the security concerns discussed here.  (An "upgrade" to version 1.1 has no effect at all.)<a href="#section-5.1-2" class="pilcrow">¶</a></p>
-<p id="section-5.1-3">A version number of "2.0" corresponds to HTTP/2.  Every HTTP/2 connection begins with a Client Connection Preface (<span><a href="https://rfc-editor.org/rfc/rfc9113#section-3.4" class="relref">Section 3.4</a> of [<a href="#RFC9113" class="cite xref">RFC9113</a>]</span>) that was selected to ensure that a compliant HTTP/1.1 server will not process further data on this connection.  This avoids security issues if an "HTTP/2.0" Upgrade Token is used optimistically.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
-</section>
-</div>
+<p id="section-5-1">This section describes the impact of this document's considerations on some registered Upgrade Tokens that are believed to be in use at the time of writing.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <div id="tls">
-<section id="section-5.2">
+<section id="section-5.1">
         <h3 id="name-tls">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-tls" class="section-name selfRef">"TLS"</a>
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-tls" class="section-name selfRef">"TLS"</a>
         </h3>
-<p id="section-5.2-1"><span>[<a href="#RFC2817" class="cite xref">RFC2817</a>]</span> defines the "TLS/<em>.</em>" family of Upgrade Tokens, and correctly highlights the possibility of the server rejecting the upgrade.  The security considerations documented here are applicable to any use of the "TLS" Upgrade Token, but no change is required in <span>[<a href="#RFC2817" class="cite xref">RFC2817</a>]</span>.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-1"><span>[<a href="#RFC2817" class="cite xref">RFC2817</a>]</span> defines the "TLS/<em>.</em>" family of Upgrade Tokens, and correctly highlights the possibility of the server rejecting the upgrade.  The security considerations documented here are applicable to any use of the "TLS" Upgrade Token, but no change is required in <span>[<a href="#RFC2817" class="cite xref">RFC2817</a>]</span>.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="websocketwebsocket">
-<section id="section-5.3">
+<section id="section-5.2">
         <h3 id="name-websocket-websocket">
-<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-websocket-websocket" class="section-name selfRef">"WebSocket"/"websocket"</a>
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-websocket-websocket" class="section-name selfRef">"WebSocket"/"websocket"</a>
         </h3>
-<p id="section-5.3-1"><span><a href="https://rfc-editor.org/rfc/rfc6455#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC6455" class="cite xref">RFC6455</a>]</span> says:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-1"><span><a href="https://rfc-editor.org/rfc/rfc6455#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC6455" class="cite xref">RFC6455</a>]</span> says:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-5.3-2.1">
-            <p id="section-5.3-2.1.1">Once the client's opening handshake has been sent, the client <span class="bcp14">MUST</span> wait for a response from the server before sending any further data.<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="section-5.2-2.1">
+            <p id="section-5.2-2.1.1">Once the client's opening handshake has been sent, the client <span class="bcp14">MUST</span> wait for a response from the server before sending any further data.<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-5.3-3">Thus, optimistic use of HTTP Upgrade is already forbidden in the WebSocket protocol.  Additionally, the WebSocket protocol requires high-entropy masking of client-to-server frames (<span><a href="https://rfc-editor.org/rfc/rfc6455#section-5.1" class="relref">Section 5.1</a> of [<a href="#RFC6455" class="cite xref">RFC6455</a>]</span>).<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<p id="section-5.2-3">Thus, optimistic use of HTTP Upgrade is already forbidden in the WebSocket protocol.  Additionally, the WebSocket protocol requires high-entropy masking of client-to-server frames (<span><a href="https://rfc-editor.org/rfc/rfc6455#section-5.1" class="relref">Section 5.1</a> of [<a href="#RFC6455" class="cite xref">RFC6455</a>]</span>).<a href="#section-5.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="connect-udp">
-<section id="section-5.4">
+<section id="section-5.3">
         <h3 id="name-connect-udp">
-<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-connect-udp" class="section-name selfRef">"connect-udp"</a>
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-connect-udp" class="section-name selfRef">"connect-udp"</a>
         </h3>
-<p id="section-5.4-1"><span><a href="https://rfc-editor.org/rfc/rfc9298#section-5" class="relref">Section 5</a> of [<a href="#RFC9298" class="cite xref">RFC9298</a>]</span> says:<a href="#section-5.4-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-1"><span><a href="https://rfc-editor.org/rfc/rfc9298#section-5" class="relref">Section 5</a> of [<a href="#RFC9298" class="cite xref">RFC9298</a>]</span> says:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-5.4-2.1">
-            <p id="section-5.4-2.1.1">A client <span class="bcp14">MAY</span> optimistically start sending UDP packets in HTTP Datagrams before receiving the response to its UDP proxying request.<a href="#section-5.4-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="section-5.3-2.1">
+            <p id="section-5.3-2.1.1">A client <span class="bcp14">MAY</span> optimistically start sending UDP packets in HTTP Datagrams before receiving the response to its UDP proxying request.<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-5.4-3">However, in HTTP/1.1, this "proxying request" is an HTTP Upgrade request.  This upgrade is likely to be rejected in certain circumstances, such as when the UDP destination address (which is attacker-controlled) is invalid.  Additionally, the contents of the "connect-udp" protocol stream can include untrusted material (i.e., the UDP packets, which might come from other applications on the client device).  This creates the possibility of Request Smuggling attacks.  To avoid these concerns, this text is updated as follows:<a href="#section-5.4-3" class="pilcrow">¶</a></p>
+<p id="section-5.3-3">However, in HTTP/1.1, this "proxying request" is an HTTP Upgrade request.  This upgrade is likely to be rejected in certain circumstances, such as when the UDP destination address (which is attacker-controlled) is invalid.  Additionally, the contents of the "connect-udp" protocol stream can include untrusted material (i.e., the UDP packets, which might come from other applications on the client device).  This creates the possibility of Request Smuggling attacks.  To avoid these concerns, this text is updated as follows:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-5.4-4.1">
-            <p id="section-5.4-4.1.1">When using HTTP/2 or later, a client <span class="bcp14">MAY</span> optimistically ...<a href="#section-5.4-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="section-5.3-4.1">
+            <p id="section-5.3-4.1.1">When using HTTP/2 or later, a client <span class="bcp14">MAY</span> optimistically ...<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-5.4-5"><span><a href="https://rfc-editor.org/rfc/rfc9298#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9298" class="cite xref">RFC9298</a>]</span> describes the requirement for a successful proxy setup response, including upgrading to the "connect-udp" protocol, and says:<a href="#section-5.4-5" class="pilcrow">¶</a></p>
+<p id="section-5.3-5"><span><a href="https://rfc-editor.org/rfc/rfc9298#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9298" class="cite xref">RFC9298</a>]</span> describes the requirement for a successful proxy setup response, including upgrading to the "connect-udp" protocol, and says:<a href="#section-5.3-5" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-5.4-6.1">
-            <p id="section-5.4-6.1.1">If any of these requirements are not met, the client <span class="bcp14">MUST</span> treat this proxying attempt as failed and abort the connection.<a href="#section-5.4-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="section-5.3-6.1">
+            <p id="section-5.3-6.1.1">If any of these requirements are not met, the client <span class="bcp14">MUST</span> treat this proxying attempt as failed and abort the connection.<a href="#section-5.3-6.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-5.4-7">However, this could be interpreted as an instruction to abort the underlying TLS and TCP connections in the event of an unsuccessful response such as "407 ("Proxy Authentication Required)".  To avoid an unnecessary delay in this case, this text is hereby updated as follows:<a href="#section-5.4-7" class="pilcrow">¶</a></p>
+<p id="section-5.3-7">However, this could be interpreted as an instruction to abort the underlying TLS and TCP connections in the event of an unsuccessful response such as "407 ("Proxy Authentication Required)".  To avoid an unnecessary delay in this case, this text is hereby updated as follows:<a href="#section-5.3-7" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-5.4-8.1">
-            <p id="section-5.4-8.1.1">If any of these requirements are not met, the client <span class="bcp14">MUST</span> treat this proxying attempt as failed.  If the "Upgrade" response header field is absent, the client <span class="bcp14">MAY</span> reuse the connection for further HTTP/1.1 requests; otherwise it <span class="bcp14">MUST</span> abort the underlying connection.<a href="#section-5.4-8.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="section-5.3-8.1">
+            <p id="section-5.3-8.1.1">If any of these requirements are not met, the client <span class="bcp14">MUST</span> treat this proxying attempt as failed.  If the "Upgrade" response header field is absent, the client <span class="bcp14">MAY</span> reuse the connection for further HTTP/1.1 requests; otherwise it <span class="bcp14">MUST</span> abort the underlying connection.<a href="#section-5.3-8.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="connect-ip">
-<section id="section-5.5">
+<section id="section-5.4">
         <h3 id="name-connect-ip">
-<a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-connect-ip" class="section-name selfRef">"connect-ip"</a>
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-connect-ip" class="section-name selfRef">"connect-ip"</a>
         </h3>
-<p id="section-5.5-1">The "connect-ip" Upgrade Token is defined in <span>[<a href="#RFC9484" class="cite xref">RFC9484</a>]</span>.  <span><a href="https://rfc-editor.org/rfc/rfc9484#section-11" class="relref">Section 11</a> of [<a href="#RFC9484" class="cite xref">RFC9484</a>]</span> forbids clients from using optimistic upgrade, avoiding this issue.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
+<p id="section-5.4-1">The "connect-ip" Upgrade Token is defined in <span>[<a href="#RFC9484" class="cite xref">RFC9484</a>]</span>.  <span><a href="https://rfc-editor.org/rfc/rfc9484#section-11" class="relref">Section 11</a> of [<a href="#RFC9484" class="cite xref">RFC9484</a>]</span> forbids clients from using optimistic upgrade, avoiding this issue.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
