@@ -100,11 +100,7 @@ A related category of attacks use protocol disagreement to exploit vulnerabiliti
 
 If the server rejects the transition request, the connection can continue to be used for HTTP/1.1.  There is no requirement to close the connection in response to a rejected transition, and keeping the connection open has performance advantages if additional HTTP requests to this server are likely.  Thus, it is normally inappropriate to close the connection in response to a rejected transition.
 
-<<<<<<< HEAD
-# Impact on HTTP Upgrade with Existing Upgrade Tokens
-=======
-# Impact on Existing Upgrade Tokens {#existing}
->>>>>>> ac690a6f (Remove normative SHOULD and clarify rationale)
+# Impact on HTTP Upgrade with Existing Upgrade Tokens {#existing}
 
 This section describes the impact of this document's considerations on some registered Upgrade Tokens that are believed to be in use at the time of writing.
 
@@ -151,6 +147,14 @@ There are now several good examples of designs that prevent the security concern
 * Apply high-entropy masking of client-to-server data (WebSocket, {{Section 5.1 of ?RFC6455}}).
 
 Future specifications for Upgrade Tokens MUST account for the security issues discussed here and provide clear guidance on how clients can avoid them.
+
+## Selection of Request Methods
+
+Some Upgrade Tokens, such as "TLS", are defined for use with any ordinary HTTP Method.  The upgraded protocol continues to provide HTTP semantics, and will convey the response to this HTTP request.
+
+The other Upgrade Tokens mentioned in {{existing}} do not preserve HTTP semantics, so the method is not relevant.  All of these Upgrade Tokens are specified only for use with the "GET" method.
+
+Future specifications for Upgrade Tokens should restrict their use to "GET" requests if the HTTP method is otherwise irrelevant and a request body is not required.  This improves consistency with other Upgrade Tokens and reduces the likelihood that a faulty server implementation might process the request body as the new protocol.
 
 # Guidance for HTTP CONNECT
 
