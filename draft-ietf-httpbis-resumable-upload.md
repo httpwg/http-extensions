@@ -378,6 +378,8 @@ If the request completes successfully but the entire upload is not yet complete 
 
 If the request includes the `Upload-Complete` field value set to true and a valid `Content-Length` header field, the client attempts to upload the remaining resource in one request. In this case, the upload's final size is the sum of the upload's offset and the `Content-Length` header field. If the server does not have a record of the upload's final size from creation or the previous append, the server MUST record the upload's final size to ensure its consistency. If the server does have a previous record, that value MUST match the upload's final size. If they do not match, the server MUST reject the request with a `400 (Bad Request)` status code.
 
+The server MUST prevent that the offset exceeds the upload's final size when appending. If a final size has been recorded and the upload append request exceeds this value, the server MUST stop appending bytes to the upload once the offset reaches the final size and reject the request with a `400 (Bad Request)` status code. It is not sufficient to rely on the `Content-Length` header field for enforcement because the header field might not be present. 
+
 The request content MAY be empty. If the `Upload-Complete` field is then set to true, the client wants to complete the upload without appending additional data.
 
 The following example shows an upload append. The client transfers the next 100 bytes at an offset of 100 and does not indicate that the upload is then completed. The server acknowledges the new offset:
