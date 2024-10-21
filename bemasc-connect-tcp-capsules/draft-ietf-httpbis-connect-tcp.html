@@ -1183,7 +1183,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-new-upgrade-token" class="internal xref">New Upgrade Token</a></p>
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-new-upgrade-tokens" class="internal xref">New Upgrade Tokens</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
                 <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-new-masque-default-template" class="internal xref">New MASQUE Default Template</a></p>
@@ -1413,7 +1413,7 @@ HEADERS
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-use-of-the-capsule-protocol" class="section-name selfRef">Use of the Capsule Protocol</a>
         </h3>
 <p id="section-3.4-1">When using the "connect-tcp" Upgrade Token, templated TCP proxies do not use the Capsule Protocol <span>[<a href="#RFC9297" class="cite xref">RFC9297</a>]</span>.  Clients <span class="bcp14">MAY</span> request use of the Capsule Protocol by offering the Upgrade Token "connect-tcp-capsule" instead.  When offering or accepting the "connect-tcp-capsule" Upgrade Token, clients and servers <span class="bcp14">SHOULD</span> including a "Capsule-Protocol: ?1" header to facilitate processing by intermediaries.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
-<p id="section-3.4-2">Clients of this specification <span class="bcp14">MAY</span> implement "connect-tcp", "connect-tcp-capsule", or both.  Accordingly, templated TCP proxy servers for arbitrary clients <span class="bcp14">MUST</span> implement both Upgrade Tokens.<a href="#section-3.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.4-2">Clients of this specification <span class="bcp14">MAY</span> implement "connect-tcp", "connect-tcp-capsule", or both.  Accordingly, a templated TCP proxy server <span class="bcp14">MUST</span> implement both Upgrade Tokens unless its use is restricted to a subset of compatible clients.<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <p id="section-3.4-3">When using "connect-tcp-capsule", TCP payload data is sent in the payload of a new Capsule Type named DATA (<a href="#data-capsule" class="auto internal xref">Section 8.3</a>).  The ordered concatenation of DATA capsule payloads represents the main payload data stream in any protocol where this is well-defined.  Intermediaries <span class="bcp14">MAY</span> split or merge DATA capsules.  Endpoints <span class="bcp14">MAY</span> indicate a TCP connection error by sending an incomplete DATA capsule, as an alternative to using TCP, TLS, or HTTP stream errors.<a href="#section-3.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1539,24 +1539,35 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
       <h2 id="name-iana-considerations">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<div id="new-upgrade-token">
+<div id="new-upgrade-tokens">
 <section id="section-8.1">
-        <h3 id="name-new-upgrade-token">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-new-upgrade-token" class="section-name selfRef">New Upgrade Token</a>
+        <h3 id="name-new-upgrade-tokens">
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-new-upgrade-tokens" class="section-name selfRef">New Upgrade Tokens</a>
         </h3>
-<p id="section-8.1-1">IF APPROVED, IANA is requested to add the following entry to the HTTP Upgrade Token Registry:<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-8.1-2.1">
-            <p id="section-8.1-2.1.1">Value: "connect-tcp"<a href="#section-8.1-2.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-8.1-2.2">
-            <p id="section-8.1-2.2.1">Description: Proxying of TCP payloads<a href="#section-8.1-2.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-8.1-2.3">
-            <p id="section-8.1-2.3.1">Reference: (This document)<a href="#section-8.1-2.3.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-8.1-3">For interoperability testing of this draft version, implementations <span class="bcp14">SHALL</span> use the value "connect-tcp-05".<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">IF APPROVED, IANA is requested to add the following entries to the HTTP Upgrade Token Registry:<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<table class="center" id="table-1">
+          <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Value</th>
+              <th class="text-left" rowspan="1" colspan="1">Description</th>
+              <th class="text-left" rowspan="1" colspan="1">Reference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">"connect-tcp"</td>
+              <td class="text-left" rowspan="1" colspan="1">Proxying of TCP payloads</td>
+              <td class="text-left" rowspan="1" colspan="1">(This document)</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">"connect-tcp-capsule"</td>
+              <td class="text-left" rowspan="1" colspan="1">Proxying of TCP payloads in HTTP Capsules</td>
+              <td class="text-left" rowspan="1" colspan="1">(This document)</td>
+            </tr>
+          </tbody>
+        </table>
+<p id="section-8.1-3">For interoperability testing of this draft version, implementations <span class="bcp14">SHALL</span> use the values "connect-tcp-06" and "connect-tcp-capsule-06.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-template">
@@ -1565,8 +1576,8 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 <a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-new-masque-default-template" class="section-name selfRef">New MASQUE Default Template</a>
         </h3>
 <p id="section-8.2-1">IF APPROVED, IANA is requested to add the following entry to the "MASQUE URI Suffixes" registry:<a href="#section-8.2-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-1">
-          <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
+<table class="center" id="table-2">
+          <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Path Segment</th>
@@ -1590,8 +1601,8 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 <a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-new-capsule-type" class="section-name selfRef">New Capsule Type</a>
         </h3>
 <p id="section-8.3-1">IF APPROVED, IANA is requested to add the following entry to the "HTTP Capsule Types" registry:<a href="#section-8.3-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-2">
-          <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
+<table class="center" id="table-3">
+          <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Value</th>
