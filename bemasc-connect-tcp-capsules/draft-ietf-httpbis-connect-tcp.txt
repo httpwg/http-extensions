@@ -74,7 +74,7 @@ Table of Contents
    6.  Security Considerations
    7.  Operational Considerations
    8.  IANA Considerations
-     8.1.  New Upgrade Token
+     8.1.  New Upgrade Tokens
      8.2.  New MASQUE Default Template
      8.3.  New Capsule Type
    9.  References
@@ -302,8 +302,9 @@ Table of Contents
    intermediaries.
 
    Clients of this specification MAY implement "connect-tcp", "connect-
-   tcp-capsule", or both.  Accordingly, templated TCP proxy servers for
-   arbitrary clients MUST implement both Upgrade Tokens.
+   tcp-capsule", or both.  Accordingly, a templated TCP proxy server
+   MUST implement both Upgrade Tokens unless its use is restricted to a
+   subset of compatible clients.
 
    When using "connect-tcp-capsule", TCP payload data is sent in the
    payload of a new Capsule Type named DATA (Section 8.3).  The ordered
@@ -449,19 +450,25 @@ Table of Contents
 
 8.  IANA Considerations
 
-8.1.  New Upgrade Token
+8.1.  New Upgrade Tokens
 
-   IF APPROVED, IANA is requested to add the following entry to the HTTP
-   Upgrade Token Registry:
+   IF APPROVED, IANA is requested to add the following entries to the
+   HTTP Upgrade Token Registry:
 
-   *  Value: "connect-tcp"
+     +=======================+==========================+===========+
+     | Value                 | Description              | Reference |
+     +=======================+==========================+===========+
+     | "connect-tcp"         | Proxying of TCP payloads | (This     |
+     |                       |                          | document) |
+     +-----------------------+--------------------------+-----------+
+     | "connect-tcp-capsule" | Proxying of TCP payloads | (This     |
+     |                       | in HTTP Capsules         | document) |
+     +-----------------------+--------------------------+-----------+
 
-   *  Description: Proxying of TCP payloads
-
-   *  Reference: (This document)
+                                 Table 1
 
    For interoperability testing of this draft version, implementations
-   SHALL use the value "connect-tcp-05".
+   SHALL use the values "connect-tcp-06" and "connect-tcp-capsule-06.
 
 8.2.  New MASQUE Default Template
 
@@ -474,7 +481,7 @@ Table of Contents
              | tcp          | TCP Proxying | (This document) |
              +--------------+--------------+-----------------+
 
-                                  Table 1
+                                  Table 2
 
 8.3.  New Capsule Type
 
@@ -490,7 +497,7 @@ Table of Contents
    |       |         |           | Section 3.4 |            |         |
    +-------+---------+-----------+-------------+------------+---------+
 
-                                 Table 2
+                                 Table 3
 
    For this draft version of the protocol, the Capsule Type value
    0xb739a6d0 shall be used provisionally for testing, under the name
