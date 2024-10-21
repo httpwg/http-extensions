@@ -456,7 +456,7 @@ Location: /morecontacts
 
       <t>Redirected request:</t>
 <artwork type="http-message">
-QUERY /morecontacts contacts HTTP/1.1
+QUERY /morecontacts HTTP/1.1
 Host: example.org
 Content-Type: example/query
 Accept: text/csv
