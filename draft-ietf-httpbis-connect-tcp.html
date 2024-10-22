@@ -1028,7 +1028,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Schwartz</td>
-<td class="center">Expires 24 April 2025</td>
+<td class="center">Expires 25 April 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1041,12 +1041,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-connect-tcp-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-10-21" class="published">21 October 2024</time>
+<time datetime="2024-10-22" class="published">22 October 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-04-24">24 April 2025</time></dd>
+<dd class="expires"><time datetime="2025-04-25">25 April 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1080,7 +1080,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 24 April 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 25 April 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1412,7 +1412,7 @@ HEADERS
         <h3 id="name-use-of-the-capsule-protocol">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-use-of-the-capsule-protocol" class="section-name selfRef">Use of the Capsule Protocol</a>
         </h3>
-<p id="section-3.4-1">When using the "connect-tcp" Upgrade Token, templated TCP proxies do not use the Capsule Protocol <span>[<a href="#RFC9297" class="cite xref">RFC9297</a>]</span>.  Clients <span class="bcp14">MAY</span> request use of the Capsule Protocol by offering the Upgrade Token "connect-tcp-capsule" instead.  When offering or accepting the "connect-tcp-capsule" Upgrade Token, clients and servers <span class="bcp14">SHOULD</span> including a "Capsule-Protocol: ?1" header to facilitate processing by intermediaries.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-1">When using the "connect-tcp" Upgrade Token, templated TCP proxies do not use the Capsule Protocol <span>[<a href="#RFC9297" class="cite xref">RFC9297</a>]</span>.  Clients <span class="bcp14">MAY</span> request use of the Capsule Protocol by offering the Upgrade Token "connect-tcp-capsule" instead.  When offering or accepting the "connect-tcp-capsule" Upgrade Token, clients and servers <span class="bcp14">SHOULD</span> include a "Capsule-Protocol: ?1" header to facilitate processing by intermediaries.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <p id="section-3.4-2">Clients of this specification <span class="bcp14">MAY</span> implement "connect-tcp", "connect-tcp-capsule", or both.  Accordingly, a templated TCP proxy server <span class="bcp14">MUST</span> implement both Upgrade Tokens unless its use is restricted to a subset of compatible clients.<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <p id="section-3.4-3">When using "connect-tcp-capsule", TCP payload data is sent in the payload of a new Capsule Type named DATA (<a href="#data-capsule" class="auto internal xref">Section 8.3</a>).  The ordered concatenation of DATA capsule payloads represents the main payload data stream in any protocol where this is well-defined.  Intermediaries <span class="bcp14">MAY</span> split or merge DATA capsules.  Endpoints <span class="bcp14">MAY</span> indicate a TCP connection error by sending an incomplete DATA capsule, as an alternative to using TCP, TLS, or HTTP stream errors.<a href="#section-3.4-3" class="pilcrow">¶</a></p>
 </section>
