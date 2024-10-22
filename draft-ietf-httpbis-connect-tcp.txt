@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                         21 October 2024
-Expires: 24 April 2025
+Intended status: Standards Track                         22 October 2024
+Expires: 25 April 2025
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 April 2025.
+   This Internet-Draft will expire on 25 April 2025.
 
 Copyright Notice
 
@@ -297,7 +297,7 @@ Table of Contents
    not use the Capsule Protocol [RFC9297].  Clients MAY request use of
    the Capsule Protocol by offering the Upgrade Token "connect-tcp-
    capsule" instead.  When offering or accepting the "connect-tcp-
-   capsule" Upgrade Token, clients and servers SHOULD including a
+   capsule" Upgrade Token, clients and servers SHOULD include a
    "Capsule-Protocol: ?1" header to facilitate processing by
    intermediaries.
 
