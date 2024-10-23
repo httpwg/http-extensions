@@ -100,7 +100,7 @@
     <t>
       Most often, this is desirable when the data conveyed in a request is
       too voluminous to be encoded into the request's URI. For example,
-      this is a common and interoperable query:
+      this is a common query pattern:
     </t>
 
 <artwork type="http-message">
