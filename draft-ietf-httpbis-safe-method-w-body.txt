@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 25 April 2025                                                  
+Expires: 30 April 2025                                                  
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                         22 October 2024
+                                                         27 October 2024
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 April 2025.
+   This Internet-Draft will expire on 30 April 2025.
 
 Copyright Notice
 
@@ -102,22 +102,25 @@ Table of Contents
 
    Most often, this is desirable when the data conveyed in a request is
    too voluminous to be encoded into the request's URI.  For example,
-   while this is an common and interoperable query:
+   this is a common query pattern:
 
    GET /feed?q=foo&limit=10&sort=-published HTTP/1.1
    Host: example.org
 
-   if the query parameters extend to several kilobytes or more of data
-   it may not be, because many implementations place limits on their
-   size.  Often these limits are not known or discoverable ahead of
-   time, because a request can pass through many uncoordinated systems.
-   Additionally, expressing certain kinds of data in the target URI is
-   inefficient, because it needs to be encoded to be a valid URI.
+   However, for a query with parameters that are complex or large in
+   size, encoding it in the request URI may not be the best option
+   because
 
-   Encoding query parameters directly into the request URI also
-   effectively casts every possible combination of query inputs as
-   distinct resources.  Depending on the application, that may not be
-   desirable.
+   *  often size limits are not known ahead of time because a request
+      can pass through many uncoordinated system,
+
+   *  expressing certain kinds data in the target URI is inefficient
+      because of the overhead of encoding that data into a valid URI,
+      and
+
+   *  encoding query parameters directly into the request URI
+      effectively casts every possible combination of query inputs as
+      distinct resources.
 
    As an alternative to using GET, many implementations make use of the
    HTTP POST method to perform queries, as illustrated in the example
