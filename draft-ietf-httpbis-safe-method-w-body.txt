@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 30 April 2025                                                  
+Expires: 1 May 2025                                                     
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                         27 October 2024
+                                                         28 October 2024
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 April 2025.
+   This Internet-Draft will expire on 1 May 2025.
 
 Copyright Notice
 
@@ -114,7 +114,7 @@ Table of Contents
    *  often size limits are not known ahead of time because a request
       can pass through many uncoordinated system,
 
-   *  expressing certain kinds data in the target URI is inefficient
+   *  expressing certain kinds of data in the target URI is inefficient
       because of the overhead of encoding that data into a valid URI,
       and
 
