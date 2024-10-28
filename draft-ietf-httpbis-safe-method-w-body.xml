@@ -115,7 +115,7 @@ Host: example.org
       <ul>
         <li>often size limits are not known ahead of time because a request can pass through many uncoordinated
       system,</li>
-        <li>expressing certain kinds data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and</li>
+        <li>expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and</li>
         <li>encoding query parameters directly into the request URI effectively casts every possible combination of query inputs as distinct
             resources.</li>
       </ul>
