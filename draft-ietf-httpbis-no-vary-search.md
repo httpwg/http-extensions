@@ -402,7 +402,26 @@ This proposal is adjacent to the highly-privacy-relevant space of [navigational 
 
 # IANA Considerations
 
-TODO IANA
+IANA should do the following:
+
+## HTTP Field Names
+
+Enter the following into the Hypertext Transfer Protocol (HTTP) Field Name Registry:
+
+Field Name
+: `No-Vary-Search`
+
+Status
+: permanent
+
+Structured Type
+: Dictionary
+
+Reference
+: this document
+
+Comments
+: (none)
 
 --- back
 
