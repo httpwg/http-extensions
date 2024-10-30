@@ -35,6 +35,8 @@ author:
     email: jbroman@chromium.org
 
 normative:
+  HTTP: RFC9110
+  HTTP-CACHING: RFC9111
   FETCH:
    target: https://fetch.spec.whatwg.org/
    title: Fetch Living Standard
@@ -389,6 +391,36 @@ So, for example, given any non-default value for `No-Vary-Search`, such as `No-V
   </dt>
   <dd><tt>+</tt> and <tt>%20</tt> are both parsed as U+0020 SPACE</dd>
 </dl>
+
+# Caching
+
+If a cache {{HTTP-CACHING}} implements this specification, the presented target URI requirement in {{Section 4 of HTTP-CACHING}} is replaced with:
+
+* one of the following:
+  * the presented target URI ({{Section 7.1 of HTTP}}) and that of the stored response match, or
+  * the presented target URI and that of the stored response are equivalent modulo search variance ({{comparing}}), given the variance obtained ({{obtain-a-url-search-variance}}) from the stored response.
+
+Servers SHOULD send no more than one distinct non-empty value for the `No-Vary-Search` field in response to requests for a given pathname.
+
+Cache implementations MAY fail to reuse a stored response whose target URI matches _only_ modulo URL search variance, if the cache has more recently stored a response which:
+
+* has a target URI which is equal to the presented target URI, excluding the query, and
+* has a non-empty value for the `No-Vary-Search` field, and
+* has a `No-Vary-Search` field value different from the stored response being considered for reuse.
+
+{:aside}
+> Caches aren't required to reuse stored responses, generally. However, the above expressly empowers caches to, if it is advantageous for performance or other reasons, search a smaller number of stored responses. Such a cache might take steps like the following to identify a stored response (before checking the other conditions in {{Section 4 of HTTP-CACHING}}):
+>
+> 1. Let exactMatch be cache\[presentedTargetURI\]. If it is a stored response that can be reused, return it.
+> 1. Let targetPath be presentedTargetURI, with query parameters removed.
+> 1. Let lastNVS be mostRecentNVS\[targetPath\]. If it does not exist, return null.
+> 1. Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order should be ignored).
+> 1. Let nvsMatch be cache\[simplifiedURL\]. If it does not exist, return null. (It is assumed that this was written when storing in the cache, in addition to the exact URL.)
+> 1. Let searchVariance be obtained ({{obtain-a-url-search-variance}}) from nvsMatch.
+> 1. If nvsMatch's target URI and presentedTargetURI are not equivalent modulo search variance ({{comparing}}) given searchVariance, then return null.
+> 1. If nvsMatch is a stored response that can be reused, return it. Otherwise, return null.
+>
+> Such implementations might "miss" some stored responses that could otherwise have been reused. It is therefore useful for servers to avoid sending different values for the `No-Vary-Search` field when possible.
 
 # Security Considerations
 
