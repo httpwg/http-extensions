@@ -5,10 +5,10 @@
 HTTPBIS                                                      D. Schinazi
 Internet-Draft                                                Google LLC
 Intended status: Standards Track                               D. Oliver
-Expires: 1 May 2025                                     Guardian Project
+Expires: 3 May 2025                                     Guardian Project
                                                               J. Hoyland
                                                          Cloudflare Inc.
-                                                         28 October 2024
+                                                         30 October 2024
 
 
                 The Concealed HTTP Authentication Scheme
@@ -60,7 +60,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 May 2025.
+   This Internet-Draft will expire on 3 May 2025.
 
 Copyright Notice
 

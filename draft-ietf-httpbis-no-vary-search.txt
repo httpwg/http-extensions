@@ -5,7 +5,7 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                              Google LLC
-Expires: 1 May 2025                                      28 October 2024
+Expires: 3 May 2025                                      30 October 2024
 
 
                              No-Vary-Search
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 May 2025.
+   This Internet-Draft will expire on 3 May 2025.
 
 Copyright Notice
 
@@ -80,6 +80,7 @@ Table of Contents
    6.  Security Considerations
    7.  Privacy Considerations
    8.  IANA Considerations
+     8.1.  HTTP Field Names
    9.  References
      9.1.  Normative References
      9.2.  Informative References
@@ -523,7 +524,22 @@ Table of Contents
 
 8.  IANA Considerations
 
-   TODO IANA
+   IANA should do the following:
+
+8.1.  HTTP Field Names
+
+   Enter the following into the Hypertext Transfer Protocol (HTTP) Field
+   Name Registry:
+
+   Field Name  No-Vary-Search
+
+   Status  permanent
+
+   Structured Type  Dictionary
+
+   Reference  this document
+
+   Comments  (none)
 
 9.  References
 
