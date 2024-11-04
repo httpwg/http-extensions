@@ -5,7 +5,7 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                              Google LLC
-Expires: 3 May 2025                                      30 October 2024
+Expires: 8 May 2025                                      4 November 2024
 
 
                              No-Vary-Search
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 May 2025.
+   This Internet-Draft will expire on 8 May 2025.
 
 Copyright Notice
 
@@ -77,13 +77,14 @@ Table of Contents
        4.3.1.  Examples
    5.  Comparing
      5.1.  Examples
-   6.  Security Considerations
-   7.  Privacy Considerations
-   8.  IANA Considerations
-     8.1.  HTTP Field Names
-   9.  References
-     9.1.  Normative References
-     9.2.  Informative References
+   6.  Caching
+   7.  Security Considerations
+   8.  Privacy Considerations
+   9.  IANA Considerations
+     9.1.  HTTP Field Names
+   10. References
+     10.1.  Normative References
+     10.2.  Informative References
    Acknowledgments
    Index
    Authors' Addresses
@@ -488,7 +489,79 @@ Table of Contents
    https://example.com/?a= &
       + and %20 are both parsed as U+0020 SPACE
 
-6.  Security Considerations
+6.  Caching
+
+   If a cache [HTTP-CACHING] implements this specification, the
+   presented target URI requirement in Section 4 of [HTTP-CACHING] is
+   replaced with:
+
+   *  one of the following:
+
+      -  the presented target URI (Section 7.1 of [HTTP]) and that of
+         the stored response match, or
+
+      -  the presented target URI and that of the stored response are
+         equivalent modulo search variance (Section 5), given the
+         variance obtained (Section 4.2) from the stored response.
+
+   Servers SHOULD send no more than one distinct non-empty value for the
+   No-Vary-Search field in response to requests for a given pathname.
+
+   Cache implementations MAY fail to reuse a stored response whose
+   target URI matches _only_ modulo URL search variance, if the cache
+   has more recently stored a response which:
+
+   *  has a target URI which is equal to the presented target URI,
+      excluding the query, and
+
+   *  has a non-empty value for the No-Vary-Search field, and
+
+   *  has a No-Vary-Search field value different from the stored
+      response being considered for reuse.
+
+      |  Caches aren't required to reuse stored responses, generally.
+      |  However, the above expressly empowers caches to, if it is
+      |  advantageous for performance or other reasons, search a smaller
+      |  number of stored responses.  Such a cache might take steps like
+      |  the following to identify a stored response (before checking
+      |  the other conditions in Section 4 of [HTTP-CACHING]):
+      |  
+      |     1.  Let exactMatch be cache[presentedTargetURI].  If it is a
+      |         stored response that can be reused, return it.
+      |  
+      |     2.  Let targetPath be presentedTargetURI, with query
+      |         parameters removed.
+      |  
+      |     3.  Let lastNVS be mostRecentNVS[targetPath].  If it does
+      |         not exist, return null.
+      |  
+      |     4.  Let simplifiedURL be the result of simplifying
+      |         presentedTargetURI according to lastNVS (by removing
+      |         query parameters which are not significant, and stable
+      |         sorting parameters by key, if key order should be
+      |         ignored).
+      |  
+      |     5.  Let nvsMatch be cache[simplifiedURL].  If it does not
+      |         exist, return null.  (It is assumed that this was
+      |         written when storing in the cache, in addition to the
+      |         exact URL.)
+      |  
+      |     6.  Let searchVariance be obtained (Section 4.2) from
+      |         nvsMatch.
+      |  
+      |     7.  If nvsMatch's target URI and presentedTargetURI are not
+      |         equivalent modulo search variance (Section 5) given
+      |         searchVariance, then return null.
+      |  
+      |     8.  If nvsMatch is a stored response that can be reused,
+      |         return it.  Otherwise, return null.
+      |  
+      |  Such implementations might "miss" some stored responses that
+      |  could otherwise have been reused.  It is therefore useful for
+      |  servers to avoid sending different values for the No-Vary-
+      |  Search field when possible.
+
+7.  Security Considerations
 
    The main risk to be aware of is the impact of mismatched URLs.  In
    particular, this could cause the user to see a response that was
@@ -507,7 +580,7 @@ Table of Contents
    as history.replaceState() (https://html.spec.whatwg.org/multipage/
    nav-history-apis.html#dom-history-replacestate) or service workers.
 
-7.  Privacy Considerations
+8.  Privacy Considerations
 
    This proposal is adjacent to the highly-privacy-relevant space of
    navigational tracking (https://privacycg.github.io/nav-tracking-
@@ -522,11 +595,11 @@ Table of Contents
    user IDs (since the server is bypassed in favor of the cache).
    [NAV-TRACKING-MITIGATIONS]
 
-8.  IANA Considerations
+9.  IANA Considerations
 
    IANA should do the following:
 
-8.1.  HTTP Field Names
+9.1.  HTTP Field Names
 
    Enter the following into the Hypertext Transfer Protocol (HTTP) Field
    Name Registry:
@@ -541,12 +614,23 @@ Table of Contents
 
    Comments  (none)
 
-9.  References
+10.  References
 
-9.1.  Normative References
+10.1.  Normative References
 
    [FETCH]    van Kesteren, A., "Fetch Living Standard", n.d.,
               <https://fetch.spec.whatwg.org/>.  WHATWG
+
+   [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., "HTTP Semantics", STD 97, RFC 9110,
+              DOI 10.17487/RFC9110, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9110>.
+
+   [HTTP-CACHING]
+              Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., "HTTP Caching", STD 98, RFC 9111,
+              DOI 10.17487/RFC9111, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9111>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -574,7 +658,7 @@ Table of Contents
               van Kesteren, A., "URL Living Standard", n.d.,
               <https://url.spec.whatwg.org/>.  WHATWG
 
-9.2.  Informative References
+10.2.  Informative References
 
    [HTML]     van Kesteren, A., "HTML Living Standard", n.d.,
               <https://html.spec.whatwg.org/>.  WHATWG
