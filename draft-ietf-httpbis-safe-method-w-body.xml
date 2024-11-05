@@ -285,26 +285,34 @@ q=foo&amp;limit=10&amp;sort=-published
 
   <section title="The &quot;Accept-Query&quot; Header Field" anchor="field.accept-query">
     <t>
-      The "Accept-Query" response header field &MAY; be used by a resource to
+      The "Accept-Query" response header field can be used by a resource to
       directly signal support for the QUERY method while identifying
       the specific query format media type(s) that may be used.
     </t>
-<sourcecode type="abnf">
-Accept-Query = 1#media-type
-</sourcecode>
     <t>
-      The Accept-Query header field specifies a comma-separated listing of media
-      types (with optional parameters) as defined by
-      <xref target="HTTP" section="8.3.1"/>. <cref>field syntax currently discussed in <eref target="https://github.com/httpwg/http-extensions/issues/2860"/></cref>
+      "Accept-Query" contains a list of media types (<xref target="HTTP" section="8.3.1"/>),
+      represented by a List Structured Header Field, containing
+      Token Items, optionally parametrized (<xref target="STRUCTURED-FIELDS" section="3"/>).
     </t>
     <t>
-      The order of types listed by the Accept-Query header field is not significant.
+      The order of types listed in the field value is not significant.
     </t>
     <t>
       Accept-Query's value applies to every URI on the server that shares the same path; in
       other words, the query component is ignored. If requests to the same resource return
       different Accept-Query values, the most recently received fresh (per
       <xref target="HTTP-CACHING" section="4.2"/>) value is used.
+    </t>
+    <t>
+      Example:
+    </t>
+    <artwork type="example">
+Accept-Query: application/jsonpath, application/sql;charset="UTF-8"</artwork>
+    <t>
+      Note that although the syntax appears to be similar to other
+      fields, such as "Accept" (<xref target="HTTP" section="12.5.1"/>),
+      it is a Structured Field and thus &MUST; be processed as specified in
+      <xref target="STRUCTURED-FIELDS" section="4"/>.
     </t>
   </section>
 
@@ -543,9 +551,9 @@ Dubois, Camille, camille.dubois@example.net
           <tr>
             <td>Accept-Query</td>
             <td>permanent</td>
-            <td></td>
+            <td>List</td>
             <td><xref target="field.accept-query"/> of this document.</td>
-            <td><cref>field syntax currently discussed in <eref target="https://github.com/httpwg/http-extensions/issues/2860"/></cref></td>
+            <td/>
           </tr>
         </tbody>
       </table>
@@ -577,6 +585,19 @@ Dubois, Camille, camille.dubois@example.net
       </front>
       <seriesInfo name="STD" value="98"/>
       <seriesInfo name="RFC" value="9111"/>
+    </reference>
+    <reference anchor="STRUCTURED-FIELDS">
+      <front>
+        <title>Structured Field Values for HTTP</title>
+        <author initials="M." surname="Nottingham" fullname="Mark Nottingham">
+          <organization>Cloudflare</organization>
+        </author>
+        <author initials="P-H." surname="Kamp" fullname="Poul-Henning Kamp">
+          <organization>The Varnish Cache Project</organization>
+        </author>
+        <date year="2024" month="September"/>
+      </front>
+      <seriesInfo name="RFC" value="9651"/>
     </reference>
   </references>
 
@@ -628,6 +649,7 @@ Dubois, Camille, camille.dubois@example.net
 <section title="Since draft-ietf-httpbis-safe-method-w-body-06" anchor="changes.since.06">
 <ul>
   <li>Editorial changes to Introduction (ack Will Hawkins, <eref target="https://github.com/httpwg/http-extensions/pull/2859"/>)</li>
+  <li>Make Accept-Query a Structured Field (<eref target="https://github.com/httpwg/http-extensions/issues/2934"/>)</li>
 </ul>
 </section>
 </section>
