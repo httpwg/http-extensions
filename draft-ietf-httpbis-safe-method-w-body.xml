@@ -292,7 +292,7 @@ q=foo&amp;limit=10&amp;sort=-published
     <t>
       "Accept-Query" contains a list of media types (<xref target="HTTP" section="8.3.1"/>),
       represented by a List Structured Header Field, containing
-      Token Items, optionally parametrized (<xref target="STRUCTURED-FIELDS" section="3"/>).
+      Token Items, optionally parameterized (<xref target="STRUCTURED-FIELDS" section="3"/>).
     </t>
     <t>
       The order of types listed in the field value is not significant.
