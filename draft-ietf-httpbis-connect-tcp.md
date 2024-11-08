@@ -52,6 +52,8 @@ HTTP clients can be configured to use proxies by selecting a proxy hostname, a p
 
 The absence of an explicit origin for the proxy also rules out the usual defenses against server port misdirection attacks (see {{Section 7.4 of ?RFC9110}}) and creates ambiguity about the use of origin-scoped response header fields (e.g., "Alt-Svc" {{?RFC7838}}, "Strict-Transport-Security" {{?RFC6797}}).
 
+Classic HTTP CONNECT requests cannot carry in-stream metadata. For example, the WRAP_UP capsule {{?I-D.schinazi-httpbis-wrap-up}} cannot be used with Classic HTTP CONNECT.
+
 ## Overview
 
 This specification describes an alternative mechanism for proxying TCP in HTTP.  Like {{?CONNECT-UDP}} and {{?CONNECT-IP}}, the proxy service is identified by a URI Template.  Proxy interactions reuse standard HTTP components and semantics, avoiding changes to the core HTTP protocol.
@@ -62,27 +64,29 @@ This specification describes an alternative mechanism for proxying TCP in HTTP. 
 
 # Specification
 
-A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "target_port".  This URI Template and its variable values MUST meet all the same requirements as for UDP proxying ({{!RFC9298, Section 2}}), and are subject to the same validation rules.  The client MUST substitute the destination host and port number into this template to produce the request URI.
+A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "target_port".  This URI Template and its variable values MUST meet all the same requirements as for UDP proxying ({{!RFC9298, Section 2}}), and are subject to the same validation rules.  The client MUST substitute the destination host and port number into this template to produce the request URI.  The derived URI serves as the destination of a Capsule Protocol connection using the Upgrade Token "connect-tcp" (see registration in {#new-upgrade-token}).
+
+When using "connect-tcp", TCP payload data is sent in the payload of a new Capsule Type named DATA (see registration in {{data-capsule}}).  The ordered concatenation of DATA capsule payloads represents the main payload data stream in any protocol where this is well-defined.  Intermediaries MAY split or merge DATA capsules.
 
 ## In HTTP/1.1
 
 In HTTP/1.1, the client uses the proxy by issuing a request as follows:
 
 * The method SHALL be "GET".
+* The request's target SHALL correspond to the URI derived from expansion of the proxy's URI Template.
 * The request SHALL include a single "Host" header field containing the origin of the proxy.
 * The request SHALL include a "Connection" header field with the value "Upgrade".  (Note that this requirement is case-insensitive as per {{Section 7.6.1 of !RFC9110}}.)
 * The request SHALL include an "Upgrade" header field with the value "connect-tcp".
-* The request's target SHALL correspond to the URI derived from expansion of the proxy's URI Template.
+* The request SHOULD include a "Capsule-Protocol: ?1" header.
 
 If the request is well-formed and permissible, the proxy MUST attempt to establish the TCP connection before sending any response status code other than "100 (Continue)" (see {{conveying-metadata}}).  If the TCP connection is successful, the response SHALL be as follows:
 
 * The HTTP status code SHALL be "101 (Switching Protocols)".
 * The response SHALL include a "Connection" header field with the value "Upgrade".
 * The response SHALL include a single "Upgrade" header field with the value "connect-tcp".
+* The response SHOULD include a "Capsule-Protocol: ?1" header.
 
 If the request is malformed or impermissible, the proxy MUST return a 4XX error code.  If a TCP connection was not established, the proxy MUST NOT switch protocols to "connect-tcp", and the client MAY reuse this connection for additional HTTP requests.
-
-After a success response is returned, the connection SHALL conform to all the usual requirements for classic CONNECT proxies in HTTP/1.1 ({{!RFC9110, Section 9.3.6}}).  Additionally, if the proxy observes a connection error from the client (e.g., a TCP RST, TCP timeout, or TLS error), it SHOULD send a TCP RST to the target.  If the proxy observes a connection error from the target, it SHOULD send a TLS "internal_error" alert to the client, or set the TCP RST bit if TLS is not in use.  These behaviors avoid truncation of transfers between the client and the target on vulnerable protocols (e.g., HTTP/1.1 without TLS) while preserving the confidentiality and integrity guarantees of the "https" scheme.
 
 ~~~
 Client                                                 Proxy
@@ -91,12 +95,14 @@ GET /proxy?target_host=192.0.2.1&target_port=443 HTTP/1.1
 Host: example.com
 Connection: Upgrade
 Upgrade: connect-tcp
+Capsule-Protocol: ?1
 
 ** Proxy establishes a TCP connection to 192.0.2.1:443 **
 
                             HTTP/1.1 101 Switching Protocols
                             Connection: Upgrade
                             Upgrade: connect-tcp
+                            Capsule-Protocol: ?1
 ~~~
 {: title="Templated TCP proxy example in HTTP/1.1"}
 
@@ -109,8 +115,6 @@ In HTTP/2 and HTTP/3, the proxy MUST include SETTINGS_ENABLE_CONNECT_PROTOCOL in
 * The :authority pseudo-header field SHALL contain the authority of the proxy.
 * The :path and :scheme pseudo-header fields SHALL contain the path and scheme of the request URI derived from the proxy's URI Template.
 
-From this point on, the request and response SHALL conform to all the usual requirements for classic CONNECT proxies in this HTTP version (see {{Section 8.5 of !RFC9113}} and {{Section 4.4 of !RFC9114}}).
-
 A templated TCP proxying request that does not conform to all of these requirements represents a client error (see {{!RFC9110, Section 15.5}}) and may be malformed (see {{Section 8.1.1 of !RFC9113}} and {{Section 4.1.2 of !RFC9114}}).
 
 ~~~
@@ -120,11 +124,12 @@ HEADERS
 :authority = request-proxy.example
 :path = /proxy?target_host=2001%3Adb8%3A%3A1&target_port=443
 :protocol = connect-tcp
+capsule-protocol = ?1
 ...
 ~~~
 {: title="Templated TCP proxy example in HTTP/2"}
 
-## Use of Relevant Headers
+## Use of Other Relevant Headers
 
 ### Origin-scoped Headers
 
@@ -145,13 +150,12 @@ Authentication to a templated TCP proxy normally uses ordinary HTTP authenticati
 
 Clients SHOULD assume that all proxy resources generated by a single template share a protection space (i.e., a realm) ({{?RFC9110, Section 11.5}}).  For many authentication schemes, this will allow the client to avoid waiting for a "401 (Unauthorized)" response before each new connection through the proxy.
 
-## Use of the Capsule Protocol {#capsule-protocol}
+## Closing Connections
 
-When using the "connect-tcp" Upgrade Token, templated TCP proxies do not use the Capsule Protocol {{!RFC9297}}.  Clients MAY request use of the Capsule Protocol by offering the Upgrade Token "connect-tcp-capsule" instead.  When offering or accepting the "connect-tcp-capsule" Upgrade Token, clients and servers SHOULD include a "Capsule-Protocol: ?1" header to facilitate processing by intermediaries.
+In each HTTP version, any requirements related to closing connections in Classic HTTP CONNECT also apply to "connect-tcp", with the following modifications:
 
-Clients of this specification MAY implement "connect-tcp", "connect-tcp-capsule", or both.  Accordingly, a templated TCP proxy server MUST implement both Upgrade Tokens unless its use is restricted to a subset of compatible clients.
-
-When using "connect-tcp-capsule", TCP payload data is sent in the payload of a new Capsule Type named DATA ({{data-capsule}}).  The ordered concatenation of DATA capsule payloads represents the main payload data stream in any protocol where this is well-defined.  Intermediaries MAY split or merge DATA capsules.  Endpoints MAY indicate a TCP connection error by sending an incomplete DATA capsule, as an alternative to using TCP, TLS, or HTTP stream errors.
+* In HTTP/1.1, endpoints SHOULD send an incomplete DATA capsule to indicate receipt of a TCP connection error (e.g., a TCP RST or timeout).  When a connection is terminated with any incomplete capsule, or with an error in the underlying connection (e.g. a TLS "internal_error" alert or TCP RST), the endpoint SHOULD send a TCP RST if the underlying TCP implementation permits it.
+* In HTTP/2 and HTTP/3, senders MAY use an incomplete DATA capsule to indicate a TCP connection error, instead of (or in addition to) the signals defined for TCP connection errors in Classic HTTP CONNECT.  Recipients MUST recognize an incomplete DATA capsule as a TCP connection error.
 
 # Additional Connection Setup Behaviors
 
@@ -216,16 +220,15 @@ Templated TCP proxies can make use of standard HTTP gateways and path-routing to
 
 # IANA Considerations
 
-## New Upgrade Tokens
+## New Upgrade Token
 
-IF APPROVED, IANA is requested to add the following entries to the HTTP Upgrade Token Registry:
+IF APPROVED, IANA is requested to add the following entry to the HTTP Upgrade Token Registry:
 
 | Value | Description | Reference |
 | ----- | ----------- | --------- |
 | "connect-tcp" | Proxying of TCP payloads | (This document) |
-| "connect-tcp-capsule" | Proxying of TCP payloads in HTTP Capsules | (This document) |
 
-For interoperability testing of this draft version, implementations SHALL use the values "connect-tcp-06" and "connect-tcp-capsule-06.
+For interoperability testing of this draft version, implementations SHALL use the value "connect-tcp-07".
 
 ## New MASQUE Default Template {#iana-template}
 
@@ -241,7 +244,7 @@ IF APPROVED, IANA is requested to add the following entry to the "HTTP Capsule T
 
 | ----- | ------------ | --------- | ------------------------------------- | ----------------- | ------- |
 | Value | Capsule Type | Status    | Reference                             | Change Controller | Contact |
-| (TBD) | DATA         | permanent | (This document), {{capsule-protocol}} | IETF              | HTTPBIS |
+| (TBD) | DATA         | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
 
 For this draft version of the protocol, the Capsule Type value `0xb739a6d0` shall be used provisionally for testing, under the name "DATA-05".
 
