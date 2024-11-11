@@ -66,7 +66,9 @@ This specification describes an alternative mechanism for proxying TCP in HTTP. 
 
 A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "target_port".  This URI Template and its variable values MUST meet all the same requirements as for UDP proxying ({{!RFC9298, Section 2}}), and are subject to the same validation rules.  The client MUST substitute the destination host and port number into this template to produce the request URI.  The derived URI serves as the destination of a Capsule Protocol connection using the Upgrade Token "connect-tcp" (see registration in {#new-upgrade-token}).
 
-When using "connect-tcp", TCP payload data is sent in the payload of a new Capsule Type named DATA (see registration in {{data-capsule}}).  The ordered concatenation of DATA capsule payloads represents the main payload data stream in any protocol where this is well-defined.  Intermediaries MAY split or merge DATA capsules.
+When using "connect-tcp", TCP payload data is sent in the payload of a new Capsule Type named DATA (see registration in {{data-capsule}}).  The ordered concatenation of DATA capsule payloads represents the TCP payload data.
+
+Intermediaries MAY split or merge DATA capsules.  Future CPUTs may use DATA capsules to represent their main data stream, if applicable.
 
 ## In HTTP/1.1
 
