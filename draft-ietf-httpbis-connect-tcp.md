@@ -68,7 +68,7 @@ A template-driven TCP transport proxy for HTTP is identified by a URI Template {
 
 When using "connect-tcp", TCP payload data is sent in the payload of a new Capsule Type named DATA (see registration in {{data-capsule}}).  The ordered concatenation of DATA capsule payloads represents the TCP payload data.
 
-Intermediaries MAY split a DATA capsule or merge adjacent DATA capsules.  Future CPUTs may use DATA capsules to represent their main data stream, if applicable.
+An intermediary MAY split a DATA capsule into two consecutive capsules or merge two consecutive DATA capsules into one.  Future CPUTs may use DATA capsules to represent their main data stream, if applicable.
 
 ## In HTTP/1.1
 
