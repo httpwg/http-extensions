@@ -157,9 +157,10 @@ Table of Contents
    ordered concatenation of DATA capsule payloads represents the TCP
    payload data.
 
-   Intermediaries MAY split a DATA capsule or merge adjacent DATA
-   capsules.  Future CPUTs may use DATA capsules to represent their main
-   data stream, if applicable.
+   An intermediary MAY split a DATA capsule into two consecutive
+   capsules or merge two consecutive DATA capsules into one.  Future
+   CPUTs may use DATA capsules to represent their main data stream, if
+   applicable.
 
 3.1.  In HTTP/1.1
 
