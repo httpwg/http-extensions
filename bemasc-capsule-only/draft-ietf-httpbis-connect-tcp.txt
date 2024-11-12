@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                        11 November 2024
-Expires: 15 May 2025
+Intended status: Standards Track                        12 November 2024
+Expires: 16 May 2025
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 May 2025.
+   This Internet-Draft will expire on 16 May 2025.
 
 Copyright Notice
 
@@ -157,8 +157,9 @@ Table of Contents
    ordered concatenation of DATA capsule payloads represents the TCP
    payload data.
 
-   Intermediaries MAY split or merge DATA capsules.  Future CPUTs may
-   use DATA capsules to represent their main data stream, if applicable.
+   Intermediaries MAY split a DATA capsule or merge adjacent DATA
+   capsules.  Future CPUTs may use DATA capsules to represent their main
+   data stream, if applicable.
 
 3.1.  In HTTP/1.1
 
@@ -302,8 +303,9 @@ Table of Contents
    in Classic HTTP CONNECT also apply to "connect-tcp", with the
    following modifications:
 
-   *  In HTTP/1.1, endpoints SHOULD send an incomplete DATA capsule to
-      indicate receipt of a TCP connection error (e.g., a TCP RST or
+   *  In HTTP/1.1, endpoints SHOULD terminate the connection with an
+      incomplete DATA capsule (as defined in Section 3.3 of [RFC9297])
+      to indicate receipt of a TCP connection error (e.g., a TCP RST or
       timeout).  When a connection is terminated with any incomplete
       capsule, or with an error in the underlying connection (e.g. a TLS
       "internal_error" alert or TCP RST), the endpoint SHOULD send a TCP
@@ -555,6 +557,10 @@ Table of Contents
               RFC 9220, DOI 10.17487/RFC9220, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9220>.
 
+   [RFC9297]  Schinazi, D. and L. Pardue, "HTTP Datagrams and the
+              Capsule Protocol", RFC 9297, DOI 10.17487/RFC9297, August
+              2022, <https://www.rfc-editor.org/rfc/rfc9297>.
+
    [RFC9298]  Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
               DOI 10.17487/RFC9298, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9298>.
@@ -607,10 +613,6 @@ Table of Contents
    [RFC8942]  Grigorik, I. and Y. Weiss, "HTTP Client Hints", RFC 8942,
               DOI 10.17487/RFC8942, February 2021,
               <https://www.rfc-editor.org/rfc/rfc8942>.
-
-   [RFC9297]  Schinazi, D. and L. Pardue, "HTTP Datagrams and the
-              Capsule Protocol", RFC 9297, DOI 10.17487/RFC9297, August
-              2022, <https://www.rfc-editor.org/rfc/rfc9297>.
 
 Acknowledgments
 
