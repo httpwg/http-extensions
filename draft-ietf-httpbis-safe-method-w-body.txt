@@ -557,9 +557,6 @@ A.5.  Since draft-ietf-httpbis-safe-method-w-body-04
 
 A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
 
-   *  Improve language about sensitive information in URIs
-      (https://github.com/httpwg/http-extensions/issues/1895)
-
    *  Updated language and examples about redirects and method rewriting
       (https://github.com/httpwg/http-extensions/issues/1917)
 
@@ -573,6 +570,9 @@ A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
       http-extensions/issues/2903)
 
 A.7.  Since draft-ietf-httpbis-safe-method-w-body-06
+
+   *  Improve language about sensitive information in URIs
+      (https://github.com/httpwg/http-extensions/issues/1895)
 
    *  Editorial changes to Introduction (ack Will Hawkins,
       https://github.com/httpwg/http-extensions/pull/2859)
