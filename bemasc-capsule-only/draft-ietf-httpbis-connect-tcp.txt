@@ -155,10 +155,10 @@ Table of Contents
    When using "connect-tcp", TCP payload data is sent in the payload of
    new Capsule Types named DATA and FINAL_DATA (see registrations in
    Section 8.3).  The ordered concatenation of these capsule payloads
-   represents the TCP payload data.  A FINAL_DATA capsule indicates that
-   sender has closed this stream, semantically equivalent to TCP FIN.
-   After sending a FINAL_DATA capsule, an endpoint MUST NOT send any
-   more DATA or FINAL_DATA capsules on this data stream.  (See
+   represents the TCP payload data.  A FINAL_DATA capsule additionally
+   indicates that sender has closed this stream, semantically equivalent
+   to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint MUST NOT
+   send any more DATA or FINAL_DATA capsules on this data stream.  (See
    Section 3.4 for related requirements.)
 
    An intermediary MAY merge and split successive DATA and FINAL_DATA
@@ -171,11 +171,6 @@ Table of Contents
    *  The final emitted capsule uses the same capsule type (DATA or
       FINAL_DATA) as the final input capsule, and all others use the
       DATA capsule type.
-
-   In "connect-tcp", Context ID 0 is reserved for DATA, and Context ID 1
-   is reserved for FINAL_DATA.  Future CPUTs may also use DATA and
-   FINAL_DATA capsules to represent their main data stream, if
-   applicable.
 
 3.1.  In HTTP/1.1
 
@@ -319,15 +314,15 @@ Table of Contents
    in Classic HTTP CONNECT also apply to "connect-tcp", with the
    following modifications:
 
-   *  If the TCP sender send a TCP FIN indicating clean shutdown, the
-      endpoint in this specification MUST send a FINAL_DATA capsule.
+   *  If an endpoint in this specification receives a TCP FIN indicating
+      clean shutdown, it MUST send a FINAL_DATA capsule.
 
    *  When a connection is terminated without a FINAL_DATA capsule, the
       endpoint SHOULD send a TCP RST if the underlying TCP
       implementation permits it.
 
-   *  In HTTP/2 and HTTP/3, senders MAY additionally set stream-level
-      error flags as in Classic HTTP CONNECT.
+   *  In HTTP/2 and HTTP/3, senders MAY additionally emit a stream error
+      as in Classic HTTP CONNECT.
 
 4.  Additional Connection Setup Behaviors
 
@@ -513,6 +508,10 @@ Table of Contents
    +-----+------------+-----------+------------+------------+---------+
 
                                  Table 3
+
+   For this draft version of the protocol, the Capsule Type values
+   0x2028d7ee and 0x2028d7ef shall be used provisionally for testing,
+   under the names "DATA-07" and "FINAL_DATA-07".
 
 9.  References
 

@@ -1318,7 +1318,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-specification" class="section-name selfRef">Specification</a>
       </h2>
 <p id="section-3-1">A template-driven TCP transport proxy for HTTP is identified by a URI Template <span>[<a href="#RFC6570" class="cite xref">RFC6570</a>]</span> containing variables named "target_host" and "target_port".  This URI Template and its variable values <span class="bcp14">MUST</span> meet all the same requirements as for UDP proxying (<span>[<a href="#RFC9298" class="cite xref">RFC9298</a>], <a href="https://rfc-editor.org/rfc/rfc9298#section-2" class="relref">Section 2</a></span>), and are subject to the same validation rules.  The client <span class="bcp14">MUST</span> substitute the destination host and port number into this template to produce the request URI.  The derived URI serves as the destination of a Capsule Protocol connection using the Upgrade Token "connect-tcp" (see registration in <a href="#new-upgrade-token" class="auto internal xref">Section 8.1</a>).<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">When using "connect-tcp", TCP payload data is sent in the payload of new Capsule Types named DATA and FINAL_DATA (see registrations in <a href="#data-capsule" class="auto internal xref">Section 8.3</a>).  The ordered concatenation of these capsule payloads represents the TCP payload data.  A FINAL_DATA capsule indicates that sender has closed this stream, semantically equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint <span class="bcp14">MUST NOT</span> send any more DATA or FINAL_DATA capsules on this data stream. (See <a href="#closing-connections" class="auto internal xref">Section 3.4</a> for related requirements.)<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-2">When using "connect-tcp", TCP payload data is sent in the payload of new Capsule Types named DATA and FINAL_DATA (see registrations in <a href="#data-capsule" class="auto internal xref">Section 8.3</a>).  The ordered concatenation of these capsule payloads represents the TCP payload data.  A FINAL_DATA capsule additionally indicates that sender has closed this stream, semantically equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint <span class="bcp14">MUST NOT</span> send any more DATA or FINAL_DATA capsules on this data stream. (See <a href="#closing-connections" class="auto internal xref">Section 3.4</a> for related requirements.)<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">An intermediary <span class="bcp14">MAY</span> merge and split successive DATA and FINAL_DATA capsules, subject to the following requirements:<a href="#section-3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-4.1">
@@ -1331,7 +1331,6 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <p id="section-3-4.3.1">The final emitted capsule uses the same capsule type (DATA or FINAL_DATA) as the final input capsule, and all others use the DATA capsule type.<a href="#section-3-4.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-3-5">In "connect-tcp", Context ID 0 is reserved for DATA, and Context ID 1 is reserved for FINAL_DATA.  Future CPUTs may also use DATA and FINAL_DATA capsules to represent their main data stream, if applicable.<a href="#section-3-5" class="pilcrow">¶</a></p>
 <div id="in-http11">
 <section id="section-3.1">
         <h3 id="name-in-http-11">
@@ -1490,13 +1489,13 @@ capsule-protocol = ?1
 <p id="section-3.4-1">In each HTTP version, any requirements related to closing connections in Classic HTTP CONNECT also apply to "connect-tcp", with the following modifications:<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.4-2.1">
-            <p id="section-3.4-2.1.1">If the TCP sender send a TCP FIN indicating clean shutdown, the endpoint in this specification <span class="bcp14">MUST</span> send a FINAL_DATA capsule.<a href="#section-3.4-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.4-2.1.1">If an endpoint in this specification receives a TCP FIN indicating clean shutdown, it <span class="bcp14">MUST</span> send a FINAL_DATA capsule.<a href="#section-3.4-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.4-2.2">
             <p id="section-3.4-2.2.1">When a connection is terminated without a FINAL_DATA capsule, the endpoint <span class="bcp14">SHOULD</span> send a TCP RST if the underlying TCP implementation permits it.<a href="#section-3.4-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.4-2.3">
-            <p id="section-3.4-2.3.1">In HTTP/2 and HTTP/3, senders <span class="bcp14">MAY</span> additionally set stream-level error flags as in Classic HTTP CONNECT.<a href="#section-3.4-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-3.4-2.3.1">In HTTP/2 and HTTP/3, senders <span class="bcp14">MAY</span> additionally emit a stream error as in Classic HTTP CONNECT.<a href="#section-3.4-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1713,6 +1712,7 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
             </tr>
           </tbody>
         </table>
+<p id="section-8.3-3">For this draft version of the protocol, the Capsule Type values <code>0x2028d7ee</code> and <code>0x2028d7ef</code> shall be used provisionally for testing, under the names "DATA-07" and "FINAL_DATA-07".<a href="#section-8.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
