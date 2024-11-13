@@ -324,7 +324,7 @@ Accept-Query = 1#media-type
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -349,7 +349,7 @@ Dubois, Camille, camille.dubois@example.net
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -403,7 +403,7 @@ Dubois, Camille, camille.dubois@example.net
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -440,7 +440,7 @@ Dubois, Camille, camille.dubois@example.net
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -456,7 +456,7 @@ Location: /morecontacts
 <artwork type="http-message">
 QUERY /morecontacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -630,6 +630,7 @@ Dubois, Camille, camille.dubois@example.net
 <section title="Since draft-ietf-httpbis-safe-method-w-body-06" anchor="changes.since.06">
 <ul>
   <li>Editorial changes to Introduction (ack Will Hawkins, <eref target="https://github.com/httpwg/http-extensions/pull/2859"/>)</li>
+  <li>SQL media type is application/sql (RFC6922) (<eref target="https://github.com/httpwg/http-extensions/pull/2936"/>)</li>
 </ul>
 </section>
 </section>
