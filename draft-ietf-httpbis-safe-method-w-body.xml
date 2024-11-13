@@ -482,9 +482,8 @@ Dubois, Camille, camille.dubois@example.net
       considerations as all HTTP methods as described in
       <xref target="HTTP"/>.
     </t>
-
     <t>
-      The QUERY method can be used as an alternative to passing request
+      It can be used as an alternative to passing request
       information in the URI (e.g., in the query section). This is preferred in some
       cases, as the URI is more likely to be logged or otherwise processed
       by intermediaries than the request content.
@@ -493,6 +492,13 @@ Dubois, Camille, camille.dubois@example.net
       contains sensitive information that cannot be logged, then the URI of this
       resource &SHOULD; be chosen such that it does not include any sensitive
       portions of the original request content.
+    </t>
+    <t>
+      A QUERY request from user agents implementing CORS (Cross-Origin Resource Sharing)
+      will require a "preflight" request,
+      as QUERY does not belong to the set of CORS-safelisted methods
+      (see "<eref target="https://fetch.spec.whatwg.org/#methods">Methods</eref>" in
+      <xref target="FETCH"/>).
     </t>
   </section>
 
@@ -580,6 +586,14 @@ Dubois, Camille, camille.dubois@example.net
       <seriesInfo name="RFC" value="9111"/>
     </reference>
   </references>
+  <references title="Informative References">
+    <reference anchor="FETCH" target="https://fetch.spec.whatwg.org">
+      <front>
+        <title>FETCH</title>
+        <author><organization>WHATWG</organization></author>
+      </front>
+    </reference>
+  </references>
 
 <section title="Change Log" anchor="change.log" removeInRFC="true">
 <section title="Since draft-ietf-httpbis-safe-method-w-body-00" anchor="changes.since.00">
@@ -624,6 +638,7 @@ Dubois, Camille, camille.dubois@example.net
   <li>Updated language and examples about redirects and method rewriting (<eref target="https://github.com/httpwg/http-extensions/issues/1917"/>)</li>
   <li>Add QUERY example to introduction (<eref target="https://github.com/httpwg/http-extensions/issues/2171"/>)</li>
   <li>Update "Sensitive information in QUERY URLs" (<eref target="https://github.com/httpwg/http-extensions/issues/2853"/>)</li>
+  <li>Add CORS considerations (<eref target="https://github.com/httpwg/http-extensions/issues/2898"/>)</li>
   <li>Field registration for "Accept-Query" (<eref target="https://github.com/httpwg/http-extensions/issues/2903"/>)</li>
 </ul>
 </section>
