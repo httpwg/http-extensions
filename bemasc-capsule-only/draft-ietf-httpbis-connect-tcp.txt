@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                        13 November 2024
-Expires: 17 May 2025
+Intended status: Standards Track                        14 November 2024
+Expires: 18 May 2025
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 May 2025.
+   This Internet-Draft will expire on 18 May 2025.
 
 Copyright Notice
 
@@ -153,24 +153,16 @@ Table of Contents
    tcp" (see registration in Section 8.1).
 
    When using "connect-tcp", TCP payload data is sent in the payload of
-   new Capsule Types named DATA and FINAL_DATA (see registrations in
-   Section 8.3).  The ordered concatenation of these capsule payloads
-   represents the TCP payload data.  A FINAL_DATA capsule additionally
-   indicates that sender has closed this stream, semantically equivalent
-   to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint MUST NOT
-   send any more DATA or FINAL_DATA capsules on this data stream.  (See
-   Section 3.4 for related requirements.)
+   a new Capsule Type named DATA (see registration in Section 8.3).  The
+   ordered concatenation of DATA capsule payloads represents the TCP
+   payload data.
 
-   An intermediary MAY merge and split successive DATA and FINAL_DATA
-   capsules, subject to the following requirements:
+   An intermediary MAY merge and split successive DATA capsules, subject
+   to the following requirements:
 
    *  There are no intervening capsules of other types.
 
    *  The order of payload content is preserved.
-
-   *  The final emitted capsule uses the same capsule type (DATA or
-      FINAL_DATA) as the final input capsule, and all others use the
-      DATA capsule type.
 
 3.1.  In HTTP/1.1
 
@@ -314,15 +306,23 @@ Table of Contents
    in Classic HTTP CONNECT also apply to "connect-tcp", with the
    following modifications:
 
-   *  If an endpoint in this specification receives a TCP FIN indicating
-      clean shutdown, it MUST send a FINAL_DATA capsule.
+   *  In HTTP/1.1, endpoints SHOULD close the connection in an error
+      state to indicate receipt of a TCP connection error (e.g., a TCP
+      RST or timeout).  Acceptable error states include sending an
+      incomplete DATA capsule (as defined in Section 3.3 of [RFC9297]),
+      a TLS Error Alert ([RFC8446], Section 6.2), or a TCP RST (if TLS
+      is not in use).  When a connection is terminated in an error
+      state, the receiving endpoint SHOULD send a TCP RST if the
+      underlying TCP implementation permits it.
 
-   *  When a connection is terminated without a FINAL_DATA capsule, the
-      endpoint SHOULD send a TCP RST if the underlying TCP
-      implementation permits it.
+   *  In HTTP/2 and HTTP/3, senders MAY use an incomplete DATA capsule
+      to indicate a TCP connection error, instead of (or in addition to)
+      the signals defined for TCP connection errors in Classic HTTP
+      CONNECT.  Recipients MUST recognize any incomplete capsule as a
+      TCP connection error.
 
-   *  In HTTP/2 and HTTP/3, senders MAY additionally emit a stream error
-      as in Classic HTTP CONNECT.
+   *  Intermediaries MUST propagate connection shutdown errors,
+      including when translating between different HTTP versions.
 
 4.  Additional Connection Setup Behaviors
 
@@ -494,24 +494,20 @@ Table of Contents
    IF APPROVED, IANA is requested to add the following entry to the
    "HTTP Capsule Types" registry:
 
-   +=====+============+===========+============+============+=========+
-   |Value| Capsule    | Status    | Reference  | Change     | Contact |
-   |     | Type       |           |            | Controller |         |
-   +=====+============+===========+============+============+=========+
-   |(TBD)| DATA       | permanent | (This      | IETF       | HTTPBIS |
-   |     |            |           | document), |            |         |
-   |     |            |           | Section 3  |            |         |
-   +-----+------------+-----------+------------+------------+---------+
-   |(TBD)| FINAL_DATA | permanent | (This      | IETF       | HTTPBIS |
-   |     |            |           | document), |            |         |
-   |     |            |           | Section 3  |            |         |
-   +-----+------------+-----------+------------+------------+---------+
+    +=======+=========+===========+============+============+=========+
+    | Value | Capsule | Status    | Reference  | Change     | Contact |
+    |       | Type    |           |            | Controller |         |
+    +=======+=========+===========+============+============+=========+
+    | (TBD) | DATA    | permanent | (This      | IETF       | HTTPBIS |
+    |       |         |           | document), |            |         |
+    |       |         |           | Section 3  |            |         |
+    +-------+---------+-----------+------------+------------+---------+
 
-                                 Table 3
+                                  Table 3
 
-   For this draft version of the protocol, the Capsule Type values
-   0x2028d7ee and 0x2028d7ef shall be used provisionally for testing,
-   under the names "DATA-07" and "FINAL_DATA-07".
+   For this draft version of the protocol, the Capsule Type value
+   0x2028d7ee shall be used provisionally for testing, under the name
+   "DATA-07".
 
 9.  References
 
@@ -568,6 +564,10 @@ Table of Contents
               RFC 9220, DOI 10.17487/RFC9220, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9220>.
 
+   [RFC9297]  Schinazi, D. and L. Pardue, "HTTP Datagrams and the
+              Capsule Protocol", RFC 9297, DOI 10.17487/RFC9297, August
+              2022, <https://www.rfc-editor.org/rfc/rfc9297>.
+
    [RFC9298]  Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
               DOI 10.17487/RFC9298, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9298>.
@@ -620,10 +620,6 @@ Table of Contents
    [RFC8942]  Grigorik, I. and Y. Weiss, "HTTP Client Hints", RFC 8942,
               DOI 10.17487/RFC8942, February 2021,
               <https://www.rfc-editor.org/rfc/rfc8942>.
-
-   [RFC9297]  Schinazi, D. and L. Pardue, "HTTP Datagrams and the
-              Capsule Protocol", RFC 9297, DOI 10.17487/RFC9297, August
-              2022, <https://www.rfc-editor.org/rfc/rfc9297>.
 
 Acknowledgments
 
