@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 17 May 2025                                                    
+Expires: 19 May 2025                                                    
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                        13 November 2024
+                                                        15 November 2024
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 May 2025.
+   This Internet-Draft will expire on 19 May 2025.
 
 Copyright Notice
 
@@ -85,6 +85,7 @@ Table of Contents
      6.1.  Registration of QUERY method
      6.2.  Registration of Accept-Query field
    7.  Normative References
+   8.  Informative References
    Appendix A.  Change Log
      A.1.  Since draft-ietf-httpbis-safe-method-w-body-00
      A.2.  Since draft-ietf-httpbis-safe-method-w-body-01
@@ -423,16 +424,20 @@ Table of Contents
    The QUERY method is subject to the same general security
    considerations as all HTTP methods as described in [HTTP].
 
-   The QUERY method can be used as an alternative to passing request
-   information in the URI (e.g., in the query section).  This is
-   preferred in some cases, as the URI is more likely to be logged or
-   otherwise processed by intermediaries than the request content.  If a
-   server creates a temporary resource to represent the results of a
-   QUERY request (e.g., for use in the Location or Content-Location
-   field) and the request contains sensitive information that cannot be
-   logged, then the URI of this resource SHOULD be chosen such that it
-   does not include any sensitive portions of the original request
-   content.
+   It can be used as an alternative to passing request information in
+   the URI (e.g., in the query section).  This is preferred in some
+   cases, as the URI is more likely to be logged or otherwise processed
+   by intermediaries than the request content.  If a server creates a
+   temporary resource to represent the results of a QUERY request (e.g.,
+   for use in the Location or Content-Location field) and the request
+   contains sensitive information that cannot be logged, then the URI of
+   this resource SHOULD be chosen such that it does not include any
+   sensitive portions of the original request content.
+
+   A QUERY request from user agents implementing CORS (Cross-Origin
+   Resource Sharing) will require a "preflight" request, as QUERY does
+   not belong to the set of CORS-safelisted methods (see "Methods
+   (https://fetch.spec.whatwg.org/#methods)" in [FETCH]).
 
 6.  IANA Considerations
 
@@ -491,6 +496,10 @@ Table of Contents
               Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Caching", STD 98, RFC 9111, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9111>.
+
+8.  Informative References
+
+   [FETCH]    WHATWG, "FETCH", <https://fetch.spec.whatwg.org>.
 
 Appendix A.  Change Log
 
@@ -565,6 +574,9 @@ A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
 
    *  Update "Sensitive information in QUERY URLs"
       (https://github.com/httpwg/http-extensions/issues/2853)
+
+   *  Add CORS considerations (https://github.com/httpwg/http-
+      extensions/issues/2898)
 
    *  Field registration for "Accept-Query" (https://github.com/httpwg/
       http-extensions/issues/2903)
