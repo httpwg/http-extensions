@@ -164,6 +164,44 @@ q=foo&amp;limit=10&amp;sort=-published
       rather than as part of the request URI. Unlike POST, however, the method is explicitly safe
       and idempotent, allowing functions like caching and automatic retries to operate.
     </t>
+    <t>Summarizing:</t>
+    <table>
+      <thead>
+        <tr>
+          <th/>
+          <th>GET</th>
+          <th>QUERY</th>
+          <th>POST</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Safe</td>
+          <td>yes</td>
+          <td>yes</td>
+          <td>potentially no</td>
+        </tr>
+        <tr>
+          <td>Idempotent</td>
+          <td>yes</td>
+          <td>yes</td>
+          <td>potentially no</td>
+        </tr>
+        <tr>
+          <td>Cacheable</td>
+          <td>yes</td>
+          <td>yes</td>
+          <td>no</td>
+        </tr>
+        <tr>
+          <td>Content (body)</td>
+          <td>"no defined semantics"</td>
+          <td>expected (semantics per target resource)</td>
+          <td>expected (semantics per target resource)</td>
+        </tr>
+      </tbody>
+    </table>
+
 
     <t>
       The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
