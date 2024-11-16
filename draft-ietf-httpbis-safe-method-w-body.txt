@@ -596,9 +596,6 @@ A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
    *  Update "Sensitive information in QUERY URLs"
       (https://github.com/httpwg/http-extensions/issues/2853)
 
-   *  Add CORS considerations (https://github.com/httpwg/http-
-      extensions/issues/2898)
-
    *  Field registration for "Accept-Query" (https://github.com/httpwg/
       http-extensions/issues/2903)
 
@@ -609,6 +606,9 @@ A.7.  Since draft-ietf-httpbis-safe-method-w-body-06
 
    *  Editorial changes to Introduction (ack Will Hawkins,
       https://github.com/httpwg/http-extensions/pull/2859)
+
+   *  Added CORS considerations (https://github.com/httpwg/http-
+      extensions/issues/2898)
 
    *  Added overview table to introduction (https://github.com/httpwg/
       http-extensions/issues/2951)
