@@ -69,6 +69,7 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction
+     1.1.  Notational Conventions
    2.  QUERY
      2.1.  Content-Location and Location Fields
      2.2.  Redirection
@@ -173,6 +174,8 @@ Table of Contents
     +------------+-------------+------------------+------------------+
 
                                  Table 1
+
+1.1.  Notational Conventions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -593,9 +596,6 @@ A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
    *  Update "Sensitive information in QUERY URLs"
       (https://github.com/httpwg/http-extensions/issues/2853)
 
-   *  Add CORS considerations (https://github.com/httpwg/http-
-      extensions/issues/2898)
-
    *  Field registration for "Accept-Query" (https://github.com/httpwg/
       http-extensions/issues/2903)
 
@@ -607,11 +607,17 @@ A.7.  Since draft-ietf-httpbis-safe-method-w-body-06
    *  Editorial changes to Introduction (ack Will Hawkins,
       https://github.com/httpwg/http-extensions/pull/2859)
 
+   *  Added CORS considerations (https://github.com/httpwg/http-
+      extensions/issues/2898)
+
    *  SQL media type is application/sql (RFC6922)
       (https://github.com/httpwg/http-extensions/pull/2936)
 
-   *  Added overview table to introduction https://github.com/httpwg/
-      http-extensions/pull/2951)
+   *  Added overview table to introduction (https://github.com/httpwg/
+      http-extensions/issues/2951)
+
+   *  Moved BCP14 related text into subsection
+      (https://github.com/httpwg/http-extensions/issues/2954)
 
 Authors' Addresses
 
