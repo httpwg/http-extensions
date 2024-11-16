@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 19 May 2025                                                    
+Expires: 20 May 2025                                                    
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                        15 November 2024
+                                                        16 November 2024
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 May 2025.
+   This Internet-Draft will expire on 20 May 2025.
 
 Copyright Notice
 
@@ -155,6 +155,24 @@ Table of Contents
    the content of the request rather than as part of the request URI.
    Unlike POST, however, the method is explicitly safe and idempotent,
    allowing functions like caching and automatic retries to operate.
+
+   Summarizing:
+
+    +============+=============+==================+==================+
+    |            | GET         | QUERY            | POST             |
+    +============+=============+==================+==================+
+    | Safe       | yes         | yes              | potentially no   |
+    +------------+-------------+------------------+------------------+
+    | Idempotent | yes         | yes              | potentially no   |
+    +------------+-------------+------------------+------------------+
+    | Cacheable  | yes         | yes              | no               |
+    +------------+-------------+------------------+------------------+
+    | Content    | "no defined | expected         | expected         |
+    | (body)     | semantics"  | (semantics per   | (semantics per   |
+    |            |             | target resource) | target resource) |
+    +------------+-------------+------------------+------------------+
+
+                                 Table 1
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -453,7 +471,7 @@ Table of Contents
             | QUERY       | Yes  | Yes        | Section 2     |
             +-------------+------+------------+---------------+
 
-                                  Table 1
+                                  Table 2
 
 6.2.  Registration of Accept-Query field
 
@@ -475,7 +493,7 @@ Table of Contents
     |            |         |          |         | issues/2860         |
     +------------+---------+----------+---------+---------------------+
 
-                                  Table 2
+                                  Table 3
 
 7.  Normative References
 
@@ -588,6 +606,9 @@ A.7.  Since draft-ietf-httpbis-safe-method-w-body-06
 
    *  Editorial changes to Introduction (ack Will Hawkins,
       https://github.com/httpwg/http-extensions/pull/2859)
+
+   *  Added overview table to introduction https://github.com/httpwg/
+      http-extensions/pull/2951)
 
 Authors' Addresses
 

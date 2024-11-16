@@ -1089,7 +1089,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Reschke, et al.</td>
-<td class="center">Expires 19 May 2025</td>
+<td class="center">Expires 20 May 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1100,12 +1100,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">HTTP</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-11-15" class="published">15 November 2024</time>
+<time datetime="2024-11-16" class="published">16 November 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-05-19">19 May 2025</time></dd>
+<dd class="expires"><time datetime="2025-05-20">20 May 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1167,7 +1167,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 19 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 20 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1358,12 +1358,50 @@ q=foo&amp;limit=10&amp;sort=-published
       As with POST, the input to the query operation is passed along within the content of the request
       rather than as part of the request URI. Unlike POST, however, the method is explicitly safe
       and idempotent, allowing functions like caching and automatic retries to operate.<a href="#section-1-12" class="pilcrow">¶</a></p>
-<p id="section-1-13">
+<p id="section-1-13">Summarizing:<a href="#section-1-13" class="pilcrow">¶</a></p>
+<table class="center" id="table-1">
+        <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
+<thead>
+          <tr>
+            <th class="text-left" rowspan="1" colspan="1"></th>
+            <th class="text-left" rowspan="1" colspan="1">GET</th>
+            <th class="text-left" rowspan="1" colspan="1">QUERY</th>
+            <th class="text-left" rowspan="1" colspan="1">POST</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Safe</td>
+            <td class="text-left" rowspan="1" colspan="1">yes</td>
+            <td class="text-left" rowspan="1" colspan="1">yes</td>
+            <td class="text-left" rowspan="1" colspan="1">potentially no</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Idempotent</td>
+            <td class="text-left" rowspan="1" colspan="1">yes</td>
+            <td class="text-left" rowspan="1" colspan="1">yes</td>
+            <td class="text-left" rowspan="1" colspan="1">potentially no</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Cacheable</td>
+            <td class="text-left" rowspan="1" colspan="1">yes</td>
+            <td class="text-left" rowspan="1" colspan="1">yes</td>
+            <td class="text-left" rowspan="1" colspan="1">no</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Content (body)</td>
+            <td class="text-left" rowspan="1" colspan="1">"no defined semantics"</td>
+            <td class="text-left" rowspan="1" colspan="1">expected (semantics per target resource)</td>
+            <td class="text-left" rowspan="1" colspan="1">expected (semantics per target resource)</td>
+          </tr>
+        </tbody>
+      </table>
+<p id="section-1-15">
       The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
       NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
       "MAY", and "OPTIONAL" in this document are to be interpreted as
       described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
-      appear in all capitals, as shown here.<a href="#section-1-13" class="pilcrow">¶</a></p>
+      appear in all capitals, as shown here.<a href="#section-1-15" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="query">
@@ -1736,8 +1774,8 @@ Dubois, Camille, camille.dubois@example.net
         IANA is requested to add the QUERY method to the HTTP
         Method Registry at <span>&lt;<a href="http://www.iana.org/assignments/http-methods">http://www.iana.org/assignments/http-methods</a>&gt;</span>
         (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-16.3.1" class="relref">Section 16.3.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-6.1-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-1">
-          <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
+<table class="center" id="table-2">
+          <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Method Name</th>
@@ -1768,8 +1806,8 @@ Dubois, Camille, camille.dubois@example.net
         IANA is requested to add the Accept-Query field to the HTTP Field Name
         Registry at <span>&lt;<a href="https://www.iana.org/assignments/http-fields">https://www.iana.org/assignments/http-fields</a>&gt;</span>
         (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-16.1.1" class="relref">Section 16.1.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-6.2-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-2">
-          <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
+<table class="center" id="table-3">
+          <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Field Name</th>
@@ -1941,6 +1979,8 @@ Dubois, Camille, camille.dubois@example.net
 <li class="normal" id="appendix-A.7-1.1">Improve language about sensitive information in URIs (<span><a href="https://github.com/httpwg/http-extensions/issues/1895">https://github.com/httpwg/http-extensions/issues/1895</a></span>)<a href="#appendix-A.7-1.1" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="appendix-A.7-1.2">Editorial changes to Introduction (ack Will Hawkins, <span><a href="https://github.com/httpwg/http-extensions/pull/2859">https://github.com/httpwg/http-extensions/pull/2859</a></span>)<a href="#appendix-A.7-1.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="appendix-A.7-1.3">Added overview table to introduction <span><a href="https://github.com/httpwg/http-extensions/pull/2951">https://github.com/httpwg/http-extensions/pull/2951</a></span>)<a href="#appendix-A.7-1.3" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
