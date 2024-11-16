@@ -202,14 +202,15 @@ q=foo&amp;limit=10&amp;sort=-published
       </tbody>
     </table>
 
-
-    <t>
-      The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
-      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
-      "MAY", and "OPTIONAL" in this document are to be interpreted as
-      described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they
-      appear in all capitals, as shown here.
-    </t>
+    <section title="Notational Conventions" anchor="notational.coventions">
+      <t>
+        The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+        NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+        "MAY", and "OPTIONAL" in this document are to be interpreted as
+        described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they
+        appear in all capitals, as shown here.
+      </t>
+    </section>
 
   </section>
 
@@ -683,7 +684,8 @@ Dubois, Camille, camille.dubois@example.net
 <ul>
   <li>Improve language about sensitive information in URIs (<eref target="https://github.com/httpwg/http-extensions/issues/1895"/>)</li>
   <li>Editorial changes to Introduction (ack Will Hawkins, <eref target="https://github.com/httpwg/http-extensions/pull/2859"/>)</li>
-  <li>Added overview table to introduction <eref target="https://github.com/httpwg/http-extensions/pull/2951"/>)</li>
+  <li>Added overview table to introduction (<eref target="https://github.com/httpwg/http-extensions/issues/2951"/>)</li>
+  <li>Moved BCP14 related text into subsection (<eref target="https://github.com/httpwg/http-extensions/issues/2954"/>)</li>
 </ul>
 </section>
 </section>
