@@ -683,6 +683,7 @@ Dubois, Camille, camille.dubois@example.net
 <ul>
   <li>Improve language about sensitive information in URIs (<eref target="https://github.com/httpwg/http-extensions/issues/1895"/>)</li>
   <li>Editorial changes to Introduction (ack Will Hawkins, <eref target="https://github.com/httpwg/http-extensions/pull/2859"/>)</li>
+  <li>Added overview table to introduction <eref target="https://github.com/httpwg/http-extensions/pull/2951"/>)</li>
 </ul>
 </section>
 </section>
