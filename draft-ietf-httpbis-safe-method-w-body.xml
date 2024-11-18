@@ -164,14 +164,53 @@ q=foo&amp;limit=10&amp;sort=-published
       rather than as part of the request URI. Unlike POST, however, the method is explicitly safe
       and idempotent, allowing functions like caching and automatic retries to operate.
     </t>
+    <t>Summarizing:</t>
+    <table>
+      <thead>
+        <tr>
+          <th/>
+          <th>GET</th>
+          <th>QUERY</th>
+          <th>POST</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Safe</td>
+          <td>yes</td>
+          <td>yes</td>
+          <td>potentially no</td>
+        </tr>
+        <tr>
+          <td>Idempotent</td>
+          <td>yes</td>
+          <td>yes</td>
+          <td>potentially no</td>
+        </tr>
+        <tr>
+          <td>Cacheable</td>
+          <td>yes</td>
+          <td>yes</td>
+          <td>no</td>
+        </tr>
+        <tr>
+          <td>Content (body)</td>
+          <td>"no defined semantics"</td>
+          <td>expected (semantics per target resource)</td>
+          <td>expected (semantics per target resource)</td>
+        </tr>
+      </tbody>
+    </table>
 
-    <t>
-      The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
-      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
-      "MAY", and "OPTIONAL" in this document are to be interpreted as
-      described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they
-      appear in all capitals, as shown here.
-    </t>
+    <section title="Notational Conventions" anchor="notational.coventions">
+      <t>
+        The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+        NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+        "MAY", and "OPTIONAL" in this document are to be interpreted as
+        described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they
+        appear in all capitals, as shown here.
+      </t>
+    </section>
 
   </section>
 
@@ -324,7 +363,7 @@ Accept-Query = 1#media-type
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -349,7 +388,7 @@ Dubois, Camille, camille.dubois@example.net
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -403,7 +442,7 @@ Dubois, Camille, camille.dubois@example.net
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -440,7 +479,7 @@ Dubois, Camille, camille.dubois@example.net
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -456,7 +495,7 @@ Location: /morecontacts
 <artwork type="http-message">
 QUERY /morecontacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -482,16 +521,23 @@ Dubois, Camille, camille.dubois@example.net
       considerations as all HTTP methods as described in
       <xref target="HTTP"/>.
     </t>
-
     <t>
-      The QUERY method can be used as an alternative to passing query
-      information in the query portion of a URI. This is preferred in some
-      cases, as the URI is more likely to be logged than the request content. If
-      a server creates a temporary resource to represent the results of a QUERY
+      It can be used as an alternative to passing request
+      information in the URI (e.g., in the query section). This is preferred in some
+      cases, as the URI is more likely to be logged or otherwise processed
+      by intermediaries than the request content.
+      If a server creates a temporary resource to represent the results of a QUERY
       request (e.g., for use in the Location or Content-Location field) and the request
       contains sensitive information that cannot be logged, then the URI of this
       resource &SHOULD; be chosen such that it does not include any sensitive
       portions of the original request content.
+    </t>
+    <t>
+      A QUERY request from user agents implementing CORS (Cross-Origin Resource Sharing)
+      will require a "preflight" request,
+      as QUERY does not belong to the set of CORS-safelisted methods
+      (see "<eref target="https://fetch.spec.whatwg.org/#methods">Methods</eref>" in
+      <xref target="FETCH"/>).
     </t>
   </section>
 
@@ -579,6 +625,14 @@ Dubois, Camille, camille.dubois@example.net
       <seriesInfo name="RFC" value="9111"/>
     </reference>
   </references>
+  <references title="Informative References">
+    <reference anchor="FETCH" target="https://fetch.spec.whatwg.org">
+      <front>
+        <title>FETCH</title>
+        <author><organization>WHATWG</organization></author>
+      </front>
+    </reference>
+  </references>
 
 <section title="Change Log" anchor="change.log" removeInRFC="true">
 <section title="Since draft-ietf-httpbis-safe-method-w-body-00" anchor="changes.since.00">
@@ -627,7 +681,12 @@ Dubois, Camille, camille.dubois@example.net
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-06" anchor="changes.since.06">
 <ul>
+  <li>Improve language about sensitive information in URIs (<eref target="https://github.com/httpwg/http-extensions/issues/1895"/>)</li>
   <li>Editorial changes to Introduction (ack Will Hawkins, <eref target="https://github.com/httpwg/http-extensions/pull/2859"/>)</li>
+  <li>Added CORS considerations (<eref target="https://github.com/httpwg/http-extensions/issues/2898"/>)</li>
+  <li>SQL media type is application/sql (RFC6922) (<eref target="https://github.com/httpwg/http-extensions/issues/2936"/>)</li>
+  <li>Added overview table to introduction (<eref target="https://github.com/httpwg/http-extensions/issues/2951"/>)</li>
+  <li>Moved BCP14 related text into subsection (<eref target="https://github.com/httpwg/http-extensions/issues/2954"/>)</li>
 </ul>
 </section>
 </section>

@@ -567,7 +567,7 @@ cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                       ; US-ASCII characters excluding CTLs,
                       ; whitespace, DQUOTE, comma, semicolon,
                       ; and backslash
-token             = <token, defined in [RFC7230], Section 3.2.6>
+token             = <token, defined in [RFC9110], Section 5.6.2>
 
 cookie-av         = expires-av / max-age-av / domain-av /
                     path-av / secure-av / httponly-av /
