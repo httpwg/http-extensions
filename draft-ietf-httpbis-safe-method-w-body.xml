@@ -371,7 +371,7 @@ Accept-Query: application/jsonpath, application/sql;charset="UTF-8"</artwork>
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -396,7 +396,7 @@ Dubois, Camille, camille.dubois@example.net
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -450,7 +450,7 @@ Dubois, Camille, camille.dubois@example.net
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -487,7 +487,7 @@ Dubois, Camille, camille.dubois@example.net
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -503,7 +503,7 @@ Location: /morecontacts
 <artwork type="http-message">
 QUERY /morecontacts HTTP/1.1
 Host: example.org
-Content-Type: example/query
+Content-Type: application/sql
 Accept: text/csv
 
 select surname, givenname, email limit 10
@@ -706,6 +706,7 @@ Dubois, Camille, camille.dubois@example.net
   <li>Editorial changes to Introduction (ack Will Hawkins, <eref target="https://github.com/httpwg/http-extensions/pull/2859"/>)</li>
   <li>Added CORS considerations (<eref target="https://github.com/httpwg/http-extensions/issues/2898"/>)</li>
   <li>Make Accept-Query a Structured Field (<eref target="https://github.com/httpwg/http-extensions/issues/2934"/>)</li>
+  <li>SQL media type is application/sql (RFC6922) (<eref target="https://github.com/httpwg/http-extensions/issues/2936"/>)</li>
   <li>Added overview table to introduction (<eref target="https://github.com/httpwg/http-extensions/issues/2951"/>)</li>
   <li>Moved BCP14 related text into subsection (<eref target="https://github.com/httpwg/http-extensions/issues/2954"/>)</li>
 </ul>
