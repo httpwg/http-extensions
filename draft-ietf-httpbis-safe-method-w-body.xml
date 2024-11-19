@@ -329,24 +329,36 @@ q=foo&amp;limit=10&amp;sort=-published
       the specific query format media type(s) that may be used.
     </t>
     <t>
-      "Accept-Query" contains a list of media types (<xref target="HTTP" section="8.3.1"/>),
-      represented by a List Structured Header Field, containing
-      Token Items, optionally parameterized (<xref target="STRUCTURED-FIELDS" section="3"/>).
+      "Accept-Query" contains a list of media ranges (<xref target="HTTP" section="12.5.1"/>)
+      using "Structured Fields" syntax (<xref target="STRUCTURED-FIELDS"/>).
+      Media ranges are represented by a List Structured Header Field of either Tokens or
+      Strings, containing the media range value without parameters. Parameters,
+      if any, are mapped to Parameters of type String.
     </t>
     <t>
-      The order of types listed in the field value is not significant.
+      Note:
     </t>
+    <ul>
+      <li>The choice of Token vs. String is semantically insignificant.</li>
+      <li>Media types do not exactly map to Tokens, for instance they do
+      allow a leading digit. In cases like these, the String format needs to
+      be used.</li>
+      <li>The use of wildcards for anything except "*/*" or "type/*" is invalid
+      and will never match an actual media type.</li>
+      <li>The order of types listed in the field value is not significant.</li>
+      <li>The only allowed format for parameters is String.</li>
+    </ul>
     <t>
       Accept-Query's value applies to every URI on the server that shares the same path; in
       other words, the query component is ignored. If requests to the same resource return
-      different Accept-Query values, the most recently received fresh (per
-      <xref target="HTTP-CACHING" section="4.2"/>) value is used.
+      different Accept-Query values, the most recently received fresh value (per
+      <xref target="HTTP-CACHING" section="4.2"/>) is used.
     </t>
     <t>
       Example:
     </t>
     <artwork type="example">
-Accept-Query: application/jsonpath, application/sql;charset="UTF-8"</artwork>
+Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     <t>
       Note that although the syntax appears to be similar to other
       fields, such as "Accept" (<xref target="HTTP" section="12.5.1"/>),
