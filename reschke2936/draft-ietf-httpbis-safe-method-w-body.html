@@ -1508,27 +1508,44 @@ q=foo&amp;limit=10&amp;sort=-published
       directly signal support for the QUERY method while identifying
       the specific query format media type(s) that may be used.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">
-      "Accept-Query" contains a list of media types (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.3.1" class="relref">Section 8.3.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>),
-      represented by a List Structured Header Field, containing
-      Token Items, optionally parameterized (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3" class="relref">Section 3</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-2" class="pilcrow">¶</a></p>
+      "Accept-Query" contains a list of media ranges (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
+      using "Structured Fields" syntax (<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).
+      Media ranges are represented by a List Structured Header Field of either Tokens or
+      Strings, containing the media range value without parameters. Parameters,
+      if any, are mapped to Parameters of type String.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">
-      The order of types listed in the field value is not significant.<a href="#section-3-3" class="pilcrow">¶</a></p>
-<p id="section-3-4">
+      Note:<a href="#section-3-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3-4.1">The choice of Token vs. String is semantically insignificant.<a href="#section-3-4.1" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-3-4.2">Media types do not exactly map to Tokens, for instance they do
+      allow a leading digit. In cases like these, the String format needs to
+      be used.<a href="#section-3-4.2" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-3-4.3">The use of wildcards for anything except "*/*" or "type/*" is invalid
+      and will never match an actual media type.<a href="#section-3-4.3" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-3-4.4">The order of types listed in the field value is not significant.<a href="#section-3-4.4" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-3-4.5">The only allowed format for parameters is String.<a href="#section-3-4.5" class="pilcrow">¶</a>
+</li>
+      </ul>
+<p id="section-3-5">
       Accept-Query's value applies to every URI on the server that shares the same path; in
       other words, the query component is ignored. If requests to the same resource return
-      different Accept-Query values, the most recently received fresh (per
-      <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4.2" class="relref">Section 4.2</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>) value is used.<a href="#section-3-4" class="pilcrow">¶</a></p>
-<p id="section-3-5">
-      Example:<a href="#section-3-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-example art-text artwork" id="section-3-6">
+      different Accept-Query values, the most recently received fresh value (per
+      <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4.2" class="relref">Section 4.2</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>) is used.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">
+      Example:<a href="#section-3-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-example art-text artwork" id="section-3-7">
 <pre>
-Accept-Query: application/jsonpath, application/sql;charset="UTF-8"</pre><a href="#section-3-6" class="pilcrow">¶</a>
+Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a href="#section-3-7" class="pilcrow">¶</a>
 </div>
-<p id="section-3-7">
+<p id="section-3-8">
       Note that although the syntax appears to be similar to other
       fields, such as "Accept" (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>),
       it is a Structured Field and thus <span class="bcp14">MUST</span> be processed as specified in
-      <span><a href="https://rfc-editor.org/rfc/rfc9651#section-4" class="relref">Section 4</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.<a href="#section-3-7" class="pilcrow">¶</a></p>
+      <span><a href="https://rfc-editor.org/rfc/rfc9651#section-4" class="relref">Section 4</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.<a href="#section-3-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <section id="section-4">
