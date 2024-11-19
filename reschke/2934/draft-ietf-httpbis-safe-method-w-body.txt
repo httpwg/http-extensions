@@ -285,22 +285,37 @@ Table of Contents
    directly signal support for the QUERY method while identifying the
    specific query format media type(s) that may be used.
 
-   "Accept-Query" contains a list of media types (Section 8.3.1 of
-   [HTTP]), represented by a List Structured Header Field, containing
-   Token Items, optionally parameterized (Section 3 of
-   [STRUCTURED-FIELDS]).
+   "Accept-Query" contains a list of media ranges (Section 12.5.1 of
+   [HTTP]) using "Structured Fields" syntax ([STRUCTURED-FIELDS]).
+   Media ranges are represented by a List Structured Header Field of
+   either Tokens or Strings, containing the media range value without
+   parameters.  Parameters, if any, are mapped to Parameters of type
+   String.
 
-   The order of types listed in the field value is not significant.
+   Note:
+
+   *  The choice of Token vs. String is semantically insignificant.
+
+   *  Media types do not exactly map to Tokens, for instance they do
+      allow a leading digit.  In cases like these, the String format
+      needs to be used.
+
+   *  The use of wildcards for anything except "*/*" or "type/*" is
+      invalid and will never match an actual media type.
+
+   *  The order of types listed in the field value is not significant.
+
+   *  The only allowed format for parameters is String.
 
    Accept-Query's value applies to every URI on the server that shares
    the same path; in other words, the query component is ignored.  If
    requests to the same resource return different Accept-Query values,
-   the most recently received fresh (per Section 4.2 of [HTTP-CACHING])
-   value is used.
+   the most recently received fresh value (per Section 4.2 of
+   [HTTP-CACHING]) is used.
 
    Example:
 
-   Accept-Query: application/jsonpath, application/sql;charset="UTF-8"
+   Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"
 
    Note that although the syntax appears to be similar to other fields,
    such as "Accept" (Section 12.5.1 of [HTTP]), it is a Structured Field
