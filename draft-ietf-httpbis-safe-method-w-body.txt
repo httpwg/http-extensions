@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 23 May 2025                                                    
+Expires: 24 May 2025                                                    
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                        19 November 2024
+                                                        20 November 2024
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 May 2025.
+   This Internet-Draft will expire on 24 May 2025.
 
 Copyright Notice
 
@@ -247,14 +247,10 @@ Table of Contents
 
 2.3.  Conditional Requests
 
-   The semantics of the QUERY method change to a "conditional QUERY" if
-   the request message includes an If-Modified-Since, If-Unmodified-
-   Since, If-Match, If-None-Match, or If-Range header field ([HTTP],
-   Section 13).  A conditional QUERY requests that the query be
-   performed only under the circumstances described by the conditional
-   header field(s).  It is important to note, however, that such
-   conditions are evaluated against the state of the target resource
-   itself as opposed to the collected results of the query operation.
+   A conditional QUERY requests that the selected representation (i.e.,
+   the query results, after any content negotiation) be returned in the
+   response only under the circumstances described by the conditional
+   header field(s), as defined in Section 13 of [HTTP].
 
 2.4.  Caching
 
@@ -603,6 +599,9 @@ B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
 
    *  Improve language about sensitive information in URIs
       (https://github.com/httpwg/http-extensions/issues/1895)
+
+   *  Clarified description of conditional queries
+      (https://github.com/httpwg/http-extensions/issues/1917)
 
    *  Editorial changes to Introduction (ack Will Hawkins,
       https://github.com/httpwg/http-extensions/pull/2859)
