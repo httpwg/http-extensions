@@ -288,14 +288,11 @@ q=foo&amp;limit=10&amp;sort=-published
 
     <section title="Conditional Requests" anchor="conditional">
     <t>
-      The semantics of the QUERY method change to a "conditional QUERY" if
-      the request message includes an If-Modified-Since, If-Unmodified-
-      Since, If-Match, If-None-Match, or If-Range header field
-      (<xref target="HTTP" sectionFormat="comma" section="13"/>).  A conditional QUERY requests that the query
-      be performed only under the circumstances described by the conditional
-      header field(s). It is important to note, however, that such conditions
-      are evaluated against the state of the target resource itself as opposed
-      to the collected results of the query operation.
+      A conditional QUERY requests that the selected representation
+      (i.e., the query results, after any content negotiation) be
+      returned in the response only under the circumstances described by the
+      conditional header field(s), as defined in
+      <xref target="HTTP" section="13"/>.
     </t>
     </section>
 
@@ -383,6 +380,11 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       contains sensitive information that cannot be logged, then the URI of this
       resource &SHOULD; be chosen such that it does not include any sensitive
       portions of the original request content.
+    </t>
+    <t>
+      Caches that normalize QUERY content incorrectly or in ways that are
+      significantly different than how the resource processes the content
+      can return the incorrect response if normalization results in a false positive.
     </t>
     <t>
       A QUERY request from user agents implementing CORS (Cross-Origin Resource Sharing)
@@ -715,7 +717,9 @@ Dubois, Camille, camille.dubois@example.net
 <section title="Since draft-ietf-httpbis-safe-method-w-body-06" anchor="changes.since.06">
 <ul>
   <li>Improve language about sensitive information in URIs (<eref target="https://github.com/httpwg/http-extensions/issues/1895"/>)</li>
+  <li>Clarified description of conditional queries (<eref target="https://github.com/httpwg/http-extensions/issues/1917"/>)</li>
   <li>Editorial changes to Introduction (ack Will Hawkins, <eref target="https://github.com/httpwg/http-extensions/pull/2859"/>)</li>
+  <li>Added Security Consideration with respect to Normalization (<eref target="https://github.com/httpwg/http-extensions/issues/2896"/>)</li>
   <li>Added CORS considerations (<eref target="https://github.com/httpwg/http-extensions/issues/2898"/>)</li>
   <li>Make Accept-Query a Structured Field (<eref target="https://github.com/httpwg/http-extensions/issues/2934"/>)</li>
   <li>SQL media type is application/sql (RFC6922) (<eref target="https://github.com/httpwg/http-extensions/issues/2936"/>)</li>
