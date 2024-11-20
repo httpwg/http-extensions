@@ -313,6 +313,11 @@ Table of Contents
    this resource SHOULD be chosen such that it does not include any
    sensitive portions of the original request content.
 
+   Caches that normalize QUERY content incorrectly or in ways that are
+   significantly different than how the resource processes the content
+   can return the incorrect response if normalization results in a false
+   positive.
+
    A QUERY request from user agents implementing CORS (Cross-Origin
    Resource Sharing) will require a "preflight" request, as QUERY does
    not belong to the set of CORS-safelisted methods (see "Methods
@@ -605,6 +610,9 @@ B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
 
    *  Editorial changes to Introduction (ack Will Hawkins,
       https://github.com/httpwg/http-extensions/pull/2859)
+
+   *  Added Security Consideration with respect to Normalization
+      (https://github.com/httpwg/http-extensions/issues/2896)
 
    *  Added CORS considerations (https://github.com/httpwg/http-
       extensions/issues/2898)
