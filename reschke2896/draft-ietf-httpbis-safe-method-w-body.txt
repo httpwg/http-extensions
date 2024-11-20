@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 23 May 2025                                                    
+Expires: 24 May 2025                                                    
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                        19 November 2024
+                                                        20 November 2024
 
 
                          The HTTP QUERY Method
@@ -33,7 +33,7 @@ Editorial Note
    code and issues list for this draft can be found at
    https://github.com/httpwg/http-extensions/labels/query-method.
 
-   The changes in this draft are summarized in Appendix A.7.
+   The changes in this draft are summarized in Appendix B.7.
 
 Status of This Memo
 
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 May 2025.
+   This Internet-Draft will expire on 24 May 2025.
 
 Copyright Notice
 
@@ -76,25 +76,25 @@ Table of Contents
      2.3.  Conditional Requests
      2.4.  Caching
    3.  The "Accept-Query" Header Field
-   4.  Examples
-     4.1.  Simple QUERY with a Direct Response
-     4.2.  Simple QUERY with a Direct Response and Location Fields
-     4.3.  Simple QUERY with Indirect Response (303 See Other)
-     4.4.  Simple QUERY with Redirect Response (308 Moved Permanently)
-   5.  Security Considerations
-   6.  IANA Considerations
-     6.1.  Registration of QUERY method
-     6.2.  Registration of Accept-Query field
-   7.  Normative References
-   8.  Informative References
-   Appendix A.  Change Log
-     A.1.  Since draft-ietf-httpbis-safe-method-w-body-00
-     A.2.  Since draft-ietf-httpbis-safe-method-w-body-01
-     A.3.  Since draft-ietf-httpbis-safe-method-w-body-02
-     A.4.  Since draft-ietf-httpbis-safe-method-w-body-03
-     A.5.  Since draft-ietf-httpbis-safe-method-w-body-04
-     A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
-     A.7.  Since draft-ietf-httpbis-safe-method-w-body-06
+   4.  Security Considerations
+   5.  IANA Considerations
+     5.1.  Registration of QUERY method
+     5.2.  Registration of Accept-Query field
+   6.  Normative References
+   7.  Informative References
+   Appendix A.  Examples
+     A.1.  Simple QUERY with a Direct Response
+     A.2.  Simple QUERY with a Direct Response and Location Fields
+     A.3.  Simple QUERY with Indirect Response (303 See Other)
+     A.4.  Simple QUERY with Redirect Response (308 Moved Permanently)
+   Appendix B.  Change Log
+     B.1.  Since draft-ietf-httpbis-safe-method-w-body-00
+     B.2.  Since draft-ietf-httpbis-safe-method-w-body-01
+     B.3.  Since draft-ietf-httpbis-safe-method-w-body-02
+     B.4.  Since draft-ietf-httpbis-safe-method-w-body-03
+     B.5.  Since draft-ietf-httpbis-safe-method-w-body-04
+     B.6.  Since draft-ietf-httpbis-safe-method-w-body-05
+     B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
    Authors' Addresses
 
 1.  Introduction
@@ -243,18 +243,14 @@ Table of Contents
    307 (Temporary Redirect) and 308 (Permanent Redirect) can be used to
    request the user agent to redo the QUERY request on the URI specified
    by the Location field.  Various non-normative examples of successful
-   QUERY responses are illustrated in Section 4.
+   QUERY responses are illustrated in Appendix A.
 
 2.3.  Conditional Requests
 
-   The semantics of the QUERY method change to a "conditional QUERY" if
-   the request message includes an If-Modified-Since, If-Unmodified-
-   Since, If-Match, If-None-Match, or If-Range header field ([HTTP],
-   Section 13).  A conditional QUERY requests that the query be
-   performed only under the circumstances described by the conditional
-   header field(s).  It is important to note, however, that such
-   conditions are evaluated against the state of the target resource
-   itself as opposed to the collected results of the query operation.
+   A conditional QUERY requests that the selected representation (i.e.,
+   the query results, after any content negotiation) be returned in the
+   response only under the circumstances described by the conditional
+   header field(s), as defined in Section 13 of [HTTP].
 
 2.4.  Caching
 
@@ -302,7 +298,94 @@ Table of Contents
    the most recently received fresh (per Section 4.2 of [HTTP-CACHING])
    value is used.
 
-4.  Examples
+4.  Security Considerations
+
+   The QUERY method is subject to the same general security
+   considerations as all HTTP methods as described in [HTTP].
+
+   It can be used as an alternative to passing request information in
+   the URI (e.g., in the query section).  This is preferred in some
+   cases, as the URI is more likely to be logged or otherwise processed
+   by intermediaries than the request content.  If a server creates a
+   temporary resource to represent the results of a QUERY request (e.g.,
+   for use in the Location or Content-Location field) and the request
+   contains sensitive information that cannot be logged, then the URI of
+   this resource SHOULD be chosen such that it does not include any
+   sensitive portions of the original request content.
+
+   Caches that normalize QUERY content incorrectly or in ways that are
+   significantly different than how the resource processes the content
+   can return the incorrect response if normalization results in a false
+   positive.
+
+   A QUERY request from user agents implementing CORS (Cross-Origin
+   Resource Sharing) will require a "preflight" request, as QUERY does
+   not belong to the set of CORS-safelisted methods (see "Methods
+   (https://fetch.spec.whatwg.org/#methods)" in [FETCH]).
+
+5.  IANA Considerations
+
+5.1.  Registration of QUERY method
+
+   IANA is requested to add the QUERY method to the HTTP Method Registry
+   at <http://www.iana.org/assignments/http-methods> (see Section 16.3.1
+   of [HTTP]).
+
+            +=============+======+============+===============+
+            | Method Name | Safe | Idempotent | Specification |
+            +=============+======+============+===============+
+            | QUERY       | Yes  | Yes        | Section 2     |
+            +-------------+------+------------+---------------+
+
+                                  Table 2
+
+5.2.  Registration of Accept-Query field
+
+   IANA is requested to add the Accept-Query field to the HTTP Field
+   Name Registry at <https://www.iana.org/assignments/http-fields> (see
+   Section 16.1.1 of [HTTP]).
+
+    +============+=========+==========+=========+=====================+
+    |Field Name  |Status   |Structured|Reference| Comments            |
+    |            |         |Type      |         |                     |
+    +============+=========+==========+=========+=====================+
+    |Accept-Query|permanent|          |Section 3|                     |
+    |            |         |          |of this  | // field syntax     |
+    |            |         |          |document.| currently discussed |
+    |            |         |          |         | in                  |
+    |            |         |          |         | https://github.com/ |
+    |            |         |          |         | httpwg/             |
+    |            |         |          |         | // http-extensions/ |
+    |            |         |          |         | issues/2860         |
+    +------------+---------+----------+---------+---------------------+
+
+                                  Table 3
+
+6.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+   [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., "HTTP Semantics", STD 97, RFC 9110, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9110>.
+
+   [HTTP-CACHING]
+              Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., "HTTP Caching", STD 98, RFC 9111, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9111>.
+
+7.  Informative References
+
+   [FETCH]    WHATWG, "FETCH", <https://fetch.spec.whatwg.org>.
+
+Appendix A.  Examples
 
    The non-normative examples in this section make use of a simple,
    hypothetical plain-text based query syntax based on SQL with results
@@ -310,7 +393,7 @@ Table of Contents
    purposes only.  Implementations are free to use any format they wish
    on both the request and response.
 
-4.1.  Simple QUERY with a Direct Response
+A.1.  Simple QUERY with a Direct Response
 
    A simple query with a direct response:
 
@@ -331,7 +414,7 @@ Table of Contents
    Jones, Sally, sally.jones@example.com
    Dubois, Camille, camille.dubois@example.net
 
-4.2.  Simple QUERY with a Direct Response and Location Fields
+A.2.  Simple QUERY with a Direct Response and Location Fields
 
    A simple query with a direct response:
 
@@ -374,7 +457,7 @@ Table of Contents
    Jones, Sally, sally.jones@example.com
    Dubois, Camille, camille.dubois@example.net
 
-4.3.  Simple QUERY with Indirect Response (303 See Other)
+A.3.  Simple QUERY with Indirect Response (303 See Other)
 
    A simple query with an Indirect Response (303 See Other):
 
@@ -405,7 +488,7 @@ Table of Contents
    Jones, Sally, sally.jones@example.com
    Dubois, Camille, camille.dubois@example.net
 
-4.4.  Simple QUERY with Redirect Response (308 Moved Permanently)
+A.4.  Simple QUERY with Redirect Response (308 Moved Permanently)
 
    A simple query being redirected:
 
@@ -440,98 +523,11 @@ Table of Contents
    Jones, Sally, sally.jones@example.com
    Dubois, Camille, camille.dubois@example.net
 
-5.  Security Considerations
-
-   The QUERY method is subject to the same general security
-   considerations as all HTTP methods as described in [HTTP].
-
-   It can be used as an alternative to passing request information in
-   the URI (e.g., in the query section).  This is preferred in some
-   cases, as the URI is more likely to be logged or otherwise processed
-   by intermediaries than the request content.  If a server creates a
-   temporary resource to represent the results of a QUERY request (e.g.,
-   for use in the Location or Content-Location field) and the request
-   contains sensitive information that cannot be logged, then the URI of
-   this resource SHOULD be chosen such that it does not include any
-   sensitive portions of the original request content.
-
-   Caches that normalize QUERY content incorrectly or in ways that are
-   significantly different than how the resource processes the content
-   can return the incorrect response if normalization results in a false
-   positive.
-
-   A QUERY request from user agents implementing CORS (Cross-Origin
-   Resource Sharing) will require a "preflight" request, as QUERY does
-   not belong to the set of CORS-safelisted methods (see "Methods
-   (https://fetch.spec.whatwg.org/#methods)" in [FETCH]).
-
-6.  IANA Considerations
-
-6.1.  Registration of QUERY method
-
-   IANA is requested to add the QUERY method to the HTTP Method Registry
-   at <http://www.iana.org/assignments/http-methods> (see Section 16.3.1
-   of [HTTP]).
-
-            +=============+======+============+===============+
-            | Method Name | Safe | Idempotent | Specification |
-            +=============+======+============+===============+
-            | QUERY       | Yes  | Yes        | Section 2     |
-            +-------------+------+------------+---------------+
-
-                                  Table 2
-
-6.2.  Registration of Accept-Query field
-
-   IANA is requested to add the Accept-Query field to the HTTP Field
-   Name Registry at <https://www.iana.org/assignments/http-fields> (see
-   Section 16.1.1 of [HTTP]).
-
-    +============+=========+==========+=========+=====================+
-    |Field Name  |Status   |Structured|Reference| Comments            |
-    |            |         |Type      |         |                     |
-    +============+=========+==========+=========+=====================+
-    |Accept-Query|permanent|          |Section 3|                     |
-    |            |         |          |of this  | // field syntax     |
-    |            |         |          |document.| currently discussed |
-    |            |         |          |         | in                  |
-    |            |         |          |         | https://github.com/ |
-    |            |         |          |         | httpwg/             |
-    |            |         |          |         | // http-extensions/ |
-    |            |         |          |         | issues/2860         |
-    +------------+---------+----------+---------+---------------------+
-
-                                  Table 3
-
-7.  Normative References
-
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
-
-   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
-              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
-              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
-
-   [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
-              Ed., "HTTP Semantics", STD 97, RFC 9110, June 2022,
-              <https://www.rfc-editor.org/rfc/rfc9110>.
-
-   [HTTP-CACHING]
-              Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
-              Ed., "HTTP Caching", STD 98, RFC 9111, June 2022,
-              <https://www.rfc-editor.org/rfc/rfc9111>.
-
-8.  Informative References
-
-   [FETCH]    WHATWG, "FETCH", <https://fetch.spec.whatwg.org>.
-
-Appendix A.  Change Log
+Appendix B.  Change Log
 
    This section is to be removed before publishing as an RFC.
 
-A.1.  Since draft-ietf-httpbis-safe-method-w-body-00
+B.1.  Since draft-ietf-httpbis-safe-method-w-body-00
 
    *  Use "example/query" media type instead of undefined "text/query"
       (https://github.com/httpwg/http-extensions/issues/1450)
@@ -552,7 +548,7 @@ A.1.  Since draft-ietf-httpbis-safe-method-w-body-00
    *  Relax restriction of generic XML media type in request content
       (https://github.com/httpwg/http-extensions/issues/1535)
 
-A.2.  Since draft-ietf-httpbis-safe-method-w-body-01
+B.2.  Since draft-ietf-httpbis-safe-method-w-body-01
 
    *  Add minimal description of cacheability
       (https://github.com/httpwg/http-extensions/issues/1552)
@@ -563,7 +559,7 @@ A.2.  Since draft-ietf-httpbis-safe-method-w-body-01
    *  Update HTTP reference (https://github.com/httpwg/http-extensions/
       issues/1669)
 
-A.3.  Since draft-ietf-httpbis-safe-method-w-body-02
+B.3.  Since draft-ietf-httpbis-safe-method-w-body-02
 
    *  In Section 3, slightly rephrase statement about significance of
       ordering (https://github.com/httpwg/http-extensions/issues/1896)
@@ -574,12 +570,12 @@ A.3.  Since draft-ietf-httpbis-safe-method-w-body-02
    *  Updated references (https://github.com/httpwg/http-extensions/
       issues/2157)
 
-A.4.  Since draft-ietf-httpbis-safe-method-w-body-03
+B.4.  Since draft-ietf-httpbis-safe-method-w-body-03
 
    *  In Section 3, clarify scope (https://github.com/httpwg/http-
       extensions/issues/1913)
 
-A.5.  Since draft-ietf-httpbis-safe-method-w-body-04
+B.5.  Since draft-ietf-httpbis-safe-method-w-body-04
 
    *  Describe role of Content-Location and Location fields
       (https://github.com/httpwg/http-extensions/issues/1745)
@@ -590,7 +586,7 @@ A.5.  Since draft-ietf-httpbis-safe-method-w-body-04
    *  Use "target URI" instead of "effective request URI"
       (https://github.com/httpwg/http-extensions/issues/2883)
 
-A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
+B.6.  Since draft-ietf-httpbis-safe-method-w-body-05
 
    *  Updated language and examples about redirects and method rewriting
       (https://github.com/httpwg/http-extensions/issues/1917)
@@ -604,10 +600,13 @@ A.6.  Since draft-ietf-httpbis-safe-method-w-body-05
    *  Field registration for "Accept-Query" (https://github.com/httpwg/
       http-extensions/issues/2903)
 
-A.7.  Since draft-ietf-httpbis-safe-method-w-body-06
+B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
 
    *  Improve language about sensitive information in URIs
       (https://github.com/httpwg/http-extensions/issues/1895)
+
+   *  Clarified description of conditional queries
+      (https://github.com/httpwg/http-extensions/issues/1917)
 
    *  Editorial changes to Introduction (ack Will Hawkins,
       https://github.com/httpwg/http-extensions/pull/2859)
@@ -626,6 +625,9 @@ A.7.  Since draft-ietf-httpbis-safe-method-w-body-06
 
    *  Moved BCP14 related text into subsection
       (https://github.com/httpwg/http-extensions/issues/2954)
+
+   *  Move examples into index (https://github.com/httpwg/http-
+      extensions/issues/2957)
 
 Authors' Addresses
 
