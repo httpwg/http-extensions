@@ -357,7 +357,7 @@ q=foo&amp;limit=10&amp;sort=-published
     <artwork type="example">
 Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     <t>
-      Note that although the syntax appears to be similar to other
+      Although the syntax for this field appears to be similar to other
       fields, such as "Accept" (<xref target="HTTP" section="12.5.1"/>),
       it is a Structured Field and thus &MUST; be processed as specified in
       <xref target="STRUCTURED-FIELDS" section="4"/>.
