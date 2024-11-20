@@ -288,14 +288,11 @@ q=foo&amp;limit=10&amp;sort=-published
 
     <section title="Conditional Requests" anchor="conditional">
     <t>
-      The semantics of the QUERY method change to a "conditional QUERY" if
-      the request message includes an If-Modified-Since, If-Unmodified-
-      Since, If-Match, If-None-Match, or If-Range header field
-      (<xref target="HTTP" sectionFormat="comma" section="13"/>).  A conditional QUERY requests that the query
-      be performed only under the circumstances described by the conditional
-      header field(s). It is important to note, however, that such conditions
-      are evaluated against the state of the target resource itself as opposed
-      to the collected results of the query operation.
+      A conditional QUERY requests that the selected representation
+      (i.e., the query results, after any content negotiation) be
+      returned in the response only under the circumstances described by the
+      conditional header field(s), as defined in
+      <xref target="HTTP" section="13"/>.
     </t>
     </section>
 
@@ -346,6 +343,130 @@ Accept-Query = 1#media-type
       <xref target="HTTP-CACHING" section="4.2"/>) value is used.
     </t>
   </section>
+
+  <section title="Security Considerations">
+    <t>
+      The QUERY method is subject to the same general security
+      considerations as all HTTP methods as described in
+      <xref target="HTTP"/>.
+    </t>
+    <t>
+      It can be used as an alternative to passing request
+      information in the URI (e.g., in the query section). This is preferred in some
+      cases, as the URI is more likely to be logged or otherwise processed
+      by intermediaries than the request content.
+      If a server creates a temporary resource to represent the results of a QUERY
+      request (e.g., for use in the Location or Content-Location field) and the request
+      contains sensitive information that cannot be logged, then the URI of this
+      resource &SHOULD; be chosen such that it does not include any sensitive
+      portions of the original request content.
+    </t>
+    <t>
+      Caches that normalize QUERY content incorrectly or in ways that are
+      significantly different than how the resource processes the content
+      can return the incorrect response if normalization results in a false positive.
+    </t>
+    <t>
+      A QUERY request from user agents implementing CORS (Cross-Origin Resource Sharing)
+      will require a "preflight" request,
+      as QUERY does not belong to the set of CORS-safelisted methods
+      (see "<eref target="https://fetch.spec.whatwg.org/#methods">Methods</eref>" in
+      <xref target="FETCH"/>).
+    </t>
+  </section>
+
+  <section title="IANA Considerations" anchor="iana.considerations">
+
+    <section title="Registration of QUERY method" anchor="method.registration">
+      <t>
+        IANA is requested to add the QUERY method to the HTTP
+        Method Registry at <eref brackets="angle" target="http://www.iana.org/assignments/http-methods"/>
+        (see <xref target="HTTP" section="16.3.1"/>).
+      </t>
+      <table>
+        <thead>
+          <tr>
+            <th>Method Name</th>
+            <th>Safe</th>
+            <th>Idempotent</th>
+            <th>Specification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>QUERY</td>
+            <td>Yes</td>
+            <td>Yes</td>
+            <td><xref target="query"/></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section title="Registration of Accept-Query field" anchor="field.registration">
+      <t>
+        IANA is requested to add the Accept-Query field to the HTTP Field Name
+        Registry at <eref brackets="angle" target="https://www.iana.org/assignments/http-fields"/>
+        (see <xref target="HTTP" section="16.1.1"/>).
+      </t>
+      <table>
+        <thead>
+          <tr>
+            <th>Field Name</th>
+            <th>Status</th>
+            <th>Structured Type</th>
+            <th>Reference</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Accept-Query</td>
+            <td>permanent</td>
+            <td></td>
+            <td><xref target="field.accept-query"/> of this document.</td>
+            <td><cref>field syntax currently discussed in <eref target="https://github.com/httpwg/http-extensions/issues/2860"/></cref></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+</section>
+</middle>
+<back>
+  <references title="Normative References">
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
+    <reference anchor="HTTP">
+      <front>
+        <title>HTTP Semantics</title>
+        <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
+        <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
+        <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
+        <date year="2022" month="June"/>
+      </front>
+      <seriesInfo name="STD" value="97"/>
+      <seriesInfo name="RFC" value="9110"/>
+    </reference>
+    <reference anchor="HTTP-CACHING">
+      <front>
+        <title>HTTP Caching</title>
+        <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
+        <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
+        <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
+        <date year="2022" month="June"/>
+      </front>
+      <seriesInfo name="STD" value="98"/>
+      <seriesInfo name="RFC" value="9111"/>
+    </reference>
+  </references>
+  <references title="Informative References">
+    <reference anchor="FETCH" target="https://fetch.spec.whatwg.org">
+      <front>
+        <title>FETCH</title>
+        <author><organization>WHATWG</organization></author>
+      </front>
+    </reference>
+  </references>
 
   <section title="Examples" anchor="examples">
 <!-- TODO: add Content-Length fields once examples are stable -->
@@ -515,130 +636,6 @@ Dubois, Camille, camille.dubois@example.net
     </section>
   </section>
 
-  <section title="Security Considerations">
-    <t>
-      The QUERY method is subject to the same general security
-      considerations as all HTTP methods as described in
-      <xref target="HTTP"/>.
-    </t>
-    <t>
-      It can be used as an alternative to passing request
-      information in the URI (e.g., in the query section). This is preferred in some
-      cases, as the URI is more likely to be logged or otherwise processed
-      by intermediaries than the request content.
-      If a server creates a temporary resource to represent the results of a QUERY
-      request (e.g., for use in the Location or Content-Location field) and the request
-      contains sensitive information that cannot be logged, then the URI of this
-      resource &SHOULD; be chosen such that it does not include any sensitive
-      portions of the original request content.
-    </t>
-    <t>
-      Caches that normalize QUERY content incorrectly or in ways that are
-      significantly different than how the resource processes the content
-      can return the incorrect response if normalization results in a false positive.
-    </t>
-    <t>
-      A QUERY request from user agents implementing CORS (Cross-Origin Resource Sharing)
-      will require a "preflight" request,
-      as QUERY does not belong to the set of CORS-safelisted methods
-      (see "<eref target="https://fetch.spec.whatwg.org/#methods">Methods</eref>" in
-      <xref target="FETCH"/>).
-    </t>
-  </section>
-
-  <section title="IANA Considerations" anchor="iana.considerations">
-
-    <section title="Registration of QUERY method" anchor="method.registration">
-      <t>
-        IANA is requested to add the QUERY method to the HTTP
-        Method Registry at <eref brackets="angle" target="http://www.iana.org/assignments/http-methods"/>
-        (see <xref target="HTTP" section="16.3.1"/>).
-      </t>
-      <table>
-        <thead>
-          <tr>
-            <th>Method Name</th>
-            <th>Safe</th>
-            <th>Idempotent</th>
-            <th>Specification</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>QUERY</td>
-            <td>Yes</td>
-            <td>Yes</td>
-            <td><xref target="query"/></td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section title="Registration of Accept-Query field" anchor="field.registration">
-      <t>
-        IANA is requested to add the Accept-Query field to the HTTP Field Name
-        Registry at <eref brackets="angle" target="https://www.iana.org/assignments/http-fields"/>
-        (see <xref target="HTTP" section="16.1.1"/>).
-      </t>
-      <table>
-        <thead>
-          <tr>
-            <th>Field Name</th>
-            <th>Status</th>
-            <th>Structured Type</th>
-            <th>Reference</th>
-            <th>Comments</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Accept-Query</td>
-            <td>permanent</td>
-            <td></td>
-            <td><xref target="field.accept-query"/> of this document.</td>
-            <td><cref>field syntax currently discussed in <eref target="https://github.com/httpwg/http-extensions/issues/2860"/></cref></td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-</section>
-</middle>
-<back>
-  <references title="Normative References">
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
-    <reference anchor="HTTP">
-      <front>
-        <title>HTTP Semantics</title>
-        <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
-        <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
-        <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
-        <date year="2022" month="June"/>
-      </front>
-      <seriesInfo name="STD" value="97"/>
-      <seriesInfo name="RFC" value="9110"/>
-    </reference>
-    <reference anchor="HTTP-CACHING">
-      <front>
-        <title>HTTP Caching</title>
-        <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
-        <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
-        <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
-        <date year="2022" month="June"/>
-      </front>
-      <seriesInfo name="STD" value="98"/>
-      <seriesInfo name="RFC" value="9111"/>
-    </reference>
-  </references>
-  <references title="Informative References">
-    <reference anchor="FETCH" target="https://fetch.spec.whatwg.org">
-      <front>
-        <title>FETCH</title>
-        <author><organization>WHATWG</organization></author>
-      </front>
-    </reference>
-  </references>
-
 <section title="Change Log" anchor="change.log" removeInRFC="true">
 <section title="Since draft-ietf-httpbis-safe-method-w-body-00" anchor="changes.since.00">
 <ul>
@@ -687,12 +684,14 @@ Dubois, Camille, camille.dubois@example.net
 <section title="Since draft-ietf-httpbis-safe-method-w-body-06" anchor="changes.since.06">
 <ul>
   <li>Improve language about sensitive information in URIs (<eref target="https://github.com/httpwg/http-extensions/issues/1895"/>)</li>
+  <li>Clarified description of conditional queries (<eref target="https://github.com/httpwg/http-extensions/issues/1917"/>)</li>
   <li>Editorial changes to Introduction (ack Will Hawkins, <eref target="https://github.com/httpwg/http-extensions/pull/2859"/>)</li>
   <li>Added Security Consideration with respect to Normalization (<eref target="https://github.com/httpwg/http-extensions/issues/2896"/>)</li>
   <li>Added CORS considerations (<eref target="https://github.com/httpwg/http-extensions/issues/2898"/>)</li>
   <li>SQL media type is application/sql (RFC6922) (<eref target="https://github.com/httpwg/http-extensions/issues/2936"/>)</li>
   <li>Added overview table to introduction (<eref target="https://github.com/httpwg/http-extensions/issues/2951"/>)</li>
   <li>Moved BCP14 related text into subsection (<eref target="https://github.com/httpwg/http-extensions/issues/2954"/>)</li>
+  <li>Move examples into index (<eref target="https://github.com/httpwg/http-extensions/issues/2957"/>)</li>
 </ul>
 </section>
 </section>
