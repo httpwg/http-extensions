@@ -340,8 +340,8 @@ q=foo&amp;limit=10&amp;sort=-published
       <li>Media types do not exactly map to Tokens, for instance they
       allow a leading digit. In cases like these, the String format needs to
       be used.</li>
-      <li>The use of wildcards for anything except "*/*" or "type/*" is invalid
-      and will never match an actual media type.</li>
+      <li>The only supported uses of wildcards are "*/*", which matches any type, 
+      or "xxxx/*", which matches any subtype of the indicated type.</li>
       <li>The order of types listed in the field value is not significant.</li>
       <li>The only allowed format for parameters is String.</li>
     </ul>
