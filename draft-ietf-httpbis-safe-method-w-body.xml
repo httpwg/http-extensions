@@ -337,7 +337,7 @@ q=foo&amp;limit=10&amp;sort=-published
     </t>
     <ul>
       <li>The choice of Token vs. String is semantically insignificant.</li>
-      <li>Media types do not exactly map to Tokens, for instance they do
+      <li>Media types do not exactly map to Tokens, for instance they
       allow a leading digit. In cases like these, the String format needs to
       be used.</li>
       <li>The use of wildcards for anything except "*/*" or "type/*" is invalid
