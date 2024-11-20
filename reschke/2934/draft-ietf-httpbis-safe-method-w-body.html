@@ -1519,8 +1519,8 @@ q=foo&amp;limit=10&amp;sort=-published
       allow a leading digit. In cases like these, the String format needs to
       be used.<a href="#section-3-4.2" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-3-4.3">The use of wildcards for anything except "*/*" or "type/*" is invalid
-      and will never match an actual media type.<a href="#section-3-4.3" class="pilcrow">¶</a>
+        <li class="normal" id="section-3-4.3">The only supported uses of wildcards are "*/*", which matches any type,
+      or "xxxx/*", which matches any subtype of the indicated type.<a href="#section-3-4.3" class="pilcrow">¶</a>
 </li>
         <li class="normal" id="section-3-4.4">The order of types listed in the field value is not significant.<a href="#section-3-4.4" class="pilcrow">¶</a>
 </li>
@@ -1539,7 +1539,7 @@ q=foo&amp;limit=10&amp;sort=-published
 Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a href="#section-3-7" class="pilcrow">¶</a>
 </div>
 <p id="section-3-8">
-      Note that although the syntax appears to be similar to other
+      Although the syntax for this field appears to be similar to other
       fields, such as "Accept" (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>),
       it is a Structured Field and thus <span class="bcp14">MUST</span> be processed as specified in
       <span><a href="https://rfc-editor.org/rfc/rfc9651#section-4" class="relref">Section 4</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.<a href="#section-3-8" class="pilcrow">¶</a></p>

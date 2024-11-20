@@ -296,8 +296,9 @@ Table of Contents
       a leading digit.  In cases like these, the String format needs to
       be used.
 
-   *  The use of wildcards for anything except "*/*" or "type/*" is
-      invalid and will never match an actual media type.
+   *  The only supported uses of wildcards are "*/*", which matches any
+      type, or "xxxx/*", which matches any subtype of the indicated
+      type.
 
    *  The order of types listed in the field value is not significant.
 
@@ -313,10 +314,10 @@ Table of Contents
 
    Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"
 
-   Note that although the syntax appears to be similar to other fields,
-   such as "Accept" (Section 12.5.1 of [HTTP]), it is a Structured Field
-   and thus MUST be processed as specified in Section 4 of
-   [STRUCTURED-FIELDS].
+   Although the syntax for this field appears to be similar to other
+   fields, such as "Accept" (Section 12.5.1 of [HTTP]), it is a
+   Structured Field and thus MUST be processed as specified in Section 4
+   of [STRUCTURED-FIELDS].
 
 4.  Security Considerations
 
