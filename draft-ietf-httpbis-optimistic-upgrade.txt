@@ -4,9 +4,9 @@
 
 HTTPBIS                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Updates: 9298 (if approved)                             20 November 2024
+Updates: 9298 (if approved)                              2 December 2024
 Intended status: Standards Track                                        
-Expires: 24 May 2025
+Expires: 5 June 2025
 
 
 Security Considerations for Optimistic Protocol Transitions in HTTP/1.1
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 May 2025.
+   This Internet-Draft will expire on 5 June 2025.
 
 Copyright Notice
 
@@ -356,13 +356,13 @@ Table of Contents
 
 7.  Guidance for HTTP CONNECT
 
-   Clients that send HTTP CONNECT requests on behalf of untrusted TCP
-   clients MUST wait for a 2xx (Successful) response before sending any
-   TCP payload data.
+   In HTTP/1.1, clients that send CONNECT requests on behalf of
+   untrusted TCP clients MUST wait for a 2xx (Successful) response
+   before sending any TCP payload data.
 
    To mitigate vulnerabilities from any clients that do not conform to
    this requirement, proxy servers MAY close the underlying connection
-   when rejecting an HTTP CONNECT request, without processing any
+   when rejecting an HTTP/1.1 CONNECT request, without processing any
    further data sent to the proxy server on that connection.  Note that
    this behavior may impair performance, especially when returning a
    "407 (Proxy Authentication Required)" response.
