@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 5 June 2025                                          Apple Inc.
+Expires: 6 June 2025                                          Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                         2 December 2024
+                                                         3 December 2024
 
 
                        Resumable Uploads for HTTP
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 June 2025.
+   This Internet-Draft will expire on 6 June 2025.
 
 Copyright Notice
 
@@ -711,7 +711,7 @@ Table of Contents
    yet complete indicated by the Upload-Complete field value set to
    false, the server MUST acknowledge it by responding with a 201
    (Created) status code and the Upload-Complete field value set to
-   true.
+   false.
 
    If the request includes the Upload-Complete field value set to true
    and a valid Content-Length header field, the client attempts to
