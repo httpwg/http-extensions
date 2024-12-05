@@ -321,26 +321,53 @@ q=foo&amp;limit=10&amp;sort=-published
 
   <section title="The &quot;Accept-Query&quot; Header Field" anchor="field.accept-query">
     <t>
-      The "Accept-Query" response header field &MAY; be used by a resource to
+      The "Accept-Query" response header field can be used by a resource to
       directly signal support for the QUERY method while identifying
       the specific query format media type(s) that may be used.
     </t>
-<sourcecode type="abnf">
-Accept-Query = 1#media-type
-</sourcecode>
     <t>
-      The Accept-Query header field specifies a comma-separated listing of media
-      types (with optional parameters) as defined by
-      <xref target="HTTP" section="8.3.1"/>. <cref>field syntax currently discussed in <eref target="https://github.com/httpwg/http-extensions/issues/2860"/></cref>
+      "Accept-Query" contains a list of media ranges (<xref target="HTTP" section="12.5.1"/>)
+      using "Structured Fields" syntax (<xref target="STRUCTURED-FIELDS"/>).
+      Media ranges are represented by a List Structured Header Field of either Tokens or
+      Strings, containing the media range value without parameters. Parameters,
+      if any, are mapped to Parameters of type String.
     </t>
     <t>
-      The order of types listed by the Accept-Query header field is not significant.
+      The choice of Token vs. String is semantically insignificant. That is,
+      recipients &MAY; convert Tokens to Strings, but &MUST-NOT; process them
+      differently based on the received type.
+    </t>
+    <t>
+      Media types do not exactly map to Tokens, for instance they
+      allow a leading digit. In cases like these, the String format needs to
+      be used.
+    </t>
+    <t>
+      The only supported uses of wildcards are "*/*", which matches any type,
+      or "xxxx/*", which matches any subtype of the indicated type.
+    </t>
+    <t>
+      The order of types listed in the field value is not significant.
+    </t>
+    <t>
+      The only allowed format for parameters is String.
     </t>
     <t>
       Accept-Query's value applies to every URI on the server that shares the same path; in
       other words, the query component is ignored. If requests to the same resource return
-      different Accept-Query values, the most recently received fresh (per
-      <xref target="HTTP-CACHING" section="4.2"/>) value is used.
+      different Accept-Query values, the most recently received fresh value (per
+      <xref target="HTTP-CACHING" section="4.2"/>) is used.
+    </t>
+    <t>
+      Example:
+    </t>
+    <artwork type="example">
+Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
+    <t>
+      Although the syntax for this field appears to be similar to other
+      fields, such as "Accept" (<xref target="HTTP" section="12.5.1"/>),
+      it is a Structured Field and thus &MUST; be processed as specified in
+      <xref target="STRUCTURED-FIELDS" section="4"/>.
     </t>
   </section>
 
@@ -457,6 +484,19 @@ Accept-Query = 1#media-type
       </front>
       <seriesInfo name="STD" value="98"/>
       <seriesInfo name="RFC" value="9111"/>
+    </reference>
+    <reference anchor="STRUCTURED-FIELDS">
+      <front>
+        <title>Structured Field Values for HTTP</title>
+        <author initials="M." surname="Nottingham" fullname="Mark Nottingham">
+          <organization>Cloudflare</organization>
+        </author>
+        <author initials="P-H." surname="Kamp" fullname="Poul-Henning Kamp">
+          <organization>The Varnish Cache Project</organization>
+        </author>
+        <date year="2024" month="September"/>
+      </front>
+      <seriesInfo name="RFC" value="9651"/>
     </reference>
   </references>
   <references title="Informative References">
@@ -688,6 +728,7 @@ Dubois, Camille, camille.dubois@example.net
   <li>Editorial changes to Introduction (ack Will Hawkins, <eref target="https://github.com/httpwg/http-extensions/pull/2859"/>)</li>
   <li>Added Security Consideration with respect to Normalization (<eref target="https://github.com/httpwg/http-extensions/issues/2896"/>)</li>
   <li>Added CORS considerations (<eref target="https://github.com/httpwg/http-extensions/issues/2898"/>)</li>
+  <li>Make Accept-Query a Structured Field (<eref target="https://github.com/httpwg/http-extensions/issues/2934"/>)</li>
   <li>SQL media type is application/sql (RFC6922) (<eref target="https://github.com/httpwg/http-extensions/issues/2936"/>)</li>
   <li>Added overview table to introduction (<eref target="https://github.com/httpwg/http-extensions/issues/2951"/>)</li>
   <li>Moved BCP14 related text into subsection (<eref target="https://github.com/httpwg/http-extensions/issues/2954"/>)</li>
