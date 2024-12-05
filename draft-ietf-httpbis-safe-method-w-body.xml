@@ -336,7 +336,9 @@ q=foo&amp;limit=10&amp;sort=-published
       Note:
     </t>
     <ul>
-      <li>The choice of Token vs. String is semantically insignificant.</li>
+      <li>The choice of Token vs. String is semantically insignificant. That is,
+      recipients &MAY; convert Tokens to Strings, but &MUST-NOT; process them
+      differently based on the received type.</li>
       <li>Media types do not exactly map to Tokens, for instance they
       allow a leading digit. In cases like these, the String format needs to
       be used.</li>
