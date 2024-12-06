@@ -1347,9 +1347,10 @@ parse a set-cookie-string:
 3.  If the name-value-pair string lacks a %x3D ("=") character, then the name
     string is empty, and the value string is the value of name-value-pair.
 
-    Otherwise, the name string consists of the characters up to, but not
-    including, the first %x3D ("=") character, and the (possibly empty) value
-    string consists of the characters after the first %x3D ("=") character.
+    Otherwise, the (possibly empty) name string consists of the characters up
+    to, but not including, the first %x3D ("=") character, and the (possibly
+    empty) value string consists of the characters after the first %x3D ("=")
+    character.
 
 4.  Remove any leading or trailing WSP characters from the name string and the
     value string.
