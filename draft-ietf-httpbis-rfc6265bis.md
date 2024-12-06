@@ -436,7 +436,24 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 ~~~
 
 Notice that the Cookie header field above contains two cookies, one named SID and
-one named lang. If the server wishes the user agent to persist the cookie over
+one named lang.
+
+Cookie names are case-sensitive, meaning that if a server sends the user agent
+two Set-Cookie header fields that differ only in their name's case the user
+agent will store and return both of those cookies in subsequent requests.
+
+~~~ example
+== Server -> User Agent ==
+
+Set-Cookie: SID=31d4d96e407aad42
+Set-Cookie: sid=31d4d96e407aad42
+
+== User Agent -> Server ==
+
+Cookie: SID=31d4d96e407aad42; sid=31d4d96e407aad42
+~~~
+
+If the server wishes the user agent to persist the cookie over
 multiple "sessions" (e.g., user agent restarts), the server can specify an
 expiration date in the Expires attribute. Note that the user agent might
 delete the cookie before the expiration date if the user agent's cookie store
@@ -1330,9 +1347,10 @@ parse a set-cookie-string:
 3.  If the name-value-pair string lacks a %x3D ("=") character, then the name
     string is empty, and the value string is the value of name-value-pair.
 
-    Otherwise, the name string consists of the characters up to, but not
-    including, the first %x3D ("=") character, and the (possibly empty) value
-    string consists of the characters after the first %x3D ("=") character.
+    Otherwise, the (possibly empty) name string consists of the characters up
+    to, but not including, the first %x3D ("=") character, and the (possibly
+    empty) value string consists of the characters after the first %x3D ("=")
+    character.
 
 4.  Remove any leading or trailing WSP characters from the name string and the
     value string.
