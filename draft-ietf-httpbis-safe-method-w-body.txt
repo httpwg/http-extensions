@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 6 June 2025                                                    
+Expires: 10 June 2025                                                   
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                         3 December 2024
+                                                         7 December 2024
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 June 2025.
+   This Internet-Draft will expire on 10 June 2025.
 
 Copyright Notice
 
@@ -277,26 +277,46 @@ Table of Contents
 
 3.  The "Accept-Query" Header Field
 
-   The "Accept-Query" response header field MAY be used by a resource to
+   The "Accept-Query" response header field can be used by a resource to
    directly signal support for the QUERY method while identifying the
    specific query format media type(s) that may be used.
 
-   Accept-Query = 1#media-type
+   "Accept-Query" contains a list of media ranges (Section 12.5.1 of
+   [HTTP]) using "Structured Fields" syntax ([STRUCTURED-FIELDS]).
+   Media ranges are represented by a List Structured Header Field of
+   either Tokens or Strings, containing the media range value without
+   parameters.  Parameters, if any, are mapped to Parameters of type
+   String.
 
-   The Accept-Query header field specifies a comma-separated listing of
-   media types (with optional parameters) as defined by Section 8.3.1 of
-   [HTTP].
-   // field syntax currently discussed in https://github.com/httpwg/
-   // http-extensions/issues/2860
+   The choice of Token vs. String is semantically insignificant.  That
+   is, recipients MAY convert Tokens to Strings, but MUST NOT process
+   them differently based on the received type.
 
-   The order of types listed by the Accept-Query header field is not
-   significant.
+   Media types do not exactly map to Tokens, for instance they allow a
+   leading digit.  In cases like these, the String format needs to be
+   used.
+
+   The only supported uses of wildcards are "*/*", which matches any
+   type, or "xxxx/*", which matches any subtype of the indicated type.
+
+   The order of types listed in the field value is not significant.
+
+   The only allowed format for parameters is String.
 
    Accept-Query's value applies to every URI on the server that shares
    the same path; in other words, the query component is ignored.  If
    requests to the same resource return different Accept-Query values,
-   the most recently received fresh (per Section 4.2 of [HTTP-CACHING])
-   value is used.
+   the most recently received fresh value (per Section 4.2 of
+   [HTTP-CACHING]) is used.
+
+   Example:
+
+   Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"
+
+   Although the syntax for this field appears to be similar to other
+   fields, such as "Accept" (Section 12.5.1 of [HTTP]), it is a
+   Structured Field and thus MUST be processed as specified in Section 4
+   of [STRUCTURED-FIELDS].
 
 4.  Security Considerations
 
@@ -380,6 +400,11 @@ Table of Contents
               Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Caching", STD 98, RFC 9111, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9111>.
+
+   [STRUCTURED-FIELDS]
+              Nottingham, M. and P-H. Kamp, "Structured Field Values for
+              HTTP", RFC 9651, September 2024,
+              <https://www.rfc-editor.org/rfc/rfc9651>.
 
 7.  Informative References
 
@@ -616,6 +641,9 @@ B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
 
    *  Added CORS considerations (https://github.com/httpwg/http-
       extensions/issues/2898)
+
+   *  Make Accept-Query a Structured Field (https://github.com/httpwg/
+      http-extensions/issues/2934)
 
    *  SQL media type is application/sql (RFC6922)
       (https://github.com/httpwg/http-extensions/issues/2936)
