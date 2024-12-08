@@ -192,6 +192,12 @@ q=foo&amp;limit=10&amp;sort=-published
       </tbody>
     </table>
 
+    <section title="Terminology" anchor="terminology">
+      <t>
+        This document uses terminology defined in <xref section="3" target="HTTP"/>.
+      </t>
+    </section>
+
     <section title="Notational Conventions" anchor="notational.coventions">
       <t>
         The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
@@ -721,6 +727,7 @@ Dubois, Camille, camille.dubois@example.net
   <li>Make Accept-Query a Structured Field (<eref target="https://github.com/httpwg/http-extensions/issues/2934"/>)</li>
   <li>SQL media type is application/sql (RFC6922) (<eref target="https://github.com/httpwg/http-extensions/issues/2936"/>)</li>
   <li>Added overview table to introduction (<eref target="https://github.com/httpwg/http-extensions/issues/2951"/>)</li>
+  <li>Reference HTTP spec for terminology (<eref target="https://github.com/httpwg/http-extensions/issues/2953"/>)</li>
   <li>Moved BCP14 related text into subsection (<eref target="https://github.com/httpwg/http-extensions/issues/2954"/>)</li>
   <li>Move examples into index (<eref target="https://github.com/httpwg/http-extensions/issues/2957"/>)</li>
 </ul>
