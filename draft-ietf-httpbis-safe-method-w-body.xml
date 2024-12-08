@@ -91,35 +91,30 @@
   <middle>
 
   <section anchor="intro" title="Introduction">
-
     <t>
       This specification defines the HTTP QUERY request method as a means of
       making a safe, idempotent request that contains content.
     </t>
-
     <t>
       Most often, this is desirable when the data conveyed in a request is
       too voluminous to be encoded into the request's URI. For example,
       this is a common query pattern:
     </t>
-
 <artwork type="http-message">
 GET /feed?q=foo&amp;limit=10&amp;sort=-published HTTP/1.1
 Host: example.org
 </artwork>
-
     <t>
       However, for a query with parameters that are complex or large in size,
       encoding it in the request URI may not be the best option because
     </t>
-      <ul>
-        <li>often size limits are not known ahead of time because a request can pass through many uncoordinated
-      system,</li>
-        <li>expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and</li>
-        <li>encoding query parameters directly into the request URI effectively casts every possible combination of query inputs as distinct
-            resources.</li>
-      </ul>
-
+    <ul>
+      <li>often size limits are not known ahead of time because a request can pass through many uncoordinated
+    system,</li>
+      <li>expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and</li>
+      <li>encoding query parameters directly into the request URI effectively casts every possible combination of query inputs as distinct
+          resources.</li>
+    </ul>
     <t>
       As an alternative to using GET, many implementations make use of the
       HTTP POST method to perform queries, as illustrated in the example
@@ -127,7 +122,6 @@ Host: example.org
       passed along within the request content as opposed to using the
       request URI.
     </t>
-
     <t>
       A typical use of HTTP POST for requesting a query:
     </t>
@@ -138,19 +132,16 @@ Content-Type: application/x-www-form-urlencoded
 
 q=foo&amp;limit=10&amp;sort=-published
 </artwork>
-
     <t>
       This variation, however, suffers from the same basic limitation as GET
       in that it is not readily apparent -- absent specific knowledge of the
       resource and server to which the request is being sent -- that a safe,
       idempotent query is being performed.
     </t>
-
     <t>
       The QUERY method provides a solution that spans the gap between the use of GET and POST, with
       the example above being expressed as:
     </t>
-
 <artwork type="http-message">
 QUERY /feed HTTP/1.1
 Host: example.org
@@ -158,7 +149,6 @@ Content-Type: application/x-www-form-urlencoded
 
 q=foo&amp;limit=10&amp;sort=-published
 </artwork>
-
     <t>
       As with POST, the input to the query operation is passed along within the content of the request
       rather than as part of the request URI. Unlike POST, however, the method is explicitly safe
