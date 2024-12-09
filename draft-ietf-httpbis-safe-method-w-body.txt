@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 11 June 2025                                                   
+Expires: 12 June 2025                                                   
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                         8 December 2024
+                                                         9 December 2024
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 June 2025.
+   This Internet-Draft will expire on 12 June 2025.
 
 Copyright Notice
 
@@ -69,7 +69,8 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction
-     1.1.  Notational Conventions
+     1.1.  Terminology
+     1.2.  Notational Conventions
    2.  QUERY
      2.1.  Content-Location and Location Fields
      2.2.  Redirection
@@ -175,7 +176,11 @@ Table of Contents
 
                                  Table 1
 
-1.1.  Notational Conventions
+1.1.  Terminology
+
+   This document uses terminology defined in Section 3 of [HTTP].
+
+1.2.  Notational Conventions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -650,6 +655,9 @@ B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
 
    *  Added overview table to introduction (https://github.com/httpwg/
       http-extensions/issues/2951)
+
+   *  Reference HTTP spec for terminology (https://github.com/httpwg/
+      http-extensions/issues/2953)
 
    *  Moved BCP14 related text into subsection
       (https://github.com/httpwg/http-extensions/issues/2954)
