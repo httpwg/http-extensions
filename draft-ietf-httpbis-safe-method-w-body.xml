@@ -446,9 +446,9 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
           <tr>
             <td>Accept-Query</td>
             <td>permanent</td>
-            <td></td>
+            <td>List</td>
             <td><xref target="field.accept-query"/> of this document.</td>
-            <td><cref>field syntax currently discussed in <eref target="https://github.com/httpwg/http-extensions/issues/2860"/></cref></td>
+            <td></td>
           </tr>
         </tbody>
       </table>
