@@ -1661,12 +1661,28 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 </pre><a href="#section-3.1-6" class="pilcrow">¶</a>
 </div>
 <p id="section-3.1-7">Notice that the Cookie header field above contains two cookies, one named SID and
-one named lang. If the server wishes the user agent to persist the cookie over
+one named lang.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.1-8">Cookie names are case-sensitive, meaning that if a server sends the user agent
+two Set-Cookie header fields that differ only in their name's case the user
+agent will store and return both of those cookies in subsequent requests.<a href="#section-3.1-8" class="pilcrow">¶</a></p>
+<div class="lang-example sourcecode" id="section-3.1-9">
+<pre>
+== Server -&gt; User Agent ==
+
+Set-Cookie: SID=31d4d96e407aad42
+Set-Cookie: sid=31d4d96e407aad42
+
+== User Agent -&gt; Server ==
+
+Cookie: SID=31d4d96e407aad42; sid=31d4d96e407aad42
+</pre><a href="#section-3.1-9" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1-10">If the server wishes the user agent to persist the cookie over
 multiple "sessions" (e.g., user agent restarts), the server can specify an
 expiration date in the Expires attribute. Note that the user agent might
 delete the cookie before the expiration date if the user agent's cookie store
-exceeds its quota or if the user manually deletes the server's cookie.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
-<div class="lang-example sourcecode" id="section-3.1-8">
+exceeds its quota or if the user manually deletes the server's cookie.<a href="#section-3.1-10" class="pilcrow">¶</a></p>
+<div class="lang-example sourcecode" id="section-3.1-11">
 <pre>
 == Server -&gt; User Agent ==
 
@@ -1675,13 +1691,13 @@ Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT
 == User Agent -&gt; Server ==
 
 Cookie: SID=31d4d96e407aad42; lang=en-US
-</pre><a href="#section-3.1-8" class="pilcrow">¶</a>
+</pre><a href="#section-3.1-11" class="pilcrow">¶</a>
 </div>
-<p id="section-3.1-9">Finally, to remove a cookie, the server returns a Set-Cookie header field with an
+<p id="section-3.1-12">Finally, to remove a cookie, the server returns a Set-Cookie header field with an
 expiration date in the past. The server will be successful in removing the
 cookie only if the Path and the Domain attribute in the Set-Cookie header field
-match the values used when the cookie was created.<a href="#section-3.1-9" class="pilcrow">¶</a></p>
-<div class="lang-example sourcecode" id="section-3.1-10">
+match the values used when the cookie was created.<a href="#section-3.1-12" class="pilcrow">¶</a></p>
+<div class="lang-example sourcecode" id="section-3.1-13">
 <pre>
 == Server -&gt; User Agent ==
 
@@ -1690,7 +1706,7 @@ Set-Cookie: lang=; Expires=Sun, 06 Nov 1994 08:49:37 GMT
 == User Agent -&gt; Server ==
 
 Cookie: SID=31d4d96e407aad42
-</pre><a href="#section-3.1-10" class="pilcrow">¶</a>
+</pre><a href="#section-3.1-13" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2731,9 +2747,10 @@ string.<a href="#section-5.6-7.2.4.1.1" class="pilcrow">¶</a></p>
             <p id="section-5.6-7.3.1">If the name-value-pair string lacks a %x3D ("=") character, then the name
 string is empty, and the value string is the value of name-value-pair.<a href="#section-5.6-7.3.1" class="pilcrow">¶</a></p>
 <p id="section-5.6-7.3.2">
-Otherwise, the name string consists of the characters up to, but not
-including, the first %x3D ("=") character, and the (possibly empty) value
-string consists of the characters after the first %x3D ("=") character.<a href="#section-5.6-7.3.2" class="pilcrow">¶</a></p>
+Otherwise, the (possibly empty) name string consists of the characters up
+to, but not including, the first %x3D ("=") character, and the (possibly
+empty) value string consists of the characters after the first %x3D ("=")
+character.<a href="#section-5.6-7.3.2" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.6-7.4">
             <p id="section-5.6-7.4.1">Remove any leading or trailing WSP characters from the name string and the
