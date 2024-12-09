@@ -370,19 +370,14 @@ Table of Contents
    Name Registry at <https://www.iana.org/assignments/http-fields> (see
    Section 16.1.1 of [HTTP]).
 
-    +============+=========+==========+=========+=====================+
-    |Field Name  |Status   |Structured|Reference| Comments            |
-    |            |         |Type      |         |                     |
-    +============+=========+==========+=========+=====================+
-    |Accept-Query|permanent|          |Section 3|                     |
-    |            |         |          |of this  | // field syntax     |
-    |            |         |          |document.| currently discussed |
-    |            |         |          |         | in                  |
-    |            |         |          |         | https://github.com/ |
-    |            |         |          |         | httpwg/             |
-    |            |         |          |         | // http-extensions/ |
-    |            |         |          |         | issues/2860         |
-    +------------+---------+----------+---------+---------------------+
+   +==============+===========+============+================+==========+
+   | Field Name   | Status    | Structured | Reference      | Comments |
+   |              |           | Type       |                |          |
+   +==============+===========+============+================+==========+
+   | Accept-Query | permanent | List       | Section 3      |          |
+   |              |           |            | of this        |          |
+   |              |           |            | document.      |          |
+   +--------------+-----------+------------+----------------+----------+
 
                                   Table 3
 
