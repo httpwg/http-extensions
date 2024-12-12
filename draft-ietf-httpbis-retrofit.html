@@ -536,7 +536,11 @@ figcaption, caption {
   }
   pre, svg {
     display: inline-block;
-    overflow-x: auto;
+    /* In the horizontal direction, sometimes people make over-sized figures.
+       Scrollbars for those is therefore necessary: auto adds them as necessary..
+       In the vertical direction, the line-height can combine with the font
+       asender/descender height to produce scrollbars: hidden avoids that. */
+    overflow: auto hidden;
   }
   pre {
     max-width: 100%;
@@ -1046,7 +1050,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Nottingham</td>
-<td class="center">Expires 12 June 2025</td>
+<td class="center">Expires 15 June 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1059,12 +1063,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-retrofit-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-12-09" class="published">9 December 2024</time>
+<time datetime="2024-12-12" class="published">12 December 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-06-12">12 June 2025</time></dd>
+<dd class="expires"><time datetime="2025-06-15">15 June 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1113,7 +1117,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 12 June 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 15 June 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1735,7 +1739,7 @@ If-None-Match: W/"abcdef", "ghijkl", *
           </tbody>
         </table>
 </div>
-<p id="section-3.4-5">The Expires attribute is mapped to a Date representation of parsed-cookie-date (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis-15#section-5.1.1" class="relref">Section 5.1.1</a> of [<a href="#COOKIES" class="cite xref">COOKIES</a>]</span>).<a href="#section-3.4-5" class="pilcrow">¶</a></p>
+<p id="section-3.4-5">The Expires attribute is mapped to a Date representation of parsed-cookie-date (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis-16#section-5.1.1" class="relref">Section 5.1.1</a> of [<a href="#COOKIES" class="cite xref">COOKIES</a>]</span>).<a href="#section-3.4-5" class="pilcrow">¶</a></p>
 <p id="section-3.4-6">For example, this Set-Cookie field:<a href="#section-3.4-6" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-3.4-7">
 <pre>
@@ -1799,7 +1803,7 @@ natively Structured); see RFC nnnn.<a href="#section-4-2.1.1" class="pilcrow">¶
 <dl class="references">
 <dt id="COOKIES">[COOKIES]</dt>
       <dd>
-<span class="refAuthor">Bingler, S.</span>, <span class="refAuthor">West, M.</span>, and <span class="refAuthor">J. Wilander</span>, <span class="refTitle">"Cookies: HTTP State Management Mechanism"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-rfc6265bis-15</span>, <time datetime="2024-07-21" class="refDate">21 July 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis-15">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis-15</a>&gt;</span>. </dd>
+<span class="refAuthor">Bingler, S.</span>, <span class="refAuthor">West, M.</span>, and <span class="refAuthor">J. Wilander</span>, <span class="refTitle">"Cookies: HTTP State Management Mechanism"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-rfc6265bis-16</span>, <time datetime="2024-12-09" class="refDate">9 December 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis-16">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis-16</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="HTTP">[HTTP]</dt>
       <dd>
