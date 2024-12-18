@@ -82,7 +82,7 @@
         <eref target="https://github.com/httpwg/http-extensions/labels/query-method"/>.
       </t>
       <t>
-        The changes in this draft are summarized in <xref target="changes.since.06"/>.
+        The changes in this draft are summarized in <xref target="changes.since.07"/>.
       </t>
     </note>
 
@@ -732,6 +732,9 @@ Dubois, Camille, camille.dubois@example.net
   <li>Moved BCP14 related text into subsection (<eref target="https://github.com/httpwg/http-extensions/issues/2954"/>)</li>
   <li>Move examples into index (<eref target="https://github.com/httpwg/http-extensions/issues/2957"/>)</li>
 </ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-07" anchor="changes.since.07">
+  <t>None yet.</t>
 </section>
 </section>
 
