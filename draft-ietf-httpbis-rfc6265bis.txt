@@ -6,8 +6,8 @@ HTTP                                                     S. Bingler, Ed.
 Internet-Draft                                              M. West, Ed.
 Obsoletes: 6265 (if approved)                                 Google LLC
 Intended status: Standards Track                        J. Wilander, Ed.
-Expires: 21 June 2025                                         Apple, Inc
-                                                        18 December 2024
+Expires: 23 June 2025                                         Apple, Inc
+                                                        20 December 2024
 
 
                 Cookies: HTTP State Management Mechanism
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 June 2025.
+   This Internet-Draft will expire on 23 June 2025.
 
 Copyright Notice
 
@@ -129,7 +129,6 @@ Table of Contents
    6.  Implementation Considerations
      6.1.  Limits
      6.2.  Application Programming Interfaces
-     6.3.  IDNA Dependency and Migration
    7.  Privacy Considerations
      7.1.  Third-Party Cookies
      7.2.  Cookie Policy
@@ -533,14 +532,14 @@ Table of Contents
                          ; US-ASCII characters excluding CTLs,
                          ; whitespace, DQUOTE, comma, semicolon,
                          ; and backslash
-   token             = <token, defined in [RFC9110], Section 5.6.2>
+   token             = <token, defined in [HTTP], Section 5.6.2>
 
    cookie-av         = expires-av / max-age-av / domain-av /
                        path-av / secure-av / httponly-av /
                        samesite-av / extension-av
    expires-av        = "Expires" BWS "=" BWS sane-cookie-date
    sane-cookie-date  =
-       <IMF-fixdate, defined in [RFC9110], Section 5.6.7>
+       <IMF-fixdate, defined in [HTTP], Section 5.6.7>
    max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
    non-zero-digit    = %x31-39
                          ; digits 1 through 9
@@ -578,8 +577,8 @@ Table of Contents
 
    The domain-value is a subdomain as defined by [RFC1034], Section 3.5,
    and as enhanced by [RFC1123], Section 2.1.  Thus, domain-value is a
-   string of [USASCII] characters, such as one obtained by applying the
-   "ToASCII" operation defined in Section 4 of [RFC3490].
+   string of [USASCII] characters, such as an "A-label" as defined in
+   Section 2.3.2.1 of [RFC5890].
 
    The portions of the set-cookie-string produced by the cookie-av term
    are known as attributes.  To maximize compatibility with user agents,
@@ -712,7 +711,7 @@ Table of Contents
    cookie has the Secure attribute, the user agent will include the
    cookie in an HTTP request only if the request is transmitted over a
    secure channel (typically HTTP over Transport Layer Security (TLS)
-   [RFC2818]).
+   [HTTP]).
 
 4.1.2.6.  The HttpOnly Attribute
 
@@ -988,9 +987,7 @@ Table of Contents
 
    2.  Convert each label that is not a Non-Reserved LDH (NR-LDH) label,
        to an A-label (see Section 2.3.2.1 of [RFC5890] for the former
-       and latter), or to a "punycode label" (a label resulting from the
-       "ToASCII" conversion in Section 4 of [RFC3490]), as appropriate
-       (see Section 6.3 of this specification).
+       and latter).
 
    3.  Concatenate the resulting labels, separated by a %x2E (".")
        character.
@@ -2039,19 +2036,6 @@ Table of Contents
    clear benefits to accepting an abstract "Date" object instead of a
    serialized date string.
 
-6.3.  IDNA Dependency and Migration
-
-   IDNA2008 [RFC5890] supersedes IDNA2003 [RFC3490].  However, there are
-   differences between the two specifications, and thus there can be
-   differences in processing (e.g., converting) domain name labels that
-   have been registered under one from those registered under the other.
-   There will be a transition period of some time during which
-   IDNA2003-based domain name labels will exist in the wild.  User
-   agents SHOULD implement IDNA2008 [RFC5890] and MAY implement [UTS46]
-   or [RFC5895] in order to facilitate their IDNA transition.  If a user
-   agent does not implement IDNA2008, the user agent MUST implement
-   IDNA2003 [RFC3490].
-
 7.  Privacy Considerations
 
    Cookies' primary privacy risk is their ability to correlate user
@@ -2642,12 +2626,6 @@ Table of Contents
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
 
-   [RFC3490]  Costello, A., "Internationalizing Domain Names in
-              Applications (IDNA)", RFC 3490, March 2003,
-              <https://www.rfc-editor.org/rfc/rfc3490>.  See Section 6.3
-              for an explanation why the normative reference to an
-              obsoleted specification is needed.
-
    [RFC4790]  Newman, C., Duerst, M., and A. Gulbrandsen, "Internet
               Application Protocol Collation Registry", RFC 4790,
               DOI 10.17487/RFC4790, March 2007,
@@ -2707,26 +2685,6 @@ Table of Contents
               "Hypertext Transfer Protocol (HTTP) Field Name Registry",
               n.d., <https://www.iana.org/assignments/http-fields/>.
 
-   [I-D.ietf-httpbis-cookie-alone]
-              West, M., "Deprecate modification of 'secure' cookies from
-              non-secure origins", Work in Progress, Internet-Draft,
-              draft-ietf-httpbis-cookie-alone-01, 5 September 2016,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              cookie-alone-01>.
-
-   [I-D.ietf-httpbis-cookie-prefixes]
-              West, M., "Cookie Prefixes", Work in Progress, Internet-
-              Draft, draft-ietf-httpbis-cookie-prefixes-00, 23 February
-              2016, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              httpbis-cookie-prefixes-00>.
-
-   [I-D.ietf-httpbis-cookie-same-site]
-              West, M. and M. Goodwin, "Same-Site Cookies", Work in
-              Progress, Internet-Draft, draft-ietf-httpbis-cookie-same-
-              site-00, 20 June 2016,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              cookie-same-site-00>.
-
    [prerendering]
               Bentzel, C., "Chrome Prerendering", n.d.,
               <https://www.chromium.org/developers/design-documents/
@@ -2738,10 +2696,6 @@ Table of Contents
    [RFC2109]  Kristol, D. and L. Montulli, "HTTP State Management
               Mechanism", RFC 2109, DOI 10.17487/RFC2109, February 1997,
               <https://www.rfc-editor.org/rfc/rfc2109>.
-
-   [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818,
-              DOI 10.17487/RFC2818, May 2000,
-              <https://www.rfc-editor.org/rfc/rfc2818>.
 
    [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
               Resource Identifier (URI): Generic Syntax", STD 66,

@@ -1055,7 +1055,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bingler, et al.</td>
-<td class="center">Expires 21 June 2025</td>
+<td class="center">Expires 23 June 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6265" class="eref">6265</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-12-18" class="published">18 December 2024</time>
+<time datetime="2024-12-20" class="published">20 December 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-06-21">21 June 2025</time></dd>
+<dd class="expires"><time datetime="2025-06-23">23 June 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ header fields are widely used on the Internet. This document obsoletes RFC
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 21 June 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 23 June 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1342,9 +1342,6 @@ header fields are widely used on the Internet. This document obsoletes RFC
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
                 <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-application-programming-int" class="internal xref">Application Programming Interfaces</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
-                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-idna-dependency-and-migrati" class="internal xref">IDNA Dependency and Migration</a></p>
 </li>
             </ul>
 </li>
@@ -1842,14 +1839,14 @@ cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                       ; US-ASCII characters excluding CTLs,
                       ; whitespace, DQUOTE, comma, semicolon,
                       ; and backslash
-token             = &lt;token, defined in [RFC9110], Section 5.6.2&gt;
+token             = &lt;token, defined in [HTTP], Section 5.6.2&gt;
 
 cookie-av         = expires-av / max-age-av / domain-av /
                     path-av / secure-av / httponly-av /
                     samesite-av / extension-av
 expires-av        = "Expires" BWS "=" BWS sane-cookie-date
 sane-cookie-date  =
-    &lt;IMF-fixdate, defined in [RFC9110], Section 5.6.7&gt;
+    &lt;IMF-fixdate, defined in [HTTP], Section 5.6.7&gt;
 max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
 non-zero-digit    = %x31-39
                       ; digits 1 through 9
@@ -1883,8 +1880,8 @@ stripped. They are part of the cookie-value, and will be included in Cookie
 header fields sent to the server.<a href="#section-4.1.1-7" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-8">The domain-value is a subdomain as defined by <span>[<a href="#RFC1034" class="cite xref">RFC1034</a>]</span>, Section 3.5, and
 as enhanced by <span>[<a href="#RFC1123" class="cite xref">RFC1123</a>]</span>, Section 2.1. Thus, domain-value is a string of
-<span>[<a href="#USASCII" class="cite xref">USASCII</a>]</span> characters, such as one obtained by applying the "ToASCII" operation
-defined in <span><a href="https://rfc-editor.org/rfc/rfc3490#section-4" class="relref">Section 4</a> of [<a href="#RFC3490" class="cite xref">RFC3490</a>]</span>.<a href="#section-4.1.1-8" class="pilcrow">¶</a></p>
+<span>[<a href="#USASCII" class="cite xref">USASCII</a>]</span> characters, such as an "A-label" as defined in
+<span><a href="https://rfc-editor.org/rfc/rfc5890#section-2.3.2.1" class="relref">Section 2.3.2.1</a> of [<a href="#RFC5890" class="cite xref">RFC5890</a>]</span>.<a href="#section-4.1.1-8" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-9">The portions of the set-cookie-string produced by the cookie-av term are
 known as attributes. To maximize compatibility with user agents, servers SHOULD
 NOT produce two attributes with the same name in the same set-cookie-string.
@@ -2016,7 +2013,7 @@ a given host, the Path attribute cannot be relied upon for security (see
 (where "secure" is defined by the user agent). When a cookie has the Secure
 attribute, the user agent will include the cookie in an HTTP request only if
 the request is transmitted over a secure channel (typically HTTP over Transport
-Layer Security (TLS) <span>[<a href="#RFC2818" class="cite xref">RFC2818</a>]</span>).<a href="#section-4.1.2.5-1" class="pilcrow">¶</a></p>
+Layer Security (TLS) <span>[<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#section-4.1.2.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="attribute-httponly">
@@ -2351,10 +2348,7 @@ exists, abort these steps and fail to parse the cookie-date.<a href="#section-5.
 </li>
             <li id="section-5.1.2-2.2">
               <p id="section-5.1.2-2.2.1">Convert each label that is not a Non-Reserved LDH (NR-LDH) label, to an
-A-label (see <span><a href="https://rfc-editor.org/rfc/rfc5890#section-2.3.2.1" class="relref">Section 2.3.2.1</a> of [<a href="#RFC5890" class="cite xref">RFC5890</a>]</span> for the former and latter), or
-to a "punycode label" (a label resulting from the "ToASCII" conversion in
-<span><a href="https://rfc-editor.org/rfc/rfc3490#section-4" class="relref">Section 4</a> of [<a href="#RFC3490" class="cite xref">RFC3490</a>]</span>), as appropriate (see <a href="#idna-migration" class="auto internal xref">Section 6.3</a> of this
-specification).<a href="#section-5.1.2-2.2.1" class="pilcrow">¶</a></p>
+A-label (see <span><a href="https://rfc-editor.org/rfc/rfc5890#section-2.3.2.1" class="relref">Section 2.3.2.1</a> of [<a href="#RFC5890" class="cite xref">RFC5890</a>]</span> for the former and latter).<a href="#section-5.1.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.1.2-2.3">
               <p id="section-5.1.2-2.3.1">Concatenate the resulting labels, separated by a %x2E (".") character.<a href="#section-5.1.2-2.3.1" class="pilcrow">¶</a></p>
@@ -3684,22 +3678,6 @@ document to recommend specific API designs, but there are clear benefits to
 accepting an abstract "Date" object instead of a serialized date string.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="idna-migration">
-<section id="section-6.3">
-        <h3 id="name-idna-dependency-and-migrati">
-<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-idna-dependency-and-migrati" class="section-name selfRef">IDNA Dependency and Migration</a>
-        </h3>
-<p id="section-6.3-1">IDNA2008 <span>[<a href="#RFC5890" class="cite xref">RFC5890</a>]</span> supersedes IDNA2003 <span>[<a href="#RFC3490" class="cite xref">RFC3490</a>]</span>. However, there are
-differences between the two specifications, and thus there can be differences
-in processing (e.g., converting) domain name labels that have been registered
-under one from those registered under the other. There will be a transition
-period of some time during which IDNA2003-based domain name labels will exist
-in the wild. User agents SHOULD implement IDNA2008 <span>[<a href="#RFC5890" class="cite xref">RFC5890</a>]</span> and MAY
-implement <span>[<a href="#UTS46" class="cite xref">UTS46</a>]</span> or <span>[<a href="#RFC5895" class="cite xref">RFC5895</a>]</span> in order to facilitate their IDNA transition.
-If a user agent does not implement IDNA2008, the user agent MUST implement
-IDNA2003 <span>[<a href="#RFC3490" class="cite xref">RFC3490</a>]</span>.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
-</section>
-</div>
 </section>
 </div>
 <div id="privacy-considerations">
@@ -4377,11 +4355,6 @@ defined in CamelCase, but technically accepted case-insensitively.<a href="#sect
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC3490">[RFC3490]</dt>
-        <dd>
-<span class="refAuthor">Costello, A.</span>, <span class="refTitle">"Internationalizing Domain Names in Applications (IDNA)"</span>, <span class="seriesInfo">RFC 3490</span>, <time datetime="2003-03" class="refDate">March 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3490">https://www.rfc-editor.org/rfc/rfc3490</a>&gt;</span>. <span class="annotation">See <a href="#idna-migration" class="auto internal xref">Section 6.3</a> for an explanation why the normative reference to an obsoleted specification is needed.</span>
-        </dd>
-<dd class="break"></dd>
 <dt id="RFC4790">[RFC4790]</dt>
         <dd>
 <span class="refAuthor">Newman, C.</span>, <span class="refAuthor">Duerst, M.</span>, and <span class="refAuthor">A. Gulbrandsen</span>, <span class="refTitle">"Internet Application Protocol Collation Registry"</span>, <span class="seriesInfo">RFC 4790</span>, <span class="seriesInfo">DOI 10.17487/RFC4790</span>, <time datetime="2007-03" class="refDate">March 2007</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4790">https://www.rfc-editor.org/rfc/rfc4790</a>&gt;</span>. </dd>
@@ -4435,18 +4408,6 @@ defined in CamelCase, but technically accepted case-insensitively.<a href="#sect
         <dd>
 <span class="refTitle">"Hypertext Transfer Protocol (HTTP) Field Name Registry"</span>, <span>n.d.</span>, <span>&lt;<a href="https://www.iana.org/assignments/http-fields/">https://www.iana.org/assignments/http-fields/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.ietf-httpbis-cookie-alone">[I-D.ietf-httpbis-cookie-alone]</dt>
-        <dd>
-<span class="refAuthor">West, M.</span>, <span class="refTitle">"Deprecate modification of 'secure' cookies from non-secure origins"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-cookie-alone-01</span>, <time datetime="2016-09-05" class="refDate">5 September 2016</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-cookie-alone-01">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-cookie-alone-01</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-httpbis-cookie-prefixes">[I-D.ietf-httpbis-cookie-prefixes]</dt>
-        <dd>
-<span class="refAuthor">West, M.</span>, <span class="refTitle">"Cookie Prefixes"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-cookie-prefixes-00</span>, <time datetime="2016-02-23" class="refDate">23 February 2016</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-cookie-prefixes-00">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-cookie-prefixes-00</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-httpbis-cookie-same-site">[I-D.ietf-httpbis-cookie-same-site]</dt>
-        <dd>
-<span class="refAuthor">West, M.</span> and <span class="refAuthor">M. Goodwin</span>, <span class="refTitle">"Same-Site Cookies"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-cookie-same-site-00</span>, <time datetime="2016-06-20" class="refDate">20 June 2016</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-cookie-same-site-00">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-cookie-same-site-00</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="prerendering">[prerendering]</dt>
         <dd>
 <span class="refAuthor">Bentzel, C.</span>, <span class="refTitle">"Chrome Prerendering"</span>, <span>n.d.</span>, <span>&lt;<a href="https://www.chromium.org/developers/design-documents/prerender">https://www.chromium.org/developers/design-documents/prerender</a>&gt;</span>. </dd>
@@ -4458,10 +4419,6 @@ defined in CamelCase, but technically accepted case-insensitively.<a href="#sect
 <dt id="RFC2109">[RFC2109]</dt>
         <dd>
 <span class="refAuthor">Kristol, D.</span> and <span class="refAuthor">L. Montulli</span>, <span class="refTitle">"HTTP State Management Mechanism"</span>, <span class="seriesInfo">RFC 2109</span>, <span class="seriesInfo">DOI 10.17487/RFC2109</span>, <time datetime="1997-02" class="refDate">February 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2109">https://www.rfc-editor.org/rfc/rfc2109</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC2818">[RFC2818]</dt>
-        <dd>
-<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"HTTP Over TLS"</span>, <span class="seriesInfo">RFC 2818</span>, <span class="seriesInfo">DOI 10.17487/RFC2818</span>, <time datetime="2000-05" class="refDate">May 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2818">https://www.rfc-editor.org/rfc/rfc2818</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC3986">[RFC3986]</dt>
         <dd>
