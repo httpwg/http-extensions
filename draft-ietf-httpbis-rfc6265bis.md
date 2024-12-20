@@ -112,24 +112,10 @@ informative:
   RFC3986:
   RFC6265:
   RFC4648:
-  RFC5895:
   RFC6265:
   RFC7034:
   RFC9113:
   RFC9114:
-  UTS46:
-    target: http://unicode.org/reports/tr46/
-    title: "Unicode IDNA Compatibility Processing"
-    seriesinfo:
-      UNICODE: "Unicode Technical Standards # 46"
-    date: 2016-06
-    author:
-    -
-      ins: M. Davis
-      name: Mark Davis
-    -
-      ins: M. Suignard
-      name: Michel Suignard
   CSRF:
     target: http://portal.acm.org/citation.cfm?id=1455770.1455782
     title: Robust Defenses for Cross-Site Request Forgery
@@ -2295,10 +2281,10 @@ redirections.
 Understanding how and when a request is considered same-site is also important
 in order to properly design a site for SameSite cookies. For example, if a
 cross-site top-level request is made to a sensitive page that request will be
-considered cross-site and `SameSite=Strict` cookies won’t be sent; that page’s
+considered cross-site and `SameSite=Strict` cookies won't be sent; that page's
 sub-resources requests, however, are same-site and would receive `SameSite=Strict`
 cookies. Sites can avoid inadvertently allowing access to these sub-resources
-by returning an error for the initial page request if it doesn’t include the
+by returning an error for the initial page request if it doesn't include the
 appropriate cookies.
 
 Developers are strongly encouraged to deploy the usual server-side defenses
@@ -2512,7 +2498,7 @@ overwriting cookies with this flag. ({{storage-model}})
 
 *  Limits maximum values for max-age and expire. ({{ua-attribute-expires}} and {{ua-attribute-max-age}})
 
-*  Includes the host-only-flag as part of a cookie’s uniqueness computation.
+*  Includes the host-only-flag as part of a cookie's uniqueness computation.
 ({{storage-model}})
 
 *  Considers potentially trustworthy origins as "secure". ({{storage-model}})
@@ -2547,9 +2533,9 @@ errata 4148 by updating the day-of-month, year, and time grammar, and errata
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
-adding features and aligning the specification with the reality of today’s
-deployments. Here, we’re standing upon the shoulders of a giant since the
-majority of the text is still Adam’s.
+adding features and aligning the specification with the reality of today's
+deployments. Here, we're standing upon the shoulders of a giant since the
+majority of the text is still Adam's.
 
 Thank you to both Lily Chen and Steven Englehardt, editors emeritus, for their
 significant contributions improving this draft.
