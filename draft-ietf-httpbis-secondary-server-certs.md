@@ -130,8 +130,8 @@ certificates can also be supplied into these collections.
 
 ## HTTP-Layer Certificate Authentication
 
-This document defines HTTP/2 and HTTP/3 `CERTIFICATE` frames ({{certs-http}}) to
-carry the relevant certificate messages, enabling certificate-based
+This document defines HTTP/2 and HTTP/3 `SERVER_CERTIFICATE` frames ({{certs-http}})
+to carry the relevant certificate messages, enabling certificate-based
 authentication of servers independent of TLS version. This mechanism can be
 implemented at the HTTP layer without breaking the existing interface between
 HTTP and applications above it.
@@ -151,7 +151,7 @@ HTTP-Layer certificate authentication.
 # Discovering Additional Certificates at the HTTP Layer {#discovery}
 
 A certificate chain with proof of possession of the private key corresponding to
-the end-entity certificate is sent as a sequence of `CERTIFICATE` frames (see
+the end-entity certificate is sent as a sequence of `SERVER_CERTIFICATE` frames (see
 {{http2-cert}}, {{http3-cert}}) to the client. Once the holder of a certificate
 has sent the chain and proof, this certificate chain is cached by the recipient
 and available for future use.
@@ -198,18 +198,18 @@ NOT send them if the client has not indicated support with
 `SETTINGS_HTTP_SERVER_CERT_AUTH`.
 
 A client MUST NOT send certificates to the server. The server SHOULD close the
-connection upon receipt of a CERTIFICATE frame from a client.
+connection upon receipt of a SERVER_CERTIFICATE frame from a client.
 
 ~~~ drawing
-Client                                        Server
-   <-- (stream 0 / control stream) CERTIFICATE --
+Client                                               Server
+   <-- (stream 0 / control stream) SERVER_CERTIFICATE --
    ...
-   -- (stream N) GET /from-new-origin ---------->
-   <----------------------- (stream N) 200 OK ---
+   -- (stream N) GET /from-new-origin ----------------->
+   <------------------------------ (stream N) 200 OK ---
 ~~~
 {: #ex-http-server-unprompted-basic title="Simple unprompted server authentication"}
 
-A server MAY send a `CERTIFICATE` immediately after sending its `SETTINGS`.
+A server MAY send a `SERVER_CERTIFICATE` immediately after sending its `SETTINGS`.
 However, it MAY also send certificates at any time later. For example, a proxy
 might discover that a client is interested in an origin that it can reverse
 proxy at the time that a client sends a `CONNECT` request. It can then send
@@ -218,13 +218,13 @@ those origins for the remainder of the connection lifetime.
 {{ex-http-server-unprompted-reverse}} illustrates this behavior.
 
 ~~~ drawing
-Client                                        Server
-   -- (stream N) CONNECT /to-new-origin -------->
-   <-- (stream 0 / control stream) CERTIFICATE --
-   <-- (stream 0 / control stream) 200 OK -------
+Client                                                 Server
+   -- (stream N) CONNECT /to-new-origin ----------------->
+   <---- (stream 0 / control stream) SERVER_CERTIFICATE --
+   <---- (stream 0 / control stream) 200 OK --------------
    ...
-   -- (stream M) GET /to-new-origin ------------>
-   <--- (stream M, direct from server) 200 OK ---
+   -- (stream M) GET /to-new-origin --------------------->
+   <------------ (stream M, direct from server) 200 OK ---
 ~~~
 {: #ex-http-server-unprompted-reverse title="Reverse proxy server authentication"}
 
@@ -249,31 +249,31 @@ parameter MUST be 0 or 1.
 
 The usage of this parameter is described in {{settings-usage}}.
 
-# CERTIFICATE frame {#certs-http}
+# SERVER_CERTIFICATE frame {#certs-http}
 
-The CERTIFICATE frame contains an exported authenticator message from the TLS
+The SERVER_CERTIFICATE frame contains an exported authenticator message from the TLS
 layer that provides a chain of certificates and associated extensions, proving
 possession of the private key corresponding to the end-entity certificate.
 
-A server sends a CERTIFICATE frame on stream 0 for HTTP/2 and on the control
+A server sends a SERVER_CERTIFICATE frame on stream 0 for HTTP/2 and on the control
 stream for HTTP/3. The client is permitted to make subsequent requests for
-resources upon receipt of a CERTIFICATE frame without further action from the
+resources upon receipt of a SERVER_CERTIFICATE frame without further action from the
 server.
 
-Upon receiving a complete series of CERTIFICATE frames, the receiver may
+Upon receiving a complete series of SERVER_CERTIFICATE frames, the receiver may
 validate the Exported Authenticator value by using the exported authenticator
 API. This returns either an error indicating that the message was invalid or
 the certificate chain and extensions used to create the message.
 
-## HTTP/2 CERTIFICATE frame {#http2-cert}
-A CERTIFICATE frame in HTTP/2 (type=0xTBD) carrries a TLS Exported authenticator
+## HTTP/2 SERVER_CERTIFICATE frame {#http2-cert}
+A SERVER_CERTIFICATE frame in HTTP/2 (type=0xTBD) carrries a TLS Exported authenticator
 that clients can use to authenticate secondary origins from a sending server.
 
-The CERTIFICATE frame MUST be sent on stream 0. A CERTIFICATE frame received on
+The SERVER_CERTIFICATE frame MUST be sent on stream 0. A SERVER_CERTIFICATE frame received on
 any other stream MUST not be used for server authentication.
 
 ~~~~~~~~~~ ascii-art
-CERTIFICATE Frame {
+SERVER_CERTIFICATE Frame {
   Length (24),
   Type (8) = 0xTBD,
 
@@ -285,36 +285,36 @@ CERTIFICATE Frame {
   Authenticator (..),
 }
 ~~~~~~~~~~
-{: title="HTTP/2 CERTIFICATE Frame"}
+{: title="HTTP/2 SERVER_CERTIFICATE Frame"}
 
 The Length, Type, Unused Flag(s), Reserved, and Stream Identifier fields are
 described in {{Section 4 of H2}}.
 
-The CERTIFICATE frame does not define any flags.
+The SERVER_CERTIFICATE frame does not define any flags.
 
 The authenticator field is a portion of the opaque data returned from the TLS
 connection exported authenticator authenticate API. See {{exp-auth}} for more
 details on the input to this API.
 
-The CERTIFICATE frame applies to the connection, not a specific stream. An
-endpoint MUST treat a CERTIFICATE frame with a stream identifier other than
+The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. An
+endpoint MUST treat a SERVER_CERTIFICATE frame with a stream identifier other than
 0x00 as a connection error.
 
-## HTTP/3 CERTIFICATE frame {#http3-cert}
-A CERTIFICATE frame in HTTP/3 (type=0xTBD) carrries a TLS Exported authenticator
+## HTTP/3 SERVER_CERTIFICATE frame {#http3-cert}
+A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carrries a TLS Exported authenticator
 that clients can use to authenticate secondary origins from a sending server.
 
-The CERTIFICATE frame MUST be sent on the control stream. A CERTIFICATE frame
+The SERVER_CERTIFICATE frame MUST be sent on the control stream. A SERVER_CERTIFICATE frame
 received on any other stream MUST not be used for server authentication.
 
 ~~~~~~~~~~ ascii-art
-CERTIFICATE Frame {
+SERVER_CERTIFICATE Frame {
   Type (i) = 0xTBD,
   Length (i),
   Authenticator (...),
 }
 ~~~~~~~~~~
-{: title="HTTP/3 CERTIFICATE Frame"}
+{: title="HTTP/3 SERVER_CERTIFICATE Frame"}
 
 The Type and Length fields are described in {{Section 7.1 of H3}}.
 
@@ -322,8 +322,8 @@ The authenticator field is a portion of the opaque data returned from the TLS
 connection exported authenticator authenticate API. See {{exp-auth}} for more
 details on the input to this API.
 
-The CERTIFICATE frame applies to the connection, not a specific stream. An
-endpoint MUST treat a CERTIFICATE frame received on any stream other than the
+The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. An
+endpoint MUST treat a SERVER_CERTIFICATE frame received on any stream other than the
 control stream as a connection error.
 
 ## Exported Authenticator Characteristics {#exp-auth}
@@ -331,9 +331,9 @@ control stream as a connection error.
 The Exported Authenticator API defined in {{EXPORTED-AUTH}} takes as input a
 request, a set of certificates, and supporting information about the
 certificate (OCSP, SCT, etc.). The result is an opaque token which is used
-when generating the `CERTIFICATE` frame.
+when generating the `SERVER_CERTIFICATE` frame.
 
-Upon receipt of a `CERTIFICATE` frame, an endpoint which has negotiated support
+Upon receipt of a `SERVER_CERTIFICATE` frame, an endpoint which has negotiated support
 for secondary certfiicates MUST perform the following steps to validate the
 token it contains:
 
@@ -366,7 +366,7 @@ This category of errors could indicate a peer failing to follow requirements in
 this document or might indicate that the connection is not fully secure. These
 errors are fatal to stream or connection, as appropriate.
 
-CERTIFICATE_UNREADABLE (0xERROR-TBD):
+SERVER_CERTIFICATE_UNREADABLE (0xERROR-TBD):
 : An exported authenticator could not be validated.
 
 ## Invalid Certificates
@@ -434,7 +434,7 @@ features described in this document.
 Implementations need to be aware of the potential for confusion about the state
 of a connection. The presence or absence of a validated certificate can change
 during the processing of a request, potentially multiple times, as
-`CERTIFICATE` frames are received. A client that uses certificate
+`SERVER_CERTIFICATE` frames are received. A client that uses certificate
 authentication needs to be prepared to reevaluate the authorization state of a
 request as the set of certificates changes.
 
@@ -446,7 +446,7 @@ define formal mechanisms to facilitate that intention.
 
 # IANA Considerations
 
-This document registers the `CERTIFICATE` frame type and
+This document registers the `SERVER_CERTIFICATE` frame type and
 `SETTINGS_HTTP_SERVER_CERT_AUTH` setting for both {{H2}} and {{H3}}.
 
 ## Frame Types
@@ -456,7 +456,7 @@ registry defined in {{H2}}:
 
 Code: : TBD
 
-Frame Type: : CERTIFICATE
+Frame Type: : SERVER_CERTIFICATE
 
 Reference: : This document
 
@@ -466,7 +466,7 @@ registry established by {{H3}}:
 
 Value: : TBD
 
-Frame Type: : CERTIFICATE
+Frame Type: : SERVER_CERTIFICATE
 
 Status: : permanent
 
