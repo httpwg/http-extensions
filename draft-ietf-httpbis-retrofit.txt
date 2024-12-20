@@ -557,9 +557,9 @@ Table of Contents
 
    [COOKIES]  Bingler, S., West, M., and J. Wilander, "Cookies: HTTP
               State Management Mechanism", Work in Progress, Internet-
-              Draft, draft-ietf-httpbis-rfc6265bis-16, 9 December 2024,
+              Draft, draft-ietf-httpbis-rfc6265bis-17, 20 December 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              rfc6265bis-16>.
+              rfc6265bis-17>.
 
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,

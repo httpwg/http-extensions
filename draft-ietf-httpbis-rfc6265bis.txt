@@ -2376,10 +2376,10 @@ Table of Contents
    important in order to properly design a site for SameSite cookies.
    For example, if a cross-site top-level request is made to a sensitive
    page that request will be considered cross-site and SameSite=Strict
-   cookies won’t be sent; that page’s sub-resources requests, however,
+   cookies won't be sent; that page's sub-resources requests, however,
    are same-site and would receive SameSite=Strict cookies.  Sites can
    avoid inadvertently allowing access to these sub-resources by
-   returning an error for the initial page request if it doesn’t include
+   returning an error for the initial page request if it doesn't include
    the appropriate cookies.
 
    Developers are strongly encouraged to deploy the usual server-side
@@ -2706,11 +2706,6 @@ Table of Contents
               Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
               <https://www.rfc-editor.org/rfc/rfc4648>.
 
-   [RFC5895]  Resnick, P. and P. Hoffman, "Mapping Characters for
-              Internationalized Domain Names in Applications (IDNA)
-              2008", RFC 5895, DOI 10.17487/RFC5895, September 2010,
-              <https://www.rfc-editor.org/rfc/rfc5895>.
-
    [RFC6265]  Barth, A., "HTTP State Management Mechanism", RFC 6265,
               DOI 10.17487/RFC6265, April 2011,
               <https://www.rfc-editor.org/rfc/rfc6265>.
@@ -2730,10 +2725,6 @@ Table of Contents
               Archibald, J. and M. Kruisselbrink, "Service Workers",
               n.d., <https://www.w3.org/TR/service-workers/>.
 
-   [UTS46]    Davis, M. and M. Suignard, "Unicode IDNA Compatibility
-              Processing", UNICODE Unicode Technical Standards # 46,
-              June 2016, <http://unicode.org/reports/tr46/>.
-
 Appendix A.  Changes from RFC 6265
 
    *  Adds the same-site concept and the SameSite attribute.
@@ -2751,7 +2742,7 @@ Appendix A.  Changes from RFC 6265
    *  Limits maximum values for max-age and expire.  (Section 5.6.1 and
       Section 5.6.2)
 
-   *  Includes the host-only-flag as part of a cookie’s uniqueness
+   *  Includes the host-only-flag as part of a cookie's uniqueness
       computation.  (Section 5.7)
 
    *  Considers potentially trustworthy origins as "secure".
@@ -2801,8 +2792,8 @@ Acknowledgements
 
    RFC 6265 was written by Adam Barth.  This document is an update of
    RFC 6265, adding features and aligning the specification with the
-   reality of today’s deployments.  Here, we’re standing upon the
-   shoulders of a giant since the majority of the text is still Adam’s.
+   reality of today's deployments.  Here, we're standing upon the
+   shoulders of a giant since the majority of the text is still Adam's.
 
    Thank you to both Lily Chen and Steven Englehardt, editors emeritus,
    for their significant contributions improving this draft.

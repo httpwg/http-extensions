@@ -4020,10 +4020,10 @@ redirections.<a href="#section-8.8.1-1" class="pilcrow">¶</a></p>
 <p id="section-8.8.1-2">Understanding how and when a request is considered same-site is also important
 in order to properly design a site for SameSite cookies. For example, if a
 cross-site top-level request is made to a sensitive page that request will be
-considered cross-site and <code>SameSite=Strict</code> cookies won’t be sent; that page’s
+considered cross-site and <code>SameSite=Strict</code> cookies won't be sent; that page's
 sub-resources requests, however, are same-site and would receive <code>SameSite=Strict</code>
 cookies. Sites can avoid inadvertently allowing access to these sub-resources
-by returning an error for the initial page request if it doesn’t include the
+by returning an error for the initial page request if it doesn't include the
 appropriate cookies.<a href="#section-8.8.1-2" class="pilcrow">¶</a></p>
 <p id="section-8.8.1-3">Developers are strongly encouraged to deploy the usual server-side defenses
 (CSRF tokens, ensuring that "safe" HTTP methods are idempotent, etc) to mitigate
@@ -4428,10 +4428,6 @@ defined in CamelCase, but technically accepted case-insensitively.<a href="#sect
         <dd>
 <span class="refAuthor">Josefsson, S.</span>, <span class="refTitle">"The Base16, Base32, and Base64 Data Encodings"</span>, <span class="seriesInfo">RFC 4648</span>, <span class="seriesInfo">DOI 10.17487/RFC4648</span>, <time datetime="2006-10" class="refDate">October 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4648">https://www.rfc-editor.org/rfc/rfc4648</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC5895">[RFC5895]</dt>
-        <dd>
-<span class="refAuthor">Resnick, P.</span> and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Mapping Characters for Internationalized Domain Names in Applications (IDNA) 2008"</span>, <span class="seriesInfo">RFC 5895</span>, <span class="seriesInfo">DOI 10.17487/RFC5895</span>, <time datetime="2010-09" class="refDate">September 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5895">https://www.rfc-editor.org/rfc/rfc5895</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC6265">[RFC6265]</dt>
         <dd>
 <span class="refAuthor">Barth, A.</span>, <span class="refTitle">"HTTP State Management Mechanism"</span>, <span class="seriesInfo">RFC 6265</span>, <span class="seriesInfo">DOI 10.17487/RFC6265</span>, <time datetime="2011-04" class="refDate">April 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6265">https://www.rfc-editor.org/rfc/rfc6265</a>&gt;</span>. </dd>
@@ -4449,12 +4445,8 @@ defined in CamelCase, but technically accepted case-insensitively.<a href="#sect
 <span class="refAuthor">Bishop, M., Ed.</span>, <span class="refTitle">"HTTP/3"</span>, <span class="seriesInfo">RFC 9114</span>, <span class="seriesInfo">DOI 10.17487/RFC9114</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9114">https://www.rfc-editor.org/rfc/rfc9114</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SERVICE-WORKERS">[SERVICE-WORKERS]</dt>
-        <dd>
-<span class="refAuthor">Archibald, J.</span> and <span class="refAuthor">M. Kruisselbrink</span>, <span class="refTitle">"Service Workers"</span>, <span>n.d.</span>, <span>&lt;<a href="https://www.w3.org/TR/service-workers/">https://www.w3.org/TR/service-workers/</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="UTS46">[UTS46]</dt>
       <dd>
-<span class="refAuthor">Davis, M.</span> and <span class="refAuthor">M. Suignard</span>, <span class="refTitle">"Unicode IDNA Compatibility Processing"</span>, <span class="seriesInfo">UNICODE Unicode Technical Standards # 46</span>, <time datetime="2016-06" class="refDate">June 2016</time>, <span>&lt;<a href="http://unicode.org/reports/tr46/">http://unicode.org/reports/tr46/</a>&gt;</span>. </dd>
+<span class="refAuthor">Archibald, J.</span> and <span class="refAuthor">M. Kruisselbrink</span>, <span class="refTitle">"Service Workers"</span>, <span>n.d.</span>, <span>&lt;<a href="https://www.w3.org/TR/service-workers/">https://www.w3.org/TR/service-workers/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -4487,7 +4479,7 @@ overwriting cookies with this flag. (<a href="#storage-model" class="auto intern
           <p id="appendix-A-1.5.1">Limits maximum values for max-age and expire. (<a href="#ua-attribute-expires" class="auto internal xref">Section 5.6.1</a> and <a href="#ua-attribute-max-age" class="auto internal xref">Section 5.6.2</a>)<a href="#appendix-A-1.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-1.6">
-          <p id="appendix-A-1.6.1">Includes the host-only-flag as part of a cookie’s uniqueness computation.
+          <p id="appendix-A-1.6.1">Includes the host-only-flag as part of a cookie's uniqueness computation.
 (<a href="#storage-model" class="auto internal xref">Section 5.7</a>)<a href="#appendix-A-1.6.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-1.7">
@@ -4552,9 +4544,9 @@ errata 4148 by updating the day-of-month, year, and time grammar, and errata
 <a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
       </h2>
 <p id="appendix-B-1">RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
-adding features and aligning the specification with the reality of today’s
-deployments. Here, we’re standing upon the shoulders of a giant since the
-majority of the text is still Adam’s.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+adding features and aligning the specification with the reality of today's
+deployments. Here, we're standing upon the shoulders of a giant since the
+majority of the text is still Adam's.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 <p id="appendix-B-2">Thank you to both Lily Chen and Steven Englehardt, editors emeritus, for their
 significant contributions improving this draft.<a href="#appendix-B-2" class="pilcrow">¶</a></p>
 </section>
