@@ -609,7 +609,7 @@ known as attributes. To maximize compatibility with user agents, servers SHOULD
 NOT produce two attributes with the same name in the same set-cookie-string.
 (See {{storage-model}} for how user agents handle this case.)
 
-NOTE: The name of an attribute-value pair is not case sensitive. So while they
+NOTE: The name of an attribute-value pair is not case-sensitive. So while they
 are presented here in CamelCase, such as "HttpOnly" or "SameSite", any case is
 accepted. E.x.: "httponly", "Httponly", "hTTPoNLY", etc.
 
