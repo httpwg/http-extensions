@@ -6,8 +6,8 @@ HTTP                                                     S. Bingler, Ed.
 Internet-Draft                                              M. West, Ed.
 Obsoletes: 6265 (if approved)                                 Google LLC
 Intended status: Standards Track                        J. Wilander, Ed.
-Expires: 23 June 2025                                         Apple, Inc
-                                                        20 December 2024
+Expires: 10 July 2025                                         Apple, Inc
+                                                          6 January 2025
 
 
                 Cookies: HTTP State Management Mechanism
@@ -53,11 +53,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 June 2025.
+   This Internet-Draft will expire on 10 July 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -586,7 +586,7 @@ Table of Contents
    same set-cookie-string.  (See Section 5.7 for how user agents handle
    this case.)
 
-   NOTE: The name of an attribute-value pair is not case sensitive.  So
+   NOTE: The name of an attribute-value pair is not case-sensitive.  So
    while they are presented here in CamelCase, such as "HttpOnly" or
    "SameSite", any case is accepted.  E.x.: "httponly", "Httponly",
    "hTTPoNLY", etc.
