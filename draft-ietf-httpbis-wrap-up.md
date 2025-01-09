@@ -93,7 +93,7 @@ terminate the connection, supporting cases such as scheduled maintenance.
 Active requests/responses can continue to run, while new requests need to be
 sent on a new HTTP connection. Endpoints that use GOAWAY typically have a grace
 period in which requests/responses can run naturally to completion. If they run
-longer than the grace period, they are abruptly terminated when the the
+longer than the grace period, they are abruptly terminated when the
 transport layer is closed or reset, which is potentially disruptive and can
 lead to truncated content.
 
