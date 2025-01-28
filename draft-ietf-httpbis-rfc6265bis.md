@@ -753,7 +753,7 @@ along with "same-site" requests. If the value is "Lax", the cookie will be sent
 with same-site requests, and with "cross-site" top-level navigations, as
 described in {{strict-lax}}. If the value is "None", the cookie will be sent
 with same-site and cross-site requests. If the "SameSite" attribute's value is
-something other than these three known keywords, the attribute's value will be
+something other than these three known keywords, the attribute's value may be
 subject to a default enforcement mode that is equivalent to "Lax". If a user
 agent uses "Lax-allowing-unsafe" enforcement (See {{lax-allowing-unsafe}}) then
 this default enforcement mode will instead be equivalent to "Lax-allowing-unsafe".
