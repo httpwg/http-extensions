@@ -3,9 +3,9 @@
 
 
 Network Working Group                                      M. Nottingham
-Internet-Draft                                           21 January 2025
+Internet-Draft                                           29 January 2025
 Intended status: Standards Track                                        
-Expires: 25 July 2025
+Expires: 2 August 2025
 
 
                            HTTP Cache Groups
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 July 2025.
+   This Internet-Draft will expire on 2 August 2025.
 
 Copyright Notice
 

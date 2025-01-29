@@ -5,8 +5,8 @@
 HTTPBIS                                                      D. Schinazi
 Internet-Draft                                                Google LLC
 Intended status: Standards Track                               L. Pardue
-Expires: 25 July 2025                                         Cloudflare
-                                                         21 January 2025
+Expires: 2 August 2025                                        Cloudflare
+                                                         29 January 2025
 
 
                         The HTTP Wrap Up Capsule
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 July 2025.
+   This Internet-Draft will expire on 2 August 2025.
 
 Copyright Notice
 

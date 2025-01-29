@@ -6,8 +6,8 @@ HTTP                                                     S. Bingler, Ed.
 Internet-Draft                                              M. West, Ed.
 Obsoletes: 6265 (if approved)                                 Google LLC
 Intended status: Standards Track                        J. Wilander, Ed.
-Expires: 25 July 2025                                         Apple, Inc
-                                                         21 January 2025
+Expires: 2 August 2025                                        Apple, Inc
+                                                         29 January 2025
 
 
                 Cookies: HTTP State Management Mechanism
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 July 2025.
+   This Internet-Draft will expire on 2 August 2025.
 
 Copyright Notice
 
@@ -1531,9 +1531,8 @@ Table of Contents
        exploited to create "same-site" requests without the risk of user
        detection.
 
-   When possible, developers should use a session management mechanism
-   such as that described in Section 8.8.2 to mitigate the risk of CSRF
-   more completely.
+   Developers can more completely mitigate CSRF through a session
+   management mechanism such as that described in Section 8.8.2.
 
 5.6.7.2.  "Lax-Allowing-Unsafe" enforcement
 
