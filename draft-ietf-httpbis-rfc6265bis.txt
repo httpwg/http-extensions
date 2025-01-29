@@ -710,8 +710,8 @@ Table of Contents
    channels (where "secure" is defined by the user agent).  When a
    cookie has the Secure attribute, the user agent will include the
    cookie in an HTTP request only if the request is transmitted over a
-   secure channel (typically HTTP over Transport Layer Security (TLS)
-   [HTTP]).
+   secure channel (typically HTTP over Transport Layer Security (TLS
+   [TLS13]) [HTTP]).
 
 4.1.2.6.  The HttpOnly Attribute
 
@@ -1938,9 +1938,10 @@ Table of Contents
           NOTE: The notion of a "secure" connection is not defined by
           this document.  Typically, user agents consider a connection
           secure if the connection makes use of transport-layer
-          security, such as SSL or TLS, or if the host is trusted.  For
-          example, most user agents consider "https" to be a scheme that
-          denotes a secure protocol and "localhost" to be trusted host.
+          security, such as SSL or TLS [TLS13], or if the host is
+          trusted.  For example, most user agents consider "https" to be
+          a scheme that denotes a secure protocol and "localhost" to be
+          trusted host.
 
        *  If the cookie's http-only-flag is true, then exclude the
           cookie if the retrieval's type is "non-HTTP".
@@ -2215,8 +2216,9 @@ Table of Contents
 
 8.3.  Clear Text
 
-   Unless sent over a secure channel (such as TLS), the information in
-   the Cookie and Set-Cookie header fields is transmitted in the clear.
+   Unless sent over a secure channel (such as TLS [TLS13]), the
+   information in the Cookie and Set-Cookie header fields is transmitted
+   in the clear.
 
    1.  All sensitive information conveyed in these header fields is
        exposed to an eavesdropper.
@@ -2723,6 +2725,10 @@ Table of Contents
    [SERVICE-WORKERS]
               Archibald, J. and M. Kruisselbrink, "Service Workers",
               n.d., <https://www.w3.org/TR/service-workers/>.
+
+   [TLS13]    Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
+              <https://www.rfc-editor.org/rfc/rfc8446>.
 
 Appendix A.  Changes from RFC 6265
 
