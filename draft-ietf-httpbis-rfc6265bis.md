@@ -1516,9 +1516,8 @@ against CSRF as a general category of attack:
 2. Features like `<link rel='prerender'>` {{prerendering}} can be exploited
    to create "same-site" requests without the risk of user detection.
 
-When possible, developers should use a session management mechanism such as
-that described in {{top-level-navigations}} to mitigate the risk of CSRF more
-completely.
+Developers can more completely mitigate CSRF through a session management
+mechanism such as that described in {{top-level-navigations}}.
 
 #### "Lax-Allowing-Unsafe" enforcement {#lax-allowing-unsafe}
 
