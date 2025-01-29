@@ -198,7 +198,7 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
     </section>
 
-    <section title="Notational Conventions" anchor="notational.coventions">
+    <section title="Notational Conventions" anchor="notational.conventions">
       <t>
         The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
         NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
