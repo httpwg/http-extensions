@@ -6,8 +6,8 @@ HTTP                                                     S. Bingler, Ed.
 Internet-Draft                                              M. West, Ed.
 Obsoletes: 6265 (if approved)                                 Google LLC
 Intended status: Standards Track                        J. Wilander, Ed.
-Expires: 2 August 2025                                        Apple, Inc
-                                                         29 January 2025
+Expires: 3 August 2025                                        Apple, Inc
+                                                         30 January 2025
 
 
                 Cookies: HTTP State Management Mechanism
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 August 2025.
+   This Internet-Draft will expire on 3 August 2025.
 
 Copyright Notice
 
@@ -325,8 +325,8 @@ Table of Contents
    Cookie header field does not preclude HTTP caches from storing and
    reusing a response.
 
-   Origin servers SHOULD NOT fold multiple Set-Cookie header fields into
-   a single header field.  The usual mechanism for folding HTTP headers
+   Origin servers MUST NOT fold multiple Set-Cookie header fields into a
+   single header field.  The usual mechanism for folding HTTP headers
    fields (i.e., as defined in Section 5.3 of [HTTP]) might change the
    semantics of the Set-Cookie header field because the %x2C (",")
    character is used by Set-Cookie in a way that conflicts with such
@@ -520,8 +520,9 @@ Table of Contents
 
    Informally, the Set-Cookie response header field contains a cookie,
    which begins with a name-value-pair, followed by zero or more
-   attribute-value pairs.  Servers SHOULD NOT send Set-Cookie header
-   fields that fail to conform to the following grammar:
+   attribute-value pairs.  Servers conforming to this profile MUST NOT
+   send Set-Cookie header fields that deviate from the following
+   grammar:
 
    set-cookie        = set-cookie-string
    set-cookie-string = BWS cookie-pair *( BWS ";" OWS cookie-av )
@@ -560,7 +561,7 @@ Table of Contents
    that use different grammatical notations than this document (which
    uses ABNF from [RFC5234]).
 
-   Per the grammar above, servers SHOULD NOT produce nameless cookies
+   Per the grammar above, servers MUST NOT produce nameless cookies
    (i.e.: an empty cookie-name) as such cookies may be unpredictably
    serialized by UAs when sent back to the server.
 
@@ -582,7 +583,7 @@ Table of Contents
 
    The portions of the set-cookie-string produced by the cookie-av term
    are known as attributes.  To maximize compatibility with user agents,
-   servers SHOULD NOT produce two attributes with the same name in the
+   servers MUST NOT produce two attributes with the same name in the
    same set-cookie-string.  (See Section 5.7 for how user agents handle
    this case.)
 
@@ -591,9 +592,9 @@ Table of Contents
    "SameSite", any case is accepted.  E.x.: "httponly", "Httponly",
    "hTTPoNLY", etc.
 
-   Servers SHOULD NOT include more than one Set-Cookie header field in
-   the same response with the same cookie-name.  (See Section 5.6 for
-   how user agents handle this case.)
+   Servers MUST NOT include more than one Set-Cookie header field in the
+   same response with the same cookie-name.  (See Section 5.6 for how
+   user agents handle this case.)
 
    If a server sends multiple responses containing Set-Cookie header
    fields concurrently to the user agent (e.g., when communicating with
@@ -710,8 +711,8 @@ Table of Contents
    channels (where "secure" is defined by the user agent).  When a
    cookie has the Secure attribute, the user agent will include the
    cookie in an HTTP request only if the request is transmitted over a
-   secure channel (typically HTTP over Transport Layer Security (TLS)
-   [HTTP]).
+   secure channel (typically HTTP over Transport Layer Security (TLS
+   [TLS13]) [HTTP]).
 
 4.1.2.6.  The HttpOnly Attribute
 
@@ -1938,9 +1939,10 @@ Table of Contents
           NOTE: The notion of a "secure" connection is not defined by
           this document.  Typically, user agents consider a connection
           secure if the connection makes use of transport-layer
-          security, such as SSL or TLS, or if the host is trusted.  For
-          example, most user agents consider "https" to be a scheme that
-          denotes a secure protocol and "localhost" to be trusted host.
+          security, such as SSL or TLS [TLS13], or if the host is
+          trusted.  For example, most user agents consider "https" to be
+          a scheme that denotes a secure protocol and "localhost" to be
+          trusted host.
 
        *  If the cookie's http-only-flag is true, then exclude the
           cookie if the retrieval's type is "non-HTTP".
@@ -2215,8 +2217,9 @@ Table of Contents
 
 8.3.  Clear Text
 
-   Unless sent over a secure channel (such as TLS), the information in
-   the Cookie and Set-Cookie header fields is transmitted in the clear.
+   Unless sent over a secure channel (such as TLS [TLS13]), the
+   information in the Cookie and Set-Cookie header fields is transmitted
+   in the clear.
 
    1.  All sensitive information conveyed in these header fields is
        exposed to an eavesdropper.
@@ -2723,6 +2726,10 @@ Table of Contents
    [SERVICE-WORKERS]
               Archibald, J. and M. Kruisselbrink, "Service Workers",
               n.d., <https://www.w3.org/TR/service-workers/>.
+
+   [TLS13]    Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
+              <https://www.rfc-editor.org/rfc/rfc8446>.
 
 Appendix A.  Changes from RFC 6265
 
