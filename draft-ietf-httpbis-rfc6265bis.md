@@ -349,7 +349,7 @@ origin server can include multiple Set-Cookie header fields in a single response
 The presence of a Cookie or a Set-Cookie header field does not preclude HTTP
 caches from storing and reusing a response.
 
-Origin servers SHOULD NOT fold multiple Set-Cookie header fields into a single
+Origin servers MUST NOT fold multiple Set-Cookie header fields into a single
 header field. The usual mechanism for folding HTTP headers fields (i.e., as
 defined in {{Section 5.3 of RFC9110}}) might change the semantics of the Set-Cookie header
 field because the %x2C (",") character is used by Set-Cookie in a way that
@@ -543,8 +543,8 @@ the user agent.
 ### Syntax {#abnf-syntax}
 
 Informally, the Set-Cookie response header field contains a cookie, which begins with a
-name-value-pair, followed by zero or more attribute-value pairs. Servers
-SHOULD NOT send Set-Cookie header fields that fail to conform to the following
+name-value-pair, followed by zero or more attribute-value pairs. Servers conforming to
+this profile MUST NOT send Set-Cookie header fields that deviate from the following
 grammar:
 
 ~~~ abnf
@@ -586,7 +586,7 @@ Note that some of the grammatical terms above reference documents that use
 different grammatical notations than this document (which uses ABNF from
 {{RFC5234}}).
 
-Per the grammar above, servers SHOULD NOT produce nameless cookies (i.e.: an
+Per the grammar above, servers MUST NOT produce nameless cookies (i.e.: an
 empty cookie-name) as such cookies may be unpredictably serialized by UAs when
 sent back to the server.
 
@@ -607,7 +607,7 @@ as enhanced by {{RFC1123}}, Section 2.1. Thus, domain-value is a string of
 {{Section 2.3.2.1 of RFC5890}}.
 
 The portions of the set-cookie-string produced by the cookie-av term are
-known as attributes. To maximize compatibility with user agents, servers SHOULD
+known as attributes. To maximize compatibility with user agents, servers MUST
 NOT produce two attributes with the same name in the same set-cookie-string.
 (See {{storage-model}} for how user agents handle this case.)
 
@@ -615,7 +615,7 @@ NOTE: The name of an attribute-value pair is not case-sensitive. So while they
 are presented here in CamelCase, such as "HttpOnly" or "SameSite", any case is
 accepted. E.x.: "httponly", "Httponly", "hTTPoNLY", etc.
 
-Servers SHOULD NOT include more than one Set-Cookie header field in the same
+Servers MUST NOT include more than one Set-Cookie header field in the same
 response with the same cookie-name. (See {{set-cookie}} for how user agents
 handle this case.)
 
