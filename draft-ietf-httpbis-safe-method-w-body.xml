@@ -105,7 +105,7 @@ GET /feed?q=foo&amp;limit=10&amp;sort=-published HTTP/1.1
 Host: example.org
 </artwork>
     <t>
-      However, for a query with parameters that are complex or large in size,
+      However, for a query with parameters that are complex or large,
       encoding it in the request URI may not be the best option because
     </t>
     <ul>
@@ -305,7 +305,7 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
       <ul>
         <li>Removing content encoding(s)</li>
-        <li>Normalizing based upon knowledge of format conventions, as indicated by the any media type suffix in the request's Content-Type field (e.g., "+json")</li>
+        <li>Normalizing based upon knowledge of format conventions, as indicated by any media type suffix in the request's Content-Type field (e.g., "+json")</li>
         <li>Normalizing based upon knowledge of the semantics of the content itself, as indicated by the request's Content-Type field.</li>
       </ul>
       <t>
@@ -386,7 +386,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     </t>
     <t>
       Caches that normalize QUERY content incorrectly or in ways that are
-      significantly different than how the resource processes the content
+      significantly different from how the resource processes the content
       can return the incorrect response if normalization results in a false positive.
     </t>
     <t>
