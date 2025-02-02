@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 2 August 2025                                                  
+Expires: 6 August 2025                                                  
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                         29 January 2025
+                                                         2 February 2025
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 August 2025.
+   This Internet-Draft will expire on 6 August 2025.
 
 Copyright Notice
 
@@ -111,9 +111,8 @@ Table of Contents
    GET /feed?q=foo&limit=10&sort=-published HTTP/1.1
    Host: example.org
 
-   However, for a query with parameters that are complex or large in
-   size, encoding it in the request URI may not be the best option
-   because
+   However, for a query with parameters that are complex or large,
+   encoding it in the request URI may not be the best option because
 
    *  often size limits are not known ahead of time because a request
       can pass through many uncoordinated system (but note that
@@ -274,8 +273,8 @@ Table of Contents
    *  Removing content encoding(s)
 
    *  Normalizing based upon knowledge of format conventions, as
-      indicated by the any media type suffix in the request's Content-
-      Type field (e.g., "+json")
+      indicated by any media type suffix in the request's Content-Type
+      field (e.g., "+json")
 
    *  Normalizing based upon knowledge of the semantics of the content
       itself, as indicated by the request's Content-Type field.
@@ -342,7 +341,7 @@ Table of Contents
    sensitive portions of the original request content.
 
    Caches that normalize QUERY content incorrectly or in ways that are
-   significantly different than how the resource processes the content
+   significantly different from how the resource processes the content
    can return the incorrect response if normalization results in a false
    positive.
 
