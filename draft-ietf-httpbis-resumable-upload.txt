@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 6 August 2025                                        Apple Inc.
+Expires: 7 August 2025                                        Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                         2 February 2025
+                                                         3 February 2025
 
 
                        Resumable Uploads for HTTP
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 August 2025.
+   This Internet-Draft will expire on 7 August 2025.
 
 Copyright Notice
 
@@ -1434,7 +1434,7 @@ Appendix B.  Feature Detection
 
    *Send a 104 intermediate response to indicate support.* The clients
    normally starts a traditional upload and includes a header field
-   indicate that it supports resumable uploads (e.g.  Upload-Offset: 0).
+   indicate that it supports resumable uploads (e.g. Upload-Offset: 0).
    If the server also supports resumable uploads, it will immediately
    respond with a 104 intermediate response to indicate its support,
    before further processing the request.  This way the client is
@@ -1449,7 +1449,7 @@ Appendix B.  Feature Detection
    104 (Upload Resumption Supported) status code, the existing 103
    (Early Hint) status code is used in the intermediate response.  The
    103 code would then be accompanied by a header field indicating
-   support for resumable uploads (e.g.  Resumable-Uploads: 1).  It is
+   support for resumable uploads (e.g. Resumable-Uploads: 1).  It is
    unclear whether the Early Hints code is appropriate for that, as it
    is currently only used to indicate resources for prefetching them.
 

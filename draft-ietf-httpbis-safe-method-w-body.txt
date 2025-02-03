@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 6 August 2025                                                  
+Expires: 7 August 2025                                                  
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                         2 February 2025
+                                                         3 February 2025
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 August 2025.
+   This Internet-Draft will expire on 7 August 2025.
 
 Copyright Notice
 
@@ -76,6 +76,7 @@ Table of Contents
      2.2.  Redirection
      2.3.  Conditional Requests
      2.4.  Caching
+     2.5.  Range Requests
    3.  The "Accept-Query" Header Field
    4.  Security Considerations
    5.  IANA Considerations
@@ -281,6 +282,11 @@ Table of Contents
 
    Note that any such normalization is performed solely for the purpose
    of generating a cache key; it does not change the request itself.
+
+2.5.  Range Requests
+
+   The semantics of Range Requests for QUERY are identical to those for
+   GET, as defined in Section 14 of [HTTP].
 
 3.  The "Accept-Query" Header Field
 
@@ -667,7 +673,8 @@ B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
 
 B.8.  Since draft-ietf-httpbis-safe-method-w-body-07
 
-   None yet.
+   *  Discuss Range Requests (https://github.com/httpwg/http-extensions/
+      issues/2979)
 
 Authors' Addresses
 
