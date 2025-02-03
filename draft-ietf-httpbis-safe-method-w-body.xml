@@ -316,7 +316,7 @@ q=foo&amp;limit=10&amp;sort=-published
 
     <section title="Range Requests" anchor="range">
     <t>
-      The semantics of range requests for QUERY are identical to those for GET,
+      The semantics of Range Requests for QUERY are identical to those for GET,
       as defined in <xref target="HTTP" section="14"/>.
     </t>
     </section>
