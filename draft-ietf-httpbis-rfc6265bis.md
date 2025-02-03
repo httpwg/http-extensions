@@ -349,11 +349,11 @@ origin server can include multiple Set-Cookie header fields in a single response
 The presence of a Cookie or a Set-Cookie header field does not preclude HTTP
 caches from storing and reusing a response.
 
-Origin servers SHOULD NOT fold multiple Set-Cookie header fields into a single
-header field. The usual mechanism for folding HTTP headers fields (i.e., as
-defined in {{Section 5.3 of RFC9110}}) might change the semantics of the Set-Cookie header
-field because the %x2C (",") character is used by Set-Cookie in a way that
-conflicts with such folding.
+Origin servers SHOULD NOT combine multiple Set-Cookie header fields into a
+single header field. The usual mechanism for combining HTTP headers fields
+(i.e., as defined in {{Section 5.3 of RFC9110}}) might change the semantics of
+the Set-Cookie header field because the %x2C (",") character is used by
+Set-Cookie in a way that conflicts with such combining.
 
 User agents MAY ignore Set-Cookie header fields based on response status codes or
 the user agent's cookie policy (see {{ignoring-cookies}}).
