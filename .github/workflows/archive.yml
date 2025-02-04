@@ -16,6 +16,8 @@ jobs:
   build:
     name: "Archive Issues and Pull Requests"
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - name: "Checkout"
       uses: actions/checkout@v4
