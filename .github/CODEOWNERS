@@ -10,5 +10,5 @@ draft-ietf-httpbis-retrofit.md mnot@mnot.net
 draft-ietf-httpbis-rfc6265bis.md bingler@google.com mkwst@google.com wilander@apple.com
 draft-ietf-httpbis-safe-method-w-body.xml julian.reschke@greenbytes.de malhotrasahib@gmail.com jasnell@gmail.com mbishop@evequefou.be
 draft-ietf-httpbis-secondary-server-certs.md e_gorbaty@apple.com mbishop@evequefou.be
-draft-ietf-httpbis-unprompted-auth.md dschinazi.ietf@gmail.com david@guardianproject.info jonathan.hoyland@gmail.com
 draft-ietf-httpbis-wrap-up.md dschinazi.ietf@gmail.com lucas@lucaspardue.com
+rfc9729.md dschinazi.ietf@gmail.com david@guardianproject.info jonathan.hoyland@gmail.com
