@@ -2,17 +2,16 @@
 
 
 
-HTTPBIS                                                      D. Schinazi
-Internet-Draft                                                Google LLC
-Intended status: Standards Track                               D. Oliver
-Expires: 8 August 2025                                  Guardian Project
+Internet Engineering Task Force (IETF)                       D. Schinazi
+Request for Comments: 9729                                    Google LLC
+Category: Standards Track                                      D. Oliver
+ISSN: 2070-1721                                         Guardian Project
                                                               J. Hoyland
                                                          Cloudflare Inc.
-                                                         4 February 2025
+                                                            January 2025
 
 
                 The Concealed HTTP Authentication Scheme
-               draft-ietf-httpbis-unprompted-auth-latest
 
 Abstract
 
@@ -28,39 +27,19 @@ Abstract
    authentication.  This document defines a new non-probeable
    cryptographic authentication scheme.
 
-About This Document
-
-   This note is to be removed before publishing as an RFC.
-
-   The latest revision of this draft can be found at https://httpwg.org/
-   http-extensions/draft-ietf-httpbis-unprompted-auth.html.  Status
-   information for this document may be found at
-   https://datatracker.ietf.org/doc/draft-ietf-httpbis-unprompted-auth/.
-
-   Discussion of this document takes place on the HTTP Working Group
-   mailing list (mailto:ietf-http-wg@w3.org), which is archived at
-   https://lists.w3.org/Archives/Public/ietf-http-wg/.  Working Group
-   information can be found at https://httpwg.org/.
-
-   Source for this draft and an issue tracker can be found at
-   https://github.com/httpwg/http-extensions/labels/unprompted-auth.
-
 Status of This Memo
 
-   This Internet-Draft is submitted in full conformance with the
-   provisions of BCP 78 and BCP 79.
+   This is an Internet Standards Track document.
 
-   Internet-Drafts are working documents of the Internet Engineering
-   Task Force (IETF).  Note that other groups may also distribute
-   working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at https://datatracker.ietf.org/drafts/current/.
+   This document is a product of the Internet Engineering Task Force
+   (IETF).  It represents the consensus of the IETF community.  It has
+   received public review and has been approved for publication by the
+   Internet Engineering Steering Group (IESG).  Further information on
+   Internet Standards is available in Section 2 of RFC 7841.
 
-   Internet-Drafts are draft documents valid for a maximum of six months
-   and may be updated, replaced, or obsoleted by other documents at any
-   time.  It is inappropriate to use Internet-Drafts as reference
-   material or to cite them other than as "work in progress."
-
-   This Internet-Draft will expire on 8 August 2025.
+   Information about the current status of this document, any errata,
+   and how to provide feedback on it may be obtained at
+   https://www.rfc-editor.org/info/rfc9729.
 
 Copyright Notice
 
@@ -68,13 +47,14 @@ Copyright Notice
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
-   Provisions Relating to IETF Documents (https://trustee.ietf.org/
-   license-info) in effect on the date of publication of this document.
-   Please review these documents carefully, as they describe your rights
-   and restrictions with respect to this document.  Code Components
-   extracted from this document must include Revised BSD License text as
-   described in Section 4.e of the Trust Legal Provisions and are
-   provided without warranty as described in the Revised BSD License.
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Revised BSD License text as described in Section 4.e of the
+   Trust Legal Provisions and are provided without warranty as described
+   in the Revised BSD License.
 
 Table of Contents
 
