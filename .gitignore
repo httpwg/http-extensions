@@ -47,6 +47,7 @@ node_modules//lib
 package-lock.json
 pulls.json
 report.xml
+rfc9729.xml
 venv/
 !draft-ietf-httpbis-safe-method-w-body.xml
 !requirements.txt
