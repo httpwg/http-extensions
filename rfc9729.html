@@ -12,7 +12,7 @@
        Most HTTP authentication schemes are probeable in the sense that it is possible
 for an unauthenticated client to probe whether an origin serves resources that
 require authentication. It is possible for an origin to hide the fact that it
-requires authentication by not generating Unauthorized status codes, however
+requires authentication by not generating Unauthorized status codes; however,
 that only works with non-cryptographic authentication schemes: cryptographic
 signatures require a fresh nonce to be signed. Prior to this document, there
 was no existing way for the origin to share such a nonce without exposing the
@@ -1107,7 +1107,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-abstract-1">Most HTTP authentication schemes are probeable in the sense that it is possible
 for an unauthenticated client to probe whether an origin serves resources that
 require authentication. It is possible for an origin to hide the fact that it
-requires authentication by not generating Unauthorized status codes, however
+requires authentication by not generating Unauthorized status codes; however,
 that only works with non-cryptographic authentication schemes: cryptographic
 signatures require a fresh nonce to be signed. Prior to this document, there
 was no existing way for the origin to share such a nonce without exposing the
@@ -1169,7 +1169,7 @@ defines a new non-probeable cryptographic authentication scheme.<a href="#sectio
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-the-concealed-authenticatio" class="internal xref">The Concealed Authentication Scheme</a></p>
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-the-concealed-http-authenti" class="internal xref">The Concealed HTTP Authentication Scheme</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-client-handling" class="internal xref">Client Handling</a></p>
@@ -1220,7 +1220,7 @@ defines a new non-probeable cryptographic authentication scheme.<a href="#sectio
                 <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-frontend-handling" class="internal xref">Frontend Handling</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
-                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-communication-between-front" class="internal xref">Communication between Frontend and Backend</a></p>
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-communication-between-front" class="internal xref">Communication Between Frontend and Backend</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
                 <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-backend-handling" class="internal xref">Backend Handling</a></p>
@@ -1281,12 +1281,12 @@ to restrict access for some resources to only authenticated requests. While
 these schemes commonly involve a challenge where the origin asks the client to
 provide authentication information, it is possible for clients to send such
 information unprompted. This is particularly useful in cases where an origin
-wants to offer a service or capability only to "those who know" while all
+wants to offer a service or capability only to "those who know", while all
 others are given no indication the service or capability exists. Such designs
-rely on an externally-defined mechanism by which keys are distributed. For
+rely on an externally defined mechanism by which keys are distributed. For
 example, a company might offer remote employee access to company services
-directly via its website using their employee credentials, or offer access to
-limited special capabilities for specific employees, while making discovering
+directly via its website using their employee credentials or offer access to
+limited special capabilities for specific employees while making discovering
 (or probing for) such capabilities difficult. As another example, members of
 less well-defined communities might use more ephemeral keys to acquire access
 to geography- or capability-specific resources, as issued by an entity whose
@@ -1308,14 +1308,16 @@ is not probeable.<a href="#section-1-2" class="pilcrow">¶</a></p>
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 <p id="section-1.1-2">This document uses the notation from <span><a href="https://rfc-editor.org/rfc/rfc9000#section-1.3" class="relref">Section 1.3</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+<p id="section-1.1-3">Various examples in this document contain long lines that may be folded,
+as described in <span>[<a href="#RFC8792" class="cite xref">RFC8792</a>]</span>.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
-<div id="the-concealed-authentication-scheme">
+<div id="the-concealed-http-authentication-scheme">
 <section id="section-2">
-      <h2 id="name-the-concealed-authenticatio">
-<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-the-concealed-authenticatio" class="section-name selfRef">The Concealed Authentication Scheme</a>
+      <h2 id="name-the-concealed-http-authenti">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-the-concealed-http-authenti" class="section-name selfRef">The Concealed HTTP Authentication Scheme</a>
       </h2>
 <p id="section-2-1">This document defines the "Concealed" HTTP authentication scheme. It uses
 asymmetric cryptography. Clients possess a key ID and a public/private key
@@ -1328,7 +1330,7 @@ and additional information are exchanged using authentication parameters (see
 <a href="#auth-params" class="auto internal xref">Section 4</a>). Once the server receives these, it can check whether the
 signature validates against an entry in its database of known keys. The server
 can then use the validation result to influence its response to the client, for
-example by restricting access to certain resources.<a href="#section-2-2" class="pilcrow">¶</a></p>
+example, by restricting access to certain resources.<a href="#section-2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="client">
@@ -1341,13 +1343,13 @@ request, it <span class="bcp14">SHALL</span> compute the authentication proof us
 exporter with the following parameters:<a href="#section-3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-2.1">
-          <p id="section-3-2.1.1">the label is set to "EXPORTER-HTTP-Concealed-Authentication"<a href="#section-3-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-3-2.1.1">The label is set to "EXPORTER-HTTP-Concealed-Authentication".<a href="#section-3-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-2.2">
-          <p id="section-3-2.2.1">the context is set to the structure described in <a href="#context" class="auto internal xref">Section 3.1</a><a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-3-2.2.1">The context is set to the structure described in <a href="#context" class="auto internal xref">Section 3.1</a>.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-2.3">
-          <p id="section-3-2.3.1">the exporter output length is set to 48 bytes (see <a href="#output" class="auto internal xref">Section 3.2</a>)<a href="#section-3-2.3.1" class="pilcrow">¶</a></p>
+          <p id="section-3-2.3.1">The exporter output length is set to 48 bytes (see <a href="#output" class="auto internal xref">Section 3.2</a>).<a href="#section-3-2.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-3-3">Note that TLS 1.3 keying material exporters are defined in <span><a href="https://rfc-editor.org/rfc/rfc8446#section-7.5" class="relref">Section 7.5</a> of [<a href="#TLS" class="cite xref">TLS</a>]</span>, while TLS 1.2 keying material exporters are defined in
@@ -1414,14 +1416,14 @@ URI as defined in <span><a href="https://rfc-editor.org/rfc/rfc3986#section-3.2.
 <dt id="section-3.1-4.11">Port:</dt>
           <dd style="margin-left: 1.5em" id="section-3.1-4.12">
             <p id="section-3.1-4.12.1">The port for this request, encoded in network byte order. Note that the port
-is either included in the URI, or is the default port for the scheme in use;
+is either included in the URI or is the default port for the scheme in use;
 see <span><a href="https://rfc-editor.org/rfc/rfc3986#section-3.2.3" class="relref">Section 3.2.3</a> of [<a href="#URI" class="cite xref">URI</a>]</span>.<a href="#section-3.1-4.12.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-3.1-4.13">Realm:</dt>
           <dd style="margin-left: 1.5em" id="section-3.1-4.14">
             <p id="section-3.1-4.14.1">The realm of authentication that is sent in the realm authentication
-parameter (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-11.5" class="relref">Section 11.5</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). If the realm authentication parameter is
+parameter (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-11.5" class="relref">Section 11.5</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). If the realm authentication parameter is
 not present, this <span class="bcp14">SHALL</span> be empty. This document does not define a means for the
 origin to communicate a realm to the client. If a client is not configured to
 use a specific realm, it <span class="bcp14">SHALL</span> use an empty realm and <span class="bcp14">SHALL NOT</span> send the realm
@@ -1431,7 +1433,7 @@ authentication parameter.<a href="#section-3.1-4.14.1" class="pilcrow">¶</a></p
 </dl>
 <p id="section-3.1-5">The Signature Algorithm and Port fields are encoded as unsigned 16-bit integers
 in network byte order. The Key ID, Public Key, Scheme, Host, and Realm fields
-are length prefixed strings; they are preceded by a Length field that
+are length-prefixed strings; they are preceded by a Length field that
 represents their length in bytes. These length fields are encoded using the
 variable-length integer encoding from <span><a href="https://rfc-editor.org/rfc/rfc9000#section-16" class="relref">Section 16</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span> and <span class="bcp14">MUST</span> be
 encoded in the minimum number of bytes necessary.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
@@ -1442,17 +1444,17 @@ encoded in the minimum number of bytes necessary.<a href="#section-3.1-5" class=
           </h4>
 <p id="section-3.1.1-1">Both the "Public Key" field of the TLS key exporter context (see above) and the
 <code>a</code> Parameter (see <a href="#parameter-a" class="auto internal xref">Section 4.2</a>) carry the same public key. The encoding of
-the public key is determined by the Signature Algorithm in use as follows:<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
+the public key is determined by the signature algorithm in use as follows:<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-3.1.1-2">
             <dt id="section-3.1.1-2.1">RSASSA-PSS algorithms:</dt>
             <dd style="margin-left: 1.5em" id="section-3.1.1-2.2">
               <p id="section-3.1.1-2.2.1">The public key is an RSAPublicKey structure <span>[<a href="#PKCS1" class="cite xref">PKCS1</a>]</span> encoded in DER
-<span>[<a href="#X.690" class="cite xref">X.690</a>]</span>. BER encodings which are not DER <span class="bcp14">MUST</span> be rejected.<a href="#section-3.1.1-2.2.1" class="pilcrow">¶</a></p>
+<span>[<a href="#X.690" class="cite xref">X.690</a>]</span>. BER encodings that are not DER <span class="bcp14">MUST</span> be rejected.<a href="#section-3.1.1-2.2.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
 <dt id="section-3.1.1-2.3">ECDSA algorithms:</dt>
             <dd style="margin-left: 1.5em" id="section-3.1.1-2.4">
-              <p id="section-3.1.1-2.4.1">The public key is a UncompressedPointRepresentation structure defined in
+              <p id="section-3.1.1-2.4.1">The public key is an UncompressedPointRepresentation structure defined in
 <span><a href="https://rfc-editor.org/rfc/rfc8446#section-4.2.8.2" class="relref">Section 4.2.8.2</a> of [<a href="#TLS" class="cite xref">TLS</a>]</span>, using the curve specified by the SignatureScheme.<a href="#section-3.1.1-2.4.1" class="pilcrow">¶</a></p>
 </dd>
             <dd class="break"></dd>
@@ -1524,7 +1526,7 @@ is computed over the concatenation of:<a href="#section-3.3-1" class="pilcrow">�
             <p id="section-3.3-2.2.1">The context string "HTTP Concealed Authentication"<a href="#section-3.3-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-2.3">
-            <p id="section-3.3-2.3.1">A single 0 byte which serves as a separator<a href="#section-3.3-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-2.3.1">A single 0 byte that serves as a separator<a href="#section-3.3-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-2.4">
             <p id="section-3.3-2.4.1">The Signature Input extracted from the key exporter output (see <a href="#output" class="auto internal xref">Section 3.2</a>)<a href="#section-3.3-2.4.1" class="pilcrow">¶</a></p>
@@ -1565,15 +1567,15 @@ Parameter (see <a href="#parameter-p" class="auto internal xref">Section 4.3</a>
 <p id="section-4-1">This specification defines the following authentication parameters.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">All of the byte sequences below are encoded using base64url (see <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#BASE64" class="cite xref">BASE64</a>]</span>) without quotes and without padding. In other words, the
 values of these byte-sequence authentication parameters <span class="bcp14">MUST NOT</span> include any
-characters other than ASCII letters, digits, dash and underscore.<a href="#section-4-2" class="pilcrow">¶</a></p>
+characters other than ASCII letters, digits, dash, and underscore.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3">The integer below is encoded without a minus and without leading zeroes. In
 other words, the value of this integer authentication parameter <span class="bcp14">MUST NOT</span>
-include any characters other than digits, and <span class="bcp14">MUST NOT</span> start with a zero unless
+include any characters other than digits and <span class="bcp14">MUST NOT</span> start with a zero unless
 the full value is "0".<a href="#section-4-3" class="pilcrow">¶</a></p>
 <p id="section-4-4">Using the syntax from <span>[<a href="#ABNF" class="cite xref">ABNF</a>]</span>:<a href="#section-4-4" class="pilcrow">¶</a></p>
 <span id="name-authentication-parameter-va"></span><div id="fig-param">
 <figure id="figure-4">
-        <div class="alignLeft art-text artwork" id="section-4-5.1">
+        <div class="lang-abnf sourcecode" id="section-4-5.1">
 <pre>
 concealed-byte-sequence-param-value = *( ALPHA / DIGIT / "-" / "_" )
 concealed-integer-param-value =  %x31-39 1*4( DIGIT ) / "0"
@@ -1590,7 +1592,7 @@ concealed-integer-param-value =  %x31-39 1*4( DIGIT ) / "0"
         </h3>
 <p id="section-4.1-1">The <span class="bcp14">REQUIRED</span> "k" (key ID) Parameter is a byte sequence that identifies which
 key the client wishes to use to authenticate. This is used by the backend to
-point to an entry in a server-side database of known keys, see <a href="#backend" class="auto internal xref">Section 6.3</a>.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+point to an entry in a server-side database of known keys (see <a href="#backend" class="auto internal xref">Section 6.3</a>).<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="parameter-a">
@@ -1619,7 +1621,7 @@ its key ID.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
         <h3 id="name-the-s-parameter">
 <a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-the-s-parameter" class="section-name selfRef">The s Parameter</a>
         </h3>
-<p id="section-4.4-1">The <span class="bcp14">REQUIRED</span> "s" (signature) Parameter is an integer that specifies the
+<p id="section-4.4-1">The <span class="bcp14">REQUIRED</span> "s" (signature scheme) Parameter is an integer that specifies the
 signature scheme used to compute the proof transmitted in the <code>p</code> Parameter.
 Its value is an integer between 0 and 65535 inclusive from the IANA "TLS
 SignatureScheme" registry maintained at
@@ -1645,8 +1647,8 @@ where certain keys can generate signatures that are valid for multiple inputs
       <h2 id="name-example">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-example" class="section-name selfRef">Example</a>
       </h2>
-<p id="section-5-1">For example, the key ID "basement" authenticating using Ed25519
-<span>[<a href="#ED25519" class="cite xref">ED25519</a>]</span> could produce the following header field:<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">For example, a client using the key ID "basement" and the signature algorithm
+Ed25519 <span>[<a href="#ED25519" class="cite xref">ED25519</a>]</span> could produce the following header field:<a href="#section-5-1" class="pilcrow">¶</a></p>
 <span id="name-example-header-field"></span><div id="fig-hdr-example">
 <figure id="figure-5">
         <div class="lang-http-message sourcecode" id="section-5-2.1">
@@ -1676,15 +1678,15 @@ Authorization: Concealed \
 <p id="section-6-1">In this section, we subdivide the server role in two:<a href="#section-6-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6-2.1">
-          <p id="section-6-2.1.1">the "frontend" runs in the HTTP server that terminates the TLS or QUIC
+          <p id="section-6-2.1.1">The "frontend" runs in the HTTP server that terminates the TLS or QUIC
 connection created by the client.<a href="#section-6-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-6-2.2">
-          <p id="section-6-2.2.1">the "backend" runs in the HTTP server that has access to the database of
+          <p id="section-6-2.2.1">The "backend" runs in the HTTP server that has access to the database of
 accepted key identifiers and public keys.<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-6-3">In most deployments, we expect the frontend and backend roles to both be
+<p id="section-6-3">In most deployments, we expect both the frontend and backend roles to be
 implemented in a single HTTP origin server (as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-3.6" class="relref">Section 3.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). However, these roles can be split such that the frontend is an HTTP
 gateway (as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-3.7" class="relref">Section 3.7</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) and the backend is an HTTP
 origin server.<a href="#section-6-3" class="pilcrow">¶</a></p>
@@ -1693,7 +1695,7 @@ origin server.<a href="#section-6-3" class="pilcrow">¶</a></p>
         <h3 id="name-frontend-handling">
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-frontend-handling" class="section-name selfRef">Frontend Handling</a>
         </h3>
-<p id="section-6.1-1">If a frontend is configured to check the Concealed authentication scheme, it
+<p id="section-6.1-1">If a frontend is configured to check the Concealed HTTP authentication scheme, it
 will parse the Authorization (or Proxy-Authorization) header field. If the
 authentication scheme is set to "Concealed", the frontend <span class="bcp14">MUST</span> validate that
 all the required authentication parameters are present and can be parsed
@@ -1708,16 +1710,16 @@ header field and the key exporter output with the backend.<a href="#section-6.1-
 <div id="communication-between-frontend-and-backend">
 <section id="section-6.2">
         <h3 id="name-communication-between-front">
-<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-communication-between-front" class="section-name selfRef">Communication between Frontend and Backend</a>
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-communication-between-front" class="section-name selfRef">Communication Between Frontend and Backend</a>
         </h3>
 <p id="section-6.2-1">If the frontend and backend roles are implemented in the same machine, this can
 be handled by a simple function call.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
 <p id="section-6.2-2">If the roles are split between two separate HTTP servers, then the backend
 won't be able to directly access the TLS keying material exporter from the TLS
-connection between the client and frontend, so the frontend needs to explictly
+connection between the client and frontend, so the frontend needs to explicitly
 send it. This document defines the "Concealed-Auth-Export" request header field
 for this purpose. The Concealed-Auth-Export header field's value is a
-Structured Field Byte Sequence (see <span><a href="https://rfc-editor.org/rfc/rfc8941#section-3.3.5" class="relref">Section 3.3.5</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>) that contains the 48-byte key exporter output
+Structured Field Byte Sequence (see <span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.3.5" class="relref">Section 3.3.5</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>) that contains the 48-byte key exporter output
 (see <a href="#output" class="auto internal xref">Section 3.2</a>), without any parameters. Note that Structured Field Byte
 Sequences are encoded using the non-URL-safe variant of base64. For example:<a href="#section-6.2-2" class="pilcrow">¶</a></p>
 <span id="name-example-concealed-auth-expo"></span><div id="fig-int-hdr-example">
@@ -1778,7 +1780,7 @@ exporter output<a href="#section-6.3-2.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-6.3-3">If all of these checks succeed, the backend can consider the request to be
-properly authenticated, and can reply accordingly (the backend can also forward
+properly authenticated and can reply accordingly (the backend can also forward
 the request to another HTTP server).<a href="#section-6.3-3" class="pilcrow">¶</a></p>
 <p id="section-6.3-4">If any of the above checks fail, the backend <span class="bcp14">MUST</span> treat it as if the
 Authorization (or Proxy-Authorization) header field was missing.<a href="#section-6.3-4" class="pilcrow">¶</a></p>
@@ -1793,13 +1795,13 @@ Authorization (or Proxy-Authorization) header field was missing.<a href="#sectio
 to ensure that they do not reveal any information about those resources to
 unauthenticated clients. In particular, such servers <span class="bcp14">MUST</span> respond to
 authentication failures with the exact same response that they would have used
-for non-existent resources. For example, this can mean using HTTP status code
+for nonexistent resources. For example, this can mean using HTTP status code
 404 (Not Found) instead of 401 (Unauthorized).<a href="#section-6.4-1" class="pilcrow">¶</a></p>
 <p id="section-6.4-2">The authentication checks described above can take time to compute, and an
 attacker could detect use of this mechanism if that time is observable by
-comparing the timing of a request for a known non-existent resource to the
+comparing the timing of a request for a known nonexistent resource to the
 timing of a request for a potentially authenticated resource. Servers can
-mitigate this observability by slightly delaying responses to some non-existent
+mitigate this observability by slightly delaying responses to some nonexistent
 resources such that the timing of the authentication verification is not
 observable. This delay needs to be carefully considered to avoid having the
 delay itself leak the fact that this origin uses this mechanism at all.<a href="#section-6.4-2" class="pilcrow">¶</a></p>
@@ -1807,7 +1809,7 @@ delay itself leak the fact that this origin uses this mechanism at all.<a href="
 users. For example, if a server operator wishes to hide an authenticated
 resource by pretending it does not exist to unauthenticated users, then the
 server operator needs to ensure there are no unauthenticated pages with links
-to that resource, and no other out-of-band ways for unauthenticated users to
+to that resource and no other out-of-band ways for unauthenticated users to
 discover this resource.<a href="#section-6.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1827,14 +1829,14 @@ it is uniquely bound to the TLS session <span>[<a href="#RFC7627" class="cite xr
 authentication scheme requires either one of the following properties:<a href="#section-7-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7-3.1">
-          <p id="section-7-3.1.1">The TLS version in use is greater or equal to 1.3 <span>[<a href="#TLS" class="cite xref">TLS</a>]</span>.<a href="#section-7-3.1.1" class="pilcrow">¶</a></p>
+          <p id="section-7-3.1.1">The TLS version in use is greater than or equal to 1.3 <span>[<a href="#TLS" class="cite xref">TLS</a>]</span>.<a href="#section-7-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-7-3.2">
-          <p id="section-7-3.2.1">The TLS version in use is 1.2 and the Extended Master Secret extension
+          <p id="section-7-3.2.1">The TLS version in use is 1.2, and the extended master secret extension
 <span>[<a href="#RFC7627" class="cite xref">RFC7627</a>]</span> has been negotiated.<a href="#section-7-3.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-7-4">Clients <span class="bcp14">MUST NOT</span> use the Concealed authentication scheme on connections that do
+<p id="section-7-4">Clients <span class="bcp14">MUST NOT</span> use the Concealed HTTP authentication scheme on connections that do
 not meet one of the two properties above. If a server receives a request that
 uses this authentication scheme on a connection that meets neither of the above
 properties, the server <span class="bcp14">MUST</span> treat the request as if the authentication were not
@@ -1851,7 +1853,7 @@ origin server while guaranteeing freshness and without the need for the server
 to transmit a nonce to the client. This allows the server to accept
 authenticated clients without revealing that it supports or expects
 authentication for some resources. It also allows authentication without the
-client leaking the presence of authentication to observers due to clear-text
+client leaking the presence of authentication to observers due to cleartext
 TLS Client Hello extensions.<a href="#section-8-1" class="pilcrow">¶</a></p>
 <p id="section-8-2">Since the freshness described above is provided by a TLS key exporter, it can
 be as old as the underlying TLS connection. Servers can require better
@@ -1860,11 +1862,11 @@ the GOAWAY frame (see <span><a href="https://rfc-editor.org/rfc/rfc9114#section-
 <p id="section-8-3">The authentication proofs described in this document are not bound to
 individual HTTP requests; if the key is used for authentication proofs on
 multiple requests on the same connection, they will all be identical. This
-allows for better compression when sending over the wire, but implies that
+allows for better compression when sending over the wire, but it implies that
 client implementations that multiplex different security contexts over a single
 HTTP connection need to ensure that those contexts cannot read each other's
 header fields. Otherwise, one context would be able to replay the Authorization
-header field of another. This constraint is met by modern Web browsers. If an
+header field of another. This constraint is met by modern web browsers. If an
 attacker were to compromise the browser such that it could access another
 context's memory, the attacker might also be able to access the corresponding
 key, so binding authentication to requests would not provide much benefit in
@@ -1889,8 +1891,8 @@ to the individual origins using this scheme.<a href="#section-8-5" class="pilcro
         <h3 id="name-http-authentication-schemes">
 <a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-http-authentication-schemes" class="section-name selfRef">HTTP Authentication Schemes Registry</a>
         </h3>
-<p id="section-9.1-1">This document, if approved, requests IANA to register the following entry in
-the "HTTP Authentication Schemes" Registry maintained at
+<p id="section-9.1-1">IANA has registered the following entry in
+the "HTTP Authentication Schemes" registry maintained at
 &lt;<span><a href="https://www.iana.org/assignments/http-authschemes">https://www.iana.org/assignments/http-authschemes</a></span>&gt;:<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlCompact dlParallel" id="section-9.1-2">
           <dt id="section-9.1-2.1">Authentication Scheme Name:</dt>
@@ -1900,7 +1902,7 @@ the "HTTP Authentication Schemes" Registry maintained at
           <dd class="break"></dd>
 <dt id="section-9.1-2.3">Reference:</dt>
           <dd style="margin-left: 1.5em" id="section-9.1-2.4">
-            <p id="section-9.1-2.4.1">This document<a href="#section-9.1-2.4.1" class="pilcrow">¶</a></p>
+            <p id="section-9.1-2.4.1">RFC 9729<a href="#section-9.1-2.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-9.1-2.5">Notes:</dt>
@@ -1916,7 +1918,7 @@ the "HTTP Authentication Schemes" Registry maintained at
         <h3 id="name-tls-keying-material-exporte">
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-tls-keying-material-exporte" class="section-name selfRef">TLS Keying Material Exporter Labels</a>
         </h3>
-<p id="section-9.2-1">This document, if approved, requests IANA to register the following entry in
+<p id="section-9.2-1">IANA has registered the following entry in
 the "TLS Exporter Labels" registry maintained at
 &lt;<span><a href="https://www.iana.org/assignments/tls-parameters#exporter-labels">https://www.iana.org/assignments/tls-parameters#exporter-labels</a></span>&gt;:<a href="#section-9.2-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlCompact dlParallel" id="section-9.2-2">
@@ -1937,7 +1939,7 @@ the "TLS Exporter Labels" registry maintained at
           <dd class="break"></dd>
 <dt id="section-9.2-2.7">Reference:</dt>
           <dd style="margin-left: 1.5em" id="section-9.2-2.8">
-            <p id="section-9.2-2.8.1">This document<a href="#section-9.2-2.8.1" class="pilcrow">¶</a></p>
+            <p id="section-9.2-2.8.1">RFC 9729<a href="#section-9.2-2.8.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
@@ -1948,8 +1950,8 @@ the "TLS Exporter Labels" registry maintained at
         <h3 id="name-http-field-name">
 <a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-http-field-name" class="section-name selfRef">HTTP Field Name</a>
         </h3>
-<p id="section-9.3-1">This document, if approved, requests IANA to register the following entry in
-the "Hypertext Transfer Protocol (HTTP) Field Name" registry maintained at
+<p id="section-9.3-1">IANA has registered the following entry in
+the "Hypertext Transfer Protocol (HTTP) Field Name Registry" maintained at
 &lt;<span><a href="https://www.iana.org/assignments/http-fields/http-fields.xhtml">https://www.iana.org/assignments/http-fields/http-fields.xhtml</a></span>&gt;:<a href="#section-9.3-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlCompact dlParallel" id="section-9.3-2">
           <dt id="section-9.3-2.1">Field Name:</dt>
@@ -1969,7 +1971,7 @@ the "Hypertext Transfer Protocol (HTTP) Field Name" registry maintained at
           <dd class="break"></dd>
 <dt id="section-9.3-2.7">Reference:</dt>
           <dd style="margin-left: 1.5em" id="section-9.3-2.8">
-            <p id="section-9.3-2.8.1">This document<a href="#section-9.3-2.8.1" class="pilcrow">¶</a></p>
+            <p id="section-9.3-2.8.1">RFC 9729<a href="#section-9.3-2.8.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-9.3-2.9">Comments:</dt>
@@ -2039,7 +2041,7 @@ the "Hypertext Transfer Protocol (HTTP) Field Name" registry maintained at
 <dd class="break"></dd>
 <dt id="STRUCTURED-FIELDS">[STRUCTURED-FIELDS]</dt>
         <dd>
-<span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">P. Kamp</span>, <span class="refTitle">"Structured Field Values for HTTP"</span>, <span class="seriesInfo">RFC 8941</span>, <span class="seriesInfo">DOI 10.17487/RFC8941</span>, <time datetime="2021-02" class="refDate">February 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8941">https://www.rfc-editor.org/rfc/rfc8941</a>&gt;</span>. </dd>
+<span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">P. Kamp</span>, <span class="refTitle">"Structured Field Values for HTTP"</span>, <span class="seriesInfo">RFC 9651</span>, <span class="seriesInfo">DOI 10.17487/RFC9651</span>, <time datetime="2024-09" class="refDate">September 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9651">https://www.rfc-editor.org/rfc/rfc9651</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="TLS">[TLS]</dt>
         <dd>
@@ -2051,7 +2053,7 @@ the "Hypertext Transfer Protocol (HTTP) Field Name" registry maintained at
 <dd class="break"></dd>
 <dt id="X.690">[X.690]</dt>
       <dd>
-<span class="refAuthor">ITU-T</span>, <span class="refTitle">"Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"</span>, <span class="seriesInfo">ISO/IEC 8824-1:2021 </span>, <time datetime="2021-02" class="refDate">February 2021</time>. </dd>
+<span class="refAuthor">ITU-T</span>, <span class="refTitle">"Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"</span>, <span class="seriesInfo">ITU-T Recommendation X690</span>, <span class="seriesInfo">ISO/IEC 8825-1:2021</span>, <time datetime="2021-02" class="refDate">February 2021</time>, <span>&lt;<a href="https://www.itu.int/rec/T-REC-X.690">https://www.itu.int/rec/T-REC-X.690</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -2088,7 +2090,7 @@ the "Hypertext Transfer Protocol (HTTP) Field Name" registry maintained at
 <dd class="break"></dd>
 <dt id="SEEMS-LEGIT">[SEEMS-LEGIT]</dt>
       <dd>
-<span class="refAuthor">Jackson, D.</span>, <span class="refAuthor">Cremers, C.</span>, <span class="refAuthor">Cohn-Gordon, K.</span>, and <span class="refAuthor">R. Sasse</span>, <span class="refTitle">"Seems Legit: Automated Analysis of Subtle Attacks on Protocols That Use Signatures"</span>, <span class="refContent">CCS '19: Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security</span>, <span class="refContent">pp. 2165–2180</span>, <span class="seriesInfo">DOI 10.1145/3319535.3339813</span>, <time datetime="2019" class="refDate">2019</time>, <span>&lt;<a href="https://doi.org/10.1145/3319535.3339813">https://doi.org/10.1145/3319535.3339813</a>&gt;</span>. </dd>
+<span class="refAuthor">Jackson, D.</span>, <span class="refAuthor">Cremers, C.</span>, <span class="refAuthor">Cohn-Gordon, K.</span>, and <span class="refAuthor">R. Sasse</span>, <span class="refTitle">"Seems Legit: Automated Analysis of Subtle Attacks on Protocols That Use Signatures"</span>, <span class="refContent">CCS '19: Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security</span>, <span class="refContent">pp. 2165-2180</span>, <span class="seriesInfo">DOI 10.1145/3319535.3339813</span>, <time datetime="2019-11" class="refDate">November 2019</time>, <span>&lt;<a href="https://doi.org/10.1145/3319535.3339813">https://doi.org/10.1145/3319535.3339813</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
