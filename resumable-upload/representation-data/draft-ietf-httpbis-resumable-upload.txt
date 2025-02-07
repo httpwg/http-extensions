@@ -200,7 +200,7 @@ Table of Contents
    thereby resumable uploads, use representation data (see Section 8.1
    of [HTTP]).  This means that resumable uploads can be used with many
    forms of content, such as static files, in-memory buffers or data
-   from stream sources or generated on-demand generated.
+   from streaming sources or generated on-demand generated.
 
 3.1.  Example 1: Complete upload of representation data with known size
 
