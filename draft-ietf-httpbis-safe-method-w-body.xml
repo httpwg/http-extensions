@@ -513,8 +513,43 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
   </references>
 
   <section title="Examples" anchor="examples">
-<!-- TODO: add Content-Length fields once examples are stable -->
     <t>
+      The examples below are for illustrative purposes only; if one needs to
+      send queries that are actually this short, it is probably better to use GET.
+    </t>
+    <!-- TODO: add Content-Length fields once examples are stable -->
+
+    <section title="Simple Query" anchor="simple.query">
+      <t>A simple query with a direct response:</t>
+<artwork type="http-message">
+QUERY /contacts HTTP/1.1
+Host: example.org
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22
+</artwork>
+
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Jones",
+    "givenname": "Sally",
+    "email": "sally.jones@example.com" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]
+</artwork>
+    </section>
+
+    <!--    <t>
       The non-normative examples in this section make use of a simple,
       hypothetical plain-text based query syntax based on SQL with results
       returned as comma-separated values. This is done for illustration
@@ -677,7 +712,7 @@ Jones, Sally, sally.jones@example.com
 Dubois, Camille, camille.dubois@example.net
 </artwork>
 
-    </section>
+    </section>-->
   </section>
 
 <section title="Change Log" anchor="change.log" removeInRFC="true">
@@ -743,6 +778,7 @@ Dubois, Camille, camille.dubois@example.net
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-07" anchor="changes.since.07">
 <ul>
+  <li>Examples Section revised(<eref target="https://github.com/httpwg/http-extensions/issues/1906"/>)</li>
   <li>Discuss Range Requests (<eref target="https://github.com/httpwg/http-extensions/issues/2979"/>)</li>
 </ul>
 </section>
