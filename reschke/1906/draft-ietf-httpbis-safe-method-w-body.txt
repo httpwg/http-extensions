@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 11 August 2025                                                 
+Expires: 13 August 2025                                                 
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                         7 February 2025
+                                                         9 February 2025
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 August 2025.
+   This Internet-Draft will expire on 13 August 2025.
 
 Copyright Notice
 
@@ -85,10 +85,7 @@ Table of Contents
    6.  Normative References
    7.  Informative References
    Appendix A.  Examples
-     A.1.  Simple QUERY with a Direct Response
-     A.2.  Simple QUERY with a Direct Response and Location Fields
-     A.3.  Simple QUERY with Indirect Response (303 See Other)
-     A.4.  Simple QUERY with Redirect Response (308 Moved Permanently)
+     A.1.  Simple Query
    Appendix B.  Change Log
      B.1.  Since draft-ietf-httpbis-safe-method-w-body-00
      B.2.  Since draft-ietf-httpbis-safe-method-w-body-01
@@ -420,141 +417,37 @@ Table of Contents
 
 Appendix A.  Examples
 
-   The non-normative examples in this section make use of a simple,
-   hypothetical plain-text based query syntax based on SQL with results
-   returned as comma-separated values.  This is done for illustration
-   purposes only.  Implementations are free to use any format they wish
-   on both the request and response.
+   The examples below are for illustrative purposes only; if one needs
+   to send queries that are actually this short, it is probably better
+   to use GET.
 
-A.1.  Simple QUERY with a Direct Response
+A.1.  Simple Query
 
    A simple query with a direct response:
 
    QUERY /contacts HTTP/1.1
    Host: example.org
-   Content-Type: application/sql
-   Accept: text/csv
+   Content-Type: application/x-www-form-urlencoded
+   Accept: application/json
 
-   select surname, givenname, email limit 10
-
-   Response:
-
-   HTTP/1.1 200 OK
-   Content-Type: text/csv
-
-   surname, givenname, email
-   Smith, John, john.smith@example.org
-   Jones, Sally, sally.jones@example.com
-   Dubois, Camille, camille.dubois@example.net
-
-A.2.  Simple QUERY with a Direct Response and Location Fields
-
-   A simple query with a direct response:
-
-   QUERY /contacts HTTP/1.1
-   Host: example.org
-   Content-Type: application/sql
-   Accept: text/csv
-
-   select surname, givenname, email limit 10
+   select=surname,givenname,email&limit=10&match=%22email=*@example.*%22
 
    Response:
 
    HTTP/1.1 200 OK
-   Content-Type: text/csv
-   Content-Location: /contacts/responses/42
-   Location: /contacts/queries/17
+   Content-Type: application/json
 
-   surname, givenname, email
-   Smith, John, john.smith@example.org
-   Jones, Sally, sally.jones@example.com
-   Dubois, Camille, camille.dubois@example.net
-
-   A subsequent GET request on /contacts/responses/42 would return the
-   same response, until the server decides to remove that resource.
-
-   A GET request on /contacts/queries/17 however would execute the same
-   query again, and return a fresh result for that query:
-
-   GET /contacts/queries/17 HTTP/1.1
-   Host: example.org
-   Accept: text/csv
-
-   Response:
-
-   HTTP/1.1 200 OK
-   Content-Type: text/csv
-   Content-Location: /contacts/responses/43
-
-   surname, givenname, email
-   Jones, Sally, sally.jones@example.com
-   Dubois, Camille, camille.dubois@example.net
-
-A.3.  Simple QUERY with Indirect Response (303 See Other)
-
-   A simple query with an Indirect Response (303 See Other):
-
-   QUERY /contacts HTTP/1.1
-   Host: example.org
-   Content-Type: application/sql
-   Accept: text/csv
-
-   select surname, givenname, email limit 10
-
-   Response:
-
-   HTTP/1.1 303 See Other
-   Location: /contacts/query123
-
-   Retrieval of the Query Response:
-
-   GET /contacts/query123 HTTP/1.1
-   Host: example.org
-
-   Response:
-
-   HTTP/1.1 200 OK
-   Content-Type: text/csv
-
-   surname, givenname, email
-   Smith, John, john.smith@example.org
-   Jones, Sally, sally.jones@example.com
-   Dubois, Camille, camille.dubois@example.net
-
-A.4.  Simple QUERY with Redirect Response (308 Moved Permanently)
-
-   A simple query being redirected:
-
-   QUERY /contacts HTTP/1.1
-   Host: example.org
-   Content-Type: application/sql
-   Accept: text/csv
-
-   select surname, givenname, email limit 10
-
-   Response:
-
-   HTTP/1.1 308 Moved Permanently
-   Location: /morecontacts
-
-   Redirected request:
-
-   QUERY /morecontacts HTTP/1.1
-   Host: example.org
-   Content-Type: application/sql
-   Accept: text/csv
-
-   select surname, givenname, email limit 10
-
-   Response:
-
-   HTTP/1.1 200 OK
-   Content-Type: text/csv
-
-   surname, givenname, email
-   Smith, John, john.smith@example.org
-   Jones, Sally, sally.jones@example.com
-   Dubois, Camille, camille.dubois@example.net
+   [
+     { "surname": "Smith",
+       "givenname": "John",
+       "email": "smith@example.org" },
+     { "surname": "Jones",
+       "givenname": "Sally",
+       "email": "sally.jones@example.com" },
+     { "surname": "Dubois",
+       "givenname": "Camille",
+       "email": "camille.dubois@example.net" }
+   ]
 
 Appendix B.  Change Log
 
@@ -672,6 +565,9 @@ B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
       extensions/issues/2957)
 
 B.8.  Since draft-ietf-httpbis-safe-method-w-body-07
+
+   *  Examples Section revised(https://github.com/httpwg/http-
+      extensions/issues/1906)
 
    *  Discuss Range Requests (https://github.com/httpwg/http-extensions/
       issues/2979)

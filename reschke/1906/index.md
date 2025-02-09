@@ -1,4 +1,4 @@
-# Editor's drafts for resumable-upload/representation-data branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/resumable-upload/representation-data)
+# Editor's drafts for reschke/1906 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/reschke/1906)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |

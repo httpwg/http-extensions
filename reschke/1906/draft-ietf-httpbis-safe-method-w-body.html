@@ -1056,7 +1056,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Reschke, et al.</td>
-<td class="center">Expires 11 August 2025</td>
+<td class="center">Expires 13 August 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">HTTP</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-02-07" class="published">7 February 2025</time>
+<time datetime="2025-02-09" class="published">9 February 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-08-11">11 August 2025</time></dd>
+<dd class="expires"><time datetime="2025-08-13">13 August 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1134,7 +1134,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 11 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 13 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1221,16 +1221,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.8.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-simple-query-with-a-direct-" class="internal xref">Simple QUERY with a Direct Response</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-simple-query-with-a-direct-r" class="internal xref">Simple QUERY with a Direct Response and Location Fields</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3">
-                <p id="section-toc.1-1.8.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-simple-query-with-indirect-" class="internal xref">Simple QUERY with Indirect Response (303 See Other)</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.4">
-                <p id="section-toc.1-1.8.2.4.1"><a href="#appendix-A.4" class="auto internal xref">A.4</a>.  <a href="#name-simple-query-with-redirect-" class="internal xref">Simple QUERY with Redirect Response (308 Moved Permanently)</a></p>
+                <p id="section-toc.1-1.8.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-simple-query" class="internal xref">Simple Query</a></p>
 </li>
             </ul>
 </li>
@@ -1720,183 +1711,45 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
       </h2>
 <p id="appendix-A-1">
-      The non-normative examples in this section make use of a simple,
-      hypothetical plain-text based query syntax based on SQL with results
-      returned as comma-separated values. This is done for illustration
-      purposes only. Implementations are free to use any format they wish on
-      both the request and response.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+      The examples below are for illustrative purposes only; if one needs to
+      send queries that are actually this short, it is probably better to use GET.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<div id="simple.query">
 <section id="appendix-A.1">
-        <h3 id="name-simple-query-with-a-direct-">
-<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-simple-query-with-a-direct-" class="section-name selfRef">Simple QUERY with a Direct Response</a>
+        <h3 id="name-simple-query">
+<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-simple-query" class="section-name selfRef">Simple Query</a>
         </h3>
 <p id="appendix-A.1-1">A simple query with a direct response:<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-http-message art-text artwork" id="appendix-A.1-2">
 <pre>
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: application/sql
-Accept: text/csv
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
 
-select surname, givenname, email limit 10
+select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22
 </pre><a href="#appendix-A.1-2" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.1-3">Response:<a href="#appendix-A.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-http-message art-text artwork" id="appendix-A.1-4">
 <pre>
 HTTP/1.1 200 OK
-Content-Type: text/csv
+Content-Type: application/json
 
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Jones",
+    "givenname": "Sally",
+    "email": "sally.jones@example.com" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]
 </pre><a href="#appendix-A.1-4" class="pilcrow">¶</a>
 </div>
 </section>
-<section id="appendix-A.2">
-        <h3 id="name-simple-query-with-a-direct-r">
-<a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-simple-query-with-a-direct-r" class="section-name selfRef">Simple QUERY with a Direct Response and Location Fields</a>
-        </h3>
-<p id="appendix-A.2-1">A simple query with a direct response:<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.2-2">
-<pre>
-QUERY /contacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</pre><a href="#appendix-A.2-2" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.2-3">Response:<a href="#appendix-A.2-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.2-4">
-<pre>
-HTTP/1.1 200 OK
-Content-Type: text/csv
-Content-Location: /contacts/responses/42
-Location: /contacts/queries/17
-
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</pre><a href="#appendix-A.2-4" class="pilcrow">¶</a>
-</div>
-<p id="appendix-A.2-5">
-      A subsequent GET request on /contacts/responses/42 would return
-      the same response, until the server decides to remove that
-      resource.<a href="#appendix-A.2-5" class="pilcrow">¶</a></p>
-<p id="appendix-A.2-6">
-      A GET request on /contacts/queries/17 however would execute the same
-      query again, and return a fresh result for that query:<a href="#appendix-A.2-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.2-7">
-<pre>
-GET /contacts/queries/17 HTTP/1.1
-Host: example.org
-Accept: text/csv
-</pre><a href="#appendix-A.2-7" class="pilcrow">¶</a>
-</div>
-<p id="appendix-A.2-8">Response:<a href="#appendix-A.2-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.2-9">
-<pre>
-HTTP/1.1 200 OK
-Content-Type: text/csv
-Content-Location: /contacts/responses/43
-
-surname, givenname, email
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</pre><a href="#appendix-A.2-9" class="pilcrow">¶</a>
-</div>
-</section>
-<section id="appendix-A.3">
-        <h3 id="name-simple-query-with-indirect-">
-<a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a href="#name-simple-query-with-indirect-" class="section-name selfRef">Simple QUERY with Indirect Response (303 See Other)</a>
-        </h3>
-<p id="appendix-A.3-1">A simple query with an Indirect Response (303 See Other):<a href="#appendix-A.3-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.3-2">
-<pre>
-QUERY /contacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</pre><a href="#appendix-A.3-2" class="pilcrow">¶</a>
-</div>
-<p id="appendix-A.3-3">Response:<a href="#appendix-A.3-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.3-4">
-<pre>
-HTTP/1.1 303 See Other
-Location: /contacts/query123
-</pre><a href="#appendix-A.3-4" class="pilcrow">¶</a>
-</div>
-<p id="appendix-A.3-5">Retrieval of the Query Response:<a href="#appendix-A.3-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.3-6">
-<pre>
-GET /contacts/query123 HTTP/1.1
-Host: example.org
-</pre><a href="#appendix-A.3-6" class="pilcrow">¶</a>
-</div>
-<p id="appendix-A.3-7">Response:<a href="#appendix-A.3-7" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.3-8">
-<pre>
-HTTP/1.1 200 OK
-Content-Type: text/csv
-
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</pre><a href="#appendix-A.3-8" class="pilcrow">¶</a>
-</div>
-</section>
-<section id="appendix-A.4">
-        <h3 id="name-simple-query-with-redirect-">
-<a href="#appendix-A.4" class="section-number selfRef">A.4. </a><a href="#name-simple-query-with-redirect-" class="section-name selfRef">Simple QUERY with Redirect Response (308 Moved Permanently)</a>
-        </h3>
-<p id="appendix-A.4-1">A simple query being redirected:<a href="#appendix-A.4-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.4-2">
-<pre>
-QUERY /contacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</pre><a href="#appendix-A.4-2" class="pilcrow">¶</a>
-</div>
-<p id="appendix-A.4-3">Response:<a href="#appendix-A.4-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.4-4">
-<pre>
-HTTP/1.1 308 Moved Permanently
-Location: /morecontacts
-</pre><a href="#appendix-A.4-4" class="pilcrow">¶</a>
-</div>
-<p id="appendix-A.4-5">Redirected request:<a href="#appendix-A.4-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.4-6">
-<pre>
-QUERY /morecontacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</pre><a href="#appendix-A.4-6" class="pilcrow">¶</a>
-</div>
-<p id="appendix-A.4-7">Response:<a href="#appendix-A.4-7" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.4-8">
-<pre>
-HTTP/1.1 200 OK
-Content-Type: text/csv
-
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</pre><a href="#appendix-A.4-8" class="pilcrow">¶</a>
-</div>
-</section>
 </section>
 </div>
 <div id="change.log">
@@ -2038,7 +1891,9 @@ Dubois, Camille, camille.dubois@example.net
 <a href="#appendix-B.8" class="section-number selfRef">B.8. </a><a href="#name-since-draft-ietf-httpbis-safe-meth" class="section-name selfRef">Since draft-ietf-httpbis-safe-method-w-body-07</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.8-1.1">Discuss Range Requests (<span><a href="https://github.com/httpwg/http-extensions/issues/2979">https://github.com/httpwg/http-extensions/issues/2979</a></span>)<a href="#appendix-B.8-1.1" class="pilcrow">¶</a>
+<li class="normal" id="appendix-B.8-1.1">Examples Section revised(<span><a href="https://github.com/httpwg/http-extensions/issues/1906">https://github.com/httpwg/http-extensions/issues/1906</a></span>)<a href="#appendix-B.8-1.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="appendix-B.8-1.2">Discuss Range Requests (<span><a href="https://github.com/httpwg/http-extensions/issues/2979">https://github.com/httpwg/http-extensions/issues/2979</a></span>)<a href="#appendix-B.8-1.2" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
