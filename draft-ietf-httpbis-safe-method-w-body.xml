@@ -519,7 +519,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     </t>
     <!-- TODO: add Content-Length fields once examples are stable -->
 
-    <section title="Simple Query" anchor="simple.query">
+    <section title="Simple Query" anchor="example.simple">
       <t>A simple query with a direct response:</t>
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
@@ -547,6 +547,37 @@ Content-Type: application/json
     "email": "camille.dubois@example.net" }
 ]
 </artwork>
+    </section>
+
+    <section title="Discovery of QUERY support" anchor="example.discovery">
+      <t>
+        A simple way to discover support for QUERY is provided by the OPTIONS
+        (<xref target="HTTP" section="9.3.7"/>) method:
+      </t>
+
+<artwork type="http-message">
+OPTIONS /contacts HTTP/1.1
+Host: example.org
+
+</artwork>
+
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+
+Allow: GET, QUERY, OPTIONS, HEAD
+</artwork>
+      <t>
+        The Allow response field (<xref target="HTTP" section="10.2.1"/>) denotes the set of
+        supported methods on the specified resource.
+      </t>
+
+      <t>
+        There are alternatives to the use of OPTIONS. For instance, a QUERY request
+        can be tried without prior knowledge of server support. The server would then
+        either process the request, or respond with a 405 status ("Method Not Allowed",
+        <xref target="HTTP" section="15.5.6"/>), including the Allow response field.
+      </t>
     </section>
 
     <!--    <t>
