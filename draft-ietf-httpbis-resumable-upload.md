@@ -579,7 +579,7 @@ For a "careful upload creation" the client knows that the server supports resuma
 
 The retransmission of representation data or the ultimate upload failure that can happen with an "optimistic upload creation" is therefore avoided at the expense of an additional request that does not carry representation data.
 
-This approach best suited if the client cannot receive intermediate responses, e.g. due to a limitation in the provided HTTP interface, or if large represenations are transferred where the cost of the additional request is miniscule compared to the effort of transferring the representation itself.
+This approach best suited if the client cannot receive intermediate responses, e.g. due to a limitation in the provided HTTP interface, or if large representations are transferred where the cost of the additional request is miniscule compared to the effort of transferring the representation itself.
 
 # Security Considerations
 
