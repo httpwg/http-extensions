@@ -1,4 +1,4 @@
-# Editor's drafts for reschke/1906 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/reschke/1906)
+# Editor's drafts for draft-ietf-httpbis-cache-groups-03 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/draft-ietf-httpbis-cache-groups-03)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
