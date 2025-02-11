@@ -1097,16 +1097,15 @@ Table of Contents
 
    A possible drawback is that the client might be unable to resume an
    upload.  If an upload is interrupted before the client received a 104
-   (Upload Resumption Supported) intermediate response with the upload
-   URL, the client cannot resume that upload due to the missing upload
-   URL.  The intermediate response might not be received if the
-   interruption happens too early in the message exchange, the server
-   does not support resumable uploads at all, the server does not
-   support sending the 104 (Upload Resumption Supported) intermediate
-   response, or an intermediary dropped the intermediate response.
-   Without a 104 response, the client needs to either treat the upload
-   as failed or retry the entire upload creation request if this is
-   allowed by the application.
+   (Upload Resumption Supported) interim response with the upload URL,
+   the client cannot resume that upload due to the missing upload URL.
+   The interim response might not be received if the interruption
+   happens too early in the message exchange, the server does not
+   support resumable uploads at all, the server does not support sending
+   the 104 (Upload Resumption Supported) interim response, or an
+   intermediary dropped the interim response.  Without a 104 response,
+   the client needs to either treat the upload as failed or retry the
+   entire upload creation request if this is allowed by the application.
 
 17.1.1.  Upgrading To Resumable Uploads
 
@@ -1122,12 +1121,11 @@ Table of Contents
 
    A server that supports resumable uploads at the target URI can create
    a resumable upload resource and send its upload URL in a 104 (Upload
-   Resumption Supported) intermediate response for the client to resume
-   the upload after interruptions.  A server that does not support
-   resumable uploads or does not want to upgrade to a resumable upload
-   for this request ignores the Upload-Complete: ?1 header.  The
-   transfer then falls back to a non-resumable upload without additional
-   cost.
+   Resumption Supported) interim response for the client to resume the
+   upload after interruptions.  A server that does not support resumable
+   uploads or does not want to upgrade to a resumable upload for this
+   request ignores the Upload-Complete: ?1 header.  The transfer then
+   falls back to a non-resumable upload without additional cost.
 
    This upgrade can also be performed transparently by the client
    without the user taking an active role.  When a user asks the client
@@ -1153,7 +1151,7 @@ Table of Contents
    therefore avoided at the expense of an additional request that does
    not carry representation data.
 
-   This approach best suited if the client cannot receive intermediate
+   This approach best suited if the client cannot receive interim
    responses, e.g. due to a limitation in the provided HTTP interface,
    or if large representations are transferred where the cost of the
    additional request is miniscule compared to the effort of
