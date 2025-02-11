@@ -1050,7 +1050,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Kleidl, et al.</td>
-<td class="center">Expires 14 August 2025</td>
+<td class="center">Expires 15 August 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1063,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-resumable-upload-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-02-10" class="published">10 February 2025</time>
+<time datetime="2025-02-11" class="published">11 February 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-08-14">14 August 2025</time></dd>
+<dd class="expires"><time datetime="2025-08-15">15 August 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1128,7 +1128,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 14 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 15 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2015,7 +2015,7 @@ If an upload is spread across multiple requests, data integrity issues can be fo
 <p id="section-17.1-1">An "optimistic upload creation" can be used independent of the client's knowledge about the server's support for resumable uploads. However, the client must be capable of handling and processing interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.<a href="#section-17.1-1" class="pilcrow">¶</a></p>
 <p id="section-17.1-2">The benefit of this method is that if the upload creation request succeeds, the representation data was transferred in a single request without additional round trips.<a href="#section-17.1-2" class="pilcrow">¶</a></p>
 <p id="section-17.1-3">A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client received a <code>104 (Upload Resumption Supported)</code> intermediate response with the upload URL, the client cannot resume that upload due to the missing upload URL. The intermediate response might not be received if the interruption happens too early in the message exchange, the server does not support resumable uploads at all, the server does not support sending the <code>104 (Upload Resumption Supported)</code> intermediate response, or an intermediary dropped the intermediate response. Without a 104 response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.<a href="#section-17.1-3" class="pilcrow">¶</a></p>
-<p id="section-17.1-4">A client might wait for a limited duration for the receival of the 104 intermediate response before starting to transmit the request content, similar to how a client might wait for the response of a "100-continue" expectation (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.1.1" class="relref">Section 10.1.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). This way, the client can learn about the resorce's support for resumable uplaods and/or the upload URL.<a href="#section-17.1-4" class="pilcrow">¶</a></p>
+<p id="section-17.1-4">A client might wait for a limited duration to receive a 104 (Upload Resumption Supported) interim response before starting to transmit the request content. This way, the client can learn about the resource's support for resumable uploads and/or the upload URL. This is conceptually similar to how a client might wait for a 100 (Continue) interim response (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.1.1" class="relref">Section 10.1.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) before committing to work.<a href="#section-17.1-4" class="pilcrow">¶</a></p>
 <div id="upgrading-to-resumable-uploads">
 <section id="section-17.1.1">
           <h4 id="name-upgrading-to-resumable-uplo">

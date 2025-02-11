@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 14 August 2025                                       Apple Inc.
+Expires: 15 August 2025                                       Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                        10 February 2025
+                                                        11 February 2025
 
 
                        Resumable Uploads for HTTP
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 August 2025.
+   This Internet-Draft will expire on 15 August 2025.
 
 Copyright Notice
 
@@ -1104,12 +1104,13 @@ Table of Contents
    as failed or retry the entire upload creation request if this is
    allowed by the application.
 
-   A client might wait for a limited duration for the receival of the
-   104 intermediate response before starting to transmit the request
-   content, similar to how a client might wait for the response of a
-   "100-continue" expectation (see Section 10.1.1 of [HTTP]).  This way,
-   the client can learn about the resorce's support for resumable
-   uplaods and/or the upload URL.
+   A client might wait for a limited duration to receive a 104 (Upload
+   Resumption Supported) interim response before starting to transmit
+   the request content.  This way, the client can learn about the
+   resource's support for resumable uploads and/or the upload URL.  This
+   is conceptually similar to how a client might wait for a 100
+   (Continue) interim response (see Section 10.1.1 of [HTTP]) before
+   committing to work.
 
 17.1.1.  Upgrading To Resumable Uploads
 
