@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 14 August 2025                                       Apple Inc.
+Expires: 15 August 2025                                       Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                        10 February 2025
+                                                        11 February 2025
 
 
                        Resumable Uploads for HTTP
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 August 2025.
+   This Internet-Draft will expire on 15 August 2025.
 
 Copyright Notice
 
@@ -184,7 +184,7 @@ Table of Contents
    The terms "representation", "representation data", "representation
    metadata", "content", "client" and "server" are from [HTTP].
 
-   The term "patch document" is taken from [RFC5789].
+   The term "patch document" is taken from [PATCH].
 
 3.  Overview
 
@@ -506,9 +506,9 @@ Table of Contents
    retained throughout the entire upload.  When resuming an interrupted
    upload, the same content codings are used for appending to the
    upload, producing a consistent representation.  The Content-
-   Disposition header field ([RFC6266]) can be used to transmit a
-   filename; if included, the parameters SHOULD be either filename,
-   filename* or boundary.
+   Disposition header field ([CONTENT-DISPOSITION]) can be used to
+   transmit a filename; if included, the parameters SHOULD be either
+   filename, filename* or boundary.
 
 4.1.  Feature Detection
 
@@ -686,7 +686,7 @@ Table of Contents
    connections, it SHOULD append as much of the patch document starting
    at its beginning and without discontinuities as possible.  Appending
    a continuous section starting at the patch document's beginning
-   constitutes a successful PATCH as defined in Section 2 of [RFC5789].
+   constitutes a successful PATCH as defined in Section 2 of [PATCH].
    If the server did not receive and apply the entire patch document,
    the upload MUST NOT be considered complete.
 
@@ -1302,6 +1302,12 @@ Table of Contents
               DOI 10.17487/RFC9111, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9111>.
 
+   [CONTENT-DISPOSITION]
+              Reschke, J., "Use of the Content-Disposition Header Field
+              in the Hypertext Transfer Protocol (HTTP)", RFC 6266,
+              DOI 10.17487/RFC6266, June 2011,
+              <https://www.rfc-editor.org/rfc/rfc6266>.
+
    [DIGEST-FIELDS]
               Polli, R. and L. Pardue, "Digest Fields", RFC 9530,
               DOI 10.17487/RFC9530, February 2024,
@@ -1316,6 +1322,10 @@ Table of Contents
               Ed., "HTTP/1.1", STD 99, RFC 9112, DOI 10.17487/RFC9112,
               June 2022, <https://www.rfc-editor.org/rfc/rfc9112>.
 
+   [PATCH]    Dusseault, L. and J. Snell, "PATCH Method for HTTP",
+              RFC 5789, DOI 10.17487/RFC5789, March 2010,
+              <https://www.rfc-editor.org/rfc/rfc5789>.
+
    [PROBLEM]  Nottingham, M., Wilde, E., and S. Dalal, "Problem Details
               for HTTP APIs", RFC 9457, DOI 10.17487/RFC9457, July 2023,
               <https://www.rfc-editor.org/rfc/rfc9457>.
@@ -1324,15 +1334,6 @@ Table of Contents
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
-
-   [RFC5789]  Dusseault, L. and J. Snell, "PATCH Method for HTTP",
-              RFC 5789, DOI 10.17487/RFC5789, March 2010,
-              <https://www.rfc-editor.org/rfc/rfc5789>.
-
-   [RFC6266]  Reschke, J., "Use of the Content-Disposition Header Field
-              in the Hypertext Transfer Protocol (HTTP)", RFC 6266,
-              DOI 10.17487/RFC6266, June 2011,
-              <https://www.rfc-editor.org/rfc/rfc6266>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
