@@ -358,9 +358,9 @@ Table of Contents
 
    In HTTP/1.1, proxy clients that send CONNECT requests on behalf of
    untrusted TCP clients MUST wait for a 2xx (Successful) response
-   before forwarding any TCP payload data.  Proxy clients that send data
-   without confirming the response status code are vulnerable to a
-   trivial request smuggling attack.
+   before forwarding any TCP payload data.  Proxy clients that start
+   forwarding before confirming the response status code are vulnerable
+   to a trivial request smuggling attack (Section 3.1).
 
    To mitigate the impact of such vulnerable clients, proxy servers MAY
    close the underlying connection when rejecting an HTTP/1.1 CONNECT
