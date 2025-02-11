@@ -1155,7 +1155,7 @@ Table of Contents
 
    This approach best suited if the client cannot receive intermediate
    responses, e.g. due to a limitation in the provided HTTP interface,
-   or if large represenations are transferred where the cost of the
+   or if large representations are transferred where the cost of the
    additional request is miniscule compared to the effort of
    transferring the representation itself.
 
