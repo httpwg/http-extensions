@@ -564,13 +564,13 @@ An "optimistic upload creation" can be used independent of the client's knowledg
 
 The benefit of this method is that if the upload creation request succeeds, the representation data was transferred in a single request without additional round trips.
 
-A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client received a `104 (Upload Resumption Supported)` intermediate response with the upload URL, the client cannot resume that upload due to the missing upload URL. The intermediate response might not be received if the interruption happens too early in the message exchange, the server does not support resumable uploads at all, the server does not support sending the `104 (Upload Resumption Supported)` intermediate response, or an intermediary dropped the intermediate response. Without a 104 response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.
+A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client received a `104 (Upload Resumption Supported)` interim response with the upload URL, the client cannot resume that upload due to the missing upload URL. The interim response might not be received if the interruption happens too early in the message exchange, the server does not support resumable uploads at all, the server does not support sending the `104 (Upload Resumption Supported)` interim response, or an intermediary dropped the interim response. Without a 104 response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.
 
 ### Upgrading To Resumable Uploads
 
 Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the representation is transferred in a single request, usually `POST` or `PUT`, without any ability to resume from interruptions. The client can offer the server to upgrade such a request to a resumable upload (see {{feature-detection}}) by adding the `Upload-Complete: ?1` header field to the original request. The `Upload-Length` header field SHOULD be added if the upload's final size is known upfront. The request is not changed otherwise.
 
-A server that supports resumable uploads at the target URI can create a resumable upload resource and send its upload URL in a `104 (Upload Resumption Supported)` intermediate response for the client to resume the upload after interruptions. A server that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the `Upload-Complete: ?1` header. The transfer then falls back to a non-resumable upload without additional cost.
+A server that supports resumable uploads at the target URI can create a resumable upload resource and send its upload URL in a `104 (Upload Resumption Supported)` interim response for the client to resume the upload after interruptions. A server that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the `Upload-Complete: ?1` header. The transfer then falls back to a non-resumable upload without additional cost.
 
 This upgrade can also be performed transparently by the client without the user taking an active role. When a user asks the client to send a non-resumable request, the client can perform the upgrade and handle potential interruptions and resumptions under the hood without involving the user. The last response received by the client is considered the response for the entire upload and should be presented to the user.
 
@@ -580,7 +580,7 @@ For a "careful upload creation" the client knows that the server supports resuma
 
 The retransmission of representation data or the ultimate upload failure that can happen with an "optimistic upload creation" is therefore avoided at the expense of an additional request that does not carry representation data.
 
-This approach best suited if the client cannot receive intermediate responses, e.g. due to a limitation in the provided HTTP interface, or if large representations are transferred where the cost of the additional request is miniscule compared to the effort of transferring the representation itself.
+This approach best suited if the client cannot receive interim responses, e.g. due to a limitation in the provided HTTP interface, or if large representations are transferred where the cost of the additional request is miniscule compared to the effort of transferring the representation itself.
 
 # Security Considerations
 
