@@ -2450,11 +2450,11 @@ Author/Change controller:
 Specification document:
 : this specification ({{set-cookie}})
 
-## Cookie Attribute Registry
+## "Cookie Attributes" Registry
 
-IANA is requested to create the "Cookie Attribute" registry, defining the
-name space of attribute used to control cookies' behavior.
-The registry should be maintained at
+IANA is requested to create the "Cookie Attributes" registry, defining the name space of
+attributes used to control cookies' behavior. The registry should be maintained in a new
+registry group called "Hypertext Transfer Protocol (HTTP) Cookie Attributes" at
 <https://www.iana.org/assignments/cookie-attribute-names>.
 
 ### Procedure
@@ -2469,7 +2469,7 @@ defined in CamelCase, but technically accepted case-insensitively.
 
 ### Registration
 
-The "Cookie Attribute Registry" should be created with the registrations below:
+The "Cookie Attributes" registry should be created with the registrations below:
 
 | Name     | Reference                               |
 |----------:+----------------------------------------|
