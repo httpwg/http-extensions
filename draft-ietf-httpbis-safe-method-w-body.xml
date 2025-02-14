@@ -842,7 +842,7 @@ Dubois, Camille, camille.dubois@example.net
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-07" anchor="changes.since.07">
 <ul>
-  <li>Examples Section revised(<eref target="https://github.com/httpwg/http-extensions/issues/1906"/>)</li>
+  <li>Examples Section revised (<eref target="https://github.com/httpwg/http-extensions/issues/1906"/>)</li>
   <li>Discuss Range Requests (<eref target="https://github.com/httpwg/http-extensions/issues/2979"/>)</li>
 </ul>
 </section>
