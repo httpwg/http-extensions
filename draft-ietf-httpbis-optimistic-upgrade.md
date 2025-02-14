@@ -158,9 +158,9 @@ Future specifications for Upgrade Tokens should restrict their use to "GET" requ
 
 # Guidance for HTTP CONNECT
 
-In HTTP/1.1, clients that send CONNECT requests on behalf of untrusted TCP clients MUST wait for a 2xx (Successful) response before sending any TCP payload data.
+In HTTP/1.1, proxy clients that send CONNECT requests on behalf of untrusted TCP clients MUST wait for a 2xx (Successful) response before forwarding any TCP payload data.  Proxy clients that start forwarding before confirming the response status code are vulnerable to a trivial request smuggling attack ({{request-smuggling}}).
 
-To mitigate vulnerabilities from any clients that do not conform to this requirement, proxy servers MAY close the underlying connection when rejecting an HTTP/1.1 CONNECT request, without processing any further data sent to the proxy server on that connection.  Note that this behavior may impair performance, especially when returning a "407 (Proxy Authentication Required)" response.
+To mitigate the impact of such vulnerable clients, proxy servers MAY close the underlying connection when rejecting an HTTP/1.1 CONNECT request, without processing any further data on that connection.  Note that this behavior will frequently impair the performance of correctly implemented clients, especially when returning a "407 (Proxy Authentication Required)" response.  This performance loss can be be avoided by using HTTP/2 or HTTP/3, which are not vulnerable to this attack.
 
 # IANA Considerations
 
