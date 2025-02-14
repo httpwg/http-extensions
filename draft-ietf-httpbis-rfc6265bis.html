@@ -1601,13 +1601,21 @@ the Cookie header field or use its contents for an application-defined purpose.<
 origin server can include multiple Set-Cookie header fields in a single response.
 The presence of a Cookie or a Set-Cookie header field does not preclude HTTP
 caches from storing and reusing a response.<a href="#section-3-3" class="pilcrow">¶</a></p>
-<p id="section-3-4">Origin servers MUST NOT fold multiple Set-Cookie header fields into a single
-header field. The usual mechanism for folding HTTP headers fields (i.e., as
-defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-5.3" class="relref">Section 5.3</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) might change the semantics of the Set-Cookie header
-field because the %x2C (",") character is used by Set-Cookie in a way that
-conflicts with such folding.<a href="#section-3-4" class="pilcrow">¶</a></p>
-<p id="section-3-5">User agents MAY ignore Set-Cookie header fields based on response status codes or
-the user agent's cookie policy (see <a href="#ignoring-cookies" class="auto internal xref">Section 5.3</a>).<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-4">Origin servers and intermediaries MUST NOT combine multiple Set-Cookie header
+fields into a single header field. The usual mechanism for combining HTTP
+headers fields (i.e., as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-5.3" class="relref">Section 5.3</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) might change
+the semantics of the Set-Cookie header field because the %x2C (",") character
+is used by Set-Cookie in a way that conflicts with such combining.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-5">For example,<a href="#section-3-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-6">
+<pre>
+Set-Cookie: a=b;path=/c,d=e
+</pre><a href="#section-3-6" class="pilcrow">¶</a>
+</div>
+<p id="section-3-7">is ambiguous. It could be intended as two cookies, a=b and d=e, or a single
+cookie with a path of /c,d=e.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<p id="section-3-8">User agents MAY ignore Set-Cookie header fields based on response status codes or
+the user agent's cookie policy (see <a href="#ignoring-cookies" class="auto internal xref">Section 5.3</a>).<a href="#section-3-8" class="pilcrow">¶</a></p>
 <div id="examples">
 <section id="section-3.1">
         <h3 id="name-examples">
