@@ -355,6 +355,15 @@ HTTP headers fields (i.e., as defined in {{Section 5.3 of RFC9110}}) might
 change the semantics of the Set-Cookie header field because the %x2C (",")
 character is used by Set-Cookie in a way that conflicts with such combining.
 
+For example,
+
+~~~
+Set-Cookie: a=b;path=/c,d=e
+~~~
+
+is ambiguous. It could be intended as two cookies, a=b and d=e, or a single
+cookie with a path of /c,d=e.
+
 User agents MAY ignore Set-Cookie header fields based on response status codes or
 the user agent's cookie policy (see {{ignoring-cookies}}).
 
