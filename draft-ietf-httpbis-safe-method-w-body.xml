@@ -651,7 +651,8 @@ Date: Sun, 17 November 2024, 16:10:24 GMT
 
       <section title="Using Content-Location" anchor="example.content-location">
         <t>
-          Content-Location identifies a resource holding the result for the QUERY response it appeared on:
+          The Content-Location response field received above identifies a resource holding
+          the result for the QUERY response it appeared on:
         </t>
 <artwork type="http-message">
 GET /contacts/stored-results/17
@@ -661,10 +662,21 @@ Accept: application/json
 </artwork>
         <t>Response:</t>
 <artwork type="http-message">
-GET /contacts/stored-results/17
-Host: example.org
-Accept: application/json
+HTTP/1.1 200 OK
+Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
+Date: Sun, 17 November 2024, 16:10:25 GMT
 
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Jones",
+    "givenname": "Sally",
+    "email": "sally.jones@example.com" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]
 </artwork>
       </section>
 
