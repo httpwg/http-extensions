@@ -613,6 +613,63 @@ Allow: GET, QUERY, OPTIONS, HEAD
 </artwork>
     </section>
 
+    <section title="Content-Location and Location" anchor="example.content-location.and.location">
+      <t>
+        The Content-Location and Location response fields provide a way to identify alternate resources
+        that will respond to GET requests, either for the received result of the request, or for future
+        requests for the same request. Going back to the example from <xref target="example.simple"/>:
+      </t>
+<artwork type="http-message">
+QUERY /contacts HTTP/1.1
+Host: example.org
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22
+</artwork>
+        <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Location: /contacts/stored-results/17
+Location: /contacts/stored-queries/42
+Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
+Date: Sun, 17 November 2024, 16:10:24 GMT
+
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Jones",
+    "givenname": "Sally",
+    "email": "sally.jones@example.com" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]
+</artwork>
+
+      <section title="Using Content-Location" anchor="example.content-location">
+        <t>
+          Content-Location identifies a resource holding the result for the QUERY response it appeared on:
+        </t>
+<artwork type="http-message">
+GET /contacts/stored-results/17
+Host: example.org
+Accept: application/json
+
+</artwork>
+        <t>Response:</t>
+<artwork type="http-message">
+GET /contacts/stored-results/17
+Host: example.org
+Accept: application/json
+
+</artwork>
+      </section>
+
+    </section>
+
     <!--    <t>
       The non-normative examples in this section make use of a simple,
       hypothetical plain-text based query syntax based on SQL with results
