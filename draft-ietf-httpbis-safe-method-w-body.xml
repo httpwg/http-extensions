@@ -680,6 +680,42 @@ Date: Sun, 17 November 2024, 16:10:25 GMT
 </artwork>
       </section>
 
+      <section title="Using Location" anchor="example.location">
+        <t>
+          The Location response field identifies a resource that will respond to GET
+          with a fresh result for the QUERY response it appeared on.
+        </t>
+<artwork type="http-message">
+GET /contacts/stored-queries/42
+Host: example.org
+Accept: application/json
+
+</artwork>
+        <t>
+          In this example, one entry was removed at 2024-11-17T16:12:01Z (as indicated in
+          the Last-Modified field), so the response only contains two entries:
+        </t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: application/json
+Last-Modified: Sun, 17 November 2024, 16:12:01 GMT
+Date: Sun, 17 November 2024, 16:13:17 GMT
+
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]
+</artwork>
+        <t>
+          Note that there's no guarantee that the server will implement this resource
+          indefinitely, so, after an error response, the client would need to redo
+          the original QUERY request in order to obtain a new alternative location.
+        </t>
+      </section>
     </section>
 
     <!--    <t>
