@@ -617,7 +617,7 @@ Allow: GET, QUERY, OPTIONS, HEAD
 </artwork>
     </section>
 
-    <section title="Content-Location and Location" anchor="example.content-location.and.location">
+    <section title="Content-Location, Location, and Indirect Responses" anchor="example.content-location.location.indirect">
       <t>
         The Content-Location and Location response fields provide a way to identify alternate resources
         that will respond to GET requests, either for the received result of the request, or for future
@@ -720,6 +720,32 @@ Date: Sun, 17 November 2024, 16:13:17 GMT
           the original QUERY request in order to obtain a new alternative location.
         </t>
       </section>
+
+      <section title="Indirect Responses" anchor="example.indirect">
+        <t>
+          Servers can send "indirect" responses using the status code 303 ("See Other",
+          <xref target="HTTP" section="15.4.4"/>).
+        </t>
+        <t>
+          Given the request at the beginning of <xref target="example.content-location.location.indirect"/>,
+          a server might respond with:
+        </t>
+<artwork type="http-message">
+HTTP/1.1 303 See Other
+Content-Type: text/plain
+Date: Sun, 17 November 2024, 16:13:17 GMT
+Location: /contacts/stored-queries/42
+
+See stored query at "/contacts/stored-queries/42".
+</artwork>
+        <t>
+          This is similar to including Location on a direct response, except that no result
+          for the query is returned. This allows the server to only generate an alternative
+          resource. This resource could then be used as shown in
+          <xref target="example.location"/>.
+        </t>
+      </section>
+
     </section>
 
     <!--    <t>
