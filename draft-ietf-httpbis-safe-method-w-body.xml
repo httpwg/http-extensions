@@ -517,7 +517,11 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       The examples below are for illustrative purposes only; if one needs to
       send queries that are actually this short, it is probably better to use GET.
     </t>
-    <!-- TODO: add Content-Length fields once examples are stable -->
+    <t>
+      The media type used in most examples is "application/x-www-form-urlencoded"
+      (as used in POST requests from browser user clients).
+      The Content-Length fields have been omitted for brevity.
+    </t>
 
     <section title="Simple Query" anchor="example.simple">
       <t>A simple query with a direct response:</t>
