@@ -3,6 +3,7 @@
 draft-ietf-httpbis-cache-groups.md mnot@mnot.net
 draft-ietf-httpbis-compression-dictionary.md pmeenan@google.com yoav.weiss@shopify.com
 draft-ietf-httpbis-connect-tcp.md ietf@bemasc.net
+draft-ietf-httpbis-incremental.md kazuhooku@gmail.com tpauly@apple.com mt@lowentropy.net
 draft-ietf-httpbis-no-vary-search.md d@domenic.me jbroman@chromium.org
 draft-ietf-httpbis-optimistic-upgrade.md ietf@bemasc.net
 draft-ietf-httpbis-resumable-upload.md marius@transloadit.com guoye_zhang@apple.com lucas@lucaspardue.com
