@@ -251,7 +251,7 @@ If both variants are present in the same request, their length values MUST be th
 
 The length might be not be known until the upload is complete.
 
-Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` ({{upload-complete}}) header field to indicate that a request completes the upload. 
+Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` ({{upload-complete}}) header field to indicate that a request completes the upload.
 
 ### Limits {#upload-limit}
 
