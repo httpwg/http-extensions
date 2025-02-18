@@ -474,7 +474,7 @@ Upon receiving a `DELETE` request, the server SHOULD deactivate the upload resou
 
 The server MAY terminate any in-flight requests to the upload resource before sending the response by abruptly terminating their HTTP connection(s) or stream(s).
 
-### Example 
+### Example
 
 The following example shows an upload cancellation:
 
