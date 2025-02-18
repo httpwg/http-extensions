@@ -208,7 +208,7 @@ Client                                       Server
 
 # Upload Resource {#upload-resource}
 
-A resumable upload is enabled through interaction with an upload resource. When a resumable upload of begins, the server is asked to create an upload resource by a request to another resource ({{upload-creation}}). Using the upload resource, the client can query the upload progress ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}).
+A resumable upload is enabled through interaction with an upload resource. When a resumable upload begins, the server is asked to create an upload resource through a request to another resource ({{upload-creation}}). Using the upload resource, the client can query the upload progress ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}).
 
 The upload resource is only responsible for handling the upload of a representation, not the processing of said representation. This task is performed by the resource targeted during the upload creation ({{upload-creation}}).
 
@@ -220,38 +220,38 @@ The state of an upload consists of the following properties that are tracked by 
 
 ### Offset {#upload-offset}
 
-The offset is the number of bytes from the representation data that have been received, either during the creation of the upload resource ({{upload-creation}}) and/or by appending to it ({{upload-appending}}).
+The offset is the number of bytes from the representation data that have been received, either during the creation of the upload resource ({{upload-creation}}) and by appending to it ({{upload-appending}}).
 
 The offset is represented by the `Upload-Offset` request and response header field. Its field value is an Integer.
 
 The `Upload-Offset` header field is used to synchronize the client and resource regarding the amount of transferred representation data. The offset can be retrieved from the upload resource ({{offset-retrieving}}) and is required when appending representation data ({{upload-appending}}).
 
-Representation data received by the upload resource cannot be removed again and, therefore, the offset MUST NOT decrease. If the upload resource loses representation data, it MUST consider the upload resource invalid and reject further interaction with it.
+Representation data received by the upload resource cannot be removed again and, therefore, the offset MUST NOT decrease. If the upload resource loses representation data, the server MUST consider the upload resource invalid and reject further interaction with it.
 
-The `Upload-Offset` header field in responses serves as an acknowledgement of the received representation data and as a guarantee that no retransmission will be necessary. Client can use this guarantee to free resources associated to transferred representation data.
+The `Upload-Offset` header field in responses serves as an acknowledgement of the received representation data and as a guarantee that no retransmission of it will be necessary. Clients can use this guarantee to free resources associated to transferred representation data.
 
 ### Completeness {#upload-complete}
 
-An upload is incomplete until it is explicitly marked as completed by the client. After this point, no representation data is can be appended anymore.
+An upload is incomplete until it is explicitly marked as completed by the client. After this point, no representation data can be appended anymore.
 
-The completeness is represented by the `Upload-Complete` request and response header field. Its field value is a Boolean, whose value is true if the upload is complete.
+The completeness state is represented by the `Upload-Complete` request and response header field. Its field value is a Boolean, whose value is true if the upload is complete.
 
-An upload is marked as completed completed if a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) included the `Upload-Complete` header field with a true value and the request content was fully received.
+An upload is marked as completed if a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) included the `Upload-Complete` header field with a true value and the request content was fully received.
 
 ### Length {#upload-length}
 
 The length of an upload is the number of bytes of representation data that the client intends to upload.
 
-The client can announce the length when creating the upload ({{upload-creation}}) or appending to it ({{upload-appending}}) in two ways:
+The upload resource can discover the length from requests for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) in two different ways:
 
 - If the request includes the `Upload-Complete` field value set to true and a valid `Content-Length` header field, the request content is the remaining representation data. The length is then the sum of the current offset ({{upload-offset}}) and the `Content-Length` header field value.
-- The request can include the `Upload-Length` header field, whose field value is the number of bytes of the entire representation data as an Integer.
+- The request can include the `Upload-Length` header field, whose value is the number of bytes of the entire representation data as an Integer.
 
 If both variants are present in the same request, their length values MUST be the same. If multiple requests include length values, their values MUST be the same.
 
 The length might be not be known until the upload is complete.
 
-Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` ({{upload-complete}}) header field to indicate that a request completes the upload.
+Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` ({{upload-complete}}) header field to indicate that a request completes the upload. The offset could match the length, but the upload can still be incomplete.
 
 ### Limits {#upload-limit}
 
@@ -277,19 +277,19 @@ A client can start a resumable upload from any request that can carry content by
 
 The `Upload-Complete` header field is set to true if the request content includes the entire representation data that the client intents to upload. This is also a requirement for transparently upgrading to resumable uploads from traditional uploads ({{upgrading-uploads}}).
 
-If the client knows the representation data's length, it SHOULD include the `Upload-Length` header field ({{upload-length}}) in the request to help the server allocate necessary resources for the upload and provide early feedback if the represenation violates a limit ({{upload-limit}}).
+If the client knows the representation data's length, it SHOULD include the `Upload-Length` header field ({{upload-length}}) in the request to help the server allocate necessary resources for the upload and provide early feedback if the representation violates a limit ({{upload-limit}}).
 
-The client SHOULD respect any limits ({{upload-limit}}) announced in the `Upload-Limit` header field in interim or final responses. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client SHOULD stop the current upload transfer immediately and cancel the upload ({{upload-cancellation}}).
+The client SHOULD respect any limits ({{upload-limit}}) announced in the `Upload-Limit` header field in interim or final responses. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client SHOULD stop the current request immediately and cancel the upload ({{upload-cancellation}}).
 
-The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty representation. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring any representation data, saving client and server resources. Since interim responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
+The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty representation. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
 
 Representation metadata included in the initial request (see {{Section 8.3 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field ({{Section 8.3 of HTTP}}) indicates the media type of the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. The `Contenct-Encoding header field ({{Section 8.4 of HTTP}}) names the content codings applied to the representation.
 
-If the client received a final response and the entire representation data was transfered in the request content, the corresponding response belongs to the targeted resource processing the representation according to the request. Otherwise, the client can use the created upload resource referenced in the `Location` header fields in the interim or final responses to retrieve the offset ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}). The client MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status is received. The client SHOULD NOT automatically retry if it receives a 4xx status code.
+If the client received a final response and the entire representation data was transferred in the request content, the corresponding response belongs to the targeted resource processing the representation according to the request. Otherwise, interim and sucessful final responses point the client to the created upload resource in the `Location` header field. The client can use it to retrieve the offset ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}). The client MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status code is received. The client SHOULD NOT automatically retry if it receives a 4xx status code.
 
 ### Server Behavior
 
-Upon receiving a request with the `Upload-Complete` header field, the server can choose to offer resumption support by creating an upload resource. If so, it SHOULD announce upload resource by sending an interim response with the `104 (Upload Resumption Supported)` status code and the `Location` header field pointing to the upload resource. The interim response MAY include the `Upload-Limit` header field with the corresponding limits. The interim response allows the client to resume the upload even if the transfer gets later interrupted.
+Upon receiving a request with the `Upload-Complete` header field, the server can choose to offer resumption support by creating an upload resource. If so, it SHOULD announce the upload resource by sending an interim response with the `104 (Upload Resumption Supported)` status code and the `Location` header field pointing to the upload resource. The interim response MAY include the `Upload-Limit` header field with the corresponding limits ({{upload-limit}}). The interim response allows the client to resume the upload even if the message exchange gets later interrupted.
 
 The resource targeted by this initial request is responsible for processing the representation data transferred in the resumable upload according to the method and header fields in the initial request, while the upload resource enables resuming the transfer.
 
@@ -301,7 +301,7 @@ The server MUST record the length according to {{upload-length}} if the necessar
 
 While the request content is being received, the server MAY send additional interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
 
-If the server does not receive the entire request content, for example because of canceled requests or dropped connections, it SHOULD append as much of the request content as possible to upload resource. The upload resource MUST NOT be considered complete then.
+If the server does not receive the entire request content, for example because of canceled requests or dropped connections, it SHOULD append as much of the request content as possible to the upload resource. The upload resource MUST NOT be considered complete then.
 
 ### Draft Version Identification
 
@@ -375,21 +375,21 @@ Upload-Limit: max-size=1000000000
 
 ### Client Behavior
 
-If the client wants to resuming an upload after an interruption, it has to know the amount of representation data received by the upload resource so far. It can fetch the offset by sending a `HEAD` request to the upload resource. Opon a successful response, the client can continue the upload by appending representation data ({{upload-appending}}) starting at the offset indicated by the `Upload-Offset` response header field.
+If the client wants to resume the upload after an interruption, it has to know the amount of representation data received by the upload resource so far. It can fetch the offset by sending a `HEAD` request to the upload resource. Opon a successful response, the client can continue the upload by appending representation data ({{upload-appending}}) starting at the offset indicated by the `Upload-Offset` response header field.
 
 The offset can be less than or equal to the number of bytes of representation data that the client has already sent. The client MAY reject an offset which is greater than the number of bytes it has already sent during this upload. The client is expected to handle backtracking of a reasonable length. If the offset is invalid for this upload, or if the client cannot backtrack to the offset and reproduce the same representation data it has already sent, the upload MUST be considered a failure. The client MAY cancel the upload ({{upload-cancellation}}) after rejecting the offset.
 
-The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or append ({{upload-appending}}) is in progress. In addition, the client SHOULD NOT automatically retry if a 4xx (Client Error) status code is received.
+The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or appending ({{upload-appending}}) is in progress. In addition, the client SHOULD NOT automatically retry if a 4xx (Client Error) status code is received.
 
 ### Server Behavior
 
 A successful response to a `HEAD` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset}}),
-- MUST inlcude the completeless in the `Upload-Complete` header field ({{upload-complete}}),
+- MUST inlcude the completeless state in the `Upload-Complete` header field ({{upload-complete}}),
 - MUST include the length in the `Upload-Length` header field if known ({{upload-length}}),
 - MAY indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
-- SHOULD include  `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
+- SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
 
 ### Example
 
@@ -412,19 +412,19 @@ Cache-Control: no-store
 
 ### Client Behavior
 
-A client can continue the upload and append representation data by sending a `PATCH` reqeust with the `application/partial-upload` media type to the upload resource. The request content is the presentation data to append.
+A client can continue the upload and append representation data by sending a `PATCH` reqeust with the `application/partial-upload` media type to the upload resource. The request content is the representation data to append.
 
-The client MUST indicate the offset of the request content inside the representation data by including the offset in the `Upload-Offset` request header. To ensure that the upload resource will accept the offset, the value SHOULD match the offset reported in an immediate previous response from retrieving the offset ({{offset-retrieving}}) or appending ({{upload-appending}}).
+The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` request header field. To ensure that the upload resource will accept request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ({{offset-retrieving}}) or appending representation data ({{upload-appending}}).
 
 The request MUST include the `Upload-Complete` header field. Its value is true if the end of the request content is the end of the representation data. If the content is then fully received by the upload resource, the upload will be complete.
 
 The request content MAY be empty. If the `Upload-Complete` field is then set to true, the client wants to complete the upload without appending additional representation data.
 
-If the client received a final response and the remaining representation data was transfered in the request content, the corresponding response belongs to the resource processing the representation according to the initial request (see {{upload-creation}}). Otherwise, the client can continue appending representation data using another `PATCH` request. The client MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status is received. The client SHOULD NOT automatically retry if it receives a 4xx status code. The client SHOULD consider the upload failed if the status code indicates a success but the offset indicated by the `Upload-Offset` response field does not equal the representation data's length.
+If the client received a final response and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response belongs to the resource processing the representation according to the initial request (see {{upload-creation}}). Otherwise, the client can continue appending representation data using another `PATCH` request. The client MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a 5xx status is received. The client SHOULD NOT automatically retry if it receives a 4xx status code. The client SHOULD consider the upload failed if the status code indicates a success but the offset indicated by the `Upload-Offset` response field does not equal the representation data's length.
 
 ### Server Behavior
 
-An upload resource applies a `PATCH` request with the `application/partial-upload` media type by appending the request content to the upload resource.
+An upload resource applies a `PATCH` request with the `application/partial-upload` media type by appending the patch document in the request content to the upload resource.
 
 If the upload resource does not receive the entire patch document, for example because of canceled requests or dropped connections, it SHOULD append as much of the patch document starting at its beginning and without discontinuities as possible. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of PATCH}}.
 
@@ -432,9 +432,9 @@ If the `Upload-Offset` request header field value does not match the current off
 
 If the upload is already complete ({{upload-complete}}), the server MUST NOT modify the upload resource and MUST reject the request. The server MAY use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#completed-upload" in the response ({{completed-upload}}).
 
-If the `Upload-Complete` request header field is set to true, the client intents to transfer the remaining representation data in one request. If the request content was fully received, the upload is marked as complete and the resource targeted by the initial upload creation proceeds to process the entire representation (see {{upload-creation}}). Its response MUST include the final offset in the `Upload-Complete` header field.
+If the `Upload-Complete` request header field is set to true, the client intents to transfer the remaining representation data in one request. If the request content was fully received, the upload is marked as complete and the resource targeted by the initial upload creation proceeds to process the entire representation and generate a response (see {{upload-creation}}). Its response MUST include the final offset in the `Upload-Complete` header field.
 
-If the `Upload-Complete` request header field is set to false, the client intents to transfer the remaining representation over multiple requests. If the request content was fully received, the upload resource MUST acknowledge the new upload state by sending a response with the `201 (Created)` status code. The response MUST include theoffset in the `Upload-Offset` response header field and the `Upload-Complete` response header field set to false. The response SHOULD include the `Upload-Limit` header field with the corresponding limits if existing.
+If the `Upload-Complete` request header field is set to false, the client intents to transfer the remaining representation over multiple requests. If the request content was fully received, the upload resource MUST acknowledge the new upload state by sending a response with the `201 (Created)` status code. The response MUST include the offset in the `Upload-Offset` response header field and the `Upload-Complete` response header field set to false. The response SHOULD include the `Upload-Limit` header field with the corresponding limits if existing.
 
 The upload resource MUST record the length according to {{upload-length}} if the necessary header fields are included in the request. If the length is known, the upload resource MUST prevent the offset from exceeding the upload length by stopping to append bytes once the offset reaches the length and reject the request. It is not sufficient to rely on the `Content-Length` header field for enforcement because the header field might not be present.
 
@@ -470,7 +470,7 @@ The client MUST NOT initiate cancellation without the knowledge of server suppor
 
 ### Server Behavior
 
-Upon receiving a `DELETE` request, the server SHOULD deactivate the upload resource and MUST MUST respond with a `204 (No Content)` status code.
+Upon receiving a `DELETE` request, the server SHOULD deactivate the upload resource and MUST respond with a `204 (No Content)` status code.
 
 The server MAY terminate any in-flight requests to the upload resource before sending the response by abruptly terminating their HTTP connection(s) or stream(s).
 
