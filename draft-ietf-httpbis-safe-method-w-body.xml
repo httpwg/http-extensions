@@ -756,6 +756,97 @@ See stored query at "/contacts/stored-queries/42".
         </t>
       </section>
 
+      <section title="More Query Formats" anchor="example.more.query.formats">
+        <t>
+          The following examples show requests on a JSON-shaped database of
+          RFC errata.
+        </t>
+        <t>
+          The request below extracts errata information summarized per year and
+          the defined errata types.
+        </t>
+<artwork type="http-message">
+QUERY /errata.json
+Host: example.org
+Content-Type: application/xslt+xml
+Accept: application/xml, text/csv
+
+<![CDATA[<transform xmlns="http://www.w3.org/1999/XSL/Transform"
+  xmlns:j="http://www.w3.org/2005/xpath-functions"
+  version="3.0">
+
+  <output method="text"/>
+
+  <param name="input"/>
+
+  <variable name="json"
+    select="json-to-xml(unparsed-text($input))"/>
+
+  <variable name="sc">errata_status_code</variable>
+  <variable name="sd">submit_date</variable>
+
+  <template match="/">
+    <text>year, total, rejected, verified, hdu</text>
+    <text>&#10;</text>
+    <variable name="en" select="$json//j:map"/>
+    <for-each-group select="$en"
+      group-by="substring-before(j:string[@key=$sd],'-')">
+      <sort select="current-grouping-key()"/>
+      <variable name="year" select="current-grouping-key()"/>
+      <variable name="errata"
+        select="$en[$year=substring-before(j:string[@key=$sd],'-')]"/>
+      <value-of select="concat(
+        $year,
+        ', ',
+        count($errata),
+        ', ',
+        count($errata['Rejected'=j:string[@key=$sc]]),
+        ', ',
+        count($errata['Verified'=j:string[@key=$sc]]),
+        ', ',
+        count($errata['Held for Document Update'=j:string[@key=$sc]]),
+        '&#10;')"/>
+    </for-each-group>
+  </template>
+
+</transform>]]>
+</artwork>
+<t>
+  Response:
+</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: text/csv
+
+year, total, rejected, verified, hdu
+2000, 14, 0, 14, 0
+2001, 72, 1, 70, 1
+2002, 124, 8, 104, 12
+2003, 63, 0, 61, 2
+2004, 89, 1, 83, 5
+2005, 156, 10, 96, 50
+2006, 444, 54, 176, 214
+2007, 429, 48, 188, 193
+2008, 423, 52, 165, 206
+2009, 331, 39, 148, 144
+2010, 538, 80, 232, 222
+2011, 367, 47, 170, 150
+2012, 348, 54, 149, 145
+2013, 341, 61, 169, 106
+2014, 342, 73, 180, 72
+2015, 343, 79, 145, 89
+2016, 295, 46, 122, 82
+2017, 303, 46, 120, 84
+2018, 350, 61, 118, 98
+2019, 335, 47, 131, 94
+2020, 387, 68, 117, 123
+2021, 321, 44, 148, 63
+2022, 358, 37, 198, 40
+2023, 262, 38, 121, 33
+2024, 322, 33, 125, 23
+9999, 1, 0, 0, 1
+</artwork>
+      </section>
     </section>
 
     <!--    <t>
