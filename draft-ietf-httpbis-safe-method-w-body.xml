@@ -510,6 +510,18 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
         <author><organization>WHATWG</organization></author>
       </front>
     </reference>
+    <reference anchor="XSLT" target='https://www.w3.org/TR/2017/REC-xslt-30-20170608/'>
+      <front>
+        <title>XSL Transformations (XSLT) Version 3.0</title>
+        <author fullname='Michael Kay' surname='Kay' initials='M.'/>
+        <date year='2017' month='June' day='08'/>
+      </front>
+      <seriesInfo name='W3C Recommendation' value='REC-xslt-30-20170608'/>
+      <annotation>
+        Latest version available at
+        <eref target='https://www.w3.org/TR/xslt-30/'/>.
+      </annotation>
+    </reference>
   </references>
 
   <section title="Examples" anchor="examples">
@@ -755,16 +767,17 @@ See stored query at "/contacts/stored-queries/42".
           <xref target="example.location"/>.
         </t>
       </section>
+    </section>
 
-      <section title="More Query Formats" anchor="example.more.query.formats">
-        <t>
-          The following examples show requests on a JSON-shaped database of
-          RFC errata.
-        </t>
-        <t>
-          The request below extracts errata information summarized per year and
-          the defined errata types.
-        </t>
+    <section title="More Query Formats" anchor="example.more.query.formats">
+      <t>
+        The following examples show requests on a JSON-shaped database of
+        RFC errata.
+      </t>
+      <t>
+        The request below uses XSLT (<xref target="XSLT"/>) to extract errata information summarized per year and
+        the defined errata types.
+      </t>
 <artwork type="http-message">
 QUERY /errata.json
 Host: example.org
@@ -814,9 +827,9 @@ Accept: application/xml, text/csv
 </transform>
 ]]>
 </artwork>
-<t>
-  Response:
-</t>
+    <t>
+      Response:
+    </t>
 <artwork type="http-message">
 HTTP/1.1 200 OK
 Content-Type: text/csv
@@ -849,7 +862,6 @@ year, total, rejected, verified, hdu, reported
 2024, 322, 33, 125, 23, 141
 9999, 1, 0, 0, 1, 0
 </artwork>
-      </section>
     </section>
 
     <!--    <t>
