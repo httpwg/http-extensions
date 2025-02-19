@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 22 August 2025                                       Apple Inc.
+Expires: 23 August 2025                                       Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                        18 February 2025
+                                                        19 February 2025
 
 
                        Resumable Uploads for HTTP
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 August 2025.
+   This Internet-Draft will expire on 23 August 2025.
 
 Copyright Notice
 
@@ -695,7 +695,7 @@ Table of Contents
    If the client wants to resume the upload after an interruption, it
    has to know the amount of representation data received by the upload
    resource so far.  It can fetch the offset by sending a HEAD request
-   to the upload resource.  Opon a successful response, the client can
+   to the upload resource.  Upon a successful response, the client can
    continue the upload by appending representation data (Section 4.4)
    starting at the offset indicated by the Upload-Offset response header
    field.
@@ -753,7 +753,7 @@ Table of Contents
 4.4.1.  Client Behavior
 
    A client can continue the upload and append representation data by
-   sending a PATCH reqeust with the application/partial-upload media
+   sending a PATCH request with the application/partial-upload media
    type to the upload resource.  The request content is the
    representation data to append.
 
@@ -819,7 +819,7 @@ Table of Contents
    marked as complete and the resource targeted by the initial upload
    creation proceeds to process the entire representation and generate a
    response (see Section 4.2).  Its response MUST include the final
-   offset in the Upload-Complete header field.
+   offset in the Upload-Offset header field.
 
    If the Upload-Complete request header field is set to false, the
    client intents to transfer the remaining representation over multiple
