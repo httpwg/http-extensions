@@ -173,7 +173,15 @@ Table of Contents
 
 5.  IANA Considerations
 
-   TBD
+   An HTTP field named Incremental is registered in the Hypertext
+   Transfer Protocol (HTTP) Field Name Registry, following the
+   procedures in Section 18.4 of [HTTP].  The following values are
+   registered:
+
+   Field Name:  Incremental
+   Status:  permanent
+   Reference:  this document
+   Comments:  (none)
 
 6.  References
 
