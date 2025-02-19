@@ -621,7 +621,7 @@ Allow: GET, QUERY, OPTIONS, HEAD
       <t>
         The Content-Location and Location response fields provide a way to identify alternate resources
         that will respond to GET requests, either for the received result of the request, or for future
-        requests for the same request. Going back to the example from <xref target="example.simple"/>:
+        requests to perform the same operation. Going back to the example from <xref target="example.simple"/>:
       </t>
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
@@ -719,7 +719,7 @@ Date: Sun, 17 November 2024, 16:13:17 GMT
           Assuming no change in the query result, a subsequent conditional GET request with
         </t>
 <artwork type="http-message">
-If-Non-Match: "42-1"
+If-None-Match: "42-1"
 </artwork>
         <t>
           would result in a 304 response ("Not Modified", <xref target="HTTP" section="15.4.5"/>).
