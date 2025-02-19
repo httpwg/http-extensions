@@ -71,7 +71,7 @@ deployed to buffer complete HTTP messages before forwarding them downstream
 If such a buffering HTTP intermediary exists between the client and the server,
 these applications may fail to function as intended.
 
-In the case of Server-Sent Events, an intermediary tries to buffer the HTTP
+In the case of Server-Sent Events, an intermediary that tries to buffer the HTTP
 response completely before forwarding it could be left waiting indefinitely.
 A client might never receive any portion of the response.
 
