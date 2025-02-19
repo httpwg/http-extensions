@@ -147,7 +147,23 @@ that are buffered or the time that buffers are held before forwarding.
 
 # IANA Considerations
 
-TBD
+An HTTP field named Incremental is registered
+in the Hypertext Transfer Protocol (HTTP) Field Name Registry,
+following the procedures in {{Section 18.4 of !HTTP=RFC9110}}.
+The following values are registered:
+
+Field Name:
+: Incremental
+
+Status:
+: permanent
+
+Reference:
+: this document
+
+Comments:
+: (none)
+{: spacing="compact"}
 
 --- back
 
