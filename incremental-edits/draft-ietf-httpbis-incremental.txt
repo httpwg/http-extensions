@@ -93,10 +93,10 @@ Table of Contents
    If such a buffering HTTP intermediary exists between the client and
    the server, these applications may fail to function as intended.
 
-   In the case of Server-Sent Events, an intermediary tries to buffer
-   the HTTP response completely before forwarding it could be left
-   waiting indefinitely.  A client might never receive any portion of
-   the response.
+   In the case of Server-Sent Events, an intermediary that tries to
+   buffer the HTTP response completely before forwarding it could be
+   left waiting indefinitely.  A client might never receive any portion
+   of the response.
 
    In the case of requests that involve any bi-directional exchange, an
    intermediary that tries to buffer entire messages -- either request

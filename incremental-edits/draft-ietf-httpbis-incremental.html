@@ -1202,7 +1202,7 @@ deployed to buffer complete HTTP messages before forwarding them downstream
 (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.6" class="relref">Section 7.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">If such a buffering HTTP intermediary exists between the client and the server,
 these applications may fail to function as intended.<a href="#section-1-6" class="pilcrow">¶</a></p>
-<p id="section-1-7">In the case of Server-Sent Events, an intermediary tries to buffer the HTTP
+<p id="section-1-7">In the case of Server-Sent Events, an intermediary that tries to buffer the HTTP
 response completely before forwarding it could be left waiting indefinitely.
 A client might never receive any portion of the response.<a href="#section-1-7" class="pilcrow">¶</a></p>
 <p id="section-1-8">In the case of requests that involve any bi-directional exchange,
