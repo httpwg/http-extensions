@@ -651,7 +651,7 @@ Content-Type: application/json
 Content-Location: /contacts/stored-results/17
 Location: /contacts/stored-queries/42
 Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
-Date: Sun, 17 November 2024, 16:10:24 GMT
+Date: Sun, 17 Nov 2024, 16:10:24 GMT
 
 [
   { "surname": "Smith",
@@ -681,7 +681,7 @@ Accept: application/json
 <artwork type="http-message">
 HTTP/1.1 200 OK
 Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
-Date: Sun, 17 November 2024, 16:10:25 GMT
+Date: Sun, 17 Nov 2024, 16:10:25 GMT
 
 [
   { "surname": "Smith",
@@ -717,7 +717,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 Last-Modified: Sun, 17 November 2024, 16:12:01 GMT
 ETag: "42-1"
-Date: Sun, 17 November 2024, 16:13:17 GMT
+Date: Sun, 17 Nov 2024, 16:13:17 GMT
 
 [
   { "surname": "Smith",
@@ -756,7 +756,7 @@ If-None-Match: "42-1"
 <artwork type="http-message">
 HTTP/1.1 303 See Other
 Content-Type: text/plain
-Date: Sun, 17 November 2024, 16:13:17 GMT
+Date: Sun, 17 Nov 2024, 16:13:17 GMT
 Location: /contacts/stored-queries/42
 
 See stored query at "/contacts/stored-queries/42".
@@ -807,8 +807,8 @@ Accept: application/xml, text/csv
       group-by="substring-before(j:string[@key=$sd],'-')">
       <sort select="current-grouping-key()"/>
       <variable name="year" select="current-grouping-key()"/>
-      <variable name="errata"
-        select="$en[$year=substring-before(j:string[@key=$sd],'-')]"/>
+      <variable name="errata" select=
+        "$en[$year=substring-before(j:string[@key=$sd],'-')]"/>
       <value-of select="concat(
         $year,
         ', ',
@@ -818,7 +818,8 @@ Accept: application/xml, text/csv
         ', ',
         count($errata['Verified'=j:string[@key=$sc]]),
         ', ',
-        count($errata['Held for Document Update'=j:string[@key=$sc]]),
+        count(
+          $errata['Held for Document Update'=j:string[@key=$sc]]),
         ', ',
         count($errata['Reported'=j:string[@key=$sc]]),
         '&#10;')"/>
@@ -834,7 +835,7 @@ Accept: application/xml, text/csv
 HTTP/1.1 200 OK
 Content-Type: text/csv
 Accept-Query: "application/jsonpath", "application/xslt+xml"
-Date: Mon, 17 February 2024, 20:21:22 GMT
+Date: Wed, 19 Feb 2025, 17:10:01 GMT
 
 year, total, rejected, verified, hdu, reported
 2000, 14, 0, 14, 0, 0
@@ -866,9 +867,9 @@ year, total, rejected, verified, hdu, reported
 </artwork>
     <t>
       Note the Accept-Query response field indicating that another query format - JSONPath
-      (<xref target="RFC9535"/>) - is supported as well. The request below would report all
-      errata for the <xref target="HTTP"/> specification that have not been rejected (by identifier
-      and submission date):
+      (<xref target="RFC9535"/>) - is supported as well. The request below would report the
+      report the identifiers ("doc-id" in the JSON content) of all rejected errata submitted
+      since 2024:
     </t>
 <artwork type="http-message">
 QUERY /errata.json HTTP/1.1
@@ -876,12 +877,12 @@ Host: example.org
 Content-Type: application/jsonpath
 Accept: application/json
 
-$..[?@doc-id=="RFC9110" &amp;&amp; @errata_status_code!="Rejected"]
-  .[errata_id, submit_date]</artwork>
-      <t>
-        <cref>This example query is likely incorrect, help appreciated.
-        See <eref target="https://github.com/httpwg/http-extensions/issues/2924"/>.</cref>
-      </t>
+$..[
+     ?@.errata_status_code=="Rejected"
+     &amp;&amp; @.submit_date>"2024"
+   ]
+   ["doc\u002did"]
+</artwork>
       <t>
         Response:
       </t>
@@ -889,188 +890,23 @@ $..[?@doc-id=="RFC9110" &amp;&amp; @errata_status_code!="Rejected"]
 HTTP/1.1 200 OK
 Content-Type: application/json
 Accept-Query: "application/jsonpath", "application/xslt+xml"
-Date: Wed, 12 April 2023, 17:10:01 GMT
+Date: Thu, 20 Feb 2025, 09:55:42 GMT
+Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
+ETag: "a24a7a-62e8cb96f0b8a"
 
 [
-  "7105",
-  "2022-08-26",
-  "7109",
-  "2022-08-31",
-  "7138",
-  "2022-09-23",
-  "7306",
-  "2023-01-13",
-  "7419",
-  "2023-04-11"
+  "RFC1185","RFC8407","RFC6350","RFC8467","RFC1157","RFC9543",
+  "RFC9076","RFC7656","RFC2822","RFC9460","RFC2104","RFC6797",
+  "RFC9499","RFC9557","RFC2131","RFC2328","RFC9001","RFC3325",
+  "RFC9438","RFC2526","RFC2985","RFC7643","RFC9132","RFC6376",
+  "RFC9110","RFC9460","RFC7748","RFC9497","RFC8463","RFC4035",
+  "RFC7239","RFC9083","RFC9537","RFC9537","RFC9420","RFC9000",
+  "RFC9656","RFC9110","RFC2324","RFC2549","RFC6797","RFC2549",
+  "RFC8894"
 ]
 </artwork>
     </section>
-
-    <!--    <t>
-      The non-normative examples in this section make use of a simple,
-      hypothetical plain-text based query syntax based on SQL with results
-      returned as comma-separated values. This is done for illustration
-      purposes only. Implementations are free to use any format they wish on
-      both the request and response.
-    </t>
-
-    <section title="Simple QUERY with a Direct Response">
-
-      <t>A simple query with a direct response:</t>
-<artwork type="http-message">
-QUERY /contacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 200 OK
-Content-Type: text/csv
-
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</artwork>
-
-    </section>
-
-    <section title="Simple QUERY with a Direct Response and Location Fields">
-
-      <t>A simple query with a direct response:</t>
-<artwork type="http-message">
-QUERY /contacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 200 OK
-Content-Type: text/csv
-Content-Location: /contacts/responses/42
-Location: /contacts/queries/17
-
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</artwork>
-
-    <t>
-      A subsequent GET request on /contacts/responses/42 would return
-      the same response, until the server decides to remove that
-      resource.
-    </t>
-    <t>
-      A GET request on /contacts/queries/17 however would execute the same
-      query again, and return a fresh result for that query:
-    </t>
-
-<artwork type="http-message">
-GET /contacts/queries/17 HTTP/1.1
-Host: example.org
-Accept: text/csv
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 200 OK
-Content-Type: text/csv
-Content-Location: /contacts/responses/43
-
-surname, givenname, email
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</artwork>
-
-    </section>
-
-    <section title="Simple QUERY with Indirect Response (303 See Other)">
-
-      <t>A simple query with an Indirect Response (303 See Other):</t>
-<artwork type="http-message">
-QUERY /contacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 303 See Other
-Location: /contacts/query123
-</artwork>
-
-      <t>Retrieval of the Query Response:</t>
-<artwork type="http-message">
-GET /contacts/query123 HTTP/1.1
-Host: example.org
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 200 OK
-Content-Type: text/csv
-
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</artwork>
-
-    </section>
-
-    <section title="Simple QUERY with Redirect Response (308 Moved Permanently)">
-
-      <t>A simple query being redirected:</t>
-<artwork type="http-message">
-QUERY /contacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 308 Moved Permanently
-Location: /morecontacts
-</artwork>
-
-      <t>Redirected request:</t>
-<artwork type="http-message">
-QUERY /morecontacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 200 OK
-Content-Type: text/csv
-
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</artwork>
-
-    </section>-->
-  </section>
+</section>
 
 <section title="Change Log" anchor="change.log" removeInRFC="true">
 <section title="Since draft-ietf-httpbis-safe-method-w-body-00" anchor="changes.since.00">
