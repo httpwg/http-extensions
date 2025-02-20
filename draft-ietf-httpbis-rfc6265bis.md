@@ -52,6 +52,7 @@ normative:
   RFC5890:
   RFC6454:
   RFC8126:
+  RFC8174:
   RFC9110:
      display: HTTP
   USASCII:
