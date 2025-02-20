@@ -603,16 +603,16 @@ Allow: GET, QUERY, OPTIONS, HEAD
       </t>
 
 <artwork type="http-message">
-  HEAD /contacts HTTP/1.1
-  Host: example.org
+HEAD /contacts HTTP/1.1
+Host: example.org
 
 </artwork>
 
 <t>Response:</t>
 <artwork type="http-message">
-  HTTP/1.1 200 OK
-  Content-Type: application/xhtml
-  Accept-Query: application/x-www-form-urlencoded, application/sql
+HTTP/1.1 200 OK
+Content-Type: application/xhtml
+Accept-Query: application/x-www-form-urlencoded, application/sql
 </artwork>
       <t>
         Responses to which request methods will contain Accept-Query will depend on
@@ -624,9 +624,9 @@ Allow: GET, QUERY, OPTIONS, HEAD
         to inspect the Allow (<xref target="HTTP" section="15.5.16"/>) response field:
       </t>
 <artwork type="http-message">
-  HTTP/1.1 415 Unsupported Media Type
-  Content-Type: application/xhtml
-  Accept: application/x-www-form-urlencoded, application/sql
+HTTP/1.1 415 Unsupported Media Type
+Content-Type: application/xhtml
+Accept: application/x-www-form-urlencoded, application/sql
 </artwork>
     </section>
 
@@ -892,7 +892,6 @@ Content-Type: application/json
 Accept-Query: "application/jsonpath", "application/xslt+xml"
 Date: Thu, 20 Feb 2025, 09:55:42 GMT
 Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
-ETag: "a24a7a-62e8cb96f0b8a"
 
 [
   "RFC1185","RFC8407","RFC6350","RFC8467","RFC1157","RFC9543",
