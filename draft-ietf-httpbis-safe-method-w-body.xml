@@ -868,7 +868,7 @@ year, total, rejected, verified, hdu, reported
     <t>
       Note the Accept-Query response field indicating that another query format - JSONPath
       (<xref target="RFC9535"/>) - is supported as well. The request below would report the
-      identifiers ("doc-id" in the JSON content) of all rejected errata submitted
+      identifiers of all rejected errata submitted
       since 2024:
     </t>
 <artwork type="http-message">
@@ -881,7 +881,7 @@ $..[
      ?@.errata_status_code=="Rejected"
      &amp;&amp; @.submit_date>"2024"
    ]
-   ["doc\u002did"]
+   ["doc-id"]
 </artwork>
       <t>
         Response:
