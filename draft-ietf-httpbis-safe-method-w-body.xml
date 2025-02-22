@@ -579,7 +579,7 @@ Host: example.org
 </artwork>
 
       <t>Response:</t>
-<artwork type="http-message">
+<artwork type="exammple">
 HTTP/1.1 200 OK
 
 Allow: GET, QUERY, OPTIONS, HEAD
