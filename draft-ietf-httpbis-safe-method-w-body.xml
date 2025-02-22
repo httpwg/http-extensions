@@ -672,7 +672,7 @@ Date: Sun, 17 Nov 2024, 16:10:24 GMT
           the result for the QUERY response it appeared on:
         </t>
 <artwork type="http-message">
-GET /contacts/stored-results/17
+GET /contacts/stored-results/17 HTTP/1.1
 Host: example.org
 Accept: application/json
 
@@ -703,7 +703,7 @@ Date: Sun, 17 Nov 2024, 16:10:25 GMT
           with a fresh result for the QUERY response it appeared on.
         </t>
 <artwork type="http-message">
-GET /contacts/stored-queries/42
+GET /contacts/stored-queries/42 HTTP/1.1
 Host: example.org
 Accept: application/json
 
@@ -780,7 +780,7 @@ See stored query at "/contacts/stored-queries/42".
         the defined errata types.
       </t>
 <artwork type="http-message">
-QUERY /errata.json
+QUERY /errata.json HTTP/1.1
 Host: example.org
 Content-Type: application/xslt+xml
 Accept: application/xml, text/csv
