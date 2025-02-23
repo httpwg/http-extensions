@@ -20,7 +20,7 @@
   <!ENTITY SHOULD "<bcp14>SHOULD</bcp14>">
   <!ENTITY SHOULD-NOT "<bcp14>SHOULD NOT</bcp14>">
 ]>
-<rfc category="std" ipr="trust200902" docName="draft-ietf-httpbis-safe-method-w-body-latest" submissionType="IETF" version="3" xmlns:xi="http://www.w3.org/2001/XInclude">
+<rfc category="std" ipr="trust200902" docName="draft-ietf-httpbis-safe-method-w-body-latest" submissionType="IETF" consensus="true" version="3" xmlns:xi="http://www.w3.org/2001/XInclude">
   <front>
     <title>
       The HTTP QUERY Method
