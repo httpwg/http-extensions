@@ -1055,7 +1055,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bingler, et al.</td>
-<td class="center">Expires 26 August 2025</td>
+<td class="center">Expires 27 August 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6265" class="eref">6265</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-02-22" class="published">22 February 2025</time>
+<time datetime="2025-02-23" class="published">23 February 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-08-26">26 August 2025</time></dd>
+<dd class="expires"><time datetime="2025-08-27">27 August 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ header fields are widely used on the Internet. This document obsoletes RFC
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 26 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 27 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1421,7 +1421,7 @@ header fields are widely used on the Internet. This document obsoletes RFC
                 <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-set-cookie-2" class="internal xref">Set-Cookie</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.3">
-                <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="auto internal xref">9.3</a>.  <a href="#name-cookie-attribute-registry" class="internal xref">Cookie Attribute Registry</a></p>
+                <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="auto internal xref">9.3</a>.  <a href="#name-cookie-attributes-registry" class="internal xref">"Cookie Attributes" Registry</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.3.2.1">
                     <p id="section-toc.1-1.9.2.3.2.1.1"><a href="#section-9.3.1" class="auto internal xref">9.3.1</a>.  <a href="#name-procedure" class="internal xref">Procedure</a></p>
@@ -1509,9 +1509,11 @@ in significant ways, the document contains a note explaining the difference.<a h
         <h3 id="name-conformance-criteria">
 <a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-conformance-criteria" class="section-name selfRef">Conformance Criteria</a>
         </h3>
-<p id="section-2.1-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
-"SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
-interpreted as described in <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span>.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+"MAY", and "OPTIONAL" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 <p id="section-2.1-2">Requirements phrased in the imperative as part of algorithms (such as "strip any
 leading space characters" or "return false and abort these steps") are to be
 interpreted with the meaning of the key word ("MUST", "SHOULD", "MAY", etc.)
@@ -1601,13 +1603,21 @@ the Cookie header field or use its contents for an application-defined purpose.<
 origin server can include multiple Set-Cookie header fields in a single response.
 The presence of a Cookie or a Set-Cookie header field does not preclude HTTP
 caches from storing and reusing a response.<a href="#section-3-3" class="pilcrow">¶</a></p>
-<p id="section-3-4">Origin servers MUST NOT fold multiple Set-Cookie header fields into a single
-header field. The usual mechanism for folding HTTP headers fields (i.e., as
-defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-5.3" class="relref">Section 5.3</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) might change the semantics of the Set-Cookie header
-field because the %x2C (",") character is used by Set-Cookie in a way that
-conflicts with such folding.<a href="#section-3-4" class="pilcrow">¶</a></p>
-<p id="section-3-5">User agents MAY ignore Set-Cookie header fields based on response status codes or
-the user agent's cookie policy (see <a href="#ignoring-cookies" class="auto internal xref">Section 5.3</a>).<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-4">Origin servers and intermediaries MUST NOT combine multiple Set-Cookie header
+fields into a single header field. The usual mechanism for combining HTTP
+headers fields (i.e., as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-5.3" class="relref">Section 5.3</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) might change
+the semantics of the Set-Cookie header field because the %x2C (",") character
+is used by Set-Cookie in a way that conflicts with such combining.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-5">For example,<a href="#section-3-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-6">
+<pre>
+Set-Cookie: a=b;path=/c,d=e
+</pre><a href="#section-3-6" class="pilcrow">¶</a>
+</div>
+<p id="section-3-7">is ambiguous. It could be intended as two cookies, a=b and d=e, or a single
+cookie with a path of /c,d=e.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<p id="section-3-8">User agents MAY ignore Set-Cookie header fields based on response status codes or
+the user agent's cookie policy (see <a href="#ignoring-cookies" class="auto internal xref">Section 5.3</a>).<a href="#section-3-8" class="pilcrow">¶</a></p>
 <div id="examples">
 <section id="section-3.1">
         <h3 id="name-examples">
@@ -4235,14 +4245,14 @@ updated with the following registration:<a href="#section-9.2-1" class="pilcrow"
 </dl>
 </section>
 </div>
-<div id="cookie-attribute-registry">
+<div id="cookie-attributes-registry">
 <section id="section-9.3">
-        <h3 id="name-cookie-attribute-registry">
-<a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-cookie-attribute-registry" class="section-name selfRef">Cookie Attribute Registry</a>
+        <h3 id="name-cookie-attributes-registry">
+<a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-cookie-attributes-registry" class="section-name selfRef">"Cookie Attributes" Registry</a>
         </h3>
-<p id="section-9.3-1">IANA is requested to create the "Cookie Attribute" registry, defining the
-name space of attribute used to control cookies' behavior.
-The registry should be maintained at
+<p id="section-9.3-1">IANA is requested to create the "Cookie Attributes" registry, defining the name space of
+attributes used to control cookies' behavior. The registry should be maintained in a new
+registry group called "Hypertext Transfer Protocol (HTTP) Cookie Attributes" at
 <a href="https://www.iana.org/assignments/cookie-attribute-names">https://www.iana.org/assignments/cookie-attribute-names</a>.<a href="#section-9.3-1" class="pilcrow">¶</a></p>
 <div id="procedure">
 <section id="section-9.3.1">
@@ -4262,7 +4272,7 @@ defined in CamelCase, but technically accepted case-insensitively.<a href="#sect
           <h4 id="name-registration">
 <a href="#section-9.3.2" class="section-number selfRef">9.3.2. </a><a href="#name-registration" class="section-name selfRef">Registration</a>
           </h4>
-<p id="section-9.3.2-1">The "Cookie Attribute Registry" should be created with the registrations below:<a href="#section-9.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.3.2-1">The "Cookie Attributes" registry should be created with the registrations below:<a href="#section-9.3.2-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
             <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
 <thead>
@@ -4373,6 +4383,10 @@ defined in CamelCase, but technically accepted case-insensitively.<a href="#sect
 <dt id="RFC8126">[RFC8126]</dt>
         <dd>
 <span class="refAuthor">Cotton, M.</span>, <span class="refAuthor">Leiba, B.</span>, and <span class="refAuthor">T. Narten</span>, <span class="refTitle">"Guidelines for Writing an IANA Considerations Section in RFCs"</span>, <span class="seriesInfo">BCP 26</span>, <span class="seriesInfo">RFC 8126</span>, <span class="seriesInfo">DOI 10.17487/RFC8126</span>, <time datetime="2017-06" class="refDate">June 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8126">https://www.rfc-editor.org/rfc/rfc8126</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SAMESITE">[SAMESITE]</dt>
         <dd>

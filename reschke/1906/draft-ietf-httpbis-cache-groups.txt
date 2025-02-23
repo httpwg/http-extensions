@@ -2,10 +2,10 @@
 
 
 
-Network Working Group                                      M. Nottingham
-Internet-Draft                                          22 February 2025
+HTTP                                                       M. Nottingham
+Internet-Draft                                          23 February 2025
 Intended status: Standards Track                                        
-Expires: 26 August 2025
+Expires: 27 August 2025
 
 
                            HTTP Cache Groups
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 August 2025.
+   This Internet-Draft will expire on 27 August 2025.
 
 Copyright Notice
 
@@ -110,7 +110,7 @@ Table of Contents
    information to apply invalidation events to members of a group.
 
    Section 3 introduces one new source of such events: a HTTP response
-   header that allows a state-changing response to trigger a group
+   header field that allows a state-changing response to trigger a group
    invalidation.
 
    These mechanisms operate within a single cache, across the stored
@@ -158,7 +158,8 @@ Table of Contents
        contains the same String (in any position in the List), when
        compared character-by-character.
 
-   2.  The both share the same URI origin (per Section 4.3.1 of [HTTP]).
+   2.  They both share the same URI origin (per Section 4.3.1 of
+       [HTTP]).
 
 2.2.  Cache Behaviour
 
@@ -270,10 +271,8 @@ Table of Contents
 
    [STRUCTURED-FIELDS]
               Nottingham, M. and P. Kamp, "Structured Field Values for
-              HTTP", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-sfbis-06, 21 April 2024,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              sfbis-06>.
+              HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
+              <https://www.rfc-editor.org/rfc/rfc9651>.
 
 6.2.  Informative References
 
