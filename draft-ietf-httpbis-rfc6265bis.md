@@ -52,6 +52,7 @@ normative:
   RFC5890:
   RFC6454:
   RFC8126:
+  RFC8174:
   RFC9110:
      display: HTTP
   USASCII:
@@ -252,9 +253,11 @@ This document obsoletes {{RFC6265}}.
 
 ## Conformance Criteria
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
-"SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
-interpreted as described in {{RFC2119}}.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+"MAY", and "OPTIONAL" in this document are to be interpreted as
+described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they
+appear in all capitals, as shown here.
 
 Requirements phrased in the imperative as part of algorithms (such as "strip any
 leading space characters" or "return false and abort these steps") are to be
@@ -349,11 +352,20 @@ origin server can include multiple Set-Cookie header fields in a single response
 The presence of a Cookie or a Set-Cookie header field does not preclude HTTP
 caches from storing and reusing a response.
 
-Origin servers MUST NOT fold multiple Set-Cookie header fields into a single
-header field. The usual mechanism for folding HTTP headers fields (i.e., as
-defined in {{Section 5.3 of RFC9110}}) might change the semantics of the Set-Cookie header
-field because the %x2C (",") character is used by Set-Cookie in a way that
-conflicts with such folding.
+Origin servers and intermediaries MUST NOT combine multiple Set-Cookie header
+fields into a single header field. The usual mechanism for combining HTTP
+headers fields (i.e., as defined in {{Section 5.3 of RFC9110}}) might change
+the semantics of the Set-Cookie header field because the %x2C (",") character
+is used by Set-Cookie in a way that conflicts with such combining.
+
+For example,
+
+~~~
+Set-Cookie: a=b;path=/c,d=e
+~~~
+
+is ambiguous. It could be intended as two cookies, a=b and d=e, or a single
+cookie with a path of /c,d=e.
 
 User agents MAY ignore Set-Cookie header fields based on response status codes or
 the user agent's cookie policy (see {{ignoring-cookies}}).
@@ -2450,11 +2462,11 @@ Author/Change controller:
 Specification document:
 : this specification ({{set-cookie}})
 
-## Cookie Attribute Registry
+## "Cookie Attributes" Registry
 
-IANA is requested to create the "Cookie Attribute" registry, defining the
-name space of attribute used to control cookies' behavior.
-The registry should be maintained at
+IANA is requested to create the "Cookie Attributes" registry, defining the name space of
+attributes used to control cookies' behavior. The registry should be maintained in a new
+registry group called "Hypertext Transfer Protocol (HTTP) Cookie Attributes" at
 <https://www.iana.org/assignments/cookie-attribute-names>.
 
 ### Procedure
@@ -2469,7 +2481,7 @@ defined in CamelCase, but technically accepted case-insensitively.
 
 ### Registration
 
-The "Cookie Attribute Registry" should be created with the registrations below:
+The "Cookie Attributes" registry should be created with the registrations below:
 
 | Name     | Reference                               |
 |----------:+----------------------------------------|

@@ -6,7 +6,9 @@ date: {DATE}
 category: std
 
 ipr: trust200902
-keyword: Internet-Draft
+keyword: HTTP, Caching, Invalidation
+workgroup: HTTP
+area: Web and Internet Transport
 
 stand_alone: yes
 smart_quotes: no
@@ -35,7 +37,7 @@ author:
 normative:
   HTTP: RFC9110
   HTTP-CACHING: RFC9111
-  STRUCTURED-FIELDS: I-D.ietf-httpbis-sfbis
+  STRUCTURED-FIELDS: RFC9651
 
 informative:
   TARGETED: RFC9213
@@ -62,7 +64,7 @@ In addition to sharing invalidation events, the relationships indicated by group
 
 {{cache-groups}} introduces a means of describing the relationships between a set of stored responses in HTTP caches by associating them with one or more opaque strings. It also describes how caches can use that information to apply invalidation events to members of a group.
 
-{{cache-group-invalidation}} introduces one new source of such events: a HTTP response header that allows a state-changing response to trigger a group invalidation.
+{{cache-group-invalidation}} introduces one new source of such events: a HTTP response header field that allows a state-changing response to trigger a group invalidation.
 
 These mechanisms operate within a single cache, across the stored responses associated with a single origin server. They do not address this issues of synchronising state between multiple caches (e.g., in a hierarchy or mesh), nor do they facilitate association of stored responses from disparate origins.
 
@@ -94,7 +96,7 @@ Implementations MUST support at least 128 groups in a field value, with up to at
 Two responses stored in the same cache are considered to have the same group when all of the following conditions are met:
 
 1. They both contain a Cache-Groups response header field that contains the same String (in any position in the List), when compared character-by-character.
-2. The both share the same URI origin (per {{Section 4.3.1 of HTTP}}).
+2. They both share the same URI origin (per {{Section 4.3.1 of HTTP}}).
 
 
 ## Cache Behaviour
