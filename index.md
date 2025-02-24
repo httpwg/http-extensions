@@ -24,7 +24,7 @@ View [saved issues](issues.html), or the latest GitHub [issues](https://github.c
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
-| [The HTTP QUERY Method](reschke/1906/draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](reschke/1906/draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-safe-method-w-body.txt&url_2=https://httpwg.github.io/http-extensions/reschke/1906/draft-ietf-httpbis-safe-method-w-body.txt) |
+| [The HTTP QUERY Method](reschke/1906/draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](reschke/1906/draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | same as main |
 | [No-Vary-Search](reschke/1906/draft-ietf-httpbis-no-vary-search.html "No-Vary-Search (HTML)") | [plain text](reschke/1906/draft-ietf-httpbis-no-vary-search.txt "No-Vary-Search (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-no-vary-search.txt&url_2=https://httpwg.github.io/http-extensions/reschke/1906/draft-ietf-httpbis-no-vary-search.txt) |
 | [HTTP Cache Groups](reschke/1906/draft-ietf-httpbis-cache-groups.html "HTTP Cache Groups (HTML)") | [plain text](reschke/1906/draft-ietf-httpbis-cache-groups.txt "HTTP Cache Groups (Text)") | same as main |
 | [Compression Dictionary Transport](reschke/1906/draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](reschke/1906/draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | same as main |

@@ -5,12 +5,12 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                             A. Malhotra
-Expires: 24 August 2025                                                 
+Expires: 28 August 2025                                                 
                                                               J.M. Snell
                                                                         
                                                                M. Bishop
                                                                   Akamai
-                                                        20 February 2025
+                                                        24 February 2025
 
 
                          The HTTP QUERY Method
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 August 2025.
+   This Internet-Draft will expire on 28 August 2025.
 
 Copyright Notice
 
@@ -85,10 +85,14 @@ Table of Contents
    6.  Normative References
    7.  Informative References
    Appendix A.  Examples
-     A.1.  Simple QUERY with a Direct Response
-     A.2.  Simple QUERY with a Direct Response and Location Fields
-     A.3.  Simple QUERY with Indirect Response (303 See Other)
-     A.4.  Simple QUERY with Redirect Response (308 Moved Permanently)
+     A.1.  Simple Query
+     A.2.  Discovery of QUERY support
+     A.3.  Discovery of QUERY Formats
+     A.4.  Content-Location, Location, and Indirect Responses
+       A.4.1.  Using Content-Location
+       A.4.2.  Using Location
+       A.4.3.  Indirect Responses
+     A.5.  More Query Formats
    Appendix B.  Change Log
      B.1.  Since draft-ietf-httpbis-safe-method-w-body-00
      B.2.  Since draft-ietf-httpbis-safe-method-w-body-01
@@ -418,143 +422,352 @@ Table of Contents
 
    [FETCH]    WHATWG, "FETCH", <https://fetch.spec.whatwg.org>.
 
+   [RFC9535]  Gössner, S., Ed., Normington, G., Ed., and C. Bormann,
+              Ed., "JSONPath: Query Expressions for JSON", RFC 9535,
+              DOI 10.17487/RFC9535, February 2024,
+              <https://www.rfc-editor.org/info/rfc9535>.
+
+   [XSLT]     Kay, M., "XSL Transformations (XSLT) Version 3.0", W3C
+              Recommendation REC-xslt-30-20170608, 8 June 2017,
+              <https://www.w3.org/TR/2017/REC-xslt-30-20170608/>.
+              Latest version available at
+              https://www.w3.org/TR/xslt-30/.
+
 Appendix A.  Examples
 
-   The non-normative examples in this section make use of a simple,
-   hypothetical plain-text based query syntax based on SQL with results
-   returned as comma-separated values.  This is done for illustration
-   purposes only.  Implementations are free to use any format they wish
-   on both the request and response.
+   The examples below are for illustrative purposes only; if one needs
+   to send queries that are actually this short, it is probably better
+   to use GET.
 
-A.1.  Simple QUERY with a Direct Response
+   The media type used in most examples is "application/x-www-form-
+   urlencoded" (as used in POST requests from browser user clients).
+   The Content-Length fields have been omitted for brevity.
 
-   A simple query with a direct response:
-
-   QUERY /contacts HTTP/1.1
-   Host: example.org
-   Content-Type: application/sql
-   Accept: text/csv
-
-   select surname, givenname, email limit 10
-
-   Response:
-
-   HTTP/1.1 200 OK
-   Content-Type: text/csv
-
-   surname, givenname, email
-   Smith, John, john.smith@example.org
-   Jones, Sally, sally.jones@example.com
-   Dubois, Camille, camille.dubois@example.net
-
-A.2.  Simple QUERY with a Direct Response and Location Fields
+A.1.  Simple Query
 
    A simple query with a direct response:
 
    QUERY /contacts HTTP/1.1
    Host: example.org
-   Content-Type: application/sql
-   Accept: text/csv
+   Content-Type: application/x-www-form-urlencoded
+   Accept: application/json
 
-   select surname, givenname, email limit 10
+   select=surname,givenname,email&limit=10&match=%22email=*@example.*%22
 
    Response:
 
    HTTP/1.1 200 OK
-   Content-Type: text/csv
-   Content-Location: /contacts/responses/42
-   Location: /contacts/queries/17
+   Content-Type: application/json
 
-   surname, givenname, email
-   Smith, John, john.smith@example.org
-   Jones, Sally, sally.jones@example.com
-   Dubois, Camille, camille.dubois@example.net
+   [
+     { "surname": "Smith",
+       "givenname": "John",
+       "email": "smith@example.org" },
+     { "surname": "Jones",
+       "givenname": "Sally",
+       "email": "sally.jones@example.com" },
+     { "surname": "Dubois",
+       "givenname": "Camille",
+       "email": "camille.dubois@example.net" }
+   ]
 
-   A subsequent GET request on /contacts/responses/42 would return the
-   same response, until the server decides to remove that resource.
+A.2.  Discovery of QUERY support
 
-   A GET request on /contacts/queries/17 however would execute the same
-   query again, and return a fresh result for that query:
+   A simple way to discover support for QUERY is provided by the OPTIONS
+   (Section 9.3.7 of [HTTP]) method:
 
-   GET /contacts/queries/17 HTTP/1.1
+   OPTIONS /contacts HTTP/1.1
    Host: example.org
-   Accept: text/csv
 
    Response:
 
    HTTP/1.1 200 OK
-   Content-Type: text/csv
-   Content-Location: /contacts/responses/43
+   Allow: GET, QUERY, OPTIONS, HEAD
 
-   surname, givenname, email
-   Jones, Sally, sally.jones@example.com
-   Dubois, Camille, camille.dubois@example.net
+   The Allow response field (Section 10.2.1 of [HTTP]) denotes the set
+   of supported methods on the specified resource.
 
-A.3.  Simple QUERY with Indirect Response (303 See Other)
+   There are alternatives to the use of OPTIONS.  For instance, a QUERY
+   request can be tried without prior knowledge of server support.  The
+   server would then either process the request, or could respond with a
+   4xx status such as 405 ("Method Not Allowed", Section 15.5.6 of
+   [HTTP]), including the Allow response field.
 
-   A simple query with an Indirect Response (303 See Other):
+A.3.  Discovery of QUERY Formats
+
+   Discovery of supported media types for QUERY is possible via the
+   Accept-Query (Section 3) response field:
+
+   HEAD /contacts HTTP/1.1
+   Host: example.org
+
+   Response:
+
+   HTTP/1.1 200 OK
+   Content-Type: application/xhtml
+   Accept-Query: application/x-www-form-urlencoded, application/sql
+
+   Responses to which request methods will contain Accept-Query will
+   depend on the resource being accessed.
+
+   An alternative to checking Accept-Query would be to make a QUERY
+   request, and then - in case of a 4xx status such as 415 ("Unsupported
+   Media Type", Section 12.5.1 of [HTTP]) response - to inspect the
+   Allow (Section 15.5.16 of [HTTP]) response field:
+
+   HTTP/1.1 415 Unsupported Media Type
+   Content-Type: application/xhtml
+   Accept: application/x-www-form-urlencoded, application/sql
+
+A.4.  Content-Location, Location, and Indirect Responses
+
+   The Content-Location and Location response fields provide a way to
+   identify alternate resources that will respond to GET requests,
+   either for the received result of the request, or for future requests
+   to perform the same operation.  Going back to the example from
+   Appendix A.1:
 
    QUERY /contacts HTTP/1.1
    Host: example.org
-   Content-Type: application/sql
-   Accept: text/csv
+   Content-Type: application/x-www-form-urlencoded
+   Accept: application/json
 
-   select surname, givenname, email limit 10
+   select=surname,givenname,email&limit=10&match=%22email=*@example.*%22
 
    Response:
+
+   HTTP/1.1 200 OK
+   Content-Type: application/json
+   Content-Location: /contacts/stored-results/17
+   Location: /contacts/stored-queries/42
+   Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
+   Date: Sun, 17 Nov 2024, 16:10:24 GMT
+
+   [
+     { "surname": "Smith",
+       "givenname": "John",
+       "email": "smith@example.org" },
+     { "surname": "Jones",
+       "givenname": "Sally",
+       "email": "sally.jones@example.com" },
+     { "surname": "Dubois",
+       "givenname": "Camille",
+       "email": "camille.dubois@example.net" }
+   ]
+
+A.4.1.  Using Content-Location
+
+   The Content-Location response field received above identifies a
+   resource holding the result for the QUERY response it appeared on:
+
+   GET /contacts/stored-results/17 HTTP/1.1
+   Host: example.org
+   Accept: application/json
+
+   Response:
+
+   HTTP/1.1 200 OK
+   Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
+   Date: Sun, 17 Nov 2024, 16:10:25 GMT
+
+   [
+     { "surname": "Smith",
+       "givenname": "John",
+       "email": "smith@example.org" },
+     { "surname": "Jones",
+       "givenname": "Sally",
+       "email": "sally.jones@example.com" },
+     { "surname": "Dubois",
+       "givenname": "Camille",
+       "email": "camille.dubois@example.net" }
+   ]
+
+A.4.2.  Using Location
+
+   The Location response field identifies a resource that will respond
+   to GET with a fresh result for the QUERY response it appeared on.
+
+   GET /contacts/stored-queries/42 HTTP/1.1
+   Host: example.org
+   Accept: application/json
+
+   In this example, one entry was removed at 2024-11-17T16:12:01Z (as
+   indicated in the Last-Modified field), so the response only contains
+   two entries:
+
+   HTTP/1.1 200 OK
+   Content-Type: application/json
+   Last-Modified: Sun, 17 November 2024, 16:12:01 GMT
+   ETag: "42-1"
+   Date: Sun, 17 Nov 2024, 16:13:17 GMT
+
+   [
+     { "surname": "Smith",
+       "givenname": "John",
+       "email": "smith@example.org" },
+     { "surname": "Dubois",
+       "givenname": "Camille",
+       "email": "camille.dubois@example.net" }
+   ]
+
+   Assuming no change in the query result, a subsequent conditional GET
+   request with
+
+   If-None-Match: "42-1"
+
+   would result in a 304 response ("Not Modified", Section 15.4.5 of
+   [HTTP]).
+
+   Note that there's no guarantee that the server will implement this
+   resource indefinitely, so, after an error response, the client would
+   need to redo the original QUERY request in order to obtain a new
+   alternative location.
+
+A.4.3.  Indirect Responses
+
+   Servers can send "indirect" responses using the status code 303 ("See
+   Other", Section 15.4.4 of [HTTP]).
+
+   Given the request at the beginning of Appendix A.4, a server might
+   respond with:
 
    HTTP/1.1 303 See Other
-   Location: /contacts/query123
+   Content-Type: text/plain
+   Date: Sun, 17 Nov 2024, 16:13:17 GMT
+   Location: /contacts/stored-queries/42
 
-   Retrieval of the Query Response:
+   See stored query at "/contacts/stored-queries/42".
 
-   GET /contacts/query123 HTTP/1.1
+   This is similar to including Location on a direct response, except
+   that no result for the query is returned.  This allows the server to
+   only generate an alternative resource.  This resource could then be
+   used as shown in Appendix A.4.2.
+
+A.5.  More Query Formats
+
+   The following examples show requests on a JSON-shaped database of RFC
+   errata.
+
+   The request below uses XSLT ([XSLT]) to extract errata information
+   summarized per year and the defined errata types.
+
+   QUERY /errata.json HTTP/1.1
    Host: example.org
+   Content-Type: application/xslt+xml
+   Accept: application/xml, text/csv
+
+   <transform xmlns="http://www.w3.org/1999/XSL/Transform"
+     xmlns:j="http://www.w3.org/2005/xpath-functions"
+     version="3.0">
+
+     <output method="text"/>
+
+     <param name="input"/>
+
+     <variable name="json"
+       select="json-to-xml(unparsed-text($input))"/>
+
+     <variable name="sc">errata_status_code</variable>
+     <variable name="sd">submit_date</variable>
+
+     <template match="/">
+       <text>year, total, rejected, verified, hdu, reported</text>
+       <text>&#10;</text>
+       <variable name="en" select="$json//j:map"/>
+       <for-each-group select="$en"
+         group-by="substring-before(j:string[@key=$sd],'-')">
+         <sort select="current-grouping-key()"/>
+         <variable name="year" select="current-grouping-key()"/>
+         <variable name="errata" select=
+           "$en[$year=substring-before(j:string[@key=$sd],'-')]"/>
+         <value-of select="concat(
+           $year,
+           ', ',
+           count($errata),
+           ', ',
+           count($errata['Rejected'=j:string[@key=$sc]]),
+           ', ',
+           count($errata['Verified'=j:string[@key=$sc]]),
+           ', ',
+           count(
+             $errata['Held for Document Update'=j:string[@key=$sc]]),
+           ', ',
+           count($errata['Reported'=j:string[@key=$sc]]),
+           '&#10;')"/>
+       </for-each-group>
+     </template>
+
+   </transform>
 
    Response:
 
    HTTP/1.1 200 OK
    Content-Type: text/csv
+   Accept-Query: "application/jsonpath", "application/xslt+xml"
+   Date: Wed, 19 Feb 2025, 17:10:01 GMT
 
-   surname, givenname, email
-   Smith, John, john.smith@example.org
-   Jones, Sally, sally.jones@example.com
-   Dubois, Camille, camille.dubois@example.net
+   year, total, rejected, verified, hdu, reported
+   2000, 14, 0, 14, 0, 0
+   2001, 72, 1, 70, 1, 0
+   2002, 124, 8, 104, 12, 0
+   2003, 63, 0, 61, 2, 0
+   2004, 89, 1, 83, 5, 0
+   2005, 156, 10, 96, 50, 0
+   2006, 444, 54, 176, 214, 0
+   2007, 429, 48, 188, 193, 0
+   2008, 423, 52, 165, 206, 0
+   2009, 331, 39, 148, 144, 0
+   2010, 538, 80, 232, 222, 4
+   2011, 367, 47, 170, 150, 0
+   2012, 348, 54, 149, 145, 0
+   2013, 341, 61, 169, 106, 5
+   2014, 342, 73, 180, 72, 17
+   2015, 343, 79, 145, 89, 30
+   2016, 295, 46, 122, 82, 45
+   2017, 303, 46, 120, 84, 53
+   2018, 350, 61, 118, 98, 73
+   2019, 335, 47, 131, 94, 63
+   2020, 387, 68, 117, 123, 79
+   2021, 321, 44, 148, 63, 66
+   2022, 358, 37, 198, 40, 83
+   2023, 262, 38, 121, 33, 70
+   2024, 322, 33, 125, 23, 141
+   9999, 1, 0, 0, 1, 0
 
-A.4.  Simple QUERY with Redirect Response (308 Moved Permanently)
+   Note the Accept-Query response field indicating that another query
+   format - JSONPath ([RFC9535]) - is supported as well.  The request
+   below would report the identifiers of all rejected errata submitted
+   since 2024:
 
-   A simple query being redirected:
-
-   QUERY /contacts HTTP/1.1
+   QUERY /errata.json HTTP/1.1
    Host: example.org
-   Content-Type: application/sql
-   Accept: text/csv
+   Content-Type: application/jsonpath
+   Accept: application/json
 
-   select surname, givenname, email limit 10
-
-   Response:
-
-   HTTP/1.1 308 Moved Permanently
-   Location: /morecontacts
-
-   Redirected request:
-
-   QUERY /morecontacts HTTP/1.1
-   Host: example.org
-   Content-Type: application/sql
-   Accept: text/csv
-
-   select surname, givenname, email limit 10
+   $..[
+        ?@.errata_status_code=="Rejected"
+        && @.submit_date>"2024"
+      ]
+      ["doc-id"]
 
    Response:
 
    HTTP/1.1 200 OK
-   Content-Type: text/csv
+   Content-Type: application/json
+   Accept-Query: "application/jsonpath", "application/xslt+xml"
+   Date: Thu, 20 Feb 2025, 09:55:42 GMT
+   Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 
-   surname, givenname, email
-   Smith, John, john.smith@example.org
-   Jones, Sally, sally.jones@example.com
-   Dubois, Camille, camille.dubois@example.net
+   [
+     "RFC1185","RFC8407","RFC6350","RFC8467","RFC1157","RFC9543",
+     "RFC9076","RFC7656","RFC2822","RFC9460","RFC2104","RFC6797",
+     "RFC9499","RFC9557","RFC2131","RFC2328","RFC9001","RFC3325",
+     "RFC9438","RFC2526","RFC2985","RFC7643","RFC9132","RFC6376",
+     "RFC9110","RFC9460","RFC7748","RFC9497","RFC8463","RFC4035",
+     "RFC7239","RFC9083","RFC9537","RFC9537","RFC9420","RFC9000",
+     "RFC9656","RFC9110","RFC2324","RFC2549","RFC6797","RFC2549",
+     "RFC8894"
+   ]
 
 Appendix B.  Change Log
 
@@ -672,6 +885,9 @@ B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
       extensions/issues/2957)
 
 B.8.  Since draft-ietf-httpbis-safe-method-w-body-07
+
+   *  Examples Section revised (https://github.com/httpwg/http-
+      extensions/issues/1906)
 
    *  Discuss Range Requests (https://github.com/httpwg/http-extensions/
       issues/2979)
