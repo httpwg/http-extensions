@@ -82,7 +82,7 @@
         <eref target="https://github.com/httpwg/http-extensions/labels/query-method"/>.
       </t>
       <t>
-        The changes in this draft are summarized in <xref target="changes.since.07"/>.
+        The changes in this draft are summarized in <xref target="changes.since.08"/>.
       </t>
     </note>
 
@@ -972,6 +972,9 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Examples Section revised (<eref target="https://github.com/httpwg/http-extensions/issues/1906"/>)</li>
   <li>Discuss Range Requests (<eref target="https://github.com/httpwg/http-extensions/issues/2979"/>)</li>
 </ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-08" anchor="changes.since.08">
+  <t>None yet.</t>
 </section>
 </section>
 
