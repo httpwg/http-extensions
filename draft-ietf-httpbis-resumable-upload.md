@@ -353,7 +353,7 @@ Client implementations of draft versions of the protocol MUST ignore a `104 (Upl
 
 The reason both the client and the server are sending and checking the draft version is to ensure that implementations of the final RFC will not accidentally interop with draft implementations, as they will not check the existence of the `Upload-Draft-Interop-Version` header field.
 
-### Examples
+### Examples {#upload-creation-example}
 
 The following example shows an upload creation, where the entire 100 bytes are transferred in the initial request:
 
@@ -425,7 +425,7 @@ A successful response to a `HEAD` request against an upload resource
 - MAY indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
 
-### Example
+### Example {#offset-retrieving-example}
 
 The following example shows an offset retrieval request. The server indicates the new offset and that the upload is not complete yet:
 
@@ -474,7 +474,7 @@ The upload resource MUST record the length according to {{upload-length}} if the
 
 While the request content is being received, the server MAY send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
 
-### Example
+### Example {#upload-appending-example}
 
 The following example shows an upload append. The client transfers the next 100 bytes at an offset of 100 and does not indicate that the upload is then completed. The server acknowledges the new offset:
 
@@ -508,7 +508,7 @@ Upon receiving a `DELETE` request, the server SHOULD deactivate the upload resou
 
 The server MAY terminate any in-flight requests to the upload resource before sending the response by abruptly terminating their HTTP connection(s) or stream(s).
 
-### Example
+### Example {#upload-cancellation-example}
 
 The following example shows an upload cancellation:
 
