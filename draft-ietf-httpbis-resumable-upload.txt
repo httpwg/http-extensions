@@ -231,9 +231,7 @@ Table of Contents
    |            with upload resource URL        |
    |<-------------------------------------------|
    |                                            |
-   | Flow Interrupted                           |
-   |------------------------------------------->|
-   |                                            |
+   X--------------Flow Interrupted--------------X
 
                          Figure 1: Upload Creation
 
@@ -313,11 +311,53 @@ Table of Contents
    |<------------------------------------------------|
    |                                                 |
 
-                    Figure 5: Incomplete Upload Creation
+         Figure 5: Upload creation with partial representation data
 
-   2) Subsequently, parts are appended (Section 6).  The last part of
-   the upload has a Upload-Complete field value set to true to indicate
-   the complete transfer.
+   2) Subsequent, intermediate parts are appended (Section 6) with the
+   Upload-Complete field value set to false, indicating that they are
+   not the last part of the representation data.  The offset value in
+   the Upload-Offset header field is taken from the previous response
+   when creating the upload or appending to it.
+
+   Client                                       Server
+   |                                                 |
+   | PATCH to upload resource URL with Upload-Offset |
+   | and Upload-Complete: ?0                         |
+   |------------------------------------------------>|
+   |                                                 |
+   |                                     201 Created |
+   |<------------------------------------------------|
+   |                                                 |
+
+         Figure 6: Appending partial representation data to upload
+
+   3) If the connection was interrupted, the client might want to resume
+   the upload, similar to the previous example (Section 3.1).  The
+   client retrieves the offset (Section 5) to learn the amount of
+   representation data received by the server and then continues
+   appending the remaining parts to the upload as in the previous step.
+
+   Client                                       Server
+   |                                                 |
+   | HEAD to upload resource URL                     |
+   |------------------------------------------------>|
+   |                                                 |
+   |               204 No Content with Upload-Offset |
+   |<------------------------------------------------|
+   |                                                 |
+   | PATCH to upload resource URL with Upload-Offset |
+   | and Upload-Complete: ?0                         |
+   |------------------------------------------------>|
+   |                                                 |
+   |                                     201 Created |
+   |<------------------------------------------------|
+   |                                                 |
+
+                  Figure 7: Resuming an interrupted upload
+
+   4) The request to append the last part of the representation data has
+   a Upload-Complete field value set to true to indicate the complete
+   transfer.
 
    Client                                       Server
    |                                                 |
@@ -329,7 +369,7 @@ Table of Contents
    |<------------------------------------------------|
    |                                                 |
 
-                     Figure 6: Upload Append Last Chunk
+             Figure 8: Appending remaining representation data
 
 4.  Upload Creation
 

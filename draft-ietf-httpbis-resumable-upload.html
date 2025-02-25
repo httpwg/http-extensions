@@ -1358,7 +1358,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       </h2>
 <p id="section-3-1">Resumable uploads are supported in HTTP through use of a temporary resource, an <em>upload resource</em>, that is separate from the resource being uploaded to (hereafter, the <em>target resource</em>) and specific to that upload. By interacting with the upload resource, a client can retrieve the current offset of the upload (<a href="#offset-retrieving" class="auto internal xref">Section 5</a>), append to the upload (<a href="#upload-appending" class="auto internal xref">Section 6</a>), and cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 7</a>).<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">The remainder of this section uses examples to illustrate different interactions with the upload resource. HTTP message exchanges, and thereby resumable uploads, use representation data (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.1" class="relref">Section 8.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). This means that resumable uploads can be used with many forms of content, such as static files, in-memory buffers, data from streaming sources, or on-demand generated data.<a href="#section-3-2" class="pilcrow">¶</a></p>
-<div id="example-1-complete-upload-of-representation-data-with-known-size">
+<div id="example-1">
 <section id="section-3.1">
         <h3 id="name-example-1-complete-upload-o">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-example-1-complete-upload-o" class="section-name selfRef">Example 1: Complete upload of representation data with known size</a>
@@ -1370,17 +1370,17 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <figure id="figure-1">
           <div id="section-3.1-4.1">
             <div class="alignLeft art-svg artwork" id="section-3.1-4.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="320" width="520" viewBox="0 0 520 320" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,304" fill="none" stroke="black"></path>
-                <path d="M 368,48 L 368,304" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="288" width="520" viewBox="0 0 520 288" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,256" fill="none" stroke="black"></path>
+                <path d="M 368,48 L 368,256" fill="none" stroke="black"></path>
                 <path d="M 512,144 L 512,176" fill="none" stroke="black"></path>
                 <path d="M 16,80 L 360,80" fill="none" stroke="black"></path>
                 <path d="M 376,144 L 512,144" fill="none" stroke="black"></path>
                 <path d="M 376,176 L 512,176" fill="none" stroke="black"></path>
                 <path d="M 16,240 L 360,240" fill="none" stroke="black"></path>
-                <path d="M 16,288 L 360,288" fill="none" stroke="black"></path>
+                <path d="M 16,272 L 120,272" fill="none" stroke="black"></path>
+                <path d="M 256,272 L 360,272" fill="none" stroke="black"></path>
                 <polygon class="arrowhead" points="384,176 372,170.4 372,181.6" fill="black" transform="rotate(180,376,176)"></polygon>
-                <polygon class="arrowhead" points="368,288 356,282.4 356,293.6" fill="black" transform="rotate(0,360,288)"></polygon>
                 <polygon class="arrowhead" points="368,80 356,74.4 356,85.6" fill="black" transform="rotate(0,360,80)"></polygon>
                 <polygon class="arrowhead" points="24,240 12,234.4 12,245.6" fill="black" transform="rotate(180,16,240)"></polygon>
                 <g class="text">
@@ -1399,8 +1399,10 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
                   <text x="172" y="228">upload</text>
                   <text x="236" y="228">resource</text>
                   <text x="288" y="228">URL</text>
-                  <text x="36" y="276">Flow</text>
-                  <text x="104" y="276">Interrupted</text>
+                  <text x="8" y="276">X</text>
+                  <text x="140" y="276">Flow</text>
+                  <text x="208" y="276">Interrupted</text>
+                  <text x="368" y="276">X</text>
                 </g>
               </svg><a href="#section-3.1-4.1.1" class="pilcrow">¶</a>
 </div>
@@ -1511,7 +1513,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </div>
 </section>
 </div>
-<div id="example-2-upload-as-a-series-of-parts">
+<div id="example-2">
 <section id="section-3.2">
         <h3 id="name-example-2-upload-as-a-serie">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-example-2-upload-as-a-serie" class="section-name selfRef">Example 2: Upload as a series of parts</a>
@@ -1519,7 +1521,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-3.2-1">In some cases, clients might prefer to upload a representation as a series of parts sent serially across multiple HTTP messages. One use case is to overcome server limits on HTTP message content size. Another use case is where the client does not know the final size of the representation data, such as when the data originates from a streaming source.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2-2">This example shows how the client, with prior knowledge about the server's resumable upload support, can upload parts of a representation incrementally.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.2-3">1) If the client is aware that the server supports resumable upload, it can start an upload with the <code>Upload-Complete</code> field value set to false and the first part of the representation.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
-<span id="name-incomplete-upload-creation"></span><div id="fig-upload-creation-incomplete">
+<span id="name-upload-creation-with-partia"></span><div id="fig-upload-creation-incomplete">
 <figure id="figure-5">
           <div id="section-3.2-4.1">
             <div class="alignLeft art-svg artwork" id="section-3.2-4.1.1">
@@ -1551,14 +1553,98 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </div>
 </div>
 <figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
-<a href="#name-incomplete-upload-creation" class="selfRef">Incomplete Upload Creation</a>
+<a href="#name-upload-creation-with-partia" class="selfRef">Upload creation with partial representation data</a>
           </figcaption></figure>
 </div>
-<p id="section-3.2-5">2) Subsequently, parts are appended (<a href="#upload-appending" class="auto internal xref">Section 6</a>). The last part of the upload has a <code>Upload-Complete</code> field value set to true to indicate the complete transfer.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
-<span id="name-upload-append-last-chunk"></span><div id="fig-upload-appending-last-chunk">
+<p id="section-3.2-5">2) Subsequent, intermediate parts are appended (<a href="#upload-appending" class="auto internal xref">Section 6</a>) with the <code>Upload-Complete</code> field value set to false, indicating that they are not the last part of the representation data. The offset value in the <code>Upload-Offset</code> header field is taken from the previous response when creating the upload or appending to it.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
+<span id="name-appending-partial-represent"></span><div id="fig-upload-appending-incomplete">
 <figure id="figure-6">
           <div id="section-3.2-6.1">
             <div class="alignLeft art-svg artwork" id="section-3.2-6.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="176" width="416" viewBox="0 0 416 176" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,160" fill="none" stroke="black"></path>
+                <path d="M 408,48 L 408,160" fill="none" stroke="black"></path>
+                <path d="M 16,96 L 400,96" fill="none" stroke="black"></path>
+                <path d="M 16,144 L 400,144" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="408,96 396,90.4 396,101.6" fill="black" transform="rotate(0,400,96)"></polygon>
+                <polygon class="arrowhead" points="24,144 12,138.4 12,149.6" fill="black" transform="rotate(180,16,144)"></polygon>
+                <g class="text">
+                  <text x="28" y="36">Client</text>
+                  <text x="388" y="36">Server</text>
+                  <text x="40" y="68">PATCH</text>
+                  <text x="76" y="68">to</text>
+                  <text x="116" y="68">upload</text>
+                  <text x="180" y="68">resource</text>
+                  <text x="232" y="68">URL</text>
+                  <text x="268" y="68">with</text>
+                  <text x="344" y="68">Upload-Offset</text>
+                  <text x="32" y="84">and</text>
+                  <text x="116" y="84">Upload-Complete:</text>
+                  <text x="196" y="84">?0</text>
+                  <text x="320" y="132">201</text>
+                  <text x="368" y="132">Created</text>
+                </g>
+              </svg><a href="#section-3.2-6.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-appending-partial-represent" class="selfRef">Appending partial representation data to upload</a>
+          </figcaption></figure>
+</div>
+<p id="section-3.2-7">3) If the connection was interrupted, the client might want to resume the upload, similar to the previous example (<a href="#example-1" class="auto internal xref">Section 3.1</a>). The client retrieves the offset (<a href="#offset-retrieving" class="auto internal xref">Section 5</a>) to learn the amount of representation data received by the server and then continues appending the remaining parts to the upload as in the previous step.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
+<span id="name-resuming-an-interrupted-upl"></span><div id="fig-upload-resume-incomplete">
+<figure id="figure-7">
+          <div id="section-3.2-8.1">
+            <div class="alignLeft art-svg artwork" id="section-3.2-8.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="272" width="416" viewBox="0 0 416 272" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,256" fill="none" stroke="black"></path>
+                <path d="M 408,48 L 408,256" fill="none" stroke="black"></path>
+                <path d="M 16,80 L 400,80" fill="none" stroke="black"></path>
+                <path d="M 16,128 L 400,128" fill="none" stroke="black"></path>
+                <path d="M 16,192 L 400,192" fill="none" stroke="black"></path>
+                <path d="M 16,240 L 400,240" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="408,192 396,186.4 396,197.6" fill="black" transform="rotate(0,400,192)"></polygon>
+                <polygon class="arrowhead" points="408,80 396,74.4 396,85.6" fill="black" transform="rotate(0,400,80)"></polygon>
+                <polygon class="arrowhead" points="24,240 12,234.4 12,245.6" fill="black" transform="rotate(180,16,240)"></polygon>
+                <polygon class="arrowhead" points="24,128 12,122.4 12,133.6" fill="black" transform="rotate(180,16,128)"></polygon>
+                <g class="text">
+                  <text x="28" y="36">Client</text>
+                  <text x="388" y="36">Server</text>
+                  <text x="36" y="68">HEAD</text>
+                  <text x="68" y="68">to</text>
+                  <text x="108" y="68">upload</text>
+                  <text x="172" y="68">resource</text>
+                  <text x="224" y="68">URL</text>
+                  <text x="144" y="116">204</text>
+                  <text x="172" y="116">No</text>
+                  <text x="216" y="116">Content</text>
+                  <text x="268" y="116">with</text>
+                  <text x="344" y="116">Upload-Offset</text>
+                  <text x="40" y="164">PATCH</text>
+                  <text x="76" y="164">to</text>
+                  <text x="116" y="164">upload</text>
+                  <text x="180" y="164">resource</text>
+                  <text x="232" y="164">URL</text>
+                  <text x="268" y="164">with</text>
+                  <text x="344" y="164">Upload-Offset</text>
+                  <text x="32" y="180">and</text>
+                  <text x="116" y="180">Upload-Complete:</text>
+                  <text x="196" y="180">?0</text>
+                  <text x="320" y="228">201</text>
+                  <text x="368" y="228">Created</text>
+                </g>
+              </svg><a href="#section-3.2-8.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
+<a href="#name-resuming-an-interrupted-upl" class="selfRef">Resuming an interrupted upload</a>
+          </figcaption></figure>
+</div>
+<p id="section-3.2-9">4) The request to append the last part of the representation data has a <code>Upload-Complete</code> field value set to true to indicate the complete transfer.<a href="#section-3.2-9" class="pilcrow">¶</a></p>
+<span id="name-appending-remaining-represe"></span><div id="fig-upload-appending-last-chunk">
+<figure id="figure-8">
+          <div id="section-3.2-10.1">
+            <div class="alignLeft art-svg artwork" id="section-3.2-10.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="176" width="416" viewBox="0 0 416 176" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,48 L 8,160" fill="none" stroke="black"></path>
                 <path d="M 408,48 L 408,160" fill="none" stroke="black"></path>
@@ -1584,11 +1670,11 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
                   <text x="300" y="132">on</text>
                   <text x="356" y="132">completion</text>
                 </g>
-              </svg><a href="#section-3.2-6.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-3.2-10.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
-<a href="#name-upload-append-last-chunk" class="selfRef">Upload Append Last Chunk</a>
+<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
+<a href="#name-appending-remaining-represe" class="selfRef">Appending remaining representation data</a>
           </figcaption></figure>
 </div>
 </section>
