@@ -20,7 +20,7 @@
   <!ENTITY SHOULD "<bcp14>SHOULD</bcp14>">
   <!ENTITY SHOULD-NOT "<bcp14>SHOULD NOT</bcp14>">
 ]>
-<rfc category="std" ipr="trust200902" docName="draft-ietf-httpbis-safe-method-w-body-latest" submissionType="IETF" version="3" xmlns:xi="http://www.w3.org/2001/XInclude">
+<rfc category="std" ipr="trust200902" docName="draft-ietf-httpbis-safe-method-w-body-latest" submissionType="IETF" consensus="true" version="3" xmlns:xi="http://www.w3.org/2001/XInclude">
   <front>
     <title>
       The HTTP QUERY Method
@@ -82,7 +82,7 @@
         <eref target="https://github.com/httpwg/http-extensions/labels/query-method"/>.
       </t>
       <t>
-        The changes in this draft are summarized in <xref target="changes.since.07"/>.
+        The changes in this draft are summarized in <xref target="changes.since.08"/>.
       </t>
     </note>
 
@@ -510,175 +510,401 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
         <author><organization>WHATWG</organization></author>
       </front>
     </reference>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9535.xml"/>
+    <reference anchor="XSLT" target='https://www.w3.org/TR/2017/REC-xslt-30-20170608/'>
+      <front>
+        <title>XSL Transformations (XSLT) Version 3.0</title>
+        <author fullname='Michael Kay' surname='Kay' initials='M.'/>
+        <date year='2017' month='June' day='08'/>
+      </front>
+      <seriesInfo name='W3C Recommendation' value='REC-xslt-30-20170608'/>
+      <annotation>
+        Latest version available at
+        <eref target='https://www.w3.org/TR/xslt-30/'/>.
+      </annotation>
+    </reference>
   </references>
 
   <section title="Examples" anchor="examples">
-<!-- TODO: add Content-Length fields once examples are stable -->
     <t>
-      The non-normative examples in this section make use of a simple,
-      hypothetical plain-text based query syntax based on SQL with results
-      returned as comma-separated values. This is done for illustration
-      purposes only. Implementations are free to use any format they wish on
-      both the request and response.
+      The examples below are for illustrative purposes only; if one needs to
+      send queries that are actually this short, it is probably better to use GET.
+    </t>
+    <t>
+      The media type used in most examples is "application/x-www-form-urlencoded"
+      (as used in POST requests from browser user clients).
+      The Content-Length fields have been omitted for brevity.
     </t>
 
-    <section title="Simple QUERY with a Direct Response">
-
+    <section title="Simple Query" anchor="example.simple">
       <t>A simple query with a direct response:</t>
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: application/sql
-Accept: text/csv
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
 
-select surname, givenname, email limit 10
+select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22
 </artwork>
 
       <t>Response:</t>
 <artwork type="http-message">
 HTTP/1.1 200 OK
-Content-Type: text/csv
+Content-Type: application/json
 
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Jones",
+    "givenname": "Sally",
+    "email": "sally.jones@example.com" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]
 </artwork>
-
     </section>
 
-    <section title="Simple QUERY with a Direct Response and Location Fields">
+    <section title="Discovery of QUERY support" anchor="example.discovery.method">
+      <t>
+        A simple way to discover support for QUERY is provided by the OPTIONS
+        (<xref target="HTTP" section="9.3.7"/>) method:
+      </t>
 
-      <t>A simple query with a direct response:</t>
+<artwork type="http-message">
+OPTIONS /contacts HTTP/1.1
+Host: example.org
+
+</artwork>
+
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Allow: GET, QUERY, OPTIONS, HEAD
+</artwork>
+      <t>
+        The Allow response field (<xref target="HTTP" section="10.2.1"/>) denotes the set of
+        supported methods on the specified resource.
+      </t>
+      <t>
+        There are alternatives to the use of OPTIONS. For instance, a QUERY request
+        can be tried without prior knowledge of server support. The server would then
+        either process the request, or could respond with a 4xx status such as 405 ("Method Not Allowed",
+        <xref target="HTTP" section="15.5.6"/>), including the Allow response field.
+      </t>
+    </section>
+
+    <section title="Discovery of QUERY Formats" anchor="example.discovery.formats">
+      <t>
+        Discovery of supported media types for QUERY is possible via the Accept-Query
+        (<xref target="field.accept-query"/>) response field:
+      </t>
+
+<artwork type="http-message">
+HEAD /contacts HTTP/1.1
+Host: example.org
+
+</artwork>
+
+<t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: application/xhtml
+Accept-Query: application/x-www-form-urlencoded, application/sql
+</artwork>
+      <t>
+        Responses to which request methods will contain Accept-Query will depend on
+        the resource being accessed.
+      </t>
+      <t>
+        An alternative to checking Accept-Query would be to make a QUERY request, and then
+        - in case of a 4xx status such as 415 ("Unsupported Media Type", <xref target="HTTP" section="12.5.1"/>) response -
+        to inspect the Allow (<xref target="HTTP" section="15.5.16"/>) response field:
+      </t>
+<artwork type="http-message">
+HTTP/1.1 415 Unsupported Media Type
+Content-Type: application/xhtml
+Accept: application/x-www-form-urlencoded, application/sql
+</artwork>
+    </section>
+
+    <section title="Content-Location, Location, and Indirect Responses" anchor="example.content-location.location.indirect">
+      <t>
+        The Content-Location and Location response fields provide a way to identify alternate resources
+        that will respond to GET requests, either for the received result of the request, or for future
+        requests to perform the same operation. Going back to the example from <xref target="example.simple"/>:
+      </t>
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
 Host: example.org
-Content-Type: application/sql
-Accept: text/csv
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
 
-select surname, givenname, email limit 10
+select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22
 </artwork>
-
-      <t>Response:</t>
+        <t>Response:</t>
 <artwork type="http-message">
 HTTP/1.1 200 OK
-Content-Type: text/csv
-Content-Location: /contacts/responses/42
-Location: /contacts/queries/17
+Content-Type: application/json
+Content-Location: /contacts/stored-results/17
+Location: /contacts/stored-queries/42
+Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
+Date: Sun, 17 Nov 2024, 16:10:24 GMT
 
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Jones",
+    "givenname": "Sally",
+    "email": "sally.jones@example.com" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]
 </artwork>
 
-    <t>
-      A subsequent GET request on /contacts/responses/42 would return
-      the same response, until the server decides to remove that
-      resource.
-    </t>
-    <t>
-      A GET request on /contacts/queries/17 however would execute the same
-      query again, and return a fresh result for that query:
-    </t>
-
+      <section title="Using Content-Location" anchor="example.content-location">
+        <t>
+          The Content-Location response field received above identifies a resource holding
+          the result for the QUERY response it appeared on:
+        </t>
 <artwork type="http-message">
-GET /contacts/queries/17 HTTP/1.1
+GET /contacts/stored-results/17 HTTP/1.1
 Host: example.org
-Accept: text/csv
-</artwork>
+Accept: application/json
 
-      <t>Response:</t>
+</artwork>
+        <t>Response:</t>
 <artwork type="http-message">
 HTTP/1.1 200 OK
-Content-Type: text/csv
-Content-Location: /contacts/responses/43
+Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
+Date: Sun, 17 Nov 2024, 16:10:25 GMT
 
-surname, givenname, email
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Jones",
+    "givenname": "Sally",
+    "email": "sally.jones@example.com" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]
 </artwork>
+      </section>
 
-    </section>
-
-    <section title="Simple QUERY with Indirect Response (303 See Other)">
-
-      <t>A simple query with an Indirect Response (303 See Other):</t>
+      <section title="Using Location" anchor="example.location">
+        <t>
+          The Location response field identifies a resource that will respond to GET
+          with a fresh result for the QUERY response it appeared on.
+        </t>
 <artwork type="http-message">
-QUERY /contacts HTTP/1.1
+GET /contacts/stored-queries/42 HTTP/1.1
 Host: example.org
-Content-Type: application/sql
-Accept: text/csv
+Accept: application/json
 
-select surname, givenname, email limit 10
 </artwork>
+        <t>
+          In this example, one entry was removed at 2024-11-17T16:12:01Z (as indicated in
+          the Last-Modified field), so the response only contains two entries:
+        </t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: application/json
+Last-Modified: Sun, 17 November 2024, 16:12:01 GMT
+ETag: "42-1"
+Date: Sun, 17 Nov 2024, 16:13:17 GMT
 
-      <t>Response:</t>
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]
+</artwork>
+        <t>
+          Assuming no change in the query result, a subsequent conditional GET request with
+        </t>
+<artwork type="http-message">
+If-None-Match: "42-1"
+</artwork>
+        <t>
+          would result in a 304 response ("Not Modified", <xref target="HTTP" section="15.4.5"/>).
+        </t>
+        <t>
+          Note that there's no guarantee that the server will implement this resource
+          indefinitely, so, after an error response, the client would need to redo
+          the original QUERY request in order to obtain a new alternative location.
+        </t>
+      </section>
+
+      <section title="Indirect Responses" anchor="example.indirect">
+        <t>
+          Servers can send "indirect" responses using the status code 303 ("See Other",
+          <xref target="HTTP" section="15.4.4"/>).
+        </t>
+        <t>
+          Given the request at the beginning of <xref target="example.content-location.location.indirect"/>,
+          a server might respond with:
+        </t>
 <artwork type="http-message">
 HTTP/1.1 303 See Other
-Location: /contacts/query123
-</artwork>
+Content-Type: text/plain
+Date: Sun, 17 Nov 2024, 16:13:17 GMT
+Location: /contacts/stored-queries/42
 
-      <t>Retrieval of the Query Response:</t>
+See stored query at "/contacts/stored-queries/42".
+</artwork>
+        <t>
+          This is similar to including Location on a direct response, except that no result
+          for the query is returned. This allows the server to only generate an alternative
+          resource. This resource could then be used as shown in
+          <xref target="example.location"/>.
+        </t>
+      </section>
+    </section>
+
+    <section title="More Query Formats" anchor="example.more.query.formats">
+      <t>
+        The following examples show requests on a JSON-shaped database of
+        RFC errata.
+      </t>
+      <t>
+        The request below uses XSLT (<xref target="XSLT"/>) to extract errata information summarized per year and
+        the defined errata types.
+      </t>
 <artwork type="http-message">
-GET /contacts/query123 HTTP/1.1
+QUERY /errata.json HTTP/1.1
 Host: example.org
-</artwork>
+Content-Type: application/xslt+xml
+Accept: application/xml, text/csv
 
-      <t>Response:</t>
+<![CDATA[<transform xmlns="http://www.w3.org/1999/XSL/Transform"
+  xmlns:j="http://www.w3.org/2005/xpath-functions"
+  version="3.0">
+
+  <output method="text"/>
+
+  <param name="input"/>
+
+  <variable name="json"
+    select="json-to-xml(unparsed-text($input))"/>
+
+  <variable name="sc">errata_status_code</variable>
+  <variable name="sd">submit_date</variable>
+
+  <template match="/">
+    <text>year, total, rejected, verified, hdu, reported</text>
+    <text>&#10;</text>
+    <variable name="en" select="$json//j:map"/>
+    <for-each-group select="$en"
+      group-by="substring-before(j:string[@key=$sd],'-')">
+      <sort select="current-grouping-key()"/>
+      <variable name="year" select="current-grouping-key()"/>
+      <variable name="errata" select=
+        "$en[$year=substring-before(j:string[@key=$sd],'-')]"/>
+      <value-of select="concat(
+        $year,
+        ', ',
+        count($errata),
+        ', ',
+        count($errata['Rejected'=j:string[@key=$sc]]),
+        ', ',
+        count($errata['Verified'=j:string[@key=$sc]]),
+        ', ',
+        count(
+          $errata['Held for Document Update'=j:string[@key=$sc]]),
+        ', ',
+        count($errata['Reported'=j:string[@key=$sc]]),
+        '&#10;')"/>
+    </for-each-group>
+  </template>
+
+</transform>]]>
+</artwork>
+    <t>
+      Response:
+    </t>
 <artwork type="http-message">
 HTTP/1.1 200 OK
 Content-Type: text/csv
+Accept-Query: "application/jsonpath", "application/xslt+xml"
+Date: Wed, 19 Feb 2025, 17:10:01 GMT
 
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
+year, total, rejected, verified, hdu, reported
+2000, 14, 0, 14, 0, 0
+2001, 72, 1, 70, 1, 0
+2002, 124, 8, 104, 12, 0
+2003, 63, 0, 61, 2, 0
+2004, 89, 1, 83, 5, 0
+2005, 156, 10, 96, 50, 0
+2006, 444, 54, 176, 214, 0
+2007, 429, 48, 188, 193, 0
+2008, 423, 52, 165, 206, 0
+2009, 331, 39, 148, 144, 0
+2010, 538, 80, 232, 222, 4
+2011, 367, 47, 170, 150, 0
+2012, 348, 54, 149, 145, 0
+2013, 341, 61, 169, 106, 5
+2014, 342, 73, 180, 72, 17
+2015, 343, 79, 145, 89, 30
+2016, 295, 46, 122, 82, 45
+2017, 303, 46, 120, 84, 53
+2018, 350, 61, 118, 98, 73
+2019, 335, 47, 131, 94, 63
+2020, 387, 68, 117, 123, 79
+2021, 321, 44, 148, 63, 66
+2022, 358, 37, 198, 40, 83
+2023, 262, 38, 121, 33, 70
+2024, 322, 33, 125, 23, 141
+9999, 1, 0, 0, 1, 0
 </artwork>
-
-    </section>
-
-    <section title="Simple QUERY with Redirect Response (308 Moved Permanently)">
-
-      <t>A simple query being redirected:</t>
+    <t>
+      Note the Accept-Query response field indicating that another query format - JSONPath
+      (<xref target="RFC9535"/>) - is supported as well. The request below would report the
+      identifiers of all rejected errata submitted
+      since 2024:
+    </t>
 <artwork type="http-message">
-QUERY /contacts HTTP/1.1
+QUERY /errata.json HTTP/1.1
 Host: example.org
-Content-Type: application/sql
-Accept: text/csv
+Content-Type: application/jsonpath
+Accept: application/json
 
-select surname, givenname, email limit 10
+$..[
+     ?@.errata_status_code=="Rejected"
+     &amp;&amp; @.submit_date>"2024"
+   ]
+   ["doc-id"]
 </artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 308 Moved Permanently
-Location: /morecontacts
-</artwork>
-
-      <t>Redirected request:</t>
-<artwork type="http-message">
-QUERY /morecontacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</artwork>
-
-      <t>Response:</t>
+      <t>
+        Response:
+      </t>
 <artwork type="http-message">
 HTTP/1.1 200 OK
-Content-Type: text/csv
+Content-Type: application/json
+Accept-Query: "application/jsonpath", "application/xslt+xml"
+Date: Thu, 20 Feb 2025, 09:55:42 GMT
+Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
+[
+  "RFC1185","RFC8407","RFC6350","RFC8467","RFC1157","RFC9543",
+  "RFC9076","RFC7656","RFC2822","RFC9460","RFC2104","RFC6797",
+  "RFC9499","RFC9557","RFC2131","RFC2328","RFC9001","RFC3325",
+  "RFC9438","RFC2526","RFC2985","RFC7643","RFC9132","RFC6376",
+  "RFC9110","RFC9460","RFC7748","RFC9497","RFC8463","RFC4035",
+  "RFC7239","RFC9083","RFC9537","RFC9537","RFC9420","RFC9000",
+  "RFC9656","RFC9110","RFC2324","RFC2549","RFC6797","RFC2549",
+  "RFC8894"
+]
 </artwork>
-
     </section>
-  </section>
+</section>
 
 <section title="Change Log" anchor="change.log" removeInRFC="true">
 <section title="Since draft-ietf-httpbis-safe-method-w-body-00" anchor="changes.since.00">
@@ -743,8 +969,12 @@ Dubois, Camille, camille.dubois@example.net
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-07" anchor="changes.since.07">
 <ul>
+  <li>Examples Section revised (<eref target="https://github.com/httpwg/http-extensions/issues/1906"/>)</li>
   <li>Discuss Range Requests (<eref target="https://github.com/httpwg/http-extensions/issues/2979"/>)</li>
 </ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-08" anchor="changes.since.08">
+  <t>None yet.</t>
 </section>
 </section>
 

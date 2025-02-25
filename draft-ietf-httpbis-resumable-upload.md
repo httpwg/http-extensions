@@ -98,7 +98,7 @@ Resumable uploads are supported in HTTP through use of a temporary resource, an 
 
 The remainder of this section uses examples to illustrate different interactions with the upload resource. HTTP message exchanges, and thereby resumable uploads, use representation data (see {{Section 8.1 of HTTP}}). This means that resumable uploads can be used with many forms of content, such as static files, in-memory buffers, data from streaming sources, or on-demand generated data.
 
-## Example 1: Complete upload of representation data with known size
+## Example 1: Complete upload of representation data with known size {#example-1}
 
 In this example, the client first attempts to upload representation data with a known size in a single HTTP request to the target resource. An interruption occurs and the client then attempts to resume the upload using subsequent HTTP requests to the upload resource.
 
@@ -122,9 +122,7 @@ Client                                  Server
 |            with upload resource URL        |
 |<-------------------------------------------|
 |                                            |
-| Flow Interrupted                           |
-|------------------------------------------->|
-|                                            |
+X--------------Flow Interrupted--------------X
 ~~~
 {: #fig-upload-creation title="Upload Creation"}
 
@@ -170,7 +168,7 @@ Client                                       Server
 ~~~
 {: #fig-upload-cancellation title="Upload Cancellation"}
 
-## Example 2: Upload as a series of parts
+## Example 2: Upload as a series of parts {#example-2}
 
 In some cases, clients might prefer to upload a representation as a series of parts sent serially across multiple HTTP messages. One use case is to overcome server limits on HTTP message content size. Another use case is where the client does not know the final size of the representation data, such as when the data originates from a streaming source.
 
@@ -189,9 +187,45 @@ Client                                       Server
 |<------------------------------------------------|
 |                                                 |
 ~~~
-{: #fig-upload-creation-incomplete title="Incomplete Upload Creation"}
+{: #fig-upload-creation-incomplete title="Upload creation with partial representation data"}
 
-2) Subsequently, parts are appended ({{upload-appending}}). The last part of the upload has a `Upload-Complete` field value set to true to indicate the complete transfer.
+2) Subsequent, intermediate parts are appended ({{upload-appending}}) with the `Upload-Complete` field value set to false, indicating that they are not the last part of the representation data. The offset value in the `Upload-Offset` header field is taken from the previous response when creating the upload or appending to it.
+
+~~~ aasvg
+Client                                       Server
+|                                                 |
+| PATCH to upload resource URL with Upload-Offset |
+| and Upload-Complete: ?0                         |
+|------------------------------------------------>|
+|                                                 |
+|                                     201 Created |
+|<------------------------------------------------|
+|                                                 |
+~~~
+{: #fig-upload-appending-incomplete title="Appending partial representation data to upload"}
+
+3) If the connection was interrupted, the client might want to resume the upload, similar to the previous example ({{example-1}}). The client retrieves the offset ({{offset-retrieving}}) to learn the amount of representation data received by the server and then continues appending the remaining parts to the upload as in the previous step.
+
+~~~ aasvg
+Client                                       Server
+|                                                 |
+| HEAD to upload resource URL                     |
+|------------------------------------------------>|
+|                                                 |
+|               204 No Content with Upload-Offset |
+|<------------------------------------------------|
+|                                                 |
+| PATCH to upload resource URL with Upload-Offset |
+| and Upload-Complete: ?0                         |
+|------------------------------------------------>|
+|                                                 |
+|                                     201 Created |
+|<------------------------------------------------|
+|                                                 |
+~~~
+{: #fig-upload-resume-incomplete title="Resuming an interrupted upload"}
+
+4) The request to append the last part of the representation data has a `Upload-Complete` field value set to true to indicate the complete transfer.
 
 ~~~ aasvg
 Client                                       Server
@@ -204,7 +238,7 @@ Client                                       Server
 |<------------------------------------------------|
 |                                                 |
 ~~~
-{: #fig-upload-appending-last-chunk title="Upload Append Last Chunk"}
+{: #fig-upload-appending-last-chunk title="Appending remaining representation data"}
 
 # Upload Resource {#upload-resource}
 
