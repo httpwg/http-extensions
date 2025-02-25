@@ -242,9 +242,7 @@ Client                                       Server
 
 # Upload Resource {#upload-resource}
 
-A resumable upload is enabled through interaction with an upload resource. When a resumable upload begins, the server is asked to create an upload resource through a request to another resource ({{upload-creation}}). Using the upload resource, the client can query the upload progress ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}).
-
-The upload resource is only responsible for handling the upload of a representation, not the processing of said representation. This task is performed by the resource targeted during the upload creation ({{upload-creation}}).
+A resumable upload is enabled through interaction with an upload resource. When a resumable upload begins, the server is asked to create an upload resource through a request to another resource ({{upload-creation}}). This upload resource is responsible for handling the upload of a representation. Using the upload resource, the client can query the upload progress ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}).
 
 An upload resource is specific to the upload of one representation. For uploading multiple representations, multiple upload resources have to be used.
 
@@ -276,14 +274,14 @@ An upload is marked as completed if a request for creating the upload resource (
 
 The length of an upload is the number of bytes of representation data that the client intends to upload.
 
-The upload resource can discover the length from requests for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) in two different ways:
+Even the client might not know the total length of the representation data when starting the transfer, for example, because the representation is taken from a streaming source. However, a client SHOULD communicate the length to the upload resource as soon as it becomes known. There are two different ways for the client to indicate and the upload resource to discover the length from requests for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}):
 
 - If the request includes the `Upload-Complete` field value set to true and a valid `Content-Length` header field, the request content is the remaining representation data. The length is then the sum of the current offset ({{upload-offset}}) and the `Content-Length` header field value.
 - The request can include the `Upload-Length` header field, whose value is the number of bytes of the entire representation data as an Integer.
 
-If both variants are present in the same request, their length values MUST be the same. If multiple requests include length values, their values MUST be the same.
+If both indicators are present in the same request, their indicated lengths MUST match. If multiple requests include indicators, their indicated values MUST match.
 
-The length might be not be known until the upload is complete.
+The upload resource might not know the length until the upload is complete.
 
 Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` ({{upload-complete}}) header field to indicate that a request completes the upload. The offset could match the length, but the upload can still be incomplete.
 
@@ -466,7 +464,7 @@ If the `Upload-Offset` request header field value does not match the current off
 
 If the upload is already complete ({{upload-complete}}), the server MUST NOT modify the upload resource and MUST reject the request. The server MAY use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#completed-upload" in the response ({{completed-upload}}).
 
-If the `Upload-Complete` request header field is set to true, the client intents to transfer the remaining representation data in one request. If the request content was fully received, the upload is marked as complete and the resource targeted by the initial upload creation proceeds to process the entire representation and generate a response (see {{upload-creation}}). Its response MUST include the final offset in the `Upload-Offset` header field.
+If the Upload-Complete request header field is set to true, the client intents to transfer the remaining representation data in one request. If the request content was fully received, the upload is marked as complete and the upload resource SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had received the entire representation in the initial request.
 
 If the `Upload-Complete` request header field is set to false, the client intents to transfer the remaining representation over multiple requests. If the request content was fully received, the upload resource MUST acknowledge the new upload state by sending a response with the `201 (Created)` status code. The response MUST include the offset in the `Upload-Offset` response header field and the `Upload-Complete` response header field set to false. The response SHOULD include the `Upload-Limit` header field with the corresponding limits if existing.
 
@@ -526,10 +524,7 @@ HTTP/1.1 204 No Content
 
 Resumable uploads, as defined in this document, do not permit uploading representation data in parallel to the same upload resource. The client MUST NOT perform multiple representation data transfers for the same upload resource in parallel.
 
-If an upload resource receives a new request to retrieve the offset ({{offset-retrieving}}), appending representation data ({{upload-appending}}), or cancellation ({{upload-cancellation}}) while a previous request for creating the upload ({{upload-creation}}) or appending representation data ({{upload-appending}}) is still ongoing, the resource SHOULD prevent race conditions, data loss, and corruption by either
-
-- rejecting the new request altogether or
-- terminating the previous request before processing the new request. Due to network delay and reordering, the resouce might still be receiving representation data from an ongoing transfer for the same upload resource, which in the client's perspective has failed. Since the client is not allowed to perform multiple transfers in parallel, the upload resource can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
+If an upload resource receives a new request to retrieve the offset ({{offset-retrieving}}), appending representation data ({{upload-appending}}), or cancellation ({{upload-cancellation}}) while a previous request for creating the upload ({{upload-creation}}) or appending representation data ({{upload-appending}}) is still ongoing, the resource SHOULD prevent race conditions, data loss, and corruption by terminating the previous request before processing the new request. Due to network delay and reordering, the resouce might still be receiving representation data from an ongoing transfer for the same upload resource, which in the client's perspective has failed. Since the client is not allowed to perform multiple transfers in parallel, the upload resource can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
 
 # Media Type `application/partial-upload`
 
