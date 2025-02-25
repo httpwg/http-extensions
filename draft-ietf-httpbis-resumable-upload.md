@@ -311,7 +311,7 @@ The `Upload-Complete` header field is set to true if the request content include
 
 If the client knows the representation data's length, it SHOULD include the `Upload-Length` header field ({{upload-length}}) in the request to help the server allocate necessary resources for the upload and provide early feedback if the representation violates a limit ({{upload-limit}}).
 
-The client SHOULD respect any limits ({{upload-limit}}) announced in the `Upload-Limit` header field in interim or final responses. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client SHOULD stop the current request immediately and cancel the upload ({{upload-cancellation}}).
+The client MUST respect recognized limits announced by the `Upload-Limit` header field in a received interim or final response. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client MUST stop the current request immediately and cancel the upload ({{upload-cancellation}}).
 
 The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty representation. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
 
@@ -773,6 +773,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-05
 {:numbered="false"}
 
+* Require client to adhere to limits in `Upload-Limit`.
 * Reduce use of "file" in favor of "representation".
 
 ## Since draft-ietf-httpbis-resumable-upload-04
