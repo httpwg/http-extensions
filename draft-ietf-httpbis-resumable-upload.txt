@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 29 August 2025                                       Apple Inc.
+Expires: 30 August 2025                                       Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                        25 February 2025
+                                                        26 February 2025
 
 
                        Resumable Uploads for HTTP
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 August 2025.
+   This Internet-Draft will expire on 30 August 2025.
 
 Copyright Notice
 
@@ -512,15 +512,14 @@ Table of Contents
       Integer.  Requests completing the upload by including the Upload-
       Complete: ?1 header field are exempt from this limit.
 
-   *  The expires limits specifies the remaining lifetime of the upload
+   *  The max-age limit specifies the remaining lifetime of the upload
       resource in seconds counted from the generation of the response.
       After the resource's lifetime is reached, the server MAY make the
       upload resource inaccessible and a client SHOULD NOT attempt to
       access the upload resource.  The lifetime MAY be extended but
-      SHOULD NOT be reduced once the upload resource is created.  The
-      value is an Integer.
+      SHOULD NOT be reduced.  The value is an Integer.
 
-   Except for the expires limit, the existence of a limit or its value
+   Except for the max-age limit, the existence of a limit or its value
    MUST NOT change throughout the lifetime of the upload resource.
 
    When parsing the Upload-Limit header field, unrecognized keys MUST be
