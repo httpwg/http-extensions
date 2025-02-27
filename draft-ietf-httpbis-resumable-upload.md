@@ -88,7 +88,9 @@ This document defines an optional mechanism for HTTP that enables resumable uplo
 
 The terms Byte Sequence, Item, String, Token, Integer, and Boolean are imported from {{STRUCTURED-FIELDS}}.
 
-The terms "representation", "representation data", "representation metadata", "content", "client" and "server" are from {{HTTP}}.
+The terms "representation", "representation data", "representation metadata", "content", "client" and "server" are from {{Section 3 of HTTP}}.
+
+The term "URI" is used as defined in {{Section 4 of HTTP}}.
 
 The term "patch document" is taken from {{PATCH}}.
 
@@ -104,7 +106,7 @@ In this example, the client first attempts to upload representation data with a 
 
 1) The client notifies the server that it wants to begin an upload ({{upload-creation}}). The server reserves the required resources to accept the upload from the client, and the client begins transferring the entire representation data in the request content.
 
-An interim response can be sent to the client, which signals the server's support of resumable upload as well as the upload resource URL via the Location header field ({{Section 10.2.2 of HTTP}}).
+An interim response can be sent to the client, which signals the server's support of resumable upload as well as the upload resource's URI via the Location header field ({{Section 10.2.2 of HTTP}}).
 
 ~~~ aasvg
 Client                                  Server
@@ -119,7 +121,7 @@ Client                                  Server
 |                                            |<----------------'
 |                                            |
 |            104 Upload Resumption Supported |
-|            with upload resource URL        |
+|            with upload resource URI        |
 |<-------------------------------------------|
 |                                            |
 X--------------Flow Interrupted--------------X
@@ -131,7 +133,7 @@ X--------------Flow Interrupted--------------X
 ~~~ aasvg
 Client                                       Server
 |                                                 |
-| HEAD to upload resource URL                     |
+| HEAD to upload resource URI                     |
 |------------------------------------------------>|
 |                                                 |
 |               204 No Content with Upload-Offset |
@@ -145,7 +147,7 @@ Client                                       Server
 ~~~ aasvg
 Client                                       Server
 |                                                 |
-| PATCH to upload resource URL with Upload-Offset |
+| PATCH to upload resource URI with Upload-Offset |
 |------------------------------------------------>|
 |                                                 |
 |                      201 Created on completion  |
@@ -159,7 +161,7 @@ Client                                       Server
 ~~~ aasvg
 Client                                       Server
 |                                                 |
-| DELETE to upload resource URL                   |
+| DELETE to upload resource URI                   |
 |------------------------------------------------>|
 |                                                 |
 |                    204 No Content on completion |
@@ -194,7 +196,7 @@ Client                                       Server
 ~~~ aasvg
 Client                                       Server
 |                                                 |
-| PATCH to upload resource URL with Upload-Offset |
+| PATCH to upload resource URI with Upload-Offset |
 | and Upload-Complete: ?0                         |
 |------------------------------------------------>|
 |                                                 |
@@ -209,13 +211,13 @@ Client                                       Server
 ~~~ aasvg
 Client                                       Server
 |                                                 |
-| HEAD to upload resource URL                     |
+| HEAD to upload resource URI                     |
 |------------------------------------------------>|
 |                                                 |
 |               204 No Content with Upload-Offset |
 |<------------------------------------------------|
 |                                                 |
-| PATCH to upload resource URL with Upload-Offset |
+| PATCH to upload resource URI with Upload-Offset |
 | and Upload-Complete: ?0                         |
 |------------------------------------------------>|
 |                                                 |
@@ -230,7 +232,7 @@ Client                                       Server
 ~~~ aasvg
 Client                                       Server
 |                                                 |
-| PATCH to upload resource URL with               |
+| PATCH to upload resource URI with               |
 | Upload-Offset and Upload-Complete: ?1           |
 |------------------------------------------------>|
 |                                                 |
@@ -313,7 +315,7 @@ If the client knows the representation data's length, it SHOULD include the `Upl
 
 The client SHOULD respect any limits ({{upload-limit}}) announced in the `Upload-Limit` header field in interim or final responses. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client SHOULD stop the current request immediately and cancel the upload ({{upload-cancellation}}).
 
-The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty representation. An `Upload-Complete` header field is set to false is also valid. This can be used to create an upload resource URL before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URL, at the cost of an additional round-trip before data upload can commence.
+The request content MAY be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty representation. An `Upload-Complete` header field is set to false is also valid. This can be used to retrieve the upload resource's URI before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URI, at the cost of an additional round-trip before data upload can commence.
 
 Representation metadata included in the initial request (see {{Section 8.3 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field ({{Section 8.3 of HTTP}}) indicates the media type of the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. The `Contenct-Encoding header field ({{Section 8.4 of HTTP}}) names the content codings applied to the representation.
 
@@ -620,21 +622,21 @@ An "optimistic upload creation" can be used independent of the client's knowledg
 
 The benefit of this method is that if the upload creation request succeeds, the representation data was transferred in a single request without additional round trips.
 
-A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client received a `104 (Upload Resumption Supported)` interim response with the upload URL, the client cannot resume that upload due to the missing upload URL. The interim response might not be received if the interruption happens too early in the message exchange, the server does not support resumable uploads at all, the server does not support sending the `104 (Upload Resumption Supported)` interim response, or an intermediary dropped the interim response. Without a 104 response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.
+A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client received a `104 (Upload Resumption Supported)` interim response with the upload resource's URI, the client cannot resume that upload due to the missing URI. The interim response might not be received if the interruption happens too early in the message exchange, the server does not support resumable uploads at all, the server does not support sending the `104 (Upload Resumption Supported)` interim response, or an intermediary dropped the interim response. Without a 104 response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.
 
-A client might wait for a limited duration to receive a 104 (Upload Resumption Supported) interim response before starting to transmit the request content. This way, the client can learn about the resource's support for resumable uploads and/or the upload URL. This is conceptually similar to how a client might wait for a 100 (Continue) interim response (see {{Section 10.1.1 of HTTP}}) before committing to work.
+A client might wait for a limited duration to receive a 104 (Upload Resumption Supported) interim response before starting to transmit the request content. This way, the client can learn about the resource's support for resumable uploads and/or the upload resource's URI. This is conceptually similar to how a client might wait for a 100 (Continue) interim response (see {{Section 10.1.1 of HTTP}}) before committing to work.
 
 ### Upgrading To Resumable Uploads {#upgrading-uploads}
 
 Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the representation is transferred in a single request, usually `POST` or `PUT`, without any ability to resume from interruptions. The client can offer the server to upgrade such a request to a resumable upload by adding the `Upload-Complete: ?1` header field to the original request. The `Upload-Length` header field SHOULD be added if the representation data's length is known upfront. The request is not changed otherwise.
 
-A server that supports resumable uploads at the target URI can create a resumable upload resource and send its upload URL in a `104 (Upload Resumption Supported)` interim response for the client to resume the upload after interruptions. A server that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the `Upload-Complete: ?1` header. The transfer then falls back to a non-resumable upload without additional cost.
+A server that supports resumable uploads at the target URI can create an upload resource and send its URI in a `104 (Upload Resumption Supported)` interim response for the client to resume the upload after interruptions. A server that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the `Upload-Complete: ?1` header. The transfer then falls back to a non-resumable upload without additional cost.
 
 This upgrade can also be performed transparently by the client without the user taking an active role. When a user asks the client to send a non-resumable request, the client can perform the upgrade and handle potential interruptions and resumptions under the hood without involving the user. The last response received by the client is considered the response for the entire upload and should be presented to the user.
 
 ## Careful Upload Creation
 
-For a "careful upload creation" the client knows that the server supports resumable uploads and sends an empty upload creation request without including any representation data. Upon successful response reception, the client can use the included upload URL to transmit the representation data ({{upload-appending}}) and resume the upload at any stage if an interruption occurs. The client should inspect the response for the `Upload-Limit` header field, which would indicate limits applying to the remaining upload procedure.
+For a "careful upload creation" the client knows that the server supports resumable uploads and sends an empty upload creation request without including any representation data. Upon successful response reception, the client can use the included upload resource URI to transmit the representation data ({{upload-appending}}) and resume the upload at any stage if an interruption occurs. The client should inspect the response for the `Upload-Limit` header field, which would indicate limits applying to the remaining upload procedure.
 
 The retransmission of representation data or the ultimate upload failure that can happen with an "optimistic upload creation" is therefore avoided at the expense of an additional request that does not carry representation data.
 
@@ -642,7 +644,7 @@ This approach best suited if the client cannot receive interim responses, e.g. d
 
 # Security Considerations
 
-The upload resource URL is the identifier used for modifying the upload. Without further protection of this URL, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can access the upload resource. In addition, the upload resource URL SHOULD be generated in such a way that makes it hard to be guessed by unauthorized clients.
+The upload resource URI is the identifier used for modifying the upload. Without further protection of this URI, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can access the upload resource. In addition, the upload resource URI SHOULD be generated in such a way that makes it hard to be guessed by unauthorized clients.
 
 Some servers or intermediaries provide scanning of content uploaded by clients. Any scanning mechanism that relies on receiving a complete representation in a single request message can be defeated by resumable uploads because content can be split across multiple messages. Servers or intermediaries wishing to perform content scanning SHOULD consider how resumable uploads can circumvent scanning and take appropriate measures. Possible strategies include waiting for the upload to complete before scanning the entire representation, or disabling resumable uploads.
 
