@@ -3,9 +3,9 @@
 
 
 HTTP                                                       M. Nottingham
-Internet-Draft                                          27 February 2025
+Internet-Draft                                          28 February 2025
 Intended status: Standards Track                                        
-Expires: 31 August 2025
+Expires: 1 September 2025
 
 
                            HTTP Cache Groups
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 August 2025.
+   This Internet-Draft will expire on 1 September 2025.
 
 Copyright Notice
 
@@ -105,9 +105,10 @@ Table of Contents
    cache eviction algorithms.
 
    Section 2 introduces a means of describing the relationships between
-   a set of stored responses in HTTP caches by associating them with one
-   or more opaque strings.  It also describes how caches can use that
-   information to apply invalidation events to members of a group.
+   stored responses in HTTP caches, by associating those responses with
+   one or more groups that reflect those relationships and that are
+   identified by opaque strings.  It also describes how caches can use
+   that information to apply invalidation events to members of a group.
 
    Section 3 introduces one new source of such events: a HTTP response
    header field that allows a state-changing response to trigger a group
@@ -115,7 +116,7 @@ Table of Contents
 
    These mechanisms operate within a single cache, across the stored
    responses associated with a single origin server.  They do not
-   address this issues of synchronising state between multiple caches
+   address the issues of synchronising state between multiple caches
    (e.g., in a hierarchy or mesh), nor do they facilitate association of
    stored responses from disparate origins.
 
@@ -151,8 +152,8 @@ Table of Contents
 
 2.1.  Identifying Grouped Responses
 
-   Two responses stored in the same cache are considered to have the
-   same group when all of the following conditions are met:
+   Two responses stored in the same cache are considered to belong to
+   the same group when all of the following conditions are met:
 
    1.  They both contain a Cache-Groups response header field that
        contains the same String (in any position in the List), when
@@ -180,9 +181,10 @@ Table of Contents
    value that identifies a group that the response invalidates, per
    Section 2.2.1.
 
-   For example, a POST request that has side effects on two cache groups
-   could indicate that stored responses associated with either or both
-   of those groups should be invalidated with:
+   For example, following a POST request that has side effects on two
+   cache groups, the corresponding response could indicate that stored
+   responses associated with either or both of those groups should be
+   invalidated with:
 
    HTTP/1.1 200 OK
    Content-Type: text/html
