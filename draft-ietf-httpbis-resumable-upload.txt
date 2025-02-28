@@ -109,22 +109,21 @@ Table of Contents
    6.  Problem Types
      6.1.  Mismatching Offset
      6.2.  Completed Upload
-   7.  Redirection
-   8.  Content Codings
-   9.  Transfer Codings
-   10. Integrity Digests
-     10.1.  Representation Digests
-     10.2.  Content Digests
-   11. Subsequent Resources
-   12. Upload Strategies
-     12.1.  Optimistic Upload Creation
-       12.1.1.  Upgrading To Resumable Uploads
-     12.2.  Careful Upload Creation
-   13. Security Considerations
-   14. IANA Considerations
-   15. References
-     15.1.  Normative References
-     15.2.  Informative References
+   7.  Content Codings
+   8.  Transfer Codings
+   9.  Integrity Digests
+     9.1.  Representation Digests
+     9.2.  Content Digests
+   10. Subsequent Resources
+   11. Upload Strategies
+     11.1.  Optimistic Upload Creation
+       11.1.1.  Upgrading To Resumable Uploads
+     11.2.  Careful Upload Creation
+   12. Security Considerations
+   13. IANA Considerations
+   14. References
+     14.1.  Normative References
+     14.2.  Informative References
    Acknowledgments
    Changes
      Since draft-ietf-httpbis-resumable-upload-05
@@ -557,7 +556,7 @@ Table of Contents
    content includes the entire representation data that the client
    intents to upload.  This is also a requirement for transparently
    upgrading to resumable uploads from traditional uploads
-   (Section 12.1.1).
+   (Section 11.1.1).
 
    If the client knows the representation data's length, it SHOULD
    include the Upload-Length header field (Section 4.1.3) in the request
@@ -590,18 +589,27 @@ Table of Contents
    (Section 8.4 of [HTTP]) names the content codings applied to the
    representation.
 
-   If the client received a final response and the entire representation
-   data was transferred in the request content, the corresponding
-   response belongs to the targeted resource processing the
-   representation according to the request.  Otherwise, interim and
-   sucessful final responses point the client to the created upload
-   resource in the Location header field.  The client can use it to
-   retrieve the offset (Section 4.3), append representation data
-   (Section 4.4), or cancel the upload (Section 4.5).  The client MAY
-   automatically attempt upload resumption when the connection is
-   terminated unexpectedly, or if a 5xx status code is received.  The
-   client SHOULD NOT automatically retry if it receives a 4xx status
-   code.
+   If the client received a final response with a
+
+   *  2xx (Successful) status code and the entire representation data
+      was transferred in the request content, the upload is complete and
+      the response belongs to the targeted resource processing the
+      representation.
+
+   *  2xx (Successful) status code and not the entire representation
+      data was transferred in the request content, the Location response
+      header field points the client to the created upload resource.
+      The client can continue appending representation data to it
+      (Section 4.4).
+
+   *  4xx (Client Error) status code, the client SHOULD NOT attempt to
+      retry or resume the upload.
+
+   *  5xx (Server Error) status code or no final response at all due to
+      connectivity issues, the client MAY automatically attempt upload
+      resumption by retrieving the current offset (Section 4.3) if it
+      received the URI of the upload resource in a 104 (Upload
+      Resumption Supported) interim response.
 
 4.2.2.  Server Behavior
 
@@ -760,6 +768,21 @@ Table of Contents
    addition, the client SHOULD NOT automatically retry if a 4xx (Client
    Error) status code is received.
 
+   If the client received a response with a
+
+   *  2xx (Successful) status code, the client can continue appending
+      representation data to it (Section 4.4) if the upload is not
+      complete yet.
+
+   *  307 (Temporary Redirect) or 308 (Permanent Redirect) status code,
+      the client MAY retry retrieving the offset from the new URI.
+
+   *  4xx (Client Error) status code, the client SHOULD NOT attempt to
+      retry or resume the upload.
+
+   *  5xx (Server Error) status code or no final response at all due to
+      connectivity issues, the client MAY retry retrieving the offset.
+
 4.3.2.  Server Behavior
 
    A successful response to a HEAD request against an upload resource
@@ -778,6 +801,9 @@ Table of Contents
 
    *  SHOULD include the Cache-Control header field with the value no-
       store to prevent HTTP caching ([CACHING]).
+
+   The resource MUST NOT generate a response with the 301 (Moved
+   Permanently) and 302 (Found) status codes.
 
 4.3.3.  Example
 
@@ -818,19 +844,29 @@ Table of Contents
    then set to true, the client wants to complete the upload without
    appending additional representation data.
 
-   If the client received a final response and the remaining
-   representation data was transferred in the request content, the
-   upload is complete and the corresponding response belongs to the
-   resource processing the representation according to the initial
-   request (see Section 4.2).  Otherwise, the client can continue
-   appending representation data using another PATCH request.  The
-   client MAY automatically attempt upload resumption when the
-   connection is terminated unexpectedly, or if a 5xx status is
-   received.  The client SHOULD NOT automatically retry if it receives a
-   4xx status code.  The client SHOULD consider the upload failed if the
-   status code indicates a success but the offset indicated by the
-   Upload-Offset response field does not equal the representation data's
-   length.
+   If the client received a final response with a
+
+   *  2xx (Successful) status code and the remaining representation data
+      was transferred in the request content, the upload is complete and
+      the corresponding response belongs to the resource processing the
+      representation according to the initial request (see Section 4.2).
+      However, the client SHOULD consider the upload failed if the
+      offset indicated by the Upload-Offset response field does not
+      equal the representation data's length.
+
+   *  2xx (Successful) status code and not the entire remaining
+      representation data was transferred in the request content, the
+      client can continue appending representation data.
+
+   *  307 (Temporary Redirect) or 308 (Permanent Redirect) status code,
+      the client MAY retry appending to the new URI.
+
+   *  4xx (Client Error) status code, the client SHOULD NOT attempt to
+      retry or resume the upload.
+
+   *  5xx (Server Error) status code or no final response at all due to
+      connectivity issues, the client MAY automatically attempt upload
+      resumption by retrieving the current offset (Section 4.3).
 
 4.4.2.  Server Behavior
 
@@ -930,6 +966,9 @@ Table of Contents
    resource before sending the response by abruptly terminating their
    HTTP connection(s) or stream(s).
 
+   The resource MUST NOT generate a response with the 301 (Moved
+   Permanently) and 302 (Found) status codes.
+
 4.5.3.  Example
 
    The following example shows an upload cancellation:
@@ -1017,18 +1056,7 @@ Table of Contents
      "title": "upload is already completed"
    }
 
-7.  Redirection
-
-   The 301 (Moved Permanently) and 302 (Found) status codes MUST NOT be
-   used in offset retrieval (Section 4.3) and upload cancellation
-   (Section 4.5) responses.  For other responses, the upload resource
-   MAY return a 308 (Permanent Redirect) status code and clients SHOULD
-   use the new permanent URI for subsequent requests.  If the client
-   receives a 307 (Temporary Redirect) response to an offset retrieval
-   (Section 4.3) request, it MAY apply the redirection directly in an
-   immediate subsequent upload append (Section 4.4).
-
-8.  Content Codings
+7.  Content Codings
 
    Since the codings listed in Content-Encoding are a characteristic of
    the representation (see Section 8.4 of [HTTP]), both the client and
@@ -1039,7 +1067,7 @@ Table of Contents
    representation data to support resumable uploads.  See Appendix A of
    [DIGEST-FIELDS] for more information.
 
-9.  Transfer Codings
+8.  Transfer Codings
 
    Unlike Content-Encoding (see Section 8.4.1 of [HTTP]), Transfer-
    Encoding (see Section 6.1 of [HTTP/1.1]) is a property of the
@@ -1052,12 +1080,12 @@ Table of Contents
    field cannot be used in conjunction with the Transfer-Encoding header
    field.
 
-10.  Integrity Digests
+9.  Integrity Digests
 
    The integrity of an entire upload or individual upload requests can
    be verifying using digests from [DIGEST-FIELDS].
 
-10.1.  Representation Digests
+9.1.  Representation Digests
 
    Representation digests help verify the integrity of the entire
    representation data that has been uploaded so far, which might strech
@@ -1089,7 +1117,7 @@ Table of Contents
    spread across multiple requests, data integrity issues can be found
    even before the upload is fully completed.
 
-10.2.  Content Digests
+9.2.  Content Digests
 
    Content digests help verify the integrity of the content in an
    individual request.
@@ -1104,7 +1132,7 @@ Table of Contents
    resource.  This way, the integrity of an individual request can be
    protected.
 
-11.  Subsequent Resources
+10.  Subsequent Resources
 
    The server might process the uploaded representation data and make
    its results available in another resource during or after the upload.
@@ -1119,7 +1147,7 @@ Table of Contents
    an upload.  For example, a subsequent resource could allow the client
    to fetch information extracted from the uploaded representation data.
 
-12.  Upload Strategies
+11.  Upload Strategies
 
    The definition of the upload creation request (Section 4.2) provides
    the client with flexibility to choose whether the representation data
@@ -1134,7 +1162,7 @@ Table of Contents
    explicitly communicated to the server and clients are not required to
    stick to one strategy, but can mix and adapt them to their needs.
 
-12.1.  Optimistic Upload Creation
+11.1.  Optimistic Upload Creation
 
    An "optimistic upload creation" can be used independent of the
    client's knowledge about the server's support for resumable uploads.
@@ -1169,7 +1197,7 @@ Table of Contents
    100 (Continue) interim response (see Section 10.1.1 of [HTTP]) before
    committing to work.
 
-12.1.1.  Upgrading To Resumable Uploads
+11.1.1.  Upgrading To Resumable Uploads
 
    Optimistic upload creation allows clients and servers to
    automatically upgrade non-resumable uploads to resumable ones.  In a
@@ -1197,7 +1225,7 @@ Table of Contents
    is considered the response for the entire upload and should be
    presented to the user.
 
-12.2.  Careful Upload Creation
+11.2.  Careful Upload Creation
 
    For a "careful upload creation" the client knows that the server
    supports resumable uploads and sends an empty upload creation request
@@ -1219,7 +1247,7 @@ Table of Contents
    additional request is miniscule compared to the effort of
    transferring the representation itself.
 
-13.  Security Considerations
+12.  Security Considerations
 
    The upload resource URI is the identifier used for modifying the
    upload.  Without further protection of this URI, an attacker may
@@ -1253,7 +1281,7 @@ Table of Contents
    allowed to have, and restricting the length of time an upload
    resource can exist.
 
-14.  IANA Considerations
+13.  IANA Considerations
 
    IANA is asked to register the following entries in the "Hypertext
    Transfer Protocol (HTTP) Field Name Registry":
@@ -1294,7 +1322,7 @@ Table of Contents
 
    Encoding considerations:  binary
 
-   Security considerations:  see Section 13 of this document
+   Security considerations:  see Section 12 of this document
 
    Interoperability considerations:  N/A
 
@@ -1353,9 +1381,9 @@ Table of Contents
 
       This document
 
-15.  References
+14.  References
 
-15.1.  Normative References
+14.1.  Normative References
 
    [CACHING]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Caching", STD 98, RFC 9111,
@@ -1404,7 +1432,7 @@ Table of Contents
               HTTP", RFC 8941, DOI 10.17487/RFC8941, February 2021,
               <https://www.rfc-editor.org/rfc/rfc8941>.
 
-15.2.  Informative References
+14.2.  Informative References
 
    [SLOWLORIS]
               "RSnake" Hansen, R., "Welcome to Slowloris - the low
