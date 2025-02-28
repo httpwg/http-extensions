@@ -197,15 +197,17 @@ Table of Contents
 
    The term "patch document" is taken from [PATCH].
 
+   An _upload resource_ is a temporary resource on the server that
+   facilitates the resumable upload of one representation (Section 4).
+
 3.  Overview
 
    Resumable uploads are supported in HTTP through use of a temporary
    resource, an _upload resource_ (Section 4), that is separate from the
-   resource being uploaded to (hereafter, the _target resource_) and
-   specific to that upload.  By interacting with the upload resource, a
-   client can retrieve the current offset of the upload (Section 4.3),
-   append to the upload (Section 4.4), and cancel the upload
-   (Section 4.5).
+   resource being uploaded to and specific to that upload.  By
+   interacting with the upload resource, a client can retrieve the
+   current offset of the upload (Section 4.3), append to the upload
+   (Section 4.4), and cancel the upload (Section 4.5).
 
    The remainder of this section uses examples to illustrate different
    interactions with the upload resource.  HTTP message exchanges, and
@@ -217,10 +219,9 @@ Table of Contents
 3.1.  Example 1: Complete upload of representation data with known size
 
    In this example, the client first attempts to upload representation
-   data with a known size in a single HTTP request to the target
-   resource.  An interruption occurs and the client then attempts to
-   resume the upload using subsequent HTTP requests to the upload
-   resource.
+   data with a known size in a single HTTP request to a resource.  An
+   interruption occurs and the client then attempts to resume the upload
+   using subsequent HTTP requests to the upload resource.
 
    1) The client notifies the server that it wants to begin an upload
    (Section 4.2).  The server reserves the required resources to accept
