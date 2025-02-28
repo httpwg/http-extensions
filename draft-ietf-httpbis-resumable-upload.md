@@ -94,6 +94,8 @@ The term "URI" is used as defined in {{Section 4 of HTTP}}.
 
 The term "patch document" is taken from {{PATCH}}.
 
+An _upload resource_ is a temporary resource on the server that facilitates the resumable upload of one representation ({{upload-resource}}).
+
 # Overview
 
 Resumable uploads are supported in HTTP through use of a temporary resource, an _upload resource_ ({{upload-resource}}), that is separate from the resource being uploaded to and specific to that upload. By interacting with the upload resource, a client can retrieve the current offset of the upload ({{offset-retrieving}}), append to the upload ({{upload-appending}}), and cancel the upload ({{upload-cancellation}}).
