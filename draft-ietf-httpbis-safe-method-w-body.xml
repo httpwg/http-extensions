@@ -107,7 +107,7 @@ Host: example.org
       <li>often size limits are not known ahead of time because a request can pass through many uncoordinated
     system (but note that <xref section="4.1" target="HTTP"/> recommends senders and recipients to support at least 8000 octets),</li>
       <li>expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and</li>
-      <li>encoding query parameters directly into the request URI effectively casts every possible combination of query inputs as distinct
+      <li>encoding queries directly into the request URI effectively casts every possible combination of query inputs as distinct
           resources.</li>
     </ul>
     <t>
@@ -253,9 +253,9 @@ q=foo&amp;limit=10&amp;sort=-published
       can be included in the Location header field of the response (see <xref
       target="HTTP" section="10.2.2"/>). This represents a claim that a client can
       send a GET request to the indicated URI to repeat the query operation just
-      performed without resending the query parameters. This resource might be
+      performed without resending the query payload. This resource might be
       temporary; if a future request fails, the client can retry using the
-      original QUERY resource and the previously submitted parameters again.
+      original QUERY resource and the previously submitted payload again.
     </t>
     </section>
 
