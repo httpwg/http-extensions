@@ -336,7 +336,7 @@ The resource targeted by this initial request is responsible for processing the 
 
 If the `Upload-Complete` request header field is set to true, the client intents to transfer the entire representation data in one request. If the request content was fully received, no resumable upload is needed and the resource proceeds to process the request and generate a response.
 
-If the `Upload-Complete` header field is set to false, the client intents to transfer the representation over multiple requests. If the request content was fully received, the server MUST announce the upload resource by referencing it in the `Location` response header field. Servers are RECOMMENDED to use the `201 (Created)` status code. The response MUST include the new offset in the `Upload-Offset` header field and the `Upload-Complete` header value set to false. The response SHOULD include the `Upload-Limit` header field with the corresponding limits if existing.
+If the `Upload-Complete` header field is set to false, the client intents to transfer the representation over multiple requests. If the request content was fully received, the server MUST announce the upload resource by referencing it in the `Location` response header field. Servers are RECOMMENDED to use the `201 (Created)` status code. The response SHOULD include the `Upload-Limit` header field with the corresponding limits if existing.
 
 The server MUST record the length according to {{upload-length}} if the necessary header fields are included in the request.
 
@@ -387,7 +387,6 @@ Upload-Limit: max-size=1000000000
 
 HTTP/1.1 201 Created
 Location: https://example.com/upload/b530ce8ff
-Upload-Offset: 100
 Upload-Limit: max-size=1000000000
 ~~~
 
@@ -407,8 +406,6 @@ Upload-Length: 100
 ~~~ http-message
 HTTP/1.1 201 Created
 Location: https://example.com/upload/b530ce8ff
-Upload-Complete: ?0
-Upload-Offset: 25
 Upload-Limit: max-size=1000000000
 ~~~
 
@@ -472,7 +469,7 @@ The request content MAY be empty. If the `Upload-Complete` field is then set to 
 
 If the client received a final response with a
 
-- `2xx (Successful)` status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response belongs to the resource processing the representation according to the initial request (see {{upload-creation}}). However, the client SHOULD consider the upload failed if the offset indicated by the `Upload-Offset` response field does not equal the representation data's length.
+- `2xx (Successful)` status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response belongs to the resource processing the representation according to the initial request (see {{upload-creation}}).
 - `2xx (Successful)` status code and not the entire remaining representation data was transferred in the request content, the client can continue appending representation data.
 - `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry appending to the new URI.
 - `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
@@ -490,7 +487,7 @@ If the upload is already complete ({{upload-complete}}), the server MUST NOT mod
 
 If the Upload-Complete request header field is set to true, the client intents to transfer the remaining representation data in one request. If the request content was fully received, the upload is marked as complete and the upload resource SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had received the entire representation in the initial request.
 
-If the `Upload-Complete` request header field is set to false, the client intents to transfer the remaining representation over multiple requests. If the request content was fully received, the upload resource MUST acknowledge the new upload state by sending a response with the `201 (Created)` status code. The response MUST include the offset in the `Upload-Offset` response header field and the `Upload-Complete` response header field set to false. The response SHOULD include the `Upload-Limit` header field with the corresponding limits if existing.
+If the `Upload-Complete` request header field is set to false, the client intents to transfer the remaining representation over multiple requests. If the request content was fully received, the upload resource acknowledges the appended data by sending a `2xx (Successful)` response.
 
 The upload resource MUST record the length according to {{upload-length}} if the necessary header fields are included in the request. If the length is known, the upload resource MUST prevent the offset from exceeding the upload length by stopping to append bytes once the offset reaches the length and reject the request. It is not sufficient to rely on the `Content-Length` header field for enforcement because the header field might not be present.
 
@@ -512,8 +509,7 @@ Content-Type: application/partial-upload
 ~~~
 
 ~~~ http-message
-HTTP/1.1 201 Created
-Upload-Offset: 200
+HTTP/1.1 204 No Content
 ~~~
 
 ## Upload Cancellation {#upload-cancellation}
