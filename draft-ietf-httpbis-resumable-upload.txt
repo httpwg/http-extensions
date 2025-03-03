@@ -1593,6 +1593,10 @@ Changes
 
 Since draft-ietf-httpbis-resumable-upload-05
 
+   *  Numerous editorial changes.
+
+   *  Rename expires limit to max-age.
+
    *  Require Upload-Complete, but not Upload-Offset or Upload-Limit,
       for append responses.
 
