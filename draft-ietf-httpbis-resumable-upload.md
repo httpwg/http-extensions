@@ -514,7 +514,7 @@ HTTP/1.1 204 No Content
 Upload-Complete: ?0
 ~~~
 
-The next example shows an upload append, where the client transfers the remaining 200 bytes and completes the upload. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data: 
+The next example shows an upload append, where the client transfers the remaining 200 bytes and completes the upload. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:
 
 ~~~ http-message
 PATCH /upload/b530ce8ff HTTP/1.1
