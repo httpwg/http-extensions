@@ -358,7 +358,7 @@ If the server does not receive the entire request content, for example because o
 
 > **RFC Editor's Note:**  Please remove this section and `Upload-Draft-Interop-Version` from all examples prior to publication of a final version of this document.
 
-The current interop version is 6.
+The current interop version is 7.
 
 Client implementations of draft versions of the protocol MUST send a header field `Upload-Draft-Interop-Version` with the interop version as its value to its requests. The `Upload-Draft-Interop-Version` field value is an Integer.
 
@@ -377,7 +377,7 @@ A) The following example shows an upload creation, where the entire 100 bytes ar
 ~~~ http-message
 POST /project/123/files HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 6
+Upload-Draft-Interop-Version: 7
 Upload-Complete: ?1
 Content-Length: 100
 Upload-Length: 100
@@ -387,11 +387,11 @@ Upload-Length: 100
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Draft-Interop-Version: 6
+Upload-Draft-Interop-Version: 7
 Location: https://example.com/upload/b530ce8ff
 
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Draft-Interop-Version: 6
+Upload-Draft-Interop-Version: 7
 Upload-Offset: 50
 Upload-Limit: max-size=1000000000
 
@@ -408,7 +408,7 @@ B) The following example shows an upload creation, where only the first 25 bytes
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 6
+Upload-Draft-Interop-Version: 7
 Upload-Complete: ?0
 Content-Length: 25
 Upload-Length: 100
@@ -427,7 +427,7 @@ C) The following example shows an upload creation, where the server responds wit
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 6
+Upload-Draft-Interop-Version: 7
 Upload-Complete: ?1
 Content-Length: 100
 Upload-Length: 100
@@ -437,7 +437,7 @@ Upload-Length: 100
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Draft-Interop-Version: 6
+Upload-Draft-Interop-Version: 7
 Location: https://example.com/upload/b530ce8ff
 
 HTTP/1.1 500 Internal Server Error
@@ -448,7 +448,7 @@ D) The following example shows an upload creation being rejected by the server. 
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 6
+Upload-Draft-Interop-Version: 7
 Upload-Complete: ?1
 Content-Length: 100
 Upload-Length: 100
@@ -496,7 +496,7 @@ A) The following example shows an offset retrieval request. The server indicates
 ~~~ http-message
 HEAD /upload/b530ce8ff HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 6
+Upload-Draft-Interop-Version: 7
 ~~~
 
 ~~~ http-message
@@ -513,7 +513,7 @@ B) The following example shows on offset retrieval request for a completed uploa
 ~~~ http-message
 HEAD /upload/b530ce8ff HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 6
+Upload-Draft-Interop-Version: 7
 ~~~
 
 ~~~ http-message
@@ -573,7 +573,7 @@ PATCH /upload/b530ce8ff HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
 Upload-Offset: 100
-Upload-Draft-Interop-Version: 6
+Upload-Draft-Interop-Version: 7
 Content-Length: 100
 Content-Type: application/partial-upload
 
@@ -582,7 +582,7 @@ Content-Type: application/partial-upload
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Draft-Interop-Version: 6
+Upload-Draft-Interop-Version: 7
 Upload-Offset: 150
 
 HTTP/1.1 204 No Content
@@ -596,7 +596,7 @@ PATCH /upload/b530ce8ff HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
 Upload-Offset: 200
-Upload-Draft-Interop-Version: 6
+Upload-Draft-Interop-Version: 7
 Content-Length: 100
 Content-Type: application/partial-upload
 
@@ -638,7 +638,7 @@ The following example shows an upload cancellation:
 ~~~ http-message
 DELETE /upload/b530ce8ff HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 6
+Upload-Draft-Interop-Version: 7
 ~~~
 
 ~~~ http-message
@@ -920,6 +920,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-05
 {:numbered="false"}
 
+* Increase the draft interop version.
 * Numerous editorial changes.
 * Rename `expires` limit to `max-age`.
 * Require `Upload-Complete`, but not `Upload-Offset` or `Upload-Limit`, for append responses.
