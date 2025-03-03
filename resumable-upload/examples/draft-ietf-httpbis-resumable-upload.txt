@@ -109,6 +109,7 @@ Table of Contents
    6.  Problem Types
      6.1.  Mismatching Offset
      6.2.  Completed Upload
+     6.3.  Inconsistent Length
    7.  Content Codings
    8.  Transfer Codings
    9.  Integrity Digests
@@ -488,7 +489,10 @@ Table of Contents
 
    If both indicators are present in the same request, their indicated
    lengths MUST match.  If multiple requests include indicators, their
-   indicated values MUST match.
+   indicated values MUST match.  A server MAY use the problem type
+   [PROBLEM] of "https://iana.org/assignments/http-problem-
+   types#inconsistent-upload-length" (Section 6.3) in responses to
+   indicates inconsistent length values.
 
    The upload resource might not know the length until the upload is
    complete.
@@ -656,9 +660,7 @@ Table of Contents
    the request content was fully received, the server MUST announce the
    upload resource by referencing it in the Location response header
    field.  Servers are RECOMMENDED to use the 201 (Created) status code.
-   The response MUST include the new offset in the Upload-Offset header
-   field and the Upload-Complete header value set to false.  The
-   response SHOULD include the Upload-Limit header field with the
+   The response SHOULD include the Upload-Limit header field with the
    corresponding limits if existing.
 
    The server MUST record the length according to Section 4.1.3 if the
@@ -737,7 +739,6 @@ Table of Contents
 
    HTTP/1.1 200 OK
    Location: https://example.com/upload/b530ce8ff
-   Upload-Offset: 100
    Upload-Limit: max-size=1000000000
    Content-Type: application/json
 
@@ -759,8 +760,6 @@ Table of Contents
 
    HTTP/1.1 201 Created
    Location: https://example.com/upload/b530ce8ff
-   Upload-Complete: ?0
-   Upload-Offset: 25
    Upload-Limit: max-size=1000000000
 
    C) The following example shows an upload creation, where the server
@@ -921,9 +920,6 @@ Table of Contents
       was transferred in the request content, the upload is complete and
       the corresponding response belongs to the resource processing the
       representation according to the initial request (see Section 4.2).
-      However, the client SHOULD consider the upload failed if the
-      offset indicated by the Upload-Offset response field does not
-      equal the representation data's length.
 
    *  2xx (Successful) status code and not the entire remaining
       representation data was transferred in the request content, the
@@ -971,17 +967,22 @@ Table of Contents
    marked as complete and the upload resource SHOULD generate the
    response that matches what the resource, that was targeted by the
    initial upload creation (Section 4.2), would have generated if it had
-   received the entire representation in the initial request.
+   received the entire representation in the initial request.  However,
+   the response MUST include the Upload-Complete header field with a
+   true value, allowing clients to identify whether a response, in
+   particular error responses, is related to the resumable upload itself
+   or the processing of the upload representation.
 
    If the Upload-Complete request header field is set to false, the
    client intents to transfer the remaining representation over multiple
    requests.  If the request content was fully received, the upload
-   resource MUST acknowledge the new upload state by sending a response
-   with the 201 (Created) status code.  The response MUST include the
-   offset in the Upload-Offset response header field and the Upload-
-   Complete response header field set to false.  The response SHOULD
-   include the Upload-Limit header field with the corresponding limits
-   if existing.
+   resource acknowledges the appended data by sending a 2xx (Successful)
+   response.
+
+   If the request didn't complete the upload, any response, successful
+   or not, MUST include the Upload-Complete header field with a false
+   value, indicating that this response does not belong to the
+   processing of the uploaded representation.
 
    The upload resource MUST record the length according to Section 4.1.3
    if the necessary header fields are included in the request.  If the
@@ -1006,6 +1007,7 @@ Table of Contents
 
    PATCH /upload/b530ce8ff HTTP/1.1
    Host: example.com
+   Upload-Complete: ?0
    Upload-Offset: 100
    Upload-Draft-Interop-Version: 6
    Content-Length: 100
@@ -1017,8 +1019,33 @@ Table of Contents
    Upload-Draft-Interop-Version: 6
    Upload-Offset: 150
 
-   HTTP/1.1 201 Created
+   HTTP/1.1 204 No Content
+   Upload-Complete: ?0
+
+   B) The next example shows an upload append, where the client
+   transfers the remaining 200 bytes and completes the upload.  The
+   server processes the uploaded representation and generates the
+   responding response, in this example containing extracted meta data:
+
+   PATCH /upload/b530ce8ff HTTP/1.1
+   Host: example.com
+   Upload-Complete: ?1
    Upload-Offset: 200
+   Upload-Draft-Interop-Version: 6
+   Content-Length: 100
+   Content-Type: application/partial-upload
+
+   [content (100 bytes)]
+
+   HTTP/1.1 200 OK
+   Upload-Complete: ?1
+   Content-Type: application/json
+
+   {
+     "metadata": {
+       [...]
+     }
+   }
 
 4.5.  Upload Cancellation
 
@@ -1130,6 +1157,25 @@ Table of Contents
    {
      "type":"https://iana.org/assignments/http-problem-types#completed-upload",
      "title": "upload is already completed"
+   }
+
+6.3.  Inconsistent Length
+
+   This section defines the "https://iana.org/assignments/http-problem-
+   types#inconsistent-upload-length" problem type [PROBLEM].  A server
+   MAY use this problem type when responding to an upload creation
+   (Section 4.2) or upload append request (Section 4.4) to indicate that
+   that the request includes inconsistent upload length values, as
+   described in Section 4.1.3.
+
+   The following example shows an example response:
+
+   HTTP/1.1 409 Conflict
+   Content-Type: application/problem+json
+
+   {
+     "type":"https://iana.org/assignments/http-problem-types#inconsistent-upload-length",
+     "title": "inconsistent length values for upload"
    }
 
 7.  Content Codings
@@ -1457,6 +1503,18 @@ Table of Contents
 
       This document
 
+   IANA is asked to register the following entry in the "HTTP Problem
+   Types" registry:
+
+   Type URI:  https://iana.org/assignments/http-problem-
+      types#inconsistent-upload-length Title:
+
+      Inconsistent Upload Length Values Recommended HTTP status code:
+
+      400 Reference:
+
+      This document
+
 14.  References
 
 14.1.  Normative References
@@ -1534,6 +1592,11 @@ Changes
    This section is to be removed before publishing as an RFC.
 
 Since draft-ietf-httpbis-resumable-upload-05
+
+   *  Require Upload-Complete, but not Upload-Offset or Upload-Limit,
+      for append responses.
+
+   *  Add problem type for inconsistent length values.
 
    *  Reduce use of "file" in favor of "representation".
 
