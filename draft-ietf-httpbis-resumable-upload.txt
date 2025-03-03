@@ -643,9 +643,7 @@ Table of Contents
    the request content was fully received, the server MUST announce the
    upload resource by referencing it in the Location response header
    field.  Servers are RECOMMENDED to use the 201 (Created) status code.
-   The response MUST include the new offset in the Upload-Offset header
-   field and the Upload-Complete header value set to false.  The
-   response SHOULD include the Upload-Limit header field with the
+   The response SHOULD include the Upload-Limit header field with the
    corresponding limits if existing.
 
    The server MUST record the length according to Section 4.1.3 if the
@@ -722,7 +720,6 @@ Table of Contents
 
    HTTP/1.1 201 Created
    Location: https://example.com/upload/b530ce8ff
-   Upload-Offset: 100
    Upload-Limit: max-size=1000000000
 
    The next example shows an upload creation, where only the first 25
@@ -741,8 +738,6 @@ Table of Contents
 
    HTTP/1.1 201 Created
    Location: https://example.com/upload/b530ce8ff
-   Upload-Complete: ?0
-   Upload-Offset: 25
    Upload-Limit: max-size=1000000000
 
 4.3.  Offset Retrieval
@@ -854,9 +849,6 @@ Table of Contents
       was transferred in the request content, the upload is complete and
       the corresponding response belongs to the resource processing the
       representation according to the initial request (see Section 4.2).
-      However, the client SHOULD consider the upload failed if the
-      offset indicated by the Upload-Offset response field does not
-      equal the representation data's length.
 
    *  2xx (Successful) status code and not the entire remaining
       representation data was transferred in the request content, the
@@ -904,17 +896,22 @@ Table of Contents
    marked as complete and the upload resource SHOULD generate the
    response that matches what the resource, that was targeted by the
    initial upload creation (Section 4.2), would have generated if it had
-   received the entire representation in the initial request.
+   received the entire representation in the initial request.  However,
+   the response MUST include the Upload-Complete header field with a
+   true value, allowing clients to identify whether a response, in
+   particular error responses, is related to the resumable upload itself
+   or the processing of the upload representation.
 
    If the Upload-Complete request header field is set to false, the
    client intents to transfer the remaining representation over multiple
    requests.  If the request content was fully received, the upload
-   resource MUST acknowledge the new upload state by sending a response
-   with the 201 (Created) status code.  The response MUST include the
-   offset in the Upload-Offset response header field and the Upload-
-   Complete response header field set to false.  The response SHOULD
-   include the Upload-Limit header field with the corresponding limits
-   if existing.
+   resource acknowledges the appended data by sending a 2xx (Successful)
+   response.
+
+   If the request didn't complete the upload, any response, successful
+   or not, MUST include the Upload-Complete header field with a false
+   value, indicating that this response does not belong to the
+   processing of the uploaded representation.
 
    The upload resource MUST record the length according to Section 4.1.3
    if the necessary header fields are included in the request.  If the
@@ -938,6 +935,7 @@ Table of Contents
 
    PATCH /upload/b530ce8ff HTTP/1.1
    Host: example.com
+   Upload-Complete: ?0
    Upload-Offset: 100
    Upload-Draft-Interop-Version: 6
    Content-Length: 100
@@ -945,8 +943,33 @@ Table of Contents
 
    [content (100 bytes)]
 
-   HTTP/1.1 201 Created
+   HTTP/1.1 204 No Content
+   Upload-Complete: ?0
+
+   The next example shows an upload append, where the client transfers
+   the remaining 200 bytes and completes the upload.  The server
+   processes the uploaded representation and generates the responding
+   response, in this example containing extracted meta data:
+
+   PATCH /upload/b530ce8ff HTTP/1.1
+   Host: example.com
+   Upload-Complete: ?1
    Upload-Offset: 200
+   Upload-Draft-Interop-Version: 6
+   Content-Length: 100
+   Content-Type: application/partial-upload
+
+   [content (100 bytes)]
+
+   HTTP/1.1 200 OK
+   Upload-Complete: ?1
+   Content-Type: application/json
+
+   {
+     "metadata": {
+       [...]
+     }
+   }
 
 4.5.  Upload Cancellation
 
@@ -1493,6 +1516,9 @@ Changes
    This section is to be removed before publishing as an RFC.
 
 Since draft-ietf-httpbis-resumable-upload-05
+
+   *  Require Upload-Complete, but not Upload-Offset or Upload-Limit,
+      for append responses.
 
    *  Add problem type for inconsistent length values.
 
