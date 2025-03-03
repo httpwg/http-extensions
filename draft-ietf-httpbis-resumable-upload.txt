@@ -684,7 +684,7 @@ Table of Contents
       Interop-Version from all examples prior to publication of a final
       version of this document.
 
-   The current interop version is 6.
+   The current interop version is 7.
 
    Client implementations of draft versions of the protocol MUST send a
    header field Upload-Draft-Interop-Version with the interop version as
@@ -721,7 +721,7 @@ Table of Contents
 
    POST /project/123/files HTTP/1.1
    Host: example.com
-   Upload-Draft-Interop-Version: 6
+   Upload-Draft-Interop-Version: 7
    Upload-Complete: ?1
    Content-Length: 100
    Upload-Length: 100
@@ -729,11 +729,11 @@ Table of Contents
    [content (100 bytes)]
 
    HTTP/1.1 104 Upload Resumption Supported
-   Upload-Draft-Interop-Version: 6
+   Upload-Draft-Interop-Version: 7
    Location: https://example.com/upload/b530ce8ff
 
    HTTP/1.1 104 Upload Resumption Supported
-   Upload-Draft-Interop-Version: 6
+   Upload-Draft-Interop-Version: 7
    Upload-Offset: 50
    Upload-Limit: max-size=1000000000
 
@@ -751,7 +751,7 @@ Table of Contents
 
    POST /upload HTTP/1.1
    Host: example.com
-   Upload-Draft-Interop-Version: 6
+   Upload-Draft-Interop-Version: 7
    Upload-Complete: ?0
    Content-Length: 25
    Upload-Length: 100
@@ -768,7 +768,7 @@ Table of Contents
 
    POST /upload HTTP/1.1
    Host: example.com
-   Upload-Draft-Interop-Version: 6
+   Upload-Draft-Interop-Version: 7
    Upload-Complete: ?1
    Content-Length: 100
    Upload-Length: 100
@@ -776,7 +776,7 @@ Table of Contents
    [content (100 bytes)]
 
    HTTP/1.1 104 Upload Resumption Supported
-   Upload-Draft-Interop-Version: 6
+   Upload-Draft-Interop-Version: 7
    Location: https://example.com/upload/b530ce8ff
 
    HTTP/1.1 500 Internal Server Error
@@ -786,7 +786,7 @@ Table of Contents
 
    POST /upload HTTP/1.1
    Host: example.com
-   Upload-Draft-Interop-Version: 6
+   Upload-Draft-Interop-Version: 7
    Upload-Complete: ?1
    Content-Length: 100
    Upload-Length: 100
@@ -867,7 +867,7 @@ Table of Contents
 
    HEAD /upload/b530ce8ff HTTP/1.1
    Host: example.com
-   Upload-Draft-Interop-Version: 6
+   Upload-Draft-Interop-Version: 7
 
    HTTP/1.1 204 No Content
    Upload-Offset: 100
@@ -881,7 +881,7 @@ Table of Contents
 
    HEAD /upload/b530ce8ff HTTP/1.1
    Host: example.com
-   Upload-Draft-Interop-Version: 6
+   Upload-Draft-Interop-Version: 7
 
    HTTP/1.1 204 No Content
    Upload-Offset: 500
@@ -1009,14 +1009,14 @@ Table of Contents
    Host: example.com
    Upload-Complete: ?0
    Upload-Offset: 100
-   Upload-Draft-Interop-Version: 6
+   Upload-Draft-Interop-Version: 7
    Content-Length: 100
    Content-Type: application/partial-upload
 
    [content (100 bytes)]
 
    HTTP/1.1 104 Upload Resumption Supported
-   Upload-Draft-Interop-Version: 6
+   Upload-Draft-Interop-Version: 7
    Upload-Offset: 150
 
    HTTP/1.1 204 No Content
@@ -1031,7 +1031,7 @@ Table of Contents
    Host: example.com
    Upload-Complete: ?1
    Upload-Offset: 200
-   Upload-Draft-Interop-Version: 6
+   Upload-Draft-Interop-Version: 7
    Content-Length: 100
    Content-Type: application/partial-upload
 
@@ -1078,7 +1078,7 @@ Table of Contents
 
    DELETE /upload/b530ce8ff HTTP/1.1
    Host: example.com
-   Upload-Draft-Interop-Version: 6
+   Upload-Draft-Interop-Version: 7
 
    HTTP/1.1 204 No Content
 
@@ -1592,6 +1592,8 @@ Changes
    This section is to be removed before publishing as an RFC.
 
 Since draft-ietf-httpbis-resumable-upload-05
+
+   *  Increase the draft interop version.
 
    *  Numerous editorial changes.
 
