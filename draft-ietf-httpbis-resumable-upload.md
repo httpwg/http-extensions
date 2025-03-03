@@ -615,7 +615,6 @@ Content-Type: application/json
 }
 ~~~
 
-
 ## Upload Cancellation {#upload-cancellation}
 
 ### Client Behavior
