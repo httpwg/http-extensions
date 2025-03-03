@@ -920,6 +920,8 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-05
 {:numbered="false"}
 
+* Numerous editorial changes.
+* Rename `expires` limit to `max-age`.
 * Require `Upload-Complete`, but not `Upload-Offset` or `Upload-Limit`, for append responses.
 * Add problem type for inconsistent length values.
 * Reduce use of "file" in favor of "representation".
