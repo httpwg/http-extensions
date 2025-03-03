@@ -700,7 +700,7 @@ This section defines the "https://iana.org/assignments/http-problem-types#incons
 The following example shows an example response:
 
 ~~~ http-message
-HTTP/1.1 409 Conflict
+HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
 
 {
