@@ -1170,7 +1170,7 @@ Table of Contents
 
    The following example shows an example response:
 
-   HTTP/1.1 409 Conflict
+   HTTP/1.1 400 Bad Request
    Content-Type: application/problem+json
 
    {
