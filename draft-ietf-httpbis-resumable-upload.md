@@ -485,9 +485,9 @@ If the `Upload-Offset` request header field value does not match the current off
 
 If the upload is already complete ({{upload-complete}}), the server MUST NOT modify the upload resource and MUST reject the request. The server MAY use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#completed-upload" in the response ({{completed-upload}}).
 
-If the Upload-Complete request header field is set to true, the client intents to transfer the remaining representation data in one request. If the request content was fully received, the upload is marked as complete and the upload resource SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had received the entire representation in the initial request.
+If the Upload-Complete request header field is set to true, the client intents to transfer the remaining representation data in one request. If the request content was fully received, the upload is marked as complete and the upload resource SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had received the entire representation in the initial request. However, the response MUST include the `Upload-Complete` header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the upload representation.
 
-If the `Upload-Complete` request header field is set to false, the client intents to transfer the remaining representation over multiple requests. If the request content was fully received, the upload resource acknowledges the appended data by sending a `2xx (Successful)` response.
+If the `Upload-Complete` request header field is set to false, the client intents to transfer the remaining representation over multiple requests. Any response, successful or not, MUST then include the `Upload-Complete` header field with a false value. If the request content was fully received, the upload resource acknowledges the appended data by sending a `2xx (Successful)` response.
 
 The upload resource MUST record the length according to {{upload-length}} if the necessary header fields are included in the request. If the length is known, the upload resource MUST prevent the offset from exceeding the upload length by stopping to append bytes once the offset reaches the length and reject the request. It is not sufficient to rely on the `Content-Length` header field for enforcement because the header field might not be present.
 
@@ -500,6 +500,7 @@ The following example shows an upload append. The client transfers the next 100 
 ~~~ http-message
 PATCH /upload/b530ce8ff HTTP/1.1
 Host: example.com
+Upload-Complete: ?0
 Upload-Offset: 100
 Upload-Draft-Interop-Version: 6
 Content-Length: 100
@@ -510,7 +511,35 @@ Content-Type: application/partial-upload
 
 ~~~ http-message
 HTTP/1.1 204 No Content
+Upload-Complete: ?0
 ~~~
+
+The next example shows an upload append, where the client transfers the remaining 200 bytes and completes the upload. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data: 
+
+~~~ http-message
+PATCH /upload/b530ce8ff HTTP/1.1
+Host: example.com
+Upload-Complete: ?1
+Upload-Offset: 200
+Upload-Draft-Interop-Version: 6
+Content-Length: 100
+Content-Type: application/partial-upload
+
+[content (100 bytes)]
+~~~
+
+~~~ http-message
+HTTP/1.1 200 OK
+Upload-Complete: ?1
+Content-Type: application/json
+
+{
+  "metadata": {
+    [...]
+  }
+}
+~~~
+
 
 ## Upload Cancellation {#upload-cancellation}
 
