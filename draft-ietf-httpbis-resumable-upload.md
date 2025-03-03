@@ -363,10 +363,10 @@ The reason both the client and the server are sending and checking the draft ver
 
 ### Examples {#upload-creation-example}
 
-The following example shows an upload creation, where the entire 100 bytes are transferred in the initial request:
+A) The following example shows an upload creation, where the entire 100 bytes are transferred in the initial request. The server sends multiple interim responses and one final response from processing the uploaded representation.
 
 ~~~ http-message
-POST /upload HTTP/1.1
+POST /project/123/files HTTP/1.1
 Host: example.com
 Upload-Draft-Interop-Version: 6
 Upload-Complete: ?1
@@ -386,13 +386,16 @@ Upload-Draft-Interop-Version: 6
 Upload-Offset: 50
 Upload-Limit: max-size=1000000000
 
-HTTP/1.1 201 Created
+HTTP/1.1 200 OK
 Location: https://example.com/upload/b530ce8ff
 Upload-Offset: 100
 Upload-Limit: max-size=1000000000
+Content-Type: application/json
+
+{"attachmentId": "b530ce8ff"}
 ~~~
 
-The next example shows an upload creation, where only the first 25 bytes of a 100 bytes upload are transferred. The server acknowledges the received representation data and that the upload is not complete yet:
+B) The following example shows an upload creation, where only the first 25 bytes of a 100 bytes upload are transferred. The server acknowledges the received representation data and that the upload is not complete yet. The client can continue appending data.
 
 ~~~ http-message
 POST /upload HTTP/1.1
@@ -413,13 +416,44 @@ Upload-Offset: 25
 Upload-Limit: max-size=1000000000
 ~~~
 
+C) The following example shows an upload creation, where the server responds with a 5xx status code. Thanks to the interim response containing the upload resource URI, the client can resume the upload.
+
+~~~ http-message
+POST /upload HTTP/1.1
+Host: example.com
+Upload-Draft-Interop-Version: 6
+Upload-Complete: ?1
+Content-Length: 100
+Upload-Length: 100
+
+[content (100 bytes)]
+~~~
+
+~~~ http-message
+HTTP/1.1 104 Upload Resumption Supported
+Upload-Draft-Interop-Version: 6
+Location: https://example.com/upload/b530ce8ff
+
+HTTP/1.1 500 Internal Server Error
+~~~
+
+D) The following example shows an upload creation being rejected by the server. The client cannot continue the upload.
+
+~~~ http-message
+POST /upload HTTP/1.1
+Host: example.com
+Upload-Draft-Interop-Version: 6
+Upload-Complete: ?1
+Content-Length: 100
+Upload-Length: 100
+
 [content (100 bytes)]
 ~~~
 
 ~~~ http-message
 HTTP/1.1 400 Bad Request
+~~~
 
-TODO: response
 ## Offset Retrieval {#offset-retrieving}
 
 ### Client Behavior
@@ -442,7 +476,7 @@ A successful response to a `HEAD` request against an upload resource
 
 ### Example {#offset-retrieving-example}
 
-The following example shows an offset retrieval request. The server indicates the new offset and that the upload is not complete yet:
+A) The following example shows an offset retrieval request. The server indicates the current offset and that the upload is not complete yet. The client can continue to append representation data.
 
 ~~~ http-message
 HEAD /upload/b530ce8ff HTTP/1.1
@@ -454,9 +488,25 @@ Upload-Draft-Interop-Version: 6
 HTTP/1.1 204 No Content
 Upload-Offset: 100
 Upload-Complete: ?0
+Upload-Length: 500
+Upload-Limit: max-age=3600
 Cache-Control: no-store
-TODO: Upload-Limit
-TODO: Upload-Length
+~~~
+
+B) The following example shows on offset retrieval request for a completed upload. The client does not need to continue the upload.
+
+~~~ http-message
+HEAD /upload/b530ce8ff HTTP/1.1
+Host: example.com
+Upload-Draft-Interop-Version: 6
+~~~
+
+~~~ http-message
+HTTP/1.1 204 No Content
+Upload-Offset: 500
+Upload-Complete: ?1
+Upload-Length: 500
+Cache-Control: no-store
 ~~~
 
 ## Upload Append {#upload-appending}
@@ -493,7 +543,7 @@ While the request content is being received, the server MAY send interim respons
 
 ### Example {#upload-appending-example}
 
-The following example shows an upload append. The client transfers the next 100 bytes at an offset of 100 and does not indicate that the upload is then completed. The server acknowledges the new offset:
+A) The following example shows an upload append request. The client transfers the next 100 bytes at an offset of 100 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:
 
 ~~~ http-message
 PATCH /upload/b530ce8ff HTTP/1.1
@@ -507,6 +557,10 @@ Content-Type: application/partial-upload
 ~~~
 
 ~~~ http-message
+HTTP/1.1 104 Upload Resumption Supported
+Upload-Draft-Interop-Version: 6
+Upload-Offset: 150
+
 HTTP/1.1 201 Created
 Upload-Offset: 200
 ~~~
