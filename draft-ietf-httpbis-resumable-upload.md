@@ -100,7 +100,7 @@ The remainder of this section uses examples to illustrate different interactions
 
 ## Example 1: Complete upload of representation data with known size {#example-1}
 
-In this example, the client first attempts to upload representation data with a known size in a single HTTP request to the target resource. An interruption occurs and the client then attempts to resume the upload using subsequent HTTP requests to the upload resource.
+In this example, the client first attempts to upload representation data with a known size in a single HTTP request to the target resource at `/project/123/files`. An interruption occurs and the client then attempts to resume the upload using subsequent HTTP requests to the upload resource at `/uploads/abc`.
 
 1) The client notifies the server that it wants to begin an upload ({{upload-creation}}). The server reserves the required resources to accept the upload from the client, and the client begins transferring the entire representation data in the request content.
 
@@ -109,7 +109,8 @@ An interim response can be sent to the client, which signals the server's suppor
 ~~~ aasvg
 Client                                  Server
 |                                            |
-| POST                                       |
+| POST /project/123/files                    |
+| Upload-Complete: ?1                        |
 |------------------------------------------->|
 |                                            |
 |                                            | Reserve resources
@@ -119,7 +120,7 @@ Client                                  Server
 |                                            |<----------------'
 |                                            |
 |            104 Upload Resumption Supported |
-|            with upload resource URL        |
+|            Location: /uploads/abc          |
 |<-------------------------------------------|
 |                                            |
 X--------------Flow Interrupted--------------X
@@ -131,24 +132,27 @@ X--------------Flow Interrupted--------------X
 ~~~ aasvg
 Client                                       Server
 |                                                 |
-| HEAD to upload resource URL                     |
+| HEAD /uploads/abc                               |
 |------------------------------------------------>|
 |                                                 |
-|               204 No Content with Upload-Offset |
+|                                204 No Content   |
+|                                Upload-Offset: X |
 |<------------------------------------------------|
 |                                                 |
 ~~~
 {: #fig-offset-retrieving title="Offset Retrieval"}
 
-3) The client can resume the upload by sending the remaining representation data to the upload resource ({{upload-appending}}), appending to the already stored representation data in the upload. The `Upload-Offset` value is included to ensure that the client and server agree on the offset that the upload resumes from.
+3) The client can resume the upload by sending the remaining representation data to the upload resource ({{upload-appending}}), appending to the already stored representation data in the upload. The `Upload-Offset` value is included to ensure that the client and server agree on the offset that the upload resumes from. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if it had not been interrupted, e.g. a `200 (OK)` response.
 
 ~~~ aasvg
 Client                                       Server
 |                                                 |
-| PATCH to upload resource URL with Upload-Offset |
+| PATCH /uploads/abc                              |
+| Upload-Complete: ?1                             |
+| Upload-Offset: X                                |
 |------------------------------------------------>|
 |                                                 |
-|                      201 Created on completion  |
+|                                          200 OK |
 |<------------------------------------------------|
 |                                                 |
 ~~~
@@ -159,10 +163,10 @@ Client                                       Server
 ~~~ aasvg
 Client                                       Server
 |                                                 |
-| DELETE to upload resource URL                   |
+| DELETE /uploads/abc                             |
 |------------------------------------------------>|
 |                                                 |
-|                    204 No Content on completion |
+|                                  204 No Content |
 |<------------------------------------------------|
 |                                                 |
 ~~~
@@ -179,11 +183,12 @@ This example shows how the client, with prior knowledge about the server's resum
 ~~~ aasvg
 Client                                       Server
 |                                                 |
-| POST with Upload-Complete: ?0                   |
+| POST /project/123/files                         |
+| Upload-Complete: ?0                             |
 |------------------------------------------------>|
 |                                                 |
-|            201 Created with Upload-Complete: ?0 |
-|            and Location on completion           |
+|                                     201 Created |
+|                          Location: /uploads/abc |
 |<------------------------------------------------|
 |                                                 |
 ~~~
@@ -194,11 +199,12 @@ Client                                       Server
 ~~~ aasvg
 Client                                       Server
 |                                                 |
-| PATCH to upload resource URL with Upload-Offset |
-| and Upload-Complete: ?0                         |
+| PATCH /uploads/abc                              |
+| Upload-Complete: ?0                             |
+| Upload-Offset: X                                |
 |------------------------------------------------>|
 |                                                 |
-|                                     201 Created |
+|                                  204 No Content |
 |<------------------------------------------------|
 |                                                 |
 ~~~
@@ -209,32 +215,36 @@ Client                                       Server
 ~~~ aasvg
 Client                                       Server
 |                                                 |
-| HEAD to upload resource URL                     |
+| HEAD /uploads/abc                               |
 |------------------------------------------------>|
 |                                                 |
-|               204 No Content with Upload-Offset |
+|                                  204 No Content |
+|                                Upload-Offset: Y |
 |<------------------------------------------------|
 |                                                 |
-| PATCH to upload resource URL with Upload-Offset |
-| and Upload-Complete: ?0                         |
+| PATCH /uploads/abc                              |
+| Upload-Complete: ?0                             |
+| Upload-Offset: Y                                |
 |------------------------------------------------>|
 |                                                 |
-|                                     201 Created |
+|                                  204 No Content |
 |<------------------------------------------------|
 |                                                 |
 ~~~
 {: #fig-upload-resume-incomplete title="Resuming an interrupted upload"}
 
-4) The request to append the last part of the representation data has a `Upload-Complete` field value set to true to indicate the complete transfer.
+4) The request to append the last part of the representation data has a `Upload-Complete` field value set to true to indicate the complete transfer. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if it had received the entire representation, e.g. a `200 (OK)` response.
+
 
 ~~~ aasvg
 Client                                       Server
 |                                                 |
-| PATCH to upload resource URL with               |
-| Upload-Offset and Upload-Complete: ?1           |
+| PATCH /uploads/abc                              |
+| Upload-Offset: Z                                |
+| Upload-Complete: ?1                             |
 |------------------------------------------------>|
 |                                                 |
-|                       201 Created on completion |
+|                                          200 OK |
 |<------------------------------------------------|
 |                                                 |
 ~~~
@@ -403,6 +413,13 @@ Upload-Offset: 25
 Upload-Limit: max-size=1000000000
 ~~~
 
+[content (100 bytes)]
+~~~
+
+~~~ http-message
+HTTP/1.1 400 Bad Request
+
+TODO: response
 ## Offset Retrieval {#offset-retrieving}
 
 ### Client Behavior
@@ -438,6 +455,8 @@ HTTP/1.1 204 No Content
 Upload-Offset: 100
 Upload-Complete: ?0
 Cache-Control: no-store
+TODO: Upload-Limit
+TODO: Upload-Length
 ~~~
 
 ## Upload Append {#upload-appending}
