@@ -283,7 +283,7 @@ Even the client might not know the total length of the representation data when 
 - If the request includes the `Upload-Complete` field value set to true and a valid `Content-Length` header field, the request content is the remaining representation data. The length is then the sum of the current offset ({{upload-offset}}) and the `Content-Length` header field value.
 - The request can include the `Upload-Length` header field, whose value is the number of bytes of the entire representation data as an Integer.
 
-If both indicators are present in the same request, their indicated lengths MUST match. If multiple requests include indicators, their indicated values MUST match.
+If both indicators are present in the same request, their indicated lengths MUST match. If multiple requests include indicators, their indicated values MUST match. A server MAY use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) in responses to indicates inconsistent length values.
 
 The upload resource might not know the length until the upload is complete.
 
@@ -592,7 +592,22 @@ Content-Type: application/problem+json
   "type":"https://iana.org/assignments/http-problem-types#completed-upload",
   "title": "upload is already completed"
 }
+~~~
 
+## Inconsistent Length
+
+This section defines the "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" problem type {{PROBLEM}}. A server MAY use this problem type when responding to an upload creation ({{upload-creation}}) or upload append request ({{upload-appending}}) to indicate that that the request includes inconsistent upload length values, as described in {{upload-length}}.
+
+The following example shows an example response:
+
+~~~ http-message
+HTTP/1.1 409 Conflict
+Content-Type: application/problem+json
+
+{
+  "type":"https://iana.org/assignments/http-problem-types#inconsistent-upload-length",
+  "title": "inconsistent length values for upload"
+}
 ~~~
 
 # Content Codings
@@ -777,6 +792,17 @@ Recommended HTTP status code:
 Reference:
 : This document
 
+IANA is asked to register the following entry in the "HTTP Problem Types" registry:
+
+Type URI:
+: https://iana.org/assignments/http-problem-types#inconsistent-upload-length
+Title:
+: Inconsistent Upload Length Values
+Recommended HTTP status code:
+: 400
+Reference:
+: This document
+
 --- back
 
 # Acknowledgments
@@ -795,6 +821,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-05
 {:numbered="false"}
 
+* Add problem type for inconsistent length values.
 * Reduce use of "file" in favor of "representation".
 
 ## Since draft-ietf-httpbis-resumable-upload-04
