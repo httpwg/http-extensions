@@ -293,7 +293,7 @@ Even the client might not know the total length of the representation data when 
 - If the request includes the `Upload-Complete` field value set to true and a valid `Content-Length` header field, the request content is the remaining representation data. The length is then the sum of the current offset ({{upload-offset}}) and the `Content-Length` header field value.
 - The request can include the `Upload-Length` header field, whose value is the number of bytes of the entire representation data as an Integer.
 
-If both indicators are present in the same request, their indicated lengths MUST match. If multiple requests include indicators, their indicated values MUST match.
+If both indicators are present in the same request, their indicated lengths MUST match. If multiple requests include indicators, their indicated values MUST match. A server MAY use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) in responses to indicates inconsistent length values.
 
 The upload resource might not know the length until the upload is complete.
 
@@ -346,7 +346,7 @@ The resource targeted by this initial request is responsible for processing the 
 
 If the `Upload-Complete` request header field is set to true, the client intents to transfer the entire representation data in one request. If the request content was fully received, no resumable upload is needed and the resource proceeds to process the request and generate a response.
 
-If the `Upload-Complete` header field is set to false, the client intents to transfer the representation over multiple requests. If the request content was fully received, the server MUST announce the upload resource by referencing it in the `Location` response header field. Servers are RECOMMENDED to use the `201 (Created)` status code. The response MUST include the new offset in the `Upload-Offset` header field and the `Upload-Complete` header value set to false. The response SHOULD include the `Upload-Limit` header field with the corresponding limits if existing.
+If the `Upload-Complete` header field is set to false, the client intents to transfer the representation over multiple requests. If the request content was fully received, the server MUST announce the upload resource by referencing it in the `Location` response header field. Servers are RECOMMENDED to use the `201 (Created)` status code. The response SHOULD include the `Upload-Limit` header field with the corresponding limits if existing.
 
 The server MUST record the length according to {{upload-length}} if the necessary header fields are included in the request.
 
@@ -397,7 +397,6 @@ Upload-Limit: max-size=1000000000
 
 HTTP/1.1 200 OK
 Location: https://example.com/upload/b530ce8ff
-Upload-Offset: 100
 Upload-Limit: max-size=1000000000
 Content-Type: application/json
 
@@ -420,8 +419,6 @@ Upload-Length: 100
 ~~~ http-message
 HTTP/1.1 201 Created
 Location: https://example.com/upload/b530ce8ff
-Upload-Complete: ?0
-Upload-Offset: 25
 Upload-Limit: max-size=1000000000
 ~~~
 
@@ -541,7 +538,7 @@ The request content MAY be empty. If the `Upload-Complete` field is then set to 
 
 If the client received a final response with a
 
-- `2xx (Successful)` status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response belongs to the resource processing the representation according to the initial request (see {{upload-creation}}). However, the client SHOULD consider the upload failed if the offset indicated by the `Upload-Offset` response field does not equal the representation data's length.
+- `2xx (Successful)` status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response belongs to the resource processing the representation according to the initial request (see {{upload-creation}}).
 - `2xx (Successful)` status code and not the entire remaining representation data was transferred in the request content, the client can continue appending representation data.
 - `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry appending to the new URI.
 - `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
@@ -557,9 +554,11 @@ If the `Upload-Offset` request header field value does not match the current off
 
 If the upload is already complete ({{upload-complete}}), the server MUST NOT modify the upload resource and MUST reject the request. The server MAY use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#completed-upload" in the response ({{completed-upload}}).
 
-If the Upload-Complete request header field is set to true, the client intents to transfer the remaining representation data in one request. If the request content was fully received, the upload is marked as complete and the upload resource SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had received the entire representation in the initial request.
+If the Upload-Complete request header field is set to true, the client intents to transfer the remaining representation data in one request. If the request content was fully received, the upload is marked as complete and the upload resource SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had received the entire representation in the initial request. However, the response MUST include the `Upload-Complete` header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the upload representation.
 
-If the `Upload-Complete` request header field is set to false, the client intents to transfer the remaining representation over multiple requests. If the request content was fully received, the upload resource MUST acknowledge the new upload state by sending a response with the `201 (Created)` status code. The response MUST include the offset in the `Upload-Offset` response header field and the `Upload-Complete` response header field set to false. The response SHOULD include the `Upload-Limit` header field with the corresponding limits if existing.
+If the `Upload-Complete` request header field is set to false, the client intents to transfer the remaining representation over multiple requests. If the request content was fully received, the upload resource acknowledges the appended data by sending a `2xx (Successful)` response.
+
+If the request didn't complete the upload, any response, successful or not, MUST include the `Upload-Complete` header field with a false value, indicating that this response does not belong to the processing of the uploaded representation.
 
 The upload resource MUST record the length according to {{upload-length}} if the necessary header fields are included in the request. If the length is known, the upload resource MUST prevent the offset from exceeding the upload length by stopping to append bytes once the offset reaches the length and reject the request. It is not sufficient to rely on the `Content-Length` header field for enforcement because the header field might not be present.
 
@@ -572,6 +571,7 @@ A) The following example shows an upload append request. The client transfers th
 ~~~ http-message
 PATCH /upload/b530ce8ff HTTP/1.1
 Host: example.com
+Upload-Complete: ?0
 Upload-Offset: 100
 Upload-Draft-Interop-Version: 6
 Content-Length: 100
@@ -585,9 +585,36 @@ HTTP/1.1 104 Upload Resumption Supported
 Upload-Draft-Interop-Version: 6
 Upload-Offset: 150
 
-HTTP/1.1 201 Created
-Upload-Offset: 200
+HTTP/1.1 204 No Content
+Upload-Complete: ?0
 ~~~
+
+B) The next example shows an upload append, where the client transfers the remaining 200 bytes and completes the upload. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:
+
+~~~ http-message
+PATCH /upload/b530ce8ff HTTP/1.1
+Host: example.com
+Upload-Complete: ?1
+Upload-Offset: 200
+Upload-Draft-Interop-Version: 6
+Content-Length: 100
+Content-Type: application/partial-upload
+
+[content (100 bytes)]
+~~~
+
+~~~ http-message
+HTTP/1.1 200 OK
+Upload-Complete: ?1
+Content-Type: application/json
+
+{
+  "metadata": {
+    [...]
+  }
+}
+~~~
+
 
 ## Upload Cancellation {#upload-cancellation}
 
@@ -665,7 +692,22 @@ Content-Type: application/problem+json
   "type":"https://iana.org/assignments/http-problem-types#completed-upload",
   "title": "upload is already completed"
 }
+~~~
 
+## Inconsistent Length
+
+This section defines the "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" problem type {{PROBLEM}}. A server MAY use this problem type when responding to an upload creation ({{upload-creation}}) or upload append request ({{upload-appending}}) to indicate that that the request includes inconsistent upload length values, as described in {{upload-length}}.
+
+The following example shows an example response:
+
+~~~ http-message
+HTTP/1.1 409 Conflict
+Content-Type: application/problem+json
+
+{
+  "type":"https://iana.org/assignments/http-problem-types#inconsistent-upload-length",
+  "title": "inconsistent length values for upload"
+}
 ~~~
 
 # Content Codings
@@ -850,6 +892,17 @@ Recommended HTTP status code:
 Reference:
 : This document
 
+IANA is asked to register the following entry in the "HTTP Problem Types" registry:
+
+Type URI:
+: https://iana.org/assignments/http-problem-types#inconsistent-upload-length
+Title:
+: Inconsistent Upload Length Values
+Recommended HTTP status code:
+: 400
+Reference:
+: This document
+
 --- back
 
 # Acknowledgments
@@ -868,6 +921,8 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-05
 {:numbered="false"}
 
+* Require `Upload-Complete`, but not `Upload-Offset` or `Upload-Limit`, for append responses.
+* Add problem type for inconsistent length values.
 * Reduce use of "file" in favor of "representation".
 
 ## Since draft-ietf-httpbis-resumable-upload-04
