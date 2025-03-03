@@ -820,6 +820,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-05
 {:numbered="false"}
 
+* Require `Upload-Complete`, but not `Upload-Offset` or `Upload-Limit`, for append responses.
 * Reduce use of "file" in favor of "representation".
 
 ## Since draft-ietf-httpbis-resumable-upload-04
