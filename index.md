@@ -19,6 +19,23 @@ View [saved issues](issues.html), or the latest GitHub [issues](https://github.c
 
 ## Preview for branch [reschke](reschke)
 
+## Preview for branch [reschke/resumable1](reschke/resumable1)
+
+| Draft |     |     |     |
+| ----- | --- | --- | --- |
+| [Templated CONNECT-TCP](reschke/resumable1/draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](reschke/resumable1/draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | same as main |
+| [Retrofit Structured Fields](reschke/resumable1/draft-ietf-httpbis-retrofit.html "Retrofit Structured Fields for HTTP (HTML)") | [plain text](reschke/resumable1/draft-ietf-httpbis-retrofit.txt "Retrofit Structured Fields for HTTP (Text)") | same as main |
+| [HTTP Cache Groups](reschke/resumable1/draft-ietf-httpbis-cache-groups.html "HTTP Cache Groups (HTML)") | [plain text](reschke/resumable1/draft-ietf-httpbis-cache-groups.txt "HTTP Cache Groups (Text)") | same as main |
+| [No-Vary-Search](reschke/resumable1/draft-ietf-httpbis-no-vary-search.html "No-Vary-Search (HTML)") | [plain text](reschke/resumable1/draft-ietf-httpbis-no-vary-search.txt "No-Vary-Search (Text)") | same as main |
+| [Cookies: HTTP State Management Mechanism](reschke/resumable1/draft-ietf-httpbis-rfc6265bis.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](reschke/resumable1/draft-ietf-httpbis-rfc6265bis.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
+| [Resumable Uploads](reschke/resumable1/draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](reschke/resumable1/draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-resumable-upload.txt&url_2=https://httpwg.github.io/http-extensions/reschke/resumable1/draft-ietf-httpbis-resumable-upload.txt) |
+| [Optimistic HTTP Upgrade Security](reschke/resumable1/draft-ietf-httpbis-optimistic-upgrade.html "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (HTML)") | [plain text](reschke/resumable1/draft-ietf-httpbis-optimistic-upgrade.txt "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (Text)") | same as main |
+| [Incremental HTTP Messages](reschke/resumable1/draft-ietf-httpbis-incremental.html "Incremental HTTP Messages (HTML)") | [plain text](reschke/resumable1/draft-ietf-httpbis-incremental.txt "Incremental HTTP Messages (Text)") | same as main |
+| [The HTTP Wrap Up Capsule](reschke/resumable1/draft-ietf-httpbis-wrap-up.html "The HTTP Wrap Up Capsule (HTML)") | [plain text](reschke/resumable1/draft-ietf-httpbis-wrap-up.txt "The HTTP Wrap Up Capsule (Text)") | same as main |
+| [The HTTP QUERY Method](reschke/resumable1/draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](reschke/resumable1/draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | same as main |
+| [HTTP Server Secondary Cert Auth](reschke/resumable1/draft-ietf-httpbis-secondary-server-certs.html "Secondary Certificate Authentication of HTTP Servers (HTML)") | [plain text](reschke/resumable1/draft-ietf-httpbis-secondary-server-certs.txt "Secondary Certificate Authentication of HTTP Servers (Text)") | same as main |
+| [Compression Dictionary Transport](reschke/resumable1/draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](reschke/resumable1/draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | same as main |
+
 ## Preview for branch [reschke/3021](reschke/3021)
 
 | Draft |     |     |     |
