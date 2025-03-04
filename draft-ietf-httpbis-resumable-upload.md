@@ -5,9 +5,9 @@ docname: draft-ietf-httpbis-resumable-upload-latest
 category: std
 
 ipr: trust200902
-area: ART
+area: Web and Internet Transport
 workgroup: HTTP
-keyword: Internet-Draft
+keyword: HTTP, upload, resumable
 
 stand_alone: yes
 smart_quotes: no
@@ -48,7 +48,7 @@ normative:
   CACHING: RFC9111
   RFC9112:
     display: HTTP/1.1
-  STRUCTURED-FIELDS: RFC9651
+  STRUCTURED-FIELDS: RFC8941
   PATCH: RFC5789
   PROBLEM: RFC9457
   DIGEST-FIELDS: RFC9530
