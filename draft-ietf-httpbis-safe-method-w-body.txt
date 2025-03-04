@@ -276,11 +276,11 @@ Table of Contents
    normalize request content to remove semantically insignificant
    differences, thereby improving cache efficiency, by:
 
-   *  Removing content encoding(s)
+   *  Removing content encoding(s) (Section 8.4 of [HTTP])
 
    *  Normalizing based upon knowledge of format conventions, as
-      indicated by any media type suffix in the request's Content-Type
-      field (e.g., "+json")
+      indicated by any media subtype suffix in the request's Content-
+      Type field (e.g., "+json", see Section 4.2.8 of [RFC6838])
 
    *  Normalizing based upon knowledge of the semantics of the content
       itself, as indicated by the request's Content-Type field.
@@ -423,10 +423,22 @@ Table of Contents
 
    [FETCH]    WHATWG, "FETCH", <https://fetch.spec.whatwg.org>.
 
+   [RFC6838]  Freed, N., Klensin, J., and T. Hansen, "Media Type
+              Specifications and Registration Procedures", BCP 13,
+              RFC 6838, DOI 10.17487/RFC6838, January 2013,
+              <https://www.rfc-editor.org/info/rfc6838>.
+
+   [RFC8259]  Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
+              Interchange Format", STD 90, RFC 8259,
+              DOI 10.17487/RFC8259, December 2017,
+              <https://www.rfc-editor.org/info/rfc8259>.
+
    [RFC9535]  Gössner, S., Ed., Normington, G., Ed., and C. Bormann,
               Ed., "JSONPath: Query Expressions for JSON", RFC 9535,
               DOI 10.17487/RFC9535, February 2024,
               <https://www.rfc-editor.org/info/rfc9535>.
+
+   [URL]      WHATWG, "URL", <https://url.spec.whatwg.org>.
 
    [XSLT]     Kay, M., "XSL Transformations (XSLT) Version 3.0", W3C
               Recommendation REC-xslt-30-20170608, 8 June 2017,
@@ -441,8 +453,10 @@ Appendix A.  Examples
    to use GET.
 
    The media type used in most examples is "application/x-www-form-
-   urlencoded" (as used in POST requests from browser user clients).
-   The Content-Length fields have been omitted for brevity.
+   urlencoded" (as used in POST requests from browser user clients,
+   defined in "application/x-www-form-urlencoded
+   (https://url.spec.whatwg.org/#application/x-www-form-urlencoded)" in
+   [URL]).  The Content-Length fields have been omitted for brevity.
 
 A.1.  Simple Query
 
@@ -646,8 +660,8 @@ A.4.3.  Indirect Responses
 
 A.5.  More Query Formats
 
-   The following examples show requests on a JSON-shaped database of RFC
-   errata.
+   The following examples show requests on a JSON-shaped ([RFC8259])
+   database of RFC errata.
 
    The request below uses XSLT ([XSLT]) to extract errata information
    summarized per year and the defined errata types.
@@ -895,7 +909,8 @@ B.8.  Since draft-ietf-httpbis-safe-method-w-body-07
 
 B.9.  Since draft-ietf-httpbis-safe-method-w-body-08
 
-   None yet.
+   *  Add missing references, fixed terminology
+      (https://github.com/httpwg/http-extensions/issues/3021)
 
 Authors' Addresses
 

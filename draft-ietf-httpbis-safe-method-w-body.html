@@ -1520,11 +1520,14 @@ q=foo&amp;limit=10&amp;sort=-published
         content to remove semantically insignificant differences, thereby improving cache
         efficiency, by:<a href="#section-2.4-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-2.4-3.1">Removing content encoding(s)<a href="#section-2.4-3.1" class="pilcrow">¶</a>
+<li class="normal" id="section-2.4-3.1">Removing content encoding(s) (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)<a href="#section-2.4-3.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-2.4-3.2">Normalizing based upon knowledge of format conventions, as indicated by any media type suffix in the request's Content-Type field (e.g., "+json")<a href="#section-2.4-3.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-2.4-3.2">Normalizing based upon knowledge of format conventions, as indicated by any
+          media subtype suffix in the request's Content-Type field (e.g., "+json", see
+          <span><a href="https://rfc-editor.org/rfc/rfc6838#section-4.2.8" class="relref">Section 4.2.8</a> of [<a href="#RFC6838" class="cite xref">RFC6838</a>]</span>)<a href="#section-2.4-3.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-2.4-3.3">Normalizing based upon knowledge of the semantics of the content itself, as indicated by the request's Content-Type field.<a href="#section-2.4-3.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-2.4-3.3">Normalizing based upon knowledge of the semantics of the content itself, as indicated by
+          the request's Content-Type field.<a href="#section-2.4-3.3" class="pilcrow">¶</a>
 </li>
         </ul>
 <p id="section-2.4-4">
@@ -1729,9 +1732,21 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
       <dd>
 <span class="refAuthor">WHATWG</span>, <span class="refTitle">"FETCH"</span>, <span>&lt;<a href="https://fetch.spec.whatwg.org">https://fetch.spec.whatwg.org</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC6838">[RFC6838]</dt>
+      <dd>
+<span class="refAuthor">Freed, N.</span>, <span class="refAuthor">Klensin, J.</span>, and <span class="refAuthor">T. Hansen</span>, <span class="refTitle">"Media Type Specifications and Registration Procedures"</span>, <span class="seriesInfo">BCP 13</span>, <span class="seriesInfo">RFC 6838</span>, <span class="seriesInfo">DOI 10.17487/RFC6838</span>, <time datetime="2013-01" class="refDate">January 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6838">https://www.rfc-editor.org/info/rfc6838</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8259">[RFC8259]</dt>
+      <dd>
+<span class="refAuthor">Bray, T., Ed.</span>, <span class="refTitle">"The JavaScript Object Notation (JSON) Data Interchange Format"</span>, <span class="seriesInfo">STD 90</span>, <span class="seriesInfo">RFC 8259</span>, <span class="seriesInfo">DOI 10.17487/RFC8259</span>, <time datetime="2017-12" class="refDate">December 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8259">https://www.rfc-editor.org/info/rfc8259</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC9535">[RFC9535]</dt>
       <dd>
 <span class="refAuthor">Gössner, S., Ed.</span>, <span class="refAuthor">Normington, G., Ed.</span>, and <span class="refAuthor">C. Bormann, Ed.</span>, <span class="refTitle">"JSONPath: Query Expressions for JSON"</span>, <span class="seriesInfo">RFC 9535</span>, <span class="seriesInfo">DOI 10.17487/RFC9535</span>, <time datetime="2024-02" class="refDate">February 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9535">https://www.rfc-editor.org/info/rfc9535</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="URL">[URL]</dt>
+      <dd>
+<span class="refAuthor">WHATWG</span>, <span class="refTitle">"URL"</span>, <span>&lt;<a href="https://url.spec.whatwg.org">https://url.spec.whatwg.org</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="XSLT">[XSLT]</dt>
     <dd>
@@ -1753,7 +1768,9 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
       send queries that are actually this short, it is probably better to use GET.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <p id="appendix-A-2">
       The media type used in most examples is "application/x-www-form-urlencoded"
-      (as used in POST requests from browser user clients).
+      (as used in POST requests from browser user clients, defined in
+      "<a href="https://url.spec.whatwg.org/#application/x-www-form-urlencoded">application/x-www-form-urlencoded</a>" in
+      <span>[<a href="#URL" class="cite xref">URL</a>]</span>).
       The Content-Length fields have been omitted for brevity.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
 <div id="example.simple">
 <section id="appendix-A.1">
@@ -2031,7 +2048,7 @@ See stored query at "/contacts/stored-queries/42".
 <a href="#appendix-A.5" class="section-number selfRef">A.5. </a><a href="#name-more-query-formats" class="section-name selfRef">More Query Formats</a>
         </h3>
 <p id="appendix-A.5-1">
-        The following examples show requests on a JSON-shaped database of
+        The following examples show requests on a JSON-shaped (<span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span>) database of
         RFC errata.<a href="#appendix-A.5-1" class="pilcrow">¶</a></p>
 <p id="appendix-A.5-2">
         The request below uses XSLT (<span>[<a href="#XSLT" class="cite xref">XSLT</a>]</span>) to extract errata information summarized per year and
@@ -2321,7 +2338,10 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
         <h3 id="name-since-draft-ietf-httpbis-safe-metho">
 <a href="#appendix-B.9" class="section-number selfRef">B.9. </a><a href="#name-since-draft-ietf-httpbis-safe-metho" class="section-name selfRef">Since draft-ietf-httpbis-safe-method-w-body-08</a>
         </h3>
-<p id="appendix-B.9-1">None yet.<a href="#appendix-B.9-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-B.9-1.1">Add missing references, fixed terminology (<span><a href="https://github.com/httpwg/http-extensions/issues/3021">https://github.com/httpwg/http-extensions/issues/3021</a></span>)<a href="#appendix-B.9-1.1" class="pilcrow">¶</a>
+</li>
+        </ul>
 </section>
 </div>
 </section>
