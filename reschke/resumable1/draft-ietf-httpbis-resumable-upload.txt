@@ -1563,8 +1563,8 @@ Table of Contents
 
    [STRUCTURED-FIELDS]
               Nottingham, M. and P. Kamp, "Structured Field Values for
-              HTTP", RFC 8941, DOI 10.17487/RFC8941, February 2021,
-              <https://www.rfc-editor.org/rfc/rfc8941>.
+              HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
+              <https://www.rfc-editor.org/rfc/rfc9651>.
 
 14.2.  Informative References
 
