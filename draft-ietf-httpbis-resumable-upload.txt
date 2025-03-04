@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 4 September 2025                                     Apple Inc.
+Expires: 5 September 2025                                     Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                            3 March 2025
+                                                            4 March 2025
 
 
                        Resumable Uploads for HTTP
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 September 2025.
+   This Internet-Draft will expire on 5 September 2025.
 
 Copyright Notice
 
@@ -127,6 +127,7 @@ Table of Contents
      14.2.  Informative References
    Acknowledgments
    Changes
+     Since draft-ietf-httpbis-resumable-upload-06
      Since draft-ietf-httpbis-resumable-upload-05
      Since draft-ietf-httpbis-resumable-upload-04
      Since draft-ietf-httpbis-resumable-upload-03
@@ -164,7 +165,7 @@ Table of Contents
    as a resumable upload.
 
    Connection interruptions are common and the absence of a standard
-   mechanism for resumable uploads has lead to a proliferation of custom
+   mechanism for resumable uploads has led to a proliferation of custom
    solutions.  Some of those use HTTP, while others rely on other
    transfer mechanisms entirely.  An HTTP-based standard solution is
    desirable for such a common class of problem.
@@ -174,9 +175,9 @@ Table of Contents
    conventional HTTP uploads.  When an upload is interrupted, clients
    can send subsequent requests to query the server state and use this
    information to send the remaining representation data.
-   Alternatively, they can cancel the upload entirely.  Different from
-   ranged downloads, this protocol does not support transferring
-   different parts of the same representation in parallel.
+   Alternatively, they can cancel the upload entirely.  Unlike ranged
+   downloads, this protocol does not support transferring different
+   parts of the same representation in parallel.
 
 2.  Conventions and Definitions
 
@@ -511,14 +512,14 @@ Table of Contents
    identified by a key and carries a value:
 
    *  The max-size limit specifies a maximum size for the representation
-      data, counted in bytes.  The server MAY NOT create an upload
+      data, counted in bytes.  The server MAY not create an upload
       resource if the length (Section 4.1.3) deduced from the upload
       creation request is larger than the maximum size.  The upload
       resource MAY stop the upload if the offset (Section 4.1.1) exceeds
       the maximum size.  The value is an Integer.
 
    *  The min-size limit specifies a minimum size for the representation
-      data, counted in bytes.  The server MAY NOT create an upload
+      data, counted in bytes.  The server MAY not create an upload
       resource if the length (Section 4.1.3) deduced from the upload
       creation request is smaller than the minimum size or no length can
       be deduced at all.  The value is an Integer.
@@ -575,7 +576,7 @@ Table of Contents
 
    The Upload-Complete header field is set to true if the request
    content includes the entire representation data that the client
-   intents to upload.  This is also a requirement for transparently
+   intends to upload.  This is also a requirement for transparently
    upgrading to resumable uploads from traditional uploads
    (Section 11.1.1).
 
@@ -606,9 +607,8 @@ Table of Contents
    representation data.  The Content-Type header field (Section 8.3 of
    [HTTP]) indicates the media type of the representation.  The Content-
    Disposition header field ([CONTENT-DISPOSITION]) can be used to
-   transmit a filename.  The `Contenct-Encoding header field
-   (Section 8.4 of [HTTP]) names the content codings applied to the
-   representation.
+   transmit a filename.  The Content-Encoding header field (Section 8.4
+   of [HTTP]) names the content codings applied to the representation.
 
    If the client received a final response with a
 
@@ -650,13 +650,13 @@ Table of Contents
    request, while the upload resource enables resuming the transfer.
 
    If the Upload-Complete request header field is set to true, the
-   client intents to transfer the entire representation data in one
+   client intends to transfer the entire representation data in one
    request.  If the request content was fully received, no resumable
    upload is needed and the resource proceeds to process the request and
    generate a response.
 
    If the Upload-Complete header field is set to false, the client
-   intents to transfer the representation over multiple requests.  If
+   intends to transfer the representation over multiple requests.  If
    the request content was fully received, the server MUST announce the
    upload resource by referencing it in the Location response header
    field.  Servers are RECOMMENDED to use the 201 (Created) status code.
@@ -844,7 +844,7 @@ Table of Contents
    *  MUST include the offset in the Upload-Offset header field
       (Section 4.1.1),
 
-   *  MUST inlcude the completeless state in the Upload-Complete header
+   *  MUST include the completeless state in the Upload-Complete header
       field (Section 4.1.2),
 
    *  MUST include the length in the Upload-Length header field if known
@@ -962,7 +962,7 @@ Table of Contents
    the response (Section 6.2).
 
    If the Upload-Complete request header field is set to true, the
-   client intents to transfer the remaining representation data in one
+   client intends to transfer the remaining representation data in one
    request.  If the request content was fully received, the upload is
    marked as complete and the upload resource SHOULD generate the
    response that matches what the resource, that was targeted by the
@@ -974,7 +974,7 @@ Table of Contents
    or the processing of the upload representation.
 
    If the Upload-Complete request header field is set to false, the
-   client intents to transfer the remaining representation over multiple
+   client intends to transfer the remaining representation over multiple
    requests.  If the request content was fully received, the upload
    resource acknowledges the appended data by sending a 2xx (Successful)
    response.
@@ -1096,7 +1096,7 @@ Table of Contents
    is still ongoing, the resource SHOULD prevent race conditions, data
    loss, and corruption by terminating the previous request before
    processing the new request.  Due to network delay and reordering, the
-   resouce might still be receiving representation data from an ongoing
+   resource might still be receiving representation data from an ongoing
    transfer for the same upload resource, which in the client's
    perspective has failed.  Since the client is not allowed to perform
    multiple transfers in parallel, the upload resource can assume that
@@ -1295,8 +1295,8 @@ Table of Contents
    occurs.
 
    The benefit of this method is that if the upload creation request
-   succeeds, the representation data was transferred in a single request
-   without additional round trips.
+   succeeded, the representation data was transferred in a single
+   request without additional round trips.
 
    A possible drawback is that the client might be unable to resume an
    upload.  If an upload is interrupted before the client received a 104
@@ -1363,10 +1363,10 @@ Table of Contents
    therefore avoided at the expense of an additional request that does
    not carry representation data.
 
-   This approach best suited if the client cannot receive interim
+   This approach is best suited if the client cannot receive interim
    responses, e.g. due to a limitation in the provided HTTP interface,
    or if large representations are transferred where the cost of the
-   additional request is miniscule compared to the effort of
+   additional request is minuscule compared to the effort of
    transferring the representation itself.
 
 12.  Security Considerations
@@ -1563,8 +1563,8 @@ Table of Contents
 
    [STRUCTURED-FIELDS]
               Nottingham, M. and P. Kamp, "Structured Field Values for
-              HTTP", RFC 8941, DOI 10.17487/RFC8941, February 2021,
-              <https://www.rfc-editor.org/rfc/rfc8941>.
+              HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
+              <https://www.rfc-editor.org/rfc/rfc9651>.
 
 14.2.  Informative References
 
@@ -1590,6 +1590,10 @@ Acknowledgments
 Changes
 
    This section is to be removed before publishing as an RFC.
+
+Since draft-ietf-httpbis-resumable-upload-06
+
+   None yet
 
 Since draft-ietf-httpbis-resumable-upload-05
 
