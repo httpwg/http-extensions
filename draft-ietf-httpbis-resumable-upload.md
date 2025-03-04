@@ -5,9 +5,9 @@ docname: draft-ietf-httpbis-resumable-upload-latest
 category: std
 
 ipr: trust200902
-area: ART
+area: Web and Internet Transport
 workgroup: HTTP
-keyword: Internet-Draft
+keyword: HTTP, upload, resumable
 
 stand_alone: yes
 smart_quotes: no
