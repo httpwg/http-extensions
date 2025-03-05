@@ -38,11 +38,6 @@
         <uri>https://greenbytes.de/tech/webdav/</uri>
       </address>
     </author>
-    <author initials="A." surname="Malhotra" fullname="Ashok Malhotra">
-      <address>
-        <email>malhotrasahib@gmail.com</email>
-      </address>
-    </author>
      <author initials="J.M." surname="Snell" fullname="James M Snell">
       <address>
         <email>jasnell@gmail.com</email>
@@ -989,9 +984,37 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <section title="Since draft-ietf-httpbis-safe-method-w-body-08" anchor="changes.since.08">
 <ul>
   <li>Add missing references, fixed terminology (<eref target="https://github.com/httpwg/http-extensions/issues/3021"/>)</li>
+  <li>Add Acknowledgements/Contributors sections; moved Ashok to Contributors (<eref target="https://github.com/httpwg/http-extensions/issues/3029"/>)</li>
 </ul>
 </section>
 </section>
 
+<section title="Acknowledgements" anchor="acknowledgements" numbered="false">
+<t>
+  We thank all members of the HTTP Working Group for ideas, reviews, and feedback.
+</t>
+<t>
+  The following individuals deserve special recognition:
+  Carsten Bormann,
+  Mark Nottingham,
+  Martin Thomson,
+  Michael Thornburgh,
+  Roberto Polli,
+  Roy Fielding, and
+  Will Hawkins.
+</t>
+</section>
+
+<section title="Contributors" anchor="contributors" numbered="false">
+<t>
+  Ashok Malhotra participated in early discussions leading to this
+  specification:
+</t>
+<author initials="A." surname="Malhotra" fullname="Ashok Malhotra">
+  <address>
+    <email>malhotrasahib@gmail.com</email>
+  </address>
+</author>
+</section>
 </back>
 </rfc>
