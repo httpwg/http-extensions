@@ -4,13 +4,11 @@
 
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
-Intended status: Standards Track                             A. Malhotra
-Expires: 5 September 2025                                               
-                                                              J.M. Snell
-                                                                        
+Intended status: Standards Track                              J.M. Snell
+Expires: 7 September 2025                                               
                                                                M. Bishop
                                                                   Akamai
-                                                            4 March 2025
+                                                            6 March 2025
 
 
                          The HTTP QUERY Method
@@ -50,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 September 2025.
+   This Internet-Draft will expire on 7 September 2025.
 
 Copyright Notice
 
@@ -103,6 +101,8 @@ Table of Contents
      B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
      B.8.  Since draft-ietf-httpbis-safe-method-w-body-07
      B.9.  Since draft-ietf-httpbis-safe-method-w-body-08
+   Acknowledgements
+   Contributors
    Authors' Addresses
 
 1.  Introduction
@@ -912,6 +912,28 @@ B.9.  Since draft-ietf-httpbis-safe-method-w-body-08
    *  Add missing references, fixed terminology
       (https://github.com/httpwg/http-extensions/issues/3021)
 
+   *  Add Acknowledgements/Contributors sections; moved Ashok to
+      Contributors (https://github.com/httpwg/http-extensions/
+      issues/3029)
+
+Acknowledgements
+
+   We thank all members of the HTTP Working Group for ideas, reviews,
+   and feedback.
+
+   The following individuals deserve special recognition: Carsten
+   Bormann, Mark Nottingham, Martin Thomson, Michael Thornburgh, Roberto
+   Polli, Roy Fielding, and Will Hawkins.
+
+Contributors
+
+   Ashok Malhotra participated in early discussions leading to this
+   specification:
+
+   Ashok Malhotra
+   Email: malhotrasahib@gmail.com
+
+
 Authors' Addresses
 
    Julian Reschke
@@ -921,10 +943,6 @@ Authors' Addresses
    Germany
    Email: julian.reschke@greenbytes.de
    URI:   https://greenbytes.de/tech/webdav/
-
-
-   Ashok Malhotra
-   Email: malhotrasahib@gmail.com
 
 
    James M Snell
