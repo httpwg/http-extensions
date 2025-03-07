@@ -89,7 +89,7 @@ Cache-Groups: "scripts"
 
 The ordering of members is not significant. Unrecognised Parameters MUST be ignored.
 
-Implementations MUST support at least 128 groups in a field value, with up to at least 128 characters in each member. Note that generic limitations on HTTP field lengths may constrain the size of this field value in practice.
+Implementations MUST support at least 32 groups in a field value, with up to at least 32 characters in each member. Note that generic limitations on HTTP field lengths may constrain the size of this field value in practice.
 
 ## Identifying Grouped Responses {#identify}
 
@@ -128,7 +128,7 @@ Cache extensions can explicitly strengthen the requirement above. For example, a
 
 The ordering of members is not significant. Unrecognised Parameters MUST be ignored.
 
-Implementations MUST support at least 128 groups in a field value, with up to at least 128 characters in each member. Note that generic limitations on HTTP field lengths may constrain the size of this field value in practice.
+Implementations MUST support at least 32 groups in a field value, with up to at least 32 characters in each member. Note that generic limitations on HTTP field lengths may constrain the size of this field value in practice.
 
 # IANA Considerations
 
