@@ -389,11 +389,11 @@ Upload-Length: 100
 HTTP/1.1 104 Upload Resumption Supported
 Upload-Draft-Interop-Version: 7
 Location: https://example.com/upload/b530ce8ff
+Upload-Limit: max-size=1000000000
 
 HTTP/1.1 104 Upload Resumption Supported
 Upload-Draft-Interop-Version: 7
 Upload-Offset: 50
-Upload-Limit: max-size=1000000000
 
 HTTP/1.1 200 OK
 Location: https://example.com/upload/b530ce8ff
@@ -417,6 +417,10 @@ Upload-Length: 100
 ~~~
 
 ~~~ http-message
+HTTP/1.1 104 Upload Resumption Supported
+Upload-Draft-Interop-Version: 7
+Location: https://example.com/upload/b530ce8ff
+
 HTTP/1.1 201 Created
 Location: https://example.com/upload/b530ce8ff
 Upload-Limit: max-size=1000000000
