@@ -62,11 +62,11 @@ For example, it is often necessary to invalidate a set of related resources. Thi
 
 In addition to sharing invalidation events, the relationships indicated by grouping can also be used by caches to optimise their operation; for example, it could be used to inform the operation of cache eviction algorithms.
 
-{{cache-groups}} introduces a means of describing the relationships between a set of stored responses in HTTP caches by associating them with one or more opaque strings. It also describes how caches can use that information to apply invalidation events to members of a group.
+{{cache-groups}} introduces a means of describing the relationships between stored responses in HTTP caches, by associating those responses with one or more groups that reflect those relationships and that are identified by opaque strings. It also describes how caches can use that information to apply invalidation events to members of a group.
 
 {{cache-group-invalidation}} introduces one new source of such events: a HTTP response header field that allows a state-changing response to trigger a group invalidation.
 
-These mechanisms operate within a single cache, across the stored responses associated with a single origin server. They do not address this issues of synchronising state between multiple caches (e.g., in a hierarchy or mesh), nor do they facilitate association of stored responses from disparate origins.
+These mechanisms operate within a single cache, across the stored responses associated with a single origin server. They do not address the issues of synchronising state between multiple caches (e.g., in a hierarchy or mesh), nor do they facilitate association of stored responses from disparate origins.
 
 
 ## Notational Conventions
@@ -93,7 +93,7 @@ Implementations MUST support at least 128 groups in a field value, with up to at
 
 ## Identifying Grouped Responses {#identify}
 
-Two responses stored in the same cache are considered to have the same group when all of the following conditions are met:
+Two responses stored in the same cache are considered to belong to the same group when all of the following conditions are met:
 
 1. They both contain a Cache-Groups response header field that contains the same String (in any position in the List), when compared character-by-character.
 2. They both share the same URI origin (per {{Section 4.3.1 of HTTP}}).
@@ -112,7 +112,7 @@ Cache extensions can explicitly strengthen the requirement above. For example, a
 
 The Cache-Group-Invalidation response header field is a List of Strings {{STRUCTURED-FIELDS}}. Each member of the list is an opaque value that identifies a group that the response invalidates, per {{invalidation}}.
 
-For example, a POST request that has side effects on two cache groups could indicate that stored responses associated with either or both of those groups should be invalidated with:
+For example, following a POST request that has side effects on two cache groups, the corresponding response could indicate that stored responses associated with either or both of those groups should be invalidated with:
 
 ~~~ http-message
 HTTP/1.1 200 OK
