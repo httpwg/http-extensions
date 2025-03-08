@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 8 September 2025                                     Apple Inc.
+Expires: 9 September 2025                                     Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                            7 March 2025
+                                                            8 March 2025
 
 
                        Resumable Uploads for HTTP
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 September 2025.
+   This Internet-Draft will expire on 9 September 2025.
 
 Copyright Notice
 
@@ -731,11 +731,11 @@ Table of Contents
    HTTP/1.1 104 Upload Resumption Supported
    Upload-Draft-Interop-Version: 7
    Location: https://example.com/upload/b530ce8ff
+   Upload-Limit: max-size=1000000000
 
    HTTP/1.1 104 Upload Resumption Supported
    Upload-Draft-Interop-Version: 7
    Upload-Offset: 50
-   Upload-Limit: max-size=1000000000
 
    HTTP/1.1 200 OK
    Location: https://example.com/upload/b530ce8ff
@@ -757,6 +757,10 @@ Table of Contents
    Upload-Length: 100
 
    [partial content (25 bytes)]
+
+   HTTP/1.1 104 Upload Resumption Supported
+   Upload-Draft-Interop-Version: 7
+   Location: https://example.com/upload/b530ce8ff
 
    HTTP/1.1 201 Created
    Location: https://example.com/upload/b530ce8ff
