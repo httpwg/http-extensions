@@ -794,14 +794,14 @@ Servers SHOULD provide mitigations for Slowloris attacks, such as increasing the
 
 IANA is asked to register the following entries in the "Hypertext Transfer Protocol (HTTP) Field Name Registry":
 
-|----------------------|-----------|-------------------------------------------|
-| Field Name           | Status    |                 Reference                 |
-|----------------------|-----------|-------------------------------------------|
-| Upload-Complete      | permanent | {{upload-complete}} of this document      |
-| Upload-Offset        | permanent | {{upload-offset}} of this document        |
-| Upload-Limit         | permanent | {{upload-limit}} of this document         |
-| Upload-Length        | permanent | {{upload-length}} of this document        |
-|----------------------|-----------|-------------------------------------------|
+|----------------------|-----------|-----------------|-------------------------------------------|
+| Field Name           | Status    | Structured Type |                 Reference                 |
+|----------------------|-----------|-----------------|-------------------------------------------|
+| Upload-Complete      | permanent | Item            | {{upload-complete}} of this document      |
+| Upload-Offset        | permanent | Item            | {{upload-offset}} of this document        |
+| Upload-Limit         | permanent | Dictionary      | {{upload-limit}} of this document         |
+| Upload-Length        | permanent | Item            | {{upload-length}} of this document        |
+|----------------------|-----------|-----------------|-------------------------------------------|
 
 IANA is asked to register the following entry in the "HTTP Status Codes" registry:
 
