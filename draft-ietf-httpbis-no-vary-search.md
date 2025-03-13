@@ -141,16 +141,16 @@ This document also adopts some conventions and notation typical in WHATWG and W3
 
 # HTTP header field definition {#header-definition}
 
-The `No-Vary-Search` HTTP header field is a structured field {{STRUCTURED-FIELDS}} whose value must be a dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}).
+The `No-Vary-Search` HTTP header field is a structured field {{STRUCTURED-FIELDS}} whose value MUST be a dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}).
 
 It has the following authoring conformance requirements:
 
-* If present, the `key-order` entry's value must be a boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}).
-* If present, the `params` entry's value must be either a boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) or an inner list ({{Section 3.1.1 of STRUCTURED-FIELDS}}).
-* If present, the `except` entry's value must be an inner list ({{Section 3.1.1 of STRUCTURED-FIELDS}}).
-* The `except` entry must only be present if the `params` entry is also present, and the `params` entry's value is the boolean value true.
+* If present, the `key-order` entry's value MUST be a boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}).
+* If present, the `params` entry's value MUST be either a boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) or an inner list ({{Section 3.1.1 of STRUCTURED-FIELDS}}).
+* If present, the `except` entry's value MUST be an inner list ({{Section 3.1.1 of STRUCTURED-FIELDS}}).
+* The `except` entry MUST only be present if the `params` entry is also present, and the `params` entry's value is the boolean value true.
 
-The dictionary may contain entries whose keys are not one of `key-order`, `params`, and `except`, but their meaning is not defined by this specification. Implementations of this specification will ignore such entries (but future documents may assign meaning to such entries).
+The dictionary MAY contain entries whose keys are not one of `key-order`, `params`, and `except`, but their meaning is not defined by this specification. Implementations of this specification will ignore such entries (but future documents might assign meaning to such entries).
 
 {:aside}
 > As always, the authoring conformance requirements are not binding on implementations. Implementations instead need to implement the processing model given by the obtain a URL search variance algorithm ({{obtain-a-url-search-variance}}).
@@ -434,7 +434,7 @@ Cache implementations MAY fail to reuse a stored response whose target URI match
 > 1. Let exactMatch be cache\[presentedTargetURI\]. If it is a stored response that can be reused, return it.
 > 1. Let targetPath be presentedTargetURI, with query parameters removed.
 > 1. Let lastNVS be mostRecentNVS\[targetPath\]. If it does not exist, return null.
-> 1. Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order should be ignored).
+> 1. Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order is to be be ignored).
 > 1. Let nvsMatch be cache\[simplifiedURL\]. If it does not exist, return null. (It is assumed that this was written when storing in the cache, in addition to the exact URL.)
 > 1. Let searchVariance be obtained ({{obtain-a-url-search-variance}}) from nvsMatch.
 > 1. If nvsMatch's target URI and presentedTargetURI are not equivalent modulo search variance ({{comparing}}) given searchVariance, then return null.
