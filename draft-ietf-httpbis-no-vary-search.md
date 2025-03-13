@@ -137,7 +137,12 @@ No-Vary-Search: params, except=("productId")
 
 {::boilerplate bcp14-tagged}
 
-This document also adopts some conventions and notation typical in WHATWG and W3C usage, especially as it relates to algorithms. See {{WHATWG-INFRA}}.
+This document also adopts some conventions and notation typical in WHATWG and W3C usage, especially as it relates to algorithms. See {{WHATWG-INFRA}}, and in particular:
+
+* its definition of lists, including the list literal notation « 1, 2, 3 ».
+* its definition of strings, including their representation as code units.
+
+(Other concepts used are called out using inline references.)
 
 # HTTP header field definition {#header-definition}
 
