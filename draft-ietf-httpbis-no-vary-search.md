@@ -113,19 +113,19 @@ This specification defines a proposed HTTP header field for changing how URL sea
 
 HTTP caching {{HTTP-CACHING}} is based on reusing resources which match across a number of cache keys. One of the most prominent is the presented target URI ({{Section 7.1 of HTTP}}). However, sometimes multiple URLs can represent the same resource. This leads to caches not always being as helpful as they could be: if the cache contains the resource under one URI, but the resource is then requested under another, the cached version will be ignored.
 
-The `No-Vary-Search` HTTP header field tackles a specific subset of this general problem, for when a resource has multiple URLs which differ only in certain query components. It allows resources to declare that some or all parts of the query can be ignored for cache matching purposes. For example, if the order of the query parameter keys should not cause cache misses, this is indicated using
+The `No-Vary-Search` HTTP header field tackles a specific subset of this general problem, for when a resource has multiple URLs which differ only in certain query components. It allows resources to declare that some or all parts of the query do not semantically affect the served resource, and thus can be ignored for cache matching purposes. For example, if the order of the query parameter keys do not semantically affect the served resource, this is indicated using
 
 ~~~~http-message
 No-Vary-Search: key-order
 ~~~~
 
-If the specific query parameters (e.g., ones indicating something for analytics) should not cause cache misses, this is indicated using
+If the specific query parameters (e.g., ones indicating something for analytics) do not semantically affect the served resource, this is indicated using
 
 ~~~~http-message
 No-Vary-Search: params=("utm_source" "utm_medium" "utm_campaign")
 ~~~~
 
-And if the resource instead wants to take an allowlist-based approach, where only certain known query parameters should cause cache misses, they can use
+And if the resource instead wants to take an allowlist-based approach, where only certain known query parameters semantically affect the served resource, they can use
 
 ~~~~http-message
 No-Vary-Search: params, except=("productId")
