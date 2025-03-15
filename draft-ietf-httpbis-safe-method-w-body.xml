@@ -85,7 +85,7 @@
 
   <middle>
 
-  <section anchor="intro" title="Introduction">
+  <section title="Introduction" anchor="introduction">
     <t>
       This specification defines the HTTP QUERY request method as a means of
       making a safe, idempotent request that contains content.
@@ -105,7 +105,7 @@ Host: example.org
     </t>
     <ul>
       <li>often size limits are not known ahead of time because a request can pass through many uncoordinated
-    system (but note that <xref section="4.1" target="HTTP"/> recommends senders and recipients to support at least 8000 octets),</li>
+      systems (but note that <xref section="4.1" target="HTTP"/> recommends senders and recipients to support at least 8000 octets),</li>
       <li>expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and</li>
       <li>encoding queries directly into the request URI effectively casts every possible combination of query inputs as distinct
           resources.</li>
@@ -118,7 +118,7 @@ Host: example.org
       request URI.
     </t>
     <t>
-      A typical use of HTTP POST for requesting a query:
+      A typical use of HTTP POST for requesting a query is:
     </t>
 <artwork type="http-message">
 POST /feed HTTP/1.1
@@ -223,7 +223,7 @@ q=foo&amp;limit=10&amp;sort=-published
       has appropriate query semantics.
     </t>
     <t>
-      QUERY requests are both safe and idempotent with regards to the
+      QUERY requests are both safe and idempotent with regard to the
       resource identified by the request URI. That is, QUERY requests do not
       alter the state of the targeted resource. However, while processing a
       QUERY request, a server can be expected to allocate computing and memory
@@ -234,57 +234,57 @@ q=foo&amp;limit=10&amp;sort=-published
       A successful response to a QUERY request is expected to provide some
       indication as to the final disposition of the operation. For
       instance, a successful query that yields no results can be represented
-      by a 204 No Content response. If the response includes content,
+      by a 204 (No Content) response. If the response includes content,
       it is expected to describe the results of the operation.
     </t>
 
     <section title="Content-Location and Location Fields" anchor="location">
-    <t>
-      Furthermore, a successful response can include a Content-Location
-      header field (see <xref target="HTTP" section="8.7"/>) containing an
-      identifier for a resource corresponding to the results of the
-      operation. This represents a claim from the server that a client can send
-      a GET request for the indicated URI to retrieve the results of the query
-      operation just performed. The indicated resource might be temporary.
-    </t>
-    <t>
-      A server &MAY; create or locate a resource that identifies the query
-      operation for future use. If the server does so, the URI of the resource
-      can be included in the Location header field of the response (see <xref
-      target="HTTP" section="10.2.2"/>). This represents a claim that a client can
-      send a GET request to the indicated URI to repeat the query operation just
-      performed without resending the query payload. This resource might be
-      temporary; if a future request fails, the client can retry using the
-      original QUERY resource and the previously submitted payload again.
-    </t>
+      <t>
+        Furthermore, a successful response can include a Content-Location
+        header field (see <xref target="HTTP" section="8.7"/>) containing an
+        identifier for a resource corresponding to the results of the
+        operation. This represents a claim from the server that a client can send
+        a GET request for the indicated URI to retrieve the results of the query
+        operation just performed. The indicated resource might be temporary.
+      </t>
+      <t>
+        A server can create or locate a resource that identifies the query
+        operation for future use. If the server does so, the URI of the resource
+        can be included in the Location header field of the response (see <xref
+        target="HTTP" section="10.2.2"/>). This represents a claim that a client can
+        send a GET request to the indicated URI to repeat the query operation just
+        performed without resending the query payload. This resource might be
+        temporary; if a future request fails, the client can retry using the
+        original QUERY resource and the previously submitted payload.
+      </t>
     </section>
 
     <section title="Redirection" anchor="redirection">
-    <t>
-      In some cases, the server may choose to respond indirectly to the QUERY
-      request by redirecting the user agent to a different URI (see
-      <xref target="HTTP" section="15.4"/>). The semantics of the redirect
-      response do not differ from other methods. For instance, a 303 (See Other)
-      response would indicate that the Location field identifies an
-      alternate URI from which the results can be retrieved
-      using a GET request (this use case is also covered by the
-      use of the Location response field in a 2xx response).
-      On the other hand, response codes 307 (Temporary Redirect) and 308
-      (Permanent Redirect) can be used to request the user agent to redo
-      the QUERY request on the URI specified by the Location field.
-      Various non-normative examples of successful
-      QUERY responses are illustrated in <xref target="examples" />.
-    </t>
+      <t>
+        In some cases, the server may choose to respond indirectly to the QUERY
+        request by redirecting the user agent to a different URI (see
+        <xref target="HTTP" section="15.4"/>). The semantics of the redirect
+        response do not differ from other methods. For instance, a 303 (See Other)
+        response would indicate that the Location field identifies an
+        alternate URI from which the results can be retrieved
+        using a GET request (this use case is also covered by the
+        use of the Location response field in a 2xx response).
+        On the other hand, response codes 307 (Temporary Redirect) and 308
+        (Permanent Redirect) can be used to request the user agent to redo
+        the QUERY request on the URI specified by the Location field.
+        Various non-normative examples of successful
+        QUERY responses are illustrated in <xref target="examples"/>.
+      </t>
     </section>
 
     <section title="Conditional Requests" anchor="conditional">
-    <t>
-      A conditional QUERY requests that the selected representation
-      (i.e., the query results, after any content negotiation) be
-      returned in the response only under the circumstances described by the
-      conditional header field(s), as defined in
-      <xref target="HTTP" section="13"/>.
-    </t>
+      <t>
+        A conditional QUERY requests that the selected representation
+        (i.e., the query results, after any content negotiation) be
+        returned in the response only under the circumstances described by the
+        conditional header field(s), as defined in
+        <xref target="HTTP" section="13"/>.
+      </t>
     </section>
 
     <section title="Caching" anchor="caching">
@@ -299,10 +299,10 @@ q=foo&amp;limit=10&amp;sort=-published
         efficiency, by:
       </t>
       <ul>
-        <li>Removing content encoding(s) (<xref target="HTTP" section="8.4"/>)</li>
+        <li>Removing content encoding(s) (<xref target="HTTP" section="8.4"/>).</li>
         <li>Normalizing based upon knowledge of format conventions, as indicated by any
           media subtype suffix in the request's Content-Type field (e.g., "+json", see
-          <xref target="RFC6838" section="4.2.8"/>)</li>
+          <xref target="RFC6838" section="4.2.8"/>).</li>
         <li>Normalizing based upon knowledge of the semantics of the content itself, as indicated by
           the request's Content-Type field.</li>
       </ul>
@@ -310,13 +310,13 @@ q=foo&amp;limit=10&amp;sort=-published
         Note that any such normalization is performed solely for the purpose of generating a cache key; it
         does not change the request itself.
       </t>
-      </section>
+    </section>
 
     <section title="Range Requests" anchor="range">
-    <t>
-      The semantics of Range Requests for QUERY are identical to those for GET,
-      as defined in <xref target="HTTP" section="14"/>.
-    </t>
+      <t>
+        The semantics of Range Requests for QUERY are identical to those for GET,
+        as defined in <xref target="HTTP" section="14"/>.
+      </t>
     </section>
 
   </section>
@@ -384,6 +384,8 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       information in the URI (e.g., in the query section). This is preferred in some
       cases, as the URI is more likely to be logged or otherwise processed
       by intermediaries than the request content.
+    </t>
+    <t>
       If a server creates a temporary resource to represent the results of a QUERY
       request (e.g., for use in the Location or Content-Location field) and the request
       contains sensitive information that cannot be logged, then the URI of this
@@ -579,13 +581,11 @@ Content-Type: application/json
         A simple way to discover support for QUERY is provided by the OPTIONS
         (<xref target="HTTP" section="9.3.7"/>) method:
       </t>
-
 <artwork type="http-message">
 OPTIONS /contacts HTTP/1.1
 Host: example.org
 
 </artwork>
-
       <t>Response:</t>
 <artwork type="http-message">
 HTTP/1.1 200 OK
@@ -598,7 +598,7 @@ Allow: GET, QUERY, OPTIONS, HEAD
       <t>
         There are alternatives to the use of OPTIONS. For instance, a QUERY request
         can be tried without prior knowledge of server support. The server would then
-        either process the request, or could respond with a 4xx status such as 405 ("Method Not Allowed",
+        either process the request, or could respond with a 4xx status such as 405 (Method Not Allowed,
         <xref target="HTTP" section="15.5.6"/>), including the Allow response field.
       </t>
     </section>
@@ -608,14 +608,12 @@ Allow: GET, QUERY, OPTIONS, HEAD
         Discovery of supported media types for QUERY is possible via the Accept-Query
         (<xref target="field.accept-query"/>) response field:
       </t>
-
 <artwork type="http-message">
 HEAD /contacts HTTP/1.1
 Host: example.org
 
 </artwork>
-
-<t>Response:</t>
+      <t>Response:</t>
 <artwork type="http-message">
 HTTP/1.1 200 OK
 Content-Type: application/xhtml
@@ -627,7 +625,7 @@ Accept-Query: application/x-www-form-urlencoded, application/sql
       </t>
       <t>
         An alternative to checking Accept-Query would be to make a QUERY request, and then
-        - in case of a 4xx status such as 415 ("Unsupported Media Type", <xref target="HTTP" section="12.5.1"/>) response -
+        -- in case of a 4xx status such as 415 (Unsupported Media Type, <xref target="HTTP" section="12.5.1"/>) response --
         to inspect the Allow (<xref target="HTTP" section="15.5.16"/>) response field:
       </t>
 <artwork type="http-message">
@@ -742,7 +740,7 @@ Date: Sun, 17 Nov 2024, 16:13:17 GMT
 If-None-Match: "42-1"
 </artwork>
         <t>
-          would result in a 304 response ("Not Modified", <xref target="HTTP" section="15.4.5"/>).
+          would result in a 304 response (Not Modified, <xref target="HTTP" section="15.4.5"/>).
         </t>
         <t>
           Note that there's no guarantee that the server will implement this resource
@@ -753,7 +751,7 @@ If-None-Match: "42-1"
 
       <section title="Indirect Responses" anchor="example.indirect">
         <t>
-          Servers can send "indirect" responses using the status code 303 ("See Other",
+          Servers can send "indirect" responses using the status code 303 (See Other,
           <xref target="HTTP" section="15.4.4"/>).
         </t>
         <t>
@@ -873,10 +871,9 @@ year, total, rejected, verified, hdu, reported
 9999, 1, 0, 0, 1, 0
 </artwork>
     <t>
-      Note the Accept-Query response field indicating that another query format - JSONPath
-      (<xref target="RFC9535"/>) - is supported as well. The request below would report the
-      identifiers of all rejected errata submitted
-      since 2024:
+      Note the Accept-Query response field indicating that another query format -- JSONPath
+      (<xref target="RFC9535"/>) -- is supported as well. The request below would report the
+      identifiers of all rejected errata submitted since 2024:
     </t>
 <artwork type="http-message">
 QUERY /errata.json HTTP/1.1
