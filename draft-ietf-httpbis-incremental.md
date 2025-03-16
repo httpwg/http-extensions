@@ -24,6 +24,7 @@ author:
     email: mt@lowentropy.net
 
 normative:
+  PREFER: RFC7240
 
 informative:
   PROXY-STATUS: RFC9209
@@ -92,27 +93,58 @@ downstream before receiving the complete message.
 The term Boolean is imported from {{!STRUCTURED-FIELDS=RFC8941}}.
 
 
-# The Incremental Header Field
+# The Signalling Scheme
+
+This specification defines two HTTP header fields that allow endpoints to
+signal their preference regarding the incremental delivery of HTTP requests or
+responses.
+
+
+## The Incremental Header Field
 
 The Incremental HTTP header field expresses the sender's intent for HTTP
-intermediaries to start forwarding the message downstream before the entire
-message is received.
+intermediaries to begin forwarding the message downstream before the entire
+message has been received.
 
-This header field has just one valid value of type Boolean: "?1".
+This header field has a single valid value of type Boolean: "?1".
 
 ~~~
 Incremental = ?1
 ~~~
 
-Upon receiving a header section that includes the Incremental header field, HTTP
-intermediaries SHOULD NOT buffer the entire message before forwarding it.
-Instead, intermediaries SHOULD transmit the header section downstream and
-continuously forward the bytes of the message body as they arrive.
+The Incremental header field applies individually to each HTTP message. Thus,
+setting the Incremental header field on an HTTP request affects only how the
+request is forwarded. For responses to be delivered incrementally, servers
+SHOULD set the Incremental header field on the responses they generate.
 
-The Incremental HTTP header field applies to each HTTP message. Therefore, if
-both the HTTP request and response need to be forwarded incrementally, the
-Incremental HTTP header field MUST be set for both the HTTP request and the
-response.
+
+## The Prefer: incremental Header Field
+
+In addition to the server-driven `Incremental` signal, clients may request
+incremental delivery of responses by including the `incremental` preference
+within the HTTP `Prefer` request header field ({{Section 2 of PREFER}}).
+
+~~~
+Prefer: incremental
+~~~
+
+This client-driven preference is particularly useful for responses whose
+incremental usage may not be readily determinable by the server. It also
+provides intermediaries an opportunity to immediately reject requests if they
+are unable or unwilling to deliver responses incrementally.
+
+
+# Intermediary Behavior
+
+When forwarding HTTP messages marked for incremental delivery (either by clients
+or servers), intermediaries SHOULD NOT buffer the entire message. Instead, they
+SHOULD forward the header section downsteram promptly, followed by incremental
+transmisson of the message body as bytes become available.
+
+If incremental delivery is impossible, intermediaries SHOULD respond with a 503
+Service Unavailable error. If generating such an error response is not possible,
+intermediaries SHOULD reset the underlying stream. This allows clients to
+quickly detect failure rather than waiting for a timeout.
 
 The Incremental field is advisory. Intermediaries that are unaware of the field
 or that do not support the field might buffer messages, even when explicitly
