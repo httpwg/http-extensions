@@ -24,6 +24,7 @@ author:
     email: mt@lowentropy.net
 
 normative:
+  STRUCTURED-FIELDS: RFC8941
 
 informative:
   PROXY-STATUS: RFC9209
@@ -89,37 +90,51 @@ downstream before receiving the complete message.
 
 {::boilerplate bcp14-tagged}
 
-The term Boolean is imported from {{!STRUCTURED-FIELDS=RFC8941}}.
-
 
 # The Incremental Header Field
 
-The Incremental HTTP header field expresses the sender's intent for HTTP
-intermediaries to start forwarding the message downstream before the entire
-message is received.
+The Incremental HTTP header field expresses the sender's preference regarding
+when HTTP intermediaries start forwarding the message downstream.
 
-This header field has just one valid value of type Boolean: "?1".
+This header field conveys a Structured Field Token
+({{Section 3.3.4 of STRUCTURED-FIELDS}}).
 
-~~~
-Incremental = ?1
-~~~
+This specification defines the following three Tokens:
 
-Upon receiving a header section that includes the Incremental header field, HTTP
-intermediaries SHOULD NOT buffer the entire message before forwarding it.
-Instead, intermediaries SHOULD transmit the header section downstream and
-continuously forward the bytes of the message body as they arrive.
+* "always": Requires incremental forwarding.
+* "preferred": Prefers incremental forwarding if feasible.
+* "not-preferred": Allow buffering before forwarding.
+
+Upon receiving a header section with the Incremental header field, HTTP
+intermediaries respect the sender's preference as follows:
+
+When the value is "always", intermediaries SHOULD forward the message
+incrementally with minimum buffering. If incremental delivery is impossible,
+intermediaries SHOULD abort the HTTP request by responding with a 503 Service
+Unavailable error or by resetting the stream.
+
+When the value is "preferred", intermediares SHOULD forward the message
+incrementally if feasible. However, they MAY buffer the message if necessary due
+to system constraints.
+
+When the value is "not-preferred", intermediaries are free to buffer the message
+before forwarding it, but they are not required to do so.
+
+When the Incremental HTTP header field conveys an unknown token, intermediaries
+SHOULD behave as if the Incremental HTTP header field was absent.
 
 The Incremental HTTP header field applies to each HTTP message. Therefore, if
 both the HTTP request and response need to be forwarded incrementally, the
 Incremental HTTP header field MUST be set for both the HTTP request and the
 response.
 
-The Incremental field is advisory. Intermediaries that are unaware of the field
-or that do not support the field might buffer messages, even when explicitly
-requested otherwise.  Clients and servers therefore cannot expect all
+The Incremental HTTP header field is advisory. Intermediaries that are unaware
+of the field or that do not support the field might buffer messages, even when
+explicitly requested otherwise.  Clients and servers therefore cannot expect all
 intermediaries to understand and respect a request to deliver messages
 incrementally. Clients can rely on prior knowledge or probe for support on
 individual resources.
+
 
 # Security Considerations
 
