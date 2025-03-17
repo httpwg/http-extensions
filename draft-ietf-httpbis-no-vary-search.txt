@@ -5,7 +5,7 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                              Google LLC
-Expires: 13 September 2025                                 12 March 2025
+Expires: 18 September 2025                                 17 March 2025
 
 
                              No-Vary-Search
@@ -13,8 +13,8 @@ Expires: 13 September 2025                                 12 March 2025
 
 Abstract
 
-   A proposed HTTP header field for changing how URL search parameters
-   impact caching.
+   This specification defines a proposed HTTP header field for changing
+   how URL search parameters impact caching.
 
 About This Document
 
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 September 2025.
+   This Internet-Draft will expire on 18 September 2025.
 
 Copyright Notice
 
@@ -66,30 +66,76 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Conventions and Definitions
-   2.  HTTP header field definition
-   3.  Data model
-   4.  Parsing
-     4.1.  Parse a URL search variance
-     4.2.  Obtain a URL search variance
-       4.2.1.  Examples
-     4.3.  Parse a key
-       4.3.1.  Examples
-   5.  Comparing
-     5.1.  Examples
-   6.  Caching
-   7.  Security Considerations
-   8.  Privacy Considerations
-   9.  IANA Considerations
-     9.1.  HTTP Field Names
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   1.  Introduction
+   2.  Conventions and Definitions
+   3.  HTTP header field definition
+   4.  Data model
+   5.  Parsing
+     5.1.  Parse a URL search variance
+     5.2.  Obtain a URL search variance
+       5.2.1.  Examples
+     5.3.  Parse a key
+       5.3.1.  Examples
+   6.  Comparing
+     6.1.  Examples
+   7.  Caching
+   8.  Security Considerations
+   9.  Privacy Considerations
+   10. IANA Considerations
+     10.1.  HTTP Field Names
+   11. References
+     11.1.  Normative References
+     11.2.  Informative References
    Acknowledgments
    Index
    Authors' Addresses
 
-1.  Conventions and Definitions
+1.  Introduction
+
+   HTTP caching [HTTP-CACHING] is based on reusing resources which match
+   across a number of cache keys.  One of the most prominent is the
+   presented target URI (Section 7.1 of [HTTP]).  However, sometimes
+   multiple URLs can represent the same resource.  This leads to caches
+   not always being as helpful as they could be: if the cache contains
+   the resource under one URI, but the resource is then requested under
+   another, the cached version will be ignored.
+
+   The No-Vary-Search HTTP header field tackles a specific subset of
+   this general problem, for when a resource has multiple URLs which
+   differ only in certain query components.  It allows resources to
+   declare that some or all parts of the query do not semantically
+   affect the served resource, and thus can be ignored for cache
+   matching purposes.  For example, if the order of the query parameter
+   keys do not semantically affect the served resource, this is
+   indicated using
+
+   No-Vary-Search: key-order
+
+   If the specific query parameters (e.g., ones indicating something for
+   analytics) do not semantically affect the served resource, this is
+   indicated using
+
+   No-Vary-Search: params=("utm_source" "utm_medium" "utm_campaign")
+
+   And if the resource instead wants to take an allowlist-based
+   approach, where only certain known query parameters semantically
+   affect the served resource, they can use
+
+   No-Vary-Search: params, except=("productId")
+
+   Section 3 defines the header, using the [STRUCTURED-FIELDS]
+   framework.  Section 4 and Section 5 illustrate the data model for how
+   the header can be represented in specifications, and the process for
+   parsing the raw output from the structured field parser into that
+   data model.  Section 6 gives the key algorithm for comparing if two
+   URLs are equivalent under the influence of the header; notably, it
+   leans on the decomposition of the query component into keys and
+   values given by the application/x-www-form-urlencoded
+   (https://url.spec.whatwg.org/#concept-urlencoded) format specified in
+   [WHATWG-URL].  Finally, Section 7 explains how to modify
+   [HTTP-CACHING] to take into account this new equivalence.
+
+2.  Conventions and Definitions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -101,7 +147,7 @@ Table of Contents
    WHATWG and W3C usage, especially as it relates to algorithms.  See
    [WHATWG-INFRA].
 
-2.  HTTP header field definition
+3.  HTTP header field definition
 
    The No-Vary-Search HTTP header field is a structured field
    [STRUCTURED-FIELDS] whose value must be a dictionary (Section 3.2 of
@@ -131,9 +177,9 @@ Table of Contents
       |  As always, the authoring conformance requirements are not
       |  binding on implementations.  Implementations instead need to
       |  implement the processing model given by the obtain a URL search
-      |  variance algorithm (Section 4.2).
+      |  variance algorithm (Section 5.2).
 
-3.  Data model
+4.  Data model
 
    A _URL search variance_ consists of the following:
 
@@ -150,7 +196,7 @@ Table of Contents
    vary params is an empty list, vary params is *wildcard*, and vary on
    key order is true.
 
-   The obtain a URL search variance algorithm (Section 4.2) ensures that
+   The obtain a URL search variance algorithm (Section 5.2) ensures that
    all URL search variances obey the following constraints:
 
    *  vary params is a list if and only if the no-vary params is
@@ -159,9 +205,9 @@ Table of Contents
    *  no-vary params is a list if and only if the vary params is
       *wildcard*.
 
-4.  Parsing
+5.  Parsing
 
-4.1.  Parse a URL search variance
+5.1.  Parse a URL search variance
 
    To _parse a URL search variance_ given _value_:
 
@@ -201,7 +247,7 @@ Table of Contents
                return the default URL search variance.
 
            2.  Set _result_'s no-vary params to the result of applying
-               parse a key (Section 4.3) to each item in
+               parse a key (Section 5.3) to each item in
                _value_["params"].
 
            3.  Set _result_'s vary params to *wildcard*.
@@ -220,7 +266,7 @@ Table of Contents
            the default URL search variance.
 
        4.  Set _result_'s vary params to the result of applying parse a
-           key (Section 4.3) to each item in _value_["except"].
+           key (Section 5.3) to each item in _value_["except"].
 
    7.  Return _result_.
 
@@ -240,7 +286,7 @@ Table of Contents
       |  structured field (Section 4.2 of [STRUCTURED-FIELDS]) using
       |  field_type "dictionary".
 
-4.2.  Obtain a URL search variance
+5.2.  Obtain a URL search variance
 
    To _obtain a URL search variance_ given a response
    (https://fetch.spec.whatwg.org/#concept-response) _response_:
@@ -250,10 +296,10 @@ Table of Contents
        structured-header) [FETCH] given `No-Vary-Search` and
        "dictionary" from _response_'s header list.
 
-   2.  Return the result of parsing a URL search variance (Section 4.1)
+   2.  Return the result of parsing a URL search variance (Section 5.1)
        given _fieldValue_.
 
-4.2.1.  Examples
+5.2.1.  Examples
 
    The following illustrates how various inputs are parsed, in terms of
    their impacting on the resulting no-vary params and vary params:
@@ -311,7 +357,7 @@ Table of Contents
 
                                   Table 2
 
-4.3.  Parse a key
+5.3.  Parse a key
 
    To _parse a key_ given an ASCII string _keyString_:
 
@@ -331,7 +377,7 @@ Table of Contents
 
    5.  Return _keyStringDecoded_.
 
-4.3.1.  Examples
+5.3.1.  Examples
 
    The parse a key algorithm allows encoding non-ASCII key strings in
    the ASCII structured header format, similar to how the application/x-
@@ -358,7 +404,7 @@ Table of Contents
    (https://url.spec.whatwg.org/#concept-urlencoded-parser) [WHATWG-URL]
    to having the same key "é 気".
 
-5.  Comparing
+6.  Comparing
 
    Two URLs (https://url.spec.whatwg.org/#concept-url) [WHATWG-URL]
    _urlA_ and _urlB_ are _equivalent modulo search variance_ given a URL
@@ -449,7 +495,7 @@ Table of Contents
 
    12.  Return true.
 
-5.1.  Examples
+6.1.  Examples
 
    Due to how the application/x-www-form-urlencoded parser canonicalizes
    query strings, there are some cases where query strings which do not
@@ -489,7 +535,7 @@ Table of Contents
    https://example.com/?a= &
       + and %20 are both parsed as U+0020 SPACE
 
-6.  Caching
+7.  Caching
 
    If a cache [HTTP-CACHING] implements this specification, the
    presented target URI requirement in Section 4 of [HTTP-CACHING] is
@@ -501,8 +547,8 @@ Table of Contents
          the stored response match, or
 
       -  the presented target URI and that of the stored response are
-         equivalent modulo search variance (Section 5), given the
-         variance obtained (Section 4.2) from the stored response.
+         equivalent modulo search variance (Section 6), given the
+         variance obtained (Section 5.2) from the stored response.
 
    Servers SHOULD send no more than one distinct non-empty value for the
    No-Vary-Search field in response to requests for a given pathname.
@@ -546,11 +592,11 @@ Table of Contents
       |         written when storing in the cache, in addition to the
       |         exact URL.)
       |  
-      |     6.  Let searchVariance be obtained (Section 4.2) from
+      |     6.  Let searchVariance be obtained (Section 5.2) from
       |         nvsMatch.
       |  
       |     7.  If nvsMatch's target URI and presentedTargetURI are not
-      |         equivalent modulo search variance (Section 5) given
+      |         equivalent modulo search variance (Section 6) given
       |         searchVariance, then return null.
       |  
       |     8.  If nvsMatch is a stored response that can be reused,
@@ -561,7 +607,7 @@ Table of Contents
       |  servers to avoid sending different values for the No-Vary-
       |  Search field when possible.
 
-7.  Security Considerations
+8.  Security Considerations
 
    The main risk to be aware of is the impact of mismatched URLs.  In
    particular, this could cause the user to see a response that was
@@ -580,7 +626,7 @@ Table of Contents
    as history.replaceState() (https://html.spec.whatwg.org/multipage/
    nav-history-apis.html#dom-history-replacestate) or service workers.
 
-8.  Privacy Considerations
+9.  Privacy Considerations
 
    This proposal is adjacent to the highly-privacy-relevant space of
    navigational tracking (https://privacycg.github.io/nav-tracking-
@@ -595,11 +641,11 @@ Table of Contents
    user IDs (since the server is bypassed in favor of the cache).
    [NAV-TRACKING-MITIGATIONS]
 
-9.  IANA Considerations
+10.  IANA Considerations
 
    IANA should do the following:
 
-9.1.  HTTP Field Names
+10.1.  HTTP Field Names
 
    Enter the following into the Hypertext Transfer Protocol (HTTP) Field
    Name Registry:
@@ -614,9 +660,9 @@ Table of Contents
 
    Comments  (none)
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [FETCH]    van Kesteren, A., "Fetch Living Standard", n.d.,
               <https://fetch.spec.whatwg.org/>.  WHATWG
@@ -658,7 +704,7 @@ Table of Contents
               van Kesteren, A., "URL Living Standard", n.d.,
               <https://url.spec.whatwg.org/>.  WHATWG
 
-10.2.  Informative References
+11.2.  Informative References
 
    [HTML]     van Kesteren, A., "HTML Living Standard", n.d.,
               <https://html.spec.whatwg.org/>.  WHATWG
@@ -679,30 +725,30 @@ Index
 
       D
 
-         default URL search variance  *_Section 3, Paragraph 3_*;
-            Section 4.1, Paragraph 2.1.1; Section 4.1, Paragraph
-            2.4.2.1.1; Section 4.1, Paragraph 2.5.2.2.2.1.1;
-            Section 4.1, Paragraph 2.5.2.3.1; Section 4.1, Paragraph
-            2.6.2.1.1; Section 4.1, Paragraph 2.6.2.2.1; Section 4.1,
-            Paragraph 2.6.2.3.1; Section 4.1, Paragraph 3.1;
-            Section 4.2.1, Paragraph 3; Section 5, Paragraph 2.2.1
+         default URL search variance  *_Section 4, Paragraph 3_*;
+            Section 5.1, Paragraph 2.1.1; Section 5.1, Paragraph
+            2.4.2.1.1; Section 5.1, Paragraph 2.5.2.2.2.1.1;
+            Section 5.1, Paragraph 2.5.2.3.1; Section 5.1, Paragraph
+            2.6.2.1.1; Section 5.1, Paragraph 2.6.2.2.1; Section 5.1,
+            Paragraph 2.6.2.3.1; Section 5.1, Paragraph 3.1;
+            Section 5.2.1, Paragraph 3; Section 6, Paragraph 2.2.1
 
       E
 
-         equivalent modulo search variance  *_Section 5, Paragraph 1_*
+         equivalent modulo search variance  *_Section 6, Paragraph 1_*
 
       O
 
-         obtain a URL search variance  Section 2, Paragraph 5.1;
-            Section 3, Paragraph 4; *_Section 4.2, Paragraph 1_*
+         obtain a URL search variance  Section 3, Paragraph 5.1;
+            Section 4, Paragraph 4; *_Section 5.2, Paragraph 1_*
 
       P
 
-         parse a key  Section 4.1, Paragraph 2.5.2.2.2.2.1; Section 4.1,
-            Paragraph 2.6.2.4.1; *_Section 4.3, Paragraph 1_*;
-            Section 4.3.1, Paragraph 1
-         parse a URL search variance  *_Section 4.1, Paragraph 1_*;
-            Section 4.2, Paragraph 2.2.1
+         parse a key  Section 5.1, Paragraph 2.5.2.2.2.2.1; Section 5.1,
+            Paragraph 2.6.2.4.1; *_Section 5.3, Paragraph 1_*;
+            Section 5.3.1, Paragraph 1
+         parse a URL search variance  *_Section 5.1, Paragraph 1_*;
+            Section 5.2, Paragraph 2.2.1
 
 Authors' Addresses
 
