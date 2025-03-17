@@ -105,9 +105,33 @@ informative:
 
 --- abstract
 
-A proposed HTTP header field for changing how URL search parameters impact caching.
+This specification defines a proposed HTTP header field for changing how URL search parameters impact caching.
 
 --- middle
+
+# Introduction
+
+HTTP caching {{HTTP-CACHING}} is based on reusing resources which match across a number of cache keys. One of the most prominent is the presented target URI ({{Section 7.1 of HTTP}}). However, sometimes multiple URLs can represent the same resource. This leads to caches not always being as helpful as they could be: if the cache contains the resource under one URI, but the resource is then requested under another, the cached version will be ignored.
+
+The `No-Vary-Search` HTTP header field tackles a specific subset of this general problem, for when a resource has multiple URLs which differ only in certain query components. It allows resources to declare that some or all parts of the query do not semantically affect the served resource, and thus can be ignored for cache matching purposes. For example, if the order of the query parameter keys do not semantically affect the served resource, this is indicated using
+
+~~~~http-message
+No-Vary-Search: key-order
+~~~~
+
+If the specific query parameters (e.g., ones indicating something for analytics) do not semantically affect the served resource, this is indicated using
+
+~~~~http-message
+No-Vary-Search: params=("utm_source" "utm_medium" "utm_campaign")
+~~~~
+
+And if the resource instead wants to take an allowlist-based approach, where only certain known query parameters semantically affect the served resource, they can use
+
+~~~~http-message
+No-Vary-Search: params, except=("productId")
+~~~~
+
+{{header-definition}} defines the header, using the {{STRUCTURED-FIELDS}} framework. {{data-model}} and {{parsing}} illustrate the data model for how the header can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. {{comparing}} gives the key algorithm for comparing if two URLs are equivalent under the influence of the header; notably, it leans on the decomposition of the query component into keys and values given by the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format specified in {{WHATWG-URL}}. Finally, {{caching}} explains how to modify {{HTTP-CACHING}} to take into account this new equivalence.
 
 # Conventions and Definitions
 
@@ -115,13 +139,9 @@ A proposed HTTP header field for changing how URL search parameters impact cachi
 
 This document also adopts some conventions and notation typical in WHATWG and W3C usage, especially as it relates to algorithms. See {{WHATWG-INFRA}}.
 
-# HTTP header field definition
+# HTTP header field definition {#header-definition}
 
 The `No-Vary-Search` HTTP header field is a structured field {{STRUCTURED-FIELDS}} whose value must be a dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}).
-
-<!--
-TODO: probably give some more introductory non-normative text. Look at what other HTTP field defintions do.
--->
 
 It has the following authoring conformance requirements:
 
@@ -159,7 +179,7 @@ The obtain a URL search variance algorithm ({{obtain-a-url-search-variance}}) en
 * vary params is a list if and only if the no-vary params is __wildcard__; and
 * no-vary params is a list if and only if the vary params is __wildcard__.
 
-# Parsing
+# Parsing {#parsing}
 
 ## Parse a URL search variance {#parse-a-url-search-variance}
 
@@ -285,7 +305,7 @@ will result in a URL search variance whose vary params are « "`é 気`" ». As 
 
 and so on, since they all are [parsed](https://url.spec.whatwg.org/#concept-urlencoded-parser) {{WHATWG-URL}} to having the same key "`é 気`".
 
-# Comparing
+# Comparing {#comparing}
 
 (((!equivalent modulo search variance)))
 Two [URLs](https://url.spec.whatwg.org/#concept-url) {{WHATWG-URL}} _urlA_ and _urlB_ are _equivalent modulo search variance_ given a URL search variance _searchVariance_ if the following algorithm returns true:
@@ -392,7 +412,7 @@ So, for example, given any non-default value for `No-Vary-Search`, such as `No-V
   <dd><tt>+</tt> and <tt>%20</tt> are both parsed as U+0020 SPACE</dd>
 </dl>
 
-# Caching
+# Caching {#caching}
 
 If a cache {{HTTP-CACHING}} implements this specification, the presented target URI requirement in {{Section 4 of HTTP-CACHING}} is replaced with:
 
