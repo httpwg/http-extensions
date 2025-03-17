@@ -922,7 +922,8 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-06
 {:numbered="false"}
 
-None yet
+* Minor editorial improvements to introduction and examples.
+* Define structured types for new header fields.
 
 ## Since draft-ietf-httpbis-resumable-upload-05
 {:numbered="false"}
