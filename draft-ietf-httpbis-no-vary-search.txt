@@ -150,28 +150,28 @@ Table of Contents
 3.  HTTP header field definition
 
    The No-Vary-Search HTTP header field is a structured field
-   [STRUCTURED-FIELDS] whose value must be a dictionary (Section 3.2 of
+   [STRUCTURED-FIELDS] whose value MUST be a dictionary (Section 3.2 of
    [STRUCTURED-FIELDS]).
 
    It has the following authoring conformance requirements:
 
-   *  If present, the key-order entry's value must be a boolean
+   *  If present, the key-order entry's value MUST be a boolean
       (Section 3.3.6 of [STRUCTURED-FIELDS]).
 
-   *  If present, the params entry's value must be either a boolean
+   *  If present, the params entry's value MUST be either a boolean
       (Section 3.3.6 of [STRUCTURED-FIELDS]) or an inner list
       (Section 3.1.1 of [STRUCTURED-FIELDS]).
 
-   *  If present, the except entry's value must be an inner list
+   *  If present, the except entry's value MUST be an inner list
       (Section 3.1.1 of [STRUCTURED-FIELDS]).
 
-   *  The except entry must only be present if the params entry is also
+   *  The except entry MUST only be present if the params entry is also
       present, and the params entry's value is the boolean value true.
 
-   The dictionary may contain entries whose keys are not one of key-
+   The dictionary MAY contain entries whose keys are not one of key-
    order, params, and except, but their meaning is not defined by this
    specification.  Implementations of this specification will ignore
-   such entries (but future documents may assign meaning to such
+   such entries (but future documents might assign meaning to such
    entries).
 
       |  As always, the authoring conformance requirements are not
@@ -584,7 +584,7 @@ Table of Contents
       |     4.  Let simplifiedURL be the result of simplifying
       |         presentedTargetURI according to lastNVS (by removing
       |         query parameters which are not significant, and stable
-      |         sorting parameters by key, if key order should be
+      |         sorting parameters by key, if key order is to be be
       |         ignored).
       |  
       |     5.  Let nvsMatch be cache[simplifiedURL].  If it does not

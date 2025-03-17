@@ -1280,23 +1280,23 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-http-header-field-definitio">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-http-header-field-definitio" class="section-name selfRef">HTTP header field definition</a>
       </h2>
-<p id="section-3-1">The <code>No-Vary-Search</code> HTTP header field is a structured field <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> whose value must be a dictionary (<span><a href="https://rfc-editor.org/rfc/rfc8941#section-3.2" class="relref">Section 3.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">The <code>No-Vary-Search</code> HTTP header field is a structured field <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> whose value <span class="bcp14">MUST</span> be a dictionary (<span><a href="https://rfc-editor.org/rfc/rfc8941#section-3.2" class="relref">Section 3.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">It has the following authoring conformance requirements:<a href="#section-3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-3.1">
-          <p id="section-3-3.1.1">If present, the <code>key-order</code> entry's value must be a boolean (<span><a href="https://rfc-editor.org/rfc/rfc8941#section-3.3.6" class="relref">Section 3.3.6</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-3.1.1" class="pilcrow">¶</a></p>
+          <p id="section-3-3.1.1">If present, the <code>key-order</code> entry's value <span class="bcp14">MUST</span> be a boolean (<span><a href="https://rfc-editor.org/rfc/rfc8941#section-3.3.6" class="relref">Section 3.3.6</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-3.2">
-          <p id="section-3-3.2.1">If present, the <code>params</code> entry's value must be either a boolean (<span><a href="https://rfc-editor.org/rfc/rfc8941#section-3.3.6" class="relref">Section 3.3.6</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>) or an inner list (<span><a href="https://rfc-editor.org/rfc/rfc8941#section-3.1.1" class="relref">Section 3.1.1</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
+          <p id="section-3-3.2.1">If present, the <code>params</code> entry's value <span class="bcp14">MUST</span> be either a boolean (<span><a href="https://rfc-editor.org/rfc/rfc8941#section-3.3.6" class="relref">Section 3.3.6</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>) or an inner list (<span><a href="https://rfc-editor.org/rfc/rfc8941#section-3.1.1" class="relref">Section 3.1.1</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-3.3">
-          <p id="section-3-3.3.1">If present, the <code>except</code> entry's value must be an inner list (<span><a href="https://rfc-editor.org/rfc/rfc8941#section-3.1.1" class="relref">Section 3.1.1</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-3.3.1" class="pilcrow">¶</a></p>
+          <p id="section-3-3.3.1">If present, the <code>except</code> entry's value <span class="bcp14">MUST</span> be an inner list (<span><a href="https://rfc-editor.org/rfc/rfc8941#section-3.1.1" class="relref">Section 3.1.1</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-3.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-3.4">
-          <p id="section-3-3.4.1">The <code>except</code> entry must only be present if the <code>params</code> entry is also present, and the <code>params</code> entry's value is the boolean value true.<a href="#section-3-3.4.1" class="pilcrow">¶</a></p>
+          <p id="section-3-3.4.1">The <code>except</code> entry <span class="bcp14">MUST</span> only be present if the <code>params</code> entry is also present, and the <code>params</code> entry's value is the boolean value true.<a href="#section-3-3.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-3-4">The dictionary may contain entries whose keys are not one of <code>key-order</code>, <code>params</code>, and <code>except</code>, but their meaning is not defined by this specification. Implementations of this specification will ignore such entries (but future documents may assign meaning to such entries).<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-4">The dictionary <span class="bcp14">MAY</span> contain entries whose keys are not one of <code>key-order</code>, <code>params</code>, and <code>except</code>, but their meaning is not defined by this specification. Implementations of this specification will ignore such entries (but future documents might assign meaning to such entries).<a href="#section-3-4" class="pilcrow">¶</a></p>
 <aside id="section-3-5">
         <p id="section-3-5.1">As always, the authoring conformance requirements are not binding on implementations. Implementations instead need to implement the processing model given by the <span id="iref-obtain-a-url-search-varianc" class="iref"></span><a href="#obtain-a-url-search-variance" class="internal xref">obtain a URL search variance</a> algorithm (<a href="#obtain-a-url-search-variance" class="auto internal xref">Section 5.2</a>).<a href="#section-3-5.1" class="pilcrow">¶</a></p>
 </aside>
@@ -1868,7 +1868,7 @@ In this case, even URL pairs that might appear the same after running the <a hre
             <p id="section-7-6.2.3.1">Let lastNVS be mostRecentNVS[targetPath]. If it does not exist, return null.<a href="#section-7-6.2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-7-6.2.4">
-            <p id="section-7-6.2.4.1">Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order should be ignored).<a href="#section-7-6.2.4.1" class="pilcrow">¶</a></p>
+            <p id="section-7-6.2.4.1">Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order is to be be ignored).<a href="#section-7-6.2.4.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-7-6.2.5">
             <p id="section-7-6.2.5.1">Let nvsMatch be cache[simplifiedURL]. If it does not exist, return null. (It is assumed that this was written when storing in the cache, in addition to the exact URL.)<a href="#section-7-6.2.5.1" class="pilcrow">¶</a></p>
