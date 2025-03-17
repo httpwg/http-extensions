@@ -16,7 +16,7 @@ Expires: 18 September 2025                                    Apple Inc.
 
 Abstract
 
-   Data transfer using the Hypertext Transfer Protocol ([HTTP]) is often
+   Data transfer using the Hypertext Transfer Protocol (HTTP) is often
    interrupted by canceled requests or dropped connections.  If the
    intended recipient can indicate how much of the data was received
    prior to interruption, a sender can resume data transfer at that
