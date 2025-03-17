@@ -126,6 +126,7 @@ Table of Contents
      14.2.  Informative References
    Acknowledgments
    Changes
+     Since draft-ietf-httpbis-resumable-upload-07
      Since draft-ietf-httpbis-resumable-upload-06
      Since draft-ietf-httpbis-resumable-upload-05
      Since draft-ietf-httpbis-resumable-upload-04
@@ -1583,9 +1584,15 @@ Changes
 
    This section is to be removed before publishing as an RFC.
 
+Since draft-ietf-httpbis-resumable-upload-07
+
+   None yet.
+
 Since draft-ietf-httpbis-resumable-upload-06
 
-   None yet
+   *  Minor editorial improvements to introduction and examples.
+
+   *  Define structured types for new header fields.
 
 Since draft-ietf-httpbis-resumable-upload-05
 
