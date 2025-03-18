@@ -93,7 +93,7 @@ downstream before receiving the complete message.
 The term Boolean is imported from {{!STRUCTURED-FIELDS=RFC8941}}.
 
 
-# The Signalling Scheme
+# The Signaling Scheme
 
 This specification defines two HTTP header fields that allow endpoints to
 signal their preference regarding the incremental delivery of HTTP requests or
