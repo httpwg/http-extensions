@@ -5,10 +5,9 @@ category: std
 
 docname: draft-ietf-httpbis-connect-tcp-latest
 ipr: trust200902
-area: art
+area: wit
 submissiontype: IETF
 workgroup: httpbis
-keyword: Internet-Draft
 
 stand_alone: yes
 smart_quotes: no
