@@ -1,4 +1,4 @@
-# Editor's drafts for draft-ietf-httpbis-cache-groups-04 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/draft-ietf-httpbis-cache-groups-04)
+# Editor's drafts for draft-ietf-httpbis-rfc6265bis-20 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/draft-ietf-httpbis-rfc6265bis-20)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
