@@ -7,7 +7,7 @@ category: std
 obsoletes: 6265
 
 ipr: pre5378Trust200902
-area: Applications and Real-Time
+area: Web and Internet Transport
 workgroup: HTTP
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 stand_alone: yes #_
