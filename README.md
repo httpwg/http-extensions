@@ -1,3 +1,5 @@
+<!-- regenerate: off -->
+
 ## Draft HTTP Extension Specifications
 
 This is the working area for the [IETF HTTP Working Group](https://httpwg.org/)'s extensions to HTTP. See [our contribution guidelines](CONTRIBUTING.md) for information about how to participate.
