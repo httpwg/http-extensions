@@ -1,4 +1,4 @@
-# Editor's drafts for draft-ietf-httpbis-no-vary-search-01 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/draft-ietf-httpbis-no-vary-search-01)
+# Editor's drafts for incremental-iana branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/incremental-iana)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |

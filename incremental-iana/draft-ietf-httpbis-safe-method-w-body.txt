@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 22 September 2025                                              
+Expires: 26 September 2025                                              
                                                                M. Bishop
                                                                   Akamai
-                                                           21 March 2025
+                                                           25 March 2025
 
 
                          The HTTP QUERY Method
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 September 2025.
+   This Internet-Draft will expire on 26 September 2025.
 
 Copyright Notice
 
@@ -121,7 +121,7 @@ Table of Contents
    encoding it in the request URI may not be the best option because
 
    *  often size limits are not known ahead of time because a request
-      can pass through many uncoordinated system (but note that
+      can pass through many uncoordinated systems (but note that
       Section 4.1 of [HTTP] recommends senders and recipients to support
       at least 8000 octets),
 
@@ -138,7 +138,7 @@ Table of Contents
    passed along within the request content as opposed to using the
    request URI.
 
-   A typical use of HTTP POST for requesting a query:
+   A typical use of HTTP POST for requesting a query is:
 
    POST /feed HTTP/1.1
    Host: example.org
@@ -210,7 +210,7 @@ Table of Contents
    use a request content of any media type with the QUERY method,
    provided that it has appropriate query semantics.
 
-   QUERY requests are both safe and idempotent with regards to the
+   QUERY requests are both safe and idempotent with regard to the
    resource identified by the request URI.  That is, QUERY requests do
    not alter the state of the targeted resource.  However, while
    processing a QUERY request, a server can be expected to allocate
@@ -220,7 +220,7 @@ Table of Contents
    A successful response to a QUERY request is expected to provide some
    indication as to the final disposition of the operation.  For
    instance, a successful query that yields no results can be
-   represented by a 204 No Content response.  If the response includes
+   represented by a 204 (No Content) response.  If the response includes
    content, it is expected to describe the results of the operation.
 
 2.1.  Content-Location and Location Fields
@@ -232,7 +232,7 @@ Table of Contents
    request for the indicated URI to retrieve the results of the query
    operation just performed.  The indicated resource might be temporary.
 
-   A server MAY create or locate a resource that identifies the query
+   A server can create or locate a resource that identifies the query
    operation for future use.  If the server does so, the URI of the
    resource can be included in the Location header field of the response
    (see Section 10.2.2 of [HTTP]).  This represents a claim that a
@@ -240,7 +240,7 @@ Table of Contents
    query operation just performed without resending the query payload.
    This resource might be temporary; if a future request fails, the
    client can retry using the original QUERY resource and the previously
-   submitted payload again.
+   submitted payload.
 
 2.2.  Redirection
 
@@ -275,11 +275,11 @@ Table of Contents
    normalize request content to remove semantically insignificant
    differences, thereby improving cache efficiency, by:
 
-   *  Removing content encoding(s) (Section 8.4 of [HTTP])
+   *  Removing content encoding(s) (Section 8.4 of [HTTP]).
 
    *  Normalizing based upon knowledge of format conventions, as
       indicated by any media subtype suffix in the request's Content-
-      Type field (e.g., "+json", see Section 4.2.8 of [RFC6838])
+      Type field (e.g., "+json", see Section 4.2.8 of [RFC6838]).
 
    *  Normalizing based upon knowledge of the semantics of the content
       itself, as indicated by the request's Content-Type field.
@@ -343,12 +343,14 @@ Table of Contents
    It can be used as an alternative to passing request information in
    the URI (e.g., in the query section).  This is preferred in some
    cases, as the URI is more likely to be logged or otherwise processed
-   by intermediaries than the request content.  If a server creates a
-   temporary resource to represent the results of a QUERY request (e.g.,
-   for use in the Location or Content-Location field) and the request
-   contains sensitive information that cannot be logged, then the URI of
-   this resource SHOULD be chosen such that it does not include any
-   sensitive portions of the original request content.
+   by intermediaries than the request content.
+
+   If a server creates a temporary resource to represent the results of
+   a QUERY request (e.g., for use in the Location or Content-Location
+   field) and the request contains sensitive information that cannot be
+   logged, then the URI of this resource SHOULD be chosen such that it
+   does not include any sensitive portions of the original request
+   content.
 
    Caches that normalize QUERY content incorrectly or in ways that are
    significantly different from how the resource processes the content
@@ -504,7 +506,7 @@ A.2.  Discovery of QUERY support
    There are alternatives to the use of OPTIONS.  For instance, a QUERY
    request can be tried without prior knowledge of server support.  The
    server would then either process the request, or could respond with a
-   4xx status such as 405 ("Method Not Allowed", Section 15.5.6 of
+   4xx status such as 405 (Method Not Allowed, Section 15.5.6 of
    [HTTP]), including the Allow response field.
 
 A.3.  Discovery of QUERY Formats
@@ -525,8 +527,8 @@ A.3.  Discovery of QUERY Formats
    depend on the resource being accessed.
 
    An alternative to checking Accept-Query would be to make a QUERY
-   request, and then - in case of a 4xx status such as 415 ("Unsupported
-   Media Type", Section 12.5.1 of [HTTP]) response - to inspect the
+   request, and then -- in case of a 4xx status such as 415 (Unsupported
+   Media Type, Section 12.5.1 of [HTTP]) response -- to inspect the
    Allow (Section 15.5.16 of [HTTP]) response field:
 
    HTTP/1.1 415 Unsupported Media Type
@@ -629,7 +631,7 @@ A.4.2.  Using Location
 
    If-None-Match: "42-1"
 
-   would result in a 304 response ("Not Modified", Section 15.4.5 of
+   would result in a 304 response (Not Modified, Section 15.4.5 of
    [HTTP]).
 
    Note that there's no guarantee that the server will implement this
@@ -639,8 +641,8 @@ A.4.2.  Using Location
 
 A.4.3.  Indirect Responses
 
-   Servers can send "indirect" responses using the status code 303 ("See
-   Other", Section 15.4.4 of [HTTP]).
+   Servers can send "indirect" responses using the status code 303 (See
+   Other, Section 15.4.4 of [HTTP]).
 
    Given the request at the beginning of Appendix A.4, a server might
    respond with:
@@ -749,7 +751,7 @@ A.5.  More Query Formats
    9999, 1, 0, 0, 1, 0
 
    Note the Accept-Query response field indicating that another query
-   format - JSONPath ([RFC9535]) - is supported as well.  The request
+   format -- JSONPath ([RFC9535]) -- is supported as well.  The request
    below would report the identifiers of all rejected errata submitted
    since 2024:
 
