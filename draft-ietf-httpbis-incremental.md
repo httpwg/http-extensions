@@ -156,7 +156,7 @@ Status:
 : permanent
 
 Structured Type:
-: Boolean
+: Item
 
 Reference:
 : This document
