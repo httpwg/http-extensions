@@ -57,7 +57,6 @@ Table of Contents
    2.  Conventions and Definitions
    3.  The Incremental Header Field
    4.  Security Considerations
-     4.1.  Applying Concurrency Limits
    5.  IANA Considerations
    6.  References
      6.1.  Normative References
@@ -115,7 +114,8 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-   The term Boolean is imported from [STRUCTURED-FIELDS].
+   This document relies on structured field definitions of Item and
+   Boolean [STRUCTURED-FIELDS].
 
 3.  The Incremental Header Field
 
@@ -123,15 +123,17 @@ Table of Contents
    HTTP intermediaries to start forwarding the message downstream before
    the entire message is received.
 
-   This header field has just one valid value of type Boolean: "?1".
+   The Incremental header field is defined as a structured field
+   [STRUCTURED-FIELDS] of type Item.  There is just one valid value,
+   which is of type Boolean: "?1".
 
    Incremental = ?1
 
-   Upon receiving a header section that includes the Incremental header
-   field, HTTP intermediaries SHOULD NOT buffer the entire message
-   before forwarding it.  Instead, intermediaries SHOULD transmit the
-   header section downstream and continuously forward the bytes of the
-   message body as they arrive.
+   Upon receiving a header section that includes an Incremental header
+   field with a true value, HTTP intermediaries SHOULD NOT buffer the
+   entire message before forwarding it.  Instead, intermediaries SHOULD
+   transmit the header section downstream and continuously forward the
+   bytes of the message body as they arrive.
 
    The Incremental HTTP header field applies to each HTTP message.
    Therefore, if both the HTTP request and response need to be forwarded
@@ -146,8 +148,6 @@ Table of Contents
    prior knowledge or probe for support on individual resources.
 
 4.  Security Considerations
-
-4.1.  Applying Concurrency Limits
 
    To conserve resources required to handle HTTP requests or
    connections, it is common for intermediaries to impose limits on the
