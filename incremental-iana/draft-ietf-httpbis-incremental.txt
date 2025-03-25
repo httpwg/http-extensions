@@ -173,7 +173,7 @@ Table of Contents
 
    Field Name:  Incremental
    Status:  permanent
-   Structured Type:  Boolean
+   Structured Type:  Item
    Reference:  This document
    Comments:  None
 
