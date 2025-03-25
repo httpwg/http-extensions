@@ -89,7 +89,8 @@ downstream before receiving the complete message.
 
 {::boilerplate bcp14-tagged}
 
-The term Boolean is imported from {{!STRUCTURED-FIELDS=RFC8941}}.
+This document relies on structured field definitions
+of Item and Boolean {{!STRUCTURED-FIELDS=RFC8941}}.
 
 
 # The Incremental Header Field
@@ -98,16 +99,19 @@ The Incremental HTTP header field expresses the sender's intent for HTTP
 intermediaries to start forwarding the message downstream before the entire
 message is received.
 
-This header field has just one valid value of type Boolean: "?1".
+The Incremental header field is defined as a structured field
+{{STRUCTURED-FIELDS}} of type Item.  There is just one valid value, which is of
+type Boolean: "?1".
 
 ~~~
 Incremental = ?1
 ~~~
 
-Upon receiving a header section that includes the Incremental header field, HTTP
-intermediaries SHOULD NOT buffer the entire message before forwarding it.
-Instead, intermediaries SHOULD transmit the header section downstream and
-continuously forward the bytes of the message body as they arrive.
+Upon receiving a header section that includes an Incremental header field with a
+true value, HTTP intermediaries SHOULD NOT buffer the entire message before
+forwarding it.  Instead, intermediaries SHOULD transmit the header section
+downstream and continuously forward the bytes of the message body as they
+arrive.
 
 The Incremental HTTP header field applies to each HTTP message. Therefore, if
 both the HTTP request and response need to be forwarded incrementally, the
@@ -122,8 +126,6 @@ incrementally. Clients can rely on prior knowledge or probe for support on
 individual resources.
 
 # Security Considerations
-
-## Applying Concurrency Limits
 
 To conserve resources required to handle HTTP requests or connections, it is
 common for intermediaries to impose limits on the maximum number of concurrent
