@@ -144,7 +144,25 @@ by a connection_limit_reached Proxy-Status response header field
 
 # IANA Considerations
 
-TBD
+The Incremental HTTP header field is added to the "HTTP Field Name" registry established in
+{{Section 18.4 of HTTP}}:
+
+Field Name:
+: Incremental
+
+Status:
+: permanent
+
+Structured Type:
+: Boolean
+
+Reference:
+: This document
+
+Comments:
+: None
+{: spacing="compact"}
+
 
 --- back
 
