@@ -3,9 +3,9 @@
 
 
 HTTP                                                       M. Nottingham
-Internet-Draft                                             18 March 2025
+Internet-Draft                                             28 March 2025
 Intended status: Standards Track                                        
-Expires: 19 September 2025
+Expires: 29 September 2025
 
 
                            HTTP Cache Groups
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 September 2025.
+   This Internet-Draft will expire on 29 September 2025.
 
 Copyright Notice
 
@@ -145,8 +145,8 @@ Table of Contents
    The ordering of members is not significant.  Unrecognised Parameters
    MUST be ignored.
 
-   Implementations MUST support at least 128 groups in a field value,
-   with up to at least 128 characters in each member.  Note that generic
+   Implementations MUST support at least 32 groups in a field value,
+   with up to at least 32 characters in each member.  Note that generic
    limitations on HTTP field lengths may constrain the size of this
    field value in practice.
 
@@ -206,8 +206,8 @@ Table of Contents
    The ordering of members is not significant.  Unrecognised Parameters
    MUST be ignored.
 
-   Implementations MUST support at least 128 groups in a field value,
-   with up to at least 128 characters in each member.  Note that generic
+   Implementations MUST support at least 32 groups in a field value,
+   with up to at least 32 characters in each member.  Note that generic
    limitations on HTTP field lengths may constrain the size of this
    field value in practice.
 
