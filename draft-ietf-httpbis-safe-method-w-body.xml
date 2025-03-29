@@ -218,9 +218,16 @@ q=foo&amp;limit=10&amp;sort=-published
       the target URI.
     </t>
     <t>
-      The content of the request defines the query. Implementations &MAY; use
-      a request content of any media type with the QUERY method, provided that it
-      has appropriate query semantics.
+      The content of the request and it's media type define the query.
+      Implementations &MAY; use a request content of any media type with
+      the QUERY method, provided that it has appropriate query semantics.
+    </t>
+    <t>
+      As for all HTTP methods in general, the target URI's query part
+      takes part in identifying the resource being queried and therefore is
+      not part of the actual query. Whether and how the URI's query part
+      directly affects the result of the query can be defined in media
+      type definitions for QUERY.
     </t>
     <t>
       QUERY requests are both safe and idempotent with regard to the
@@ -980,6 +987,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-08" anchor="changes.since.08">
 <ul>
+  <li>Mention the role of the query part of the request URI (<eref target="https://github.com/httpwg/http-extensions/issues/3004"/>)</li>
   <li>Avoid term 'query parameters' (<eref target="https://github.com/httpwg/http-extensions/issues/3019"/>)</li>
   <li>Add missing references, fixed terminology (<eref target="https://github.com/httpwg/http-extensions/issues/3021"/>)</li>
   <li>Add Acknowledgements/Contributors sections; moved Ashok to Contributors (<eref target="https://github.com/httpwg/http-extensions/issues/3029"/>)</li>
