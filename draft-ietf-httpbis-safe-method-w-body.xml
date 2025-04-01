@@ -113,9 +113,9 @@ Host: example.org
     <t>
       As an alternative to using GET, many implementations make use of the
       HTTP POST method to perform queries, as illustrated in the example
-      below. In this case, the input parameters to the query operation are
-      passed along within the request content as opposed to using the
-      request URI.
+      below. In this case, the input to the query operation is
+      passed as the request content as opposed to using the
+      request URI's query component.
     </t>
     <t>
       A typical use of HTTP POST for requesting a query is:
@@ -145,7 +145,7 @@ Content-Type: application/x-www-form-urlencoded
 q=foo&amp;limit=10&amp;sort=-published
 </artwork>
     <t>
-      As with POST, the input to the query operation is passed along within the content of the request
+      As with POST, the input to the query operation is passed as the content of the request
       rather than as part of the request URI. Unlike POST, however, the method is explicitly safe
       and idempotent, allowing functions like caching and automatic retries to operate.
     </t>
@@ -190,6 +190,12 @@ q=foo&amp;limit=10&amp;sort=-published
     <section title="Terminology" anchor="terminology">
       <t>
         This document uses terminology defined in <xref section="3" target="HTTP"/>.
+      </t>
+      <t>
+        Furthermore, it uses the terms <em>URI query parameter</em> for parameters
+        in the query component of a URI (<xref target="HTTP" section="4.2.2"/>) and
+        <em>query content</em> for the request content (<xref target="HTTP" section="4.2.2"/>)
+        of a QUERY request.
       </t>
     </section>
 
@@ -253,9 +259,9 @@ q=foo&amp;limit=10&amp;sort=-published
         can be included in the Location header field of the response (see <xref
         target="HTTP" section="10.2.2"/>). This represents a claim that a client can
         send a GET request to the indicated URI to repeat the query operation just
-        performed without resending the query payload. This resource might be
+        performed without resending the query content. This resource might be
         temporary; if a future request fails, the client can retry using the
-        original QUERY resource and the previously submitted payload.
+        original QUERY resource and the previously submitted content.
       </t>
     </section>
 
@@ -381,7 +387,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     </t>
     <t>
       It can be used as an alternative to passing request
-      information in the URI (e.g., in the query section). This is preferred in some
+      information in the URI (e.g., in the query component). This is preferred in some
       cases, as the URI is more likely to be logged or otherwise processed
       by intermediaries than the request content.
     </t>
@@ -983,6 +989,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Avoid term 'query parameters' (<eref target="https://github.com/httpwg/http-extensions/issues/3019"/>)</li>
   <li>Add missing references, fixed terminology (<eref target="https://github.com/httpwg/http-extensions/issues/3021"/>)</li>
   <li>Add Acknowledgements/Contributors sections; moved Ashok to Contributors (<eref target="https://github.com/httpwg/http-extensions/issues/3029"/>)</li>
+  <li>Hopefully more clarity wrt query content vs URI query conponent (<eref target="https://github.com/httpwg/http-extensions/issues/3059"/>)</li>
 </ul>
 </section>
 </section>
