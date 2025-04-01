@@ -23,7 +23,7 @@
 <rfc category="std" ipr="trust200902" docName="draft-ietf-httpbis-safe-method-w-body-latest" submissionType="IETF" consensus="true" version="3" xmlns:xi="http://www.w3.org/2001/XInclude">
   <front>
     <title>
-      The HTTP QUERY Method
+      The HTTP "?" Method
     </title>
 
     <author initials="J." surname="Reschke" fullname="Julian Reschke">
@@ -60,7 +60,7 @@
 
     <abstract>
       <t>
-        This specification defines a new HTTP method, QUERY, as a safe, idempotent
+        This specification defines a new HTTP method, ?, as a safe, idempotent
         request method that can carry request content.
       </t>
     </abstract>
@@ -87,7 +87,7 @@
 
   <section title="Introduction" anchor="introduction">
     <t>
-      This specification defines the HTTP QUERY request method as a means of
+      This specification defines the HTTP ? request method as a means of
       making a safe, idempotent request that contains content.
     </t>
     <t>
@@ -134,11 +134,11 @@ q=foo&amp;limit=10&amp;sort=-published
       idempotent query is being performed.
     </t>
     <t>
-      The QUERY method provides a solution that spans the gap between the use of GET and POST, with
+      The ? method provides a solution that spans the gap between the use of GET and POST, with
       the example above being expressed as:
     </t>
 <artwork type="http-message">
-QUERY /feed HTTP/1.1
+? /feed HTTP/1.1
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 
@@ -155,7 +155,7 @@ q=foo&amp;limit=10&amp;sort=-published
         <tr>
           <th/>
           <th>GET</th>
-          <th>QUERY</th>
+          <th>?</th>
           <th>POST</th>
         </tr>
       </thead>
@@ -205,33 +205,33 @@ q=foo&amp;limit=10&amp;sort=-published
 
   </section>
 
-  <section title="QUERY" anchor="query">
+  <section title="?" anchor="query">
     <t>
-      The QUERY method is used to initiate a server-side query. Unlike
+      The ? method is used to initiate a server-side query. Unlike
       the HTTP GET method, which requests that a server return a
       representation of the resource identified by the target URI
-      (as defined by <xref target="HTTP" section="7.1"/>), the QUERY
+      (as defined by <xref target="HTTP" section="7.1"/>), the ?
       method is used to ask the server to perform a query operation
       (described by the request content) over some set of data scoped to the
-      target URI. The content returned in response to a QUERY
+      target URI. The content returned in response to a ?
       cannot be assumed to be a representation of the resource identified by
       the target URI.
     </t>
     <t>
       The content of the request defines the query. Implementations &MAY; use
-      a request content of any media type with the QUERY method, provided that it
+      a request content of any media type with the ? method, provided that it
       has appropriate query semantics.
     </t>
     <t>
-      QUERY requests are both safe and idempotent with regard to the
-      resource identified by the request URI. That is, QUERY requests do not
+      ? requests are both safe and idempotent with regard to the
+      resource identified by the request URI. That is, ? requests do not
       alter the state of the targeted resource. However, while processing a
-      QUERY request, a server can be expected to allocate computing and memory
+      ? request, a server can be expected to allocate computing and memory
       resources or even create additional HTTP resources through which the
       response can be retrieved.
     </t>
     <t>
-      A successful response to a QUERY request is expected to provide some
+      A successful response to a ? request is expected to provide some
       indication as to the final disposition of the operation. For
       instance, a successful query that yields no results can be represented
       by a 204 (No Content) response. If the response includes content,
@@ -255,13 +255,13 @@ q=foo&amp;limit=10&amp;sort=-published
         send a GET request to the indicated URI to repeat the query operation just
         performed without resending the query payload. This resource might be
         temporary; if a future request fails, the client can retry using the
-        original QUERY resource and the previously submitted payload.
+        original ? resource and the previously submitted payload.
       </t>
     </section>
 
     <section title="Redirection" anchor="redirection">
       <t>
-        In some cases, the server may choose to respond indirectly to the QUERY
+        In some cases, the server may choose to respond indirectly to the ?
         request by redirecting the user agent to a different URI (see
         <xref target="HTTP" section="15.4"/>). The semantics of the redirect
         response do not differ from other methods. For instance, a 303 (See Other)
@@ -271,15 +271,15 @@ q=foo&amp;limit=10&amp;sort=-published
         use of the Location response field in a 2xx response).
         On the other hand, response codes 307 (Temporary Redirect) and 308
         (Permanent Redirect) can be used to request the user agent to redo
-        the QUERY request on the URI specified by the Location field.
+        the ? request on the URI specified by the Location field.
         Various non-normative examples of successful
-        QUERY responses are illustrated in <xref target="examples"/>.
+        ? responses are illustrated in <xref target="examples"/>.
       </t>
     </section>
 
     <section title="Conditional Requests" anchor="conditional">
       <t>
-        A conditional QUERY requests that the selected representation
+        A conditional ? requests that the selected representation
         (i.e., the query results, after any content negotiation) be
         returned in the response only under the circumstances described by the
         conditional header field(s), as defined in
@@ -289,8 +289,8 @@ q=foo&amp;limit=10&amp;sort=-published
 
     <section title="Caching" anchor="caching">
       <t>
-        The response to a QUERY method is cacheable; a cache &MAY; use it to satisfy subsequent
-        QUERY requests as per <xref target="HTTP-CACHING" section="4"/>).
+        The response to a ? method is cacheable; a cache &MAY; use it to satisfy subsequent
+        ? requests as per <xref target="HTTP-CACHING" section="4"/>).
       </t>
       <t>
         The cache key for a query (see <xref target="HTTP-CACHING" section="2"/>) &MUST;
@@ -314,21 +314,21 @@ q=foo&amp;limit=10&amp;sort=-published
 
     <section title="Range Requests" anchor="range">
       <t>
-        The semantics of Range Requests for QUERY are identical to those for GET,
+        The semantics of Range Requests for ? are identical to those for GET,
         as defined in <xref target="HTTP" section="14"/>.
       </t>
     </section>
 
   </section>
 
-  <section title="The &quot;Accept-Query&quot; Header Field" anchor="field.accept-query">
+  <section title="The &quot;Accept-?&quot; Header Field" anchor="field.accept-query">
     <t>
-      The "Accept-Query" response header field can be used by a resource to
-      directly signal support for the QUERY method while identifying
+      The "Accept-?" response header field can be used by a resource to
+      directly signal support for the ? method while identifying
       the specific query format media type(s) that may be used.
     </t>
     <t>
-      "Accept-Query" contains a list of media ranges (<xref target="HTTP" section="12.5.1"/>)
+      "Accept-?" contains a list of media ranges (<xref target="HTTP" section="12.5.1"/>)
       using "Structured Fields" syntax (<xref target="STRUCTURED-FIELDS"/>).
       Media ranges are represented by a List Structured Header Field of either Tokens or
       Strings, containing the media range value without parameters. Parameters,
@@ -355,16 +355,16 @@ q=foo&amp;limit=10&amp;sort=-published
       The only allowed format for parameters is String.
     </t>
     <t>
-      Accept-Query's value applies to every URI on the server that shares the same path; in
+      Accept-?'s value applies to every URI on the server that shares the same path; in
       other words, the query component is ignored. If requests to the same resource return
-      different Accept-Query values, the most recently received fresh value (per
+      different Accept-? values, the most recently received fresh value (per
       <xref target="HTTP-CACHING" section="4.2"/>) is used.
     </t>
     <t>
       Example:
     </t>
     <artwork type="example">
-Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
+Accept-?: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     <t>
       Although the syntax for this field appears to be similar to other
       fields, such as "Accept" (<xref target="HTTP" section="12.5.1"/>),
@@ -375,7 +375,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
 
   <section title="Security Considerations">
     <t>
-      The QUERY method is subject to the same general security
+      The ? method is subject to the same general security
       considerations as all HTTP methods as described in
       <xref target="HTTP"/>.
     </t>
@@ -386,21 +386,21 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       by intermediaries than the request content.
     </t>
     <t>
-      If a server creates a temporary resource to represent the results of a QUERY
+      If a server creates a temporary resource to represent the results of a ?
       request (e.g., for use in the Location or Content-Location field) and the request
       contains sensitive information that cannot be logged, then the URI of this
       resource &SHOULD; be chosen such that it does not include any sensitive
       portions of the original request content.
     </t>
     <t>
-      Caches that normalize QUERY content incorrectly or in ways that are
+      Caches that normalize ? content incorrectly or in ways that are
       significantly different from how the resource processes the content
       can return the incorrect response if normalization results in a false positive.
     </t>
     <t>
-      A QUERY request from user agents implementing CORS (Cross-Origin Resource Sharing)
+      A ? request from user agents implementing CORS (Cross-Origin Resource Sharing)
       will require a "preflight" request,
-      as QUERY does not belong to the set of CORS-safelisted methods
+      as ? does not belong to the set of CORS-safelisted methods
       (see "<eref target="https://fetch.spec.whatwg.org/#methods">Methods</eref>" in
       <xref target="FETCH"/>).
     </t>
@@ -408,9 +408,9 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
 
   <section title="IANA Considerations" anchor="iana.considerations">
 
-    <section title="Registration of QUERY method" anchor="method.registration">
+    <section title="Registration of ? method" anchor="method.registration">
       <t>
-        IANA is requested to add the QUERY method to the HTTP
+        IANA is requested to add the ? method to the HTTP
         Method Registry at <eref brackets="angle" target="http://www.iana.org/assignments/http-methods"/>
         (see <xref target="HTTP" section="16.3.1"/>).
       </t>
@@ -425,7 +425,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
         </thead>
         <tbody>
           <tr>
-            <td>QUERY</td>
+            <td>?</td>
             <td>Yes</td>
             <td>Yes</td>
             <td><xref target="query"/></td>
@@ -434,9 +434,9 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       </table>
     </section>
 
-    <section title="Registration of Accept-Query field" anchor="field.registration">
+    <section title="Registration of Accept-? field" anchor="field.registration">
       <t>
-        IANA is requested to add the Accept-Query field to the HTTP Field Name
+        IANA is requested to add the Accept-? field to the HTTP Field Name
         Registry at <eref brackets="angle" target="https://www.iana.org/assignments/http-fields"/>
         (see <xref target="HTTP" section="16.1.1"/>).
       </t>
@@ -452,7 +452,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
         </thead>
         <tbody>
           <tr>
-            <td>Accept-Query</td>
+            <td>Accept-?</td>
             <td>permanent</td>
             <td>List</td>
             <td><xref target="field.accept-query"/> of this document.</td>
@@ -549,7 +549,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     <section title="Simple Query" anchor="example.simple">
       <t>A simple query with a direct response:</t>
 <artwork type="http-message">
-QUERY /contacts HTTP/1.1
+? /contacts HTTP/1.1
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
@@ -576,9 +576,9 @@ Content-Type: application/json
 </artwork>
     </section>
 
-    <section title="Discovery of QUERY support" anchor="example.discovery.method">
+    <section title="Discovery of ? support" anchor="example.discovery.method">
       <t>
-        A simple way to discover support for QUERY is provided by the OPTIONS
+        A simple way to discover support for ? is provided by the OPTIONS
         (<xref target="HTTP" section="9.3.7"/>) method:
       </t>
 <artwork type="http-message">
@@ -589,23 +589,23 @@ Host: example.org
       <t>Response:</t>
 <artwork type="http-message">
 HTTP/1.1 200 OK
-Allow: GET, QUERY, OPTIONS, HEAD
+Allow: GET, ?, OPTIONS, HEAD
 </artwork>
       <t>
         The Allow response field (<xref target="HTTP" section="10.2.1"/>) denotes the set of
         supported methods on the specified resource.
       </t>
       <t>
-        There are alternatives to the use of OPTIONS. For instance, a QUERY request
+        There are alternatives to the use of OPTIONS. For instance, a ? request
         can be tried without prior knowledge of server support. The server would then
         either process the request, or could respond with a 4xx status such as 405 (Method Not Allowed,
         <xref target="HTTP" section="15.5.6"/>), including the Allow response field.
       </t>
     </section>
 
-    <section title="Discovery of QUERY Formats" anchor="example.discovery.formats">
+    <section title="Discovery of ? Formats" anchor="example.discovery.formats">
       <t>
-        Discovery of supported media types for QUERY is possible via the Accept-Query
+        Discovery of supported media types for ? is possible via the Accept-?
         (<xref target="field.accept-query"/>) response field:
       </t>
 <artwork type="http-message">
@@ -617,14 +617,14 @@ Host: example.org
 <artwork type="http-message">
 HTTP/1.1 200 OK
 Content-Type: application/xhtml
-Accept-Query: application/x-www-form-urlencoded, application/sql
+Accept-?: application/x-www-form-urlencoded, application/sql
 </artwork>
       <t>
-        Responses to which request methods will contain Accept-Query will depend on
+        Responses to which request methods will contain Accept-? will depend on
         the resource being accessed.
       </t>
       <t>
-        An alternative to checking Accept-Query would be to make a QUERY request, and then
+        An alternative to checking Accept-? would be to make a ? request, and then
         -- in case of a 4xx status such as 415 (Unsupported Media Type, <xref target="HTTP" section="12.5.1"/>) response --
         to inspect the Allow (<xref target="HTTP" section="15.5.16"/>) response field:
       </t>
@@ -642,7 +642,7 @@ Accept: application/x-www-form-urlencoded, application/sql
         requests to perform the same operation. Going back to the example from <xref target="example.simple"/>:
       </t>
 <artwork type="http-message">
-QUERY /contacts HTTP/1.1
+? /contacts HTTP/1.1
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
@@ -674,7 +674,7 @@ Date: Sun, 17 Nov 2024, 16:10:24 GMT
       <section title="Using Content-Location" anchor="example.content-location">
         <t>
           The Content-Location response field received above identifies a resource holding
-          the result for the QUERY response it appeared on:
+          the result for the ? response it appeared on:
         </t>
 <artwork type="http-message">
 GET /contacts/stored-results/17 HTTP/1.1
@@ -705,7 +705,7 @@ Date: Sun, 17 Nov 2024, 16:10:25 GMT
       <section title="Using Location" anchor="example.location">
         <t>
           The Location response field identifies a resource that will respond to GET
-          with a fresh result for the QUERY response it appeared on.
+          with a fresh result for the ? response it appeared on.
         </t>
 <artwork type="http-message">
 GET /contacts/stored-queries/42 HTTP/1.1
@@ -745,7 +745,7 @@ If-None-Match: "42-1"
         <t>
           Note that there's no guarantee that the server will implement this resource
           indefinitely, so, after an error response, the client would need to redo
-          the original QUERY request in order to obtain a new alternative location.
+          the original ? request in order to obtain a new alternative location.
         </t>
       </section>
 
@@ -785,7 +785,7 @@ See stored query at "/contacts/stored-queries/42".
         the defined errata types.
       </t>
 <artwork type="http-message">
-QUERY /errata.json HTTP/1.1
+? /errata.json HTTP/1.1
 Host: example.org
 Content-Type: application/xslt+xml
 Accept: application/xml, text/csv
@@ -839,7 +839,7 @@ Accept: application/xml, text/csv
 <artwork type="http-message">
 HTTP/1.1 200 OK
 Content-Type: text/csv
-Accept-Query: "application/jsonpath", "application/xslt+xml"
+Accept-?: "application/jsonpath", "application/xslt+xml"
 Date: Wed, 19 Feb 2025, 17:10:01 GMT
 
 year, total, rejected, verified, hdu, reported
@@ -871,12 +871,12 @@ year, total, rejected, verified, hdu, reported
 9999, 1, 0, 0, 1, 0
 </artwork>
     <t>
-      Note the Accept-Query response field indicating that another query format -- JSONPath
+      Note the Accept-? response field indicating that another query format -- JSONPath
       (<xref target="RFC9535"/>) -- is supported as well. The request below would report the
       identifiers of all rejected errata submitted since 2024:
     </t>
 <artwork type="http-message">
-QUERY /errata.json HTTP/1.1
+? /errata.json HTTP/1.1
 Host: example.org
 Content-Type: application/jsonpath
 Accept: application/json
@@ -893,7 +893,7 @@ $..[
 <artwork type="http-message">
 HTTP/1.1 200 OK
 Content-Type: application/json
-Accept-Query: "application/jsonpath", "application/xslt+xml"
+Accept-?: "application/jsonpath", "application/xslt+xml"
 Date: Thu, 20 Feb 2025, 09:55:42 GMT
 Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 
