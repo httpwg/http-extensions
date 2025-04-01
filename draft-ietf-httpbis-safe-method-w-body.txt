@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 29 September 2025                                              
+Expires: 3 October 2025                                                 
                                                                M. Bishop
                                                                   Akamai
-                                                           28 March 2025
+                                                            1 April 2025
 
 
                          The HTTP QUERY Method
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 September 2025.
+   This Internet-Draft will expire on 3 October 2025.
 
 Copyright Notice
 
@@ -206,9 +206,15 @@ Table of Contents
    response to a QUERY cannot be assumed to be a representation of the
    resource identified by the target URI.
 
-   The content of the request defines the query.  Implementations MAY
-   use a request content of any media type with the QUERY method,
-   provided that it has appropriate query semantics.
+   The content of the request and it's media type define the query.
+   Implementations MAY use a request content of any media type with the
+   QUERY method, provided that it has appropriate query semantics.
+
+   As for all HTTP methods in general, the target URI's query part takes
+   part in identifying the resource being queried and therefore is not
+   part of the actual query.  Whether and how the URI's query part
+   directly affects the result of the query can be defined in media type
+   definitions for QUERY.
 
    QUERY requests are both safe and idempotent with regard to the
    resource identified by the request URI.  That is, QUERY requests do
@@ -909,6 +915,9 @@ B.8.  Since draft-ietf-httpbis-safe-method-w-body-07
       issues/2979)
 
 B.9.  Since draft-ietf-httpbis-safe-method-w-body-08
+
+   *  Mention the role of the query part of the request URI
+      (https://github.com/httpwg/http-extensions/issues/3004)
 
    *  Avoid term 'query parameters' (https://github.com/httpwg/http-
       extensions/issues/3019)
