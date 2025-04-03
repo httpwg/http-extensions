@@ -158,9 +158,14 @@ Future specifications for Upgrade Tokens should restrict their use to "GET" requ
 
 # Guidance for HTTP CONNECT
 
-In HTTP/1.1, proxy clients that send CONNECT requests on behalf of untrusted TCP clients MUST wait for a 2xx (Successful) response before forwarding any TCP payload data.  Proxy clients that start forwarding before confirming the response status code are vulnerable to a trivial request smuggling attack ({{request-smuggling}}).
+In HTTP/1.1, proxy clients that send CONNECT requests on behalf of untrusted TCP clients MUST do one or both of the following:
 
-At the time of writing, some proxy clients are believed to be vulnerable as described.  When communicating with potentially vulnerable clients, proxy servers MUST close the underlying connection when rejecting an HTTP/1.1 CONNECT request, without processing any further data on that connection.  Note that this mitigation will frequently impair the performance of correctly implemented clients, especially when returning a "407 (Proxy Authentication Required)" response.  This performance loss can be avoided by using HTTP/2 or HTTP/3, which are not vulnerable to this attack.
+1. Wait for a 2xx (Successful) response before forwarding any TCP payload data.
+1. Send a "Connection: close" request header.
+
+Proxy clients that don't implement at least one of these two behaviors are vulnerable to a trivial request smuggling attack ({{request-smuggling}}).
+
+At the time of writing, some proxy clients are believed to be vulnerable as described.  When communicating with potentially vulnerable clients, proxy servers MUST close the underlying connection when rejecting an HTTP/1.1 CONNECT request, without processing any further data on that connection, whether or not the request headers include "Connection: close".  Note that this mitigation will frequently impair the performance of correctly implemented clients, especially when returning a "407 (Proxy Authentication Required)" response.  This performance loss can be avoided by using HTTP/2 or HTTP/3, which are not vulnerable to this attack.
 
 # IANA Considerations
 
