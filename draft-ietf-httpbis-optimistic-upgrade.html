@@ -1424,8 +1424,17 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
       <h2 id="name-guidance-for-http-connect">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-guidance-for-http-connect" class="section-name selfRef">Guidance for HTTP CONNECT</a>
       </h2>
-<p id="section-7-1">In HTTP/1.1, proxy clients that send CONNECT requests on behalf of untrusted TCP clients <span class="bcp14">MUST</span> wait for a 2xx (Successful) response before forwarding any TCP payload data.  Proxy clients that start forwarding before confirming the response status code are vulnerable to a trivial request smuggling attack (<a href="#request-smuggling" class="auto internal xref">Section 3.1</a>).<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">At the time of writing, some proxy clients are believed to be vulnerable as described.  When communicating with potentially vulnerable clients, proxy servers <span class="bcp14">MUST</span> close the underlying connection when rejecting an HTTP/1.1 CONNECT request, without processing any further data on that connection.  Note that this mitigation will frequently impair the performance of correctly implemented clients, especially when returning a "407 (Proxy Authentication Required)" response.  This performance loss can be avoided by using HTTP/2 or HTTP/3, which are not vulnerable to this attack.<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-1">In HTTP/1.1, proxy clients that send CONNECT requests on behalf of untrusted TCP clients <span class="bcp14">MUST</span> do one or both of the following:<a href="#section-7-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-7-2">
+<li id="section-7-2.1">
+          <p id="section-7-2.1.1">Wait for a 2xx (Successful) response before forwarding any TCP payload data.<a href="#section-7-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-7-2.2">
+          <p id="section-7-2.2.1">Send a "Connection: close" request header.<a href="#section-7-2.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ol>
+<p id="section-7-3">Proxy clients that don't implement at least one of these two behaviors are vulnerable to a trivial request smuggling attack (<a href="#request-smuggling" class="auto internal xref">Section 3.1</a>).<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-4">At the time of writing, some proxy clients are believed to be vulnerable as described.  When communicating with potentially vulnerable clients, proxy servers <span class="bcp14">MUST</span> close the underlying connection when rejecting an HTTP/1.1 CONNECT request, without processing any further data on that connection, whether or not the request headers include "Connection: close".  Note that this mitigation will frequently impair the performance of correctly implemented clients, especially when returning a "407 (Proxy Authentication Required)" response.  This performance loss can be avoided by using HTTP/2 or HTTP/3, which are not vulnerable to this attack.<a href="#section-7-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
