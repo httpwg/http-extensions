@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 5 October 2025                                                 
+Expires: 6 October 2025                                                 
                                                                M. Bishop
                                                                   Akamai
-                                                            3 April 2025
+                                                            4 April 2025
 
 
                          The HTTP QUERY Method
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 October 2025.
+   This Internet-Draft will expire on 6 October 2025.
 
 Copyright Notice
 
@@ -134,9 +134,9 @@ Table of Contents
 
    As an alternative to using GET, many implementations make use of the
    HTTP POST method to perform queries, as illustrated in the example
-   below.  In this case, the input parameters to the query operation are
-   passed along within the request content as opposed to using the
-   request URI.
+   below.  In this case, the input to the query operation is passed as
+   the request content as opposed to using the request URI's query
+   component.
 
    A typical use of HTTP POST for requesting a query is:
 
@@ -160,8 +160,8 @@ Table of Contents
 
    q=foo&limit=10&sort=-published
 
-   As with POST, the input to the query operation is passed along within
-   the content of the request rather than as part of the request URI.
+   As with POST, the input to the query operation is passed as the
+   content of the request rather than as part of the request URI.
    Unlike POST, however, the method is explicitly safe and idempotent,
    allowing functions like caching and automatic retries to operate.
 
@@ -186,6 +186,11 @@ Table of Contents
 1.1.  Terminology
 
    This document uses terminology defined in Section 3 of [HTTP].
+
+   Furthermore, it uses the terms _URI query parameter_ for parameters
+   in the query component of a URI (Section 4.2.2 of [HTTP]) and _query
+   content_ for the request content (Section 4.2.2 of [HTTP]) of a QUERY
+   request.
 
 1.2.  Notational Conventions
 
@@ -243,10 +248,10 @@ Table of Contents
    resource can be included in the Location header field of the response
    (see Section 10.2.2 of [HTTP]).  This represents a claim that a
    client can send a GET request to the indicated URI to repeat the
-   query operation just performed without resending the query payload.
+   query operation just performed without resending the query content.
    This resource might be temporary; if a future request fails, the
    client can retry using the original QUERY resource and the previously
-   submitted payload.
+   submitted content.
 
 2.2.  Redirection
 
@@ -347,7 +352,7 @@ Table of Contents
    considerations as all HTTP methods as described in [HTTP].
 
    It can be used as an alternative to passing request information in
-   the URI (e.g., in the query section).  This is preferred in some
+   the URI (e.g., in the query component).  This is preferred in some
    cases, as the URI is more likely to be logged or otherwise processed
    by intermediaries than the request content.
 
@@ -928,6 +933,9 @@ B.9.  Since draft-ietf-httpbis-safe-method-w-body-08
    *  Add Acknowledgements/Contributors sections; moved Ashok to
       Contributors (https://github.com/httpwg/http-extensions/
       issues/3029)
+
+   *  Hopefully more clarity wrt query content vs URI query conponent
+      (https://github.com/httpwg/http-extensions/issues/3059)
 
 Acknowledgements
 
