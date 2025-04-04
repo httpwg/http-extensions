@@ -53,6 +53,7 @@ normative:
   PROBLEM: RFC9457
   DIGEST-FIELDS: RFC9530
   CONTENT-DISPOSITION: RFC6266
+  RFC6585:
 
 informative:
 
@@ -329,12 +330,13 @@ The request content MAY be empty. If the `Upload-Complete` header field is then 
 
 Representation metadata included in the initial request (see {{Section 8.3 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field ({{Section 8.3 of HTTP}}) indicates the media type of the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. The `Content-Encoding` header field ({{Section 8.4 of HTTP}}) names the content codings applied to the representation.
 
-If the client received a final response with a
+If the client received a final response with
 
-- `2xx (Successful)` status code and the entire representation data was transferred in the request content, the upload is complete and the response belongs to the targeted resource processing the representation.
-- `2xx (Successful)` status code and not the entire representation data was transferred in the request content, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
-- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
-- `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}) if it received the URI of the upload resource in a `104 (Upload Resumption Supported)` interim response.
+- a `2xx (Successful)` status code and the entire representation data was transferred in the request content, the upload is complete and the response belongs to the targeted resource processing the representation.
+- a `2xx (Successful)` status code and not the entire representation data was transferred in the request content, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
+- a `429 (Too Many Requests)` status code ({{RFC6585}}), the client SHOULD retry the request after waiting for the period expressed in a `Retry-After` response header field or another appropriate period.
+- any other `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
+- a `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}) if it received the URI of the upload resource in a `104 (Upload Resumption Supported)` interim response.
 
 ### Server Behavior
 
@@ -472,12 +474,13 @@ The offset can be less than or equal to the number of bytes of representation da
 
 The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or appending ({{upload-appending}}) is in progress. In addition, the client SHOULD NOT automatically retry if a 4xx (Client Error) status code is received.
 
-If the client received a response with a
+If the client received a response with
 
-- `2xx (Successful)` status code, the client can continue appending representation data to it ({{upload-appending}}) if the upload is not complete yet.
-- `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry retrieving the offset from the new URI.
-- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
-- `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY retry retrieving the offset.
+- a `2xx (Successful)` status code, the client can continue appending representation data to it ({{upload-appending}}) if the upload is not complete yet.
+- a `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry retrieving the offset from the new URI.
+- a `429 (Too Many Requests)` status code ({{RFC6585}}), the client SHOULD retry the request after waiting for the period expressed in a `Retry-After` response header field or another appropriate period.
+- any other `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
+- a `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY retry retrieving the offset.
 
 ### Server Behavior
 
@@ -538,13 +541,14 @@ The request MUST include the `Upload-Complete` header field. Its value is true i
 
 The request content MAY be empty. If the `Upload-Complete` field is then set to true, the client wants to complete the upload without appending additional representation data.
 
-If the client received a final response with a
+If the client received a final response with
 
-- `2xx (Successful)` status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response belongs to the resource processing the representation according to the initial request (see {{upload-creation}}).
-- `2xx (Successful)` status code and not the entire remaining representation data was transferred in the request content, the client can continue appending representation data.
-- `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry appending to the new URI.
-- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
-- `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
+- a `2xx (Successful)` status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response belongs to the resource processing the representation according to the initial request (see {{upload-creation}}).
+- a `2xx (Successful)` status code and not the entire remaining representation data was transferred in the request content, the client can continue appending representation data.
+- a `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry appending to the new URI.
+- a `429 (Too Many Requests)` status code ({{RFC6585}}), the client SHOULD retry the request after waiting for the period expressed in a `Retry-After` response header field or another appropriate period.
+- any other `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
+- a `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
 
 ### Server Behavior
 
@@ -562,7 +566,7 @@ If the `Upload-Complete` request header field is set to false, the client intend
 
 If the request didn't complete the upload, any response, successful or not, MUST include the `Upload-Complete` header field with a false value, indicating that this response does not belong to the processing of the uploaded representation.
 
-The upload resource MUST record the length according to {{upload-length}} if the necessary header fields are included in the request. If the length is known, the upload resource MUST prevent the offset from exceeding the upload length by stopping to append bytes once the offset reaches the length and reject the request. It is not sufficient to rely on the `Content-Length` header field for enforcement because the header field might not be present.
+The upload resource MUST record the length according to {{upload-length}} if the necessary header fields are included in the request. If the length is known, the upload resource MUST prevent the offset from exceeding the upload length by stopping to append bytes once the offset reaches the length, rejecting the request, marking the upload resource invalid and rejecting any further interaction with it. It is not sufficient to rely on the `Content-Length` header field for enforcement because the header field might not be present.
 
 While the request content is being received, the server MAY send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
 
@@ -780,13 +784,13 @@ This approach is best suited if the client cannot receive interim responses, e.g
 
 # Security Considerations
 
-The upload resource URI is the identifier used for modifying the upload. Without further protection of this URI, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can access the upload resource. In addition, the upload resource URI SHOULD be generated in such a way that makes it hard to be guessed by unauthorized clients.
+The upload resource URI is the identifier used for modifying the upload. Without further protection of this URI, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can access the upload resource. To reduce the risk of unauthorized access, it is RECOMMENDED to generate upload resource URIs in such a way that makes it hard to be guessed by unauthorized clients. In addition, servers may embed information about the storage or processing location of the uploaded representation in the upload resource URI to make routing requests more efficient. If so, they MUST ensure that no internal information is leaked in the URI that is not intended to be exposed.
+
+Uploaded representation data and its metadata are untrusted input. Server operators have to be careful of where uploaded data is written and subsequently accessed, especially if the operations cause the representation to be processed or executed by the server. In addition, metadata MUST be validated and/or sanitized if the server takes its values into consideration for processing or storing the representation.
 
 Some servers or intermediaries provide scanning of content uploaded by clients. Any scanning mechanism that relies on receiving a complete representation in a single request message can be defeated by resumable uploads because content can be split across multiple messages. Servers or intermediaries wishing to perform content scanning SHOULD consider how resumable uploads can circumvent scanning and take appropriate measures. Possible strategies include waiting for the upload to complete before scanning the entire representation, or disabling resumable uploads.
 
-Resumable uploads are vulnerable to Slowloris-style attacks {{SLOWLORIS}}. A malicious client may create upload resources and keep them alive by regularly sending `PATCH` requests with no or small content to the upload resources. This could be abused to exhaust server resources by creating and holding open uploads indefinitely with minimal work.
-
-Servers SHOULD provide mitigations for Slowloris attacks, such as increasing the maximum number of clients the server will allow, limiting the number of uploads a single client is allowed to make, imposing restrictions on the minimum transfer speed an upload is allowed to have, and restricting the length of time an upload resource can exist.
+Resumable uploads are vulnerable to Slowloris-style attacks {{SLOWLORIS}}. A malicious client may create upload resources and keep them alive by regularly sending `PATCH` requests with no or small content to the upload resources. This could be abused to exhaust server resources by creating and holding open uploads indefinitely with minimal work. Servers SHOULD provide mitigations for Slowloris attacks, such as increasing the maximum number of clients the server will allow, limiting the number of uploads a single client is allowed to make, imposing restrictions on the minimum transfer speed an upload is allowed to have, and restricting the length of time an upload resource can exist.
 
 # IANA Considerations
 
