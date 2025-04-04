@@ -562,7 +562,7 @@ If the `Upload-Complete` request header field is set to false, the client intend
 
 If the request didn't complete the upload, any response, successful or not, MUST include the `Upload-Complete` header field with a false value, indicating that this response does not belong to the processing of the uploaded representation.
 
-The upload resource MUST record the length according to {{upload-length}} if the necessary header fields are included in the request. If the length is known, the upload resource MUST prevent the offset from exceeding the upload length by stopping to append bytes once the offset reaches the length and reject the request. It is not sufficient to rely on the `Content-Length` header field for enforcement because the header field might not be present.
+The upload resource MUST record the length according to {{upload-length}} if the necessary header fields are included in the request. If the length is known, the upload resource MUST prevent the offset from exceeding the upload length by stopping to append bytes once the offset reaches the length, rejecting the request, marking the upload resource invalid and rejecting any further interaction with it. It is not sufficient to rely on the `Content-Length` header field for enforcement because the header field might not be present.
 
 While the request content is being received, the server MAY send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
 
