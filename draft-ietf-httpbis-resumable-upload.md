@@ -53,6 +53,7 @@ normative:
   PROBLEM: RFC9457
   DIGEST-FIELDS: RFC9530
   CONTENT-DISPOSITION: RFC6266
+  RFC6585:
 
 informative:
 
@@ -329,12 +330,13 @@ The request content MAY be empty. If the `Upload-Complete` header field is then 
 
 Representation metadata included in the initial request (see {{Section 8.3 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field ({{Section 8.3 of HTTP}}) indicates the media type of the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. The `Content-Encoding` header field ({{Section 8.4 of HTTP}}) names the content codings applied to the representation.
 
-If the client received a final response with a
+If the client received a final response with
 
-- `2xx (Successful)` status code and the entire representation data was transferred in the request content, the upload is complete and the response belongs to the targeted resource processing the representation.
-- `2xx (Successful)` status code and not the entire representation data was transferred in the request content, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
-- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
-- `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}) if it received the URI of the upload resource in a `104 (Upload Resumption Supported)` interim response.
+- a `2xx (Successful)` status code and the entire representation data was transferred in the request content, the upload is complete and the response belongs to the targeted resource processing the representation.
+- a `2xx (Successful)` status code and not the entire representation data was transferred in the request content, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
+- a `429 (Too Many Requests)` status code ({{RFC6585}}), the client SHOULD retry the request after waiting for the period expressed in a `Retry-After` response header field or another appropriate period.
+- any other `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
+- a `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}) if it received the URI of the upload resource in a `104 (Upload Resumption Supported)` interim response.
 
 ### Server Behavior
 
@@ -472,12 +474,13 @@ The offset can be less than or equal to the number of bytes of representation da
 
 The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or appending ({{upload-appending}}) is in progress. In addition, the client SHOULD NOT automatically retry if a 4xx (Client Error) status code is received.
 
-If the client received a response with a
+If the client received a response with
 
-- `2xx (Successful)` status code, the client can continue appending representation data to it ({{upload-appending}}) if the upload is not complete yet.
-- `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry retrieving the offset from the new URI.
-- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
-- `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY retry retrieving the offset.
+- a `2xx (Successful)` status code, the client can continue appending representation data to it ({{upload-appending}}) if the upload is not complete yet.
+- a `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry retrieving the offset from the new URI.
+- a `429 (Too Many Requests)` status code ({{RFC6585}}), the client SHOULD retry the request after waiting for the period expressed in a `Retry-After` response header field or another appropriate period.
+- any other `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
+- a `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY retry retrieving the offset.
 
 ### Server Behavior
 
@@ -538,13 +541,14 @@ The request MUST include the `Upload-Complete` header field. Its value is true i
 
 The request content MAY be empty. If the `Upload-Complete` field is then set to true, the client wants to complete the upload without appending additional representation data.
 
-If the client received a final response with a
+If the client received a final response with
 
-- `2xx (Successful)` status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response belongs to the resource processing the representation according to the initial request (see {{upload-creation}}).
-- `2xx (Successful)` status code and not the entire remaining representation data was transferred in the request content, the client can continue appending representation data.
-- `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry appending to the new URI.
-- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
-- `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
+- a `2xx (Successful)` status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response belongs to the resource processing the representation according to the initial request (see {{upload-creation}}).
+- a `2xx (Successful)` status code and not the entire remaining representation data was transferred in the request content, the client can continue appending representation data.
+- a `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry appending to the new URI.
+- a `429 (Too Many Requests)` status code ({{RFC6585}}), the client SHOULD retry the request after waiting for the period expressed in a `Retry-After` response header field or another appropriate period.
+- any other `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
+- a `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
 
 ### Server Behavior
 
