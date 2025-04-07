@@ -333,7 +333,7 @@ If the client received a final response with a
 
 - `2xx (Successful)` status code and the entire representation data was transferred in the request content, the upload is complete and the response belongs to the targeted resource processing the representation.
 - `2xx (Successful)` status code and not the entire representation data was transferred in the request content, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
-- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
+- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
 - `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}) if it received the URI of the upload resource in a `104 (Upload Resumption Supported)` interim response.
 
 ### Server Behavior
@@ -476,7 +476,7 @@ If the client received a response with a
 
 - `2xx (Successful)` status code, the client can continue appending representation data to it ({{upload-appending}}) if the upload is not complete yet.
 - `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry retrieving the offset from the new URI.
-- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
+- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
 - `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY retry retrieving the offset.
 
 ### Server Behavior
@@ -543,7 +543,7 @@ If the client received a final response with a
 - `2xx (Successful)` status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response belongs to the resource processing the representation according to the initial request (see {{upload-creation}}).
 - `2xx (Successful)` status code and not the entire remaining representation data was transferred in the request content, the client can continue appending representation data.
 - `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry appending to the new URI.
-- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload.
+- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
 - `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
 
 ### Server Behavior
