@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 6 October 2025                                       Apple Inc.
+Expires: 9 October 2025                                       Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                            4 April 2025
+                                                            7 April 2025
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 October 2025.
+   This Internet-Draft will expire on 9 October 2025.
 
 Copyright Notice
 
@@ -595,30 +595,27 @@ Table of Contents
    transmit a filename.  The Content-Encoding header field (Section 8.4
    of [HTTP]) names the content codings applied to the representation.
 
-   If the client received a final response with
+   If the client received a final response with a
 
-   *  a 2xx (Successful) status code and the entire representation data
+   *  2xx (Successful) status code and the entire representation data
       was transferred in the request content, the upload is complete and
       the response belongs to the targeted resource processing the
       representation.
 
-   *  a 2xx (Successful) status code and not the entire representation
+   *  2xx (Successful) status code and not the entire representation
       data was transferred in the request content, the Location response
       header field points the client to the created upload resource.
       The client can continue appending representation data to it
       (Section 4.4).
 
-   *  a 429 (Too Many Requests) status code ([RFC6585]), the client
-      SHOULD retry the request after waiting for the period expressed in
-      a Retry-After response header field or another appropriate period.
+   *  4xx (Client Error) status code, the client SHOULD NOT attempt to
+      retry or resume the upload, unless the semantics of the response
+      allow or recommend the client to retry the request.
 
-   *  any other 4xx (Client Error) status code, the client SHOULD NOT
-      attempt to retry or resume the upload.
-
-   *  a 5xx (Server Error) status code or no final response at all due
-      to connectivity issues, the client MAY automatically attempt
-      upload resumption by retrieving the current offset (Section 4.3)
-      if it received the URI of the upload resource in a 104 (Upload
+   *  5xx (Server Error) status code or no final response at all due to
+      connectivity issues, the client MAY automatically attempt upload
+      resumption by retrieving the current offset (Section 4.3) if it
+      received the URI of the upload resource in a 104 (Upload
       Resumption Supported) interim response.
 
 4.2.2.  Server Behavior
@@ -811,29 +808,23 @@ Table of Contents
    upload (Section 4.5) after rejecting the offset.
 
    The client MUST NOT perform offset retrieval while creation
-   (Section 4.2) or appending (Section 4.4) is in progress.  In
-   addition, the client SHOULD NOT automatically retry if a 4xx (Client
-   Error) status code is received.
+   (Section 4.2) or appending (Section 4.4) is in progress.
 
-   If the client received a response with
+   If the client received a response with a
 
-   *  a 2xx (Successful) status code, the client can continue appending
+   *  2xx (Successful) status code, the client can continue appending
       representation data to it (Section 4.4) if the upload is not
       complete yet.
 
-   *  a 307 (Temporary Redirect) or 308 (Permanent Redirect) status
-      code, the client MAY retry retrieving the offset from the new URI.
+   *  307 (Temporary Redirect) or 308 (Permanent Redirect) status code,
+      the client MAY retry retrieving the offset from the new URI.
 
-   *  a 429 (Too Many Requests) status code ([RFC6585]), the client
-      SHOULD retry the request after waiting for the period expressed in
-      a Retry-After response header field or another appropriate period.
+   *  4xx (Client Error) status code, the client SHOULD NOT attempt to
+      retry or resume the upload, unless the semantics of the response
+      allow or recommend the client to retry the request.
 
-   *  any other 4xx (Client Error) status code, the client SHOULD NOT
-      attempt to retry or resume the upload.
-
-   *  a 5xx (Server Error) status code or no final response at all due
-      to connectivity issues, the client MAY retry retrieving the
-      offset.
+   *  5xx (Server Error) status code or no final response at all due to
+      connectivity issues, the client MAY retry retrieving the offset.
 
 4.3.2.  Server Behavior
 
@@ -912,31 +903,27 @@ Table of Contents
    then set to true, the client wants to complete the upload without
    appending additional representation data.
 
-   If the client received a final response with
+   If the client received a final response with a
 
-   *  a 2xx (Successful) status code and the remaining representation
-      data was transferred in the request content, the upload is
-      complete and the corresponding response belongs to the resource
-      processing the representation according to the initial request
-      (see Section 4.2).
+   *  2xx (Successful) status code and the remaining representation data
+      was transferred in the request content, the upload is complete and
+      the corresponding response belongs to the resource processing the
+      representation according to the initial request (see Section 4.2).
 
-   *  a 2xx (Successful) status code and not the entire remaining
+   *  2xx (Successful) status code and not the entire remaining
       representation data was transferred in the request content, the
       client can continue appending representation data.
 
-   *  a 307 (Temporary Redirect) or 308 (Permanent Redirect) status
-      code, the client MAY retry appending to the new URI.
+   *  307 (Temporary Redirect) or 308 (Permanent Redirect) status code,
+      the client MAY retry appending to the new URI.
 
-   *  a 429 (Too Many Requests) status code ([RFC6585]), the client
-      SHOULD retry the request after waiting for the period expressed in
-      a Retry-After response header field or another appropriate period.
+   *  4xx (Client Error) status code, the client SHOULD NOT attempt to
+      retry or resume the upload, unless the semantics of the response
+      allow or recommend the client to retry the request.
 
-   *  any other 4xx (Client Error) status code, the client SHOULD NOT
-      attempt to retry or resume the upload.
-
-   *  a 5xx (Server Error) status code or no final response at all due
-      to connectivity issues, the client MAY automatically attempt
-      upload resumption by retrieving the current offset (Section 4.3).
+   *  5xx (Server Error) status code or no final response at all due to
+      connectivity issues, the client MAY automatically attempt upload
+      resumption by retrieving the current offset (Section 4.3).
 
 4.4.2.  Server Behavior
 
@@ -1575,10 +1562,6 @@ Table of Contents
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
-
-   [RFC6585]  Nottingham, M. and R. Fielding, "Additional HTTP Status
-              Codes", RFC 6585, DOI 10.17487/RFC6585, April 2012,
-              <https://www.rfc-editor.org/rfc/rfc6585>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
