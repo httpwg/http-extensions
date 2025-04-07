@@ -470,7 +470,7 @@ If the client wants to resume the upload after an interruption, it has to know t
 
 The offset can be less than or equal to the number of bytes of representation data that the client has already sent. The client MAY reject an offset which is greater than the number of bytes it has already sent during this upload. The client is expected to handle backtracking of a reasonable length. If the offset is invalid for this upload, or if the client cannot backtrack to the offset and reproduce the same representation data it has already sent, the upload MUST be considered a failure. The client MAY cancel the upload ({{upload-cancellation}}) after rejecting the offset.
 
-The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or appending ({{upload-appending}}) is in progress. In addition, the client SHOULD NOT automatically retry if a 4xx (Client Error) status code is received.
+The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or appending ({{upload-appending}}) is in progress.
 
 If the client received a response with a
 
