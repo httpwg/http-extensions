@@ -172,6 +172,9 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
+   Some examples in this document contain long lines that may be folded,
+   as described in [RFC8792].
+
    The terms Byte Sequence, Item, String, Token, Integer, and Boolean
    are imported from [STRUCTURED-FIELDS].
 
@@ -1122,11 +1125,14 @@ Table of Contents
    The following example shows an example response, where the resource's
    offset was 100, but the client attempted to append at offset 200:
 
+   # NOTE: '\' line wrapping per RFC 8792
+
    HTTP/1.1 409 Conflict
    Content-Type: application/problem+json
 
    {
-     "type":"https://iana.org/assignments/http-problem-types#mismatching-upload-offset",
+     "type":"https://iana.org/assignments/http-problem-types#\
+       mismatching-upload-offset",
      "title": "offset from request does not match offset of resource",
      "expected-offset": 100,
      "provided-offset": 200
@@ -1142,11 +1148,14 @@ Table of Contents
 
    The following example shows an example response:
 
+   # NOTE: '\' line wrapping per RFC 8792
+
    HTTP/1.1 400 Bad Request
    Content-Type: application/problem+json
 
    {
-     "type":"https://iana.org/assignments/http-problem-types#completed-upload",
+     "type":"https://iana.org/assignments/http-problem-types#\
+       completed-upload",
      "title": "upload is already completed"
    }
 
@@ -1161,11 +1170,14 @@ Table of Contents
 
    The following example shows an example response:
 
+   # NOTE: '\' line wrapping per RFC 8792
+
    HTTP/1.1 400 Bad Request
    Content-Type: application/problem+json
 
    {
-     "type":"https://iana.org/assignments/http-problem-types#inconsistent-upload-length",
+     "type":"https://iana.org/assignments/http-problem-types#\
+       inconsistent-upload-length",
      "title": "inconsistent length values for upload"
    }
 
@@ -1566,6 +1578,11 @@ Table of Contents
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8792]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,
+              "Handling Long Lines in Content of Internet-Drafts and
+              RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
+              <https://www.rfc-editor.org/rfc/rfc8792>.
 
    [STRUCTURED-FIELDS]
               Nottingham, M. and P. Kamp, "Structured Field Values for

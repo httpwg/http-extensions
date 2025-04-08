@@ -1395,11 +1395,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">The terms Byte Sequence, Item, String, Token, Integer, and Boolean are imported from <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">The terms "representation", "representation data", "representation metadata", "content", "client" and "server" are from <span><a href="https://rfc-editor.org/rfc/rfc9110#section-3" class="relref">Section 3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
-<p id="section-2-4">The term "URI" is used as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-4" class="relref">Section 4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">The term "patch document" is taken from <span>[<a href="#PATCH" class="cite xref">PATCH</a>]</span>.<a href="#section-2-5" class="pilcrow">¶</a></p>
-<p id="section-2-6">An <em>upload resource</em> is a temporary resource on the server that facilitates the resumable upload of one representation (<a href="#upload-resource" class="auto internal xref">Section 4</a>).<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-2">Some examples in this document contain long lines that may be folded, as described in <span>[<a href="#RFC8792" class="cite xref">RFC8792</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">The terms Byte Sequence, Item, String, Token, Integer, and Boolean are imported from <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">The terms "representation", "representation data", "representation metadata", "content", "client" and "server" are from <span><a href="https://rfc-editor.org/rfc/rfc9110#section-3" class="relref">Section 3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">The term "URI" is used as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-4" class="relref">Section 4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">The term "patch document" is taken from <span>[<a href="#PATCH" class="cite xref">PATCH</a>]</span>.<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-7">An <em>upload resource</em> is a temporary resource on the server that facilitates the resumable upload of one representation (<a href="#upload-resource" class="auto internal xref">Section 4</a>).<a href="#section-2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="overview">
@@ -2247,11 +2248,14 @@ HTTP/1.1 204 No Content
 <p id="section-6.1-3">The following example shows an example response, where the resource's offset was 100, but the client attempted to append at offset 200:<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-6.1-4">
 <pre>
+# NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 409 Conflict
 Content-Type: application/problem+json
 
 {
-  "type":"https://iana.org/assignments/http-problem-types#mismatching-upload-offset",
+  "type":"https://iana.org/assignments/http-problem-types#\
+    mismatching-upload-offset",
   "title": "offset from request does not match offset of resource",
   "expected-offset": 100,
   "provided-offset": 200
@@ -2269,11 +2273,14 @@ Content-Type: application/problem+json
 <p id="section-6.2-2">The following example shows an example response:<a href="#section-6.2-2" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-6.2-3">
 <pre>
+# NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
 
 {
-  "type":"https://iana.org/assignments/http-problem-types#completed-upload",
+  "type":"https://iana.org/assignments/http-problem-types#\
+    completed-upload",
   "title": "upload is already completed"
 }
 </pre><a href="#section-6.2-3" class="pilcrow">¶</a>
@@ -2289,11 +2296,14 @@ Content-Type: application/problem+json
 <p id="section-6.3-2">The following example shows an example response:<a href="#section-6.3-2" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-6.3-3">
 <pre>
+# NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
 
 {
-  "type":"https://iana.org/assignments/http-problem-types#inconsistent-upload-length",
+  "type":"https://iana.org/assignments/http-problem-types#\
+    inconsistent-upload-length",
   "title": "inconsistent length values for upload"
 }
 </pre><a href="#section-6.3-3" class="pilcrow">¶</a>
@@ -2698,6 +2708,10 @@ Reference:<a href="#section-13-15.6.1" class="pilcrow">¶</a></p>
 <dt id="RFC8174">[RFC8174]</dt>
         <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8792">[RFC8792]</dt>
+        <dd>
+<span class="refAuthor">Watsen, K.</span>, <span class="refAuthor">Auerswald, E.</span>, <span class="refAuthor">Farrel, A.</span>, and <span class="refAuthor">Q. Wu</span>, <span class="refTitle">"Handling Long Lines in Content of Internet-Drafts and RFCs"</span>, <span class="seriesInfo">RFC 8792</span>, <span class="seriesInfo">DOI 10.17487/RFC8792</span>, <time datetime="2020-06" class="refDate">June 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8792">https://www.rfc-editor.org/rfc/rfc8792</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="STRUCTURED-FIELDS">[STRUCTURED-FIELDS]</dt>
       <dd>
