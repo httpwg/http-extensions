@@ -8,6 +8,7 @@ ipr: trust200902
 area: Web and Internet Transport
 workgroup: HTTP
 keyword: HTTP, upload, resumable
+submissionType: IETF
 
 stand_alone: yes
 smart_quotes: no
