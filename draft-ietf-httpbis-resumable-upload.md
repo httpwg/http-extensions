@@ -922,7 +922,9 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 ## Since draft-ietf-httpbis-resumable-upload-07
 {:numbered="false"}
 
-None yet.
+* Clarify server handling when upload length is exceeded.
+* Extend security considerations about upload resource URIs, representation metadata, and untrusted inputs.
+* Allow clients to retry for appropriate 4xx responses.
 
 ## Since draft-ietf-httpbis-resumable-upload-06
 {:numbered="false"}
