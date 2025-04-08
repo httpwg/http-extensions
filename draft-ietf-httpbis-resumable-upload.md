@@ -53,6 +53,7 @@ normative:
   PROBLEM: RFC9457
   DIGEST-FIELDS: RFC9530
   CONTENT-DISPOSITION: RFC6266
+  RFC8792:
 
 informative:
 
@@ -83,6 +84,8 @@ Utilizing resumable uploads, applications can recover from unintended interrupti
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
+
+Some examples in this document contain long lines that may be folded, as described in {{RFC8792}}.
 
 The terms Byte Sequence, Item, String, Token, Integer, and Boolean are imported from {{STRUCTURED-FIELDS}}.
 
@@ -668,11 +671,14 @@ Two problem type extension members are defined: the `expected-offset` and `provi
 The following example shows an example response, where the resource's offset was 100, but the client attempted to append at offset 200:
 
 ~~~ http-message
+# NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 409 Conflict
 Content-Type: application/problem+json
 
 {
-  "type":"https://iana.org/assignments/http-problem-types#mismatching-upload-offset",
+  "type":"https://iana.org/assignments/http-problem-types#\
+    mismatching-upload-offset",
   "title": "offset from request does not match offset of resource",
   "expected-offset": 100,
   "provided-offset": 200
@@ -686,11 +692,14 @@ This section defines the "https://iana.org/assignments/http-problem-types#comple
 The following example shows an example response:
 
 ~~~ http-message
+# NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
 
 {
-  "type":"https://iana.org/assignments/http-problem-types#completed-upload",
+  "type":"https://iana.org/assignments/http-problem-types#\
+    completed-upload",
   "title": "upload is already completed"
 }
 ~~~
@@ -702,11 +711,14 @@ This section defines the "https://iana.org/assignments/http-problem-types#incons
 The following example shows an example response:
 
 ~~~ http-message
+# NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
 
 {
-  "type":"https://iana.org/assignments/http-problem-types#inconsistent-upload-length",
+  "type":"https://iana.org/assignments/http-problem-types#\
+    inconsistent-upload-length",
   "title": "inconsistent length values for upload"
 }
 ~~~
