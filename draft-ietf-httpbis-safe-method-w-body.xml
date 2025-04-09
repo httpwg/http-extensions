@@ -20,7 +20,7 @@
   <!ENTITY SHOULD "<bcp14>SHOULD</bcp14>">
   <!ENTITY SHOULD-NOT "<bcp14>SHOULD NOT</bcp14>">
 ]>
-<rfc category="std" ipr="trust200902" docName="draft-ietf-httpbis-safe-method-w-body-latest" submissionType="IETF" version="3" xmlns:xi="http://www.w3.org/2001/XInclude">
+<rfc category="std" ipr="trust200902" docName="draft-ietf-httpbis-safe-method-w-body-latest" submissionType="IETF" consensus="true" version="3" xmlns:xi="http://www.w3.org/2001/XInclude">
   <front>
     <title>
       The HTTP QUERY Method
@@ -36,11 +36,6 @@
         </postal>
         <email>julian.reschke@greenbytes.de</email>
         <uri>https://greenbytes.de/tech/webdav/</uri>
-      </address>
-    </author>
-    <author initials="A." surname="Malhotra" fullname="Ashok Malhotra">
-      <address>
-        <email>malhotrasahib@gmail.com</email>
       </address>
     </author>
      <author initials="J.M." surname="Snell" fullname="James M Snell">
@@ -82,7 +77,7 @@
         <eref target="https://github.com/httpwg/http-extensions/labels/query-method"/>.
       </t>
       <t>
-        The changes in this draft are summarized in <xref target="changes.since.06"/>.
+        The changes in this draft are summarized in <xref target="changes.since.08"/>.
       </t>
     </note>
 
@@ -90,46 +85,40 @@
 
   <middle>
 
-  <section anchor="intro" title="Introduction">
-
+  <section title="Introduction" anchor="introduction">
     <t>
       This specification defines the HTTP QUERY request method as a means of
       making a safe, idempotent request that contains content.
     </t>
-
     <t>
       Most often, this is desirable when the data conveyed in a request is
       too voluminous to be encoded into the request's URI. For example,
       this is a common query pattern:
     </t>
-
 <artwork type="http-message">
 GET /feed?q=foo&amp;limit=10&amp;sort=-published HTTP/1.1
 Host: example.org
 </artwork>
-
     <t>
-      However, for a query with parameters that are complex or large in size,
+      However, for a query with parameters that are complex or large,
       encoding it in the request URI may not be the best option because
     </t>
-      <ul>
-        <li>often size limits are not known ahead of time because a request can pass through many uncoordinated
-      system,</li>
-        <li>expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and</li>
-        <li>encoding query parameters directly into the request URI effectively casts every possible combination of query inputs as distinct
-            resources.</li>
-      </ul>
-
+    <ul>
+      <li>often size limits are not known ahead of time because a request can pass through many uncoordinated
+      systems (but note that <xref section="4.1" target="HTTP"/> recommends senders and recipients to support at least 8000 octets),</li>
+      <li>expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and</li>
+      <li>encoding queries directly into the request URI effectively casts every possible combination of query inputs as distinct
+          resources.</li>
+    </ul>
     <t>
       As an alternative to using GET, many implementations make use of the
       HTTP POST method to perform queries, as illustrated in the example
-      below. In this case, the input parameters to the query operation are
-      passed along within the request content as opposed to using the
-      request URI.
+      below. In this case, the input to the query operation is
+      passed as the request content as opposed to using the
+      request URI's query component.
     </t>
-
     <t>
-      A typical use of HTTP POST for requesting a query:
+      A typical use of HTTP POST for requesting a query is:
     </t>
 <artwork type="http-message">
 POST /feed HTTP/1.1
@@ -138,19 +127,16 @@ Content-Type: application/x-www-form-urlencoded
 
 q=foo&amp;limit=10&amp;sort=-published
 </artwork>
-
     <t>
       This variation, however, suffers from the same basic limitation as GET
       in that it is not readily apparent -- absent specific knowledge of the
       resource and server to which the request is being sent -- that a safe,
       idempotent query is being performed.
     </t>
-
     <t>
       The QUERY method provides a solution that spans the gap between the use of GET and POST, with
       the example above being expressed as:
     </t>
-
 <artwork type="http-message">
 QUERY /feed HTTP/1.1
 Host: example.org
@@ -158,9 +144,8 @@ Content-Type: application/x-www-form-urlencoded
 
 q=foo&amp;limit=10&amp;sort=-published
 </artwork>
-
     <t>
-      As with POST, the input to the query operation is passed along within the content of the request
+      As with POST, the input to the query operation is passed as the content of the request
       rather than as part of the request URI. Unlike POST, however, the method is explicitly safe
       and idempotent, allowing functions like caching and automatic retries to operate.
     </t>
@@ -202,7 +187,19 @@ q=foo&amp;limit=10&amp;sort=-published
       </tbody>
     </table>
 
-    <section title="Notational Conventions" anchor="notational.coventions">
+    <section title="Terminology" anchor="terminology">
+      <t>
+        This document uses terminology defined in <xref section="3" target="HTTP"/>.
+      </t>
+      <t>
+        Furthermore, it uses the terms <em>URI query parameter</em> for parameters
+        in the query component of a URI (<xref target="HTTP" section="4.2.2"/>) and
+        <em>query content</em> for the request content (<xref target="HTTP" section="4.2.2"/>)
+        of a QUERY request.
+      </t>
+    </section>
+
+    <section title="Notational Conventions" anchor="notational.conventions">
       <t>
         The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
         NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
@@ -227,12 +224,19 @@ q=foo&amp;limit=10&amp;sort=-published
       the target URI.
     </t>
     <t>
-      The content of the request defines the query. Implementations &MAY; use
-      a request content of any media type with the QUERY method, provided that it
-      has appropriate query semantics.
+      The content of the request and it's media type define the query.
+      Implementations &MAY; use a request content of any media type with
+      the QUERY method, provided that it has appropriate query semantics.
     </t>
     <t>
-      QUERY requests are both safe and idempotent with regards to the
+      As for all HTTP methods in general, the target URI's query part
+      takes part in identifying the resource being queried and therefore is
+      not part of the actual query. Whether and how the URI's query part
+      directly affects the result of the query can be defined in media
+      type definitions for QUERY.
+    </t>
+    <t>
+      QUERY requests are both safe and idempotent with regard to the
       resource identified by the request URI. That is, QUERY requests do not
       alter the state of the targeted resource. However, while processing a
       QUERY request, a server can be expected to allocate computing and memory
@@ -243,60 +247,57 @@ q=foo&amp;limit=10&amp;sort=-published
       A successful response to a QUERY request is expected to provide some
       indication as to the final disposition of the operation. For
       instance, a successful query that yields no results can be represented
-      by a 204 No Content response. If the response includes content,
+      by a 204 (No Content) response. If the response includes content,
       it is expected to describe the results of the operation.
     </t>
 
     <section title="Content-Location and Location Fields" anchor="location">
-    <t>
-      Furthermore, a successful response can include a Content-Location
-      header field (see <xref target="HTTP" section="8.7"/>) containing an
-      identifier for a resource corresponding to the results of the
-      operation. This represents a claim from the server that a client can send
-      a GET request for the indicated URI to retrieve the results of the query
-      operation just performed. The indicated resource might be temporary.
-    </t>
-    <t>
-      A server &MAY; create or locate a resource that identifies the query
-      operation for future use. If the server does so, the URI of the resource
-      can be included in the Location header field of the response (see <xref
-      target="HTTP" section="10.2.2"/>). This represents a claim that a client can
-      send a GET request to the indicated URI to repeat the query operation just
-      performed without resending the query parameters. This resource might be
-      temporary; if a future request fails, the client can retry using the
-      original QUERY resource and the previously submitted parameters again.
-    </t>
+      <t>
+        Furthermore, a successful response can include a Content-Location
+        header field (see <xref target="HTTP" section="8.7"/>) containing an
+        identifier for a resource corresponding to the results of the
+        operation. This represents a claim from the server that a client can send
+        a GET request for the indicated URI to retrieve the results of the query
+        operation just performed. The indicated resource might be temporary.
+      </t>
+      <t>
+        A server can create or locate a resource that identifies the query
+        operation for future use. If the server does so, the URI of the resource
+        can be included in the Location header field of the response (see <xref
+        target="HTTP" section="10.2.2"/>). This represents a claim that a client can
+        send a GET request to the indicated URI to repeat the query operation just
+        performed without resending the query content. This resource might be
+        temporary; if a future request fails, the client can retry using the
+        original QUERY resource and the previously submitted content.
+      </t>
     </section>
 
     <section title="Redirection" anchor="redirection">
-    <t>
-      In some cases, the server may choose to respond indirectly to the QUERY
-      request by redirecting the user agent to a different URI (see
-      <xref target="HTTP" section="15.4"/>). The semantics of the redirect
-      response do not differ from other methods. For instance, a 303 (See Other)
-      response would indicate that the Location field identifies an
-      alternate URI from which the results can be retrieved
-      using a GET request (this use case is also covered by the
-      use of the Location response field in a 2xx response).
-      On the other hand, response codes 307 (Temporary Redirect) and 308
-      (Permanent Redirect) can be used to request the user agent to redo
-      the QUERY request on the URI specified by the Location field.
-      Various non-normative examples of successful
-      QUERY responses are illustrated in <xref target="examples" />.
-    </t>
+      <t>
+        In some cases, the server may choose to respond indirectly to the QUERY
+        request by redirecting the user agent to a different URI (see
+        <xref target="HTTP" section="15.4"/>). The semantics of the redirect
+        response do not differ from other methods. For instance, a 303 (See Other)
+        response would indicate that the Location field identifies an
+        alternate URI from which the results can be retrieved
+        using a GET request (this use case is also covered by the
+        use of the Location response field in a 2xx response).
+        On the other hand, response codes 307 (Temporary Redirect) and 308
+        (Permanent Redirect) can be used to request the user agent to redo
+        the QUERY request on the URI specified by the Location field.
+        Various non-normative examples of successful
+        QUERY responses are illustrated in <xref target="examples"/>.
+      </t>
     </section>
 
     <section title="Conditional Requests" anchor="conditional">
-    <t>
-      The semantics of the QUERY method change to a "conditional QUERY" if
-      the request message includes an If-Modified-Since, If-Unmodified-
-      Since, If-Match, If-None-Match, or If-Range header field
-      (<xref target="HTTP" sectionFormat="comma" section="13"/>).  A conditional QUERY requests that the query
-      be performed only under the circumstances described by the conditional
-      header field(s). It is important to note, however, that such conditions
-      are evaluated against the state of the target resource itself as opposed
-      to the collected results of the query operation.
-    </t>
+      <t>
+        A conditional QUERY requests that the selected representation
+        (i.e., the query results, after any content negotiation) be
+        returned in the response only under the circumstances described by the
+        conditional header field(s), as defined in
+        <xref target="HTTP" section="13"/>.
+      </t>
     </section>
 
     <section title="Caching" anchor="caching">
@@ -311,208 +312,78 @@ q=foo&amp;limit=10&amp;sort=-published
         efficiency, by:
       </t>
       <ul>
-        <li>Removing content encoding(s)</li>
-        <li>Normalizing based upon knowledge of format conventions, as indicated by the any media type suffix in the request's Content-Type field (e.g., "+json")</li>
-        <li>Normalizing based upon knowledge of the semantics of the content itself, as indicated by the request's Content-Type field.</li>
+        <li>Removing content encoding(s) (<xref target="HTTP" section="8.4"/>).</li>
+        <li>Normalizing based upon knowledge of format conventions, as indicated by any
+          media subtype suffix in the request's Content-Type field (e.g., "+json", see
+          <xref target="RFC6838" section="4.2.8"/>).</li>
+        <li>Normalizing based upon knowledge of the semantics of the content itself, as indicated by
+          the request's Content-Type field.</li>
       </ul>
       <t>
         Note that any such normalization is performed solely for the purpose of generating a cache key; it
         does not change the request itself.
       </t>
-      </section>
+    </section>
+
+    <section title="Range Requests" anchor="range">
+      <t>
+        The semantics of Range Requests for QUERY are identical to those for GET,
+        as defined in <xref target="HTTP" section="14"/>.
+      </t>
+    </section>
+
   </section>
 
   <section title="The &quot;Accept-Query&quot; Header Field" anchor="field.accept-query">
     <t>
-      The "Accept-Query" response header field &MAY; be used by a resource to
+      The "Accept-Query" response header field can be used by a resource to
       directly signal support for the QUERY method while identifying
       the specific query format media type(s) that may be used.
     </t>
-<sourcecode type="abnf">
-Accept-Query = 1#media-type
-</sourcecode>
     <t>
-      The Accept-Query header field specifies a comma-separated listing of media
-      types (with optional parameters) as defined by
-      <xref target="HTTP" section="8.3.1"/>. <cref>field syntax currently discussed in <eref target="https://github.com/httpwg/http-extensions/issues/2860"/></cref>
+      "Accept-Query" contains a list of media ranges (<xref target="HTTP" section="12.5.1"/>)
+      using "Structured Fields" syntax (<xref target="STRUCTURED-FIELDS"/>).
+      Media ranges are represented by a List Structured Header Field of either Tokens or
+      Strings, containing the media range value without parameters. Parameters,
+      if any, are mapped to Parameters of type String.
     </t>
     <t>
-      The order of types listed by the Accept-Query header field is not significant.
+      The choice of Token vs. String is semantically insignificant. That is,
+      recipients &MAY; convert Tokens to Strings, but &MUST-NOT; process them
+      differently based on the received type.
+    </t>
+    <t>
+      Media types do not exactly map to Tokens, for instance they
+      allow a leading digit. In cases like these, the String format needs to
+      be used.
+    </t>
+    <t>
+      The only supported uses of wildcards are "*/*", which matches any type,
+      or "xxxx/*", which matches any subtype of the indicated type.
+    </t>
+    <t>
+      The order of types listed in the field value is not significant.
+    </t>
+    <t>
+      The only allowed format for parameters is String.
     </t>
     <t>
       Accept-Query's value applies to every URI on the server that shares the same path; in
       other words, the query component is ignored. If requests to the same resource return
-      different Accept-Query values, the most recently received fresh (per
-      <xref target="HTTP-CACHING" section="4.2"/>) value is used.
-    </t>
-  </section>
-
-  <section title="Examples" anchor="examples">
-<!-- TODO: add Content-Length fields once examples are stable -->
-    <t>
-      The non-normative examples in this section make use of a simple,
-      hypothetical plain-text based query syntax based on SQL with results
-      returned as comma-separated values. This is done for illustration
-      purposes only. Implementations are free to use any format they wish on
-      both the request and response.
-    </t>
-
-    <section title="Simple QUERY with a Direct Response">
-
-      <t>A simple query with a direct response:</t>
-<artwork type="http-message">
-QUERY /contacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 200 OK
-Content-Type: text/csv
-
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</artwork>
-
-    </section>
-
-    <section title="Simple QUERY with a Direct Response and Location Fields">
-
-      <t>A simple query with a direct response:</t>
-<artwork type="http-message">
-QUERY /contacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 200 OK
-Content-Type: text/csv
-Content-Location: /contacts/responses/42
-Location: /contacts/queries/17
-
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</artwork>
-
-    <t>
-      A subsequent GET request on /contacts/responses/42 would return
-      the same response, until the server decides to remove that
-      resource.
+      different Accept-Query values, the most recently received fresh value (per
+      <xref target="HTTP-CACHING" section="4.2"/>) is used.
     </t>
     <t>
-      A GET request on /contacts/queries/17 however would execute the same
-      query again, and return a fresh result for that query:
+      Example:
     </t>
-
-<artwork type="http-message">
-GET /contacts/queries/17 HTTP/1.1
-Host: example.org
-Accept: text/csv
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 200 OK
-Content-Type: text/csv
-Content-Location: /contacts/responses/43
-
-surname, givenname, email
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</artwork>
-
-    </section>
-
-    <section title="Simple QUERY with Indirect Response (303 See Other)">
-
-      <t>A simple query with an Indirect Response (303 See Other):</t>
-<artwork type="http-message">
-QUERY /contacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 303 See Other
-Location: /contacts/query123
-</artwork>
-
-      <t>Retrieval of the Query Response:</t>
-<artwork type="http-message">
-GET /contacts/query123 HTTP/1.1
-Host: example.org
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 200 OK
-Content-Type: text/csv
-
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</artwork>
-
-    </section>
-
-    <section title="Simple QUERY with Redirect Response (308 Moved Permanently)">
-
-      <t>A simple query being redirected:</t>
-<artwork type="http-message">
-QUERY /contacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 308 Moved Permanently
-Location: /morecontacts
-</artwork>
-
-      <t>Redirected request:</t>
-<artwork type="http-message">
-QUERY /morecontacts HTTP/1.1
-Host: example.org
-Content-Type: application/sql
-Accept: text/csv
-
-select surname, givenname, email limit 10
-</artwork>
-
-      <t>Response:</t>
-<artwork type="http-message">
-HTTP/1.1 200 OK
-Content-Type: text/csv
-
-surname, givenname, email
-Smith, John, john.smith@example.org
-Jones, Sally, sally.jones@example.com
-Dubois, Camille, camille.dubois@example.net
-</artwork>
-
-    </section>
+    <artwork type="example">
+Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
+    <t>
+      Although the syntax for this field appears to be similar to other
+      fields, such as "Accept" (<xref target="HTTP" section="12.5.1"/>),
+      it is a Structured Field and thus &MUST; be processed as specified in
+      <xref target="STRUCTURED-FIELDS" section="4"/>.
+    </t>
   </section>
 
   <section title="Security Considerations">
@@ -523,14 +394,21 @@ Dubois, Camille, camille.dubois@example.net
     </t>
     <t>
       It can be used as an alternative to passing request
-      information in the URI (e.g., in the query section). This is preferred in some
+      information in the URI (e.g., in the query component). This is preferred in some
       cases, as the URI is more likely to be logged or otherwise processed
       by intermediaries than the request content.
+    </t>
+    <t>
       If a server creates a temporary resource to represent the results of a QUERY
       request (e.g., for use in the Location or Content-Location field) and the request
       contains sensitive information that cannot be logged, then the URI of this
       resource &SHOULD; be chosen such that it does not include any sensitive
       portions of the original request content.
+    </t>
+    <t>
+      Caches that normalize QUERY content incorrectly or in ways that are
+      significantly different from how the resource processes the content
+      can return the incorrect response if normalization results in a false positive.
     </t>
     <t>
       A QUERY request from user agents implementing CORS (Cross-Origin Resource Sharing)
@@ -589,9 +467,9 @@ Dubois, Camille, camille.dubois@example.net
           <tr>
             <td>Accept-Query</td>
             <td>permanent</td>
-            <td></td>
+            <td>List</td>
             <td><xref target="field.accept-query"/> of this document.</td>
-            <td><cref>field syntax currently discussed in <eref target="https://github.com/httpwg/http-extensions/issues/2860"/></cref></td>
+            <td></td>
           </tr>
         </tbody>
       </table>
@@ -624,6 +502,19 @@ Dubois, Camille, camille.dubois@example.net
       <seriesInfo name="STD" value="98"/>
       <seriesInfo name="RFC" value="9111"/>
     </reference>
+    <reference anchor="STRUCTURED-FIELDS">
+      <front>
+        <title>Structured Field Values for HTTP</title>
+        <author initials="M." surname="Nottingham" fullname="Mark Nottingham">
+          <organization>Cloudflare</organization>
+        </author>
+        <author initials="P-H." surname="Kamp" fullname="Poul-Henning Kamp">
+          <organization>The Varnish Cache Project</organization>
+        </author>
+        <date year="2024" month="September"/>
+      </front>
+      <seriesInfo name="RFC" value="9651"/>
+    </reference>
   </references>
   <references title="Informative References">
     <reference anchor="FETCH" target="https://fetch.spec.whatwg.org">
@@ -632,7 +523,406 @@ Dubois, Camille, camille.dubois@example.net
         <author><organization>WHATWG</organization></author>
       </front>
     </reference>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6838.xml"/>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8259.xml"/>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9535.xml"/>
+    <reference anchor="URL" target="https://url.spec.whatwg.org">
+      <front>
+        <title>URL</title>
+        <author><organization>WHATWG</organization></author>
+      </front>
+    </reference>
+    <reference anchor="XSLT" target='https://www.w3.org/TR/2017/REC-xslt-30-20170608/'>
+      <front>
+        <title>XSL Transformations (XSLT) Version 3.0</title>
+        <author fullname='Michael Kay' surname='Kay' initials='M.'/>
+        <date year='2017' month='June' day='08'/>
+      </front>
+      <seriesInfo name='W3C Recommendation' value='REC-xslt-30-20170608'/>
+      <annotation>
+        Latest version available at
+        <eref target='https://www.w3.org/TR/xslt-30/'/>.
+      </annotation>
+    </reference>
   </references>
+
+  <section title="Examples" anchor="examples">
+    <t>
+      The examples below are for illustrative purposes only; if one needs to
+      send queries that are actually this short, it is probably better to use GET.
+    </t>
+    <t>
+      The media type used in most examples is "application/x-www-form-urlencoded"
+      (as used in POST requests from browser user clients, defined in
+      "<eref target="https://url.spec.whatwg.org/#application/x-www-form-urlencoded">application/x-www-form-urlencoded</eref>" in
+      <xref target="URL"/>).
+      The Content-Length fields have been omitted for brevity.
+    </t>
+
+    <section title="Simple Query" anchor="example.simple">
+      <t>A simple query with a direct response:</t>
+<artwork type="http-message">
+QUERY /contacts HTTP/1.1
+Host: example.org
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22
+</artwork>
+
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Jones",
+    "givenname": "Sally",
+    "email": "sally.jones@example.com" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]
+</artwork>
+    </section>
+
+    <section title="Discovery of QUERY support" anchor="example.discovery.method">
+      <t>
+        A simple way to discover support for QUERY is provided by the OPTIONS
+        (<xref target="HTTP" section="9.3.7"/>) method:
+      </t>
+<artwork type="http-message">
+OPTIONS /contacts HTTP/1.1
+Host: example.org
+
+</artwork>
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Allow: GET, QUERY, OPTIONS, HEAD
+</artwork>
+      <t>
+        The Allow response field (<xref target="HTTP" section="10.2.1"/>) denotes the set of
+        supported methods on the specified resource.
+      </t>
+      <t>
+        There are alternatives to the use of OPTIONS. For instance, a QUERY request
+        can be tried without prior knowledge of server support. The server would then
+        either process the request, or could respond with a 4xx status such as 405 (Method Not Allowed,
+        <xref target="HTTP" section="15.5.6"/>), including the Allow response field.
+      </t>
+    </section>
+
+    <section title="Discovery of QUERY Formats" anchor="example.discovery.formats">
+      <t>
+        Discovery of supported media types for QUERY is possible via the Accept-Query
+        (<xref target="field.accept-query"/>) response field:
+      </t>
+<artwork type="http-message">
+HEAD /contacts HTTP/1.1
+Host: example.org
+
+</artwork>
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: application/xhtml
+Accept-Query: application/x-www-form-urlencoded, application/sql
+</artwork>
+      <t>
+        Responses to which request methods will contain Accept-Query will depend on
+        the resource being accessed.
+      </t>
+      <t>
+        An alternative to checking Accept-Query would be to make a QUERY request, and then
+        -- in case of a 4xx status such as 415 (Unsupported Media Type, <xref target="HTTP" section="12.5.1"/>) response --
+        to inspect the Allow (<xref target="HTTP" section="15.5.16"/>) response field:
+      </t>
+<artwork type="http-message">
+HTTP/1.1 415 Unsupported Media Type
+Content-Type: application/xhtml
+Accept: application/x-www-form-urlencoded, application/sql
+</artwork>
+    </section>
+
+    <section title="Content-Location, Location, and Indirect Responses" anchor="example.content-location.location.indirect">
+      <t>
+        The Content-Location and Location response fields provide a way to identify alternate resources
+        that will respond to GET requests, either for the received result of the request, or for future
+        requests to perform the same operation. Going back to the example from <xref target="example.simple"/>:
+      </t>
+<artwork type="http-message">
+QUERY /contacts HTTP/1.1
+Host: example.org
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22
+</artwork>
+        <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Location: /contacts/stored-results/17
+Location: /contacts/stored-queries/42
+Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
+Date: Sun, 17 Nov 2024, 16:10:24 GMT
+
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Jones",
+    "givenname": "Sally",
+    "email": "sally.jones@example.com" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]
+</artwork>
+
+      <section title="Using Content-Location" anchor="example.content-location">
+        <t>
+          The Content-Location response field received above identifies a resource holding
+          the result for the QUERY response it appeared on:
+        </t>
+<artwork type="http-message">
+GET /contacts/stored-results/17 HTTP/1.1
+Host: example.org
+Accept: application/json
+
+</artwork>
+        <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
+Date: Sun, 17 Nov 2024, 16:10:25 GMT
+
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Jones",
+    "givenname": "Sally",
+    "email": "sally.jones@example.com" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]
+</artwork>
+      </section>
+
+      <section title="Using Location" anchor="example.location">
+        <t>
+          The Location response field identifies a resource that will respond to GET
+          with a fresh result for the QUERY response it appeared on.
+        </t>
+<artwork type="http-message">
+GET /contacts/stored-queries/42 HTTP/1.1
+Host: example.org
+Accept: application/json
+
+</artwork>
+        <t>
+          In this example, one entry was removed at 2024-11-17T16:12:01Z (as indicated in
+          the Last-Modified field), so the response only contains two entries:
+        </t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: application/json
+Last-Modified: Sun, 17 November 2024, 16:12:01 GMT
+ETag: "42-1"
+Date: Sun, 17 Nov 2024, 16:13:17 GMT
+
+[
+  { "surname": "Smith",
+    "givenname": "John",
+    "email": "smith@example.org" },
+  { "surname": "Dubois",
+    "givenname": "Camille",
+    "email": "camille.dubois@example.net" }
+]
+</artwork>
+        <t>
+          Assuming no change in the query result, a subsequent conditional GET request with
+        </t>
+<artwork type="http-message">
+If-None-Match: "42-1"
+</artwork>
+        <t>
+          would result in a 304 response (Not Modified, <xref target="HTTP" section="15.4.5"/>).
+        </t>
+        <t>
+          Note that there's no guarantee that the server will implement this resource
+          indefinitely, so, after an error response, the client would need to redo
+          the original QUERY request in order to obtain a new alternative location.
+        </t>
+      </section>
+
+      <section title="Indirect Responses" anchor="example.indirect">
+        <t>
+          Servers can send "indirect" responses using the status code 303 (See Other,
+          <xref target="HTTP" section="15.4.4"/>).
+        </t>
+        <t>
+          Given the request at the beginning of <xref target="example.content-location.location.indirect"/>,
+          a server might respond with:
+        </t>
+<artwork type="http-message">
+HTTP/1.1 303 See Other
+Content-Type: text/plain
+Date: Sun, 17 Nov 2024, 16:13:17 GMT
+Location: /contacts/stored-queries/42
+
+See stored query at "/contacts/stored-queries/42".
+</artwork>
+        <t>
+          This is similar to including Location on a direct response, except that no result
+          for the query is returned. This allows the server to only generate an alternative
+          resource. This resource could then be used as shown in
+          <xref target="example.location"/>.
+        </t>
+      </section>
+    </section>
+
+    <section title="More Query Formats" anchor="example.more.query.formats">
+      <t>
+        The following examples show requests on a JSON-shaped (<xref target="RFC8259"/>) database of
+        RFC errata.
+      </t>
+      <t>
+        The request below uses XSLT (<xref target="XSLT"/>) to extract errata information summarized per year and
+        the defined errata types.
+      </t>
+<artwork type="http-message">
+QUERY /errata.json HTTP/1.1
+Host: example.org
+Content-Type: application/xslt+xml
+Accept: application/xml, text/csv
+
+<![CDATA[<transform xmlns="http://www.w3.org/1999/XSL/Transform"
+  xmlns:j="http://www.w3.org/2005/xpath-functions"
+  version="3.0">
+
+  <output method="text"/>
+
+  <param name="input"/>
+
+  <variable name="json"
+    select="json-to-xml(unparsed-text($input))"/>
+
+  <variable name="sc">errata_status_code</variable>
+  <variable name="sd">submit_date</variable>
+
+  <template match="/">
+    <text>year, total, rejected, verified, hdu, reported</text>
+    <text>&#10;</text>
+    <variable name="en" select="$json//j:map"/>
+    <for-each-group select="$en"
+      group-by="substring-before(j:string[@key=$sd],'-')">
+      <sort select="current-grouping-key()"/>
+      <variable name="year" select="current-grouping-key()"/>
+      <variable name="errata" select=
+        "$en[$year=substring-before(j:string[@key=$sd],'-')]"/>
+      <value-of select="concat(
+        $year,
+        ', ',
+        count($errata),
+        ', ',
+        count($errata['Rejected'=j:string[@key=$sc]]),
+        ', ',
+        count($errata['Verified'=j:string[@key=$sc]]),
+        ', ',
+        count(
+          $errata['Held for Document Update'=j:string[@key=$sc]]),
+        ', ',
+        count($errata['Reported'=j:string[@key=$sc]]),
+        '&#10;')"/>
+    </for-each-group>
+  </template>
+
+</transform>]]>
+</artwork>
+    <t>
+      Response:
+    </t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: text/csv
+Accept-Query: "application/jsonpath", "application/xslt+xml"
+Date: Wed, 19 Feb 2025, 17:10:01 GMT
+
+year, total, rejected, verified, hdu, reported
+2000, 14, 0, 14, 0, 0
+2001, 72, 1, 70, 1, 0
+2002, 124, 8, 104, 12, 0
+2003, 63, 0, 61, 2, 0
+2004, 89, 1, 83, 5, 0
+2005, 156, 10, 96, 50, 0
+2006, 444, 54, 176, 214, 0
+2007, 429, 48, 188, 193, 0
+2008, 423, 52, 165, 206, 0
+2009, 331, 39, 148, 144, 0
+2010, 538, 80, 232, 222, 4
+2011, 367, 47, 170, 150, 0
+2012, 348, 54, 149, 145, 0
+2013, 341, 61, 169, 106, 5
+2014, 342, 73, 180, 72, 17
+2015, 343, 79, 145, 89, 30
+2016, 295, 46, 122, 82, 45
+2017, 303, 46, 120, 84, 53
+2018, 350, 61, 118, 98, 73
+2019, 335, 47, 131, 94, 63
+2020, 387, 68, 117, 123, 79
+2021, 321, 44, 148, 63, 66
+2022, 358, 37, 198, 40, 83
+2023, 262, 38, 121, 33, 70
+2024, 322, 33, 125, 23, 141
+9999, 1, 0, 0, 1, 0
+</artwork>
+    <t>
+      Note the Accept-Query response field indicating that another query format -- JSONPath
+      (<xref target="RFC9535"/>) -- is supported as well. The request below would report the
+      identifiers of all rejected errata submitted since 2024:
+    </t>
+<artwork type="http-message">
+QUERY /errata.json HTTP/1.1
+Host: example.org
+Content-Type: application/jsonpath
+Accept: application/json
+
+$..[
+     ?@.errata_status_code=="Rejected"
+     &amp;&amp; @.submit_date>"2024"
+   ]
+   ["doc-id"]
+</artwork>
+      <t>
+        Response:
+      </t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: application/json
+Accept-Query: "application/jsonpath", "application/xslt+xml"
+Date: Thu, 20 Feb 2025, 09:55:42 GMT
+Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
+
+[
+  "RFC1185","RFC8407","RFC6350","RFC8467","RFC1157","RFC9543",
+  "RFC9076","RFC7656","RFC2822","RFC9460","RFC2104","RFC6797",
+  "RFC9499","RFC9557","RFC2131","RFC2328","RFC9001","RFC3325",
+  "RFC9438","RFC2526","RFC2985","RFC7643","RFC9132","RFC6376",
+  "RFC9110","RFC9460","RFC7748","RFC9497","RFC8463","RFC4035",
+  "RFC7239","RFC9083","RFC9537","RFC9537","RFC9420","RFC9000",
+  "RFC9656","RFC9110","RFC2324","RFC2549","RFC6797","RFC2549",
+  "RFC8894"
+]
+</artwork>
+    </section>
+</section>
 
 <section title="Change Log" anchor="change.log" removeInRFC="true">
 <section title="Since draft-ietf-httpbis-safe-method-w-body-00" anchor="changes.since.00">
@@ -682,14 +972,62 @@ Dubois, Camille, camille.dubois@example.net
 <section title="Since draft-ietf-httpbis-safe-method-w-body-06" anchor="changes.since.06">
 <ul>
   <li>Improve language about sensitive information in URIs (<eref target="https://github.com/httpwg/http-extensions/issues/1895"/>)</li>
+  <li>Guidance about what's possible with GET wrt URI length (<eref target="https://github.com/httpwg/http-extensions/issues/1914"/>)</li>
+  <li>Clarified description of conditional queries (<eref target="https://github.com/httpwg/http-extensions/issues/1917"/>)</li>
   <li>Editorial changes to Introduction (ack Will Hawkins, <eref target="https://github.com/httpwg/http-extensions/pull/2859"/>)</li>
+  <li>Added Security Consideration with respect to Normalization (<eref target="https://github.com/httpwg/http-extensions/issues/2896"/>)</li>
   <li>Added CORS considerations (<eref target="https://github.com/httpwg/http-extensions/issues/2898"/>)</li>
+  <li>Make Accept-Query a Structured Field (<eref target="https://github.com/httpwg/http-extensions/issues/2934"/>)</li>
   <li>SQL media type is application/sql (RFC6922) (<eref target="https://github.com/httpwg/http-extensions/issues/2936"/>)</li>
   <li>Added overview table to introduction (<eref target="https://github.com/httpwg/http-extensions/issues/2951"/>)</li>
+  <li>Reference HTTP spec for terminology (<eref target="https://github.com/httpwg/http-extensions/issues/2953"/>)</li>
   <li>Moved BCP14 related text into subsection (<eref target="https://github.com/httpwg/http-extensions/issues/2954"/>)</li>
+  <li>Move examples into index (<eref target="https://github.com/httpwg/http-extensions/issues/2957"/>)</li>
+</ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-07" anchor="changes.since.07">
+<ul>
+  <li>Examples Section revised (<eref target="https://github.com/httpwg/http-extensions/issues/1906"/>)</li>
+  <li>Discuss Range Requests (<eref target="https://github.com/httpwg/http-extensions/issues/2979"/>)</li>
+</ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-08" anchor="changes.since.08">
+<ul>
+  <li>Mention the role of the query part of the request URI (<eref target="https://github.com/httpwg/http-extensions/issues/3004"/>)</li>
+  <li>Avoid term 'query parameters' (<eref target="https://github.com/httpwg/http-extensions/issues/3019"/>)</li>
+  <li>Add missing references, fixed terminology (<eref target="https://github.com/httpwg/http-extensions/issues/3021"/>)</li>
+  <li>Add Acknowledgements/Contributors sections; moved Ashok to Contributors (<eref target="https://github.com/httpwg/http-extensions/issues/3029"/>)</li>
+  <li>Hopefully more clarity wrt query content vs URI query conponent (<eref target="https://github.com/httpwg/http-extensions/issues/3059"/>)</li>
 </ul>
 </section>
 </section>
 
+<section title="Acknowledgements" anchor="acknowledgements" numbered="false">
+<t>
+  We thank all members of the HTTP Working Group for ideas, reviews, and feedback.
+</t>
+<t>
+  The following individuals deserve special recognition:
+  Carsten Bormann,
+  Mark Nottingham,
+  Martin Thomson,
+  Michael Thornburgh,
+  Roberto Polli,
+  Roy Fielding, and
+  Will Hawkins.
+</t>
+</section>
+
+<section title="Contributors" anchor="contributors" numbered="false">
+<t>
+  Ashok Malhotra participated in early discussions leading to this
+  specification:
+</t>
+<author initials="A." surname="Malhotra" fullname="Ashok Malhotra">
+  <address>
+    <email>malhotrasahib@gmail.com</email>
+  </address>
+</author>
+</section>
 </back>
 </rfc>

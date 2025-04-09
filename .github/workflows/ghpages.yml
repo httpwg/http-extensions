@@ -18,6 +18,8 @@ jobs:
   build:
     name: "Update Editor's Copy"
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - name: "Checkout"
       uses: actions/checkout@v4

@@ -1,6 +1,7 @@
 ---
 title: "Cookies: HTTP State Management Mechanism"
 docname: draft-ietf-httpbis-rfc6265bis-latest
+submissiontype: IETF
 date: {DATE}
 category: std
 obsoletes: 6265
@@ -46,23 +47,12 @@ normative:
   RFC1034:
   RFC1123:
   RFC2119:
-  RFC3490:
-    override: yes
-    title: "Internationalizing Domain Names in Applications (IDNA)"
-    seriesinfo:
-      RFC: 3490
-    date: 2003-03
-    author:
-      -
-        ins: P. Faltstrom
-        ins: P. Hoffman
-        ins: A. Costello
-    ann: See {{idna-migration}} for an explanation why the normative reference to an obsoleted specification is needed.
   RFC4790:
   RFC5234:
   RFC5890:
   RFC6454:
   RFC8126:
+  RFC8174:
   RFC9110:
      display: HTTP
   USASCII:
@@ -120,28 +110,15 @@ normative:
       org: WHATWG
 
 informative:
-  RFC2818:
   RFC3986:
   RFC6265:
   RFC4648:
-  RFC5895:
   RFC6265:
   RFC7034:
+  RFC8446:
+     display: TLS13
   RFC9113:
   RFC9114:
-  UTS46:
-    target: http://unicode.org/reports/tr46/
-    title: "Unicode IDNA Compatibility Processing"
-    seriesinfo:
-      UNICODE: "Unicode Technical Standards # 46"
-    date: 2016-06
-    author:
-    -
-      ins: M. Davis
-      name: Mark Davis
-    -
-      ins: M. Suignard
-      name: Michel Suignard
   CSRF:
     target: http://portal.acm.org/citation.cfm?id=1455770.1455782
     title: Robust Defenses for Cross-Site Request Forgery
@@ -198,9 +175,6 @@ informative:
     -
       ins: C. Bentzel
       name: Chris Bentzel
-  I-D.ietf-httpbis-cookie-alone:
-  I-D.ietf-httpbis-cookie-prefixes:
-  I-D.ietf-httpbis-cookie-same-site:
   PSL:
     target: https://publicsuffix.org/list/
     title: "Public Suffix List"
@@ -279,9 +253,11 @@ This document obsoletes {{RFC6265}}.
 
 ## Conformance Criteria
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
-"SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
-interpreted as described in {{RFC2119}}.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+"MAY", and "OPTIONAL" in this document are to be interpreted as
+described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they
+appear in all capitals, as shown here.
 
 Requirements phrased in the imperative as part of algorithms (such as "strip any
 leading space characters" or "return false and abort these steps") are to be
@@ -376,11 +352,20 @@ origin server can include multiple Set-Cookie header fields in a single response
 The presence of a Cookie or a Set-Cookie header field does not preclude HTTP
 caches from storing and reusing a response.
 
-Origin servers SHOULD NOT fold multiple Set-Cookie header fields into a single
-header field. The usual mechanism for folding HTTP headers fields (i.e., as
-defined in {{Section 5.3 of RFC9110}}) might change the semantics of the Set-Cookie header
-field because the %x2C (",") character is used by Set-Cookie in a way that
-conflicts with such folding.
+Origin servers and intermediaries MUST NOT combine multiple Set-Cookie header
+fields into a single header field. The usual mechanism for combining HTTP
+headers fields (i.e., as defined in {{Section 5.3 of RFC9110}}) might change
+the semantics of the Set-Cookie header field because the %x2C (",") character
+is used by Set-Cookie in a way that conflicts with such combining.
+
+For example,
+
+~~~
+Set-Cookie: a=b;path=/c,d=e
+~~~
+
+is ambiguous. It could be intended as two cookies, a=b and d=e, or a single
+cookie with a path of /c,d=e.
 
 User agents MAY ignore Set-Cookie header fields based on response status codes or
 the user agent's cookie policy (see {{ignoring-cookies}}).
@@ -436,7 +421,24 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 ~~~
 
 Notice that the Cookie header field above contains two cookies, one named SID and
-one named lang. If the server wishes the user agent to persist the cookie over
+one named lang.
+
+Cookie names are case-sensitive, meaning that if a server sends the user agent
+two Set-Cookie header fields that differ only in their name's case the user
+agent will store and return both of those cookies in subsequent requests.
+
+~~~ example
+== Server -> User Agent ==
+
+Set-Cookie: SID=31d4d96e407aad42
+Set-Cookie: sid=31d4d96e407aad42
+
+== User Agent -> Server ==
+
+Cookie: SID=31d4d96e407aad42; sid=31d4d96e407aad42
+~~~
+
+If the server wishes the user agent to persist the cookie over
 multiple "sessions" (e.g., user agent restarts), the server can specify an
 expiration date in the Expires attribute. Note that the user agent might
 delete the cookie before the expiration date if the user agent's cookie store
@@ -553,8 +555,8 @@ the user agent.
 ### Syntax {#abnf-syntax}
 
 Informally, the Set-Cookie response header field contains a cookie, which begins with a
-name-value-pair, followed by zero or more attribute-value pairs. Servers
-SHOULD NOT send Set-Cookie header fields that fail to conform to the following
+name-value-pair, followed by zero or more attribute-value pairs. Servers conforming to
+this profile MUST NOT send Set-Cookie header fields that deviate from the following
 grammar:
 
 ~~~ abnf
@@ -567,14 +569,14 @@ cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                       ; US-ASCII characters excluding CTLs,
                       ; whitespace, DQUOTE, comma, semicolon,
                       ; and backslash
-token             = <token, defined in [RFC9110], Section 5.6.2>
+token             = <token, defined in [HTTP], Section 5.6.2>
 
 cookie-av         = expires-av / max-age-av / domain-av /
                     path-av / secure-av / httponly-av /
                     samesite-av / extension-av
 expires-av        = "Expires" BWS "=" BWS sane-cookie-date
 sane-cookie-date  =
-    <IMF-fixdate, defined in [RFC9110], Section 5.6.7>
+    <IMF-fixdate, defined in [HTTP], Section 5.6.7>
 max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
 non-zero-digit    = %x31-39
                       ; digits 1 through 9
@@ -596,7 +598,7 @@ Note that some of the grammatical terms above reference documents that use
 different grammatical notations than this document (which uses ABNF from
 {{RFC5234}}).
 
-Per the grammar above, servers SHOULD NOT produce nameless cookies (i.e.: an
+Per the grammar above, servers MUST NOT produce nameless cookies (i.e.: an
 empty cookie-name) as such cookies may be unpredictably serialized by UAs when
 sent back to the server.
 
@@ -613,19 +615,19 @@ header fields sent to the server.
 
 The domain-value is a subdomain as defined by {{RFC1034}}, Section 3.5, and
 as enhanced by {{RFC1123}}, Section 2.1. Thus, domain-value is a string of
-{{USASCII}} characters, such as one obtained by applying the "ToASCII" operation
-defined in {{Section 4 of RFC3490}}.
+{{USASCII}} characters, such as an "A-label" as defined in
+{{Section 2.3.2.1 of RFC5890}}.
 
 The portions of the set-cookie-string produced by the cookie-av term are
-known as attributes. To maximize compatibility with user agents, servers SHOULD
+known as attributes. To maximize compatibility with user agents, servers MUST
 NOT produce two attributes with the same name in the same set-cookie-string.
 (See {{storage-model}} for how user agents handle this case.)
 
-NOTE: The name of an attribute-value pair is not case sensitive. So while they
+NOTE: The name of an attribute-value pair is not case-sensitive. So while they
 are presented here in CamelCase, such as "HttpOnly" or "SameSite", any case is
 accepted. E.x.: "httponly", "Httponly", "hTTPoNLY", etc.
 
-Servers SHOULD NOT include more than one Set-Cookie header field in the same
+Servers MUST NOT include more than one Set-Cookie header field in the same
 response with the same cookie-name. (See {{set-cookie}} for how user agents
 handle this case.)
 
@@ -740,7 +742,7 @@ The Secure attribute limits the scope of the cookie to "secure" channels
 (where "secure" is defined by the user agent). When a cookie has the Secure
 attribute, the user agent will include the cookie in an HTTP request only if
 the request is transmitted over a secure channel (typically HTTP over Transport
-Layer Security (TLS) {{RFC2818}}).
+Layer Security (TLS {{RFC8446}}) {{RFC9110}}).
 
 #### The HttpOnly Attribute {#attribute-httponly}
 
@@ -1009,10 +1011,7 @@ A canonicalized host name is the string generated by the following algorithm:
 1.  Convert the host name to a sequence of individual domain name labels.
 
 2.  Convert each label that is not a Non-Reserved LDH (NR-LDH) label, to an
-    A-label (see {{Section 2.3.2.1 of RFC5890}} for the former and latter), or
-    to a "punycode label" (a label resulting from the "ToASCII" conversion in
-    {{Section 4 of RFC3490}}), as appropriate (see {{idna-migration}} of this
-    specification).
+    A-label (see {{Section 2.3.2.1 of RFC5890}} for the former and latter).
 
 3.  Concatenate the resulting labels, separated by a %x2E (".") character.
 
@@ -1330,9 +1329,10 @@ parse a set-cookie-string:
 3.  If the name-value-pair string lacks a %x3D ("=") character, then the name
     string is empty, and the value string is the value of name-value-pair.
 
-    Otherwise, the name string consists of the characters up to, but not
-    including, the first %x3D ("=") character, and the (possibly empty) value
-    string consists of the characters after the first %x3D ("=") character.
+    Otherwise, the (possibly empty) name string consists of the characters up
+    to, but not including, the first %x3D ("=") character, and the (possibly
+    empty) value string consists of the characters after the first %x3D ("=")
+    character.
 
 4.  Remove any leading or trailing WSP characters from the name string and the
     value string.
@@ -1530,9 +1530,8 @@ against CSRF as a general category of attack:
 2. Features like `<link rel='prerender'>` {{prerendering}} can be exploited
    to create "same-site" requests without the risk of user detection.
 
-When possible, developers should use a session management mechanism such as
-that described in {{top-level-navigations}} to mitigate the risk of CSRF more
-completely.
+Developers can more completely mitigate CSRF through a session management
+mechanism such as that described in {{top-level-navigations}}.
 
 #### "Lax-Allowing-Unsafe" enforcement {#lax-allowing-unsafe}
 
@@ -1913,7 +1912,7 @@ cookie-string from a given cookie store.
 
      NOTE: The notion of a "secure" connection is not defined by this document.
      Typically, user agents consider a connection secure if the connection makes
-     use of transport-layer security, such as SSL or TLS, or if the host is
+     use of transport-layer security, such as SSL or TLS {{RFC8446}}, or if the host is
      trusted. For example, most user agents consider "https" to be a scheme that
      denotes a secure protocol and "localhost" to be trusted host.
 
@@ -1998,18 +1997,6 @@ Instead of providing string-based APIs to cookies, platforms would be
 well-served by providing more semantic APIs. It is beyond the scope of this
 document to recommend specific API designs, but there are clear benefits to
 accepting an abstract "Date" object instead of a serialized date string.
-
-## IDNA Dependency and Migration {#idna-migration}
-
-IDNA2008 {{RFC5890}} supersedes IDNA2003 {{RFC3490}}. However, there are
-differences between the two specifications, and thus there can be differences
-in processing (e.g., converting) domain name labels that have been registered
-under one from those registered under the other. There will be a transition
-period of some time during which IDNA2003-based domain name labels will exist
-in the wild. User agents SHOULD implement IDNA2008 {{RFC5890}} and MAY
-implement {{UTS46}} or {{RFC5895}} in order to facilitate their IDNA transition.
-If a user agent does not implement IDNA2008, the user agent MUST implement
-IDNA2003 {{RFC3490}}.
 
 # Privacy Considerations
 
@@ -2163,7 +2150,7 @@ principles can lead to more robust security.
 
 ## Clear Text
 
-Unless sent over a secure channel (such as TLS), the information in the Cookie
+Unless sent over a secure channel (such as TLS {{RFC8446}}), the information in the Cookie
 and Set-Cookie header fields is transmitted in the clear.
 
 1.  All sensitive information conveyed in these header fields is exposed to an
@@ -2307,10 +2294,10 @@ redirections.
 Understanding how and when a request is considered same-site is also important
 in order to properly design a site for SameSite cookies. For example, if a
 cross-site top-level request is made to a sensitive page that request will be
-considered cross-site and `SameSite=Strict` cookies won’t be sent; that page’s
+considered cross-site and `SameSite=Strict` cookies won't be sent; that page's
 sub-resources requests, however, are same-site and would receive `SameSite=Strict`
 cookies. Sites can avoid inadvertently allowing access to these sub-resources
-by returning an error for the initial page request if it doesn’t include the
+by returning an error for the initial page request if it doesn't include the
 appropriate cookies.
 
 Developers are strongly encouraged to deploy the usual server-side defenses
@@ -2475,11 +2462,11 @@ Author/Change controller:
 Specification document:
 : this specification ({{set-cookie}})
 
-## Cookie Attribute Registry
+## "Cookie Attributes" Registry
 
-IANA is requested to create the "Cookie Attribute" registry, defining the
-name space of attribute used to control cookies' behavior.
-The registry should be maintained at
+IANA is requested to create the "Cookie Attributes" registry, defining the name space of
+attributes used to control cookies' behavior. The registry should be maintained in a new
+registry group called "Hypertext Transfer Protocol (HTTP) Cookie Attributes" at
 <https://www.iana.org/assignments/cookie-attribute-names>.
 
 ### Procedure
@@ -2494,7 +2481,7 @@ defined in CamelCase, but technically accepted case-insensitively.
 
 ### Registration
 
-The "Cookie Attribute Registry" should be created with the registrations below:
+The "Cookie Attributes" registry should be created with the registrations below:
 
 | Name     | Reference                               |
 |----------:+----------------------------------------|
@@ -2524,7 +2511,7 @@ overwriting cookies with this flag. ({{storage-model}})
 
 *  Limits maximum values for max-age and expire. ({{ua-attribute-expires}} and {{ua-attribute-max-age}})
 
-*  Includes the host-only-flag as part of a cookie’s uniqueness computation.
+*  Includes the host-only-flag as part of a cookie's uniqueness computation.
 ({{storage-model}})
 
 *  Considers potentially trustworthy origins as "secure". ({{storage-model}})
@@ -2559,9 +2546,9 @@ errata 4148 by updating the day-of-month, year, and time grammar, and errata
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
-adding features and aligning the specification with the reality of today’s
-deployments. Here, we’re standing upon the shoulders of a giant since the
-majority of the text is still Adam’s.
+adding features and aligning the specification with the reality of today's
+deployments. Here, we're standing upon the shoulders of a giant since the
+majority of the text is still Adam's.
 
 Thank you to both Lily Chen and Steven Englehardt, editors emeritus, for their
 significant contributions improving this draft.
