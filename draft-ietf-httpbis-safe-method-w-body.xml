@@ -77,7 +77,7 @@
         <eref target="https://github.com/httpwg/http-extensions/labels/query-method"/>.
       </t>
       <t>
-        The changes in this draft are summarized in <xref target="changes.since.08"/>.
+        The changes in this draft are summarized in <xref target="changes.since.09"/>.
       </t>
     </note>
 
@@ -997,9 +997,14 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Avoid term 'query parameters' (<eref target="https://github.com/httpwg/http-extensions/issues/3019"/>)</li>
   <li>Add missing references, fixed terminology (<eref target="https://github.com/httpwg/http-extensions/issues/3021"/>)</li>
   <li>Add Acknowledgements/Contributors sections; moved Ashok to Contributors (<eref target="https://github.com/httpwg/http-extensions/issues/3029"/>)</li>
-  <li>Hopefully more clarity wrt query content vs URI query conponent (<eref target="https://github.com/httpwg/http-extensions/issues/3059"/>)</li>
+  <li>Hopefully more clarity wrt query content vs URI query component (<eref target="https://github.com/httpwg/http-extensions/issues/3059"/>)</li>
 </ul>
 </section>
+  <section title="Since draft-ietf-httpbis-safe-method-w-body-09" anchor="changes.since.09">
+    <t>
+      None yet.
+    </t>
+  </section>
 </section>
 
 <section title="Acknowledgements" anchor="acknowledgements" numbered="false">
