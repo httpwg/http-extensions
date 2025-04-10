@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 10 October 2025                                                
+Expires: 12 October 2025                                                
                                                                M. Bishop
                                                                   Akamai
-                                                            8 April 2025
+                                                           10 April 2025
 
 
                          The HTTP QUERY Method
@@ -31,7 +31,7 @@ Editorial Note
    code and issues list for this draft can be found at
    https://github.com/httpwg/http-extensions/labels/query-method.
 
-   The changes in this draft are summarized in Appendix B.9.
+   The changes in this draft are summarized in Appendix B.10.
 
 Status of This Memo
 
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 October 2025.
+   This Internet-Draft will expire on 12 October 2025.
 
 Copyright Notice
 
@@ -101,6 +101,7 @@ Table of Contents
      B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
      B.8.  Since draft-ietf-httpbis-safe-method-w-body-07
      B.9.  Since draft-ietf-httpbis-safe-method-w-body-08
+     B.10. Since draft-ietf-httpbis-safe-method-w-body-09
    Acknowledgements
    Contributors
    Authors' Addresses
@@ -934,8 +935,12 @@ B.9.  Since draft-ietf-httpbis-safe-method-w-body-08
       Contributors (https://github.com/httpwg/http-extensions/
       issues/3029)
 
-   *  Hopefully more clarity wrt query content vs URI query conponent
+   *  Hopefully more clarity wrt query content vs URI query component
       (https://github.com/httpwg/http-extensions/issues/3059)
+
+B.10.  Since draft-ietf-httpbis-safe-method-w-body-09
+
+   None yet.
 
 Acknowledgements
 
