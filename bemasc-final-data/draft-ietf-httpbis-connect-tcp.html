@@ -1047,7 +1047,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Schwartz</td>
-<td class="center">Expires 11 October 2025</td>
+<td class="center">Expires 16 October 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1060,12 +1060,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-connect-tcp-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-04-09" class="published">9 April 2025</time>
+<time datetime="2025-04-14" class="published">14 April 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-10-11">11 October 2025</time></dd>
+<dd class="expires"><time datetime="2025-10-16">16 October 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1099,7 +1099,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 11 October 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 16 October 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1452,18 +1452,323 @@ capsule-protocol = ?1
         <h3 id="name-closing-connections">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-closing-connections" class="section-name selfRef">Closing Connections</a>
         </h3>
-<p id="section-3.4-1">In each HTTP version, any requirements related to closing connections in Classic HTTP CONNECT also apply to "connect-tcp", with the following modifications:<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-1">Connection termination is essentially symmetrical for proxies and their clients.  In this section, we use the term "endpoint" to describe an implementation of this specification in either role.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-2">When closing connections, endpoints are subject to the following requirements:<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.4-2.1">
-            <p id="section-3.4-2.1.1">If an endpoint in this specification receives a TCP FIN indicating clean shutdown, it <span class="bcp14">MUST</span> send a FINAL_DATA capsule.<a href="#section-3.4-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.4-3.1">
+            <p id="section-3.4-3.1.1">When an endpoint receives a valid TCP FIN, it <span class="bcp14">MUST</span> send a FINAL_DATA capsule.<a href="#section-3.4-3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.4-2.2">
-            <p id="section-3.4-2.2.1">When a connection is terminated without a FINAL_DATA capsule, the endpoint <span class="bcp14">SHOULD</span> send a TCP RST if the underlying TCP implementation permits it.<a href="#section-3.4-2.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-3.4-3.2">
+            <p id="section-3.4-3.2.1">When an endpoint receives a valid FINAL_DATA capsule, it <span class="bcp14">MUST</span> send a TCP FIN.<a href="#section-3.4-3.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.4-2.3">
-            <p id="section-3.4-2.3.1">In HTTP/2 and HTTP/3, senders <span class="bcp14">MAY</span> additionally emit a stream error as in Classic HTTP CONNECT.<a href="#section-3.4-2.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-3.4-3.3">
+            <p id="section-3.4-3.3.1">Each endpoint <span class="bcp14">MUST</span> close its send stream when the corresponding TCP connection reaches the TIME-WAIT or CLOSED state.<a href="#section-3.4-3.3.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.4-3.3.2.1">
+                <p id="section-3.4-3.3.2.1.1">If the connection closed gracefully, the endpoint <span class="bcp14">MUST</span> close the send stream gracefully.<a href="#section-3.4-3.3.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.4-3.3.2.2">
+                <p id="section-3.4-3.3.2.2.1">Otherwise, the endpoint <span class="bcp14">SHOULD</span> close the send stream abruptly, using a mechanism appropriate to the HTTP version:<a href="#section-3.4-3.3.2.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.4-3.3.2.2.2.1">
+                    <p id="section-3.4-3.3.2.2.2.1.1">HTTP/3: RESET_STREAM with H3_CONNECT_ERROR<a href="#section-3.4-3.3.2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+                  <li class="normal" id="section-3.4-3.3.2.2.2.2">
+                    <p id="section-3.4-3.3.2.2.2.2.1">HTTP/2: RST_STREAM with CONNECT_ERROR<a href="#section-3.4-3.3.2.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+                  <li class="normal" id="section-3.4-3.3.2.2.2.3">
+                    <p id="section-3.4-3.3.2.2.2.3.1">HTTP/1.1 over TLS: a TLS Error Alert<a href="#section-3.4-3.3.2.2.2.3.1" class="pilcrow">¶</a></p>
+</li>
+                  <li class="normal" id="section-3.4-3.3.2.2.2.4">
+                    <p id="section-3.4-3.3.2.2.2.4.1">HTTP/1.1 (insecure): TCP RST.<a href="#section-3.4-3.3.2.2.2.4.1" class="pilcrow">¶</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-3.4-3.4">
+            <p id="section-3.4-3.4.1">The endpoint <span class="bcp14">SHOULD</span> send a TCP RST when the receive stream is terminated if the TCP subsystem permits it and<a href="#section-3.4-3.4.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.4-3.4.2.1">
+                <p id="section-3.4-3.4.2.1.1">the receive stream ended abruptly, or<a href="#section-3.4-3.4.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.4-3.4.2.2">
+                <p id="section-3.4-3.4.2.2.1">a FINAL_DATA capsule was not received.<a href="#section-3.4-3.4.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
 </li>
         </ul>
+<p id="section-3.4-4">The mandatory behaviors above enable endpoints to detect any truncation of incoming TCP data.  The recommended behaviors propagate any TCP errors through the proxy connection.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
+<span id="name-simple-graceful-termination"></span><figure id="figure-3">
+          <div id="section-3.4-5.1">
+            <div class="alignLeft art-svg artwork" id="section-3.4-5.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="176" width="472" viewBox="0 0 472 176" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,64" fill="none" stroke="black"></path>
+                <path d="M 24,64 L 24,160" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 112,64" fill="none" stroke="black"></path>
+                <path d="M 128,64 L 128,160" fill="none" stroke="black"></path>
+                <path d="M 216,32 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 256,64" fill="none" stroke="black"></path>
+                <path d="M 344,64 L 344,160" fill="none" stroke="black"></path>
+                <path d="M 360,32 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 400,64" fill="none" stroke="black"></path>
+                <path d="M 448,64 L 448,160" fill="none" stroke="black"></path>
+                <path d="M 464,32 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 8,32 L 72,32" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 216,32" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 360,32" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 464,32" fill="none" stroke="black"></path>
+                <path d="M 8,64 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,64 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,64 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,64 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 24,80 L 48,80" fill="none" stroke="black"></path>
+                <path d="M 96,80 L 184,80" fill="none" stroke="black"></path>
+                <path d="M 280,80 L 368,80" fill="none" stroke="black"></path>
+                <path d="M 416,80 L 440,80" fill="none" stroke="black"></path>
+                <path d="M 24,96 L 56,96" fill="none" stroke="black"></path>
+                <path d="M 88,96 L 176,96" fill="none" stroke="black"></path>
+                <path d="M 296,96 L 376,96" fill="none" stroke="black"></path>
+                <path d="M 408,96 L 440,96" fill="none" stroke="black"></path>
+                <path d="M 32,112 L 56,112" fill="none" stroke="black"></path>
+                <path d="M 88,112 L 176,112" fill="none" stroke="black"></path>
+                <path d="M 296,112 L 376,112" fill="none" stroke="black"></path>
+                <path d="M 408,112 L 448,112" fill="none" stroke="black"></path>
+                <path d="M 136,128 L 168,128" fill="none" stroke="black"></path>
+                <path d="M 304,128 L 344,128" fill="none" stroke="black"></path>
+                <path d="M 24,144 L 48,144" fill="none" stroke="black"></path>
+                <path d="M 104,144 L 168,144" fill="none" stroke="black"></path>
+                <path d="M 304,144 L 336,144" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="448,96 436,90.4 436,101.6" fill="black" transform="rotate(0,440,96)"></polygon>
+                <polygon class="arrowhead" points="448,80 436,74.4 436,85.6" fill="black" transform="rotate(0,440,80)"></polygon>
+                <polygon class="arrowhead" points="360,112 348,106.4 348,117.6" fill="black" transform="rotate(180,352,112)"></polygon>
+                <polygon class="arrowhead" points="344,144 332,138.4 332,149.6" fill="black" transform="rotate(0,336,144)"></polygon>
+                <polygon class="arrowhead" points="344,96 332,90.4 332,101.6" fill="black" transform="rotate(0,336,96)"></polygon>
+                <polygon class="arrowhead" points="344,80 332,74.4 332,85.6" fill="black" transform="rotate(0,336,80)"></polygon>
+                <polygon class="arrowhead" points="144,128 132,122.4 132,133.6" fill="black" transform="rotate(180,136,128)"></polygon>
+                <polygon class="arrowhead" points="144,112 132,106.4 132,117.6" fill="black" transform="rotate(180,136,112)"></polygon>
+                <polygon class="arrowhead" points="128,144 116,138.4 116,149.6" fill="black" transform="rotate(0,120,144)"></polygon>
+                <polygon class="arrowhead" points="128,96 116,90.4 116,101.6" fill="black" transform="rotate(0,120,96)"></polygon>
+                <polygon class="arrowhead" points="128,80 116,74.4 116,85.6" fill="black" transform="rotate(0,120,80)"></polygon>
+                <polygon class="arrowhead" points="40,112 28,106.4 28,117.6" fill="black" transform="rotate(180,32,112)"></polygon>
+                <g class="text">
+                  <text x="32" y="52">TCP</text>
+                  <text x="56" y="52">A</text>
+                  <text x="156" y="52">Endpoint</text>
+                  <text x="200" y="52">A</text>
+                  <text x="300" y="52">Endpoint</text>
+                  <text x="344" y="52">B</text>
+                  <text x="424" y="52">TCP</text>
+                  <text x="448" y="52">B</text>
+                  <text x="72" y="84">"abc"</text>
+                  <text x="232" y="84">DATA{"abc"}</text>
+                  <text x="392" y="84">"abc"</text>
+                  <text x="72" y="100">FIN</text>
+                  <text x="236" y="100">FINAL_DATA{""}</text>
+                  <text x="392" y="100">FIN</text>
+                  <text x="72" y="116">FIN</text>
+                  <text x="236" y="116">FINAL_DATA{""}</text>
+                  <text x="392" y="116">FIN</text>
+                  <text x="236" y="132">QUIC.STREAM{FIN}</text>
+                  <text x="76" y="148">FINACK</text>
+                  <text x="236" y="148">QUIC.STREAM{FIN}</text>
+                </g>
+              </svg><a href="#section-3.4-5.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-simple-graceful-termination" class="selfRef">Simple graceful termination example (HTTP/3)</a>
+          </figcaption></figure>
+<span id="name-simple-tcp-rst-termination-"></span><figure id="figure-4">
+          <div id="section-3.4-6.1">
+            <div class="alignLeft art-svg artwork" id="section-3.4-6.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="472" viewBox="0 0 472 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,64" fill="none" stroke="black"></path>
+                <path d="M 24,64 L 24,96" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 112,64" fill="none" stroke="black"></path>
+                <path d="M 128,64 L 128,96" fill="none" stroke="black"></path>
+                <path d="M 216,32 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 256,64" fill="none" stroke="black"></path>
+                <path d="M 344,64 L 344,96" fill="none" stroke="black"></path>
+                <path d="M 360,32 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 400,64" fill="none" stroke="black"></path>
+                <path d="M 448,64 L 448,96" fill="none" stroke="black"></path>
+                <path d="M 464,32 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 8,32 L 72,32" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 216,32" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 360,32" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 464,32" fill="none" stroke="black"></path>
+                <path d="M 8,64 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,64 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,64 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,64 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 24,80 L 56,80" fill="none" stroke="black"></path>
+                <path d="M 88,80 L 152,80" fill="none" stroke="black"></path>
+                <path d="M 312,80 L 376,80" fill="none" stroke="black"></path>
+                <path d="M 408,80 L 440,80" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="448,80 436,74.4 436,85.6" fill="black" transform="rotate(0,440,80)"></polygon>
+                <polygon class="arrowhead" points="344,80 332,74.4 332,85.6" fill="black" transform="rotate(0,336,80)"></polygon>
+                <polygon class="arrowhead" points="128,80 116,74.4 116,85.6" fill="black" transform="rotate(0,120,80)"></polygon>
+                <g class="text">
+                  <text x="32" y="52">TCP</text>
+                  <text x="56" y="52">A</text>
+                  <text x="156" y="52">Endpoint</text>
+                  <text x="200" y="52">A</text>
+                  <text x="300" y="52">Endpoint</text>
+                  <text x="344" y="52">B</text>
+                  <text x="424" y="52">TCP</text>
+                  <text x="448" y="52">B</text>
+                  <text x="72" y="84">RST</text>
+                  <text x="232" y="84">RST_STREAM{CON_ERR}</text>
+                  <text x="392" y="84">RST</text>
+                </g>
+              </svg><a href="#section-3.4-6.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-simple-tcp-rst-termination-" class="selfRef">Simple TCP RST termination example (HTTP/2)</a>
+          </figcaption></figure>
+<span id="name-timeout-example-http-11"></span><figure id="figure-5">
+          <div id="section-3.4-7.1">
+            <div class="alignLeft art-svg artwork" id="section-3.4-7.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="144" width="472" viewBox="0 0 472 144" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,64" fill="none" stroke="black"></path>
+                <path d="M 24,64 L 24,128" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 112,64" fill="none" stroke="black"></path>
+                <path d="M 128,64 L 128,128" fill="none" stroke="black"></path>
+                <path d="M 216,32 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 256,64" fill="none" stroke="black"></path>
+                <path d="M 344,64 L 344,128" fill="none" stroke="black"></path>
+                <path d="M 360,32 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 400,64" fill="none" stroke="black"></path>
+                <path d="M 448,64 L 448,128" fill="none" stroke="black"></path>
+                <path d="M 464,32 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 8,32 L 72,32" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 216,32" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 360,32" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 464,32" fill="none" stroke="black"></path>
+                <path d="M 8,64 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,64 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,64 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,64 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 24,80 L 48,80" fill="none" stroke="black"></path>
+                <path d="M 96,80 L 184,80" fill="none" stroke="black"></path>
+                <path d="M 280,80 L 368,80" fill="none" stroke="black"></path>
+                <path d="M 416,80 L 440,80" fill="none" stroke="black"></path>
+                <path d="M 128,112 L 192,112" fill="none" stroke="black"></path>
+                <path d="M 272,112 L 376,112" fill="none" stroke="black"></path>
+                <path d="M 408,112 L 440,112" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="448,112 436,106.4 436,117.6" fill="black" transform="rotate(0,440,112)"></polygon>
+                <polygon class="arrowhead" points="448,80 436,74.4 436,85.6" fill="black" transform="rotate(0,440,80)"></polygon>
+                <polygon class="arrowhead" points="344,112 332,106.4 332,117.6" fill="black" transform="rotate(0,336,112)"></polygon>
+                <polygon class="arrowhead" points="344,80 332,74.4 332,85.6" fill="black" transform="rotate(0,336,80)"></polygon>
+                <polygon class="arrowhead" points="128,80 116,74.4 116,85.6" fill="black" transform="rotate(0,120,80)"></polygon>
+                <g class="text">
+                  <text x="32" y="52">TCP</text>
+                  <text x="56" y="52">A</text>
+                  <text x="156" y="52">Endpoint</text>
+                  <text x="200" y="52">A</text>
+                  <text x="300" y="52">Endpoint</text>
+                  <text x="344" y="52">B</text>
+                  <text x="424" y="52">TCP</text>
+                  <text x="448" y="52">B</text>
+                  <text x="72" y="84">"abc"</text>
+                  <text x="232" y="84">DATA{"abc"}</text>
+                  <text x="392" y="84">"abc"</text>
+                  <text x="164" y="100">(...</text>
+                  <text x="216" y="100">timeout</text>
+                  <text x="256" y="100">@</text>
+                  <text x="272" y="100">A</text>
+                  <text x="300" y="100">...)</text>
+                  <text x="208" y="116">TLS</text>
+                  <text x="248" y="116">Alert</text>
+                  <text x="392" y="116">RST</text>
+                </g>
+              </svg><a href="#section-3.4-7.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-timeout-example-http-11" class="selfRef">Timeout example (HTTP/1.1)</a>
+          </figcaption></figure>
+<span id="name-rst-after-fin-example-http-"></span><figure id="figure-6">
+          <div id="section-3.4-8.1">
+            <div class="alignLeft art-svg artwork" id="section-3.4-8.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="192" width="472" viewBox="0 0 472 192" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,64" fill="none" stroke="black"></path>
+                <path d="M 24,64 L 24,176" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 112,64" fill="none" stroke="black"></path>
+                <path d="M 128,64 L 128,176" fill="none" stroke="black"></path>
+                <path d="M 216,32 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 256,64" fill="none" stroke="black"></path>
+                <path d="M 344,64 L 344,176" fill="none" stroke="black"></path>
+                <path d="M 360,32 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 400,64" fill="none" stroke="black"></path>
+                <path d="M 448,64 L 448,176" fill="none" stroke="black"></path>
+                <path d="M 464,32 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 8,32 L 72,32" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 216,32" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 360,32" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 464,32" fill="none" stroke="black"></path>
+                <path d="M 8,64 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,64 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,64 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,64 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 24,80 L 64,80" fill="none" stroke="black"></path>
+                <path d="M 96,80 L 184,80" fill="none" stroke="black"></path>
+                <path d="M 304,80 L 384,80" fill="none" stroke="black"></path>
+                <path d="M 416,80 L 440,80" fill="none" stroke="black"></path>
+                <path d="M 32,128 L 56,128" fill="none" stroke="black"></path>
+                <path d="M 104,128 L 168,128" fill="none" stroke="black"></path>
+                <path d="M 312,128 L 376,128" fill="none" stroke="black"></path>
+                <path d="M 424,128 L 448,128" fill="none" stroke="black"></path>
+                <path d="M 136,144 L 168,144" fill="none" stroke="black"></path>
+                <path d="M 304,144 L 344,144" fill="none" stroke="black"></path>
+                <path d="M 24,160 L 64,160" fill="none" stroke="black"></path>
+                <path d="M 96,160 L 168,160" fill="none" stroke="black"></path>
+                <path d="M 304,160 L 384,160" fill="none" stroke="black"></path>
+                <path d="M 416,160 L 440,160" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="448,160 436,154.4 436,165.6" fill="black" transform="rotate(0,440,160)"></polygon>
+                <polygon class="arrowhead" points="448,80 436,74.4 436,85.6" fill="black" transform="rotate(0,440,80)"></polygon>
+                <polygon class="arrowhead" points="360,128 348,122.4 348,133.6" fill="black" transform="rotate(180,352,128)"></polygon>
+                <polygon class="arrowhead" points="344,160 332,154.4 332,165.6" fill="black" transform="rotate(0,336,160)"></polygon>
+                <polygon class="arrowhead" points="344,80 332,74.4 332,85.6" fill="black" transform="rotate(0,336,80)"></polygon>
+                <polygon class="arrowhead" points="144,144 132,138.4 132,149.6" fill="black" transform="rotate(180,136,144)"></polygon>
+                <polygon class="arrowhead" points="144,128 132,122.4 132,133.6" fill="black" transform="rotate(180,136,128)"></polygon>
+                <polygon class="arrowhead" points="128,160 116,154.4 116,165.6" fill="black" transform="rotate(0,120,160)"></polygon>
+                <polygon class="arrowhead" points="128,80 116,74.4 116,85.6" fill="black" transform="rotate(0,120,80)"></polygon>
+                <polygon class="arrowhead" points="40,128 28,122.4 28,133.6" fill="black" transform="rotate(180,32,128)"></polygon>
+                <g class="text">
+                  <text x="32" y="52">TCP</text>
+                  <text x="56" y="52">A</text>
+                  <text x="156" y="52">Endpoint</text>
+                  <text x="200" y="52">A</text>
+                  <text x="300" y="52">Endpoint</text>
+                  <text x="344" y="52">B</text>
+                  <text x="424" y="52">TCP</text>
+                  <text x="448" y="52">B</text>
+                  <text x="80" y="84">FIN</text>
+                  <text x="244" y="84">FINAL_DATA{""}</text>
+                  <text x="400" y="84">FIN</text>
+                  <text x="80" y="116">(FIN)</text>
+                  <text x="400" y="116">(FIN)</text>
+                  <text x="80" y="132">"abc"</text>
+                  <text x="240" y="132">FINAL_DATA{"abc"}</text>
+                  <text x="400" y="132">"abc"</text>
+                  <text x="236" y="148">QUIC.STREAM{FIN}</text>
+                  <text x="80" y="164">RST</text>
+                  <text x="236" y="164">H3_CONNECT_ERROR</text>
+                  <text x="400" y="164">RST</text>
+                </g>
+              </svg><a href="#section-3.4-8.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-rst-after-fin-example-http-" class="selfRef">RST after FIN example (HTTP/3)</a>
+          </figcaption></figure>
 </section>
 </div>
 </section>
@@ -1529,14 +1834,14 @@ capsule-protocol = ?1
 </li>
         </ul>
 <p id="section-5.2-4">If the client infers that classic HTTP CONNECT is not supported, it <span class="bcp14">SHOULD</span> retry the request using the registered default template for "connect-tcp":<a href="#section-5.2-4" class="pilcrow">¶</a></p>
-<span id="name-registered-default-template"></span><figure id="figure-3">
+<span id="name-registered-default-template"></span><figure id="figure-7">
           <div class="alignLeft art-text artwork" id="section-5.2-5.1">
 <pre>
 https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
                  /tcp/{target_host}/{target_port}/
 </pre>
 </div>
-<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
 <a href="#name-registered-default-template" class="selfRef">Registered default template</a>
           </figcaption></figure>
 <p id="section-5.2-6">If this request succeeds, the client <span class="bcp14">SHOULD</span> record a preference for "connect-tcp" to avoid further retry delays.<a href="#section-5.2-6" class="pilcrow">¶</a></p>

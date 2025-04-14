@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                            9 April 2025
-Expires: 11 October 2025
+Intended status: Standards Track                           14 April 2025
+Expires: 16 October 2025
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 October 2025.
+   This Internet-Draft will expire on 16 October 2025.
 
 Copyright Notice
 
@@ -310,19 +310,89 @@ Table of Contents
 
 3.4.  Closing Connections
 
-   In each HTTP version, any requirements related to closing connections
-   in Classic HTTP CONNECT also apply to "connect-tcp", with the
-   following modifications:
+   Connection termination is essentially symmetrical for proxies and
+   their clients.  In this section, we use the term "endpoint" to
+   describe an implementation of this specification in either role.
 
-   *  If an endpoint in this specification receives a TCP FIN indicating
-      clean shutdown, it MUST send a FINAL_DATA capsule.
+   When closing connections, endpoints are subject to the following
+   requirements:
 
-   *  When a connection is terminated without a FINAL_DATA capsule, the
-      endpoint SHOULD send a TCP RST if the underlying TCP
-      implementation permits it.
+   *  When an endpoint receives a valid TCP FIN, it MUST send a
+      FINAL_DATA capsule.
 
-   *  In HTTP/2 and HTTP/3, senders MAY additionally emit a stream error
-      as in Classic HTTP CONNECT.
+   *  When an endpoint receives a valid FINAL_DATA capsule, it MUST send
+      a TCP FIN.
+
+   *  Each endpoint MUST close its send stream when the corresponding
+      TCP connection reaches the TIME-WAIT or CLOSED state.
+
+      -  If the connection closed gracefully, the endpoint MUST close
+         the send stream gracefully.
+
+      -  Otherwise, the endpoint SHOULD close the send stream abruptly,
+         using a mechanism appropriate to the HTTP version:
+
+         o  HTTP/3: RESET_STREAM with H3_CONNECT_ERROR
+
+         o  HTTP/2: RST_STREAM with CONNECT_ERROR
+
+         o  HTTP/1.1 over TLS: a TLS Error Alert
+
+         o  HTTP/1.1 (insecure): TCP RST.
+
+   *  The endpoint SHOULD send a TCP RST when the receive stream is
+      terminated if the TCP subsystem permits it and
+
+      -  the receive stream ended abruptly, or
+
+      -  a FINAL_DATA capsule was not received.
+
+   The mandatory behaviors above enable endpoints to detect any
+   truncation of incoming TCP data.  The recommended behaviors propagate
+   any TCP errors through the proxy connection.
+
+   +-------+    +------------+    +------------+    +-------+
+   | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
+   +-+-----+    +-+----------+    +----------+-+    +-----+-+
+     +---"abc"--->+-------DATA{"abc"}------->+---"abc"--->|
+     +----FIN---->+------FINAL_DATA{""}----->+----FIN---->|
+     |<---FIN-----+<-----FINAL_DATA{""}------+<---FIN-----+
+     |            |<----QUIC.STREAM{FIN}-----+            |
+     +---FINACK-->+-----QUIC.STREAM{FIN}---->|            |
+     |            |                          |            |
+
+           Figure 3: Simple graceful termination example (HTTP/3)
+
+   +-------+    +------------+    +------------+    +-------+
+   | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
+   +-+-----+    +-+----------+    +----------+-+    +-----+-+
+     +----RST---->+---RST_STREAM{CON_ERR}--->+----RST---->|
+     |            |                          |            |
+
+           Figure 4: Simple TCP RST termination example (HTTP/2)
+
+   +-------+    +------------+    +------------+    +-------+
+   | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
+   +-+-----+    +-+----------+    +----------+-+    +-----+-+
+     +---"abc"--->+-------DATA{"abc"}------->+---"abc"--->|
+     |            |  (... timeout @ A ...)   |            |
+     |            +--------TLS Alert-------->+----RST---->|
+     |            |                          |            |
+
+                    Figure 5: Timeout example (HTTP/1.1)
+
+   +-------+    +------------+    +------------+    +-------+
+   | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
+   +-+-----+    +-+----------+    +----------+-+    +-----+-+
+     +-----FIN--->+-------FINAL_DATA{""}---->+-----FIN--->|
+     |            |                          |            |
+     |    (FIN)   |                          |    (FIN)   |
+     |<---"abc"---+<----FINAL_DATA{"abc"}----+<---"abc"---+
+     |            |<----QUIC.STREAM{FIN}-----+            |
+     +-----RST--->+-----H3_CONNECT_ERROR---->+-----RST--->|
+     |            |                          |            |
+
+                  Figure 6: RST after FIN example (HTTP/3)
 
 4.  Additional Connection Setup Behaviors
 
@@ -417,7 +487,7 @@ Table of Contents
    https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
                     /tcp/{target_host}/{target_port}/
 
-                   Figure 3: Registered default template
+                   Figure 7: Registered default template
 
    If this request succeeds, the client SHOULD record a preference for
    "connect-tcp" to avoid further retry delays.
