@@ -281,8 +281,8 @@ Proxy implementors should take special care to avoid resource exhaustion attacks
   - Mitigation: Limit the number of concurrent connections per client.
 * **Window Bloat**: An attacker can grow the receive window size by simulating a "long, fat network" {{?RFC7323}}, then fill the window (from the sender) and stop acknowledging it (at the receiver).  This leaves the proxy buffering up to 1 GiB of TCP data until some timeout, while the attacker does not have to retain a large buffer.
   - Mitigation: Limit the maximum receive window for TCP and HTTP connections, and the size of userspace buffers used for proxying.  Alternatively, monitor the connections' send queues and limit the total buffered data per client.
-* **WAIT Abuse**: An attacker can force the proxy into a TIME-WAIT, CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up the proxy's ports for up to four minutes after the client's connection is nominally closed.
-  - Mitigation: Count all connections to the client and its destinations against the client's connection limit, even if the connections are in a waiting state and the CONNECT stream is closed.
+* **WAIT Abuse**: An attacker can force the proxy into a TIME-WAIT, CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a proxy<->destination 4-tuple for up to four minutes after the client's connection is closed.
+  - Mitigation: Count all destination connections against the client's connection limit, even if those connections are in a waiting state and the corresponding CONNECT stream is closed.
 
 # Operational Considerations
 
