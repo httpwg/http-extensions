@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                           14 April 2025
-Expires: 16 October 2025
+Intended status: Standards Track                           16 April 2025
+Expires: 18 October 2025
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 October 2025.
+   This Internet-Draft will expire on 18 October 2025.
 
 Copyright Notice
 
@@ -72,6 +72,7 @@ Table of Contents
      5.1.  Servers
      5.2.  Clients
    6.  Security Considerations
+     6.1.  Resource Exhaustion attacks
    7.  Operational Considerations
    8.  IANA Considerations
      8.1.  New Upgrade Token
@@ -505,6 +506,45 @@ Table of Contents
    implementers should apply their usual precautions for code that
    processes untrusted inputs.
 
+6.1.  Resource Exhaustion attacks
+
+   Proxy implementors should take special care to avoid resource
+   exhaustion attacks when the client is not trusted.  A malicious
+   client can achieve highly asymmetric resource usage by colluding with
+   a destination server and violating the ordinary rules of TCP or HTTP.
+   Some example attacks and mitigations:
+
+   *  *Connection Pileup*: A malicious client can attempt to open a
+      large number of proxy<->destination connections to exhaust the
+      proxy's memory, port, or file descriptor limits.  When using
+      HTTP/2 or HTTP/3, each incremental TCP connection imposes a much
+      higher cost on the proxy than on the attacker.
+
+      -  Mitigation: Limit the number of concurrent connections per
+         client.
+
+   *  *Window Bloat*: An attacker can grow the receive window size by
+      simulating a "long, fat network" [RFC7323], then fill the window
+      (from the sender) and stop acknowledging it (at the receiver).
+      This leaves the proxy buffering up to 1 GiB of TCP data until some
+      timeout, while the attacker does not have to retain a large
+      buffer.
+
+      -  Mitigation: Limit the maximum receive window for TCP and HTTP
+         connections, and the size of userspace buffers used for
+         proxying.  Alternatively, monitor the connections' send queues
+         and limit the total buffered data per client.
+
+   *  *WAIT Abuse*: An attacker can force the proxy into a TIME-WAIT,
+      CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up
+      the proxy's ports for up to four minutes after the client's
+      connection is nominally closed.
+
+      -  Mitigation: Count all connections to the client and its
+         destinations against the client's connection limit, even if the
+         connections are in a waiting state and the CONNECT stream is
+         closed.
+
 7.  Operational Considerations
 
    Templated TCP proxies can make use of standard HTTP gateways and
@@ -678,6 +718,11 @@ Table of Contents
               Transport Security (HSTS)", RFC 6797,
               DOI 10.17487/RFC6797, November 2012,
               <https://www.rfc-editor.org/rfc/rfc6797>.
+
+   [RFC7323]  Borman, D., Braden, B., Jacobson, V., and R.
+              Scheffenegger, Ed., "TCP Extensions for High Performance",
+              RFC 7323, DOI 10.17487/RFC7323, September 2014,
+              <https://www.rfc-editor.org/rfc/rfc7323>.
 
    [RFC7469]  Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
               Extension for HTTP", RFC 7469, DOI 10.17487/RFC7469, April
