@@ -1885,10 +1885,10 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
             </ul>
 </li>
           <li class="normal" id="section-6.1-2.3">
-            <p id="section-6.1-2.3.1"><strong>WAIT Abuse</strong>: An attacker can force the proxy into a TIME-WAIT, CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up the proxy's ports for up to four minutes after the client's connection is nominally closed.<a href="#section-6.1-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-6.1-2.3.1"><strong>WAIT Abuse</strong>: An attacker can force the proxy into a TIME-WAIT, CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a proxy&lt;-&gt;destination 4-tuple for up to four minutes after the client's connection is closed.<a href="#section-6.1-2.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6.1-2.3.2.1">
-                <p id="section-6.1-2.3.2.1.1">Mitigation: Count all connections to the client and its destinations against the client's connection limit, even if the connections are in a waiting state and the CONNECT stream is closed.<a href="#section-6.1-2.3.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-6.1-2.3.2.1.1">Mitigation: Count all destination connections against the client's connection limit, even if those connections are in a waiting state and the corresponding CONNECT stream is closed.<a href="#section-6.1-2.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>

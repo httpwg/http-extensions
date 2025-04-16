@@ -536,14 +536,13 @@ Table of Contents
          and limit the total buffered data per client.
 
    *  *WAIT Abuse*: An attacker can force the proxy into a TIME-WAIT,
-      CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up
-      the proxy's ports for up to four minutes after the client's
-      connection is nominally closed.
+      CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a
+      proxy<->destination 4-tuple for up to four minutes after the
+      client's connection is closed.
 
-      -  Mitigation: Count all connections to the client and its
-         destinations against the client's connection limit, even if the
-         connections are in a waiting state and the CONNECT stream is
-         closed.
+      -  Mitigation: Count all destination connections against the
+         client's connection limit, even if those connections are in a
+         waiting state and the corresponding CONNECT stream is closed.
 
 7.  Operational Considerations
 
