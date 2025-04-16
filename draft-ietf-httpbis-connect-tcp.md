@@ -273,6 +273,17 @@ Template-driven TCP proxying is largely subject to the same security risks as cl
 
 A small additional risk is posed by the use of a URI Template parser on the client side.  The template input string could be crafted to exploit any vulnerabilities in the parser implementation.  Client implementers should apply their usual precautions for code that processes untrusted inputs.
 
+## Resource Exhaustion attacks
+
+Proxy implementors should take special care to avoid resource exhaustion attacks when the client is not trusted. A malicious client can achieve highly asymmetric resource usage by colluding with a destination server and violating the ordinary rules of TCP or HTTP.  Some example attacks and mitigations:
+
+* **Connection Pileup**: A malicious client can attempt to open a large number of proxy<->destination connections to exhaust the proxy's memory, port, or file descriptor limits. When using HTTP/2 or HTTP/3, each incremental TCP connection imposes a much higher cost on the proxy than on the attacker.
+  - Mitigation: Limit the number of concurrent connections per client.
+* **Window Bloat**: An attacker can grow the receive window size by simulating a "long, fat network" {{?RFC7323}}, then fill the window (from the sender) and stop acknowledging it (at the receiver).  This leaves the proxy buffering up to 1 GiB of TCP data until some timeout, while the attacker does not have to retain a large buffer.
+  - Mitigation: Limit the maximum receive window for TCP and HTTP connections, and the size of userspace buffers used for proxying.  Alternatively, monitor the connections' send queues and limit the total buffered data per client.
+* **WAIT Abuse**: An attacker can force the proxy into a TIME-WAIT, CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up the proxy's ports for up to four minutes after the client's connection is nominally closed.
+  - Mitigation: Count all connections to the client and its destinations against the client's connection limit, even if the connections are in a waiting state and the CONNECT stream is closed.
+
 # Operational Considerations
 
 Templated TCP proxies can make use of standard HTTP gateways and path-routing to ease implementation and allow use of shared infrastructure.  However, current gateways might need modifications to support TCP proxy services.  To be compatible, a gateway must:
