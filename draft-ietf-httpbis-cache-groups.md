@@ -78,7 +78,7 @@ This specification uses the following terminology from {{STRUCTURED-FIELDS}}: Li
 
 # The Cache-Groups Response Header Field {#cache-groups}
 
-The Cache-Groups HTTP Response Header is a List of Strings {{STRUCTURED-FIELDS}}. Each member of the list is an opaque value that identifies a group that the response belongs to.
+The Cache-Groups HTTP Response Header is a List of Strings ({{Sections 3.1 and 3.3.1 of STRUCTURED-FIELDS}}). Each member of the list is an opaque value that identifies a group that the response belongs to.
 
 ~~~ http-message
 HTTP/1.1 200 OK
@@ -110,7 +110,7 @@ Cache extensions can explicitly strengthen the requirement above. For example, a
 
 # The Cache-Group-Invalidation Response Header Field {#cache-group-invalidation}
 
-The Cache-Group-Invalidation response header field is a List of Strings {{STRUCTURED-FIELDS}}. Each member of the list is an opaque value that identifies a group that the response invalidates, per {{invalidation}}.
+The Cache-Group-Invalidation response header field is a List of Strings ({{Sections 3.1 and 3.3.1 of STRUCTURED-FIELDS}}). Each member of the list is an opaque value that identifies a group that the response invalidates, per {{invalidation}}.
 
 For example, following a POST request that has side effects on two cache groups, the corresponding response could indicate that stored responses associated with either or both of those groups should be invalidated with:
 
