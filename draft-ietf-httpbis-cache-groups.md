@@ -95,7 +95,7 @@ Implementations MUST support at least 32 groups in a field value, with up to at 
 
 Two responses stored in the same cache are considered to belong to the same group when all of the following conditions are met:
 
-1. They both contain a Cache-Groups response header field that contains the same String (in any position in the List), when compared character-by-character.
+1. They both contain a Cache-Groups response header field that contains the same String (in any position in the List), when compared character-by-character (case sensitive).
 2. They both share the same URI origin (per {{Section 4.3.1 of HTTP}}).
 
 
