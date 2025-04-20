@@ -3,9 +3,9 @@
 
 
 HTTP                                                       M. Nottingham
-Internet-Draft                                             10 April 2025
+Internet-Draft                                             20 April 2025
 Intended status: Standards Track                                        
-Expires: 12 October 2025
+Expires: 22 October 2025
 
 
                            HTTP Cache Groups
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 October 2025.
+   This Internet-Draft will expire on 22 October 2025.
 
 Copyright Notice
 
@@ -133,9 +133,9 @@ Table of Contents
 
 2.  The Cache-Groups Response Header Field
 
-   The Cache-Groups HTTP Response Header is a List of Strings
-   [STRUCTURED-FIELDS].  Each member of the list is an opaque value that
-   identifies a group that the response belongs to.
+   The Cache-Groups HTTP Response Header is a List of Strings (Sections
+   3.1 and 3.3.1 of [STRUCTURED-FIELDS]).  Each member of the list is an
+   opaque value that identifies a group that the response belongs to.
 
    HTTP/1.1 200 OK
    Content-Type: application/javascript
@@ -157,7 +157,7 @@ Table of Contents
 
    1.  They both contain a Cache-Groups response header field that
        contains the same String (in any position in the List), when
-       compared character-by-character.
+       compared character-by-character (case sensitive).
 
    2.  They both share the same URI origin (per Section 4.3.1 of
        [HTTP]).
@@ -177,9 +177,9 @@ Table of Contents
 3.  The Cache-Group-Invalidation Response Header Field
 
    The Cache-Group-Invalidation response header field is a List of
-   Strings [STRUCTURED-FIELDS].  Each member of the list is an opaque
-   value that identifies a group that the response invalidates, per
-   Section 2.2.1.
+   Strings (Sections 3.1 and 3.3.1 of [STRUCTURED-FIELDS]).  Each member
+   of the list is an opaque value that identifies a group that the
+   response invalidates, per Section 2.2.1.
 
    For example, following a POST request that has side effects on two
    cache groups, the corresponding response could indicate that stored
