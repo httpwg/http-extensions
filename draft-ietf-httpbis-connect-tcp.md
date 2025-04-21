@@ -286,6 +286,19 @@ Proxy implementors should take special care to avoid resource exhaustion attacks
 
 # Operational Considerations
 
+## Avoiding HTTP/1.1
+
+While this specification is fully functional under HTTP/1.1, performance-sensitive deployments SHOULD use HTTP/2 or HTTP/3 instead.  When using HTTP/1.1:
+
+* Each CONNECT request requires a new TCP and TLS connection, imposing a higher cost in setup latency, congestion control convergence, CPU time, and data transfer.
+* It may be difficult to implement the recommended unclean shutdown signals ({{closing-connections}}), as many TLS libraries do not support injecting TLS Alerts.
+* The number of active connections through each client may be limited by the number of available TCP client ports, especially if:
+  - The client only has one IP address that can be used to reach the proxy.
+  - The client is shared between many parties, such as when acting as a gateway or concentrator.
+  - The proxied connections are often closed by the destination. This causes the client to initiate closure of the client<->proxy connection, leaving the client in a TIME-WAIT state for up to several minutes.
+
+## Gateway Compatibility
+
 Templated TCP proxies can make use of standard HTTP gateways and path-routing to ease implementation and allow use of shared infrastructure.  However, current gateways might need modifications to support TCP proxy services.  To be compatible, a gateway must:
 
 * support Extended CONNECT (if acting as an HTTP/2 or HTTP/3 server).
