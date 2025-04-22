@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                           21 April 2025
-Expires: 23 October 2025
+Intended status: Standards Track                           22 April 2025
+Expires: 24 October 2025
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 October 2025.
+   This Internet-Draft will expire on 24 October 2025.
 
 Copyright Notice
 
@@ -159,10 +159,10 @@ Table of Contents
    new Capsule Types named DATA and FINAL_DATA (see registrations in
    Section 8.3).  The ordered concatenation of these capsule payloads
    represents the TCP payload data.  A FINAL_DATA capsule additionally
-   indicates that sender has closed this stream, semantically equivalent
-   to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint MUST NOT
-   send any more DATA or FINAL_DATA capsules on this data stream.  (See
-   Section 3.4 for related requirements.)
+   indicates that the sender has closed this stream, semantically
+   equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an
+   endpoint MUST NOT send any more DATA or FINAL_DATA capsules on this
+   data stream.  (See Section 3.4 for related requirements.)
 
    An intermediary MAY merge and split successive DATA and FINAL_DATA
    capsules, subject to the following requirements:
@@ -510,11 +510,10 @@ Table of Contents
 
 6.1.  Resource Exhaustion attacks
 
-   Proxy implementors should take special care to avoid resource
-   exhaustion attacks when the client is not trusted.  A malicious
-   client can achieve highly asymmetric resource usage by colluding with
-   a destination server and violating the ordinary rules of TCP or HTTP.
-   Some example attacks and mitigations:
+   A malicious client can achieve cause highly asymmetric resource usage
+   at the proxy by colluding with a destination server and violating the
+   ordinary rules of TCP or HTTP.  Some example attacks, and mitigations
+   that proxies can apply:
 
    *  *Connection Pileup*: A malicious client can attempt to open a
       large number of proxy<->destination connections to exhaust the
@@ -542,9 +541,11 @@ Table of Contents
       proxy<->destination 4-tuple for up to four minutes after the
       client's connection is closed.
 
-      -  Mitigation: Count all destination connections against the
-         client's connection limit, even if those connections are in a
-         waiting state and the corresponding CONNECT stream is closed.
+      -  Mitigation: Limit the number of connections for each client to
+         each destination, even if those connections are in a waiting
+         state and the corresponding CONNECT stream is closed.
+         Alternatively, allocate a large range of IP addresses for TCP
+         connections (especially in IPv6).
 
 7.  Operational Considerations
 
@@ -575,7 +576,7 @@ Table of Contents
       -  The proxied connections are often closed by the destination.
          This causes the client to initiate closure of the
          client<->proxy connection, leaving the client in a TIME-WAIT
-         state for up to several minutes.
+         state for up to four minutes.
 
 7.2.  Gateway Compatibility
 

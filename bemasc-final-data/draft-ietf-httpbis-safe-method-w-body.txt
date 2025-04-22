@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 23 October 2025                                                
+Expires: 24 October 2025                                                
                                                                M. Bishop
                                                                   Akamai
-                                                           21 April 2025
+                                                           22 April 2025
 
 
                          The HTTP QUERY Method
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 October 2025.
+   This Internet-Draft will expire on 24 October 2025.
 
 Copyright Notice
 
