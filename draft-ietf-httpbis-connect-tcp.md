@@ -65,7 +65,7 @@ This specification describes an alternative mechanism for proxying TCP in HTTP. 
 
 A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "target_port".  This URI Template and its variable values MUST meet all the same requirements as for UDP proxying ({{!RFC9298, Section 2}}), and are subject to the same validation rules.  The client MUST substitute the destination host and port number into this template to produce the request URI.  The derived URI serves as the destination of a Capsule Protocol connection using the Upgrade Token "connect-tcp" (see registration in {{new-upgrade-token}}).
 
-When using "connect-tcp", TCP payload data is sent in the payload of new Capsule Types named DATA and FINAL_DATA (see registrations in {{data-capsule}}).  The ordered concatenation of these capsule payloads represents the TCP payload data.  A FINAL_DATA capsule additionally indicates that sender has closed this stream, semantically equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint MUST NOT send any more DATA or FINAL_DATA capsules on this data stream. (See {{closing-connections}} for related requirements.)
+When using "connect-tcp", TCP payload data is sent in the payload of new Capsule Types named DATA and FINAL_DATA (see registrations in {{data-capsule}}).  The ordered concatenation of these capsule payloads represents the TCP payload data.  A FINAL_DATA capsule additionally indicates that the sender has closed this stream, semantically equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint MUST NOT send any more DATA or FINAL_DATA capsules on this data stream. (See {{closing-connections}} for related requirements.)
 
 An intermediary MAY merge and split successive DATA and FINAL_DATA capsules, subject to the following requirements:
 
@@ -275,14 +275,14 @@ A small additional risk is posed by the use of a URI Template parser on the clie
 
 ## Resource Exhaustion attacks
 
-Proxy implementors should take special care to avoid resource exhaustion attacks when the client is not trusted. A malicious client can achieve highly asymmetric resource usage by colluding with a destination server and violating the ordinary rules of TCP or HTTP.  Some example attacks and mitigations:
+A malicious client can achieve cause highly asymmetric resource usage at the proxy by colluding with a destination server and violating the ordinary rules of TCP or HTTP.  Some example attacks, and mitigations that proxies can apply:
 
 * **Connection Pileup**: A malicious client can attempt to open a large number of proxy<->destination connections to exhaust the proxy's memory, port, or file descriptor limits. When using HTTP/2 or HTTP/3, each incremental TCP connection imposes a much higher cost on the proxy than on the attacker.
   - Mitigation: Limit the number of concurrent connections per client.
 * **Window Bloat**: An attacker can grow the receive window size by simulating a "long, fat network" {{?RFC7323}}, then fill the window (from the sender) and stop acknowledging it (at the receiver).  This leaves the proxy buffering up to 1 GiB of TCP data until some timeout, while the attacker does not have to retain a large buffer.
   - Mitigation: Limit the maximum receive window for TCP and HTTP connections, and the size of userspace buffers used for proxying.  Alternatively, monitor the connections' send queues and limit the total buffered data per client.
 * **WAIT Abuse**: An attacker can force the proxy into a TIME-WAIT, CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a proxy<->destination 4-tuple for up to four minutes after the client's connection is closed.
-  - Mitigation: Count all destination connections against the client's connection limit, even if those connections are in a waiting state and the corresponding CONNECT stream is closed.
+  - Mitigation: Limit the number of connections for each client to each destination, even if those connections are in a waiting state and the corresponding CONNECT stream is closed.  Alternatively, allocate a large range of IP addresses for TCP connections (especially in IPv6).
 
 # Operational Considerations
 
@@ -295,7 +295,7 @@ While this specification is fully functional under HTTP/1.1, performance-sensiti
 * The number of active connections through each client may be limited by the number of available TCP client ports, especially if:
   - The client only has one IP address that can be used to reach the proxy.
   - The client is shared between many parties, such as when acting as a gateway or concentrator.
-  - The proxied connections are often closed by the destination. This causes the client to initiate closure of the client<->proxy connection, leaving the client in a TIME-WAIT state for up to several minutes.
+  - The proxied connections are often closed by the destination. This causes the client to initiate closure of the client<->proxy connection, leaving the client in a TIME-WAIT state for up to four minutes.
 
 ## Gateway Compatibility
 
