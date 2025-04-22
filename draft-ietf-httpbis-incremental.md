@@ -124,6 +124,12 @@ intermediaries to understand and respect a request to deliver messages
 incrementally. Clients can rely on prior knowledge or probe for support on
 individual resources.
 
+The Incremental header field enables the establishment of a bi-directional byte
+channel over HTTP, as its presence in both requests and responses instructs
+intermediaries to forward early responses ({{Section 7.5 of HTTP}}) and to
+transmit message bodies incrementally in both directions.
+
+
 # Security Considerations
 
 To conserve resources required to handle HTTP requests or connections, it is
