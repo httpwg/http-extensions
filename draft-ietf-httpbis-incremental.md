@@ -60,10 +60,10 @@ In the case of Chunked Oblivious HTTP Messages
 {{?CHUNKED-OHTTP=I-D.ietf-ohai-chunked-ohttp}}, the client opens an HTTP request
 and incrementally sends application messages, while the server can start responding
 even before the HTTP request is fully complete. In this way, the HTTP
-request-response pair effectively serves as a bi-directional communication
-channel.
+request-response pair could create what is, in effect, a bi-directional
+communication channel.
 
-However, these applications are fragile when HTTP intermediaries are involved.
+Applications that rely on incremental delivery of messages are fragile when HTTP intermediaries are involved.
 This is because HTTP intermediaries are not only permitted but are frequently
 deployed to buffer complete HTTP messages before forwarding them downstream
 ({{Section 7.6 of HTTP}}).
@@ -71,14 +71,13 @@ deployed to buffer complete HTTP messages before forwarding them downstream
 If such a buffering HTTP intermediary exists between the client and the server,
 these applications may fail to function as intended.
 
-In the case of Server-Sent Events, when an intermediary tries to buffer the HTTP
-response completely before forwarding it, the client might time out before
-receiving any portion of the HTTP response.
+In the case of Server-Sent Events, an intermediary that tries to buffer the HTTP
+response completely before forwarding it could be left waiting indefinitely.
+A client might never receive any portion of the response.
 
-In the case of Chunked Oblivious HTTP Messages, when an intermediary tries to
-buffer the entire HTTP request, the client will not start receiving application
-messages from the server until the client closes the request, effectively
-disrupting the intended incremental processing of the request.
+In the case of requests that involve any bi-directional exchange,
+an intermediary that tries to buffer entire messages --
+either request or response -- prevents any data from being delivered.
 
 To help avoid such behavior, this document specifies the "Incremental" HTTP header
 field, which instructs HTTP intermediaries to begin forwarding the HTTP message
@@ -123,8 +122,6 @@ individual resources.
 
 # Security Considerations
 
-## Applying Concurrency Limits
-
 To conserve resources required to handle HTTP requests or connections, it is
 common for intermediaries to impose limits on the maximum number of concurrent
 HTTP requests that they forward, while buffering requests that exceed this
@@ -141,10 +138,36 @@ intermediaries SHOULD respond with a 503 Service Unavailable error, accompanied
 by a connection_limit_reached Proxy-Status response header field
 ({{Section 2.3.12 of PROXY-STATUS}}).
 
+For performance and efficiency reasons, a small amount of buffering might be
+used by intermediaries, even for incremental messages. Immediate forwarding
+might be exploited to cause an intermediary to waste effort on many small
+packets.  Enabling incremental delivery might instead set limits on the number
+bytes that are buffered or the time that buffers are held before forwarding.
+Any buffering could adversely affect application latency, even if it improves
+efficiency.  In all cases, intermediaries cannot hold data in buffers
+indefinitely, so data needs to be forwarded when either the time limit or the
+byte limit is reached.
+
 
 # IANA Considerations
 
-TBD
+An HTTP field named Incremental is registered
+in the Hypertext Transfer Protocol (HTTP) Field Name Registry,
+following the procedures in {{Section 18.4 of !HTTP=RFC9110}}.
+The following values are registered:
+
+Field Name:
+: Incremental
+
+Status:
+: permanent
+
+Reference:
+: this document
+
+Comments:
+: (none)
+{: spacing="compact"}
 
 --- back
 
