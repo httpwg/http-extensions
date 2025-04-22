@@ -78,7 +78,7 @@ This specification uses the following terminology from {{STRUCTURED-FIELDS}}: Li
 
 # The Cache-Groups Response Header Field {#cache-groups}
 
-The Cache-Groups HTTP Response Header is a List of Strings {{STRUCTURED-FIELDS}}. Each member of the list is an opaque value that identifies a group that the response belongs to.
+The Cache-Groups HTTP Response Header is a List of Strings ({{Sections 3.1 and 3.3.1 of STRUCTURED-FIELDS}}). Each member of the list is an opaque value that identifies a group that the response belongs to.
 
 ~~~ http-message
 HTTP/1.1 200 OK
@@ -89,13 +89,13 @@ Cache-Groups: "scripts"
 
 The ordering of members is not significant. Unrecognised Parameters MUST be ignored.
 
-Implementations MUST support at least 128 groups in a field value, with up to at least 128 characters in each member. Note that generic limitations on HTTP field lengths may constrain the size of this field value in practice.
+Implementations MUST support at least 32 groups in a field value, with up to at least 32 characters in each member. Note that generic limitations on HTTP field lengths may constrain the size of this field value in practice.
 
 ## Identifying Grouped Responses {#identify}
 
 Two responses stored in the same cache are considered to belong to the same group when all of the following conditions are met:
 
-1. They both contain a Cache-Groups response header field that contains the same String (in any position in the List), when compared character-by-character.
+1. They both contain a Cache-Groups response header field that contains the same String (in any position in the List), when compared character-by-character (case sensitive).
 2. They both share the same URI origin (per {{Section 4.3.1 of HTTP}}).
 
 
@@ -110,7 +110,7 @@ Cache extensions can explicitly strengthen the requirement above. For example, a
 
 # The Cache-Group-Invalidation Response Header Field {#cache-group-invalidation}
 
-The Cache-Group-Invalidation response header field is a List of Strings {{STRUCTURED-FIELDS}}. Each member of the list is an opaque value that identifies a group that the response invalidates, per {{invalidation}}.
+The Cache-Group-Invalidation response header field is a List of Strings ({{Sections 3.1 and 3.3.1 of STRUCTURED-FIELDS}}). Each member of the list is an opaque value that identifies a group that the response invalidates, per {{invalidation}}.
 
 For example, following a POST request that has side effects on two cache groups, the corresponding response could indicate that stored responses associated with either or both of those groups should be invalidated with:
 
@@ -128,7 +128,7 @@ Cache extensions can explicitly strengthen the requirement above. For example, a
 
 The ordering of members is not significant. Unrecognised Parameters MUST be ignored.
 
-Implementations MUST support at least 128 groups in a field value, with up to at least 128 characters in each member. Note that generic limitations on HTTP field lengths may constrain the size of this field value in practice.
+Implementations MUST support at least 32 groups in a field value, with up to at least 32 characters in each member. Note that generic limitations on HTTP field lengths may constrain the size of this field value in practice.
 
 # IANA Considerations
 
