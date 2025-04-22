@@ -1222,7 +1222,8 @@ downstream before receiving the complete message.<a href="#section-1-9" class="p
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">The term Boolean is imported from <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-2">This document relies on structured field definitions
+of Item and Boolean <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="the-incremental-header-field">
@@ -1233,16 +1234,19 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-3-1">The Incremental HTTP header field expresses the sender's intent for HTTP
 intermediaries to start forwarding the message downstream before the entire
 message is received.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">This header field has just one valid value of type Boolean: "?1".<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-2">The Incremental header field is defined as a structured field
+<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> of type Item.  There is just one valid value, which is of
+type Boolean: "?1".<a href="#section-3-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3-3">
 <pre>
 Incremental = ?1
 </pre><a href="#section-3-3" class="pilcrow">¶</a>
 </div>
-<p id="section-3-4">Upon receiving a header section that includes the Incremental header field, HTTP
-intermediaries <span class="bcp14">SHOULD NOT</span> buffer the entire message before forwarding it.
-Instead, intermediaries <span class="bcp14">SHOULD</span> transmit the header section downstream and
-continuously forward the bytes of the message body as they arrive.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-4">Upon receiving a header section that includes an Incremental header field with a
+true value, HTTP intermediaries <span class="bcp14">SHOULD NOT</span> buffer the entire message before
+forwarding it.  Instead, intermediaries <span class="bcp14">SHOULD</span> transmit the header section
+downstream and continuously forward the bytes of the message body as they
+arrive.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <p id="section-3-5">The Incremental HTTP header field applies to each HTTP message. Therefore, if
 both the HTTP request and response need to be forwarded incrementally, the
 Incremental HTTP header field <span class="bcp14">MUST</span> be set for both the HTTP request and the
@@ -1304,14 +1308,19 @@ The following values are registered:<a href="#section-5-1" class="pilcrow">¶</a
           <p id="section-5-2.4.1">permanent<a href="#section-5-2.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-5-2.5">Reference:</dt>
+<dt id="section-5-2.5">Structured Type:</dt>
         <dd style="margin-left: 1.5em" id="section-5-2.6">
-          <p id="section-5-2.6.1">this document<a href="#section-5-2.6.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.6.1">Item<a href="#section-5-2.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
-<dt id="section-5-2.7">Comments:</dt>
+<dt id="section-5-2.7">Reference:</dt>
         <dd style="margin-left: 1.5em" id="section-5-2.8">
-          <p id="section-5-2.8.1">(none)<a href="#section-5-2.8.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.8.1">This document<a href="#section-5-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-5-2.9">Comments:</dt>
+        <dd style="margin-left: 1.5em" id="section-5-2.10">
+          <p id="section-5-2.10.1">None<a href="#section-5-2.10.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
