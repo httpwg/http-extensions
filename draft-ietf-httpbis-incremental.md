@@ -112,7 +112,7 @@ forwarding it.  Instead, intermediaries SHOULD transmit the header section
 downstream and continuously forward the bytes of the message body as they
 arrive. As the Incremental header field indicates only how the message body is
 to be forwarded, intermediaries can still buffer the entire header and trailer
-sections of the message before forwarding it downstream.
+sections of the message before forwarding them downstream.
 
 The Incremental HTTP header field applies to each HTTP message. Therefore, if
 both the HTTP request and response need to be forwarded incrementally, the
