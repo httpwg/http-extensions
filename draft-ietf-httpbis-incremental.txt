@@ -5,10 +5,10 @@
 httpbis                                                 奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                T. Pauly
-Expires: 24 October 2025                                           Apple
+Expires: 26 October 2025                                           Apple
                                                               M. Thomson
                                                                  Mozilla
-                                                           22 April 2025
+                                                           24 April 2025
 
 
                        Incremental HTTP Messages
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 October 2025.
+   This Internet-Draft will expire on 26 October 2025.
 
 Copyright Notice
 
@@ -148,6 +148,15 @@ Table of Contents
    a request to deliver messages incrementally.  Clients can rely on
    prior knowledge or probe for support on individual resources.
 
+   The Incremental header field facilitates the establishment of a
+   bidirectional byte channel over HTTP, as its presence in both
+   requests and responses instructs intermediaries to forward early
+   responses (Section 7.5 of [HTTP]) and to transmit message contents
+   incrementally in both directions.  However, when developing
+   bidirectional protocols over HTTP, Extended CONNECT
+   [RFC8441][RFC9220] is generally more consistent with HTTP's
+   architecture.
+
 4.  Security Considerations
 
    To conserve resources required to handle HTTP requests or
@@ -227,6 +236,14 @@ Table of Contents
               Nottingham, M. and P. Sikora, "The Proxy-Status HTTP
               Response Header Field", RFC 9209, DOI 10.17487/RFC9209,
               June 2022, <https://www.rfc-editor.org/rfc/rfc9209>.
+
+   [RFC8441]  McManus, P., "Bootstrapping WebSockets with HTTP/2",
+              RFC 8441, DOI 10.17487/RFC8441, September 2018,
+              <https://www.rfc-editor.org/rfc/rfc8441>.
+
+   [RFC9220]  Hamilton, R., "Bootstrapping WebSockets with HTTP/3",
+              RFC 9220, DOI 10.17487/RFC9220, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9220>.
 
    [SSE]      WHATWG, "Server-Sent Events", n.d.,
               <https://html.spec.whatwg.org/multipage/server-sent-
