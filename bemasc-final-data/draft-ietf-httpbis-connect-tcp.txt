@@ -343,9 +343,9 @@ Table of Contents
 
          o  HTTP/1.1 (insecure): TCP RST.
 
-   *  When the receive stream is terminated abruptly or without a
-      FINAL_DATA capsule received, the endpoint SHOULD send a TCP RST if
-      the TCP subsystem permits it.
+   *  When the receive stream is closed abruptly or without a FINAL_DATA
+      capsule received, the endpoint SHOULD send a TCP RST if the TCP
+      subsystem permits it.
 
    The mandatory behaviors above enable endpoints to detect any
    truncation of incoming TCP data.  The recommended behaviors propagate

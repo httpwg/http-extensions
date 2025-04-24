@@ -1500,7 +1500,7 @@ capsule-protocol = ?1
             </ul>
 </li>
           <li class="normal" id="section-3.4-3.4">
-            <p id="section-3.4-3.4.1">When the receive stream is terminated abruptly or without a FINAL_DATA capsule received, the endpoint <span class="bcp14">SHOULD</span> send a TCP RST if the TCP subsystem permits it.<a href="#section-3.4-3.4.1" class="pilcrow">¶</a></p>
+            <p id="section-3.4-3.4.1">When the receive stream is closed abruptly or without a FINAL_DATA capsule received, the endpoint <span class="bcp14">SHOULD</span> send a TCP RST if the TCP subsystem permits it.<a href="#section-3.4-3.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-3.4-4">The mandatory behaviors above enable endpoints to detect any truncation of incoming TCP data.  The recommended behaviors propagate any TCP errors through the proxy connection.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
