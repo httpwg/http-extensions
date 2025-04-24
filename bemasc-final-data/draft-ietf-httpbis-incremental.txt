@@ -5,10 +5,10 @@
 httpbis                                                 奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                T. Pauly
-Expires: 24 October 2025                                           Apple
+Expires: 26 October 2025                                           Apple
                                                               M. Thomson
                                                                  Mozilla
-                                                           22 April 2025
+                                                           24 April 2025
 
 
                        Incremental HTTP Messages
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 October 2025.
+   This Internet-Draft will expire on 26 October 2025.
 
 Copyright Notice
 

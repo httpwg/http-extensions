@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                           22 April 2025
-Expires: 24 October 2025
+Intended status: Standards Track                           24 April 2025
+Expires: 26 October 2025
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 October 2025.
+   This Internet-Draft will expire on 26 October 2025.
 
 Copyright Notice
 
@@ -326,8 +326,8 @@ Table of Contents
    *  When an endpoint receives a valid FINAL_DATA capsule, it MUST send
       a TCP FIN.
 
-   *  Each endpoint MUST close its send stream when the corresponding
-      TCP connection reaches the TIME-WAIT or CLOSED state.
+   *  When the corresponding TCP connection reaches the TIME-WAIT or
+      CLOSED state, each endpoint MUST close its send stream.
 
       -  If the connection closed gracefully, the endpoint MUST close
          the send stream gracefully.
@@ -343,12 +343,9 @@ Table of Contents
 
          o  HTTP/1.1 (insecure): TCP RST.
 
-   *  The endpoint SHOULD send a TCP RST when the receive stream is
-      terminated if the TCP subsystem permits it and
-
-      -  the receive stream ended abruptly, or
-
-      -  a FINAL_DATA capsule was not received.
+   *  When the receive stream terminates abruptly or without a
+      FINAL_DATA capsule received, an endpoint SHOULD send a TCP RST if
+      the TCP subsystem permits it.
 
    The mandatory behaviors above enable endpoints to detect any
    truncation of incoming TCP data.  The recommended behaviors propagate
