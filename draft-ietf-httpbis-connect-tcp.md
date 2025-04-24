@@ -163,14 +163,14 @@ When closing connections, endpoints are subject to the following requirements:
 
 * When an endpoint receives a valid TCP FIN, it MUST send a FINAL_DATA capsule.
 * When an endpoint receives a valid FINAL_DATA capsule, it MUST send a TCP FIN.
-* When the corresponding TCP connection reaches the TIME-WAIT or CLOSED state, each endpoint MUST close its send stream.
+* When a TCP connection reaches the TIME-WAIT or CLOSED state, the associated endpoint MUST close its send stream.
   - If the connection closed gracefully, the endpoint MUST close the send stream gracefully.
   - Otherwise, the endpoint SHOULD close the send stream abruptly, using a mechanism appropriate to the HTTP version:
     - HTTP/3: RESET_STREAM with H3_CONNECT_ERROR
     - HTTP/2: RST_STREAM with CONNECT_ERROR
     - HTTP/1.1 over TLS: a TLS Error Alert
     - HTTP/1.1 (insecure): TCP RST.
-* When the receive stream terminates abruptly or without a FINAL_DATA capsule received, an endpoint SHOULD send a TCP RST if the TCP subsystem permits it.
+* When the receive stream is closed abruptly or without a FINAL_DATA capsule received, the endpoint SHOULD send a TCP RST if the TCP subsystem permits it.
 
 The mandatory behaviors above enable endpoints to detect any truncation of incoming TCP data.  The recommended behaviors propagate any TCP errors through the proxy connection.
 
