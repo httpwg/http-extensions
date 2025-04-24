@@ -1475,7 +1475,7 @@ capsule-protocol = ?1
             <p id="section-3.4-3.2.1">When an endpoint receives a valid FINAL_DATA capsule, it <span class="bcp14">MUST</span> send a TCP FIN.<a href="#section-3.4-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.4-3.3">
-            <p id="section-3.4-3.3.1">When the corresponding TCP connection reaches the TIME-WAIT or CLOSED state, each endpoint <span class="bcp14">MUST</span> close its send stream.<a href="#section-3.4-3.3.1" class="pilcrow">¶</a></p>
+            <p id="section-3.4-3.3.1">When a TCP connection reaches the TIME-WAIT or CLOSED state, the associated endpoint <span class="bcp14">MUST</span> close its send stream.<a href="#section-3.4-3.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.4-3.3.2.1">
                 <p id="section-3.4-3.3.2.1.1">If the connection closed gracefully, the endpoint <span class="bcp14">MUST</span> close the send stream gracefully.<a href="#section-3.4-3.3.2.1.1" class="pilcrow">¶</a></p>
@@ -1500,7 +1500,7 @@ capsule-protocol = ?1
             </ul>
 </li>
           <li class="normal" id="section-3.4-3.4">
-            <p id="section-3.4-3.4.1">When the receive stream terminates abruptly or without a FINAL_DATA capsule received, an endpoint <span class="bcp14">SHOULD</span> send a TCP RST if the TCP subsystem permits it.<a href="#section-3.4-3.4.1" class="pilcrow">¶</a></p>
+            <p id="section-3.4-3.4.1">When the receive stream is terminated abruptly or without a FINAL_DATA capsule received, the endpoint <span class="bcp14">SHOULD</span> send a TCP RST if the TCP subsystem permits it.<a href="#section-3.4-3.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-3.4-4">The mandatory behaviors above enable endpoints to detect any truncation of incoming TCP data.  The recommended behaviors propagate any TCP errors through the proxy connection.<a href="#section-3.4-4" class="pilcrow">¶</a></p>

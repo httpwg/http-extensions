@@ -326,8 +326,8 @@ Table of Contents
    *  When an endpoint receives a valid FINAL_DATA capsule, it MUST send
       a TCP FIN.
 
-   *  When the corresponding TCP connection reaches the TIME-WAIT or
-      CLOSED state, each endpoint MUST close its send stream.
+   *  When a TCP connection reaches the TIME-WAIT or CLOSED state, the
+      associated endpoint MUST close its send stream.
 
       -  If the connection closed gracefully, the endpoint MUST close
          the send stream gracefully.
@@ -343,8 +343,8 @@ Table of Contents
 
          o  HTTP/1.1 (insecure): TCP RST.
 
-   *  When the receive stream terminates abruptly or without a
-      FINAL_DATA capsule received, an endpoint SHOULD send a TCP RST if
+   *  When the receive stream is terminated abruptly or without a
+      FINAL_DATA capsule received, the endpoint SHOULD send a TCP RST if
       the TCP subsystem permits it.
 
    The mandatory behaviors above enable endpoints to detect any
