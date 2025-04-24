@@ -127,7 +127,9 @@ individual resources.
 The Incremental header field facilitates the establishment of a bidirectional
 byte channel over HTTP, as its presence in both requests and responses instructs
 intermediaries to forward early responses ({{Section 7.5 of HTTP}}) and to
-transmit message contents incrementally in both directions.
+transmit message contents incrementally in both directions.  However, when developing
+bidirectional protocols over HTTP, Extended CONNECT {{?RFC8441}}{{?RFC9220}} is
+generally more consistent with HTTP's architecture.
 
 
 # Security Considerations
