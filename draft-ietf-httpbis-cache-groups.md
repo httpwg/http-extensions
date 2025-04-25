@@ -87,7 +87,7 @@ Cache-Control: max-age=3600
 Cache-Groups: "scripts"
 ~~~
 
-The ordering of members is not significant. Unrecognised Parameters MUST be ignored.
+The ordering of members is not significant. Unrecognised Parameters are to be ignored.
 
 Implementations MUST support at least 32 groups in a field value, with up to at least 32 characters in each member. Note that generic limitations on HTTP field lengths may constrain the size of this field value in practice.
 
@@ -126,7 +126,7 @@ A cache that receives a Cache-Group-Invalidation header field on a response to a
 
 Cache extensions can explicitly strengthen the requirement above. For example, a targeted cache control header field {{TARGETED}} might specify that caches processing it are required to respect the Cache-Group-Invalidation signal.
 
-The ordering of members is not significant. Unrecognised Parameters MUST be ignored.
+The ordering of members is not significant. Unrecognised Parameters are to be ignored.
 
 Implementations MUST support at least 32 groups in a field value, with up to at least 32 characters in each member. Note that generic limitations on HTTP field lengths may constrain the size of this field value in practice.
 
