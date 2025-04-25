@@ -66,7 +66,7 @@ In addition to sharing invalidation events, the relationships indicated by group
 
 {{cache-group-invalidation}} introduces one new source of such events: a HTTP response header field that allows a state-changing response to trigger a group invalidation.
 
-These mechanisms operate within a single cache, across the stored responses associated with a single origin server. They do not address the issues of synchronising state between multiple caches (e.g., in a hierarchy or mesh), nor do they facilitate association of stored responses from disparate origins.
+These mechanisms operate within a single cache, across the stored responses associated with a single origin server (see {{identify}}). They do not address the issues of synchronising state between multiple caches (e.g., in a hierarchy or mesh), nor do they facilitate association of stored responses from disparate origins.
 
 
 ## Notational Conventions
