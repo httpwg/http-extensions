@@ -176,7 +176,7 @@ q=foo&amp;limit=10&amp;sort=-published
           <td>Cacheable</td>
           <td>yes</td>
           <td>yes</td>
-          <td>no</td>
+          <td>yes, but only for future GET or HEAD requests</td>
         </tr>
         <tr>
           <td>Content (body)</td>
