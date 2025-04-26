@@ -1,4 +1,4 @@
-# Editor's drafts for bemasc-final-data branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/bemasc-final-data)
+# Editor's drafts for reschke-3068 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/reschke-3068)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |

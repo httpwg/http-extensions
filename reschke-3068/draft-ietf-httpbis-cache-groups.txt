@@ -3,9 +3,9 @@
 
 
 HTTP                                                       M. Nottingham
-Internet-Draft                                             24 April 2025
+Internet-Draft                                             26 April 2025
 Intended status: Standards Track                                        
-Expires: 26 October 2025
+Expires: 28 October 2025
 
 
                            HTTP Cache Groups
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 October 2025.
+   This Internet-Draft will expire on 28 October 2025.
 
 Copyright Notice
 
@@ -115,10 +115,10 @@ Table of Contents
    invalidation.
 
    These mechanisms operate within a single cache, across the stored
-   responses associated with a single origin server.  They do not
-   address the issues of synchronising state between multiple caches
-   (e.g., in a hierarchy or mesh), nor do they facilitate association of
-   stored responses from disparate origins.
+   responses associated with a single origin server (see Section 2.1).
+   They do not address the issues of synchronising state between
+   multiple caches (e.g., in a hierarchy or mesh), nor do they
+   facilitate association of stored responses from disparate origins.
 
 1.1.  Notational Conventions
 
@@ -133,9 +133,9 @@ Table of Contents
 
 2.  The Cache-Groups Response Header Field
 
-   The Cache-Groups HTTP Response Header is a List of Strings
-   [STRUCTURED-FIELDS].  Each member of the list is an opaque value that
-   identifies a group that the response belongs to.
+   The Cache-Groups HTTP Response Header is a List of Strings (Sections
+   3.1 and 3.3.1 of [STRUCTURED-FIELDS]).  Each member of the list is an
+   opaque value that identifies a group that the response belongs to.
 
    HTTP/1.1 200 OK
    Content-Type: application/javascript
@@ -143,7 +143,7 @@ Table of Contents
    Cache-Groups: "scripts"
 
    The ordering of members is not significant.  Unrecognised Parameters
-   MUST be ignored.
+   are to be ignored.
 
    Implementations MUST support at least 32 groups in a field value,
    with up to at least 32 characters in each member.  Note that generic
@@ -157,7 +157,7 @@ Table of Contents
 
    1.  They both contain a Cache-Groups response header field that
        contains the same String (in any position in the List), when
-       compared character-by-character.
+       compared character-by-character (case sensitive).
 
    2.  They both share the same URI origin (per Section 4.3.1 of
        [HTTP]).
@@ -177,9 +177,9 @@ Table of Contents
 3.  The Cache-Group-Invalidation Response Header Field
 
    The Cache-Group-Invalidation response header field is a List of
-   Strings [STRUCTURED-FIELDS].  Each member of the list is an opaque
-   value that identifies a group that the response invalidates, per
-   Section 2.2.1.
+   Strings (Sections 3.1 and 3.3.1 of [STRUCTURED-FIELDS]).  Each member
+   of the list is an opaque value that identifies a group that the
+   response invalidates, per Section 2.2.1.
 
    For example, following a POST request that has side effects on two
    cache groups, the corresponding response could indicate that stored
@@ -204,7 +204,7 @@ Table of Contents
    Group-Invalidation signal.
 
    The ordering of members is not significant.  Unrecognised Parameters
-   MUST be ignored.
+   are to be ignored.
 
    Implementations MUST support at least 32 groups in a field value,
    with up to at least 32 characters in each member.  Note that generic
