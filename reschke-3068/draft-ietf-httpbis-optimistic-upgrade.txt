@@ -4,9 +4,9 @@
 
 HTTPBIS                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Updates: 9112, 9298 (if approved)                          26 April 2025
+Updates: 9112, 9298 (if approved)                          27 April 2025
 Intended status: Standards Track                                        
-Expires: 28 October 2025
+Expires: 29 October 2025
 
 
 Security Considerations for Optimistic Protocol Transitions in HTTP/1.1
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 October 2025.
+   This Internet-Draft will expire on 29 October 2025.
 
 Copyright Notice
 
