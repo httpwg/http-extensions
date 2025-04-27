@@ -232,8 +232,8 @@ q=foo&amp;limit=10&amp;sort=-published
       As for all HTTP methods in general, the target URI's query part
       takes part in identifying the resource being queried and therefore is
       not part of the actual query. Whether and how the URI's query part
-      directly affects the result of the query can be defined in media
-      type definitions for QUERY.
+      directly affects the result of the query is implementation specific
+      and out of scope for this specification.
     </t>
     <t>
       QUERY requests are both safe and idempotent with regard to the
@@ -1003,6 +1003,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <section title="Since draft-ietf-httpbis-safe-method-w-body-09" anchor="changes.since.09">
 <ul>
   <li>Clarify cacheability of POST (<eref target="https://github.com/httpwg/http-extensions/issues/3068"/>)</li>
+  <li>Rephrase text that suggests a media type definition can override URI semantics (<eref target="https://github.com/httpwg/http-extensions/issues/3069"/>)</li>
 </ul>
 </section>
 </section>
