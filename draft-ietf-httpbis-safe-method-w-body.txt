@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 27 October 2025                                                
+Expires: 29 October 2025                                                
                                                                M. Bishop
                                                                   Akamai
-                                                           25 April 2025
+                                                           27 April 2025
 
 
                          The HTTP QUERY Method
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 October 2025.
+   This Internet-Draft will expire on 29 October 2025.
 
 Copyright Notice
 
@@ -168,21 +168,23 @@ Table of Contents
 
    Summarizing:
 
-    +============+=============+==================+==================+
-    |            | GET         | QUERY            | POST             |
-    +============+=============+==================+==================+
-    | Safe       | yes         | yes              | potentially no   |
-    +------------+-------------+------------------+------------------+
-    | Idempotent | yes         | yes              | potentially no   |
-    +------------+-------------+------------------+------------------+
-    | Cacheable  | yes         | yes              | no               |
-    +------------+-------------+------------------+------------------+
-    | Content    | "no defined | expected         | expected         |
-    | (body)     | semantics"  | (semantics per   | (semantics per   |
-    |            |             | target resource) | target resource) |
-    +------------+-------------+------------------+------------------+
+     +============+============+==================+==================+
+     |            | GET        | QUERY            | POST             |
+     +============+============+==================+==================+
+     | Safe       | yes        | yes              | potentially no   |
+     +------------+------------+------------------+------------------+
+     | Idempotent | yes        | yes              | potentially no   |
+     +------------+------------+------------------+------------------+
+     | Cacheable  | yes        | yes              | yes, but only    |
+     |            |            |                  | for future GET   |
+     |            |            |                  | or HEAD requests |
+     +------------+------------+------------------+------------------+
+     | Content    | "no        | expected         | expected         |
+     | (body)     | defined    | (semantics per   | (semantics per   |
+     |            | semantics" | target resource) | target resource) |
+     +------------+------------+------------------+------------------+
 
-                                 Table 1
+                                  Table 1
 
 1.1.  Terminology
 
@@ -940,7 +942,8 @@ B.9.  Since draft-ietf-httpbis-safe-method-w-body-08
 
 B.10.  Since draft-ietf-httpbis-safe-method-w-body-09
 
-   None yet.
+   *  Clarify cacheability of POST (https://github.com/httpwg/http-
+      extensions/issues/3068)
 
 Acknowledgements
 
