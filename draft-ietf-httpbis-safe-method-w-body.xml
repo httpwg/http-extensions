@@ -1000,11 +1000,11 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Hopefully more clarity wrt query content vs URI query component (<eref target="https://github.com/httpwg/http-extensions/issues/3059"/>)</li>
 </ul>
 </section>
-  <section title="Since draft-ietf-httpbis-safe-method-w-body-09" anchor="changes.since.09">
-    <t>
-      None yet.
-    </t>
-  </section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-09" anchor="changes.since.09">
+<ul>
+  <li>Clarify cacheability of POST (<eref target="https://github.com/httpwg/http-extensions/issues/3068"/>)</li>
+</ul>
+</section>
 </section>
 
 <section title="Acknowledgements" anchor="acknowledgements" numbered="false">
