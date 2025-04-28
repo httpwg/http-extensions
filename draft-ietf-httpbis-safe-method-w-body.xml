@@ -253,7 +253,8 @@ q=foo&amp;limit=10&amp;sort=-published
 
     <section title="Content-Location and Location Fields" anchor="location">
       <t>
-        Furthermore, a successful response can include a Content-Location
+        Furthermore, a successful response (2xx, <eref target="HTTP" section="15.3"/>)
+        can include a Content-Location
         header field (see <xref target="HTTP" section="8.7"/>) containing an
         identifier for a resource corresponding to the results of the
         operation. This represents a claim from the server that a client can send
@@ -263,7 +264,7 @@ q=foo&amp;limit=10&amp;sort=-published
       <t>
         A server can create or locate a resource that identifies the query
         operation for future use. If the server does so, the URI of the resource
-        can be included in the Location header field of the response (see <xref
+        can be included in the Location header field of the 2xx response (see <xref
         target="HTTP" section="10.2.2"/>). This represents a claim that a client can
         send a GET request to the indicated URI to repeat the query operation just
         performed without resending the query content. This resource might be
@@ -650,7 +651,8 @@ Accept: application/x-www-form-urlencoded, application/sql
 
     <section title="Content-Location, Location, and Indirect Responses" anchor="example.content-location.location.indirect">
       <t>
-        The Content-Location and Location response fields provide a way to identify alternate resources
+        The Content-Location and Location response fields in success responses
+        (2xx, <eref target="HTTP" section="15.3"/>) provide a way to identify alternate resources
         that will respond to GET requests, either for the received result of the request, or for future
         requests to perform the same operation. Going back to the example from <xref target="example.simple"/>:
       </t>
@@ -1004,6 +1006,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <ul>
   <li>Clarify cacheability of POST (<eref target="https://github.com/httpwg/http-extensions/issues/3068"/>)</li>
   <li>Rephrase text that suggests a media type definition can override URI semantics (<eref target="https://github.com/httpwg/http-extensions/issues/3069"/>)</li>
+  <li>Restrict description of Content-Location and Location semantics to 2xx responses (<eref target="https://github.com/httpwg/http-extensions/issues/3070"/>)</li>
 </ul>
 </section>
 </section>
