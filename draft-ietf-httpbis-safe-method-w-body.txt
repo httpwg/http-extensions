@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 29 October 2025                                                
+Expires: 30 October 2025                                                
                                                                M. Bishop
                                                                   Akamai
-                                                           27 April 2025
+                                                           28 April 2025
 
 
                          The HTTP QUERY Method
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 October 2025.
+   This Internet-Draft will expire on 30 October 2025.
 
 Copyright Notice
 
@@ -221,8 +221,8 @@ Table of Contents
    As for all HTTP methods in general, the target URI's query part takes
    part in identifying the resource being queried and therefore is not
    part of the actual query.  Whether and how the URI's query part
-   directly affects the result of the query can be defined in media type
-   definitions for QUERY.
+   directly affects the result of the query is implementation specific
+   and out of scope for this specification.
 
    QUERY requests are both safe and idempotent with regard to the
    resource identified by the request URI.  That is, QUERY requests do
@@ -944,6 +944,10 @@ B.10.  Since draft-ietf-httpbis-safe-method-w-body-09
 
    *  Clarify cacheability of POST (https://github.com/httpwg/http-
       extensions/issues/3068)
+
+   *  Rephrase text that suggests a media type definition can override
+      URI semantics (https://github.com/httpwg/http-extensions/
+      issues/3069)
 
 Acknowledgements
 
