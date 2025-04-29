@@ -253,7 +253,7 @@ q=foo&amp;limit=10&amp;sort=-published
 
     <section title="Content-Location and Location Fields" anchor="location">
       <t>
-        Furthermore, a successful response (2xx, <eref target="HTTP" section="15.3"/>)
+        Furthermore, a successful response (2xx, <xref target="HTTP" section="15.3"/>)
         can include a Content-Location
         header field containing an
         identifier for a resource corresponding to the results of the
@@ -652,7 +652,7 @@ Accept: application/x-www-form-urlencoded, application/sql
     <section title="Content-Location, Location, and Indirect Responses" anchor="example.content-location.location.indirect">
       <t>
         The Content-Location and Location response fields in success responses
-        (2xx, <eref target="HTTP" section="15.3"/>) provide a way to identify alternate resources
+        (2xx, <xref target="HTTP" section="15.3"/>) provide a way to identify alternate resources
         that will respond to GET requests, either for the received result of the request, or for future
         requests to perform the same operation. Going back to the example from <xref target="example.simple"/>:
       </t>
