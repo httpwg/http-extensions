@@ -1010,7 +1010,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Slightly rephrase semantics for Content-Location (<eref target="https://github.com/httpwg/http-extensions/issues/3071"/>)</li>
 </ul>
 </section>
-<section title="Since draft-ietf-httpbis-safe-method-w-body-09" anchor="changes.since.10">
+<section title="Since draft-ietf-httpbis-safe-method-w-body-10" anchor="changes.since.10">
   <t>None yet.</t>
 </section>
 </section>
