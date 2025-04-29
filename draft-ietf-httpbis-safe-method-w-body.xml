@@ -255,9 +255,9 @@ q=foo&amp;limit=10&amp;sort=-published
       <t>
         Furthermore, a successful response (2xx, <eref target="HTTP" section="15.3"/>)
         can include a Content-Location
-        header field (see <xref target="HTTP" section="8.7"/>) containing an
+        header field containing an
         identifier for a resource corresponding to the results of the
-        operation. This represents a claim from the server that a client can send
+        operation; see <xref target="HTTP" section="8.7"/> for details. This represents a claim from the server that a client can send
         a GET request for the indicated URI to retrieve the results of the query
         operation just performed. The indicated resource might be temporary.
       </t>
@@ -1007,6 +1007,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Clarify cacheability of POST (<eref target="https://github.com/httpwg/http-extensions/issues/3068"/>)</li>
   <li>Rephrase text that suggests a media type definition can override URI semantics (<eref target="https://github.com/httpwg/http-extensions/issues/3069"/>)</li>
   <li>Restrict description of Content-Location and Location semantics to 2xx responses (<eref target="https://github.com/httpwg/http-extensions/issues/3070"/>)</li>
+  <li>Slightly rephrase semantics for Content-Location (<eref target="https://github.com/httpwg/http-extensions/issues/3071"/>)</li>
 </ul>
 </section>
 </section>
