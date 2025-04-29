@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 30 October 2025                                                
+Expires: 31 October 2025                                                
                                                                M. Bishop
                                                                   Akamai
-                                                           28 April 2025
+                                                           29 April 2025
 
 
                          The HTTP QUERY Method
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 October 2025.
+   This Internet-Draft will expire on 31 October 2025.
 
 Copyright Notice
 
@@ -239,22 +239,23 @@ Table of Contents
 
 2.1.  Content-Location and Location Fields
 
-   Furthermore, a successful response can include a Content-Location
-   header field (see Section 8.7 of [HTTP]) containing an identifier for
-   a resource corresponding to the results of the operation.  This
-   represents a claim from the server that a client can send a GET
-   request for the indicated URI to retrieve the results of the query
-   operation just performed.  The indicated resource might be temporary.
+   Furthermore, a successful response (2xx, Section 15.3 of [HTTP]) can
+   include a Content-Location header field containing an identifier for
+   a resource corresponding to the results of the operation; see
+   Section 8.7 of [HTTP] for details.  This represents a claim from the
+   server that a client can send a GET request for the indicated URI to
+   retrieve the results of the query operation just performed.  The
+   indicated resource might be temporary.
 
    A server can create or locate a resource that identifies the query
    operation for future use.  If the server does so, the URI of the
-   resource can be included in the Location header field of the response
-   (see Section 10.2.2 of [HTTP]).  This represents a claim that a
-   client can send a GET request to the indicated URI to repeat the
-   query operation just performed without resending the query content.
-   This resource might be temporary; if a future request fails, the
-   client can retry using the original QUERY resource and the previously
-   submitted content.
+   resource can be included in the Location header field of the 2xx
+   response (see Section 10.2.2 of [HTTP]).  This represents a claim
+   that a client can send a GET request to the indicated URI to repeat
+   the query operation just performed without resending the query
+   content.  This resource might be temporary; if a future request
+   fails, the client can retry using the original QUERY resource and the
+   previously submitted content.
 
 2.2.  Redirection
 
@@ -551,11 +552,11 @@ A.3.  Discovery of QUERY Formats
 
 A.4.  Content-Location, Location, and Indirect Responses
 
-   The Content-Location and Location response fields provide a way to
-   identify alternate resources that will respond to GET requests,
-   either for the received result of the request, or for future requests
-   to perform the same operation.  Going back to the example from
-   Appendix A.1:
+   The Content-Location and Location response fields in success
+   responses (2xx, Section 15.3 of [HTTP]) provide a way to identify
+   alternate resources that will respond to GET requests, either for the
+   received result of the request, or for future requests to perform the
+   same operation.  Going back to the example from Appendix A.1:
 
    QUERY /contacts HTTP/1.1
    Host: example.org
@@ -948,6 +949,13 @@ B.10.  Since draft-ietf-httpbis-safe-method-w-body-09
    *  Rephrase text that suggests a media type definition can override
       URI semantics (https://github.com/httpwg/http-extensions/
       issues/3069)
+
+   *  Restrict description of Content-Location and Location semantics to
+      2xx responses (https://github.com/httpwg/http-extensions/
+      issues/3070)
+
+   *  Slightly rephrase semantics for Content-Location
+      (https://github.com/httpwg/http-extensions/issues/3071)
 
 Acknowledgements
 
