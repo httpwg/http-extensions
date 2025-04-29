@@ -31,7 +31,7 @@ Editorial Note
    code and issues list for this draft can be found at
    https://github.com/httpwg/http-extensions/labels/query-method.
 
-   The changes in this draft are summarized in Appendix B.10.
+   The changes in this draft are summarized in Appendix B.11.
 
 Status of This Memo
 
@@ -102,6 +102,7 @@ Table of Contents
      B.8.  Since draft-ietf-httpbis-safe-method-w-body-07
      B.9.  Since draft-ietf-httpbis-safe-method-w-body-08
      B.10. Since draft-ietf-httpbis-safe-method-w-body-09
+     B.11. Since draft-ietf-httpbis-safe-method-w-body-09
    Acknowledgements
    Contributors
    Authors' Addresses
@@ -956,6 +957,10 @@ B.10.  Since draft-ietf-httpbis-safe-method-w-body-09
 
    *  Slightly rephrase semantics for Content-Location
       (https://github.com/httpwg/http-extensions/issues/3071)
+
+B.11.  Since draft-ietf-httpbis-safe-method-w-body-09
+
+   None yet.
 
 Acknowledgements
 
