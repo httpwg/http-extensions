@@ -419,7 +419,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     <t>
       Caches that normalize QUERY content incorrectly or in ways that are
       significantly different from how the resource processes the content
-      can return the incorrect response if normalization results in a false positive.
+      can return an incorrect response if normalization results in a false positive.
     </t>
     <t>
       A QUERY request from user agents implementing CORS (Cross-Origin Resource Sharing)
