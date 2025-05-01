@@ -219,8 +219,8 @@ q=foo&amp;limit=10&amp;sort=-published
       representation of the resource identified by the target URI
       (as defined by <xref target="HTTP" section="7.1"/>), the QUERY
       method is used to ask the server to perform a query operation
-      (described by the request content) over some set of data scoped to the
-      target URI. The content returned in response to a QUERY
+      (described by the request content) over some set of data at the
+      resource. The content returned in response to a QUERY
       cannot be assumed to be a representation of the resource identified by
       the target URI.
     </t>
