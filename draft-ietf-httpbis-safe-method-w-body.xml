@@ -239,7 +239,7 @@ q=foo&amp;limit=10&amp;sort=-published
     <t>
       QUERY requests are both safe and idempotent with regard to the
       resource identified by the request URI. That is, QUERY requests do not
-      alter the state of the targeted resource. However, while processing a
+      alter the state of the identified resource. However, while processing a
       QUERY request, a server can be expected to allocate computing and memory
       resources or even create additional HTTP resources through which the
       response can be retrieved.
