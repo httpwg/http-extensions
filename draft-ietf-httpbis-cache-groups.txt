@@ -3,9 +3,9 @@
 
 
 HTTP                                                       M. Nottingham
-Internet-Draft                                             30 April 2025
+Internet-Draft                                                2 May 2025
 Intended status: Standards Track                                        
-Expires: 1 November 2025
+Expires: 3 November 2025
 
 
                            HTTP Cache Groups
@@ -15,7 +15,7 @@ Abstract
 
    This specification introduces a means of describing the relationships
    between stored responses in HTTP caches, "grouping" them by
-   associating a stored response with one or more opaque strings.
+   associating a stored response with one or more strings.
 
 About This Document
 
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 November 2025.
+   This Internet-Draft will expire on 3 November 2025.
 
 Copyright Notice
 
@@ -106,9 +106,9 @@ Table of Contents
 
    Section 2 introduces a means of describing the relationships between
    stored responses in HTTP caches, by associating those responses with
-   one or more groups that reflect those relationships and that are
-   identified by opaque strings.  It also describes how caches can use
-   that information to apply invalidation events to members of a group.
+   one or more groups that reflect those relationships.  It also
+   describes how caches can use that information to apply invalidation
+   events to members of a group.
 
    Section 3 introduces one new source of such events: a HTTP response
    header field that allows a state-changing response to trigger a group
@@ -134,8 +134,11 @@ Table of Contents
 2.  The Cache-Groups Response Header Field
 
    The Cache-Groups HTTP Response Header is a List of Strings (Sections
-   3.1 and 3.3.1 of [STRUCTURED-FIELDS]).  Each member of the list is an
-   opaque value that identifies a group that the response belongs to.
+   3.1 and 3.3.1 of [STRUCTURED-FIELDS]).  Each member of the list is a
+   value that identifies a group that the response belongs to.  These
+   strings are opaque -- while they might have some meaning to the
+   server that creates them, the cache does not have any insight into
+   their structure or content (beyond uniquely identifying a group).
 
    HTTP/1.1 200 OK
    Content-Type: application/javascript
@@ -178,8 +181,8 @@ Table of Contents
 
    The Cache-Group-Invalidation response header field is a List of
    Strings (Sections 3.1 and 3.3.1 of [STRUCTURED-FIELDS]).  Each member
-   of the list is an opaque value that identifies a group that the
-   response invalidates, per Section 2.2.1.
+   of the list is a value that identifies a group that the response
+   invalidates, per Section 2.2.1.
 
    For example, following a POST request that has side effects on two
    cache groups, the corresponding response could indicate that stored
