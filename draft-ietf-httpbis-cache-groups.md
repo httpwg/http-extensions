@@ -47,7 +47,7 @@ entity:
 
 --- abstract
 
-This specification introduces a means of describing the relationships between stored responses in HTTP caches, "grouping" them by associating a stored response with one or more opaque strings.
+This specification introduces a means of describing the relationships between stored responses in HTTP caches, "grouping" them by associating a stored response with one or more strings.
 
 --- middle
 
@@ -62,7 +62,7 @@ For example, it is often necessary to invalidate a set of related resources. Thi
 
 In addition to sharing invalidation events, the relationships indicated by grouping can also be used by caches to optimise their operation; for example, it could be used to inform the operation of cache eviction algorithms.
 
-{{cache-groups}} introduces a means of describing the relationships between stored responses in HTTP caches, by associating those responses with one or more groups that reflect those relationships and that are identified by opaque strings. It also describes how caches can use that information to apply invalidation events to members of a group.
+{{cache-groups}} introduces a means of describing the relationships between stored responses in HTTP caches, by associating those responses with one or more groups that reflect those relationships. It also describes how caches can use that information to apply invalidation events to members of a group.
 
 {{cache-group-invalidation}} introduces one new source of such events: a HTTP response header field that allows a state-changing response to trigger a group invalidation.
 
@@ -78,7 +78,7 @@ This specification uses the following terminology from {{STRUCTURED-FIELDS}}: Li
 
 # The Cache-Groups Response Header Field {#cache-groups}
 
-The Cache-Groups HTTP Response Header is a List of Strings ({{Sections 3.1 and 3.3.1 of STRUCTURED-FIELDS}}). Each member of the list is an opaque value that identifies a group that the response belongs to.
+The Cache-Groups HTTP Response Header is a List of Strings ({{Sections 3.1 and 3.3.1 of STRUCTURED-FIELDS}}). Each member of the list is a value that identifies a group that the response belongs to. These strings are opaque -- while they might have some meaning to the server that creates them, the cache does not have any insight into their structure or content (beyond uniquely identifying a group).
 
 ~~~ http-message
 HTTP/1.1 200 OK
@@ -110,7 +110,7 @@ Cache extensions can explicitly strengthen the requirement above. For example, a
 
 # The Cache-Group-Invalidation Response Header Field {#cache-group-invalidation}
 
-The Cache-Group-Invalidation response header field is a List of Strings ({{Sections 3.1 and 3.3.1 of STRUCTURED-FIELDS}}). Each member of the list is an opaque value that identifies a group that the response invalidates, per {{invalidation}}.
+The Cache-Group-Invalidation response header field is a List of Strings ({{Sections 3.1 and 3.3.1 of STRUCTURED-FIELDS}}). Each member of the list is a value that identifies a group that the response invalidates, per {{invalidation}}.
 
 For example, following a POST request that has side effects on two cache groups, the corresponding response could indicate that stored responses associated with either or both of those groups should be invalidated with:
 
