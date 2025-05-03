@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 2 November 2025                                                
+Expires: 4 November 2025                                                
                                                                M. Bishop
                                                                   Akamai
-                                                              1 May 2025
+                                                              3 May 2025
 
 
                          The HTTP QUERY Method
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 November 2025.
+   This Internet-Draft will expire on 4 November 2025.
 
 Copyright Notice
 
@@ -185,7 +185,7 @@ Table of Contents
      |            | semantics" | target resource) | target resource) |
      +------------+------------+------------------+------------------+
 
-               Table 1: Summary of relevant method properties
+                                  Table 1
 
 1.1.  Terminology
 
@@ -211,9 +211,9 @@ Table of Contents
    of the resource identified by the target URI (as defined by
    Section 7.1 of [HTTP]), the QUERY method is used to ask the server to
    perform a query operation (described by the request content) over
-   some set of data at the resource.  The content returned in response
-   to a QUERY cannot be assumed to be a representation of the resource
-   identified by the target URI.
+   some set of data scoped to the target URI.  The content returned in
+   response to a QUERY cannot be assumed to be a representation of the
+   resource identified by the target URI.
 
    The content of the request and it's media type define the query.
    Implementations MAY use a request content of any media type with the
@@ -227,7 +227,7 @@ Table of Contents
 
    QUERY requests are both safe and idempotent with regard to the
    resource identified by the request URI.  That is, QUERY requests do
-   not alter the state of the identified resource.  However, while
+   not alter the state of the targeted resource.  However, while
    processing a QUERY request, a server can be expected to allocate
    computing and memory resources or even create additional HTTP
    resources through which the response can be retrieved.
@@ -240,13 +240,13 @@ Table of Contents
 
 2.1.  Content-Location and Location Fields
 
-   A successful response (2xx, Section 15.3 of [HTTP]) can include a
-   Content-Location header field containing an identifier for a resource
-   corresponding to the results of the operation; see Section 8.7 of
-   [HTTP] for details.  This represents a claim from the server that a
-   client can send a GET request for the indicated URI to retrieve the
-   results of the query operation just performed.  The indicated
-   resource might be temporary.
+   Furthermore, a successful response (2xx, Section 15.3 of [HTTP]) can
+   include a Content-Location header field containing an identifier for
+   a resource corresponding to the results of the operation; see
+   Section 8.7 of [HTTP] for details.  This represents a claim from the
+   server that a client can send a GET request for the indicated URI to
+   retrieve the results of the query operation just performed.  The
+   indicated resource might be temporary.
 
    A server can create or locate a resource that identifies the query
    operation for future use.  If the server does so, the URI of the
@@ -263,19 +263,15 @@ Table of Contents
    In some cases, the server may choose to respond indirectly to the
    QUERY request by redirecting the user agent to a different URI (see
    Section 15.4 of [HTTP]).  The semantics of the redirect response do
-   not differ from other methods.
-
-   For instance, a 303 (See Other) response would indicate that the
-   Location field identifies an alternate URI from which the results can
-   be retrieved using a GET request (this use case is also covered by
-   the use of the Location response field in a 2xx response).
-
-   On the other hand, response codes 307 (Temporary Redirect) and 308
-   (Permanent Redirect) can be used to request the user agent to redo
-   the QUERY request on the URI specified by the Location field.
-
-   Various non-normative examples of successful QUERY responses are
-   illustrated in Appendix A.
+   not differ from other methods.  For instance, a 303 (See Other)
+   response would indicate that the Location field identifies an
+   alternate URI from which the results can be retrieved using a GET
+   request (this use case is also covered by the use of the Location
+   response field in a 2xx response).  On the other hand, response codes
+   307 (Temporary Redirect) and 308 (Permanent Redirect) can be used to
+   request the user agent to redo the QUERY request on the URI specified
+   by the Location field.  Various non-normative examples of successful
+   QUERY responses are illustrated in Appendix A.
 
 2.3.  Conditional Requests
 
@@ -290,9 +286,9 @@ Table of Contents
    satisfy subsequent QUERY requests as per Section 4 of
    [HTTP-CACHING]).
 
-   The cache key for a QUERY request (see Section 2 of [HTTP-CACHING])
-   MUST incorporate the request content.  When doing so, caches SHOULD
-   first normalize request content to remove semantically insignificant
+   The cache key for a query (see Section 2 of [HTTP-CACHING]) MUST
+   incorporate the request content.  When doing so, caches SHOULD first
+   normalize request content to remove semantically insignificant
    differences, thereby improving cache efficiency, by:
 
    *  Removing content encoding(s) (Section 8.4 of [HTTP]).
@@ -363,9 +359,7 @@ Table of Contents
    It can be used as an alternative to passing request information in
    the URI (e.g., in the query component).  This is preferred in some
    cases, as the URI is more likely to be logged or otherwise processed
-   by intermediaries than the request content.  In other cases, where
-   the query contains sensitive information, the potential for logging
-   of the URI might motivate the use of QUERY over GET.
+   by intermediaries than the request content.
 
    If a server creates a temporary resource to represent the results of
    a QUERY request (e.g., for use in the Location or Content-Location
@@ -376,7 +370,7 @@ Table of Contents
 
    Caches that normalize QUERY content incorrectly or in ways that are
    significantly different from how the resource processes the content
-   can return an incorrect response if normalization results in a false
+   can return the incorrect response if normalization results in a false
    positive.
 
    A QUERY request from user agents implementing CORS (Cross-Origin
@@ -472,8 +466,8 @@ Table of Contents
 Appendix A.  Examples
 
    The examples below are for illustrative purposes only; if one needs
-   to send queries that are actually this short, it is likely better to
-   use GET.
+   to send queries that are actually this short, it is probably better
+   to use GET.
 
    The media type used in most examples is "application/x-www-form-
    urlencoded" (as used in POST requests from browser user clients,

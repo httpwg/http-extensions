@@ -1,4 +1,4 @@
-# Editor's drafts for editorial-query-mt branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/editorial-query-mt)
+# Editor's drafts for reschke-patch-2 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/reschke-patch-2)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
