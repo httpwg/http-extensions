@@ -117,7 +117,7 @@ For example, following a POST request that has side effects on two cache groups,
 ~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: text/html
-Cache-Group-Invalidation: "eurovision-results", "kylie-minogue"
+Cache-Group-Invalidation: "glastonbury-sets", "kylie-minogue"
 ~~~
 
 The Cache-Group-Invalidation header field MUST be ignored on responses to requests that have a safe method (e.g., GET; see {{Section 9.2.1 of HTTP}}).
