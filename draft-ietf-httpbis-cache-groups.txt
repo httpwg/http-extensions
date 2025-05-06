@@ -3,9 +3,9 @@
 
 
 HTTP                                                       M. Nottingham
-Internet-Draft                                                2 May 2025
+Internet-Draft                                                6 May 2025
 Intended status: Standards Track                                        
-Expires: 3 November 2025
+Expires: 7 November 2025
 
 
                            HTTP Cache Groups
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 November 2025.
+   This Internet-Draft will expire on 7 November 2025.
 
 Copyright Notice
 
@@ -191,7 +191,7 @@ Table of Contents
 
    HTTP/1.1 200 OK
    Content-Type: text/html
-   Cache-Group-Invalidation: "eurovision-results", "kylie-minogue"
+   Cache-Group-Invalidation: "eurovision-results", "australia"
 
    The Cache-Group-Invalidation header field MUST be ignored on
    responses to requests that have a safe method (e.g., GET; see
