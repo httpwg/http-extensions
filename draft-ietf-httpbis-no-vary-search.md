@@ -1,5 +1,5 @@
 ---
-title: No-Vary-Search
+title: The HTTP No-Vary-Search Field
 abbrev:
 category: std
 
