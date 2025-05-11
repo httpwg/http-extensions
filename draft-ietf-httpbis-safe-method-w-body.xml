@@ -151,6 +151,7 @@ q=foo&amp;limit=10&amp;sort=-published
     </t>
     <t>Summarizing:</t>
     <table>
+      <name>Summary of relevant method properties</name>
       <thead>
         <tr>
           <th/>
@@ -218,8 +219,8 @@ q=foo&amp;limit=10&amp;sort=-published
       representation of the resource identified by the target URI
       (as defined by <xref target="HTTP" section="7.1"/>), the QUERY
       method is used to ask the server to perform a query operation
-      (described by the request content) over some set of data scoped to the
-      target URI. The content returned in response to a QUERY
+      (described by the request content) over some set of data at the
+      resource. The content returned in response to a QUERY
       cannot be assumed to be a representation of the resource identified by
       the target URI.
     </t>
@@ -238,7 +239,7 @@ q=foo&amp;limit=10&amp;sort=-published
     <t>
       QUERY requests are both safe and idempotent with regard to the
       resource identified by the request URI. That is, QUERY requests do not
-      alter the state of the targeted resource. However, while processing a
+      alter the state of the identified resource. However, while processing a
       QUERY request, a server can be expected to allocate computing and memory
       resources or even create additional HTTP resources through which the
       response can be retrieved.
@@ -253,7 +254,7 @@ q=foo&amp;limit=10&amp;sort=-published
 
     <section title="Content-Location and Location Fields" anchor="location">
       <t>
-        Furthermore, a successful response (2xx, <xref target="HTTP" section="15.3"/>)
+        A successful response (2xx, <xref target="HTTP" section="15.3"/>)
         can include a Content-Location
         header field containing an
         identifier for a resource corresponding to the results of the
@@ -278,14 +279,21 @@ q=foo&amp;limit=10&amp;sort=-published
         In some cases, the server may choose to respond indirectly to the QUERY
         request by redirecting the user agent to a different URI (see
         <xref target="HTTP" section="15.4"/>). The semantics of the redirect
-        response do not differ from other methods. For instance, a 303 (See Other)
+        response do not differ from other methods.
+      </t>
+      <t>
+        For instance, a 303 (See Other)
         response would indicate that the Location field identifies an
         alternate URI from which the results can be retrieved
         using a GET request (this use case is also covered by the
         use of the Location response field in a 2xx response).
+      </t>
+      <t>
         On the other hand, response codes 307 (Temporary Redirect) and 308
         (Permanent Redirect) can be used to request the user agent to redo
         the QUERY request on the URI specified by the Location field.
+      </t>
+      <t>
         Various non-normative examples of successful
         QUERY responses are illustrated in <xref target="examples"/>.
       </t>
@@ -307,7 +315,7 @@ q=foo&amp;limit=10&amp;sort=-published
         QUERY requests as per <xref target="HTTP-CACHING" section="4"/>).
       </t>
       <t>
-        The cache key for a query (see <xref target="HTTP-CACHING" section="2"/>) &MUST;
+        The cache key for a QUERY request (see <xref target="HTTP-CACHING" section="2"/>) &MUST;
         incorporate the request content. When doing so, caches &SHOULD; first normalize request
         content to remove semantically insignificant differences, thereby improving cache
         efficiency, by:
@@ -397,7 +405,9 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       It can be used as an alternative to passing request
       information in the URI (e.g., in the query component). This is preferred in some
       cases, as the URI is more likely to be logged or otherwise processed
-      by intermediaries than the request content.
+      by intermediaries than the request content. In other cases, where the query
+      contains sensitive information, the potential for logging of the URI might
+      motivate the use of QUERY over GET.
     </t>
     <t>
       If a server creates a temporary resource to represent the results of a QUERY
@@ -409,7 +419,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     <t>
       Caches that normalize QUERY content incorrectly or in ways that are
       significantly different from how the resource processes the content
-      can return the incorrect response if normalization results in a false positive.
+      can return an incorrect response if normalization results in a false positive.
     </t>
     <t>
       A QUERY request from user agents implementing CORS (Cross-Origin Resource Sharing)
@@ -550,7 +560,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
   <section title="Examples" anchor="examples">
     <t>
       The examples below are for illustrative purposes only; if one needs to
-      send queries that are actually this short, it is probably better to use GET.
+      send queries that are actually this short, it is likely better to use GET.
     </t>
     <t>
       The media type used in most examples is "application/x-www-form-urlencoded"
