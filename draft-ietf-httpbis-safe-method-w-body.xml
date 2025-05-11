@@ -254,7 +254,7 @@ q=foo&amp;limit=10&amp;sort=-published
 
     <section title="Content-Location and Location Fields" anchor="location">
       <t>
-        A successful response (2xx, <xref target="HTTP" section="15.3"/>)
+        Furthermore, a successful response (2xx, <xref target="HTTP" section="15.3"/>)
         can include a Content-Location
         header field containing an
         identifier for a resource corresponding to the results of the
