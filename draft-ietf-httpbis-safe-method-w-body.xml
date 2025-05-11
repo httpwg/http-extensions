@@ -560,7 +560,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
   <section title="Examples" anchor="examples">
     <t>
       The examples below are for illustrative purposes only; if one needs to
-      send queries that are actually this short, it is likely better to use GET.
+      send queries that are actually this short, it is probably better to use GET.
     </t>
     <t>
       The media type used in most examples is "application/x-www-form-urlencoded"
