@@ -151,7 +151,6 @@ q=foo&amp;limit=10&amp;sort=-published
     </t>
     <t>Summarizing:</t>
     <table>
-      <name>Summary of relevant method properties</name>
       <thead>
         <tr>
           <th/>
