@@ -405,9 +405,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       It can be used as an alternative to passing request
       information in the URI (e.g., in the query component). This is preferred in some
       cases, as the URI is more likely to be logged or otherwise processed
-      by intermediaries than the request content. In other cases, where the query
-      contains sensitive information, the potential for logging of the URI might
-      motivate the use of QUERY over GET.
+      by intermediaries than the request content.
     </t>
     <t>
       If a server creates a temporary resource to represent the results of a QUERY
