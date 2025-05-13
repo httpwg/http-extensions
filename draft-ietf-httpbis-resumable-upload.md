@@ -356,22 +356,6 @@ While the request content is being received, the server MAY send additional inte
 
 If the server does not receive the entire request content, for example because of canceled requests or dropped connections, it SHOULD append as much of the request content as possible to the upload resource. The upload resource MUST NOT be considered complete then.
 
-### Draft Version Identification
-
-> **RFC Editor's Note:**  Please remove this section and `Upload-Draft-Interop-Version` from all examples prior to publication of a final version of this document.
-
-The current interop version is 7.
-
-Client implementations of draft versions of the protocol MUST send a header field `Upload-Draft-Interop-Version` with the interop version as its value to its requests. The `Upload-Draft-Interop-Version` field value is an Integer.
-
-Server implementations of draft versions of the protocol MUST NOT send a `104 (Upload Resumption Supported)` informational response when the interop version indicated by the `Upload-Draft-Interop-Version` header field in the request is missing or mismatching.
-
-Server implementations of draft versions of the protocol MUST also send a header field `Upload-Draft-Interop-Version` with the interop version as its value to the `104 (Upload Resumption Supported)` informational response.
-
-Client implementations of draft versions of the protocol MUST ignore a `104 (Upload Resumption Supported)` informational response with missing or mismatching interop version indicated by the `Upload-Draft-Interop-Version` header field.
-
-The reason both the client and the server are sending and checking the draft version is to ensure that implementations of the final RFC will not accidentally interop with draft implementations, as they will not check the existence of the `Upload-Draft-Interop-Version` header field.
-
 ### Examples {#upload-creation-example}
 
 A) The following example shows an upload creation, where the entire 100 bytes are transferred in the initial request. The server sends multiple interim responses and one final response from processing the uploaded representation.
@@ -379,7 +363,6 @@ A) The following example shows an upload creation, where the entire 100 bytes ar
 ~~~ http-message
 POST /project/123/files HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 7
 Upload-Complete: ?1
 Content-Length: 100
 Upload-Length: 100
@@ -389,12 +372,10 @@ Upload-Length: 100
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Draft-Interop-Version: 7
 Location: https://example.com/upload/b530ce8ff
 Upload-Limit: max-size=1000000000
 
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Draft-Interop-Version: 7
 Upload-Offset: 50
 
 HTTP/1.1 200 OK
@@ -410,7 +391,6 @@ B) The following example shows an upload creation, where only the first 25 bytes
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 7
 Upload-Complete: ?0
 Content-Length: 25
 Upload-Length: 100
@@ -420,7 +400,6 @@ Upload-Length: 100
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Draft-Interop-Version: 7
 Location: https://example.com/upload/b530ce8ff
 
 HTTP/1.1 201 Created
@@ -433,7 +412,6 @@ C) The following example shows an upload creation, where the server responds wit
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 7
 Upload-Complete: ?1
 Content-Length: 100
 Upload-Length: 100
@@ -443,7 +421,6 @@ Upload-Length: 100
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Draft-Interop-Version: 7
 Location: https://example.com/upload/b530ce8ff
 
 HTTP/1.1 500 Internal Server Error
@@ -454,7 +431,6 @@ D) The following example shows an upload creation being rejected by the server. 
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 7
 Upload-Complete: ?1
 Content-Length: 100
 Upload-Length: 100
@@ -502,7 +478,6 @@ A) The following example shows an offset retrieval request. The server indicates
 ~~~ http-message
 HEAD /upload/b530ce8ff HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 7
 ~~~
 
 ~~~ http-message
@@ -519,7 +494,6 @@ B) The following example shows on offset retrieval request for a completed uploa
 ~~~ http-message
 HEAD /upload/b530ce8ff HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 7
 ~~~
 
 ~~~ http-message
@@ -579,7 +553,6 @@ PATCH /upload/b530ce8ff HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
 Upload-Offset: 100
-Upload-Draft-Interop-Version: 7
 Content-Length: 100
 Content-Type: application/partial-upload
 
@@ -588,7 +561,6 @@ Content-Type: application/partial-upload
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Draft-Interop-Version: 7
 Upload-Offset: 150
 
 HTTP/1.1 204 No Content
@@ -602,7 +574,6 @@ PATCH /upload/b530ce8ff HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
 Upload-Offset: 200
-Upload-Draft-Interop-Version: 7
 Content-Length: 100
 Content-Type: application/partial-upload
 
@@ -644,7 +615,6 @@ The following example shows an upload cancellation:
 ~~~ http-message
 DELETE /upload/b530ce8ff HTTP/1.1
 Host: example.com
-Upload-Draft-Interop-Version: 7
 ~~~
 
 ~~~ http-message
@@ -919,18 +889,8 @@ Reference:
 
 --- back
 
-# Acknowledgments
-{:numbered="false"}
-
-This document is based on an Internet-Draft specification written by Jiten Mehta, Stefan Matsson, and the authors of this document.
-
-The [tus v1 protocol](https://tus.io/) is a specification for a resumable file upload protocol over HTTP. It inspired the early design of this protocol. Members of the tus community helped significantly in the process of bringing this work to the IETF.
-
-The authors would like to thank Mark Nottingham for substantive contributions to the text.
-
-
 # Changes
-{:numbered="false" removeinrfc="true"}
+{:removeinrfc="true"}
 
 ## Since draft-ietf-httpbis-resumable-upload-08
 {:numbered="false"}
@@ -1021,3 +981,29 @@ None
 {:numbered="false"}
 
 * Split the Upload Transfer Procedure into the Upload Creation Procedure and the Upload Appending Procedure.
+
+# Draft Version Identification
+{:removeinrfc="true"}
+
+To assist the development of implementations and interoperability testing while this document is still a draft, an interop version is defined. Implementations of this draft use the interop version to identify the iteration of the draft that they implement. The interop version is bumped for breaking changes.
+
+The current interop version is 7.
+
+Client implementations of draft versions of the protocol MUST send a header field `Upload-Draft-Interop-Version` with the interop version as its value to its requests. The `Upload-Draft-Interop-Version` field value is an Integer.
+
+Server implementations of draft versions of the protocol MUST NOT send a `104 (Upload Resumption Supported)` informational response when the interop version indicated by the `Upload-Draft-Interop-Version` header field in the request is missing or mismatching.
+
+Server implementations of draft versions of the protocol MUST also send a header field `Upload-Draft-Interop-Version` with the interop version as its value to the `104 (Upload Resumption Supported)` informational response.
+
+Client implementations of draft versions of the protocol MUST ignore a `104 (Upload Resumption Supported)` informational response with missing or mismatching interop version indicated by the `Upload-Draft-Interop-Version` header field.
+
+The reason both the client and the server are sending and checking the draft version is to ensure that implementations of the final RFC will not accidentally interop with draft implementations, as they will not check the existence of the `Upload-Draft-Interop-Version` header field.
+
+# Acknowledgments
+{:numbered="false"}
+
+This document is based on an Internet-Draft specification written by Jiten Mehta, Stefan Matsson, and the authors of this document.
+
+The [tus v1 protocol](https://tus.io/) is a specification for a resumable file upload protocol over HTTP. It inspired the early design of this protocol. Members of the tus community helped significantly in the process of bringing this work to the IETF.
+
+The authors would like to thank Mark Nottingham for substantive contributions to the text.
