@@ -1,4 +1,4 @@
-# Editor's drafts for reschke-nvs-title branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/reschke-nvs-title)
+# Editor's drafts for nvs-typo branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/nvs-typo)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
@@ -10,7 +10,7 @@
 | [HTTP Server Secondary Cert Auth](./draft-ietf-httpbis-secondary-server-certs.html "Secondary Certificate Authentication of HTTP Servers (HTML)") | [plain text](./draft-ietf-httpbis-secondary-server-certs.txt "Secondary Certificate Authentication of HTTP Servers (Text)") | same as main |
 | [Optimistic HTTP Upgrade Security](./draft-ietf-httpbis-optimistic-upgrade.html "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (HTML)") | [plain text](./draft-ietf-httpbis-optimistic-upgrade.txt "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (Text)") | same as main |
 | [Cookies: HTTP State Management Mechanism](./draft-ietf-httpbis-rfc6265bis.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](./draft-ietf-httpbis-rfc6265bis.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
-| [The HTTP No-Vary-Search Field](./draft-ietf-httpbis-no-vary-search.html "The HTTP No-Vary-Search Field (HTML)") | [plain text](./draft-ietf-httpbis-no-vary-search.txt "The HTTP No-Vary-Search Field (Text)") | same as main |
+| [No-Vary-Search](./draft-ietf-httpbis-no-vary-search.html "No-Vary-Search (HTML)") | [plain text](./draft-ietf-httpbis-no-vary-search.txt "No-Vary-Search (Text)") | same as main |
 | [Incremental HTTP Messages](./draft-ietf-httpbis-incremental.html "Incremental HTTP Messages (HTML)") | [plain text](./draft-ietf-httpbis-incremental.txt "Incremental HTTP Messages (Text)") | same as main |
 | [Retrofit Structured Fields](./draft-ietf-httpbis-retrofit.html "Retrofit Structured Fields for HTTP (HTML)") | [plain text](./draft-ietf-httpbis-retrofit.txt "Retrofit Structured Fields for HTTP (Text)") | same as main |
 | [HTTP Cache Groups](./draft-ietf-httpbis-cache-groups.html "HTTP Cache Groups (HTML)") | [plain text](./draft-ietf-httpbis-cache-groups.txt "HTTP Cache Groups (Text)") | same as main |

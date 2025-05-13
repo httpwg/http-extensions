@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta content="Common,Han,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>The HTTP No-Vary-Search Field</title>
+<title>No-Vary-Search</title>
 <meta content="Domenic Denicola" name="author">
 <meta content="Jeremy Roman" name="author">
 <meta content="
@@ -1045,12 +1045,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">The HTTP No-Vary-Search Field</td>
+<td class="center">No-Vary-Search</td>
 <td class="right">May 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Denicola &amp; Roman</td>
-<td class="center">Expires 11 November 2025</td>
+<td class="center">Expires 14 November 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1063,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-no-vary-search-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-05-10" class="published">10 May 2025</time>
+<time datetime="2025-05-13" class="published">13 May 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-11-11">11 November 2025</time></dd>
+<dd class="expires"><time datetime="2025-11-14">14 November 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1082,7 +1082,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </dd>
 </dl>
 </div>
-<h1 id="title">The HTTP No-Vary-Search Field</h1>
+<h1 id="title">No-Vary-Search</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This specification defines a proposed HTTP header field for changing how URL search parameters impact caching.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
@@ -1122,7 +1122,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 11 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 14 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1692,10 +1692,10 @@ In this case, even URL pairs that might appear the same after running the <a hre
           <p id="section-6-2.3.1">Let <em>searchParamsA</em> and <em>searchParamsB</em> be empty lists.<a href="#section-6-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.4">
-          <p id="section-6-2.4.1">If <em>wrlA</em>'s query is not null, then set <em>searchParamsA</em> to the result of running the <a href="https://url.spec.whatwg.org/#concept-urlencoded-parser">application/x-www-form-urlencoded parser</a> <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> given the <a href="https://infra.spec.whatwg.org/#isomorphic-encode">isomorphic encoding</a> <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span> of <em>urlA</em>'s query.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
+          <p id="section-6-2.4.1">If <em>urlA</em>'s query is not null, then set <em>searchParamsA</em> to the result of running the <a href="https://url.spec.whatwg.org/#concept-urlencoded-parser">application/x-www-form-urlencoded parser</a> <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> given the <a href="https://infra.spec.whatwg.org/#isomorphic-encode">isomorphic encoding</a> <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span> of <em>urlA</em>'s query.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.5">
-          <p id="section-6-2.5.1">If <em>wrlB</em>'s query is not null, then set <em>searchParamsB</em> to the result of running the <a href="https://url.spec.whatwg.org/#concept-urlencoded-parser">application/x-www-form-urlencoded parser</a> <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> given the <a href="https://infra.spec.whatwg.org/#isomorphic-encode">isomorphic encoding</a> <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span> of <em>urlB</em>'s query.<a href="#section-6-2.5.1" class="pilcrow">¶</a></p>
+          <p id="section-6-2.5.1">If <em>urlB</em>'s query is not null, then set <em>searchParamsB</em> to the result of running the <a href="https://url.spec.whatwg.org/#concept-urlencoded-parser">application/x-www-form-urlencoded parser</a> <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> given the <a href="https://infra.spec.whatwg.org/#isomorphic-encode">isomorphic encoding</a> <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span> of <em>urlB</em>'s query.<a href="#section-6-2.5.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.6">
           <p id="section-6-2.6.1">If <em>searchVariance</em>'s no-vary params is a list, then:<a href="#section-6-2.6.1" class="pilcrow">¶</a></p>
