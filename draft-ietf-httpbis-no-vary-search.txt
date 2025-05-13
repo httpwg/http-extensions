@@ -5,7 +5,7 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                              Google LLC
-Expires: 12 November 2025                                    11 May 2025
+Expires: 14 November 2025                                    13 May 2025
 
 
                              No-Vary-Search
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 November 2025.
+   This Internet-Draft will expire on 14 November 2025.
 
 Copyright Notice
 
@@ -438,14 +438,14 @@ Table of Contents
 
    3.   Let _searchParamsA_ and _searchParamsB_ be empty lists.
 
-   4.   If _wrlA_'s query is not null, then set _searchParamsA_ to the
+   4.   If _urlA_'s query is not null, then set _searchParamsA_ to the
         result of running the application/x-www-form-urlencoded parser
         (https://url.spec.whatwg.org/#concept-urlencoded-parser)
         [WHATWG-URL] given the isomorphic encoding
         (https://infra.spec.whatwg.org/#isomorphic-encode)
         [WHATWG-INFRA] of _urlA_'s query.
 
-   5.   If _wrlB_'s query is not null, then set _searchParamsB_ to the
+   5.   If _urlB_'s query is not null, then set _searchParamsB_ to the
         result of running the application/x-www-form-urlencoded parser
         (https://url.spec.whatwg.org/#concept-urlencoded-parser)
         [WHATWG-URL] given the isomorphic encoding
