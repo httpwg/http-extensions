@@ -1,4 +1,4 @@
-# Editor's drafts for revert-3080-editorial-query-mt branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/revert-3080-editorial-query-mt)
+# Editor's drafts for resumable-upload-julian-feedback branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/resumable-upload-julian-feedback)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
