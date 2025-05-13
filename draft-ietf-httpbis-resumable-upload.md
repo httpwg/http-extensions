@@ -1002,8 +1002,8 @@ The reason both the client and the server are sending and checking the draft ver
 # Acknowledgments
 {:numbered="false"}
 
-This document is based on an Internet-Draft specification written by Jiten Mehta, Stefan Matsson, and the authors of this document.
+This document is based on an Internet-Draft specification written by {{{Jiten Mehta}}}, {{{Stefan Matsson}}}, and the authors of this document.
 
 The [tus v1 protocol](https://tus.io/) is a specification for a resumable file upload protocol over HTTP. It inspired the early design of this protocol. Members of the tus community helped significantly in the process of bringing this work to the IETF.
 
-The authors would like to thank Mark Nottingham for substantive contributions to the text.
+The authors would like to thank {{{Mark Nottingham}}} for substantive contributions to the text, and {{{Roy T. Fielding}}} and {{{Julian Reschke}}} for their thorough reviews of the document.
