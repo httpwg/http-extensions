@@ -120,6 +120,10 @@ Table of Contents
      11.2.  Careful Upload Creation
    12. Security Considerations
    13. IANA Considerations
+     13.1.  HTTP Fields
+     13.2.  HTTP Status Code
+     13.3.  Media Type
+     13.4.  HTTP Problem Types
    14. References
      14.1.  Normative References
      14.2.  Informative References
@@ -1372,6 +1376,8 @@ Table of Contents
 
 13.  IANA Considerations
 
+13.1.  HTTP Fields
+
    IANA is asked to register the following entries in the "Hypertext
    Transfer Protocol (HTTP) Field Name Registry":
 
@@ -1393,6 +1399,8 @@ Table of Contents
 
                                  Table 1
 
+13.2.  HTTP Status Code
+
    IANA is asked to register the following entry in the "HTTP Status
    Codes" registry:
 
@@ -1401,6 +1409,8 @@ Table of Contents
    Description:  Upload Resumption Supported
 
    Specification:  This document
+
+13.3.  Media Type
 
    IANA is asked to register the following entry in the "Media Types"
    registry:
@@ -1449,6 +1459,8 @@ Table of Contents
    Author:  See the Authors' Addresses section of this document.
 
    Change controller:  IETF
+
+13.4.  HTTP Problem Types
 
    IANA is asked to register the following entry in the "HTTP Problem
    Types" registry:
