@@ -54,10 +54,8 @@ normative:
   PROBLEM: RFC9457
   DIGEST-FIELDS: RFC9530
   CONTENT-DISPOSITION: RFC6266
-  RFC8792:
 
 informative:
-
   SLOWLORIS:
     title: "Welcome to Slowloris - the low bandwidth, yet greedy and poisonous HTTP client!"
     author:
@@ -67,6 +65,7 @@ informative:
     date: 2009-06
     target:
      "https://web.archive.org/web/20150315054838/http://ha.ckers.org/slowloris/"
+  RFC8792:
 
 --- abstract
 
