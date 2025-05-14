@@ -773,6 +773,8 @@ Resumable uploads are vulnerable to Slowloris-style attacks {{SLOWLORIS}}. A mal
 
 # IANA Considerations
 
+## HTTP Fields
+
 IANA is asked to register the following entries in the "Hypertext Transfer Protocol (HTTP) Field Name Registry":
 
 |----------------------|-----------|-----------------|-------------------------------------------|
@@ -784,6 +786,8 @@ IANA is asked to register the following entries in the "Hypertext Transfer Proto
 | Upload-Length        | permanent | Item            | {{upload-length}} of this document        |
 |----------------------|-----------|-----------------|-------------------------------------------|
 
+## HTTP Status Code
+
 IANA is asked to register the following entry in the "HTTP Status Codes" registry:
 
 Value:
@@ -794,6 +798,8 @@ Description:
 
 Specification:
 : This document
+
+## Media Type
 
 IANA is asked to register the following entry in the "Media Types" registry:
 
@@ -853,6 +859,8 @@ Author:
 
 Change controller:
 : IETF
+
+## HTTP Problem Types
 
 IANA is asked to register the following entry in the "HTTP Problem Types" registry:
 
