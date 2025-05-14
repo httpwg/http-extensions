@@ -5,7 +5,7 @@ category: std
 
 consensus: true
 v: 3
-area: ART
+area: Web and Internet Transport
 submissiontype: IETF
 workgroup: HTTP
 keyword:

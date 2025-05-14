@@ -9,7 +9,7 @@ number:
 date:
 consensus: true
 v: 3
-area: "Applications"
+area: "Web and Internet Transport"
 workgroup: "HyperText Transfer Protocol"
 keyword:
  - http
