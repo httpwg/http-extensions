@@ -12,6 +12,7 @@
 | [No-Vary-Search](./draft-ietf-httpbis-no-vary-search.html "No-Vary-Search (HTML)") | [plain text](./draft-ietf-httpbis-no-vary-search.txt "No-Vary-Search (Text)") | same as main |
 | [Optimistic HTTP Upgrade Security](./draft-ietf-httpbis-optimistic-upgrade.html "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (HTML)") | [plain text](./draft-ietf-httpbis-optimistic-upgrade.txt "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (Text)") | same as main |
 | [Templated CONNECT-TCP](./draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](./draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | same as main |
+| [Cookies](./draft-ietf-httpbis-layered-cookies.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](./draft-ietf-httpbis-layered-cookies.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
 | [The HTTP QUERY Method](./draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](./draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | same as main |
 | [HTTP Server Secondary Cert Auth](./draft-ietf-httpbis-secondary-server-certs.html "Secondary Certificate Authentication of HTTP Servers (HTML)") | [plain text](./draft-ietf-httpbis-secondary-server-certs.txt "Secondary Certificate Authentication of HTTP Servers (Text)") | same as main |
 

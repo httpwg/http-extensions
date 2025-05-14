@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 14 November 2025                                     Apple Inc.
+Expires: 15 November 2025                                     Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                             13 May 2025
+                                                             14 May 2025
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 November 2025.
+   This Internet-Draft will expire on 15 November 2025.
 
 Copyright Notice
 
@@ -120,6 +120,10 @@ Table of Contents
      11.2.  Careful Upload Creation
    12. Security Considerations
    13. IANA Considerations
+     13.1.  HTTP Fields
+     13.2.  HTTP Status Code
+     13.3.  Media Type
+     13.4.  HTTP Problem Types
    14. References
      14.1.  Normative References
      14.2.  Informative References
@@ -1387,6 +1391,8 @@ Table of Contents
 
 13.  IANA Considerations
 
+13.1.  HTTP Fields
+
    IANA is asked to register the following entries in the "Hypertext
    Transfer Protocol (HTTP) Field Name Registry":
 
@@ -1408,6 +1414,8 @@ Table of Contents
 
                                  Table 1
 
+13.2.  HTTP Status Code
+
    IANA is asked to register the following entry in the "HTTP Status
    Codes" registry:
 
@@ -1416,6 +1424,8 @@ Table of Contents
    Description:  Upload Resumption Supported
 
    Specification:  This document
+
+13.3.  Media Type
 
    IANA is asked to register the following entry in the "Media Types"
    registry:
@@ -1464,6 +1474,8 @@ Table of Contents
    Author:  See the Authors' Addresses section of this document.
 
    Change controller:  IETF
+
+13.4.  HTTP Problem Types
 
    IANA is asked to register the following entry in the "HTTP Problem
    Types" registry:
@@ -1547,17 +1559,17 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-   [RFC8792]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,
-              "Handling Long Lines in Content of Internet-Drafts and
-              RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
-              <https://www.rfc-editor.org/rfc/rfc8792>.
-
    [STRUCTURED-FIELDS]
               Nottingham, M. and P. Kamp, "Structured Field Values for
               HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
               <https://www.rfc-editor.org/rfc/rfc9651>.
 
 14.2.  Informative References
+
+   [RFC8792]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,
+              "Handling Long Lines in Content of Internet-Drafts and
+              RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
+              <https://www.rfc-editor.org/rfc/rfc8792>.
 
    [SLOWLORIS]
               "RSnake" Hansen, R., "Welcome to Slowloris - the low
