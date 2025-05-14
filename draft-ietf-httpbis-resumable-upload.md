@@ -54,10 +54,8 @@ normative:
   PROBLEM: RFC9457
   DIGEST-FIELDS: RFC9530
   CONTENT-DISPOSITION: RFC6266
-  RFC8792:
 
 informative:
-
   SLOWLORIS:
     title: "Welcome to Slowloris - the low bandwidth, yet greedy and poisonous HTTP client!"
     author:
@@ -67,6 +65,7 @@ informative:
     date: 2009-06
     target:
      "https://web.archive.org/web/20150315054838/http://ha.ckers.org/slowloris/"
+  RFC8792:
 
 --- abstract
 
@@ -773,6 +772,8 @@ Resumable uploads are vulnerable to Slowloris-style attacks {{SLOWLORIS}}. A mal
 
 # IANA Considerations
 
+## HTTP Fields
+
 IANA is asked to register the following entries in the "Hypertext Transfer Protocol (HTTP) Field Name Registry":
 
 |----------------------|-----------|-----------------|-------------------------------------------|
@@ -784,6 +785,8 @@ IANA is asked to register the following entries in the "Hypertext Transfer Proto
 | Upload-Limit         | permanent | Dictionary      | {{upload-limit}} of this document         |
 |----------------------|-----------|-----------------|-------------------------------------------|
 
+## HTTP Status Code
+
 IANA is asked to register the following entry in the "HTTP Status Codes" registry:
 
 Value:
@@ -794,6 +797,8 @@ Description:
 
 Specification:
 : This document
+
+## Media Type
 
 IANA is asked to register the following entry in the "Media Types" registry:
 
@@ -853,6 +858,8 @@ Author:
 
 Change controller:
 : IETF
+
+## HTTP Problem Types
 
 IANA is asked to register the following entry in the "HTTP Problem Types" registry:
 

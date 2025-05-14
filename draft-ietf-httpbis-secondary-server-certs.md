@@ -10,7 +10,7 @@ date: {DATE}
 
 consensus: true
 v: 3
-area: art
+area: Web and Internet Transport
 workgroup: HTTP
 venue:
   group: "HTTP"
