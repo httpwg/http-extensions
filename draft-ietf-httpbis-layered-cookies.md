@@ -793,31 +793,58 @@ A cookie is **expired** if its expiry-time is non-null and its expiry-time is in
 
 ## Cookie Store Eviction {#cookie-store-eviction}
 
-The user agent SHOULD evict all expired cookies from its cookie store if, at any
-time, an expired cookie exists in the cookie store.
 
-When "the current session is over" (as defined by the user agent), the user
-agent MUST remove from the cookie store all cookies whose expiry-time is null.
+### Remove Expired Cookies
+
+1. Let _expiredCookies_ be a list of references to all expired cookies in the user agent's cookie store.
+
+1. For each _cookie_ of _expiredCookies_:
+
+    1.  Remove _cookie_ from the user agent's cookie store.
+
+1. Return _expiredCookies_.
 
 
 ### Remove Excess Cookies for a Host
 
 To **Remove Excess Cookies for a Host** given a host _host_:
 
-1. Let _insecureCookies_ be all cookies in the user agent's cookie store whose host is host-equal to _host_ and whose secure is false.
+1. Let _insecureCookies_ be a list of references to all cookies in the user agent's cookie store whose host is host-equal
+   to _host_ and whose secure is false.
 
 1. Sort _insecureCookies_ by earliest last-access-time first.
 
-1. Let _secureCookies_ be all cookies in the user agent's cookie store whose host is host-equal to _host_ and whose secure is true.
+1. Let _secureCookies_ be a list of references to all cookies in the user agent's cookie store whose host is host-equal
+   to _host_ and whose secure is true.
 
 1. Sort _secureCookies_ by earliest last-access-time first.
 
+1. Let _excessHostCookies_ be an empty list of cookies.
+
 1. While _insecureCookies_'s size + _secureCookies_'s size is greater than the user agent's total cookies-per-host limit:
 
-    1. If _insecureCookies_ is not empty, remove the first item of _insecureCookies_ and
-    delete the corresponding cookie from the user agent's cookie store.
+    1. If _insecureCookies_ is not empty:
 
-    1. Otherwise, remove the first item of _secureCookies_ and delete the corresponding cookie from the user agent's cookie store.
+        1. Let _cookie_ be the first item of _insecureCookies_.
+
+        1. Remove _cookie_ from _insecureCookies_.
+
+        1. Remove _cookie_ from the user agent's cookie store.
+
+        1. Append _cookie_ to _excessHostCookies_.
+
+    1. Otherwise:
+
+        1. Let _cookie_ be the first item of _secureCookies_.
+
+        1. Remove _cookie_ from _secureCookies_.
+
+        1. Remove _cookie_ from the user agent's cookie store.
+
+        1. Append _cookie_ to _excessHostCookies_.
+
+1. Return _excessHostCookies_.
+
 
 ### Remove Global Excess Cookies
 
@@ -825,9 +852,19 @@ To **Remove Global Excess Cookies**:
 
 1. Let _allCookies_ be the result of sorting the user agent's cookie store by earliest last-access-time first.
 
+1. Let _excessGlobalCookies_ be an empty list of cookies.
+
 1. While _allCookies_'s size is greater than the user agent's total cookies limit:
 
-    1. Remove the first item of _allCookies_ and delete the corresponding cookie from the user agent's cookie store.
+    1. Let _cookie_ be the first item of _allCookies_.
+
+    1. Remove _cookie_ from _allCookies_.
+
+    1. Remove _cookie_ from the user agent's cookie store.
+
+    1. Append _cookie_ to _excessGlobalCookies_.
+
+1. Return _excessGlobalCookies_.
 
 
 ## Subcomponent Algorithms
@@ -980,7 +1017,7 @@ URL path _path_, boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPu
 
 1. If _cookie_ is failure, then return.
 
-1. Run Store a Cookie given _cookie_, _isSecure_, _host_, _path_, _httpOnlyAllowed_,
+1. Return the result of Store a Cookie given _cookie_, _isSecure_, _host_, _path_, _httpOnlyAllowed_,
    _allowNonHostOnlyCookieForPublicSuffix_, and _sameSiteStrictOrLaxAllowed_.
 
 
@@ -1149,7 +1186,7 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
 1. Assert: _cookie_'s name does not contain a byte in the range 0x00 to 0x08, inclusive, in the range 0x0A to 0x1F, inclusive, or
    0x7F (CTL characters excluding HTAB).
 
-1. If _cookie_'s host is failure, then return.
+1. If _cookie_'s host is failure, then return null.
 
 1. Set _cookie_'s creation-time and last-access-time to the current date and time.
 
@@ -1157,7 +1194,7 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
 
     1. If _cookie_'s host is host-equal to _host_, then set _cookie_'s host to null.
 
-    1. Otherwise, return.
+    1. Otherwise, return null.
 
     Note: This step prevents `attacker.example` from disrupting the integrity of
     `site.example` by setting a cookie with a `Domain` attribute of `example`. In the
@@ -1172,17 +1209,17 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
 
 1. Otherwise:
 
-    1. If _host_ does not Domain-Match _cookie_'s host, then return.
+    1. If _host_ does not Domain-Match _cookie_'s host, then return null.
 
     1. Set _cookie_'s host-only to false.
 
 1. Assert: _cookie_'s host is a domain or IP address.
 
-1. If _httpOnlyAllowed_ is false and _cookie_'s http-only is true, then return.
+1. If _httpOnlyAllowed_ is false and _cookie_'s http-only is true, then return null.
 
 1. If _isSecure_ is false:
 
-    1. If _cookie_'s secure-only is true, then return.
+    1. If _cookie_'s secure-only is true, then return null.
 
     1. If the user agent's cookie store contains at least one cookie _existingCookie_ that meets all of the following criteria:
 
@@ -1194,7 +1231,7 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
 
         1. _cookie_'s path Path-Matches _existingCookie_'s path,
 
-       then return.
+       then return null.
 
        Note: The path comparison is not symmetric, ensuring only that a newly-created, non-secure
        cookie does not overlay an existing secure cookie, providing some mitigation against
@@ -1203,13 +1240,13 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
        a path of '/login' or '/login/en'.
 
 1. If _cookie_'s same-site is not "`none`" and _sameSiteStrictOrLaxAllowed_ is false,
-   then return.
+   then return null.
 
 1. If _cookie_'s same-site is "`none`" and _cookie_'s secure-only is false,
-   then return.
+   then return null.
 
 1. If _cookie_'s name, byte-lowercased, starts with `__secure-` and _cookie_'s secure-only is false,
-   then return.
+   then return null.
 
    Note: The check here and those below are with a byte-lowercased value in order to protect servers that process these values in a case-insensitive manner.
 
@@ -1221,7 +1258,7 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
 
     1. _cookie_'s path's size is 1 and _cookie_'s path[0] is the empty string,
 
-   then return.
+   then return null.
 
 1. If _cookie_'s name is the empty byte sequence and one of the following is true:
 
@@ -1229,13 +1266,16 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
 
     * _cookie_'s value, byte-lowercased, starts with `__host-`
 
-   then return.
+   then return null.
 
 1. If the user agent's cookie store contains a cookie _oldCookie_ whose name is _cookie_'s name,
    host is host-equal to _cookie_'s host, host-only is _cookie_'s host-only, and path is path-equal to _cookie_'s path:
 
     1. If _httpOnlyAllowed_ is false and _oldCookie_'s http-only is true,
-       then return.
+       then return null.
+
+    1. If _cookie_'s secure flag is equal to _oldCookie_'s secure flag, _cookie_'s same-site is equal to _oldCookie_'s
+       same-site, and _cookie_'s expiry-time is equal to _oldCookie_'s expiry-time, then return null.
 
     1. Set _cookie_'s creation-time to _oldCookie_'s creation-time.
 
@@ -1245,11 +1285,26 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
 
 1. Insert _cookie_ into the user agent's cookie store.
 
-1. Remove all expired cookies from the user agent's cookie store.
+1. Return _cookie_.
 
-1. Run Remove Excess Cookies for Host given _cookie_'s host.
 
-1. Run Remove Global Excess Cookies.
+### Garbage Collect Cookies
+
+To **Garbage Collect Cookies** given a host _host_:
+
+1. Let _expiredCookies_ be the result of running Remove Expired Cookies.
+
+1. Let _excessHostCookies_ be the result of running Remove Excess Cookies for Host given _host_.
+
+1. Let _excessGlobalCookies_ be the result of running Remove Global Excess Cookies.
+
+1. Let _removedCookies_ be « ».
+
+1. For each _cookieList_ of « _expiredCookies_, _excessHostCookies_, _excessGlobalCookies_ », do the following:
+
+    1.  Extend _removedCookies_ with _cookieList_.
+
+1. Return _removedCookies_
 
 
 ### Retrieve Cookies {#retrieve-cookies}
@@ -1361,6 +1416,10 @@ SHOULD be processed as follows:
    _isSecure_, _host_, _path_, _httpOnlyAllowed_, _allowNonHostOnlyCookieForPublicSuffix_, and
    _sameSiteStrictOrLaxAllowed_.
 
+1. If _cookie_ is null, then return.
+
+1. Run Garbage Collect Cookies given _cookie_'s host.
+
 ### The Cookie Header Field {#cookie}
 
 The user agent includes stored cookies in the `Cookie` request header field.
@@ -1395,6 +1454,14 @@ specification requires that a single cookie-string be produced, some user agents
 may split that string across multiple `Cookie` header fields. For examples, see
 {{Section 8.2.3 of RFC9113}} and {{Section 4.2.1 of RFC9114}}.
 
+### Cookie Store Eviction for Non-Browser User Agents
+
+The user agent SHOULD evict all expired cookies from its cookie store if, at any
+time, an expired cookie exists in the cookie store, by calling Remove Expired Cookies.
+
+When "the current session is over" (as defined by the user agent), the user
+agent MUST remove from the cookie store all cookies whose expiry-time is null.
+
 ## Requirements Specific to Browser User Agents
 
 While browsers are expected to generally follow the same model as non-browser user agents, they
@@ -1407,6 +1474,8 @@ manipulating the user agent's cookie store through non-HTTP APIs:
 
 - Parse and Store a Cookie
 - Store a Cookie
+- Remove Expired Cookies
+- Garbage Collect Cookies
 - Retrieve Cookies
 - Serialize Cookies
 
