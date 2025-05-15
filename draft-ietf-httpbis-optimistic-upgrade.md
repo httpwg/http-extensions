@@ -122,7 +122,7 @@ Thus, optimistic use of HTTP Upgrade is already forbidden in the WebSocket proto
 
 > A client MAY optimistically start sending UDP packets in HTTP Datagrams before receiving the response to its UDP proxying request.
 
-However, in HTTP/1.1, this "proxying request" is an HTTP Upgrade request.  This upgrade is likely to be rejected in certain circumstances, such as when the UDP destination address (which is attacker-controlled) is invalid.  Additionally, the contents of the "connect-udp" protocol stream can include untrusted material (i.e., the UDP packets, which might come from other applications on the client device).  This creates the possibility of Request Smuggling attacks.  To avoid these concerns, this text is updated as follows:
+However, in HTTP/1.1, this "proxying request" is an HTTP Upgrade request.  This upgrade is likely to be rejected in certain circumstances, such as when the UDP destination address (which is attacker-controlled) is invalid.  Additionally, the contents of the "connect-udp" protocol stream can include untrusted material (i.e., the UDP packets, which might come from other applications on the client device).  This creates the possibility of Request Smuggling attacks.  To avoid these concerns, this document updates that text to exclude HTTP/1.1 from any optimistic sending, as follows:
 
 > When using HTTP/2 or later, a client MAY optimistically ...
 
