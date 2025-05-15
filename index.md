@@ -35,6 +35,24 @@ View [saved issues](issues.html), or the latest GitHub [issues](https://github.c
 | [The HTTP QUERY Method](resumable-upload-julian-feedback/draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](resumable-upload-julian-feedback/draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | same as main |
 | [HTTP Server Secondary Cert Auth](resumable-upload-julian-feedback/draft-ietf-httpbis-secondary-server-certs.html "Secondary Certificate Authentication of HTTP Servers (HTML)") | [plain text](resumable-upload-julian-feedback/draft-ietf-httpbis-secondary-server-certs.txt "Secondary Certificate Authentication of HTTP Servers (Text)") | same as main |
 
+## Preview for branch [bemasc-noh1](bemasc-noh1)
+
+| Draft |     |     |     |
+| ----- | --- | --- | --- |
+| [The HTTP Wrap Up Capsule](bemasc-noh1/draft-ietf-httpbis-wrap-up.html "The HTTP Wrap Up Capsule (HTML)") | [plain text](bemasc-noh1/draft-ietf-httpbis-wrap-up.txt "The HTTP Wrap Up Capsule (Text)") | same as main |
+| [Incremental HTTP Messages](bemasc-noh1/draft-ietf-httpbis-incremental.html "Incremental HTTP Messages (HTML)") | [plain text](bemasc-noh1/draft-ietf-httpbis-incremental.txt "Incremental HTTP Messages (Text)") | same as main |
+| [Compression Dictionary Transport](bemasc-noh1/draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](bemasc-noh1/draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | same as main |
+| [HTTP Cache Groups](bemasc-noh1/draft-ietf-httpbis-cache-groups.html "HTTP Cache Groups (HTML)") | [plain text](bemasc-noh1/draft-ietf-httpbis-cache-groups.txt "HTTP Cache Groups (Text)") | same as main |
+| [Retrofit Structured Fields](bemasc-noh1/draft-ietf-httpbis-retrofit.html "Retrofit Structured Fields for HTTP (HTML)") | [plain text](bemasc-noh1/draft-ietf-httpbis-retrofit.txt "Retrofit Structured Fields for HTTP (Text)") | same as main |
+| [Resumable Uploads](bemasc-noh1/draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](bemasc-noh1/draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | same as main |
+| [Cookies: HTTP State Management Mechanism](bemasc-noh1/draft-ietf-httpbis-rfc6265bis.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](bemasc-noh1/draft-ietf-httpbis-rfc6265bis.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
+| [No-Vary-Search](bemasc-noh1/draft-ietf-httpbis-no-vary-search.html "No-Vary-Search (HTML)") | [plain text](bemasc-noh1/draft-ietf-httpbis-no-vary-search.txt "No-Vary-Search (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-no-vary-search.txt&url_2=https://httpwg.github.io/http-extensions/bemasc-noh1/draft-ietf-httpbis-no-vary-search.txt) |
+| [Optimistic HTTP Upgrade Security](bemasc-noh1/draft-ietf-httpbis-optimistic-upgrade.html "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (HTML)") | [plain text](bemasc-noh1/draft-ietf-httpbis-optimistic-upgrade.txt "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-optimistic-upgrade.txt&url_2=https://httpwg.github.io/http-extensions/bemasc-noh1/draft-ietf-httpbis-optimistic-upgrade.txt) |
+| [Templated CONNECT-TCP](bemasc-noh1/draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](bemasc-noh1/draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | same as main |
+| [Cookies](bemasc-noh1/draft-ietf-httpbis-layered-cookies.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](bemasc-noh1/draft-ietf-httpbis-layered-cookies.txt "Cookies: HTTP State Management Mechanism (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-layered-cookies.txt&url_2=https://httpwg.github.io/http-extensions/bemasc-noh1/draft-ietf-httpbis-layered-cookies.txt) |
+| [The HTTP QUERY Method](bemasc-noh1/draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](bemasc-noh1/draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | same as main |
+| [HTTP Server Secondary Cert Auth](bemasc-noh1/draft-ietf-httpbis-secondary-server-certs.html "Secondary Certificate Authentication of HTTP Servers (HTML)") | [plain text](bemasc-noh1/draft-ietf-httpbis-secondary-server-certs.txt "Secondary Certificate Authentication of HTTP Servers (Text)") | same as main |
+
 ## Preview for branch [draft-ietf-httpbis-layered-cookies-00](draft-ietf-httpbis-layered-cookies-00)
 
 | Draft |     |     |     |
