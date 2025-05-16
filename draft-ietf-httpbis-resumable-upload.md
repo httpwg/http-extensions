@@ -87,7 +87,7 @@ Utilizing resumable uploads, applications can recover from unintended interrupti
 
 Some examples in this document contain long lines that may be folded, as described in {{RFC8792}}.
 
-The terms Byte Sequence, Item, String, Token, Integer, and Boolean are imported from {{STRUCTURED-FIELDS}}.
+The terms Structured Header, Item, Dictionary, String, Integer, and Boolean are imported from {{STRUCTURED-FIELDS}}.
 
 The terms "representation", "representation data", "representation metadata", "content", "client" and "server" are from {{Section 3 of HTTP}}.
 
@@ -267,13 +267,11 @@ The state of an upload consists of the following properties that are tracked by 
 
 ### Offset {#upload-offset}
 
-The offset is the number of bytes from the representation data that have been received, either during the creation of the upload resource ({{upload-creation}}) and by appending to it ({{upload-appending}}).
-
-The offset is represented by the `Upload-Offset` request and response header field. Its field value is an Integer.
-
-The `Upload-Offset` header field is used to synchronize the client and resource regarding the amount of transferred representation data. The offset can be retrieved from the upload resource ({{offset-retrieving}}) and is required when appending representation data ({{upload-appending}}).
+The offset is the number of bytes from the representation data that have been received, either during the creation of the upload resource ({{upload-creation}}) and by appending to it ({{upload-appending}}). The offset can be retrieved from the upload resource ({{offset-retrieving}}) and is required when appending representation data ({{upload-appending}}) to synchronize the client and resource regarding the amount of transferred representation data.
 
 Representation data received by the upload resource cannot be removed again and, therefore, the offset MUST NOT decrease. If the upload resource loses representation data, the server MUST consider the upload resource invalid and reject further interaction with it.
+
+The `Upload-Offset` request and response header field conveys the offset. `Upload-Offset` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the current offset as viewed by the message sender. Other values MUST cause the entire header field to be ignored.
 
 The `Upload-Offset` header field in responses serves as an acknowledgement of the received representation data and as a guarantee that no retransmission of it will be necessary. Clients can use this guarantee to free resources associated to transferred representation data.
 
@@ -281,7 +279,7 @@ The `Upload-Offset` header field in responses serves as an acknowledgement of th
 
 An upload is incomplete until it is explicitly marked as completed by the client. After this point, no representation data can be appended anymore.
 
-The completeness state is represented by the `Upload-Complete` request and response header field. Its field value is a Boolean, whose value is true if the upload is complete.
+The `Upload-Complete` request and response header field conveys the completeness state. `Upload-Complete` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) and indicates whether the upload is complete or not. Other values MUST cause the entire header field to be ignored.
 
 An upload is marked as completed if a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) included the `Upload-Complete` header field with a true value and the request content was fully received.
 
@@ -292,7 +290,7 @@ The length of an upload is the number of bytes of representation data that the c
 Even the client might not know the total length of the representation data when starting the transfer, for example, because the representation is taken from a streaming source. However, a client SHOULD communicate the length to the upload resource as soon as it becomes known. There are two different ways for the client to indicate and the upload resource to discover the length from requests for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}):
 
 - If the request includes the `Upload-Complete` field value set to true and a valid `Content-Length` header field, the request content is the remaining representation data. The length is then the sum of the current offset ({{upload-offset}}) and the `Content-Length` header field value.
-- The request can include the `Upload-Length` header field, whose value is the number of bytes of the entire representation data as an Integer.
+- The request can include the `Upload-Length` request and response header field. `Upload-Length` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the number of bytes of the entire representation data. Other values MUST cause the entire header field to be ignored.
 
 If both indicators are present in the same request, their indicated lengths MUST match. If multiple requests include indicators, their indicated values MUST match. A server MAY use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) in responses to indicates inconsistent length values.
 
@@ -302,17 +300,19 @@ Note that the length and offset values do not determine whether an upload is com
 
 ### Limits {#upload-limit}
 
-An upload resource MAY enforce one or multiple limits, which are communicated to the client via the `Upload-Limit` response header field. Its field value is a Dictionary, where each limit is identified by a key and carries a value:
+An upload resource MAY enforce one or multiple limits, which are communicated to the client via the `Upload-Limit` response header field. `Upload-Limit` is a Dictionary Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
-- The `max-size` limit specifies a maximum size for the representation data, counted in bytes. The server MAY not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The upload resource MAY stop the upload if the offset ({{upload-offset}}) exceeds the maximum size. The value is an Integer.
-- The `min-size` limit specifies a minimum size for the representation data, counted in bytes. The server MAY not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. The value is an Integer.
-- The `max-append-size` limit specifies a maximum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server MAY reject requests exceeding this limit and a client SHOULD NOT send larger upload append requests. The value is an Integer.
-- The `min-append-size` limit specifies a minimum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server MAY reject requests below this limit and a client SHOULD NOT send such requests. The value is an Integer. Requests completing the upload by including the `Upload-Complete: ?1` header field are exempt from this limit.
-- The `max-age` limit specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server MAY make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource. The lifetime MAY be extended but SHOULD NOT be reduced. The value is an Integer.
+The following key-value pairs are defined:
+
+- The value under the `max-size` key specifies a maximum size for the representation data, counted in bytes. The server MAY not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The upload resource MAY stop the upload if the offset ({{upload-offset}}) exceeds the maximum size. The value is an Integer.
+- The value under the `min-size` key specifies a minimum size for the representation data, counted in bytes. The server MAY not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. The value is an Integer.
+- The value under the `max-append-size` key specifies a maximum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server MAY reject requests exceeding this limit and a client SHOULD NOT send larger upload append requests. The value is an Integer.
+- The value under the `min-append-size` key specifies a minimum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server MAY reject requests below this limit and a client SHOULD NOT send such requests. The value is an Integer. Requests completing the upload by including the `Upload-Complete: ?1` header field are exempt from this limit.
+- The value under the `max-age` key specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server MAY make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource. The lifetime MAY be extended but SHOULD NOT be reduced. The value is an Integer.
 
 Except for the `max-age` limit, the existence of a limit or its value MUST NOT change throughout the lifetime of the upload resource.
 
-When parsing the `Upload-Limit` header field, unrecognized keys MUST be ignored and MUST NOT fail the parsing to facilitate the addition of new limits in the future.
+When parsing the `Upload-Limit` header field, unrecognized keys MUST be ignored and MUST NOT fail the parsing to facilitate the addition of new limits in the future. Keys with values other than defined here MUST be ignored.
 
 A server that supports the creation of a resumable upload resource ({{upload-creation}}) under a target URI MUST include the `Upload-Limit` header field with the corresponding limits in a response to an `OPTIONS` request sent to this target URI. If a server supports the creation of upload resources for any target URI, it MUST include the `Upload-Limit` header field with the corresponding limits in a response to an `OPTIONS` request with the `*` target. The limits announced in an `OPTIONS` response SHOULD NOT be less restrictive than the limits applied to an upload once the upload resource has been created. If the server does not apply any limits, it MUST use `min-size=0` instead of an empty header value. A client can use an `OPTIONS` request to discover support for resumable uploads and potential limits before creating an upload resource.
 
@@ -779,10 +779,10 @@ IANA is asked to register the following entries in the "Hypertext Transfer Proto
 |----------------------|-----------|-----------------|-------------------------------------------|
 | Field Name           | Status    | Structured Type |                 Reference                 |
 |----------------------|-----------|-----------------|-------------------------------------------|
-| Upload-Complete      | permanent | Item            | {{upload-complete}} of this document      |
 | Upload-Offset        | permanent | Item            | {{upload-offset}} of this document        |
-| Upload-Limit         | permanent | Dictionary      | {{upload-limit}} of this document         |
+| Upload-Complete      | permanent | Item            | {{upload-complete}} of this document      |
 | Upload-Length        | permanent | Item            | {{upload-length}} of this document        |
+| Upload-Limit         | permanent | Dictionary      | {{upload-limit}} of this document         |
 |----------------------|-----------|-----------------|-------------------------------------------|
 
 ## HTTP Status Code
@@ -902,7 +902,7 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-08
 {:numbered="false"}
 
-None yet
+* Clarify definitions of new header fields.
 
 ## Since draft-ietf-httpbis-resumable-upload-07
 {:numbered="false"}
