@@ -79,9 +79,9 @@ Data transfer using the Hypertext Transfer Protocol ({{HTTP}}) is often interrup
 
 This specification defines a mechanism for resumable uploads from client to server in a way that is backwards-compatible with conventional HTTP uploads. When an upload is interrupted, clients can send subsequent requests to query the server state and use this information to send the remaining representation data. Alternatively, they can cancel the upload entirely. Unlike ranged downloads, this protocol does not support transferring an upload as multiple requests in parallel.
 
-The document defines new header fields to communicate the state of the upload, the status code `104 (Upload Resumption Supported)` to indicate the server's support for resumable uploads, and the `application/partial-upload` media type to label partial representation data when resuming an upload.
-
 Utilizing resumable uploads, applications can recover from unintended interruptions, but also interrupt an upload on purpose to later resume it, for example, when a user wants to pause an upload, the device's network connectivity changes, or bandwidth should be saved for higher priority tasks.
+
+The document introduces the concept of an upload resource to facilitate resumable uploads ({{upload-resource}}) and defines new header fields to communicate the state of the upload ({{state}}), the status code `104 (Upload Resumption Supported)` to indicate the server's support for resumable uploads ({{status-code-104}}), and the `application/partial-upload` media type to label partial representation data when resuming an upload ({{media-type-partial-upload}}).
 
 # Conventions and Definitions
 
@@ -519,7 +519,7 @@ Cache-Control: no-store
 
 ### Client Behavior
 
-A client can continue the upload and append representation data by sending a `PATCH` request with the `application/partial-upload` media type to the upload resource. The request content is the representation data to append.
+A client can continue the upload and append representation data by sending a `PATCH` request with the `application/partial-upload` media type ({{media-type-partial-upload}}) to the upload resource. The request content is the representation data to append.
 
 The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` request header field. To ensure that the upload resource will accept request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ({{offset-retrieving}}) or appending representation data ({{upload-appending}}).
 
@@ -537,7 +537,7 @@ If the client received a final response with a
 
 ### Server Behavior
 
-An upload resource applies a `PATCH` request with the `application/partial-upload` media type by appending the patch document in the request content to the upload resource.
+An upload resource applies a `PATCH` request with the `application/partial-upload` media type ({{media-type-partial-upload}}) by appending the patch document in the request content to the upload resource.
 
 If the upload resource does not receive the entire patch document, for example because of canceled requests or dropped connections, it SHOULD append as much of the patch document as possible, starting at its beginning and without discontinuities. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of PATCH}}.
 
@@ -640,7 +640,14 @@ The RECOMMENDED approach is as follows: If an upload resource receives a new req
 
 Since implementing this approach is not always technically possible or feasible, other measures can be considered as well. A simpler approach is that the server only processes a new request to retrieve the offset ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancellation ({{upload-cancellation}}) once all previous requests have been processed. This effectively implements exclusive access to the upload resource through an access lock. However, since network interruptions can occur in ways that cause the request to hang from the server's perspective, it might take the server significant time to realize the interruption and time out the request. During this period, the client will be unable to access the resource and resume the upload, causing friction for the end users. Therefore, the recommended approach is to terminate previous requests to enable quick resumption of uploads.
 
-# Media Type `application/partial-upload`
+# Status Code `104 (Upload Resumption Supported)` {#status-code-104}
+
+The `104 (Upload Resumption Supported)` status code is can be used for two purposes:
+
+- When responding to requests to create uploads, an interim response with the `104 (Upload Resumption Supported)` status code can be sent to indicate the server's support for resumable uploads, as well as the URI and limits of the corresponding upload resource in the `Location` and `Upload-Limit` header fields, respectively (see {{upload-creation}}). This notifies the client early about the ability to resume the upload in case of network interruptions.
+- While processing the content of a request to append representation data or create an upload, the server can regularly send interim responses with the `104 (Upload Resumption Supported)` status code to indicate the current upload progress in the `Upload-Offset` header field (see {{upload-creation}} and {{upload-appending}}). This allows the client to show more accurate progress information about the amount of data receive by the server. In addition, clients can use this information to release representation data that was buffered, knowing that it doesn't have to be re-transmitted.
+
+# Media Type `application/partial-upload` {#media-type-partial-upload}
 
 The `application/partial-upload` media type describes a contiguous block from the representation data that should be uploaded to a resource. There is no minimum block size and the block might be empty. The block can be a subset of the representation data, where the start and/or end of the block don't line up with the start and/or end of the representation data respectively.
 
@@ -810,7 +817,7 @@ Description:
 : Upload Resumption Supported
 
 Specification:
-: This document
+: {{status-code-104}} of this document
 
 ## Media Type
 
@@ -838,7 +845,7 @@ Interoperability considerations:
 : N/A
 
 Published specification:
-: This document
+: {{media-type-partial-upload}} of this document
 
 Applications that use this media type:
 : Applications that transfer files over unreliable networks or want pause- and resumable uploads.
@@ -879,34 +886,43 @@ IANA is asked to register the following entry in the "HTTP Problem Types" regist
 
 Type URI:
 : https://iana.org/assignments/http-problem-types#mismatching-upload-offset
+
 Title:
 : Mismatching Upload Offset
+
 Recommended HTTP status code:
 : 409
+
 Reference:
-: This document
+: {{mismatching-offset}} of this document
 
 IANA is asked to register the following entry in the "HTTP Problem Types" registry:
 
 Type URI:
 : https://iana.org/assignments/http-problem-types#completed-upload
+
 Title:
 : Upload Is Completed
+
 Recommended HTTP status code:
 : 400
+
 Reference:
-: This document
+: {{completed-upload}} of this document
 
 IANA is asked to register the following entry in the "HTTP Problem Types" registry:
 
 Type URI:
 : https://iana.org/assignments/http-problem-types#inconsistent-upload-length
+
 Title:
 : Inconsistent Upload Length Values
+
 Recommended HTTP status code:
 : 400
+
 Reference:
-: This document
+: {{inconsistent-length}} of this document
 
 --- back
 
@@ -923,6 +939,7 @@ Reference:
 * Rephrase requirements for concurrency handling, focusing on the outcome.
 * Remove requirement for 204 status code for DELETE responses.
 * Increase the draft interop version.
+* Add section about 104 status code.
 
 ## Since draft-ietf-httpbis-resumable-upload-07
 {:numbered="false"}
