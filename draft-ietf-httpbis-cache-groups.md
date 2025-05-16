@@ -103,7 +103,7 @@ Two responses stored in the same cache are considered to belong to the same grou
 
 ### Invalidation {#invalidation}
 
-A cache that invalidates a stored response MAY invalidate any stored responses that share groups (per {{identify}}) with that response.
+A cache that invalidates a stored response MAY invalidate any stored responses that share groups (per {{identify}}) with that response. Note that further grouped invalidations are not triggered by a grouped invalidation; i.e., this mechanism does not "cascade."
 
 Cache extensions can explicitly strengthen the requirement above. For example, a targeted cache control header field {{TARGETED}} might specify that caches processing it are required to invalidate such responses.
 
