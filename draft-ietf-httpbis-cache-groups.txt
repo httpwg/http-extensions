@@ -3,9 +3,9 @@
 
 
 HTTP                                                       M. Nottingham
-Internet-Draft                                               15 May 2025
+Internet-Draft                                               16 May 2025
 Intended status: Standards Track                                        
-Expires: 16 November 2025
+Expires: 17 November 2025
 
 
                            HTTP Cache Groups
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 November 2025.
+   This Internet-Draft will expire on 17 November 2025.
 
 Copyright Notice
 
@@ -171,6 +171,8 @@ Table of Contents
 
    A cache that invalidates a stored response MAY invalidate any stored
    responses that share groups (per Section 2.1) with that response.
+   Note that further grouped invalidations are not triggered by a
+   grouped invalidation; i.e., this mechanism does not "cascade."
 
    Cache extensions can explicitly strengthen the requirement above.
    For example, a targeted cache control header field [TARGETED] might

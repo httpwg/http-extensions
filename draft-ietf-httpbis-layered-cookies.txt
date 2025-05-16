@@ -6,7 +6,7 @@ HTTP                                                A. van Kesteren, Ed.
 Internet-Draft                                                     Apple
 Obsoletes: [6265] (if approved)                          J. Hofmann, Ed.
 Intended status: Standards Track                                  Google
-Expires: 16 November 2025                                    15 May 2025
+Expires: 17 November 2025                                    16 May 2025
 
 
                 Cookies: HTTP State Management Mechanism
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 November 2025.
+   This Internet-Draft will expire on 17 November 2025.
 
 Copyright Notice
 
