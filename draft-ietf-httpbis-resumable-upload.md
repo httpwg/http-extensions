@@ -917,6 +917,11 @@ Reference:
 {:numbered="false"}
 
 * Clarify definitions of new header fields.
+* Make handling of OPTIONS * optional.
+* Require server to announce limits using Upload-Limit.
+* Require clients to adhere to known limits.
+* Rephrase requirements for concurrency handling, focusing on the outcome.
+* Remove requirement for 204 status code for DELETE responses.
 
 ## Since draft-ietf-httpbis-resumable-upload-07
 {:numbered="false"}
