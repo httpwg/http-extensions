@@ -4,9 +4,9 @@
 
 HTTPBIS                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Updates: 9112, 9298 (if approved)                            15 May 2025
+Updates: 9112, 9298 (if approved)                            16 May 2025
 Intended status: Standards Track                                        
-Expires: 16 November 2025
+Expires: 17 November 2025
 
 
 Security Considerations for Optimistic Protocol Transitions in HTTP/1.1
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 November 2025.
+   This Internet-Draft will expire on 17 November 2025.
 
 Copyright Notice
 
@@ -290,7 +290,8 @@ Table of Contents
    "connect-udp" protocol stream can include untrusted material (i.e.,
    the UDP packets, which might come from other applications on the
    client device).  This creates the possibility of Request Smuggling
-   attacks.  To avoid these concerns, this text is updated as follows:
+   attacks.  To avoid these concerns, this document updates that text to
+   exclude HTTP/1.1 from any optimistic sending, as follows:
 
       When using HTTP/2 or later, a client MAY optimistically ...
 
