@@ -1585,7 +1585,7 @@ q=foo&amp;limit=10&amp;sort=-published
       directly signal support for the QUERY method while identifying
       the specific query format media type(s) that may be used.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">
-      "Accept-Query" contains a list of media ranges (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
+      Accept-Query contains a list of media ranges (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
       using "Structured Fields" syntax (<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).
       Media ranges are represented by a List Structured Header Field of either Tokens or
       Strings, containing the media range value without parameters. Parameters,
@@ -1606,7 +1606,7 @@ q=foo&amp;limit=10&amp;sort=-published
 <p id="section-3-7">
       The only allowed formats for parameters are String or Token.<a href="#section-3-7" class="pilcrow">¶</a></p>
 <p id="section-3-8">
-      Accept-Query's value applies to every URI on the server that shares the same path; in
+      The value of the Accept-Query field applies to every URI on the server that shares the same path; in
       other words, the query component is ignored. If requests to the same resource return
       different Accept-Query values, the most recently received fresh value (per
       <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4.2" class="relref">Section 4.2</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>) is used.<a href="#section-3-8" class="pilcrow">¶</a></p>

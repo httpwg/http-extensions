@@ -318,7 +318,7 @@ Table of Contents
    directly signal support for the QUERY method while identifying the
    specific query format media type(s) that may be used.
 
-   "Accept-Query" contains a list of media ranges (Section 12.5.1 of
+   Accept-Query contains a list of media ranges (Section 12.5.1 of
    [HTTP]) using "Structured Fields" syntax ([STRUCTURED-FIELDS]).
    Media ranges are represented by a List Structured Header Field of
    either Tokens or Strings, containing the media range value without
@@ -340,11 +340,11 @@ Table of Contents
 
    The only allowed formats for parameters are String or Token.
 
-   Accept-Query's value applies to every URI on the server that shares
-   the same path; in other words, the query component is ignored.  If
-   requests to the same resource return different Accept-Query values,
-   the most recently received fresh value (per Section 4.2 of
-   [HTTP-CACHING]) is used.
+   The value of the Accept-Query field applies to every URI on the
+   server that shares the same path; in other words, the query component
+   is ignored.  If requests to the same resource return different
+   Accept-Query values, the most recently received fresh value (per
+   Section 4.2 of [HTTP-CACHING]) is used.
 
    Example:
 
