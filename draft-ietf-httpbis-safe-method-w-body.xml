@@ -662,7 +662,7 @@ Accept: application/x-www-form-urlencoded, application/sql
 
     <section title="Content-Location, Location, and Indirect Responses" anchor="example.content-location.location.indirect">
       <t>
-        The Content-Location and Location response fields in success responses
+        As described in <xref target="location"/>, the Content-Location and Location response fields in success responses
         (2xx, <xref target="HTTP" section="15.3"/>) provide a way to identify alternate resources
         that will respond to GET requests, either for the received result of the request, or for future
         requests to perform the same operation. Going back to the example from <xref target="example.simple"/>:
@@ -777,7 +777,7 @@ If-None-Match: "42-1"
 
       <section title="Indirect Responses" anchor="example.indirect">
         <t>
-          Servers can send "indirect" responses using the status code 303 (See Other,
+          Servers can send "indirect" responses (<xref target="redirection"/>) using the status code 303 (See Other,
           <xref target="HTTP" section="15.4.4"/>).
         </t>
         <t>
