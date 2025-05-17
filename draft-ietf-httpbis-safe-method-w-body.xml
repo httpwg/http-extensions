@@ -1026,6 +1026,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Editorial nits (<eref target="https://github.com/httpwg/http-extensions/pull/3080"/>, ack martinthomson)</li>
   <li>Fix references in <xref target="example.discovery.formats"/> (<eref target="https://github.com/httpwg/http-extensions/pull/3090"/>, ack Rahul Gupta)</li>
   <li>Update James' affiliation (<eref target="https://github.com/httpwg/http-extensions/pull/3094"/>)</li>
+  <li>Review references to HTTP  (<eref target="https://github.com/httpwg/http-extensions/pull/3097"/>)</li>
 </ul>
 </section>
 </section>
