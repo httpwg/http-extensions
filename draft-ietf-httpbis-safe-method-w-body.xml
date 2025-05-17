@@ -650,8 +650,8 @@ Accept-Query: application/x-www-form-urlencoded, application/sql
       </t>
       <t>
         An alternative to checking Accept-Query would be to make a QUERY request, and then
-        -- in case of a 4xx status such as 415 (Unsupported Media Type, <xref target="HTTP" section="12.5.1"/>) response --
-        to inspect the Allow (<xref target="HTTP" section="15.5.16"/>) response field:
+        -- in case of a 4xx status such as 415 (Unsupported Media Type, <xref target="HTTP" section="15.5.16"/>) response --
+        to inspect the Accept (<xref target="HTTP" section="12.5.1"/>) response field:
       </t>
 <artwork type="http-message">
 HTTP/1.1 415 Unsupported Media Type
@@ -1024,6 +1024,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <section title="Since draft-ietf-httpbis-safe-method-w-body-10" anchor="changes.since.10">
 <ul>
   <li>Editorial nits (<eref target="https://github.com/httpwg/http-extensions/pull/3080"/>, ack martinthomson)</li>
+  <li>Fix references in <xref target="example.discovery.formats"/> (<eref target="https://github.com/httpwg/http-extensions/pull/3090"/>, ack Rahul Gupta)</li>
   <li>Update James' affiliation (<eref target="https://github.com/httpwg/http-extensions/pull/3094"/>)</li>
 </ul>
 </section>
