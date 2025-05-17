@@ -351,7 +351,7 @@ q=foo&amp;limit=10&amp;sort=-published
       the specific query format media type(s) that may be used.
     </t>
     <t>
-      "Accept-Query" contains a list of media ranges (<xref target="HTTP" section="12.5.1"/>)
+      Accept-Query contains a list of media ranges (<xref target="HTTP" section="12.5.1"/>)
       using "Structured Fields" syntax (<xref target="STRUCTURED-FIELDS"/>).
       Media ranges are represented by a List Structured Header Field of either Tokens or
       Strings, containing the media range value without parameters. Parameters,
@@ -378,7 +378,7 @@ q=foo&amp;limit=10&amp;sort=-published
       The only allowed formats for parameters are String or Token.
     </t>
     <t>
-      Accept-Query's value applies to every URI on the server that shares the same path; in
+      The value of the Accept-Query field applies to every URI on the server that shares the same path; in
       other words, the query component is ignored. If requests to the same resource return
       different Accept-Query values, the most recently received fresh value (per
       <xref target="HTTP-CACHING" section="4.2"/>) is used.
