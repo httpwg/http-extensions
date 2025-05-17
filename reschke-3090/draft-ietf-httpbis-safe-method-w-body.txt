@@ -5,7 +5,7 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 18 November 2025                                               
+Expires: 18 November 2025                                     Cloudflare
                                                                M. Bishop
                                                                   Akamai
                                                              17 May 2025
@@ -972,6 +972,9 @@ B.11.  Since draft-ietf-httpbis-safe-method-w-body-10
    *  Fix references in Appendix A.3 (https://github.com/httpwg/http-
       extensions/pull/3090, ack Rahul Gupta)
 
+   *  Update James' affiliation (https://github.com/httpwg/http-
+      extensions/pull/3094)
+
 Acknowledgements
 
    We thank all members of the HTTP Working Group for ideas, reviews,
@@ -1002,6 +1005,7 @@ Authors' Addresses
 
 
    James M Snell
+   Cloudflare
    Email: jasnell@gmail.com
 
 
