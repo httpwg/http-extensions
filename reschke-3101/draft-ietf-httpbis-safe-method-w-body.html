@@ -1471,7 +1471,7 @@ q=foo&amp;limit=10&amp;sort=-published
       A successful response to a QUERY request is expected to provide some
       indication as to the final disposition of the operation. For
       instance, a successful query that yields no results can be represented
-      by a 204 (No Content) response. If the response includes content,
+      by a 204 (No Content, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3.5" class="relref">Section 15.3.5</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) response. If the response includes content,
       it is expected to describe the results of the operation.<a href="#section-2-5" class="pilcrow">¶</a></p>
 <div id="location">
 <section id="section-2.1">
@@ -1507,14 +1507,14 @@ q=foo&amp;limit=10&amp;sort=-published
         <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4" class="relref">Section 15.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). The semantics of the redirect
         response do not differ from other methods.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 <p id="section-2.2-2">
-        For instance, a 303 (See Other)
+        For instance, a 303 (See Other, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.34.4" class="relref">Section 15.34.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
         response would indicate that the Location field identifies an
         alternate URI from which the results can be retrieved
         using a GET request (this use case is also covered by the
         use of the Location response field in a 2xx response).<a href="#section-2.2-2" class="pilcrow">¶</a></p>
 <p id="section-2.2-3">
-        On the other hand, response codes 307 (Temporary Redirect) and 308
-        (Permanent Redirect) can be used to request the user agent to redo
+        On the other hand, response codes 307 (Temporary Redirect, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.8" class="relref">Section 15.4.8</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) and 308
+        (Permanent Redirect, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.9" class="relref">Section 15.4.9</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) can be used to request the user agent to redo
         the QUERY request on the URI specified by the Location field.<a href="#section-2.2-3" class="pilcrow">¶</a></p>
 <p id="section-2.2-4">
         Various non-normative examples of successful
