@@ -89,7 +89,7 @@
   <section title="Introduction" anchor="introduction">
     <t>
       This specification defines the HTTP QUERY request method as a means of
-      making a safe, idempotent request that contains content.
+      making a safe, idempotent request (<xref target="HTTP" section="9.2"/>) that contains content.
     </t>
     <t>
       Most often, this is desirable when the data conveyed in a request is
@@ -283,7 +283,7 @@ q=foo&amp;limit=10&amp;sort=-published
         response do not differ from other methods.
       </t>
       <t>
-        For instance, a 303 (See Other, <xref target="HTTP" section="15.34.4"/>)
+        For instance, a 303 (See Other, <xref target="HTTP" section="15.4.4"/>)
         response would indicate that the Location field identifies an
         alternate URI from which the results can be retrieved
         using a GET request (this use case is also covered by the
