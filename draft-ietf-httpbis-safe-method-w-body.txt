@@ -110,7 +110,8 @@ Table of Contents
 1.  Introduction
 
    This specification defines the HTTP QUERY request method as a means
-   of making a safe, idempotent request that contains content.
+   of making a safe, idempotent request (Section 9.2 of [HTTP]) that
+   contains content.
 
    Most often, this is desirable when the data conveyed in a request is
    too voluminous to be encoded into the request's URI.  For example,
@@ -235,8 +236,9 @@ Table of Contents
    A successful response to a QUERY request is expected to provide some
    indication as to the final disposition of the operation.  For
    instance, a successful query that yields no results can be
-   represented by a 204 (No Content) response.  If the response includes
-   content, it is expected to describe the results of the operation.
+   represented by a 204 (No Content, Section 15.3.5 of [HTTP]) response.
+   If the response includes content, it is expected to describe the
+   results of the operation.
 
 2.1.  Content-Location and Location Fields
 
@@ -265,14 +267,16 @@ Table of Contents
    Section 15.4 of [HTTP]).  The semantics of the redirect response do
    not differ from other methods.
 
-   For instance, a 303 (See Other) response would indicate that the
-   Location field identifies an alternate URI from which the results can
-   be retrieved using a GET request (this use case is also covered by
-   the use of the Location response field in a 2xx response).
+   For instance, a 303 (See Other, Section 15.4.4 of [HTTP]) response
+   would indicate that the Location field identifies an alternate URI
+   from which the results can be retrieved using a GET request (this use
+   case is also covered by the use of the Location response field in a
+   2xx response).
 
-   On the other hand, response codes 307 (Temporary Redirect) and 308
-   (Permanent Redirect) can be used to request the user agent to redo
-   the QUERY request on the URI specified by the Location field.
+   On the other hand, response codes 307 (Temporary Redirect,
+   Section 15.4.8 of [HTTP]) and 308 (Permanent Redirect, Section 15.4.9
+   of [HTTP]) can be used to request the user agent to redo the QUERY
+   request on the URI specified by the Location field.
 
    Various non-normative examples of successful QUERY responses are
    illustrated in Appendix A.
@@ -318,7 +322,7 @@ Table of Contents
    directly signal support for the QUERY method while identifying the
    specific query format media type(s) that may be used.
 
-   "Accept-Query" contains a list of media ranges (Section 12.5.1 of
+   Accept-Query contains a list of media ranges (Section 12.5.1 of
    [HTTP]) using "Structured Fields" syntax ([STRUCTURED-FIELDS]).
    Media ranges are represented by a List Structured Header Field of
    either Tokens or Strings, containing the media range value without
@@ -338,13 +342,13 @@ Table of Contents
 
    The order of types listed in the field value is not significant.
 
-   The only allowed format for parameters is String.
+   The only allowed formats for parameters are String or Token.
 
-   Accept-Query's value applies to every URI on the server that shares
-   the same path; in other words, the query component is ignored.  If
-   requests to the same resource return different Accept-Query values,
-   the most recently received fresh value (per Section 4.2 of
-   [HTTP-CACHING]) is used.
+   The value of the Accept-Query field applies to every URI on the
+   server that shares the same path; in other words, the query component
+   is ignored.  If requests to the same resource return different
+   Accept-Query values, the most recently received fresh value (per
+   Section 4.2 of [HTTP-CACHING]) is used.
 
    Example:
 
@@ -559,11 +563,12 @@ A.3.  Discovery of QUERY Formats
 
 A.4.  Content-Location, Location, and Indirect Responses
 
-   The Content-Location and Location response fields in success
-   responses (2xx, Section 15.3 of [HTTP]) provide a way to identify
-   alternate resources that will respond to GET requests, either for the
-   received result of the request, or for future requests to perform the
-   same operation.  Going back to the example from Appendix A.1:
+   As described in Section 2.1, the Content-Location and Location
+   response fields in success responses (2xx, Section 15.3 of [HTTP])
+   provide a way to identify alternate resources that will respond to
+   GET requests, either for the received result of the request, or for
+   future requests to perform the same operation.  Going back to the
+   example from Appendix A.1:
 
    QUERY /contacts HTTP/1.1
    Host: example.org
@@ -663,8 +668,8 @@ A.4.2.  Using Location
 
 A.4.3.  Indirect Responses
 
-   Servers can send "indirect" responses using the status code 303 (See
-   Other, Section 15.4.4 of [HTTP]).
+   Servers can send "indirect" responses (Section 2.2) using the status
+   code 303 (See Other, Section 15.4.4 of [HTTP]).
 
    Given the request at the beginning of Appendix A.4, a server might
    respond with:
@@ -977,6 +982,9 @@ B.11.  Since draft-ietf-httpbis-safe-method-w-body-10
 
    *  Review references to HTTP (https://github.com/httpwg/http-
       extensions/pull/3097)
+
+   *  Address most Rahul Gupta's additional feedback
+      (https://github.com/httpwg/http-extensions/pull/3101)
 
 Acknowledgements
 
