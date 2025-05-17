@@ -1303,7 +1303,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
       </h2>
 <p id="section-1-1">
       This specification defines the HTTP QUERY request method as a means of
-      making a safe, idempotent request that contains content.<a href="#section-1-1" class="pilcrow">¶</a></p>
+      making a safe, idempotent request (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.2" class="relref">Section 9.2</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) that contains content.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">
       Most often, this is desirable when the data conveyed in a request is
       too voluminous to be encoded into the request's URI. For example,
@@ -1507,7 +1507,7 @@ q=foo&amp;limit=10&amp;sort=-published
         <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4" class="relref">Section 15.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). The semantics of the redirect
         response do not differ from other methods.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 <p id="section-2.2-2">
-        For instance, a 303 (See Other, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.34.4" class="relref">Section 15.34.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
+        For instance, a 303 (See Other, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.4" class="relref">Section 15.4.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
         response would indicate that the Location field identifies an
         alternate URI from which the results can be retrieved
         using a GET request (this use case is also covered by the
