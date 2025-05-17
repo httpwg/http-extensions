@@ -196,7 +196,7 @@ q=foo&amp;limit=10&amp;sort=-published
       <t>
         Furthermore, it uses the terms <em>URI query parameter</em> for parameters
         in the query component of a URI (<xref target="HTTP" section="4.2.2"/>) and
-        <em>query content</em> for the request content (<xref target="HTTP" section="4.2.2"/>)
+        <em>query content</em> for the request content (<xref target="HTTP" section="6.4"/>)
         of a QUERY request.
       </t>
     </section>
