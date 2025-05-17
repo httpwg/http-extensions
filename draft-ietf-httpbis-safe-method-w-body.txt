@@ -550,8 +550,8 @@ A.3.  Discovery of QUERY Formats
 
    An alternative to checking Accept-Query would be to make a QUERY
    request, and then -- in case of a 4xx status such as 415 (Unsupported
-   Media Type, Section 12.5.1 of [HTTP]) response -- to inspect the
-   Allow (Section 15.5.16 of [HTTP]) response field:
+   Media Type, Section 15.5.16 of [HTTP]) response -- to inspect the
+   Accept (Section 12.5.1 of [HTTP]) response field:
 
    HTTP/1.1 415 Unsupported Media Type
    Content-Type: application/xhtml
@@ -968,6 +968,9 @@ B.11.  Since draft-ietf-httpbis-safe-method-w-body-10
 
    *  Editorial nits (https://github.com/httpwg/http-extensions/
       pull/3080, ack martinthomson)
+
+   *  Fix references in Appendix A.3 (https://github.com/httpwg/http-
+      extensions/pull/3090, ack Rahul Gupta)
 
    *  Update James' affiliation (https://github.com/httpwg/http-
       extensions/pull/3094)
