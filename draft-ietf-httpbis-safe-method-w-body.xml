@@ -375,7 +375,7 @@ q=foo&amp;limit=10&amp;sort=-published
       The order of types listed in the field value is not significant.
     </t>
     <t>
-      The only allowed format for parameters is String.
+      The only allowed formats for parameters are String or Token.
     </t>
     <t>
       Accept-Query's value applies to every URI on the server that shares the same path; in
