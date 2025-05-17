@@ -152,9 +152,9 @@ Future specifications for Upgrade Tokens should account for the security issues 
 
 Some Upgrade Tokens, such as "TLS", are defined for use with any ordinary HTTP Method.  The upgraded protocol continues to provide HTTP semantics, and will convey the response to this HTTP request.
 
-The other Upgrade Tokens mentioned in {{existing}} do not preserve HTTP semantics, so the method is not relevant.  All of these Upgrade Tokens are specified only for use with the "GET" method.
+The other Upgrade Tokens mentioned in {{existing}} do not preserve HTTP semantics, so the method is not relevant.  All of these Upgrade Tokens are specified only for requests with the "GET" method and an empty body.
 
-Future specifications for Upgrade Tokens should restrict their use to "GET" requests if the HTTP method is otherwise irrelevant and a request body is not required.  This improves consistency with other Upgrade Tokens and reduces the likelihood that a faulty server implementation might process the request body as the new protocol.
+Future specifications for Upgrade Tokens should restrict their use to "GET" requests with an empty body if the HTTP method is otherwise irrelevant and a request body is not required.  This improves consistency with other Upgrade Tokens and simplifies server implementation.
 
 # Guidance for HTTP CONNECT
 
