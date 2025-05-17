@@ -983,6 +983,9 @@ B.11.  Since draft-ietf-httpbis-safe-method-w-body-10
    *  Review references to HTTP (https://github.com/httpwg/http-
       extensions/pull/3097)
 
+   *  Address most Rahul Gupta's additional feedback
+      (https://github.com/httpwg/http-extensions/pull/3101)
+
 Acknowledgements
 
    We thank all members of the HTTP Working Group for ideas, reviews,
