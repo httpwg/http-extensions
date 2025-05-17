@@ -1917,7 +1917,7 @@ Accept: application/x-www-form-urlencoded, application/sql
 <a href="#appendix-A.4" class="section-number selfRef">A.4. </a><a href="#name-content-location-location-a" class="section-name selfRef">Content-Location, Location, and Indirect Responses</a>
         </h3>
 <p id="appendix-A.4-1">
-        The Content-Location and Location response fields in success responses
+        As described in <a href="#location" class="auto internal xref">Section 2.1</a>, the Content-Location and Location response fields in success responses
         (2xx, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">Section 15.3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) provide a way to identify alternate resources
         that will respond to GET requests, either for the received result of the request, or for future
         requests to perform the same operation. Going back to the example from <a href="#example.simple" class="auto internal xref">Appendix A.1</a>:<a href="#appendix-A.4-1" class="pilcrow">¶</a></p>
@@ -2050,7 +2050,7 @@ If-None-Match: "42-1"
 <a href="#appendix-A.4.3" class="section-number selfRef">A.4.3. </a><a href="#name-indirect-responses" class="section-name selfRef">Indirect Responses</a>
           </h4>
 <p id="appendix-A.4.3-1">
-          Servers can send "indirect" responses using the status code 303 (See Other,
+          Servers can send "indirect" responses (<a href="#redirection" class="auto internal xref">Section 2.2</a>) using the status code 303 (See Other,
           <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.4" class="relref">Section 15.4.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#appendix-A.4.3-1" class="pilcrow">¶</a></p>
 <p id="appendix-A.4.3-2">
           Given the request at the beginning of <a href="#example.content-location.location.indirect" class="auto internal xref">Appendix A.4</a>,

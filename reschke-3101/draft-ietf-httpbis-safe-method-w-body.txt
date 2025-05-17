@@ -563,11 +563,12 @@ A.3.  Discovery of QUERY Formats
 
 A.4.  Content-Location, Location, and Indirect Responses
 
-   The Content-Location and Location response fields in success
-   responses (2xx, Section 15.3 of [HTTP]) provide a way to identify
-   alternate resources that will respond to GET requests, either for the
-   received result of the request, or for future requests to perform the
-   same operation.  Going back to the example from Appendix A.1:
+   As described in Section 2.1, the Content-Location and Location
+   response fields in success responses (2xx, Section 15.3 of [HTTP])
+   provide a way to identify alternate resources that will respond to
+   GET requests, either for the received result of the request, or for
+   future requests to perform the same operation.  Going back to the
+   example from Appendix A.1:
 
    QUERY /contacts HTTP/1.1
    Host: example.org
@@ -667,8 +668,8 @@ A.4.2.  Using Location
 
 A.4.3.  Indirect Responses
 
-   Servers can send "indirect" responses using the status code 303 (See
-   Other, Section 15.4.4 of [HTTP]).
+   Servers can send "indirect" responses (Section 2.2) using the status
+   code 303 (See Other, Section 15.4.4 of [HTTP]).
 
    Given the request at the beginning of Appendix A.4, a server might
    respond with:
