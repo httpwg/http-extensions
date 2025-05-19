@@ -78,7 +78,7 @@
         <eref target="https://github.com/httpwg/http-extensions/labels/query-method"/>.
       </t>
       <t>
-        The changes in this draft are summarized in <xref target="changes.since.10"/>.
+        The changes in this draft are summarized in <xref target="changes.since.11"/>.
       </t>
     </note>
 
@@ -1026,6 +1026,11 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Review references to HTTP  (<eref target="https://github.com/httpwg/http-extensions/pull/3097"/>)</li>
   <li>Address most Rahul Gupta's additional feedback (<eref target="https://github.com/httpwg/http-extensions/pull/3101"/>)</li>
 </ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-11" anchor="changes.since.11">
+<t>
+  None yet.
+</t>
 </section>
 </section>
 
