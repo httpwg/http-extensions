@@ -326,12 +326,13 @@ Table of Contents
    [HTTP]) using "Structured Fields" syntax ([STRUCTURED-FIELDS]).
    Media ranges are represented by a List Structured Header Field of
    either Tokens or Strings, containing the media range value without
-   parameters.  Parameters, if any, are mapped to Parameters of type
-   String.
+   parameters.
 
-   The choice of Token vs. String is semantically insignificant.  That
-   is, recipients MAY convert Tokens to Strings, but MUST NOT process
-   them differently based on the received type.
+   Media type parameters, if any, are mapped to Structured Field
+   Parameters of type String or Token.  The choice of Token vs. String
+   is semantically insignificant.  That is, recipients MAY convert
+   Tokens to Strings, but MUST NOT process them differently based on the
+   received type.
 
    Media types do not exactly map to Tokens, for instance they allow a
    leading digit.  In cases like these, the String format needs to be
@@ -341,8 +342,6 @@ Table of Contents
    type, or "xxxx/*", which matches any subtype of the indicated type.
 
    The order of types listed in the field value is not significant.
-
-   The only allowed formats for parameters are String or Token.
 
    The value of the Accept-Query field applies to every URI on the
    server that shares the same path; in other words, the query component

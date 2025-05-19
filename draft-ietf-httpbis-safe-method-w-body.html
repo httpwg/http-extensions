@@ -1588,10 +1588,10 @@ q=foo&amp;limit=10&amp;sort=-published
       Accept-Query contains a list of media ranges (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
       using "Structured Fields" syntax (<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).
       Media ranges are represented by a List Structured Header Field of either Tokens or
-      Strings, containing the media range value without parameters. Parameters,
-      if any, are mapped to Parameters of type String.<a href="#section-3-2" class="pilcrow">¶</a></p>
+      Strings, containing the media range value without parameters.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">
-      The choice of Token vs. String is semantically insignificant. That is,
+      Media type parameters, if any, are mapped to Structured Field Parameters of type
+      String or Token. The choice of Token vs. String is semantically insignificant. That is,
       recipients <span class="bcp14">MAY</span> convert Tokens to Strings, but <span class="bcp14">MUST NOT</span> process them
       differently based on the received type.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <p id="section-3-4">
@@ -1604,23 +1604,21 @@ q=foo&amp;limit=10&amp;sort=-published
 <p id="section-3-6">
       The order of types listed in the field value is not significant.<a href="#section-3-6" class="pilcrow">¶</a></p>
 <p id="section-3-7">
-      The only allowed formats for parameters are String or Token.<a href="#section-3-7" class="pilcrow">¶</a></p>
-<p id="section-3-8">
       The value of the Accept-Query field applies to every URI on the server that shares the same path; in
       other words, the query component is ignored. If requests to the same resource return
       different Accept-Query values, the most recently received fresh value (per
-      <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4.2" class="relref">Section 4.2</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>) is used.<a href="#section-3-8" class="pilcrow">¶</a></p>
-<p id="section-3-9">
-      Example:<a href="#section-3-9" class="pilcrow">¶</a></p>
-<div class="alignLeft art-example art-text artwork" id="section-3-10">
+      <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4.2" class="relref">Section 4.2</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>) is used.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<p id="section-3-8">
+      Example:<a href="#section-3-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-example art-text artwork" id="section-3-9">
 <pre>
-Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a href="#section-3-10" class="pilcrow">¶</a>
+Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a href="#section-3-9" class="pilcrow">¶</a>
 </div>
-<p id="section-3-11">
+<p id="section-3-10">
       Although the syntax for this field appears to be similar to other
       fields, such as "Accept" (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>),
       it is a Structured Field and thus <span class="bcp14">MUST</span> be processed as specified in
-      <span><a href="https://rfc-editor.org/rfc/rfc9651#section-4" class="relref">Section 4</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.<a href="#section-3-11" class="pilcrow">¶</a></p>
+      <span><a href="https://rfc-editor.org/rfc/rfc9651#section-4" class="relref">Section 4</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.<a href="#section-3-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <section id="section-4">
