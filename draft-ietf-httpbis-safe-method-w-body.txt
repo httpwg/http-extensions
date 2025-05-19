@@ -31,7 +31,7 @@ Editorial Note
    code and issues list for this draft can be found at
    https://github.com/httpwg/http-extensions/labels/query-method.
 
-   The changes in this draft are summarized in Appendix B.11.
+   The changes in this draft are summarized in Appendix B.12.
 
 Status of This Memo
 
@@ -103,6 +103,7 @@ Table of Contents
      B.9.  Since draft-ietf-httpbis-safe-method-w-body-08
      B.10. Since draft-ietf-httpbis-safe-method-w-body-09
      B.11. Since draft-ietf-httpbis-safe-method-w-body-10
+     B.12. Since draft-ietf-httpbis-safe-method-w-body-11
    Acknowledgements
    Contributors
    Authors' Addresses
@@ -984,6 +985,10 @@ B.11.  Since draft-ietf-httpbis-safe-method-w-body-10
 
    *  Address most Rahul Gupta's additional feedback
       (https://github.com/httpwg/http-extensions/pull/3101)
+
+B.12.  Since draft-ietf-httpbis-safe-method-w-body-11
+
+   None yet.
 
 Acknowledgements
 
