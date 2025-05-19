@@ -38,7 +38,8 @@
         <uri>https://greenbytes.de/tech/webdav/</uri>
       </address>
     </author>
-     <author initials="J.M." surname="Snell" fullname="James M Snell">
+    <author initials="J.M." surname="Snell" fullname="James M Snell">
+      <organization>Cloudflare</organization>
       <address>
         <email>jasnell@gmail.com</email>
       </address>
@@ -88,7 +89,7 @@
   <section title="Introduction" anchor="introduction">
     <t>
       This specification defines the HTTP QUERY request method as a means of
-      making a safe, idempotent request that contains content.
+      making a safe, idempotent request (<xref target="HTTP" section="9.2"/>) that contains content.
     </t>
     <t>
       Most often, this is desirable when the data conveyed in a request is
@@ -195,7 +196,7 @@ q=foo&amp;limit=10&amp;sort=-published
       <t>
         Furthermore, it uses the terms <em>URI query parameter</em> for parameters
         in the query component of a URI (<xref target="HTTP" section="4.2.2"/>) and
-        <em>query content</em> for the request content (<xref target="HTTP" section="4.2.2"/>)
+        <em>query content</em> for the request content (<xref target="HTTP" section="6.4"/>)
         of a QUERY request.
       </t>
     </section>
@@ -248,7 +249,7 @@ q=foo&amp;limit=10&amp;sort=-published
       A successful response to a QUERY request is expected to provide some
       indication as to the final disposition of the operation. For
       instance, a successful query that yields no results can be represented
-      by a 204 (No Content) response. If the response includes content,
+      by a 204 (No Content, <xref target="HTTP" section="15.3.5"/>) response. If the response includes content,
       it is expected to describe the results of the operation.
     </t>
 
@@ -282,15 +283,15 @@ q=foo&amp;limit=10&amp;sort=-published
         response do not differ from other methods.
       </t>
       <t>
-        For instance, a 303 (See Other)
+        For instance, a 303 (See Other, <xref target="HTTP" section="15.4.4"/>)
         response would indicate that the Location field identifies an
         alternate URI from which the results can be retrieved
         using a GET request (this use case is also covered by the
         use of the Location response field in a 2xx response).
       </t>
       <t>
-        On the other hand, response codes 307 (Temporary Redirect) and 308
-        (Permanent Redirect) can be used to request the user agent to redo
+        On the other hand, response codes 307 (Temporary Redirect, <xref target="HTTP" section="15.4.8"/>) and 308
+        (Permanent Redirect, <xref target="HTTP" section="15.4.9"/>) can be used to request the user agent to redo
         the QUERY request on the URI specified by the Location field.
       </t>
       <t>
@@ -350,7 +351,7 @@ q=foo&amp;limit=10&amp;sort=-published
       the specific query format media type(s) that may be used.
     </t>
     <t>
-      "Accept-Query" contains a list of media ranges (<xref target="HTTP" section="12.5.1"/>)
+      Accept-Query contains a list of media ranges (<xref target="HTTP" section="12.5.1"/>)
       using "Structured Fields" syntax (<xref target="STRUCTURED-FIELDS"/>).
       Media ranges are represented by a List Structured Header Field of either Tokens or
       Strings, containing the media range value without parameters. Parameters,
@@ -374,10 +375,10 @@ q=foo&amp;limit=10&amp;sort=-published
       The order of types listed in the field value is not significant.
     </t>
     <t>
-      The only allowed format for parameters is String.
+      The only allowed formats for parameters are String or Token.
     </t>
     <t>
-      Accept-Query's value applies to every URI on the server that shares the same path; in
+      The value of the Accept-Query field applies to every URI on the server that shares the same path; in
       other words, the query component is ignored. If requests to the same resource return
       different Accept-Query values, the most recently received fresh value (per
       <xref target="HTTP-CACHING" section="4.2"/>) is used.
@@ -649,8 +650,8 @@ Accept-Query: application/x-www-form-urlencoded, application/sql
       </t>
       <t>
         An alternative to checking Accept-Query would be to make a QUERY request, and then
-        -- in case of a 4xx status such as 415 (Unsupported Media Type, <xref target="HTTP" section="12.5.1"/>) response --
-        to inspect the Allow (<xref target="HTTP" section="15.5.16"/>) response field:
+        -- in case of a 4xx status such as 415 (Unsupported Media Type, <xref target="HTTP" section="15.5.16"/>) response --
+        to inspect the Accept (<xref target="HTTP" section="12.5.1"/>) response field:
       </t>
 <artwork type="http-message">
 HTTP/1.1 415 Unsupported Media Type
@@ -661,7 +662,7 @@ Accept: application/x-www-form-urlencoded, application/sql
 
     <section title="Content-Location, Location, and Indirect Responses" anchor="example.content-location.location.indirect">
       <t>
-        The Content-Location and Location response fields in success responses
+        As described in <xref target="location"/>, the Content-Location and Location response fields in success responses
         (2xx, <xref target="HTTP" section="15.3"/>) provide a way to identify alternate resources
         that will respond to GET requests, either for the received result of the request, or for future
         requests to perform the same operation. Going back to the example from <xref target="example.simple"/>:
@@ -776,7 +777,7 @@ If-None-Match: "42-1"
 
       <section title="Indirect Responses" anchor="example.indirect">
         <t>
-          Servers can send "indirect" responses using the status code 303 (See Other,
+          Servers can send "indirect" responses (<xref target="redirection"/>) using the status code 303 (See Other,
           <xref target="HTTP" section="15.4.4"/>).
         </t>
         <t>
@@ -1023,6 +1024,10 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <section title="Since draft-ietf-httpbis-safe-method-w-body-10" anchor="changes.since.10">
 <ul>
   <li>Editorial nits (<eref target="https://github.com/httpwg/http-extensions/pull/3080"/>, ack martinthomson)</li>
+  <li>Fix references in <xref target="example.discovery.formats"/> (<eref target="https://github.com/httpwg/http-extensions/pull/3090"/>, ack Rahul Gupta)</li>
+  <li>Update James' affiliation (<eref target="https://github.com/httpwg/http-extensions/pull/3094"/>)</li>
+  <li>Review references to HTTP  (<eref target="https://github.com/httpwg/http-extensions/pull/3097"/>)</li>
+  <li>Address most Rahul Gupta's additional feedback (<eref target="https://github.com/httpwg/http-extensions/pull/3101"/>)</li>
 </ul>
 </section>
 </section>
