@@ -354,11 +354,11 @@ q=foo&amp;limit=10&amp;sort=-published
       Accept-Query contains a list of media ranges (<xref target="HTTP" section="12.5.1"/>)
       using "Structured Fields" syntax (<xref target="STRUCTURED-FIELDS"/>).
       Media ranges are represented by a List Structured Header Field of either Tokens or
-      Strings, containing the media range value without parameters. Parameters,
-      if any, are mapped to Parameters of type String.
+      Strings, containing the media range value without parameters.
     </t>
     <t>
-      The choice of Token vs. String is semantically insignificant. That is,
+      Media type parameters, if any, are mapped to Structured Field Parameters of type
+      String or Token. The choice of Token vs. String is semantically insignificant. That is,
       recipients &MAY; convert Tokens to Strings, but &MUST-NOT; process them
       differently based on the received type.
     </t>
@@ -373,9 +373,6 @@ q=foo&amp;limit=10&amp;sort=-published
     </t>
     <t>
       The order of types listed in the field value is not significant.
-    </t>
-    <t>
-      The only allowed formats for parameters are String or Token.
     </t>
     <t>
       The value of the Accept-Query field applies to every URI on the server that shares the same path; in
