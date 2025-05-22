@@ -838,6 +838,8 @@ To **Remove Excess Cookies for a Host** given a host _host_:
 
         1. Append _cookie_ to _excessHostCookies_.
 
+1. Return _excessHostCookies_.
+
 ### Remove Global Excess Cookies
 
 To **Remove Global Excess Cookies**:
@@ -1264,7 +1266,7 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
    host is host-equal to _cookie_'s host, host-only is _cookie_'s host-only, and path is path-equal to _cookie_'s path:
 
     1. If _httpOnlyAllowed_ is false and _oldCookie_'s http-only is true,
-       then retur null.
+       then return null.
 
     1. If _cookie_'s secure flag is equal to _oldCookie_'s secure flag, _cookie_'s same-site is equal to _oldCookie_'s
        same-site, and _cookie_'s expiry-time is equal to _oldCookie_'s expiry-time, then return null.
@@ -1301,7 +1303,7 @@ To **Garbage Collect Cookies** given a host _host_:
 
 1. Let _excessGlobalCookies_ be the result of running Remove Global Excess Cookies.
 
-1. Let _removedCookies_ be an empty list.
+1. Let _removedCookies_ be « ».
 
 1. For each _cookieList_ of « _expiredCookies_, _excessHostCookies_, _excessGlobalCookies_ », do the following:
 
@@ -1419,7 +1421,7 @@ SHOULD be processed as follows:
    _isSecure_, _host_, _path_, _httpOnlyAllowed_, _allowNonHostOnlyCookieForPublicSuffix_, and
    _sameSiteStrictOrLaxAllowed_.
 
-1. If _cookie_ is null then return.
+1. If _cookie_ is null, then return.
 
 1. Run Garbage Collect Cookies given _cookie_'s host.
 
