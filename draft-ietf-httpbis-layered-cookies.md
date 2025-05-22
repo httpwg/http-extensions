@@ -793,11 +793,16 @@ A cookie is **expired** if its expiry-time is non-null and its expiry-time is in
 
 ## Cookie Store Eviction {#cookie-store-eviction}
 
-The user agent SHOULD evict all expired cookies from its cookie store if, at any
-time, an expired cookie exists in the cookie store.
 
-When "the current session is over" (as defined by the user agent), the user
-agent MUST remove from the cookie store all cookies whose expiry-time is null.
+### Remove Expired Cookies
+
+1. Let _expiredCookies_ be a list of references to all expired cookies in the user agent's cookie store.
+
+1. For each _cookie_ of _expiredCookies_:
+
+    1.  Remove _cookie_ from the user agent's cookie store.
+
+1. Return _expiredCookies_.
 
 
 ### Remove Excess Cookies for a Host
@@ -839,6 +844,7 @@ To **Remove Excess Cookies for a Host** given a host _host_:
         1. Append _cookie_ to _excessHostCookies_.
 
 1. Return _excessHostCookies_.
+
 
 ### Remove Global Excess Cookies
 
@@ -1282,17 +1288,6 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
 1. Return _cookie_.
 
 
-### Remove Expired Cookies
-
-1. Let _expiredCookies_ be a list of references to all expired cookies in the user agent's cookie store.
-
-1. For each _cookie_ of _expiredCookies_:
-
-    1.  Remove _cookie_ from the user agent's cookie store.
-
-1. Return _expiredCookies_
-
-
 ### Garbage Collect Cookies
 
 To **Garbage Collect Cookies** given a host _host_:
@@ -1458,6 +1453,14 @@ header field be sent in requests. This is no longer a requirement. While this
 specification requires that a single cookie-string be produced, some user agents
 may split that string across multiple `Cookie` header fields. For examples, see
 {{Section 8.2.3 of RFC9113}} and {{Section 4.2.1 of RFC9114}}.
+
+### Cookie Store Eviction for Non-Browser User Agents
+
+The user agent SHOULD evict all expired cookies from its cookie store if, at any
+time, an expired cookie exists in the cookie store, by calling Remove Expired Cookies.
+
+When "the current session is over" (as defined by the user agent), the user
+agent MUST remove from the cookie store all cookies whose expiry-time is null.
 
 ## Requirements Specific to Browser User Agents
 
