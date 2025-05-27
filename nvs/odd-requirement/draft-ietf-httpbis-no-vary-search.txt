@@ -573,10 +573,14 @@ Table of Contents
       |  Caches aren't required to reuse stored responses, generally.
       |  However, the above expressly empowers caches to, if it is
       |  advantageous for performance or other reasons, search a smaller
-      |  number of stored responses.  Such a cache might take steps like
-      |  the following to identify a stored response in a performant
-      |  way, before checking the other conditions in Section 4 of
-      |  [HTTP-CACHING]:
+      |  number of stored responses.
+      |  
+      |  That is, because caches might store more than one response for
+      |  a given pathname, they need a way to efficiently look up the
+      |  No-Vary-Search value without accessing all cached responses.
+      |  Such a cache might take steps like the following to identify a
+      |  stored response in a performant way, before checking the other
+      |  conditions in Section 4 of [HTTP-CACHING]:
       |  
       |     1.  Let exactMatch be cache[presentedTargetURI].  If it is a
       |         stored response that can be reused, return it.

@@ -1864,31 +1864,32 @@ In this case, even URL pairs that might appear the same after running the <a hre
 </li>
       </ul>
 <aside id="section-7-5">
-        <p id="section-7-5.1">Caches aren't required to reuse stored responses, generally. However, the above expressly empowers caches to, if it is advantageous for performance or other reasons, search a smaller number of stored responses. Such a cache might take steps like the following to identify a stored response in a performant way, before checking the other conditions in <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>:<a href="#section-7-5.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-7-5.2">
-<li id="section-7-5.2.1">
-            <p id="section-7-5.2.1.1">Let exactMatch be cache[presentedTargetURI]. If it is a stored response that can be reused, return it.<a href="#section-7-5.2.1.1" class="pilcrow">¶</a></p>
+        <p id="section-7-5.1">Caches aren't required to reuse stored responses, generally. However, the above expressly empowers caches to, if it is advantageous for performance or other reasons, search a smaller number of stored responses.<a href="#section-7-5.1" class="pilcrow">¶</a></p>
+<p id="section-7-5.2">That is, because caches might store more than one response for a given pathname, they need a way to efficiently look up the No-Vary-Search value without accessing all cached responses. Such a cache might take steps like the following to identify a stored response in a performant way, before checking the other conditions in <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>:<a href="#section-7-5.2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-7-5.3">
+<li id="section-7-5.3.1">
+            <p id="section-7-5.3.1.1">Let exactMatch be cache[presentedTargetURI]. If it is a stored response that can be reused, return it.<a href="#section-7-5.3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-5.2.2">
-            <p id="section-7-5.2.2.1">Let targetPath be presentedTargetURI, with query parameters removed.<a href="#section-7-5.2.2.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.2">
+            <p id="section-7-5.3.2.1">Let targetPath be presentedTargetURI, with query parameters removed.<a href="#section-7-5.3.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-5.2.3">
-            <p id="section-7-5.2.3.1">Let lastNVS be mostRecentNVS[targetPath]. If it does not exist, return null.<a href="#section-7-5.2.3.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.3">
+            <p id="section-7-5.3.3.1">Let lastNVS be mostRecentNVS[targetPath]. If it does not exist, return null.<a href="#section-7-5.3.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-5.2.4">
-            <p id="section-7-5.2.4.1">Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order is to be be ignored).<a href="#section-7-5.2.4.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.4">
+            <p id="section-7-5.3.4.1">Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order is to be be ignored).<a href="#section-7-5.3.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-5.2.5">
-            <p id="section-7-5.2.5.1">Let nvsMatch be cache[simplifiedURL]. If it does not exist, return null. (It is assumed that this was written when storing in the cache, in addition to the exact URL.)<a href="#section-7-5.2.5.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.5">
+            <p id="section-7-5.3.5.1">Let nvsMatch be cache[simplifiedURL]. If it does not exist, return null. (It is assumed that this was written when storing in the cache, in addition to the exact URL.)<a href="#section-7-5.3.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-5.2.6">
-            <p id="section-7-5.2.6.1">Let searchVariance be obtained (<a href="#obtain-a-url-search-variance" class="auto internal xref">Section 5.2</a>) from nvsMatch.<a href="#section-7-5.2.6.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.6">
+            <p id="section-7-5.3.6.1">Let searchVariance be obtained (<a href="#obtain-a-url-search-variance" class="auto internal xref">Section 5.2</a>) from nvsMatch.<a href="#section-7-5.3.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-5.2.7">
-            <p id="section-7-5.2.7.1">If nvsMatch's target URI and presentedTargetURI are not equivalent modulo search variance (<a href="#comparing" class="auto internal xref">Section 6</a>) given searchVariance, then return null.<a href="#section-7-5.2.7.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.7">
+            <p id="section-7-5.3.7.1">If nvsMatch's target URI and presentedTargetURI are not equivalent modulo search variance (<a href="#comparing" class="auto internal xref">Section 6</a>) given searchVariance, then return null.<a href="#section-7-5.3.7.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-5.2.8">
-            <p id="section-7-5.2.8.1">If nvsMatch is a stored response that can be reused, return it. Otherwise, return null.<a href="#section-7-5.2.8.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.8">
+            <p id="section-7-5.3.8.1">If nvsMatch is a stored response that can be reused, return it. Otherwise, return null.<a href="#section-7-5.3.8.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 </aside>
