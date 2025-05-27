@@ -1050,7 +1050,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Denicola &amp; Roman</td>
-<td class="center">Expires 20 November 2025</td>
+<td class="center">Expires 28 November 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1063,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-no-vary-search-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-05-19" class="published">19 May 2025</time>
+<time datetime="2025-05-27" class="published">27 May 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-11-20">20 November 2025</time></dd>
+<dd class="expires"><time datetime="2025-11-28">28 November 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1122,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 28 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1851,49 +1851,49 @@ In this case, even URL pairs that might appear the same after running the <a hre
           </ul>
 </li>
       </ul>
-<p id="section-7-3">Servers <span class="bcp14">SHOULD</span> send no more than one distinct non-empty value for the <code>No-Vary-Search</code> field in response to requests for a given pathname.<a href="#section-7-3" class="pilcrow">¶</a></p>
-<p id="section-7-4">Cache implementations <span class="bcp14">MAY</span> fail to reuse a stored response whose target URI matches <em>only</em> modulo URL search variance, if the cache has more recently stored a response which:<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-3">Cache implementations <span class="bcp14">MAY</span> fail to reuse a stored response whose target URI matches <em>only</em> modulo URL search variance, if the cache has more recently stored a response which:<a href="#section-7-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-5.1">
-          <p id="section-7-5.1.1">has a target URI which is equal to the presented target URI, excluding the query, and<a href="#section-7-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-4.1">
+          <p id="section-7-4.1.1">has a target URI which is equal to the presented target URI, excluding the query, and<a href="#section-7-4.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-7-5.2">
-          <p id="section-7-5.2.1">has a non-empty value for the <code>No-Vary-Search</code> field, and<a href="#section-7-5.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-4.2">
+          <p id="section-7-4.2.1">has a non-empty value for the <code>No-Vary-Search</code> field, and<a href="#section-7-4.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-7-5.3">
-          <p id="section-7-5.3.1">has a <code>No-Vary-Search</code> field value different from the stored response being considered for reuse.<a href="#section-7-5.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-4.3">
+          <p id="section-7-4.3.1">has a <code>No-Vary-Search</code> field value different from the stored response being considered for reuse.<a href="#section-7-4.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<aside id="section-7-6">
-        <p id="section-7-6.1">Caches aren't required to reuse stored responses, generally. However, the above expressly empowers caches to, if it is advantageous for performance or other reasons, search a smaller number of stored responses. Such a cache might take steps like the following to identify a stored response (before checking the other conditions in <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>):<a href="#section-7-6.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-7-6.2">
-<li id="section-7-6.2.1">
-            <p id="section-7-6.2.1.1">Let exactMatch be cache[presentedTargetURI]. If it is a stored response that can be reused, return it.<a href="#section-7-6.2.1.1" class="pilcrow">¶</a></p>
+<aside id="section-7-5">
+        <p id="section-7-5.1">Caches aren't required to reuse stored responses, generally. However, the above expressly empowers caches to, if it is advantageous for performance or other reasons, search a smaller number of stored responses.<a href="#section-7-5.1" class="pilcrow">¶</a></p>
+<p id="section-7-5.2">That is, because caches might store more than one response for a given pathname, they need a way to efficiently look up the No-Vary-Search value without accessing all cached responses. Such a cache might take steps like the following to identify a stored response in a performant way, before checking the other conditions in <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>:<a href="#section-7-5.2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-7-5.3">
+<li id="section-7-5.3.1">
+            <p id="section-7-5.3.1.1">Let exactMatch be cache[presentedTargetURI]. If it is a stored response that can be reused, return it.<a href="#section-7-5.3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-6.2.2">
-            <p id="section-7-6.2.2.1">Let targetPath be presentedTargetURI, with query parameters removed.<a href="#section-7-6.2.2.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.2">
+            <p id="section-7-5.3.2.1">Let targetPath be presentedTargetURI, with query parameters removed.<a href="#section-7-5.3.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-6.2.3">
-            <p id="section-7-6.2.3.1">Let lastNVS be mostRecentNVS[targetPath]. If it does not exist, return null.<a href="#section-7-6.2.3.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.3">
+            <p id="section-7-5.3.3.1">Let lastNVS be mostRecentNVS[targetPath]. If it does not exist, return null.<a href="#section-7-5.3.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-6.2.4">
-            <p id="section-7-6.2.4.1">Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order is to be be ignored).<a href="#section-7-6.2.4.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.4">
+            <p id="section-7-5.3.4.1">Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order is to be be ignored).<a href="#section-7-5.3.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-6.2.5">
-            <p id="section-7-6.2.5.1">Let nvsMatch be cache[simplifiedURL]. If it does not exist, return null. (It is assumed that this was written when storing in the cache, in addition to the exact URL.)<a href="#section-7-6.2.5.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.5">
+            <p id="section-7-5.3.5.1">Let nvsMatch be cache[simplifiedURL]. If it does not exist, return null. (It is assumed that this was written when storing in the cache, in addition to the exact URL.)<a href="#section-7-5.3.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-6.2.6">
-            <p id="section-7-6.2.6.1">Let searchVariance be obtained (<a href="#obtain-a-url-search-variance" class="auto internal xref">Section 5.2</a>) from nvsMatch.<a href="#section-7-6.2.6.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.6">
+            <p id="section-7-5.3.6.1">Let searchVariance be obtained (<a href="#obtain-a-url-search-variance" class="auto internal xref">Section 5.2</a>) from nvsMatch.<a href="#section-7-5.3.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-6.2.7">
-            <p id="section-7-6.2.7.1">If nvsMatch's target URI and presentedTargetURI are not equivalent modulo search variance (<a href="#comparing" class="auto internal xref">Section 6</a>) given searchVariance, then return null.<a href="#section-7-6.2.7.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.7">
+            <p id="section-7-5.3.7.1">If nvsMatch's target URI and presentedTargetURI are not equivalent modulo search variance (<a href="#comparing" class="auto internal xref">Section 6</a>) given searchVariance, then return null.<a href="#section-7-5.3.7.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7-6.2.8">
-            <p id="section-7-6.2.8.1">If nvsMatch is a stored response that can be reused, return it. Otherwise, return null.<a href="#section-7-6.2.8.1" class="pilcrow">¶</a></p>
+          <li id="section-7-5.3.8">
+            <p id="section-7-5.3.8.1">If nvsMatch is a stored response that can be reused, return it. Otherwise, return null.<a href="#section-7-5.3.8.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-7-6.3">Such implementations might "miss" some stored responses that could otherwise have been reused. It is therefore useful for servers to avoid sending different values for the <code>No-Vary-Search</code> field when possible.<a href="#section-7-6.3" class="pilcrow">¶</a></p>
 </aside>
+<p id="section-7-6">To aid cache implementation efficiency, servers <span class="bcp14">SHOULD NOT</span> send different non-empty values for the <code>No-Vary-Search</code> field in response to requests for a given pathname over time, unless there is a need to update how they handle the query component. Doing so would cause cache implementations that use a strategy like the above to miss some stored responses that could otherwise have been reused.<a href="#section-7-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
