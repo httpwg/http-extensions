@@ -1,6 +1,6 @@
 ---
-title: No-Vary-Search
-abbrev:
+title: The No-Vary-Search HTTP Response Header Field
+abbrev: No-Vary-Search
 category: std
 
 docname: draft-ietf-httpbis-no-vary-search-latest
@@ -105,7 +105,7 @@ informative:
 
 --- abstract
 
-This specification defines a proposed HTTP header field for changing how URL search parameters impact caching.
+This specification defines a proposed HTTP response header field for changing how URL search parameters impact caching.
 
 --- middle
 
