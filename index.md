@@ -42,7 +42,7 @@ View [saved issues](issues.html), or the latest GitHub [issues](https://github.c
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
-| [No-Vary-Search](nvs/odd-requirement/draft-ietf-httpbis-no-vary-search.html "The No-Vary-Search HTTP Response Header Field (HTML)") | [plain text](nvs/odd-requirement/draft-ietf-httpbis-no-vary-search.txt "The No-Vary-Search HTTP Response Header Field (Text)") | same as main |
+| [No-Vary-Search](nvs/odd-requirement/draft-ietf-httpbis-no-vary-search.html "The No-Vary-Search HTTP Response Header Field (HTML)") | [plain text](nvs/odd-requirement/draft-ietf-httpbis-no-vary-search.txt "The No-Vary-Search HTTP Response Header Field (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-no-vary-search.txt&url_2=https://httpwg.github.io/http-extensions/nvs/odd-requirement/draft-ietf-httpbis-no-vary-search.txt) |
 | [Cookies](nvs/odd-requirement/draft-ietf-httpbis-layered-cookies.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](nvs/odd-requirement/draft-ietf-httpbis-layered-cookies.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
 | [Resumable Uploads](nvs/odd-requirement/draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](nvs/odd-requirement/draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | same as main |
 | [Compression Dictionary Transport](nvs/odd-requirement/draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](nvs/odd-requirement/draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | same as main |

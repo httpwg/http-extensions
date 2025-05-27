@@ -8,13 +8,13 @@ Intended status: Standards Track                              Google LLC
 Expires: 28 November 2025                                    27 May 2025
 
 
-                             No-Vary-Search
+             The No-Vary-Search HTTP Response Header Field
                 draft-ietf-httpbis-no-vary-search-latest
 
 Abstract
 
-   This specification defines a proposed HTTP header field for changing
-   how URL search parameters impact caching.
+   This specification defines a proposed HTTP response header field for
+   changing how URL search parameters impact caching.
 
 About This Document
 
