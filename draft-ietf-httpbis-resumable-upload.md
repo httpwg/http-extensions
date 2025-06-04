@@ -747,11 +747,11 @@ If the client knows the integrity digest of the content from an upload creation 
 
 # Responses to Uploads
 
-Conventional HTTP uploads often include information about the uploaded representation in the corresponding response header and/or content. The same is possible for resumable uploads, in that the server can include such information in the response to the request that transferred the remaining representation data and included the `Upload-Complete: ?1` header field. Clients can regard this response as the final response for the entire upload, as detailed in {{upload-creation}} and {{upload-appending}}.
+HTTP uploads often not only transfer a representation to the server but also send back information to the client. For resumable uploads, this works similar to conventional HTTP uploads. The server can include information in the response to the request, which transferred the remaining representation data and included the `Upload-Complete: ?1` header field. Clients can regard this response as the final response for the entire upload, as detailed in {{upload-creation}} and {{upload-appending}}.
 
-However, due to network interruptions, the upload resource might receive the remaining representation data, complete the upload, and send a response to the client, which then might not receive the response due to the interruption. The client can learn that the upload is complete by retrieving its state ({{offset-retrieving}}), but resumable uploads as defined in this document do not offer the ability to recover the missed response.
+However, due to network interruptions, the upload resource might receive the remaining representation data, complete the upload, and send a response to the client, which then does not receive the response. The client can learn that the upload is complete by retrieving its state ({{offset-retrieving}}), but resumable uploads as defined in this document do not offer functionality to recover the missed response.
 
-To address this issue, the server can choose to send the corresponding information in header fields, which are then included in the final response, once all representation data has been transferred, as well as responses when the client fetches the upload state via a HEAD request ({{offset-retrieving}}). This way, the client can retrieve the information from the header even if it failed to receive the final response. In addition, if the server responds with a representation and wants to make it available for clients for later retrieval as well, it can include the `Content-Location` header field in the final response and responses when fetching the upload state. The client can then retrieve the representation from the provided URI, even if it failed to receive the final response.
+To address this issue, the server can send the desired information in header fields, which are included in both the final response and responses when the client fetches the upload state via a HEAD request ({{offset-retrieving}}). This way, the client can retrieve the information from the header even if it failed to receive the final response. If the piece of information is too large for header fields, the server could make it available as a separate resource for retrieval and point the client to its URI in an appropriate header field.
 
 # Upload Strategies
 
@@ -944,6 +944,7 @@ Reference:
 * Remove requirement for 204 status code for DELETE responses.
 * Increase the draft interop version.
 * Add section about 104 status code.
+* Rephrase recommendation for sending information back to client.
 
 ## Since draft-ietf-httpbis-resumable-upload-07
 {:numbered="false"}
