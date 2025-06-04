@@ -21,12 +21,12 @@
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
-    lxml 5.3.0
+    lxml 5.3.1
     platformdirs 4.3.8
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.3
-    setuptools 70.3.0
+    setuptools 80.9.0
     wcwidth 0.2.13
 -->
 <link href="draft-ietf-httpbis-resumable-upload.xml" rel="alternate" type="application/rfc+xml">
@@ -1046,11 +1046,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Resumable Uploads</td>
-<td class="right">May 2025</td>
+<td class="right">June 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Kleidl, et al.</td>
-<td class="center">Expires 28 November 2025</td>
+<td class="center">Expires 6 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1063,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-resumable-upload-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-05-27" class="published">27 May 2025</time>
+<time datetime="2025-06-04" class="published">4 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-11-28">28 November 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-06">6 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1128,7 +1128,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 28 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 6 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1293,7 +1293,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-subsequent-resources" class="internal xref">Subsequent Resources</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-responses-to-uploads" class="internal xref">Responses to Uploads</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
             <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-upload-strategies" class="internal xref">Upload Strategies</a></p>
@@ -2377,12 +2377,14 @@ If an upload is spread across multiple requests, data integrity issues can be fo
 </div>
 </section>
 </div>
-<div id="subsequent-resources">
+<div id="responses-to-uploads">
 <section id="section-11">
-      <h2 id="name-subsequent-resources">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-subsequent-resources" class="section-name selfRef">Subsequent Resources</a>
+      <h2 id="name-responses-to-uploads">
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-responses-to-uploads" class="section-name selfRef">Responses to Uploads</a>
       </h2>
-<p id="section-11-1">The server might process the uploaded representation data and make its results available in another resource during or after the upload. This subsequent resource is different from the upload resource created by the upload creation request (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>). The subsequent resource does not handle the upload process itself, but instead facilitates further interaction with the uploaded representation data. The server can indicate the location of this subsequent resource by including the <code>Content-Location</code> header field in the interim or final responses generated while creating (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>), appending to (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>), or retrieving the offset (<a href="#offset-retrieving" class="auto internal xref">Section 4.3</a>) of an upload. For example, a subsequent resource could allow the client to fetch information extracted from the uploaded representation data.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<p id="section-11-1">HTTP uploads often not only transfer a representation to the server but also send back information to the client. For resumable uploads, this works similar to conventional HTTP uploads. The server can include information in the response to the request, which transferred the remaining representation data and included the <code>Upload-Complete: ?1</code> header field. Clients can regard this response as the final response for the entire upload, as detailed in <a href="#upload-creation" class="auto internal xref">Section 4.2</a> and <a href="#upload-appending" class="auto internal xref">Section 4.4</a>.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<p id="section-11-2">However, due to network interruptions, the upload resource might receive the remaining representation data, complete the upload, and send a response to the client, which then does not receive the response. The client can learn that the upload is complete by retrieving its state (<a href="#offset-retrieving" class="auto internal xref">Section 4.3</a>), but resumable uploads as defined in this document do not offer functionality to recover the missed response.<a href="#section-11-2" class="pilcrow">¶</a></p>
+<p id="section-11-3">To address this issue, the server can send the desired information in header fields, which are included in both the final response and responses when the client fetches the upload state via a HEAD request (<a href="#offset-retrieving" class="auto internal xref">Section 4.3</a>). This way, the client can retrieve the information from the header even if it failed to receive the final response. If the piece of information is too large for header fields, the server could make it available as a separate resource for retrieval and point the client to its URI in an appropriate header field.<a href="#section-11-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="upload-strategies">
@@ -2806,6 +2808,9 @@ If an upload is spread across multiple requests, data integrity issues can be fo
 </li>
           <li class="normal" id="appendix-A.1-1.8">
             <p id="appendix-A.1-1.8.1">Add section about 104 status code.<a href="#appendix-A.1-1.8.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.9">
+            <p id="appendix-A.1-1.9.1">Rephrase recommendation for sending information back to client.<a href="#appendix-A.1-1.9.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
