@@ -745,9 +745,13 @@ Content digests help verify the integrity of the content in an individual reques
 
 If the client knows the integrity digest of the content from an upload creation ({{upload-creation}}) or upload appending ({{upload-appending}}) request, it can include the `Content-Digest` header field in the request. Once the content has been received, the server can compute the integrity digest of the received content and compare it to the provided digest. If the digests don't match the server SHOULD consider the transfer failed, not append the content to the upload resource, and signal the failure to the client. This way, the integrity of an individual request can be protected.
 
-# Subsequent Resources
+# Responses to Uploads
 
-The server might process the uploaded representation data and make its results available in another resource during or after the upload. This subsequent resource is different from the upload resource created by the upload creation request ({{upload-creation}}). The subsequent resource does not handle the upload process itself, but instead facilitates further interaction with the uploaded representation data. The server can indicate the location of this subsequent resource by including the `Content-Location` header field in the interim or final responses generated while creating ({{upload-creation}}), appending to ({{upload-appending}}), or retrieving the offset ({{offset-retrieving}}) of an upload. For example, a subsequent resource could allow the client to fetch information extracted from the uploaded representation data.
+HTTP uploads often not only transfer a representation to the server but also send back information to the client. For resumable uploads, this works similar to conventional HTTP uploads. The server can include information in the response to the request, which transferred the remaining representation data and included the `Upload-Complete: ?1` header field. Clients can regard this response as the final response for the entire upload, as detailed in {{upload-creation}} and {{upload-appending}}.
+
+However, due to network interruptions, the upload resource might receive the remaining representation data, complete the upload, and send a response to the client, which then does not receive the response. The client can learn that the upload is complete by retrieving its state ({{offset-retrieving}}), but resumable uploads as defined in this document do not offer functionality to recover the missed response.
+
+To address this issue, the server can send the desired information in header fields, which are included in both the final response and responses when the client fetches the upload state via a HEAD request ({{offset-retrieving}}). This way, the client can retrieve the information from the header even if it failed to receive the final response. If the piece of information is too large for header fields, the server could make it available as a separate resource for retrieval and point the client to its URI in an appropriate header field.
 
 # Upload Strategies
 
@@ -940,6 +944,7 @@ Reference:
 * Remove requirement for 204 status code for DELETE responses.
 * Increase the draft interop version.
 * Add section about 104 status code.
+* Rephrase recommendation for sending information back to client.
 
 ## Since draft-ietf-httpbis-resumable-upload-07
 {:numbered="false"}
