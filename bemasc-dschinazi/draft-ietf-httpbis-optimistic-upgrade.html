@@ -1362,7 +1362,7 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
 <p id="section-5.3-3">However, in HTTP/1.1, this "proxying request" is an HTTP Upgrade request.  This upgrade is likely to be rejected in certain circumstances, such as when the UDP destination address (which is attacker-controlled) is invalid.  Additionally, the contents of the "connect-udp" protocol stream can include untrusted material (i.e., the UDP packets, which might come from other applications on the client device).  This creates the possibility of Request Smuggling attacks.  To avoid these concerns, this document replaces that text to exclude HTTP/1.1 from any optimistic sending, as follows:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-5.3-4.1">
-            <p id="section-5.3-4.1.1">A client <span class="bcp14">MAY</span> optimistically start sending UDP packets in HTTP Datagrams before receiving the response to its UDP proxying request, but only if the HTTP version in use is HTTP/2 or later. Clients <span class="bcp14">MUST NOT</span> send UDP packets optimistically in HTTP/1.x due to a risk of request smuggling attacks.<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-4.1.1">A client <span class="bcp14">MAY</span> optimistically start sending UDP packets in HTTP Datagrams before receiving the response to its UDP proxying request, but only if the HTTP version in use is HTTP/2 or later. Clients <span class="bcp14">MUST NOT</span> send UDP packets optimistically in HTTP/1.x due to the risk of request smuggling attacks.<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>

@@ -301,7 +301,7 @@ Table of Contents
       Datagrams before receiving the response to its UDP proxying
       request, but only if the HTTP version in use is HTTP/2 or later.
       Clients MUST NOT send UDP packets optimistically in HTTP/1.x due
-      to a risk of request smuggling attacks.
+      to the risk of request smuggling attacks.
 
 5.4.  "connect-ip"
 
