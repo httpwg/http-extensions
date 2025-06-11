@@ -40,9 +40,9 @@ In HTTP/1.1, the client can request a change to a new protocol on the existing c
 
 # Background {#background}
 
-In HTTP/1.1, a single connection is often used for many requests, one after another.  After each request, the connection is returned to its initial state, ready to send more HTTP requests.  However, HTTP/1.1 also contains two mechanisms that allow the client to change the protocol used for the remainder of the connection.
+In HTTP/1.1 and later, a single connection can be used for many requests.  In HTTP/2 and HTTP/3, these requests can be multiplexed, as each request is distinguished explicitly by its stream ID.  However, in HTTP/1.1, requests are strictly sequential, and each new request is distinguished implicitly by the closure of the preceding request.
 
-One such mechanism is the "Upgrade" request header field ({{!RFC9110, Section 7.8}}), which indicates that the client would like to use this connection for a protocol other than HTTP/1.1.  The server replies with a "101 (Switching Protocols)" status code if it accepts the protocol change.
+HTTP/1.1 is also the only version of HTTP that allows the client to change the protocol used for the remainder of the connection.  There are two mechanisms to request such a protocol transition.  One mechanism is the "Upgrade" request header field ({{!RFC9110, Section 7.8}}), which indicates that the client would like to use this connection for a protocol other than HTTP/1.1.  The server replies with a "101 (Switching Protocols)" status code if it accepts the protocol change.
 
 The other mechanism is the HTTP "CONNECT" method.  This method indicates that the client wishes to establish a TCP connection to the specified host and port.  The server replies with a 2xx (Successful) response to indicate that the request was accepted and a TCP connection was established.  After this point, the TCP connection is acting as a TCP tunnel, not an HTTP/1.1 connection.
 
@@ -122,21 +122,13 @@ Thus, optimistic use of HTTP Upgrade is already forbidden in the WebSocket proto
 
 > A client MAY optimistically start sending UDP packets in HTTP Datagrams before receiving the response to its UDP proxying request.
 
-However, in HTTP/1.1, this "proxying request" is an HTTP Upgrade request.  This upgrade is likely to be rejected in certain circumstances, such as when the UDP destination address (which is attacker-controlled) is invalid.  Additionally, the contents of the "connect-udp" protocol stream can include untrusted material (i.e., the UDP packets, which might come from other applications on the client device).  This creates the possibility of Request Smuggling attacks.  To avoid these concerns, this document updates that text to exclude HTTP/1.1 from any optimistic sending, as follows:
+However, in HTTP/1.1, this "proxying request" is an HTTP Upgrade request.  This upgrade is likely to be rejected in certain circumstances, such as when the UDP destination address (which is attacker-controlled) is invalid.  Additionally, the contents of the "connect-udp" protocol stream can include untrusted material (i.e., the UDP packets, which might come from other applications on the client device).  This creates the possibility of Request Smuggling attacks.  To avoid these concerns, this document replaces that text to exclude HTTP/1.1 from any optimistic sending, as follows:
 
-> When using HTTP/2 or later, a client MAY optimistically ...
-
-{{Section 3.3 of !RFC9298}} describes the requirement for a successful proxy setup response, including upgrading to the "connect-udp" protocol, and says:
-
-> If any of these requirements are not met, the client MUST treat this proxying attempt as failed and abort the connection.
-
-However, this could be interpreted as an instruction to abort the underlying TLS and TCP connections in the event of an unsuccessful response such as "407 ("Proxy Authentication Required)".  To avoid an unnecessary delay in this case, this text is hereby updated as follows:
-
-> If any of these requirements are not met, the client MUST treat this proxying attempt as failed.  If the "Upgrade" response header field is absent, the client MAY reuse the connection for further HTTP/1.1 requests; otherwise it MUST abort the underlying connection.
+> A client MAY optimistically start sending UDP packets in HTTP Datagrams before receiving the response to its UDP proxying request, but only if the HTTP version in use is HTTP/2 or later. Clients MUST NOT send UDP packets optimistically in HTTP/1.x due to the risk of request smuggling attacks.
 
 ## "connect-ip"
 
-The "connect-ip" Upgrade Token is defined in {{!RFC9484}}.  {{Section 11 of !RFC9484}} forbids clients from using optimistic upgrade, avoiding this issue.
+The "connect-ip" Upgrade Token is defined in {{!RFC9484}}.  {{Section 11 of !RFC9484}} forbids clients from sending packets optimistically in HTTP/1.1, avoiding this issue.
 
 # Guidance for Future Upgrade Tokens
 
