@@ -335,7 +335,7 @@ IF APPROVED, IANA is requested to add the following entry to the "HTTP Capsule T
 | (TBD) | DATA         | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
 | (TBD) | FINAL_DATA   | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
 
-For this draft version of the protocol, the Capsule Type values `0x2028d7ee` and `0x2028d7ef` shall be used provisionally for testing, under the names "DATA-07" and "FINAL_DATA-07".
+For this draft version of the protocol, the Capsule Type values `0x2028d7f0` and `0x2028d7f1` shall be used provisionally for testing, under the names "DATA-08" and "FINAL_DATA-08".
 
 --- back
 
