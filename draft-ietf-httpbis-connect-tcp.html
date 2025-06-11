@@ -1194,9 +1194,22 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-resource-exhaustion-attacks" class="internal xref">Resource Exhaustion attacks</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-operational-considerations" class="internal xref">Operational Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-avoiding-http-11" class="internal xref">Avoiding HTTP/1.1</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-gateway-compatibility" class="internal xref">Gateway Compatibility</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
@@ -1284,14 +1297,17 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-specification" class="section-name selfRef">Specification</a>
       </h2>
 <p id="section-3-1">A template-driven TCP transport proxy for HTTP is identified by a URI Template <span>[<a href="#RFC6570" class="cite xref">RFC6570</a>]</span> containing variables named "target_host" and "target_port".  This URI Template and its variable values <span class="bcp14">MUST</span> meet all the same requirements as for UDP proxying (<span>[<a href="#RFC9298" class="cite xref">RFC9298</a>], <a href="https://rfc-editor.org/rfc/rfc9298#section-2" class="relref">Section 2</a></span>), and are subject to the same validation rules.  The client <span class="bcp14">MUST</span> substitute the destination host and port number into this template to produce the request URI.  The derived URI serves as the destination of a Capsule Protocol connection using the Upgrade Token "connect-tcp" (see registration in <a href="#new-upgrade-token" class="auto internal xref">Section 8.1</a>).<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">When using "connect-tcp", TCP payload data is sent in the payload of a new Capsule Type named DATA (see registration in <a href="#data-capsule" class="auto internal xref">Section 8.3</a>).  The ordered concatenation of DATA capsule payloads represents the TCP payload data.<a href="#section-3-2" class="pilcrow">¶</a></p>
-<p id="section-3-3">An intermediary <span class="bcp14">MAY</span> merge and split successive DATA capsules, subject to the following requirements:<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-2">When using "connect-tcp", TCP payload data is sent in the payload of new Capsule Types named DATA and FINAL_DATA (see registrations in <a href="#data-capsule" class="auto internal xref">Section 8.3</a>).  The ordered concatenation of these capsule payloads represents the TCP payload data.  A FINAL_DATA capsule additionally indicates that the sender has closed this stream, semantically equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint <span class="bcp14">MUST NOT</span> send any more DATA or FINAL_DATA capsules on this data stream. (See <a href="#closing-connections" class="auto internal xref">Section 3.4</a> for related requirements.)<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">An intermediary <span class="bcp14">MAY</span> merge and split successive DATA and FINAL_DATA capsules, subject to the following requirements:<a href="#section-3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-4.1">
           <p id="section-3-4.1.1">There are no intervening capsules of other types.<a href="#section-3-4.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-4.2">
           <p id="section-3-4.2.1">The order of payload content is preserved.<a href="#section-3-4.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-3-4.3">
+          <p id="section-3-4.3.1">The final emitted capsule uses the same capsule type (DATA or FINAL_DATA) as the final input capsule, and all others use the DATA capsule type.<a href="#section-3-4.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <div id="in-http11">
@@ -1449,18 +1465,315 @@ capsule-protocol = ?1
         <h3 id="name-closing-connections">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-closing-connections" class="section-name selfRef">Closing Connections</a>
         </h3>
-<p id="section-3.4-1">In each HTTP version, any requirements related to closing connections in Classic HTTP CONNECT also apply to "connect-tcp", with the following modifications:<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-1">Connection termination is essentially symmetrical for proxies and their clients.  In this section, we use the term "endpoint" to describe an implementation of this specification in either role.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-2">When closing connections, endpoints are subject to the following requirements:<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.4-2.1">
-            <p id="section-3.4-2.1.1">In HTTP/1.1, endpoints <span class="bcp14">SHOULD</span> close the connection in an error state to indicate receipt of a TCP connection error (e.g., a TCP RST or timeout).  Acceptable error states include sending an incomplete DATA capsule (as defined in <span><a href="https://rfc-editor.org/rfc/rfc9297#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9297" class="cite xref">RFC9297</a>]</span>), a TLS Error Alert (<span>[<a href="#RFC8446" class="cite xref">RFC8446</a>], <a href="https://rfc-editor.org/rfc/rfc8446#section-6.2" class="relref">Section 6.2</a></span>), or a TCP RST (if TLS is not in use).  When a connection is terminated in an error state, the receiving endpoint <span class="bcp14">SHOULD</span> send a TCP RST if the underlying TCP implementation permits it.<a href="#section-3.4-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.4-3.1">
+            <p id="section-3.4-3.1.1">When an endpoint receives a valid TCP FIN, it <span class="bcp14">MUST</span> send a FINAL_DATA capsule.<a href="#section-3.4-3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.4-2.2">
-            <p id="section-3.4-2.2.1">In HTTP/2 and HTTP/3, senders <span class="bcp14">MAY</span> use an incomplete DATA capsule to indicate a TCP connection error, instead of (or in addition to) the signals defined for TCP connection errors in Classic HTTP CONNECT.  Recipients <span class="bcp14">MUST</span> recognize any incomplete capsule as a TCP connection error.<a href="#section-3.4-2.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-3.4-3.2">
+            <p id="section-3.4-3.2.1">When an endpoint receives a valid FINAL_DATA capsule, it <span class="bcp14">MUST</span> send a TCP FIN.<a href="#section-3.4-3.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.4-2.3">
-            <p id="section-3.4-2.3.1">Intermediaries <span class="bcp14">MUST</span> propagate connection shutdown errors, including when translating between different HTTP versions.<a href="#section-3.4-2.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-3.4-3.3">
+            <p id="section-3.4-3.3.1">When a TCP connection reaches the TIME-WAIT or CLOSED state, the associated endpoint <span class="bcp14">MUST</span> close its send stream.<a href="#section-3.4-3.3.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.4-3.3.2.1">
+                <p id="section-3.4-3.3.2.1.1">If the connection closed gracefully, the endpoint <span class="bcp14">MUST</span> close the send stream gracefully.<a href="#section-3.4-3.3.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.4-3.3.2.2">
+                <p id="section-3.4-3.3.2.2.1">Otherwise, the endpoint <span class="bcp14">SHOULD</span> close the send stream abruptly, using a mechanism appropriate to the HTTP version:<a href="#section-3.4-3.3.2.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.4-3.3.2.2.2.1">
+                    <p id="section-3.4-3.3.2.2.2.1.1">HTTP/3: RESET_STREAM with H3_CONNECT_ERROR<a href="#section-3.4-3.3.2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+                  <li class="normal" id="section-3.4-3.3.2.2.2.2">
+                    <p id="section-3.4-3.3.2.2.2.2.1">HTTP/2: RST_STREAM with CONNECT_ERROR<a href="#section-3.4-3.3.2.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+                  <li class="normal" id="section-3.4-3.3.2.2.2.3">
+                    <p id="section-3.4-3.3.2.2.2.3.1">HTTP/1.1 over TLS: a TLS Error Alert<a href="#section-3.4-3.3.2.2.2.3.1" class="pilcrow">¶</a></p>
+</li>
+                  <li class="normal" id="section-3.4-3.3.2.2.2.4">
+                    <p id="section-3.4-3.3.2.2.2.4.1">HTTP/1.1 (insecure): TCP RST.<a href="#section-3.4-3.3.2.2.2.4.1" class="pilcrow">¶</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-3.4-3.4">
+            <p id="section-3.4-3.4.1">When the receive stream is closed abruptly or without a FINAL_DATA capsule received, the endpoint <span class="bcp14">SHOULD</span> send a TCP RST if the TCP subsystem permits it.<a href="#section-3.4-3.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
+<p id="section-3.4-4">The mandatory behaviors above enable endpoints to detect any truncation of incoming TCP data.  The recommended behaviors propagate any TCP errors through the proxy connection.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
+<span id="name-simple-graceful-termination"></span><figure id="figure-3">
+          <div id="section-3.4-5.1">
+            <div class="alignLeft art-svg artwork" id="section-3.4-5.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="176" width="472" viewBox="0 0 472 176" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,64" fill="none" stroke="black"></path>
+                <path d="M 24,64 L 24,160" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 112,64" fill="none" stroke="black"></path>
+                <path d="M 128,64 L 128,160" fill="none" stroke="black"></path>
+                <path d="M 216,32 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 256,64" fill="none" stroke="black"></path>
+                <path d="M 344,64 L 344,160" fill="none" stroke="black"></path>
+                <path d="M 360,32 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 400,64" fill="none" stroke="black"></path>
+                <path d="M 448,64 L 448,160" fill="none" stroke="black"></path>
+                <path d="M 464,32 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 8,32 L 72,32" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 216,32" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 360,32" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 464,32" fill="none" stroke="black"></path>
+                <path d="M 8,64 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,64 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,64 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,64 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 24,80 L 48,80" fill="none" stroke="black"></path>
+                <path d="M 96,80 L 184,80" fill="none" stroke="black"></path>
+                <path d="M 280,80 L 368,80" fill="none" stroke="black"></path>
+                <path d="M 416,80 L 440,80" fill="none" stroke="black"></path>
+                <path d="M 24,96 L 56,96" fill="none" stroke="black"></path>
+                <path d="M 88,96 L 176,96" fill="none" stroke="black"></path>
+                <path d="M 296,96 L 376,96" fill="none" stroke="black"></path>
+                <path d="M 408,96 L 440,96" fill="none" stroke="black"></path>
+                <path d="M 32,112 L 56,112" fill="none" stroke="black"></path>
+                <path d="M 88,112 L 176,112" fill="none" stroke="black"></path>
+                <path d="M 296,112 L 376,112" fill="none" stroke="black"></path>
+                <path d="M 408,112 L 448,112" fill="none" stroke="black"></path>
+                <path d="M 136,128 L 168,128" fill="none" stroke="black"></path>
+                <path d="M 304,128 L 344,128" fill="none" stroke="black"></path>
+                <path d="M 24,144 L 48,144" fill="none" stroke="black"></path>
+                <path d="M 104,144 L 168,144" fill="none" stroke="black"></path>
+                <path d="M 304,144 L 336,144" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="448,96 436,90.4 436,101.6" fill="black" transform="rotate(0,440,96)"></polygon>
+                <polygon class="arrowhead" points="448,80 436,74.4 436,85.6" fill="black" transform="rotate(0,440,80)"></polygon>
+                <polygon class="arrowhead" points="360,112 348,106.4 348,117.6" fill="black" transform="rotate(180,352,112)"></polygon>
+                <polygon class="arrowhead" points="344,144 332,138.4 332,149.6" fill="black" transform="rotate(0,336,144)"></polygon>
+                <polygon class="arrowhead" points="344,96 332,90.4 332,101.6" fill="black" transform="rotate(0,336,96)"></polygon>
+                <polygon class="arrowhead" points="344,80 332,74.4 332,85.6" fill="black" transform="rotate(0,336,80)"></polygon>
+                <polygon class="arrowhead" points="144,128 132,122.4 132,133.6" fill="black" transform="rotate(180,136,128)"></polygon>
+                <polygon class="arrowhead" points="144,112 132,106.4 132,117.6" fill="black" transform="rotate(180,136,112)"></polygon>
+                <polygon class="arrowhead" points="128,144 116,138.4 116,149.6" fill="black" transform="rotate(0,120,144)"></polygon>
+                <polygon class="arrowhead" points="128,96 116,90.4 116,101.6" fill="black" transform="rotate(0,120,96)"></polygon>
+                <polygon class="arrowhead" points="128,80 116,74.4 116,85.6" fill="black" transform="rotate(0,120,80)"></polygon>
+                <polygon class="arrowhead" points="40,112 28,106.4 28,117.6" fill="black" transform="rotate(180,32,112)"></polygon>
+                <g class="text">
+                  <text x="32" y="52">TCP</text>
+                  <text x="56" y="52">A</text>
+                  <text x="156" y="52">Endpoint</text>
+                  <text x="200" y="52">A</text>
+                  <text x="300" y="52">Endpoint</text>
+                  <text x="344" y="52">B</text>
+                  <text x="424" y="52">TCP</text>
+                  <text x="448" y="52">B</text>
+                  <text x="72" y="84">"abc"</text>
+                  <text x="232" y="84">DATA{"abc"}</text>
+                  <text x="392" y="84">"abc"</text>
+                  <text x="72" y="100">FIN</text>
+                  <text x="236" y="100">FINAL_DATA{""}</text>
+                  <text x="392" y="100">FIN</text>
+                  <text x="72" y="116">FIN</text>
+                  <text x="236" y="116">FINAL_DATA{""}</text>
+                  <text x="392" y="116">FIN</text>
+                  <text x="236" y="132">QUIC.STREAM{FIN}</text>
+                  <text x="76" y="148">FINACK</text>
+                  <text x="236" y="148">QUIC.STREAM{FIN}</text>
+                </g>
+              </svg><a href="#section-3.4-5.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-simple-graceful-termination" class="selfRef">Simple graceful termination example (HTTP/3)</a>
+          </figcaption></figure>
+<span id="name-simple-tcp-rst-termination-"></span><figure id="figure-4">
+          <div id="section-3.4-6.1">
+            <div class="alignLeft art-svg artwork" id="section-3.4-6.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="472" viewBox="0 0 472 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,64" fill="none" stroke="black"></path>
+                <path d="M 24,64 L 24,96" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 112,64" fill="none" stroke="black"></path>
+                <path d="M 128,64 L 128,96" fill="none" stroke="black"></path>
+                <path d="M 216,32 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 256,64" fill="none" stroke="black"></path>
+                <path d="M 344,64 L 344,96" fill="none" stroke="black"></path>
+                <path d="M 360,32 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 400,64" fill="none" stroke="black"></path>
+                <path d="M 448,64 L 448,96" fill="none" stroke="black"></path>
+                <path d="M 464,32 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 8,32 L 72,32" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 216,32" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 360,32" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 464,32" fill="none" stroke="black"></path>
+                <path d="M 8,64 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,64 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,64 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,64 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 24,80 L 56,80" fill="none" stroke="black"></path>
+                <path d="M 88,80 L 152,80" fill="none" stroke="black"></path>
+                <path d="M 312,80 L 376,80" fill="none" stroke="black"></path>
+                <path d="M 408,80 L 440,80" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="448,80 436,74.4 436,85.6" fill="black" transform="rotate(0,440,80)"></polygon>
+                <polygon class="arrowhead" points="344,80 332,74.4 332,85.6" fill="black" transform="rotate(0,336,80)"></polygon>
+                <polygon class="arrowhead" points="128,80 116,74.4 116,85.6" fill="black" transform="rotate(0,120,80)"></polygon>
+                <g class="text">
+                  <text x="32" y="52">TCP</text>
+                  <text x="56" y="52">A</text>
+                  <text x="156" y="52">Endpoint</text>
+                  <text x="200" y="52">A</text>
+                  <text x="300" y="52">Endpoint</text>
+                  <text x="344" y="52">B</text>
+                  <text x="424" y="52">TCP</text>
+                  <text x="448" y="52">B</text>
+                  <text x="72" y="84">RST</text>
+                  <text x="232" y="84">RST_STREAM{CON_ERR}</text>
+                  <text x="392" y="84">RST</text>
+                </g>
+              </svg><a href="#section-3.4-6.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-simple-tcp-rst-termination-" class="selfRef">Simple TCP RST termination example (HTTP/2)</a>
+          </figcaption></figure>
+<span id="name-timeout-example-http-11"></span><figure id="figure-5">
+          <div id="section-3.4-7.1">
+            <div class="alignLeft art-svg artwork" id="section-3.4-7.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="144" width="472" viewBox="0 0 472 144" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,64" fill="none" stroke="black"></path>
+                <path d="M 24,64 L 24,128" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 112,64" fill="none" stroke="black"></path>
+                <path d="M 128,64 L 128,128" fill="none" stroke="black"></path>
+                <path d="M 216,32 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 256,64" fill="none" stroke="black"></path>
+                <path d="M 344,64 L 344,128" fill="none" stroke="black"></path>
+                <path d="M 360,32 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 400,64" fill="none" stroke="black"></path>
+                <path d="M 448,64 L 448,128" fill="none" stroke="black"></path>
+                <path d="M 464,32 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 8,32 L 72,32" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 216,32" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 360,32" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 464,32" fill="none" stroke="black"></path>
+                <path d="M 8,64 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,64 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,64 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,64 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 24,80 L 48,80" fill="none" stroke="black"></path>
+                <path d="M 96,80 L 184,80" fill="none" stroke="black"></path>
+                <path d="M 280,80 L 368,80" fill="none" stroke="black"></path>
+                <path d="M 416,80 L 440,80" fill="none" stroke="black"></path>
+                <path d="M 128,112 L 192,112" fill="none" stroke="black"></path>
+                <path d="M 272,112 L 376,112" fill="none" stroke="black"></path>
+                <path d="M 408,112 L 440,112" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="448,112 436,106.4 436,117.6" fill="black" transform="rotate(0,440,112)"></polygon>
+                <polygon class="arrowhead" points="448,80 436,74.4 436,85.6" fill="black" transform="rotate(0,440,80)"></polygon>
+                <polygon class="arrowhead" points="344,112 332,106.4 332,117.6" fill="black" transform="rotate(0,336,112)"></polygon>
+                <polygon class="arrowhead" points="344,80 332,74.4 332,85.6" fill="black" transform="rotate(0,336,80)"></polygon>
+                <polygon class="arrowhead" points="128,80 116,74.4 116,85.6" fill="black" transform="rotate(0,120,80)"></polygon>
+                <g class="text">
+                  <text x="32" y="52">TCP</text>
+                  <text x="56" y="52">A</text>
+                  <text x="156" y="52">Endpoint</text>
+                  <text x="200" y="52">A</text>
+                  <text x="300" y="52">Endpoint</text>
+                  <text x="344" y="52">B</text>
+                  <text x="424" y="52">TCP</text>
+                  <text x="448" y="52">B</text>
+                  <text x="72" y="84">"abc"</text>
+                  <text x="232" y="84">DATA{"abc"}</text>
+                  <text x="392" y="84">"abc"</text>
+                  <text x="164" y="100">(...</text>
+                  <text x="216" y="100">timeout</text>
+                  <text x="256" y="100">@</text>
+                  <text x="272" y="100">A</text>
+                  <text x="300" y="100">...)</text>
+                  <text x="208" y="116">TLS</text>
+                  <text x="248" y="116">Alert</text>
+                  <text x="392" y="116">RST</text>
+                </g>
+              </svg><a href="#section-3.4-7.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-timeout-example-http-11" class="selfRef">Timeout example (HTTP/1.1)</a>
+          </figcaption></figure>
+<span id="name-rst-after-fin-example-http-"></span><figure id="figure-6">
+          <div id="section-3.4-8.1">
+            <div class="alignLeft art-svg artwork" id="section-3.4-8.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="192" width="472" viewBox="0 0 472 192" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,64" fill="none" stroke="black"></path>
+                <path d="M 24,64 L 24,176" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 112,64" fill="none" stroke="black"></path>
+                <path d="M 128,64 L 128,176" fill="none" stroke="black"></path>
+                <path d="M 216,32 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 256,64" fill="none" stroke="black"></path>
+                <path d="M 344,64 L 344,176" fill="none" stroke="black"></path>
+                <path d="M 360,32 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 400,64" fill="none" stroke="black"></path>
+                <path d="M 448,64 L 448,176" fill="none" stroke="black"></path>
+                <path d="M 464,32 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 8,32 L 72,32" fill="none" stroke="black"></path>
+                <path d="M 112,32 L 216,32" fill="none" stroke="black"></path>
+                <path d="M 256,32 L 360,32" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 464,32" fill="none" stroke="black"></path>
+                <path d="M 8,64 L 72,64" fill="none" stroke="black"></path>
+                <path d="M 112,64 L 216,64" fill="none" stroke="black"></path>
+                <path d="M 256,64 L 360,64" fill="none" stroke="black"></path>
+                <path d="M 400,64 L 464,64" fill="none" stroke="black"></path>
+                <path d="M 24,80 L 64,80" fill="none" stroke="black"></path>
+                <path d="M 96,80 L 184,80" fill="none" stroke="black"></path>
+                <path d="M 304,80 L 384,80" fill="none" stroke="black"></path>
+                <path d="M 416,80 L 440,80" fill="none" stroke="black"></path>
+                <path d="M 32,128 L 56,128" fill="none" stroke="black"></path>
+                <path d="M 104,128 L 168,128" fill="none" stroke="black"></path>
+                <path d="M 312,128 L 376,128" fill="none" stroke="black"></path>
+                <path d="M 424,128 L 448,128" fill="none" stroke="black"></path>
+                <path d="M 136,144 L 168,144" fill="none" stroke="black"></path>
+                <path d="M 304,144 L 344,144" fill="none" stroke="black"></path>
+                <path d="M 24,160 L 64,160" fill="none" stroke="black"></path>
+                <path d="M 96,160 L 168,160" fill="none" stroke="black"></path>
+                <path d="M 304,160 L 384,160" fill="none" stroke="black"></path>
+                <path d="M 416,160 L 440,160" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="448,160 436,154.4 436,165.6" fill="black" transform="rotate(0,440,160)"></polygon>
+                <polygon class="arrowhead" points="448,80 436,74.4 436,85.6" fill="black" transform="rotate(0,440,80)"></polygon>
+                <polygon class="arrowhead" points="360,128 348,122.4 348,133.6" fill="black" transform="rotate(180,352,128)"></polygon>
+                <polygon class="arrowhead" points="344,160 332,154.4 332,165.6" fill="black" transform="rotate(0,336,160)"></polygon>
+                <polygon class="arrowhead" points="344,80 332,74.4 332,85.6" fill="black" transform="rotate(0,336,80)"></polygon>
+                <polygon class="arrowhead" points="144,144 132,138.4 132,149.6" fill="black" transform="rotate(180,136,144)"></polygon>
+                <polygon class="arrowhead" points="144,128 132,122.4 132,133.6" fill="black" transform="rotate(180,136,128)"></polygon>
+                <polygon class="arrowhead" points="128,160 116,154.4 116,165.6" fill="black" transform="rotate(0,120,160)"></polygon>
+                <polygon class="arrowhead" points="128,80 116,74.4 116,85.6" fill="black" transform="rotate(0,120,80)"></polygon>
+                <polygon class="arrowhead" points="40,128 28,122.4 28,133.6" fill="black" transform="rotate(180,32,128)"></polygon>
+                <g class="text">
+                  <text x="32" y="52">TCP</text>
+                  <text x="56" y="52">A</text>
+                  <text x="156" y="52">Endpoint</text>
+                  <text x="200" y="52">A</text>
+                  <text x="300" y="52">Endpoint</text>
+                  <text x="344" y="52">B</text>
+                  <text x="424" y="52">TCP</text>
+                  <text x="448" y="52">B</text>
+                  <text x="80" y="84">FIN</text>
+                  <text x="244" y="84">FINAL_DATA{""}</text>
+                  <text x="400" y="84">FIN</text>
+                  <text x="80" y="116">(FIN)</text>
+                  <text x="400" y="116">(FIN)</text>
+                  <text x="80" y="132">"abc"</text>
+                  <text x="240" y="132">FINAL_DATA{"abc"}</text>
+                  <text x="400" y="132">"abc"</text>
+                  <text x="236" y="148">QUIC.STREAM{FIN}</text>
+                  <text x="80" y="164">RST</text>
+                  <text x="236" y="164">H3_CONNECT_ERROR</text>
+                  <text x="400" y="164">RST</text>
+                </g>
+              </svg><a href="#section-3.4-8.1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-rst-after-fin-example-http-" class="selfRef">RST after FIN example (HTTP/3)</a>
+          </figcaption></figure>
 </section>
 </div>
 </section>
@@ -1526,14 +1839,14 @@ capsule-protocol = ?1
 </li>
         </ul>
 <p id="section-5.2-4">If the client infers that classic HTTP CONNECT is not supported, it <span class="bcp14">SHOULD</span> retry the request using the registered default template for "connect-tcp":<a href="#section-5.2-4" class="pilcrow">¶</a></p>
-<span id="name-registered-default-template"></span><figure id="figure-3">
+<span id="name-registered-default-template"></span><figure id="figure-7">
           <div class="alignLeft art-text artwork" id="section-5.2-5.1">
 <pre>
 https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
                  /tcp/{target_host}/{target_port}/
 </pre>
 </div>
-<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
 <a href="#name-registered-default-template" class="selfRef">Registered default template</a>
           </figcaption></figure>
 <p id="section-5.2-6">If this request succeeds, the client <span class="bcp14">SHOULD</span> record a preference for "connect-tcp" to avoid further retry delays.<a href="#section-5.2-6" class="pilcrow">¶</a></p>
@@ -1548,6 +1861,40 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
       </h2>
 <p id="section-6-1">Template-driven TCP proxying is largely subject to the same security risks as classic HTTP CONNECT.  For example, any restrictions on authorized use of the proxy (see <span>[<a href="#RFC9110" class="cite xref">RFC9110</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a></span>) apply equally to both.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">A small additional risk is posed by the use of a URI Template parser on the client side.  The template input string could be crafted to exploit any vulnerabilities in the parser implementation.  Client implementers should apply their usual precautions for code that processes untrusted inputs.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<div id="resource-exhaustion-attacks">
+<section id="section-6.1">
+        <h3 id="name-resource-exhaustion-attacks">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-resource-exhaustion-attacks" class="section-name selfRef">Resource Exhaustion attacks</a>
+        </h3>
+<p id="section-6.1-1">A malicious client can achieve cause highly asymmetric resource usage at the proxy by colluding with a destination server and violating the ordinary rules of TCP or HTTP.  Some example attacks, and mitigations that proxies can apply:<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.1-2.1">
+            <p id="section-6.1-2.1.1"><strong>Connection Pileup</strong>: A malicious client can attempt to open a large number of proxy&lt;-&gt;destination connections to exhaust the proxy's memory, port, or file descriptor limits. When using HTTP/2 or HTTP/3, each incremental TCP connection imposes a much higher cost on the proxy than on the attacker.<a href="#section-6.1-2.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.1-2.1.2.1">
+                <p id="section-6.1-2.1.2.1.1">Mitigation: Limit the number of concurrent connections per client.<a href="#section-6.1-2.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-6.1-2.2">
+            <p id="section-6.1-2.2.1"><strong>Window Bloat</strong>: An attacker can grow the receive window size by simulating a "long, fat network" <span>[<a href="#RFC7323" class="cite xref">RFC7323</a>]</span>, then fill the window (from the sender) and stop acknowledging it (at the receiver).  This leaves the proxy buffering up to 1 GiB of TCP data until some timeout, while the attacker does not have to retain a large buffer.<a href="#section-6.1-2.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.1-2.2.2.1">
+                <p id="section-6.1-2.2.2.1.1">Mitigation: Limit the maximum receive window for TCP and HTTP connections, and the size of userspace buffers used for proxying.  Alternatively, monitor the connections' send queues and limit the total buffered data per client.<a href="#section-6.1-2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-6.1-2.3">
+            <p id="section-6.1-2.3.1"><strong>WAIT Abuse</strong>: An attacker can force the proxy into a TIME-WAIT, CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a proxy&lt;-&gt;destination 4-tuple for up to four minutes after the client's connection is closed.<a href="#section-6.1-2.3.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.1-2.3.2.1">
+                <p id="section-6.1-2.3.2.1.1">Mitigation: Limit the number of connections for each client to each destination, even if those connections are in a waiting state and the corresponding CONNECT stream is closed.  Alternatively, allocate a large range of IP addresses for TCP connections (especially in IPv6).<a href="#section-6.1-2.3.2.1.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+        </ul>
+</section>
+</div>
 </section>
 </div>
 <div id="operational-considerations">
@@ -1555,29 +1902,66 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
       <h2 id="name-operational-considerations">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-operational-considerations" class="section-name selfRef">Operational Considerations</a>
       </h2>
-<p id="section-7-1">Templated TCP proxies can make use of standard HTTP gateways and path-routing to ease implementation and allow use of shared infrastructure.  However, current gateways might need modifications to support TCP proxy services.  To be compatible, a gateway must:<a href="#section-7-1" class="pilcrow">¶</a></p>
+<div id="avoiding-http11">
+<section id="section-7.1">
+        <h3 id="name-avoiding-http-11">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-avoiding-http-11" class="section-name selfRef">Avoiding HTTP/1.1</a>
+        </h3>
+<p id="section-7.1-1">While this specification is fully functional under HTTP/1.1, performance-sensitive deployments <span class="bcp14">SHOULD</span> use HTTP/2 or HTTP/3 instead.  When using HTTP/1.1:<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-2.1">
-          <p id="section-7-2.1.1">support Extended CONNECT (if acting as an HTTP/2 or HTTP/3 server).<a href="#section-7-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7.1-2.1">
+            <p id="section-7.1-2.1.1">Each CONNECT request requires a new TCP and TLS connection, imposing a higher cost in setup latency, congestion control convergence, CPU time, and data transfer.<a href="#section-7.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-7-2.2">
-          <p id="section-7-2.2.1">support HTTP/1.1 Upgrade to "connect-tcp" (if acting as an HTTP/1.1 server)<a href="#section-7-2.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-7.1-2.2">
+            <p id="section-7.1-2.2.1">It may be difficult to implement the recommended unclean shutdown signals (<a href="#closing-connections" class="auto internal xref">Section 3.4</a>), as many TLS libraries do not support injecting TLS Alerts.<a href="#section-7.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.1-2.3">
+            <p id="section-7.1-2.3.1">The number of active connections through each client may be limited by the number of available TCP client ports, especially if:<a href="#section-7.1-2.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7-2.2.2.1">
-              <p id="section-7-2.2.2.1.1">only after forwarding the upgrade request to the origin and observing a success response.<a href="#section-7-2.2.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7.1-2.3.2.1">
+                <p id="section-7.1-2.3.2.1.1">The client only has one IP address that can be used to reach the proxy.<a href="#section-7.1-2.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
-          </ul>
+              <li class="normal" id="section-7.1-2.3.2.2">
+                <p id="section-7.1-2.3.2.2.1">The client is shared between many parties, such as when acting as a gateway or concentrator.<a href="#section-7.1-2.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-7-2.3">
-          <p id="section-7-2.3.1">forward the "connect-tcp" protocol to the origin.<a href="#section-7-2.3.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-7.1-2.3.2.3">
+                <p id="section-7.1-2.3.2.3.1">The proxied connections are often closed by the destination. This causes the client to initiate closure of the client&lt;-&gt;proxy connection, leaving the client in a TIME-WAIT state for up to four minutes.<a href="#section-7.1-2.3.2.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-7-2.4">
-          <p id="section-7-2.4.1">convert "connect-tcp" requests between all supported HTTP server and client versions.<a href="#section-7-2.4.1" class="pilcrow">¶</a></p>
+            </ul>
 </li>
-        <li class="normal" id="section-7-2.5">
-          <p id="section-7-2.5.1">allow any "Proxy-Status" headers to traverse the gateway.<a href="#section-7-2.5.1" class="pilcrow">¶</a></p>
+        </ul>
+</section>
+</div>
+<div id="gateway-compatibility">
+<section id="section-7.2">
+        <h3 id="name-gateway-compatibility">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-gateway-compatibility" class="section-name selfRef">Gateway Compatibility</a>
+        </h3>
+<p id="section-7.2-1">Templated TCP proxies can make use of standard HTTP gateways and path-routing to ease implementation and allow use of shared infrastructure.  However, current gateways might need modifications to support TCP proxy services.  To be compatible, a gateway must:<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7.2-2.1">
+            <p id="section-7.2-2.1.1">support Extended CONNECT (if acting as an HTTP/2 or HTTP/3 server).<a href="#section-7.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
-      </ul>
+          <li class="normal" id="section-7.2-2.2">
+            <p id="section-7.2-2.2.1">support HTTP/1.1 Upgrade to "connect-tcp" (if acting as an HTTP/1.1 server)<a href="#section-7.2-2.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7.2-2.2.2.1">
+                <p id="section-7.2-2.2.2.1.1">only after forwarding the upgrade request to the origin and observing a success response.<a href="#section-7.2-2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-7.2-2.3">
+            <p id="section-7.2-2.3.1">forward the "connect-tcp" protocol to the origin.<a href="#section-7.2-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.2-2.4">
+            <p id="section-7.2-2.4.1">convert "connect-tcp" requests between all supported HTTP server and client versions.<a href="#section-7.2-2.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.2-2.5">
+            <p id="section-7.2-2.5.1">allow any "Proxy-Status" headers to traverse the gateway.<a href="#section-7.2-2.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
 </section>
 </div>
 <div id="iana-considerations">
@@ -1664,9 +2048,18 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
               <td class="text-left" rowspan="1" colspan="1">IETF</td>
               <td class="text-left" rowspan="1" colspan="1">HTTPBIS</td>
             </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">(TBD)</td>
+              <td class="text-left" rowspan="1" colspan="1">FINAL_DATA</td>
+              <td class="text-left" rowspan="1" colspan="1">permanent</td>
+              <td class="text-left" rowspan="1" colspan="1">(This document), <a href="#specification" class="auto internal xref">Section 3</a>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">IETF</td>
+              <td class="text-left" rowspan="1" colspan="1">HTTPBIS</td>
+            </tr>
           </tbody>
         </table>
-<p id="section-8.3-3">For this draft version of the protocol, the Capsule Type value <code>0x2028d7ee</code> shall be used provisionally for testing, under the name "DATA-07".<a href="#section-8.3-3" class="pilcrow">¶</a></p>
+<p id="section-8.3-3">For this draft version of the protocol, the Capsule Type values <code>0x2028d7ee</code> and <code>0x2028d7ef</code> shall be used provisionally for testing, under the names "DATA-07" and "FINAL_DATA-07".<a href="#section-8.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1730,10 +2123,6 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
         <dd>
 <span class="refAuthor">Hamilton, R.</span>, <span class="refTitle">"Bootstrapping WebSockets with HTTP/3"</span>, <span class="seriesInfo">RFC 9220</span>, <span class="seriesInfo">DOI 10.17487/RFC9220</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9220">https://www.rfc-editor.org/rfc/rfc9220</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC9297">[RFC9297]</dt>
-        <dd>
-<span class="refAuthor">Schinazi, D.</span> and <span class="refAuthor">L. Pardue</span>, <span class="refTitle">"HTTP Datagrams and the Capsule Protocol"</span>, <span class="seriesInfo">RFC 9297</span>, <span class="seriesInfo">DOI 10.17487/RFC9297</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9297">https://www.rfc-editor.org/rfc/rfc9297</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC9298">[RFC9298]</dt>
       <dd>
 <span class="refAuthor">Schinazi, D.</span>, <span class="refTitle">"Proxying UDP in HTTP"</span>, <span class="seriesInfo">RFC 9298</span>, <span class="seriesInfo">DOI 10.17487/RFC9298</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9298">https://www.rfc-editor.org/rfc/rfc9298</a>&gt;</span>. </dd>
@@ -1775,6 +2164,10 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
         <dd>
 <span class="refAuthor">Hodges, J.</span>, <span class="refAuthor">Jackson, C.</span>, and <span class="refAuthor">A. Barth</span>, <span class="refTitle">"HTTP Strict Transport Security (HSTS)"</span>, <span class="seriesInfo">RFC 6797</span>, <span class="seriesInfo">DOI 10.17487/RFC6797</span>, <time datetime="2012-11" class="refDate">November 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6797">https://www.rfc-editor.org/rfc/rfc6797</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC7323">[RFC7323]</dt>
+        <dd>
+<span class="refAuthor">Borman, D.</span>, <span class="refAuthor">Braden, B.</span>, <span class="refAuthor">Jacobson, V.</span>, and <span class="refAuthor">R. Scheffenegger, Ed.</span>, <span class="refTitle">"TCP Extensions for High Performance"</span>, <span class="seriesInfo">RFC 7323</span>, <span class="seriesInfo">DOI 10.17487/RFC7323</span>, <time datetime="2014-09" class="refDate">September 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7323">https://www.rfc-editor.org/rfc/rfc7323</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC7469">[RFC7469]</dt>
         <dd>
 <span class="refAuthor">Evans, C.</span>, <span class="refAuthor">Palmer, C.</span>, and <span class="refAuthor">R. Sleevi</span>, <span class="refTitle">"Public Key Pinning Extension for HTTP"</span>, <span class="seriesInfo">RFC 7469</span>, <span class="seriesInfo">DOI 10.17487/RFC7469</span>, <time datetime="2015-04" class="refDate">April 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7469">https://www.rfc-editor.org/rfc/rfc7469</a>&gt;</span>. </dd>
@@ -1784,8 +2177,12 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 <span class="refAuthor">Nottingham, M.</span>, <span class="refAuthor">McManus, P.</span>, and <span class="refAuthor">J. Reschke</span>, <span class="refTitle">"HTTP Alternative Services"</span>, <span class="seriesInfo">RFC 7838</span>, <span class="seriesInfo">DOI 10.17487/RFC7838</span>, <time datetime="2016-04" class="refDate">April 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7838">https://www.rfc-editor.org/rfc/rfc7838</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8942">[RFC8942]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Grigorik, I.</span> and <span class="refAuthor">Y. Weiss</span>, <span class="refTitle">"HTTP Client Hints"</span>, <span class="seriesInfo">RFC 8942</span>, <span class="seriesInfo">DOI 10.17487/RFC8942</span>, <time datetime="2021-02" class="refDate">February 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8942">https://www.rfc-editor.org/rfc/rfc8942</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9297">[RFC9297]</dt>
+      <dd>
+<span class="refAuthor">Schinazi, D.</span> and <span class="refAuthor">L. Pardue</span>, <span class="refTitle">"HTTP Datagrams and the Capsule Protocol"</span>, <span class="seriesInfo">RFC 9297</span>, <span class="seriesInfo">DOI 10.17487/RFC9297</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9297">https://www.rfc-editor.org/rfc/rfc9297</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
