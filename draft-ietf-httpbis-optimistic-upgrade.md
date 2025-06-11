@@ -169,4 +169,14 @@ This document has no IANA actions.
 # Acknowledgments
 {:numbered="false"}
 
-Thanks to Mark Nottingham and Lucas Pardue for early reviews of this document.
+This document benefited from valuable reviews and suggestions by:
+
+* Mike Bishop
+* Mark Nottingham
+* Kazuho Oku
+* Lucas Pardue
+* David Schinazi
+* Glenn Strauss
+* Michael Sweet
+* Willy Tarreau
+* Martin Thomson
