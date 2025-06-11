@@ -1229,8 +1229,8 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
       <h2 id="name-background">
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-background" class="section-name selfRef">Background</a>
       </h2>
-<p id="section-2-1">In HTTP/1.1, a single connection is often used for many requests, one after another.  After each request, the connection is returned to its initial state, ready to send more HTTP requests.  However, HTTP/1.1 also contains two mechanisms that allow the client to change the protocol used for the remainder of the connection.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">One such mechanism is the "Upgrade" request header field (<span>[<a href="#RFC9110" class="cite xref">RFC9110</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-7.8" class="relref">Section 7.8</a></span>), which indicates that the client would like to use this connection for a protocol other than HTTP/1.1.  The server replies with a "101 (Switching Protocols)" status code if it accepts the protocol change.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-1">In HTTP/1.1 and later, a single connection can be used for many requests.  In HTTP/2 and HTTP/3, these requests can be multiplexed, as each request is distinguished explicitly by its stream ID.  However, in HTTP/1.1, requests are strictly sequential, and each new request is distinguished implicitly by the closure of the preceding request.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">HTTP/1.1 is also the only version of HTTP that allows the client to change the protocol used for the remainder of the connection.  There are two mechanisms to request such a protocol transition.  One mechanism is the "Upgrade" request header field (<span>[<a href="#RFC9110" class="cite xref">RFC9110</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-7.8" class="relref">Section 7.8</a></span>), which indicates that the client would like to use this connection for a protocol other than HTTP/1.1.  The server replies with a "101 (Switching Protocols)" status code if it accepts the protocol change.<a href="#section-2-2" class="pilcrow">¶</a></p>
 <p id="section-2-3">The other mechanism is the HTTP "CONNECT" method.  This method indicates that the client wishes to establish a TCP connection to the specified host and port.  The server replies with a 2xx (Successful) response to indicate that the request was accepted and a TCP connection was established.  After this point, the TCP connection is acting as a TCP tunnel, not an HTTP/1.1 connection.<a href="#section-2-3" class="pilcrow">¶</a></p>
 <p id="section-2-4">Both of these mechanisms also permit the server to reject the request.  For example, <span>[<a href="#RFC9110" class="cite xref">RFC9110</a>]</span> says:<a href="#section-2-4" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
@@ -1359,22 +1359,10 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
             <p id="section-5.3-2.1.1">A client <span class="bcp14">MAY</span> optimistically start sending UDP packets in HTTP Datagrams before receiving the response to its UDP proxying request.<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-5.3-3">However, in HTTP/1.1, this "proxying request" is an HTTP Upgrade request.  This upgrade is likely to be rejected in certain circumstances, such as when the UDP destination address (which is attacker-controlled) is invalid.  Additionally, the contents of the "connect-udp" protocol stream can include untrusted material (i.e., the UDP packets, which might come from other applications on the client device).  This creates the possibility of Request Smuggling attacks.  To avoid these concerns, this document updates that text to exclude HTTP/1.1 from any optimistic sending, as follows:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<p id="section-5.3-3">However, in HTTP/1.1, this "proxying request" is an HTTP Upgrade request.  This upgrade is likely to be rejected in certain circumstances, such as when the UDP destination address (which is attacker-controlled) is invalid.  Additionally, the contents of the "connect-udp" protocol stream can include untrusted material (i.e., the UDP packets, which might come from other applications on the client device).  This creates the possibility of Request Smuggling attacks.  To avoid these concerns, this document replaces that text to exclude HTTP/1.1 from any optimistic sending, as follows:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-5.3-4.1">
-            <p id="section-5.3-4.1.1">When using HTTP/2 or later, a client <span class="bcp14">MAY</span> optimistically ...<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-5.3-5"><span><a href="https://rfc-editor.org/rfc/rfc9298#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9298" class="cite xref">RFC9298</a>]</span> describes the requirement for a successful proxy setup response, including upgrading to the "connect-udp" protocol, and says:<a href="#section-5.3-5" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-5.3-6.1">
-            <p id="section-5.3-6.1.1">If any of these requirements are not met, the client <span class="bcp14">MUST</span> treat this proxying attempt as failed and abort the connection.<a href="#section-5.3-6.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-5.3-7">However, this could be interpreted as an instruction to abort the underlying TLS and TCP connections in the event of an unsuccessful response such as "407 ("Proxy Authentication Required)".  To avoid an unnecessary delay in this case, this text is hereby updated as follows:<a href="#section-5.3-7" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-5.3-8.1">
-            <p id="section-5.3-8.1.1">If any of these requirements are not met, the client <span class="bcp14">MUST</span> treat this proxying attempt as failed.  If the "Upgrade" response header field is absent, the client <span class="bcp14">MAY</span> reuse the connection for further HTTP/1.1 requests; otherwise it <span class="bcp14">MUST</span> abort the underlying connection.<a href="#section-5.3-8.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-4.1.1">A client <span class="bcp14">MAY</span> optimistically start sending UDP packets in HTTP Datagrams before receiving the response to its UDP proxying request, but only if the HTTP version in use is HTTP/2 or later. Clients <span class="bcp14">MUST NOT</span> send UDP packets optimistically in HTTP/1.x due to the risk of request smuggling attacks.<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1384,7 +1372,7 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
         <h3 id="name-connect-ip">
 <a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-connect-ip" class="section-name selfRef">"connect-ip"</a>
         </h3>
-<p id="section-5.4-1">The "connect-ip" Upgrade Token is defined in <span>[<a href="#RFC9484" class="cite xref">RFC9484</a>]</span>.  <span><a href="https://rfc-editor.org/rfc/rfc9484#section-11" class="relref">Section 11</a> of [<a href="#RFC9484" class="cite xref">RFC9484</a>]</span> forbids clients from using optimistic upgrade, avoiding this issue.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
+<p id="section-5.4-1">The "connect-ip" Upgrade Token is defined in <span>[<a href="#RFC9484" class="cite xref">RFC9484</a>]</span>.  <span><a href="https://rfc-editor.org/rfc/rfc9484#section-11" class="relref">Section 11</a> of [<a href="#RFC9484" class="cite xref">RFC9484</a>]</span> forbids clients from sending packets optimistically in HTTP/1.1, avoiding this issue.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
