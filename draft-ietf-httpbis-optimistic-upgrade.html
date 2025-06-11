@@ -1413,8 +1413,8 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-selection-of-request-method" class="section-name selfRef">Selection of Request Methods</a>
         </h3>
 <p id="section-6.1-1">Some Upgrade Tokens, such as "TLS", are defined for use with any ordinary HTTP Method.  The upgraded protocol continues to provide HTTP semantics, and will convey the response to this HTTP request.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.1-2">The other Upgrade Tokens mentioned in <a href="#existing" class="auto internal xref">Section 5</a> do not preserve HTTP semantics, so the method is not relevant.  All of these Upgrade Tokens are specified only for use with the "GET" method.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
-<p id="section-6.1-3">Future specifications for Upgrade Tokens should restrict their use to "GET" requests if the HTTP method is otherwise irrelevant and a request body is not required.  This improves consistency with other Upgrade Tokens and reduces the likelihood that a faulty server implementation might process the request body as the new protocol.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
+<p id="section-6.1-2">The other Upgrade Tokens mentioned in <a href="#existing" class="auto internal xref">Section 5</a> do not preserve HTTP semantics, so the method is not relevant.  All of these Upgrade Tokens are specified only for requests with the "GET" method and an empty body.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.1-3">Future specifications for Upgrade Tokens should restrict their use to "GET" requests with an empty body if the HTTP method is otherwise irrelevant and a request body is not required.  This improves consistency with other Upgrade Tokens and simplifies server implementation.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
