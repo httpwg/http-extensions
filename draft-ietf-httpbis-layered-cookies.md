@@ -669,6 +669,36 @@ Set-Cookie: __Host-SID=12345; Secure; Path=/
 ~~~
 
 
+#### The "__Http-" Prefix
+
+If a cookie's name begins with a case-sensitive match for the string
+`__Http-`, then the cookie will have been set with a `Secure` attribute, and an
+`HttpOnly` attribute.
+
+This helps developers and server operators to know that the cookie was set using
+a `Set-Cookie` header, and is limited in scope to HTTP requests.
+
+
+#### The "__HostHttp-" prefix
+
+If a cookie's name begins with a case-sensitive match for the string
+`__HostHttp-`, then the cookie will have been set with a `Secure` attribute, an
+`HttpOnly` attribute, a `Path` attribute with a value of `/`, and no `Domain` attribute.
+
+This helps developers and server operators to know that the cookie was set using
+a `Set-Cookie` header, and is limited in scope to HTTP requests.
+
+This combination yields a cookie that hews as closely as a cookie can to
+treating the origin as a security boundary, while at the same time ensuring developers
+and server operators know that its scope is limited to HTTP requests. The lack of a
+`Domain` attribute ensures that cookie's host-only is true, locking the cookie to a
+particular host, rather than allowing it to span subdomains. Setting the `Path`
+to `/` means that the cookie is effective for the entire host, and won't be
+overridden for specific paths. The `Secure` attribute ensures that the cookie
+is unaltered by non-secure origins, and won't span protocols. The `HttpOnly` attribute
+ensures that the cookie is not exposed by the user agent to non-HTTP APIs.
+
+
 ## Cookie {#sane-cookie}
 
 ### Syntax {#server-syntax}
@@ -770,6 +800,8 @@ A cookie's **host-only** is a boolean. It is initially false.
 
 A cookie's **path** is a URL path.
 
+A cookie's **has-path attribute** is a boolean. It is initially false.
+
 A cookie's **same-site** is "`strict`", "`lax`", "`unset`", or "`none`". It is initially "`unset`".
 
 A cookie's **http-only** is a boolean. It is initially false.
@@ -789,6 +821,22 @@ A cookie's **last-access-time** is a time. It is initially the current time.
 #### Cookie Struct Miscellaneous
 
 A cookie is **expired** if its expiry-time is non-null and its expiry-time is in the past.
+
+A cookie _cookie_ is **Host-prefix compatible** if:
+
+1. _cookie_'s secure is true;
+
+1. _cookie_'s host-only is true;
+
+1. _cookie_'s has-path attribute is true; and
+
+1. _cookie_'s path's size is 1 and _cookie_'s path[0] is the empty string,
+
+A cookie _cookie_ is **Http-prefix compatible** if:
+
+1. _cookie_'s secure is true; and
+
+1. _cookie_'s http-only is false,
 
 
 ## Cookie Store Eviction {#cookie-store-eviction}
@@ -1149,8 +1197,11 @@ URL path _path_, run these steps. They return a new cookie or failure:
     1. If _attributeName_ is a byte-case-insensitive match for `Path`:
 
         1. If _attributeValue_ is not empty and if the first byte of
-           _attributeValue_ is 0x2F (/), then set _cookie_'s path to _attributeValue_
-           split on 0x2F (/).
+           _attributeValue_ is 0x2F (/), then:
+
+           1. Set _cookie_'s path to _attributeValue_ split on 0x2F (/).
+
+           1. Set _cookie_'s has-path attribute to true.
 
     1.  If _attributeName_ is a byte-case-insensitive match for `Secure`:
 
@@ -1219,13 +1270,13 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
 
 1. If _isSecure_ is false:
 
-    1. If _cookie_'s secure-only is true, then return null.
+    1. If _cookie_'s secure is true, then return null.
 
     1. If the user agent's cookie store contains at least one cookie _existingCookie_ that meets all of the following criteria:
 
         1. _existingCookie_'s name is _cookie_'s name;
 
-        1. _existingCookie_'s secure-only is true;
+        1. _existingCookie_'s secure is true;
 
         1. _existingCookie_'s host Domain-Matches _cookie_'s host, or vice-versa; and
 
@@ -1242,29 +1293,29 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
 1. If _cookie_'s same-site is not "`none`" and _sameSiteStrictOrLaxAllowed_ is false,
    then return null.
 
-1. If _cookie_'s same-site is "`none`" and _cookie_'s secure-only is false,
+1. If _cookie_'s same-site is "`none`" and _cookie_'s secure is false,
    then return null.
 
-1. If _cookie_'s name, byte-lowercased, starts with `__secure-` and _cookie_'s secure-only is false,
+1. If _cookie_'s name, byte-lowercased, starts with `__secure-` and _cookie_'s secure is false,
    then return null.
 
    Note: The check here and those below are with a byte-lowercased value in order to protect servers that process these values in a case-insensitive manner.
 
-1. If _cookie_'s name, byte-lowercased, starts with `__host-` and not all of the following are true:
+1. If _cookie_'s name, byte-lowercased, starts with `__host-` and _cookie_ is not Host-prefix compatible, then return null.
 
-    1. _cookie_'s secure-only is true;
+1. If _cookie_'s name, byte-lowercased, starts with `__http-` and _cookie_ is not Http-prefix compatible, then return null.
 
-    1. _cookie_'s host-only is true; and
-
-    1. _cookie_'s path's size is 1 and _cookie_'s path[0] is the empty string,
-
-   then return null.
+1. If _cookie_'s name, byte-lowercased, starts with `__hosthttp-` and _cookie_ is not both Host-prefix compatible and Http-prefix compatible, then return null.
 
 1. If _cookie_'s name is the empty byte sequence and one of the following is true:
 
-    * _cookie_'s value, byte-lowercased, starts with `__secure-`, or
+    * _cookie_'s value, byte-lowercased, starts with `__secure-`,
 
-    * _cookie_'s value, byte-lowercased, starts with `__host-`
+    * _cookie_'s value, byte-lowercased, starts with `__host-`,
+
+    * _cookie_'s value, byte-lowercased, starts with `__http-`, or
+
+    * _cookie_'s value, byte-lowercased, starts with `__hosthttp-`,
 
    then return null.
 
@@ -1274,7 +1325,7 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
     1. If _httpOnlyAllowed_ is false and _oldCookie_'s http-only is true,
        then return null.
 
-    1. If _cookie_'s secure flag is equal to _oldCookie_'s secure flag, _cookie_'s same-site is equal to _oldCookie_'s
+    1. If _cookie_'s secure is equal to _oldCookie_'s secure, _cookie_'s same-site is equal to _oldCookie_'s
        same-site, and _cookie_'s expiry-time is equal to _oldCookie_'s expiry-time, then return null.
 
     1. Set _cookie_'s creation-time to _oldCookie_'s creation-time.
