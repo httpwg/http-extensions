@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                            10 June 2025
-Expires: 12 December 2025
+Intended status: Standards Track                            17 June 2025
+Expires: 19 December 2025
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 December 2025.
+   This Internet-Draft will expire on 19 December 2025.
 
 Copyright Notice
 
@@ -72,7 +72,10 @@ Table of Contents
      5.1.  Servers
      5.2.  Clients
    6.  Security Considerations
+     6.1.  Resource Exhaustion attacks
    7.  Operational Considerations
+     7.1.  Avoiding HTTP/1.1
+     7.2.  Gateway Compatibility
    8.  IANA Considerations
      8.1.  New Upgrade Token
      8.2.  New MASQUE Default Template
@@ -153,16 +156,24 @@ Table of Contents
    tcp" (see registration in Section 8.1).
 
    When using "connect-tcp", TCP payload data is sent in the payload of
-   a new Capsule Type named DATA (see registration in Section 8.3).  The
-   ordered concatenation of DATA capsule payloads represents the TCP
-   payload data.
+   new Capsule Types named DATA and FINAL_DATA (see registrations in
+   Section 8.3).  The ordered concatenation of these capsule payloads
+   represents the TCP payload data.  A FINAL_DATA capsule additionally
+   indicates that the sender has closed this stream, semantically
+   equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an
+   endpoint MUST NOT send any more DATA or FINAL_DATA capsules on this
+   data stream.  (See Section 3.4 for related requirements.)
 
-   An intermediary MAY merge and split successive DATA capsules, subject
-   to the following requirements:
+   An intermediary MAY merge and split successive DATA and FINAL_DATA
+   capsules, subject to the following requirements:
 
    *  There are no intervening capsules of other types.
 
    *  The order of payload content is preserved.
+
+   *  The final emitted capsule uses the same capsule type (DATA or
+      FINAL_DATA) as the final input capsule, and all others use the
+      DATA capsule type.
 
 3.1.  In HTTP/1.1
 
@@ -302,27 +313,86 @@ Table of Contents
 
 3.4.  Closing Connections
 
-   In each HTTP version, any requirements related to closing connections
-   in Classic HTTP CONNECT also apply to "connect-tcp", with the
-   following modifications:
+   Connection termination is essentially symmetrical for proxies and
+   their clients.  In this section, we use the term "endpoint" to
+   describe an implementation of this specification in either role.
 
-   *  In HTTP/1.1, endpoints SHOULD close the connection in an error
-      state to indicate receipt of a TCP connection error (e.g., a TCP
-      RST or timeout).  Acceptable error states include sending an
-      incomplete DATA capsule (as defined in Section 3.3 of [RFC9297]),
-      a TLS Error Alert ([RFC8446], Section 6.2), or a TCP RST (if TLS
-      is not in use).  When a connection is terminated in an error
-      state, the receiving endpoint SHOULD send a TCP RST if the
-      underlying TCP implementation permits it.
+   When closing connections, endpoints are subject to the following
+   requirements:
 
-   *  In HTTP/2 and HTTP/3, senders MAY use an incomplete DATA capsule
-      to indicate a TCP connection error, instead of (or in addition to)
-      the signals defined for TCP connection errors in Classic HTTP
-      CONNECT.  Recipients MUST recognize any incomplete capsule as a
-      TCP connection error.
+   *  When an endpoint receives a valid TCP FIN, it MUST send a
+      FINAL_DATA capsule.
 
-   *  Intermediaries MUST propagate connection shutdown errors,
-      including when translating between different HTTP versions.
+   *  When an endpoint receives a valid FINAL_DATA capsule, it MUST send
+      a TCP FIN.
+
+   *  When a TCP connection reaches the TIME-WAIT or CLOSED state, the
+      associated endpoint MUST close its send stream.
+
+      -  If the connection closed gracefully, the endpoint MUST close
+         the send stream gracefully.
+
+      -  Otherwise, the endpoint SHOULD close the send stream abruptly,
+         using a mechanism appropriate to the HTTP version:
+
+         o  HTTP/3: RESET_STREAM with H3_CONNECT_ERROR
+
+         o  HTTP/2: RST_STREAM with CONNECT_ERROR
+
+         o  HTTP/1.1 over TLS: a TLS Error Alert
+
+         o  HTTP/1.1 (insecure): TCP RST.
+
+   *  When the receive stream is closed abruptly or without a FINAL_DATA
+      capsule received, the endpoint SHOULD send a TCP RST if the TCP
+      subsystem permits it.
+
+   The mandatory behaviors above enable endpoints to detect any
+   truncation of incoming TCP data.  The recommended behaviors propagate
+   any TCP errors through the proxy connection.
+
+   +-------+    +------------+    +------------+    +-------+
+   | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
+   +-+-----+    +-+----------+    +----------+-+    +-----+-+
+     +---"abc"--->+-------DATA{"abc"}------->+---"abc"--->|
+     +----FIN---->+------FINAL_DATA{""}----->+----FIN---->|
+     |<---FIN-----+<-----FINAL_DATA{""}------+<---FIN-----+
+     |            |<----QUIC.STREAM{FIN}-----+            |
+     +---FINACK-->+-----QUIC.STREAM{FIN}---->|            |
+     |            |                          |            |
+
+           Figure 3: Simple graceful termination example (HTTP/3)
+
+   +-------+    +------------+    +------------+    +-------+
+   | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
+   +-+-----+    +-+----------+    +----------+-+    +-----+-+
+     +----RST---->+---RST_STREAM{CON_ERR}--->+----RST---->|
+     |            |                          |            |
+
+           Figure 4: Simple TCP RST termination example (HTTP/2)
+
+   +-------+    +------------+    +------------+    +-------+
+   | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
+   +-+-----+    +-+----------+    +----------+-+    +-----+-+
+     +---"abc"--->+-------DATA{"abc"}------->+---"abc"--->|
+     |            |  (... timeout @ A ...)   |            |
+     |            +--------TLS Alert-------->+----RST---->|
+     |            |                          |            |
+
+                    Figure 5: Timeout example (HTTP/1.1)
+
+   +-------+    +------------+    +------------+    +-------+
+   | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
+   +-+-----+    +-+----------+    +----------+-+    +-----+-+
+     +-----FIN--->+-------FINAL_DATA{""}---->+-----FIN--->|
+     |            |                          |            |
+     |    (FIN)   |                          |    (FIN)   |
+     |<---"abc"---+<----FINAL_DATA{"abc"}----+<---"abc"---+
+     |            |<----QUIC.STREAM{FIN}-----+            |
+     +-----RST--->+-----H3_CONNECT_ERROR---->+-----RST--->|
+     |            |                          |            |
+
+                  Figure 6: RST after FIN example (HTTP/3)
 
 4.  Additional Connection Setup Behaviors
 
@@ -417,7 +487,7 @@ Table of Contents
    https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
                     /tcp/{target_host}/{target_port}/
 
-                   Figure 3: Registered default template
+                   Figure 7: Registered default template
 
    If this request succeeds, the client SHOULD record a preference for
    "connect-tcp" to avoid further retry delays.
@@ -435,7 +505,77 @@ Table of Contents
    implementers should apply their usual precautions for code that
    processes untrusted inputs.
 
+6.1.  Resource Exhaustion attacks
+
+   A malicious client can achieve cause highly asymmetric resource usage
+   at the proxy by colluding with a destination server and violating the
+   ordinary rules of TCP or HTTP.  Some example attacks, and mitigations
+   that proxies can apply:
+
+   *  *Connection Pileup*: A malicious client can attempt to open a
+      large number of proxy<->destination connections to exhaust the
+      proxy's memory, port, or file descriptor limits.  When using
+      HTTP/2 or HTTP/3, each incremental TCP connection imposes a much
+      higher cost on the proxy than on the attacker.
+
+      -  Mitigation: Limit the number of concurrent connections per
+         client.
+
+   *  *Window Bloat*: An attacker can grow the receive window size by
+      simulating a "long, fat network" [RFC7323], then fill the window
+      (from the sender) and stop acknowledging it (at the receiver).
+      This leaves the proxy buffering up to 1 GiB of TCP data until some
+      timeout, while the attacker does not have to retain a large
+      buffer.
+
+      -  Mitigation: Limit the maximum receive window for TCP and HTTP
+         connections, and the size of userspace buffers used for
+         proxying.  Alternatively, monitor the connections' send queues
+         and limit the total buffered data per client.
+
+   *  *WAIT Abuse*: An attacker can force the proxy into a TIME-WAIT,
+      CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a
+      proxy<->destination 4-tuple for up to four minutes after the
+      client's connection is closed.
+
+      -  Mitigation: Limit the number of connections for each client to
+         each destination, even if those connections are in a waiting
+         state and the corresponding CONNECT stream is closed.
+         Alternatively, allocate a large range of IP addresses for TCP
+         connections (especially in IPv6).
+
 7.  Operational Considerations
+
+7.1.  Avoiding HTTP/1.1
+
+   While this specification is fully functional under HTTP/1.1,
+   performance-sensitive deployments SHOULD use HTTP/2 or HTTP/3
+   instead.  When using HTTP/1.1:
+
+   *  Each CONNECT request requires a new TCP and TLS connection,
+      imposing a higher cost in setup latency, congestion control
+      convergence, CPU time, and data transfer.
+
+   *  It may be difficult to implement the recommended unclean shutdown
+      signals (Section 3.4), as many TLS libraries do not support
+      injecting TLS Alerts.
+
+   *  The number of active connections through each client may be
+      limited by the number of available TCP client ports, especially
+      if:
+
+      -  The client only has one IP address that can be used to reach
+         the proxy.
+
+      -  The client is shared between many parties, such as when acting
+         as a gateway or concentrator.
+
+      -  The proxied connections are often closed by the destination.
+         This causes the client to initiate closure of the
+         client<->proxy connection, leaving the client in a TIME-WAIT
+         state for up to four minutes.
+
+7.2.  Gateway Compatibility
 
    Templated TCP proxies can make use of standard HTTP gateways and
    path-routing to ease implementation and allow use of shared
@@ -494,20 +634,24 @@ Table of Contents
    IF APPROVED, IANA is requested to add the following entry to the
    "HTTP Capsule Types" registry:
 
-    +=======+=========+===========+============+============+=========+
-    | Value | Capsule | Status    | Reference  | Change     | Contact |
-    |       | Type    |           |            | Controller |         |
-    +=======+=========+===========+============+============+=========+
-    | (TBD) | DATA    | permanent | (This      | IETF       | HTTPBIS |
-    |       |         |           | document), |            |         |
-    |       |         |           | Section 3  |            |         |
-    +-------+---------+-----------+------------+------------+---------+
+   +=====+============+===========+============+============+=========+
+   |Value| Capsule    | Status    | Reference  | Change     | Contact |
+   |     | Type       |           |            | Controller |         |
+   +=====+============+===========+============+============+=========+
+   |(TBD)| DATA       | permanent | (This      | IETF       | HTTPBIS |
+   |     |            |           | document), |            |         |
+   |     |            |           | Section 3  |            |         |
+   +-----+------------+-----------+------------+------------+---------+
+   |(TBD)| FINAL_DATA | permanent | (This      | IETF       | HTTPBIS |
+   |     |            |           | document), |            |         |
+   |     |            |           | Section 3  |            |         |
+   +-----+------------+-----------+------------+------------+---------+
 
-                                  Table 3
+                                 Table 3
 
-   For this draft version of the protocol, the Capsule Type value
-   0x2028d7ee shall be used provisionally for testing, under the name
-   "DATA-07".
+   For this draft version of the protocol, the Capsule Type values
+   0x2028d7f0 and 0x2028d7f1 shall be used provisionally for testing,
+   under the names "DATA-08" and "FINAL_DATA-08".
 
 9.  References
 
@@ -564,10 +708,6 @@ Table of Contents
               RFC 9220, DOI 10.17487/RFC9220, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9220>.
 
-   [RFC9297]  Schinazi, D. and L. Pardue, "HTTP Datagrams and the
-              Capsule Protocol", RFC 9297, DOI 10.17487/RFC9297, August
-              2022, <https://www.rfc-editor.org/rfc/rfc9297>.
-
    [RFC9298]  Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
               DOI 10.17487/RFC9298, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9298>.
@@ -609,6 +749,11 @@ Table of Contents
               DOI 10.17487/RFC6797, November 2012,
               <https://www.rfc-editor.org/rfc/rfc6797>.
 
+   [RFC7323]  Borman, D., Braden, B., Jacobson, V., and R.
+              Scheffenegger, Ed., "TCP Extensions for High Performance",
+              RFC 7323, DOI 10.17487/RFC7323, September 2014,
+              <https://www.rfc-editor.org/rfc/rfc7323>.
+
    [RFC7469]  Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
               Extension for HTTP", RFC 7469, DOI 10.17487/RFC7469, April
               2015, <https://www.rfc-editor.org/rfc/rfc7469>.
@@ -620,6 +765,10 @@ Table of Contents
    [RFC8942]  Grigorik, I. and Y. Weiss, "HTTP Client Hints", RFC 8942,
               DOI 10.17487/RFC8942, February 2021,
               <https://www.rfc-editor.org/rfc/rfc8942>.
+
+   [RFC9297]  Schinazi, D. and L. Pardue, "HTTP Datagrams and the
+              Capsule Protocol", RFC 9297, DOI 10.17487/RFC9297, August
+              2022, <https://www.rfc-editor.org/rfc/rfc9297>.
 
 Acknowledgments
 
