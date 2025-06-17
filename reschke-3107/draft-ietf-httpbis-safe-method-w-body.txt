@@ -315,6 +315,11 @@ Table of Contents
    Note that any such transformation is performed solely for the purpose
    of generating a cache key; it does not change the request itself.
 
+   Clients can indicate, using the "no-transform" cache directive
+   (Section 5.2.1.6 of [HTTP-CACHING]), that they wish that no such
+   transformation happens (but note that this directive is just
+   advisory).
+
 2.5.  Range Requests
 
    The semantics of Range Requests for QUERY are identical to those for

@@ -1567,6 +1567,10 @@ q=foo&amp;limit=10&amp;sort=-published
 <p id="section-2.4-6">
         Note that any such transformation is performed solely for the purpose of generating a cache key; it
         does not change the request itself.<a href="#section-2.4-6" class="pilcrow">¶</a></p>
+<p id="section-2.4-7">
+        Clients can indicate, using the "no-transform" cache directive (<span><a href="https://rfc-editor.org/rfc/rfc9111#section-5.2.1.6" class="relref">Section 5.2.1.6</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>),
+        that they wish that no such transformation happens (but note that this directive is just
+        advisory).<a href="#section-2.4-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="range">
