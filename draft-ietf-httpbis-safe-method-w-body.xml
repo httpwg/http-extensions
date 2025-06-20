@@ -1038,9 +1038,9 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 </ul>
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-11" anchor="changes.since.11">
-<t>
-  None yet.
-</t>
+<ul>
+  <li>Improve description of caching, clarifying what is required (<eref target="https://github.com/httpwg/http-extensions/tree/reschke-3107"/>)</li>
+</ul>
 </section>
 </section>
 
