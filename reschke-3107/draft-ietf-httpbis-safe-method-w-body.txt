@@ -996,7 +996,8 @@ B.11.  Since draft-ietf-httpbis-safe-method-w-body-10
 
 B.12.  Since draft-ietf-httpbis-safe-method-w-body-11
 
-   None yet.
+   *  Improve description of caching, clarifying what is required
+      (https://github.com/httpwg/http-extensions/tree/reschke-3107)
 
 Acknowledgements
 
