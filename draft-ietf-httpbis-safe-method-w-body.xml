@@ -732,7 +732,8 @@ Date: Sun, 17 Nov 2024, 16:10:25 GMT
       <section title="Using Location" anchor="example.location">
         <t>
           The Location response field identifies a resource that will respond to GET
-          with a fresh result for the QUERY response it appeared on.
+          with a current result for the same process and parameters as the original
+          QUERY request.
         </t>
 <artwork type="http-message">
 GET /contacts/stored-queries/42 HTTP/1.1
