@@ -1055,7 +1055,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Reschke, et al.</td>
-<td class="center">Expires 22 December 2025</td>
+<td class="center">Expires 25 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1066,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">HTTP</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-20" class="published">20 June 2025</time>
+<time datetime="2025-06-23" class="published">23 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-22">22 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-25">25 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1131,7 +1131,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 22 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 25 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1547,30 +1547,23 @@ q=foo&amp;limit=10&amp;sort=-published
         QUERY requests as per <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>).<a href="#section-2.4-1" class="pilcrow">¶</a></p>
 <p id="section-2.4-2">
         The cache key for a QUERY request (see <span><a href="https://rfc-editor.org/rfc/rfc9111#section-2" class="relref">Section 2</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>) <span class="bcp14">MUST</span>
-        incorporate the request content.<a href="#section-2.4-2" class="pilcrow">¶</a></p>
-<p id="section-2.4-3">
-        Caches <span class="bcp14">MAY</span> remove semantically insignificant differences first, thereby
-        improving cache efficiency.<a href="#section-2.4-3" class="pilcrow">¶</a></p>
-<p id="section-2.4-4">
-        For instance, by<a href="#section-2.4-4" class="pilcrow">¶</a></p>
+        incorporate the request content. When doing so, caches <span class="bcp14">SHOULD</span> first normalize request
+        content to remove semantically insignificant differences, thereby improving cache
+        efficiency, by:<a href="#section-2.4-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-2.4-5.1">removing content encoding(s) (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-2.4-5.1" class="pilcrow">¶</a>
+<li class="normal" id="section-2.4-3.1">Removing content encoding(s) (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-2.4-3.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-2.4-5.2">normalizing based upon knowledge of format conventions, as indicated by any
+          <li class="normal" id="section-2.4-3.2">Normalizing based upon knowledge of format conventions, as indicated by any
           media subtype suffix in the request's Content-Type field (e.g., "+json", see
-          <span><a href="https://rfc-editor.org/rfc/rfc6838#section-4.2.8" class="relref">Section 4.2.8</a> of [<a href="#RFC6838" class="cite xref">RFC6838</a>]</span>).<a href="#section-2.4-5.2" class="pilcrow">¶</a>
+          <span><a href="https://rfc-editor.org/rfc/rfc6838#section-4.2.8" class="relref">Section 4.2.8</a> of [<a href="#RFC6838" class="cite xref">RFC6838</a>]</span>).<a href="#section-2.4-3.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-2.4-5.3">normalizing based upon knowledge of the semantics of the content itself, as indicated by
-          the request's Content-Type field.<a href="#section-2.4-5.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-2.4-3.3">Normalizing based upon knowledge of the semantics of the content itself, as indicated by
+          the request's Content-Type field.<a href="#section-2.4-3.3" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-2.4-6">
-        Note that any such transformation is performed solely for the purpose of generating a cache key; it
-        does not change the request itself.<a href="#section-2.4-6" class="pilcrow">¶</a></p>
-<p id="section-2.4-7">
-        Clients can indicate, using the "no-transform" cache directive (<span><a href="https://rfc-editor.org/rfc/rfc9111#section-5.2.1.6" class="relref">Section 5.2.1.6</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>),
-        that they wish that no such transformation happens (but note that this directive is just
-        advisory).<a href="#section-2.4-7" class="pilcrow">¶</a></p>
+<p id="section-2.4-4">
+        Note that any such normalization is performed solely for the purpose of generating a cache key; it
+        does not change the request itself.<a href="#section-2.4-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="range">
@@ -2007,7 +2000,8 @@ Date: Sun, 17 Nov 2024, 16:10:25 GMT
           </h4>
 <p id="appendix-A.4.2-1">
           The Location response field identifies a resource that will respond to GET
-          with a fresh result for the QUERY response it appeared on.<a href="#appendix-A.4.2-1" class="pilcrow">¶</a></p>
+          with a current result for the same process and parameters as the original
+          QUERY request.<a href="#appendix-A.4.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-http-message art-text artwork" id="appendix-A.4.2-2">
 <pre>
 GET /contacts/stored-queries/42 HTTP/1.1
@@ -2432,10 +2426,8 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
         <h3 id="name-since-draft-ietf-httpbis-safe-metho-4">
 <a href="#appendix-B.12" class="section-number selfRef">B.12. </a><a href="#name-since-draft-ietf-httpbis-safe-metho-4" class="section-name selfRef">Since draft-ietf-httpbis-safe-method-w-body-11</a>
         </h3>
-<ul class="normal">
-<li class="normal" id="appendix-B.12-1.1">Improve description of caching, clarifying what is required (<span><a href="https://github.com/httpwg/http-extensions/tree/reschke-3107">https://github.com/httpwg/http-extensions/tree/reschke-3107</a></span>)<a href="#appendix-B.12-1.1" class="pilcrow">¶</a>
-</li>
-        </ul>
+<p id="appendix-B.12-1">
+  None yet.<a href="#appendix-B.12-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
