@@ -796,7 +796,7 @@ See stored query at "/contacts/stored-queries/42".
 </artwork>
         <t>
           This is similar to including Location on a direct response, except that no result
-          for the query is returned. This allows the server to only generate an alternative
+          for the query is returned. This allows the server to only generate or reuse an alternative
           resource. This resource could then be used as shown in
           <xref target="example.location"/>.
         </t>
