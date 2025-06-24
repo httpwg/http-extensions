@@ -1055,7 +1055,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Reschke, et al.</td>
-<td class="center">Expires 25 December 2025</td>
+<td class="center">Expires 26 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1066,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">HTTP</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-23" class="published">23 June 2025</time>
+<time datetime="2025-06-24" class="published">24 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-25">25 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-26">26 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1131,7 +1131,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 26 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1991,6 +1991,10 @@ Date: Sun, 17 Nov 2024, 16:10:25 GMT
 ]
 </pre><a href="#appendix-A.4.1-4" class="pilcrow">¶</a>
 </div>
+<p id="appendix-A.4.1-5">
+          Note that there's no guarantee that the server will implement this resource
+          indefinitely, so, after an error response, the client would need to redo
+          the original QUERY request in order to obtain a new alternative location.<a href="#appendix-A.4.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="example.location">
@@ -2032,7 +2036,9 @@ Date: Sun, 17 Nov 2024, 16:13:17 GMT
 </pre><a href="#appendix-A.4.2-4" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.4.2-5">
-          Assuming no change in the query result, a subsequent conditional GET request with<a href="#appendix-A.4.2-5" class="pilcrow">¶</a></p>
+          Assuming that the server still exposes the resource (for instance, it might have been
+          garbage collected) and that there was no change in the query result, a subsequent
+          conditional GET request with<a href="#appendix-A.4.2-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-http-message art-text artwork" id="appendix-A.4.2-6">
 <pre>
 If-None-Match: "42-1"
@@ -2040,10 +2046,6 @@ If-None-Match: "42-1"
 </div>
 <p id="appendix-A.4.2-7">
           would result in a 304 response (Not Modified, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.5" class="relref">Section 15.4.5</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#appendix-A.4.2-7" class="pilcrow">¶</a></p>
-<p id="appendix-A.4.2-8">
-          Note that there's no guarantee that the server will implement this resource
-          indefinitely, so, after an error response, the client would need to redo
-          the original QUERY request in order to obtain a new alternative location.<a href="#appendix-A.4.2-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="example.indirect">
