@@ -1175,19 +1175,22 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-query" class="internal xref">QUERY</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
-                <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-content-location-and-locati" class="internal xref">Content-Location and Location Fields</a></p>
+                <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-content-location-response-f" class="internal xref">Content-Location Response Field</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
-                <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-redirection" class="internal xref">Redirection</a></p>
+                <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-location-response-field" class="internal xref">Location Response Field</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3">
-                <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="auto internal xref">2.3</a>.  <a href="#name-conditional-requests" class="internal xref">Conditional Requests</a></p>
+                <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="auto internal xref">2.3</a>.  <a href="#name-redirection" class="internal xref">Redirection</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4">
-                <p id="section-toc.1-1.2.2.4.1"><a href="#section-2.4" class="auto internal xref">2.4</a>.  <a href="#name-caching" class="internal xref">Caching</a></p>
+                <p id="section-toc.1-1.2.2.4.1"><a href="#section-2.4" class="auto internal xref">2.4</a>.  <a href="#name-conditional-requests" class="internal xref">Conditional Requests</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.5">
-                <p id="section-toc.1-1.2.2.5.1"><a href="#section-2.5" class="auto internal xref">2.5</a>.  <a href="#name-range-requests" class="internal xref">Range Requests</a></p>
+                <p id="section-toc.1-1.2.2.5.1"><a href="#section-2.5" class="auto internal xref">2.5</a>.  <a href="#name-caching" class="internal xref">Caching</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.6">
+                <p id="section-toc.1-1.2.2.6.1"><a href="#section-2.6" class="auto internal xref">2.6</a>.  <a href="#name-range-requests" class="internal xref">Range Requests</a></p>
 </li>
             </ul>
 </li>
@@ -1476,10 +1479,10 @@ q=foo&amp;limit=10&amp;sort=-published
       instance, a successful query that yields no results can be represented
       by a 204 (No Content, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3.5" class="relref">Section 15.3.5</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) response. If the response includes content,
       it is expected to describe the results of the operation.<a href="#section-2-5" class="pilcrow">¶</a></p>
-<div id="location">
+<div id="content-location">
 <section id="section-2.1">
-        <h3 id="name-content-location-and-locati">
-<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-content-location-and-locati" class="section-name selfRef">Content-Location and Location Fields</a>
+        <h3 id="name-content-location-response-f">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-content-location-response-f" class="section-name selfRef">Content-Location Response Field</a>
         </h3>
 <p id="section-2.1-1">
         A successful response (2xx, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">Section 15.3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
@@ -1490,90 +1493,101 @@ q=foo&amp;limit=10&amp;sort=-published
         a GET request for the indicated URI to retrieve the results of the query
         operation just performed. The indicated resource might be temporary.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 <p id="section-2.1-2">
+        See <a href="#example.content-location" class="auto internal xref">Appendix A.4.1</a> for an example.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="location">
+<section id="section-2.2">
+        <h3 id="name-location-response-field">
+<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-location-response-field" class="section-name selfRef">Location Response Field</a>
+        </h3>
+<p id="section-2.2-1">
         A server can create or locate a resource that identifies the query
         operation for future use. If the server does so, the URI of the resource
         can be included in the Location header field of the 2xx response (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). This represents a claim that a client can
         send a GET request to the indicated URI to repeat the query operation just
         performed without resending the query content. This resource might be
         temporary; if a future request fails, the client can retry using the
-        original QUERY resource and the previously submitted content.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+        original QUERY resource and the previously submitted content.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-2">
+        See <a href="#example.location" class="auto internal xref">Appendix A.4.2</a> for an example.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="redirection">
-<section id="section-2.2">
+<section id="section-2.3">
         <h3 id="name-redirection">
-<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-redirection" class="section-name selfRef">Redirection</a>
+<a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-redirection" class="section-name selfRef">Redirection</a>
         </h3>
-<p id="section-2.2-1">
+<p id="section-2.3-1">
         In some cases, the server may choose to respond indirectly to the QUERY
         request by redirecting the user agent to a different URI (see
         <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4" class="relref">Section 15.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). The semantics of the redirect
-        response do not differ from other methods.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
-<p id="section-2.2-2">
+        response do not differ from other methods.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
+<p id="section-2.3-2">
         For instance, a 303 (See Other, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.4" class="relref">Section 15.4.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
         response would indicate that the Location field identifies an
         alternate URI from which the results can be retrieved
         using a GET request (this use case is also covered by the
-        use of the Location response field in a 2xx response).<a href="#section-2.2-2" class="pilcrow">¶</a></p>
-<p id="section-2.2-3">
+        use of the Location response field in a 2xx response).<a href="#section-2.3-2" class="pilcrow">¶</a></p>
+<p id="section-2.3-3">
         On the other hand, response codes 307 (Temporary Redirect, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.8" class="relref">Section 15.4.8</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) and 308
         (Permanent Redirect, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.9" class="relref">Section 15.4.9</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) can be used to request the user agent to redo
-        the QUERY request on the URI specified by the Location field.<a href="#section-2.2-3" class="pilcrow">¶</a></p>
-<p id="section-2.2-4">
+        the QUERY request on the URI specified by the Location field.<a href="#section-2.3-3" class="pilcrow">¶</a></p>
+<p id="section-2.3-4">
         Various non-normative examples of successful
-        QUERY responses are illustrated in <a href="#examples" class="auto internal xref">Appendix A</a>.<a href="#section-2.2-4" class="pilcrow">¶</a></p>
+        QUERY responses are illustrated in <a href="#examples" class="auto internal xref">Appendix A</a>.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conditional">
-<section id="section-2.3">
+<section id="section-2.4">
         <h3 id="name-conditional-requests">
-<a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-conditional-requests" class="section-name selfRef">Conditional Requests</a>
+<a href="#section-2.4" class="section-number selfRef">2.4. </a><a href="#name-conditional-requests" class="section-name selfRef">Conditional Requests</a>
         </h3>
-<p id="section-2.3-1">
+<p id="section-2.4-1">
         A conditional QUERY requests that the selected representation
         (i.e., the query results, after any content negotiation) be
         returned in the response only under the circumstances described by the
         conditional header field(s), as defined in
-        <span><a href="https://rfc-editor.org/rfc/rfc9110#section-13" class="relref">Section 13</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
+        <span><a href="https://rfc-editor.org/rfc/rfc9110#section-13" class="relref">Section 13</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="caching">
-<section id="section-2.4">
+<section id="section-2.5">
         <h3 id="name-caching">
-<a href="#section-2.4" class="section-number selfRef">2.4. </a><a href="#name-caching" class="section-name selfRef">Caching</a>
+<a href="#section-2.5" class="section-number selfRef">2.5. </a><a href="#name-caching" class="section-name selfRef">Caching</a>
         </h3>
-<p id="section-2.4-1">
+<p id="section-2.5-1">
         The response to a QUERY method is cacheable; a cache <span class="bcp14">MAY</span> use it to satisfy subsequent
-        QUERY requests as per <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>).<a href="#section-2.4-1" class="pilcrow">¶</a></p>
-<p id="section-2.4-2">
+        QUERY requests as per <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>).<a href="#section-2.5-1" class="pilcrow">¶</a></p>
+<p id="section-2.5-2">
         The cache key for a QUERY request (see <span><a href="https://rfc-editor.org/rfc/rfc9111#section-2" class="relref">Section 2</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>) <span class="bcp14">MUST</span>
         incorporate the request content. When doing so, caches <span class="bcp14">SHOULD</span> first normalize request
         content to remove semantically insignificant differences, thereby improving cache
-        efficiency, by:<a href="#section-2.4-2" class="pilcrow">¶</a></p>
+        efficiency, by:<a href="#section-2.5-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-2.4-3.1">Removing content encoding(s) (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-2.4-3.1" class="pilcrow">¶</a>
+<li class="normal" id="section-2.5-3.1">Removing content encoding(s) (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-2.5-3.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-2.4-3.2">Normalizing based upon knowledge of format conventions, as indicated by any
+          <li class="normal" id="section-2.5-3.2">Normalizing based upon knowledge of format conventions, as indicated by any
           media subtype suffix in the request's Content-Type field (e.g., "+json", see
-          <span><a href="https://rfc-editor.org/rfc/rfc6838#section-4.2.8" class="relref">Section 4.2.8</a> of [<a href="#RFC6838" class="cite xref">RFC6838</a>]</span>).<a href="#section-2.4-3.2" class="pilcrow">¶</a>
+          <span><a href="https://rfc-editor.org/rfc/rfc6838#section-4.2.8" class="relref">Section 4.2.8</a> of [<a href="#RFC6838" class="cite xref">RFC6838</a>]</span>).<a href="#section-2.5-3.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-2.4-3.3">Normalizing based upon knowledge of the semantics of the content itself, as indicated by
-          the request's Content-Type field.<a href="#section-2.4-3.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-2.5-3.3">Normalizing based upon knowledge of the semantics of the content itself, as indicated by
+          the request's Content-Type field.<a href="#section-2.5-3.3" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-2.4-4">
+<p id="section-2.5-4">
         Note that any such normalization is performed solely for the purpose of generating a cache key; it
-        does not change the request itself.<a href="#section-2.4-4" class="pilcrow">¶</a></p>
+        does not change the request itself.<a href="#section-2.5-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="range">
-<section id="section-2.5">
+<section id="section-2.6">
         <h3 id="name-range-requests">
-<a href="#section-2.5" class="section-number selfRef">2.5. </a><a href="#name-range-requests" class="section-name selfRef">Range Requests</a>
+<a href="#section-2.6" class="section-number selfRef">2.6. </a><a href="#name-range-requests" class="section-name selfRef">Range Requests</a>
         </h3>
-<p id="section-2.5-1">
+<p id="section-2.6-1">
         The semantics of Range Requests for QUERY are identical to those for GET,
-        as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-14" class="relref">Section 14</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2.5-1" class="pilcrow">¶</a></p>
+        as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-14" class="relref">Section 14</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2.6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1918,7 +1932,8 @@ Accept: application/x-www-form-urlencoded, application/sql
 <a href="#appendix-A.4" class="section-number selfRef">A.4. </a><a href="#name-content-location-location-a" class="section-name selfRef">Content-Location, Location, and Indirect Responses</a>
         </h3>
 <p id="appendix-A.4-1">
-        As described in <a href="#location" class="auto internal xref">Section 2.1</a>, the Content-Location and Location response fields in success responses
+        As described in Sections <a href="#content-location" class="auto internal xref">2.1</a> and
+        <a href="#location" class="auto internal xref">2.2</a>, the Content-Location and Location response fields in success responses
         (2xx, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">Section 15.3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) provide a way to identify alternate resources
         that will respond to GET requests, either for the received result of the request, or for future
         requests to perform the same operation. Going back to the example from <a href="#example.simple" class="auto internal xref">Appendix A.1</a>:<a href="#appendix-A.4-1" class="pilcrow">¶</a></p>
@@ -2054,7 +2069,7 @@ If-None-Match: "42-1"
 <a href="#appendix-A.4.3" class="section-number selfRef">A.4.3. </a><a href="#name-indirect-responses" class="section-name selfRef">Indirect Responses</a>
           </h4>
 <p id="appendix-A.4.3-1">
-          Servers can send "indirect" responses (<a href="#redirection" class="auto internal xref">Section 2.2</a>) using the status code 303 (See Other,
+          Servers can send "indirect" responses (<a href="#redirection" class="auto internal xref">Section 2.3</a>) using the status code 303 (See Other,
           <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.4" class="relref">Section 15.4.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#appendix-A.4.3-1" class="pilcrow">¶</a></p>
 <p id="appendix-A.4.3-2">
           Given the request at the beginning of <a href="#example.content-location.location.indirect" class="auto internal xref">Appendix A.4</a>,
