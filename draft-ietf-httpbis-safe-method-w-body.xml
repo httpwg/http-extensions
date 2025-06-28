@@ -777,9 +777,8 @@ Date: Sun, 17 Nov 2024, 16:13:17 GMT
 ]
 </artwork>
         <t>
-          Assuming that the server still exposes the resource (for instance, it might have been
-          garbage collected) and that there was no change in the query result, a subsequent
-          conditional GET request with
+          Assuming that the server still exposes the resource and that there was no change
+          in the query result, a subsequent conditional GET request with
         </t>
 <artwork type="http-message">
 If-None-Match: "42-1"
