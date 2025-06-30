@@ -82,14 +82,14 @@ In HTTP/1.1, the client uses the proxy by issuing a request as follows:
 * The request SHALL include a single "Host" header field containing the origin of the proxy.
 * The request SHALL include a "Connection" header field with the value "Upgrade".  (Note that this requirement is case-insensitive as per {{Section 7.6.1 of !RFC9110}}.)
 * The request SHALL include an "Upgrade" header field with the value "connect-tcp".
-* The request SHOULD include a "Capsule-Protocol: ?1" header.
+* The request SHOULD include a "Capsule-Protocol: ?1" header (as recommended in {{!RFC9297, Section 3.4}}).
 
 If the request is well-formed and permissible, the proxy MUST attempt to establish the TCP connection before sending any response status code other than "100 (Continue)" (see {{conveying-metadata}}).  If the TCP connection is successful, the response SHALL be as follows:
 
 * The HTTP status code SHALL be "101 (Switching Protocols)".
 * The response SHALL include a "Connection" header field with the value "Upgrade".
 * The response SHALL include a single "Upgrade" header field with the value "connect-tcp".
-* The response SHOULD include a "Capsule-Protocol: ?1" header.
+* The response SHOULD include a "Capsule-Protocol: ?1" header (as above).
 
 If the request is malformed or impermissible, the proxy MUST return a 4XX error code.  If a TCP connection was not established, the proxy MUST NOT switch protocols to "connect-tcp", and the client MAY reuse this connection for additional HTTP requests.
 
@@ -121,6 +121,8 @@ In HTTP/2 and HTTP/3, the proxy MUST include SETTINGS_ENABLE_CONNECT_PROTOCOL in
 * The :path and :scheme pseudo-header fields SHALL contain the path and scheme of the request URI derived from the proxy's URI Template.
 
 A templated TCP proxying request that does not conform to all of these requirements represents a client error (see {{!RFC9110, Section 15.5}}) and may be malformed (see {{Section 8.1.1 of !RFC9113}} and {{Section 4.1.2 of !RFC9114}}).
+
+Additionally the "capsule-protocol" header field SHOULD be present with a value of "?1" (as recommended in {{!RFC9297, Section 3.4}}).
 
 ~~~
 HEADERS
