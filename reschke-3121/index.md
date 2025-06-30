@@ -1,4 +1,4 @@
-# Editor's drafts for reschke-3114 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/reschke-3114)
+# Editor's drafts for reschke-3121 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/reschke-3121)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
