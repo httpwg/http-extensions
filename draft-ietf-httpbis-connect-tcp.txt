@@ -195,7 +195,8 @@ Table of Contents
    *  The request SHALL include an "Upgrade" header field with the value
       "connect-tcp".
 
-   *  The request SHOULD include a "Capsule-Protocol: ?1" header.
+   *  The request SHOULD include a "Capsule-Protocol: ?1" header (as
+      recommended in [RFC9297], Section 3.4).
 
    If the request is well-formed and permissible, the proxy MUST attempt
    to establish the TCP connection before sending any response status
@@ -210,7 +211,8 @@ Table of Contents
    *  The response SHALL include a single "Upgrade" header field with
       the value "connect-tcp".
 
-   *  The response SHOULD include a "Capsule-Protocol: ?1" header.
+   *  The response SHOULD include a "Capsule-Protocol: ?1" header (as
+      above).
 
    If the request is malformed or impermissible, the proxy MUST return a
    4XX error code.  If a TCP connection was not established, the proxy
@@ -256,6 +258,9 @@ Table of Contents
    these requirements represents a client error (see [RFC9110],
    Section 15.5) and may be malformed (see Section 8.1.1 of [RFC9113]
    and Section 4.1.2 of [RFC9114]).
+
+   Additionally the "capsule-protocol" header field SHOULD be present
+   with a value of "?1" (as recommended in [RFC9297], Section 3.4).
 
    HEADERS
    :method = CONNECT
@@ -708,6 +713,10 @@ Table of Contents
               RFC 9220, DOI 10.17487/RFC9220, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9220>.
 
+   [RFC9297]  Schinazi, D. and L. Pardue, "HTTP Datagrams and the
+              Capsule Protocol", RFC 9297, DOI 10.17487/RFC9297, August
+              2022, <https://www.rfc-editor.org/rfc/rfc9297>.
+
    [RFC9298]  Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
               DOI 10.17487/RFC9298, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9298>.
@@ -765,10 +774,6 @@ Table of Contents
    [RFC8942]  Grigorik, I. and Y. Weiss, "HTTP Client Hints", RFC 8942,
               DOI 10.17487/RFC8942, February 2021,
               <https://www.rfc-editor.org/rfc/rfc8942>.
-
-   [RFC9297]  Schinazi, D. and L. Pardue, "HTTP Datagrams and the
-              Capsule Protocol", RFC 9297, DOI 10.17487/RFC9297, August
-              2022, <https://www.rfc-editor.org/rfc/rfc9297>.
 
 Acknowledgments
 
