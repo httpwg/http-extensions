@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 1 January 2026                                       Cloudflare
+Expires: 2 January 2026                                       Cloudflare
                                                                M. Bishop
                                                                   Akamai
-                                                            30 June 2025
+                                                             1 July 2025
 
 
                          The HTTP QUERY Method
@@ -16,8 +16,12 @@ Expires: 1 January 2026                                       Cloudflare
 
 Abstract
 
-   This specification defines a new HTTP method, QUERY, as a safe,
-   idempotent request method that can carry request content.
+   This specification defines the QUERY method for HTTP.  A QUERY
+   requests that the request target process the enclosed content in a
+   safe/idempotent manner and then respond with the result of that
+   processing.  This is similar to POST requests but can be
+   automatically repeated or restarted without concern for partial state
+   changes.
 
 Editorial Note
 
@@ -48,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 January 2026.
+   This Internet-Draft will expire on 2 January 2026.
 
 Copyright Notice
 
@@ -999,6 +1003,9 @@ B.12.  Since draft-ietf-httpbis-safe-method-w-body-11
 
    *  Address HTTPDIR/RF feedback on example appendix
       (https://github.com/httpwg/http-extensions/issues/3114)
+
+   *  Address HTTPDIR/RF feedback on abstract
+      (https://github.com/httpwg/http-extensions/issues/3121)
 
 Acknowledgements
 
