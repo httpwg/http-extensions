@@ -62,15 +62,11 @@
     <abstract>
       <t>
         This specification defines the QUERY method for HTTP.
-      </t>
-      <t>
         A QUERY requests that the request target process the enclosed
         content in a safe/idempotent manner and then respond with the
         result of that processing. This is similar to POST requests but
         can be automatically repeated or restarted without concern for
-        partial state changes. The kind of processing desired to perform
-        the QUERY is indicated by the Content-Type header field value
-        enclosed with the request.
+        partial state changes.
       </t>
     </abstract>
 
