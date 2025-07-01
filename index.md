@@ -54,6 +54,24 @@ View [saved issues](issues.html), or the latest GitHub [issues](https://github.c
 | [No-Vary-Search](reschke-3121b/draft-ietf-httpbis-no-vary-search.html "The No-Vary-Search HTTP Response Header Field (HTML)") | [plain text](reschke-3121b/draft-ietf-httpbis-no-vary-search.txt "The No-Vary-Search HTTP Response Header Field (Text)") | same as main |
 | [Templated CONNECT-TCP](reschke-3121b/draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](reschke-3121b/draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | same as main |
 
+## Preview for branch [reschke-3122](reschke-3122)
+
+| Draft |     |     |     |
+| ----- | --- | --- | --- |
+| [Retrofit Structured Fields](reschke-3122/draft-ietf-httpbis-retrofit.html "Retrofit Structured Fields for HTTP (HTML)") | [plain text](reschke-3122/draft-ietf-httpbis-retrofit.txt "Retrofit Structured Fields for HTTP (Text)") | same as main |
+| [HTTP Server Secondary Cert Auth](reschke-3122/draft-ietf-httpbis-secondary-server-certs.html "Secondary Certificate Authentication of HTTP Servers (HTML)") | [plain text](reschke-3122/draft-ietf-httpbis-secondary-server-certs.txt "Secondary Certificate Authentication of HTTP Servers (Text)") | same as main |
+| [Compression Dictionary Transport](reschke-3122/draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](reschke-3122/draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | same as main |
+| [Incremental HTTP Messages](reschke-3122/draft-ietf-httpbis-incremental.html "Incremental HTTP Messages (HTML)") | [plain text](reschke-3122/draft-ietf-httpbis-incremental.txt "Incremental HTTP Messages (Text)") | same as main |
+| [The HTTP Wrap Up Capsule](reschke-3122/draft-ietf-httpbis-wrap-up.html "The HTTP Wrap Up Capsule (HTML)") | [plain text](reschke-3122/draft-ietf-httpbis-wrap-up.txt "The HTTP Wrap Up Capsule (Text)") | same as main |
+| [Resumable Uploads](reschke-3122/draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](reschke-3122/draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | same as main |
+| [HTTP Cache Groups](reschke-3122/draft-ietf-httpbis-cache-groups.html "HTTP Cache Groups (HTML)") | [plain text](reschke-3122/draft-ietf-httpbis-cache-groups.txt "HTTP Cache Groups (Text)") | same as main |
+| [The HTTP QUERY Method](reschke-3122/draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](reschke-3122/draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-safe-method-w-body.txt&url_2=https://httpwg.github.io/http-extensions/reschke-3122/draft-ietf-httpbis-safe-method-w-body.txt) |
+| [Optimistic HTTP Upgrade Security](reschke-3122/draft-ietf-httpbis-optimistic-upgrade.html "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (HTML)") | [plain text](reschke-3122/draft-ietf-httpbis-optimistic-upgrade.txt "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (Text)") | same as main |
+| [Cookies](reschke-3122/draft-ietf-httpbis-layered-cookies.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](reschke-3122/draft-ietf-httpbis-layered-cookies.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
+| [Cookies: HTTP State Management Mechanism](reschke-3122/draft-ietf-httpbis-rfc6265bis.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](reschke-3122/draft-ietf-httpbis-rfc6265bis.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
+| [No-Vary-Search](reschke-3122/draft-ietf-httpbis-no-vary-search.html "The No-Vary-Search HTTP Response Header Field (HTML)") | [plain text](reschke-3122/draft-ietf-httpbis-no-vary-search.txt "The No-Vary-Search HTTP Response Header Field (Text)") | same as main |
+| [Templated CONNECT-TCP](reschke-3122/draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](reschke-3122/draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | same as main |
+
 ## Preview for branch [reschke-3121](reschke-3121)
 
 | Draft |     |     |     |
