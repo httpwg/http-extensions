@@ -27,8 +27,7 @@ author:
   ins: S. Bingler
   name: Steven Bingler
   role: editor
-  organization: Google LLC
-  email: bingler@google.com
+  email: bingler@chromium.org
 -
   ins: M. West
   name: Mike West
