@@ -93,7 +93,8 @@
   <section title="Introduction" anchor="introduction">
     <t>
       This specification defines the HTTP QUERY request method as a means of
-      making a safe, idempotent request (<xref target="HTTP" section="9.2"/>) that contains content.
+      making a safe, idempotent request (<xref target="HTTP" section="9.2"/>) containing
+      content that describes how the request is to be processed by the target resource.
     </t>
     <t>
       Most often, this is desirable when the data conveyed in a request is
