@@ -13,6 +13,3 @@ indent_style = tab
 
 [*.md]
 indent_size = 2
-
-[*.xml]
-indent_size = 2
