@@ -61,8 +61,12 @@
 
     <abstract>
       <t>
-        This specification defines a new HTTP method, QUERY, as a safe, idempotent
-        request method that can carry request content.
+        This specification defines the QUERY method for HTTP.
+        A QUERY requests that the request target process the enclosed
+        content in a safe/idempotent manner and then respond with the
+        result of that processing. This is similar to POST requests but
+        can be automatically repeated or restarted without concern for
+        partial state changes.
       </t>
     </abstract>
 
@@ -1042,6 +1046,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <section title="Since draft-ietf-httpbis-safe-method-w-body-11" anchor="changes.since.11">
 <ul>
   <li>Address HTTPDIR/RF feedback on example appendix (<eref target="https://github.com/httpwg/http-extensions/issues/3114"/>)</li>
+  <li>Address HTTPDIR/RF feedback on abstract (<eref target="https://github.com/httpwg/http-extensions/issues/3121"/>)</li>
 </ul>
 </section>
 </section>
