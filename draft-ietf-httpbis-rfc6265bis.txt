@@ -3,11 +3,12 @@
 
 
 HTTP                                                     S. Bingler, Ed.
-Internet-Draft                                              M. West, Ed.
-Obsoletes: 6265 (if approved)                                 Google LLC
-Intended status: Standards Track                        J. Wilander, Ed.
-Expires: 2 January 2026                                       Apple, Inc
-                                                             1 July 2025
+Internet-Draft                                                          
+Obsoletes: 6265 (if approved)                               M. West, Ed.
+Intended status: Standards Track                              Google LLC
+Expires: 3 January 2026                                 J. Wilander, Ed.
+                                                              Apple, Inc
+                                                             2 July 2025
 
 
                 Cookies: HTTP State Management Mechanism
@@ -53,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 January 2026.
+   This Internet-Draft will expire on 3 January 2026.
 
 Copyright Notice
 
@@ -2821,8 +2822,7 @@ Acknowledgements
 Authors' Addresses
 
    Steven Bingler (editor)
-   Google LLC
-   Email: bingler@google.com
+   Email: bingler@chromium.org
 
 
    Mike West (editor)
