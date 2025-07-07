@@ -116,8 +116,9 @@ Table of Contents
 1.  Introduction
 
    This specification defines the HTTP QUERY request method as a means
-   of making a safe, idempotent request (Section 9.2 of [HTTP]) that
-   contains content.
+   of making a safe, idempotent request (Section 9.2 of [HTTP])
+   containing content that describes how the request is to be processed
+   by the target resource.
 
    Most often, this is desirable when the data conveyed in a request is
    too voluminous to be encoded into the request's URI.  For example,
