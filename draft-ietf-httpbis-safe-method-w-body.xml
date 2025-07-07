@@ -1048,6 +1048,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <ul>
   <li>Address HTTPDIR/RF feedback on example appendix (<eref target="https://github.com/httpwg/http-extensions/issues/3114"/>)</li>
   <li>Address HTTPDIR/RF feedback on abstract (<eref target="https://github.com/httpwg/http-extensions/issues/3121"/>)</li>
+  <li>Address HTTPDIR/RF feedback on introduction (<eref target="https://github.com/httpwg/http-extensions/issues/3122"/>)</li>
 </ul>
 </section>
 </section>
