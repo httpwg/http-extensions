@@ -5,10 +5,10 @@
 httpbis                                                 奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                T. Pauly
-Expires: 3 January 2026                                            Apple
+Expires: 8 January 2026                                            Apple
                                                               M. Thomson
                                                                  Mozilla
-                                                             2 July 2025
+                                                             7 July 2025
 
 
                        Incremental HTTP Messages
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 January 2026.
+   This Internet-Draft will expire on 8 January 2026.
 
 Copyright Notice
 
@@ -231,9 +231,9 @@ Table of Contents
    [CHUNKED-OHTTP]
               Pauly, T. and M. Thomson, "Chunked Oblivious HTTP
               Messages", Work in Progress, Internet-Draft, draft-ietf-
-              ohai-chunked-ohttp-04, 25 April 2025,
+              ohai-chunked-ohttp-05, 2 July 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ohai-
-              chunked-ohttp-04>.
+              chunked-ohttp-05>.
 
    [PROXY-STATUS]
               Nottingham, M. and P. Sikora, "The Proxy-Status HTTP

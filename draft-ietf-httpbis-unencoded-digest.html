@@ -4,17 +4,21 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>Incremental HTTP Messages</title>
-<meta content="奥 一穂 (Kazuho Oku)" name="author">
-<meta content="Tommy Pauly" name="author">
-<meta content="Martin Thomson" name="author">
-<meta content='
-       This document specifies the "Incremental" HTTP header field, which instructs
-HTTP intermediaries to forward the HTTP message incrementally. 
-    ' name="description">
+<title>HTTP Unencoded Digest</title>
+<meta content="Lucas Pardue" name="author">
+<meta content="Mike West" name="author">
+<meta content="
+       The Repr-Digest and Content-Digest integrity fields are subject to HTTP content
+coding considerations. There are some use cases that benefit from the
+unambiguous exchange of integrity digests of unencoded representation. The
+Unencoded-Digest and Want-Unencoded-Digest fields complement existing integrity
+fields for this purpose. 
+    " name="description">
 <meta content="xml2rfc 3.29.0" name="generator">
-<meta content="internet-draft" name="keyword">
-<meta content="draft-ietf-httpbis-incremental-latest" name="ietf.draft">
+<meta content="next generation" name="keyword">
+<meta content="unicorn" name="keyword">
+<meta content="sparkling distributed ledger" name="keyword">
+<meta content="draft-ietf-httpbis-unencoded-digest-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.29.0
     Python 3.12.11
@@ -30,7 +34,7 @@ HTTP intermediaries to forward the HTTP message incrementally.
     setuptools 80.9.0
     wcwidth 0.2.13
 -->
-<link href="draft-ietf-httpbis-incremental.xml" rel="alternate" type="application/rfc+xml">
+<link href="draft-ietf-httpbis-unencoded-digest.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
 <style type="text/css">@font-face {
   font-family: 'Lora';
@@ -1046,11 +1050,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">Incremental HTTP Messages</td>
+<td class="center">HTTP Unencoded Digest</td>
 <td class="right">July 2025</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Oku, et al.</td>
+<td class="left">Pardue &amp; West</td>
 <td class="center">Expires 8 January 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
@@ -1059,9 +1063,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <div id="internal-metadata" class="document-information">
 <dl id="identifiers">
 <dt class="label-workgroup">Workgroup:</dt>
-<dd class="workgroup">httpbis</dd>
+<dd class="workgroup">HTTP</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-ietf-httpbis-incremental-latest</dd>
+<dd class="internet-draft">draft-ietf-httpbis-unencoded-digest-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
 <time datetime="2025-07-07" class="published">7 July 2025</time>
@@ -1073,26 +1077,39 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
-      <div class="author-name">
-<span class="non-ascii">奥 一穂</span> (<span class="ascii">K. Oku</span>)</div>
-<div class="org">Fastly</div>
+      <div class="author-name">L. Pardue</div>
+<div class="org">Cloudflare</div>
 </div>
 <div class="author">
-      <div class="author-name">T. Pauly</div>
-<div class="org">Apple</div>
-</div>
-<div class="author">
-      <div class="author-name">M. Thomson</div>
-<div class="org">Mozilla</div>
+      <div class="author-name">M. West</div>
+<div class="org">Google</div>
 </div>
 </dd>
 </dl>
 </div>
-<h1 id="title">Incremental HTTP Messages</h1>
+<h1 id="title">HTTP Unencoded Digest</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document specifies the "Incremental" HTTP header field, which instructs
-HTTP intermediaries to forward the HTTP message incrementally.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">The Repr-Digest and Content-Digest integrity fields are subject to HTTP content
+coding considerations. There are some use cases that benefit from the
+unambiguous exchange of integrity digests of unencoded representation. The
+Unencoded-Digest and Want-Unencoded-Digest fields complement existing integrity
+fields for this purpose.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-ietf-httpbis-unencoded-digest/">https://datatracker.ietf.org/doc/draft-ietf-httpbis-unencoded-digest/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        HTTP Working Group mailing list (<span><a href="mailto:ietf-http-wg@w3.org">mailto:ietf-http-wg@w3.org</a></span>),
+        which is archived at <span><a href="https://lists.w3.org/Archives/Public/ietf-http-wg/">https://lists.w3.org/Archives/Public/ietf-http-wg/</a></span>.
+        Working Group information can be found at <span><a href="https://httpwg.org/">https://httpwg.org/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/httpwg/http-extensions/labels/unecoded-digest">https://github.com/httpwg/http-extensions/labels/unecoded-digest</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1149,30 +1166,31 @@ HTTP intermediaries to forward the HTTP message incrementally.<a href="#section-
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-the-incremental-header-fiel" class="internal xref">The Incremental Header Field</a></p>
+            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-the-unencoded-digest-field" class="internal xref">The Unencoded-Digest Field</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-the-want-unencoded-digest-f" class="internal xref">The Want-Unencoded-Digest Field</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-messages-containing-both-un" class="internal xref">Messages containing both Unencoded-Digest and Content-Encoding</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-references" class="internal xref">References</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
-                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
-                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-integrity-fields-are-comple" class="internal xref">Integrity Fields are Complementary</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1183,34 +1201,44 @@ HTTP intermediaries to forward the HTTP message incrementally.<a href="#section-
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">HTTP <span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span> permits receivers to begin processing portions of HTTP
-messages as they arrive, rather than requiring them to wait for the entire HTTP
-message to be received before acting.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">Some applications are specifically designed to take advantage of this
-capability.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">For example, Server-Sent Events <span>[<a href="#SSE" class="cite xref">SSE</a>]</span> uses a long-running HTTP response, where
-the server continually sends notifications as they become available.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">In the case of Chunked Oblivious HTTP Messages
-<span>[<a href="#CHUNKED-OHTTP" class="cite xref">CHUNKED-OHTTP</a>]</span>, the client opens an HTTP request
-and incrementally sends application messages, while the server can start responding
-even before the HTTP request is fully complete. In this way, the HTTP
-request-response pair could create what is, in effect, a bi-directional
-communication channel.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">Applications that rely on incremental delivery of messages are fragile when HTTP intermediaries are involved.
-This is because HTTP intermediaries are not only permitted but are frequently
-deployed to buffer complete HTTP messages before forwarding them downstream
-(<span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.6" class="relref">Section 7.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">If such a buffering HTTP intermediary exists between the client and the server,
-these applications may fail to function as intended.<a href="#section-1-6" class="pilcrow">¶</a></p>
-<p id="section-1-7">In the case of Server-Sent Events, an intermediary that tries to buffer the HTTP
-response completely before forwarding it could be left waiting indefinitely.
-A client might never receive any portion of the response.<a href="#section-1-7" class="pilcrow">¶</a></p>
-<p id="section-1-8">In the case of requests that involve any bi-directional exchange,
-an intermediary that tries to buffer entire messages --
-either request or response -- prevents any data from being delivered.<a href="#section-1-8" class="pilcrow">¶</a></p>
-<p id="section-1-9">To help avoid such behavior, this document specifies the "Incremental" HTTP header
-field, which instructs HTTP intermediaries to begin forwarding the HTTP message
-downstream before receiving the complete message.<a href="#section-1-9" class="pilcrow">¶</a></p>
+<p id="section-1-1">The <code>Repr-Digest</code> and <code>Content-Digest</code> integrity fields defined in
+<span>[<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span> are suitable for a range of use cases. However,
+because the fields are subject to HTTP content coding considerations, it is
+difficult to support use cases that could benefit from the exchange of integrity
+digests of the unencoded representation.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">As a simple example, an application using HTTP might be presented with request
+or response representation data that has been transparently decoded.  Attempting
+to verify the integrity of the data against the <code>Repr-Digest</code> would first require
+re-encoding that data using the same coding indicated by the Content-Encoding
+header field (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>), which is not always possible
+(see <span><a href="https://rfc-editor.org/rfc/rfc9530#section-6.5" class="relref">Section 6.5</a> of [<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>).<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">Although receivers could feasibly re-encode data in order to carry out
+<code>Repr-Digest</code> validation, it might be impractical for certain kinds of
+environments. For instance, browsers tend to provide built-in support for
+transparent decoding but little support for encoding; while this could be done
+via the use of additional libraries it would create work in JavaScript that
+could contend with other activities. Even on the server side, the re-encoding of
+received data might not be acceptable; some coding algorithms are optimized
+towards efficient decoding at the cost of complex encoding. A Content-Encoding
+field value that indicates a series of encodings adds further complexity.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">A more complex example involves HTTP Range Requests (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-14" class="relref">Section 14</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>), where a client fetches multiple partial representations from
+different origins and "stitches" them back into a whole. Unfortunately, if the
+origins apply different content coding, the <code>Repr-Digest</code> field will vary by the
+server's selected encoding (i.e. the Content-Encoding header field, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). This provides a challenge for a client - in order to verify the
+integrity of the pieced-together whole it would need to remove the encoding of
+each part, combine them, and then encode the result in order to compare against
+one or more <code>Repr-Digest</code>s.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">The Accept-Encoding header field (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.3" class="relref">Section 12.5.3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) provides the means
+to indicate preferences for content coding. It is possible for an endpoint to
+indicate a preference for no encoding, for example by sending the "identity"
+token. However, codings often provide data compression that is advantageous.
+Disabling content coding in order to simplify integrity checking is possibly an
+unacceptable trade off.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">For a variety of reasons, decoding and re-encoding content in order to benefit
+from HTTP integrity fields is not preferable. This specification defines the
+Unencoded-Digest and Want-Unencoded-Digest fields to support a simpler validation
+workflow in some scenarios where content coding is applied. These fields
+complement the other integrity fields defined in <span>[<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>.<a href="#section-1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1222,177 +1250,314 @@ downstream before receiving the complete message.<a href="#section-1-9" class="p
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">This document relies on structured field definitions
-of Item and Boolean <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-2">This document uses the Augmented BNF defined in <span>[<a href="#RFC5234" class="cite xref">RFC5234</a>]</span> and updated by
+<span>[<a href="#RFC7405" class="cite xref">RFC7405</a>]</span>. This includes the rules: LF (line feed)<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">This document uses the following terminology from <span><a href="https://rfc-editor.org/rfc/rfc9651#section-3" class="relref">Section 3</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> to specify syntax and parsing: Byte Sequence,
+Dictionary, and Integer.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">The definitions "representation", "selected representation", "representation
+data", "representation metadata", and "content" in this document are to be
+interpreted as described in <span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">"Integrity fields" is the collective term for <code>Content-Digest</code>, <code>Repr-Digest</code>,
+and <code>Unencoded-Digest</code>.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">"Integrity preference fields" is the collective term for <code>Want-Repr-Digest</code>,
+<code>Want-Content-Digest</code>, and <code>Want-Unencoded-Digest</code>.<a href="#section-2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="the-incremental-header-field">
+<div id="unencoded-digest">
 <section id="section-3">
-      <h2 id="name-the-incremental-header-fiel">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-the-incremental-header-fiel" class="section-name selfRef">The Incremental Header Field</a>
+      <h2 id="name-the-unencoded-digest-field">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-the-unencoded-digest-field" class="section-name selfRef">The Unencoded-Digest Field</a>
       </h2>
-<p id="section-3-1">The Incremental HTTP header field expresses the sender's intent for HTTP
-intermediaries to start forwarding the message downstream before the entire
-message is received.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">The Incremental header field is defined as a structured field
-<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> of type Item.  There is just one valid value, which is of
-type Boolean: "?1".<a href="#section-3-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3-3">
+<p id="section-3-1">The <code>Unencoded-Digest</code> HTTP field can be used in requests and responses to
+communicate digests that are calculated using a hashing algorithm applied to the
+representation with no content coding (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4.1" class="relref">Section 8.4.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">Apart from the content coding concerns, <code>Unencoded-Digest</code> behaves similarly
+to <code>Repr-Digest</code> (<span><a href="https://rfc-editor.org/rfc/rfc9530#section-3" class="relref">Section 3</a> of [<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>). In the absence of content
+coding, <code>Unencoded-Digest</code> is identical to <code>Repr-Digest</code>.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3"><code>Unencoded-Digest</code> is a <code>Dictionary</code> (see <span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.2" class="relref">Section 3.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>)
+where each:<a href="#section-3-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3-4.1">
+          <p id="section-3-4.1.1">key conveys the hashing algorithm (see <span><a href="https://rfc-editor.org/rfc/rfc9530#section-5" class="relref">Section 5</a> of [<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>) used to
+compute the digest;<a href="#section-3-4.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-3-4.2">
+          <p id="section-3-4.2.1">value is a <code>Byte Sequence</code> (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.3.5" class="relref">Section 3.3.5</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>), that
+conveys an encoded version of the byte output produced by the digest
+calculation.<a href="#section-3-4.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-3-5">For example:<a href="#section-3-5" class="pilcrow">¶</a></p>
+<div class="lang-http-message sourcecode" id="section-3-6">
 <pre>
-Incremental = ?1
-</pre><a href="#section-3-3" class="pilcrow">¶</a>
+NOTE: '\' line wrapping per RFC 8792
+
+Unencoded-Digest: \
+  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
+  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
+</pre><a href="#section-3-6" class="pilcrow">¶</a>
 </div>
-<p id="section-3-4">Upon receiving a header section that includes an Incremental header field with a
-true value, HTTP intermediaries <span class="bcp14">SHOULD NOT</span> buffer the entire message before
-forwarding it.  Instead, intermediaries <span class="bcp14">SHOULD</span> transmit the header section
-downstream and continuously forward the bytes of the message body as they
-arrive. As the Incremental header field indicates only how the message content is
-to be forwarded, intermediaries can still buffer the entire header and trailer
-sections of the message before forwarding them downstream.<a href="#section-3-4" class="pilcrow">¶</a></p>
-<p id="section-3-5">The Incremental HTTP header field applies to each HTTP message. Therefore, if
-both the HTTP request and response need to be forwarded incrementally, the
-Incremental HTTP header field <span class="bcp14">MUST</span> be set for both the HTTP request and the
-response.<a href="#section-3-5" class="pilcrow">¶</a></p>
-<p id="section-3-6">The Incremental field is advisory. Intermediaries that are unaware of the field
-or that do not support the field might buffer messages, even when explicitly
-requested otherwise.  Clients and servers therefore cannot expect all
-intermediaries to understand and respect a request to deliver messages
-incrementally. Clients can rely on prior knowledge or probe for support on
-individual resources.<a href="#section-3-6" class="pilcrow">¶</a></p>
-<p id="section-3-7">The Incremental header field facilitates the establishment of a bidirectional
-byte channel over HTTP, as its presence in both requests and responses instructs
-intermediaries to forward early responses (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.5" class="relref">Section 7.5</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) and to
-transmit message contents incrementally in both directions.  However, when developing
-bidirectional protocols over HTTP, Extended CONNECT <span>[<a href="#RFC8441" class="cite xref">RFC8441</a>]</span><span>[<a href="#RFC9220" class="cite xref">RFC9220</a>]</span> is
-generally more consistent with HTTP's architecture.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<p id="section-3-7">The <code>Dictionary</code> type can be used, for example, to attach multiple digests
+calculated using different hashing algorithms in order to support a population
+of endpoints with different or evolving capabilities. Such an approach could
+support transitions away from weaker algorithms (see
+<span><a href="https://rfc-editor.org/rfc/rfc9530#section-6.6" class="relref">Section 6.6</a> of [<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>).<a href="#section-3-7" class="pilcrow">¶</a></p>
+<div class="lang-http-message sourcecode" id="section-3-8">
+<pre>
+NOTE: '\' line wrapping per RFC 8792
+
+Unencoded-Digest: \
+  sha-256=:d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=:,\
+  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
+  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
+</pre><a href="#section-3-8" class="pilcrow">¶</a>
+</div>
+<p id="section-3-9">A recipient <span class="bcp14">MAY</span> ignore any or all digests. Application-specific behavior or
+local policy <span class="bcp14">MAY</span> set additional constraints on the processing and validation
+practices of the conveyed digests. The security considerations cover some of
+the issues related to ignoring digests (see <span><a href="https://rfc-editor.org/rfc/rfc9530#section-6.6" class="relref">Section 6.6</a> of [<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>)
+and validating multiple digests (see <span><a href="https://rfc-editor.org/rfc/rfc9530#section-6.7" class="relref">Section 6.7</a> of [<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>).<a href="#section-3-9" class="pilcrow">¶</a></p>
+<p id="section-3-10">A sender <span class="bcp14">MAY</span> send a digest without knowing whether the recipient supports a
+given hashing algorithm. A sender <span class="bcp14">MAY</span> send a digest if it knows the recipient
+will ignore it.<a href="#section-3-10" class="pilcrow">¶</a></p>
+<p id="section-3-11"><code>Unencoded-Digest</code> can be sent in a trailer section. In this case,
+<code>Unencoded-Digest</code> <span class="bcp14">MAY</span> be merged into the header section; see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-6.5.1" class="relref">Section 6.5.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-3-11" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="want-unencoded-digest">
+<section id="section-4">
+      <h2 id="name-the-want-unencoded-digest-f">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-the-want-unencoded-digest-f" class="section-name selfRef">The Want-Unencoded-Digest Field</a>
+      </h2>
+<p id="section-4-1"><code>Want-Unencoded-Digest</code> is an integrity preference field; see <span><a href="https://rfc-editor.org/rfc/rfc9530#section-4" class="relref">Section 4</a> of [<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>. It indicates that the sender would like to receive (via the
+<code>Unencoded-Digest</code> field) a representation digest on messages associated with the
+request URI and representation metadata where no content coding is applied.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">If <code>Want-Unencoded-Digest</code> is used in a response, it indicates that the server
+would like the client to provide the <code>Unencoded-Digest</code> field on future requests.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-3"><code>Want-Unencoded-Digest</code> is only a hint. The receiver of the field can ignore it
+and send an <code>Unencoded-Digest</code> field using any algorithm or omit one entirely. It
+is not a protocol error if preferences are ignored. Applications that use
+<code>Unencoded-Digest</code> and <code>Want-Unencoded-Digest</code> can define expectations or
+constraints that operate in addition to this specification.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-4"><code>Want-Unencoded-Digest</code> is of type <code>Dictionary</code> where each:<a href="#section-4-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4-5.1">
+          <p id="section-4-5.1.1">key conveys the hashing algorithm;<a href="#section-4-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-5.2">
+          <p id="section-4-5.2.1">value is an <code>Integer</code> (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.3.1" class="relref">Section 3.3.1</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>) that conveys an
+ascending, relative, weighted preference. It must be in the range 0 to 10
+inclusive. 1 is the least preferred, 10 is the most preferred, and a value of
+0 means "not acceptable".<a href="#section-4-5.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-4-6">Examples:<a href="#section-4-6" class="pilcrow">¶</a></p>
+<div class="lang-http-message sourcecode" id="section-4-7">
+<pre>
+Want-Unencoded-Digest: sha-256=1
+Want-Unencoded-Digest: sha-512=3, sha-256=10, unixsum=0
+</pre><a href="#section-4-7" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="encoding-and-unencoded">
+<section id="section-5">
+      <h2 id="name-messages-containing-both-un">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-messages-containing-both-un" class="section-name selfRef">Messages containing both Unencoded-Digest and Content-Encoding</a>
+      </h2>
+<p id="section-5-1">Digests delivered through <code>Unencoded-Digest</code> apply to the unencoded representation. If a message is
+received with content coding, a recipient needs to decode the message in order
+to calculate the digest that can subsequently be used for validation. If
+multiple content codings are applied, the recipient needs to decode all
+encodings in order before validation.<a href="#section-5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="integrity-fields-are-complementary">
+<section id="section-6">
+      <h2 id="name-integrity-fields-are-comple">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-integrity-fields-are-comple" class="section-name selfRef">Integrity Fields are Complementary</a>
+      </h2>
+<p id="section-6-1">Integrity fields can be used in combination to address different and
+complementary needs, particularly the cases described in <a href="#introduction" class="auto internal xref">Section 1</a>.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">In the following examples, the unencoded response data is the string "An
+unexceptional string" following by an LF.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-3">The first example demonstrates a request that uses content negotiation.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<span id="name-get-request-with-content-ne"></span><figure id="figure-1">
+        <div class="lang-http-message sourcecode" id="section-6-4.1">
+<pre>
+GET /boringstring HTTP/1.1
+Host: example.org
+Accept-Encoding: gzip
+
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-get-request-with-content-ne" class="selfRef">GET request with content negotiation</a>
+        </figcaption></figure>
+<p id="section-6-5">The server responds with the full GZIP-encoded representation. The <code>Repr-Digest</code>
+and <code>Unencoded-Digest</code> therefore differ.<a href="#section-6-5" class="pilcrow">¶</a></p>
+<span id="name-get-response-with-gzip-enco"></span><figure id="figure-2">
+        <div class="lang-http-message sourcecode" id="section-6-6.1">
+<pre>
+NOTE: '\' line wrapping per RFC 8792
+
+HTTP/1.1 200 OK
+Content-Encoding: gzip
+Repr-Digest: \
+  sha-256=:XyjvEuFb1P5rqc2le3vQm7M96DwZhvmOwqHLu2xVpY4=:
+Unencoded-Digest: \
+  sha-256=:5Bv3NIx05BPnh0jMph6v1RJ5Q7kl9LKMtQxmvc9+Z7Y=:
+
+1f 8b 08 00 79 1f 08 64 00 ff
+73 cc 53 28 cd 4b ad 48 4e 2d
+28 c9 cc cf 4b cc 51 28 2e 29
+ca cc 4b e7 02 00 7e af 07 44
+18 00 00 00
+
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-get-response-with-gzip-enco" class="selfRef">GET response with GZIP-encoded content</a>
+        </figcaption></figure>
+<p id="section-6-7">The second example demonstrates a range request with content negotiation.<a href="#section-6-7" class="pilcrow">¶</a></p>
+<span id="name-range-request-with-content-"></span><figure id="figure-3">
+        <div class="lang-http-message sourcecode" id="section-6-8.1">
+<pre>
+GET /boringstring HTTP/1.1
+Host: example.org
+Accept-Encoding: gzip
+Range: bytes=0-10
+
+</pre>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-range-request-with-content-" class="selfRef">Range request with content negotiation</a>
+        </figcaption></figure>
+<p id="section-6-9">The server responds with a 206 Partial Content response using GZIP encoding, it
+has three different Integrity fields. The <code>Content-Digest</code> relates to the
+response message content that can be used to validate the integrity of the
+received part. <code>Repr-Digest</code> and <code>Unencoded-Digest</code> can be used later once the
+entire object is reconstructed. The choice of which to use is left to the
+application that would consider a range of factors outside the scope of
+this document.<a href="#section-6-9" class="pilcrow">¶</a></p>
+<span id="name-partial-response-with-gzip-"></span><figure id="figure-4">
+        <div class="lang-http-message sourcecode" id="section-6-10.1">
+<pre>
+NOTE: '\' line wrapping per RFC 8792
+
+HTTP/1.1 206 Partial Content
+Content-Encoding: gzip
+Content-Range: bytes 0-9/44
+Content-Digest: \
+  sha-256=:SotB7Pa5A7iHSBdh9mg1Ev/ktAzrxU4Z8ldcCIUyfI4=:
+Repr-Digest: \
+  sha-256=:XyjvEuFb1P5rqc2le3vQm7M96DwZhvmOwqHLu2xVpY4=:
+Unencoded-Digest: \
+  sha-256=:5Bv3NIx05BPnh0jMph6v1RJ5Q7kl9LKMtQxmvc9+Z7Y=:
+
+1f 8b 08 00 79 1f 08 64 00 ff
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-partial-response-with-gzip-" class="selfRef">Partial response with GZIP encoding</a>
+        </figcaption></figure>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-4">
+<section id="section-7">
       <h2 id="name-security-considerations">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-4-1">To conserve resources required to handle HTTP requests or connections, it is
-common for intermediaries to impose limits on the maximum number of concurrent
-HTTP requests that they forward, while buffering requests that exceed this
-limit.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">Such intermediaries could apply a more restrictive concurrency limit to requests
-marked as incremental to ensure that capacity remains available for
-non-incremental requests, even when the maximum number of incremental requests
-is reached. This approach helps balance the processing of different types of
-requests and maintains service availability across all requests.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">When rejecting incremental requests due to reaching the concurrency limit,
-intermediaries <span class="bcp14">SHOULD</span> respond with a 503 Service Unavailable error, accompanied
-by a connection_limit_reached Proxy-Status response header field
-(<span><a href="https://rfc-editor.org/rfc/rfc9209#section-2.3.12" class="relref">Section 2.3.12</a> of [<a href="#PROXY-STATUS" class="cite xref">PROXY-STATUS</a>]</span>).<a href="#section-4-3" class="pilcrow">¶</a></p>
-<p id="section-4-4">For performance and efficiency reasons, a small amount of buffering might be
-used by intermediaries, even for incremental messages. Immediate forwarding
-might be exploited to cause an intermediary to waste effort on many small
-packets.  Enabling incremental delivery might instead set limits on the number
-bytes that are buffered or the time that buffers are held before forwarding.
-Any buffering could adversely affect application latency, even if it improves
-efficiency.  In all cases, intermediaries cannot hold data in buffers
-indefinitely, so data needs to be forwarded when either the time limit or the
-byte limit is reached.<a href="#section-4-4" class="pilcrow">¶</a></p>
+<p id="section-7-1">All the same considerations documented in <span>[<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span> apply.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">This document introduces a further consideration related to the process of
+validation when an HTTP message contains both Content-Encoding and
+Unencoded-Digest (<a href="#encoding-and-unencoded" class="auto internal xref">Section 5</a>). In order to validate the
+Unencoded-Digest, encoded content needs to be decoded. This provides an
+opportunity for an attacker to direct malicious data into a decoder. One
+possible mitigation would be to also provide a Content-Digest or Repr-Digest in
+the message, allowing for validation of the received bytes before further
+processing. An attacker that can substitute various parts of an HTTP message
+presents several risks, Sections <a href="https://rfc-editor.org/rfc/rfc9530#section-6.1" class="relref">6.1</a>, <a href="https://rfc-editor.org/rfc/rfc9530#section-6.2" class="relref">6.2</a> and <a href="https://rfc-editor.org/rfc/rfc9530#section-6.3" class="relref">6.3</a> of <span>[<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>
+describe relevant considerations and mitigations.<a href="#section-7-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-5">
+<section id="section-8">
       <h2 id="name-iana-considerations">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-5-1">An HTTP field named Incremental is registered
-in the Hypertext Transfer Protocol (HTTP) Field Name Registry,
-following the procedures in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-18.4" class="relref">Section 18.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.
-The following values are registered:<a href="#section-5-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlCompact dlParallel" id="section-5-2">
-        <dt id="section-5-2.1">Field Name:</dt>
-        <dd style="margin-left: 1.5em" id="section-5-2.2">
-          <p id="section-5-2.2.1">Incremental<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
-</dd>
-        <dd class="break"></dd>
-<dt id="section-5-2.3">Status:</dt>
-        <dd style="margin-left: 1.5em" id="section-5-2.4">
-          <p id="section-5-2.4.1">permanent<a href="#section-5-2.4.1" class="pilcrow">¶</a></p>
-</dd>
-        <dd class="break"></dd>
-<dt id="section-5-2.5">Structured Type:</dt>
-        <dd style="margin-left: 1.5em" id="section-5-2.6">
-          <p id="section-5-2.6.1">Item<a href="#section-5-2.6.1" class="pilcrow">¶</a></p>
-</dd>
-        <dd class="break"></dd>
-<dt id="section-5-2.7">Reference:</dt>
-        <dd style="margin-left: 1.5em" id="section-5-2.8">
-          <p id="section-5-2.8.1">This document<a href="#section-5-2.8.1" class="pilcrow">¶</a></p>
-</dd>
-        <dd class="break"></dd>
-<dt id="section-5-2.9">Comments:</dt>
-        <dd style="margin-left: 1.5em" id="section-5-2.10">
-          <p id="section-5-2.10.1">None<a href="#section-5-2.10.1" class="pilcrow">¶</a></p>
-</dd>
-      <dd class="break"></dd>
-</dl>
+<p id="section-8-1">Should this document be adopted and achieve working group consensus, IANA is
+asked to update the "Hypertext Transfer Protocol (HTTP) Field Name Registry"
+<span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span> as shown in the table below:<a href="#section-8-1" class="pilcrow">¶</a></p>
+<span id="name-hypertext-transfer-protocol"></span><div id="iana-field-name-table">
+<table class="center" id="table-1">
+        <caption>
+<a href="#table-1" class="selfRef">Table 1</a>:
+<a href="#name-hypertext-transfer-protocol" class="selfRef">Hypertext Transfer Protocol (HTTP) Field Name Registry Update</a>
+        </caption>
+<thead>
+          <tr>
+            <th class="text-left" rowspan="1" colspan="1">Field Name</th>
+            <th class="text-left" rowspan="1" colspan="1">Status</th>
+            <th class="text-left" rowspan="1" colspan="1">Structured Type</th>
+            <th class="text-left" rowspan="1" colspan="1">Reference</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Unencoded-Digest</td>
+            <td class="text-left" rowspan="1" colspan="1">permanent</td>
+            <td class="text-left" rowspan="1" colspan="1">Dictionary</td>
+            <td class="text-left" rowspan="1" colspan="1">
+              <a href="#unencoded-digest" class="auto internal xref">Section 3</a> of this document</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Want-Unencoded-Digest</td>
+            <td class="text-left" rowspan="1" colspan="1">permanent</td>
+            <td class="text-left" rowspan="1" colspan="1">Dictionary</td>
+            <td class="text-left" rowspan="1" colspan="1">
+              <a href="#want-unencoded-digest" class="auto internal xref">Section 4</a> of this document</td>
+          </tr>
+        </tbody>
+      </table>
+</div>
 </section>
 </div>
-<div id="sec-combined-references">
-<section id="section-6">
-      <h2 id="name-references">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-references" class="section-name selfRef">References</a>
-      </h2>
 <div id="sec-normative-references">
-<section id="section-6.1">
-        <h3 id="name-normative-references">
-<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
-        </h3>
+<section id="section-9">
+      <h2 id="name-normative-references">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+      </h2>
 <dl class="references">
+<dt id="DIGEST-FIELDS">[DIGEST-FIELDS]</dt>
+      <dd>
+<span class="refAuthor">Polli, R.</span> and <span class="refAuthor">L. Pardue</span>, <span class="refTitle">"Digest Fields"</span>, <span class="seriesInfo">RFC 9530</span>, <span class="seriesInfo">DOI 10.17487/RFC9530</span>, <time datetime="2024-02" class="refDate">February 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9530">https://www.rfc-editor.org/rfc/rfc9530</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="HTTP">[HTTP]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI 10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC5234">[RFC5234]</dt>
+      <dd>
+<span class="refAuthor">Crocker, D., Ed.</span> and <span class="refAuthor">P. Overell</span>, <span class="refTitle">"Augmented BNF for Syntax Specifications: ABNF"</span>, <span class="seriesInfo">STD 68</span>, <span class="seriesInfo">RFC 5234</span>, <span class="seriesInfo">DOI 10.17487/RFC5234</span>, <time datetime="2008-01" class="refDate">January 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5234">https://www.rfc-editor.org/rfc/rfc5234</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7405">[RFC7405]</dt>
+      <dd>
+<span class="refAuthor">Kyzivat, P.</span>, <span class="refTitle">"Case-Sensitive String Support in ABNF"</span>, <span class="seriesInfo">RFC 7405</span>, <span class="seriesInfo">DOI 10.17487/RFC7405</span>, <time datetime="2014-12" class="refDate">December 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7405">https://www.rfc-editor.org/rfc/rfc7405</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
-        <dd>
+      <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="STRUCTURED-FIELDS">[STRUCTURED-FIELDS]</dt>
-      <dd>
-<span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">P. Kamp</span>, <span class="refTitle">"Structured Field Values for HTTP"</span>, <span class="seriesInfo">RFC 8941</span>, <span class="seriesInfo">DOI 10.17487/RFC8941</span>, <time datetime="2021-02" class="refDate">February 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8941">https://www.rfc-editor.org/rfc/rfc8941</a>&gt;</span>. </dd>
+    <dd>
+<span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">P. Kamp</span>, <span class="refTitle">"Structured Field Values for HTTP"</span>, <span class="seriesInfo">RFC 9651</span>, <span class="seriesInfo">DOI 10.17487/RFC9651</span>, <time datetime="2024-09" class="refDate">September 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9651">https://www.rfc-editor.org/rfc/rfc9651</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
-</section>
-</div>
-<div id="sec-informative-references">
-<section id="section-6.2">
-        <h3 id="name-informative-references">
-<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
-        </h3>
-<dl class="references">
-<dt id="CHUNKED-OHTTP">[CHUNKED-OHTTP]</dt>
-        <dd>
-<span class="refAuthor">Pauly, T.</span> and <span class="refAuthor">M. Thomson</span>, <span class="refTitle">"Chunked Oblivious HTTP Messages"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ohai-chunked-ohttp-05</span>, <time datetime="2025-07-02" class="refDate">2 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ohai-chunked-ohttp-05">https://datatracker.ietf.org/doc/html/draft-ietf-ohai-chunked-ohttp-05</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="PROXY-STATUS">[PROXY-STATUS]</dt>
-        <dd>
-<span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">P. Sikora</span>, <span class="refTitle">"The Proxy-Status HTTP Response Header Field"</span>, <span class="seriesInfo">RFC 9209</span>, <span class="seriesInfo">DOI 10.17487/RFC9209</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9209">https://www.rfc-editor.org/rfc/rfc9209</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8441">[RFC8441]</dt>
-        <dd>
-<span class="refAuthor">McManus, P.</span>, <span class="refTitle">"Bootstrapping WebSockets with HTTP/2"</span>, <span class="seriesInfo">RFC 8441</span>, <span class="seriesInfo">DOI 10.17487/RFC8441</span>, <time datetime="2018-09" class="refDate">September 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8441">https://www.rfc-editor.org/rfc/rfc8441</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC9220">[RFC9220]</dt>
-        <dd>
-<span class="refAuthor">Hamilton, R.</span>, <span class="refTitle">"Bootstrapping WebSockets with HTTP/3"</span>, <span class="seriesInfo">RFC 9220</span>, <span class="seriesInfo">DOI 10.17487/RFC9220</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9220">https://www.rfc-editor.org/rfc/rfc9220</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="SSE">[SSE]</dt>
-      <dd>
-<span class="refAuthor">WHATWG</span>, <span class="refTitle">"Server-Sent Events"</span>, <span>n.d.</span>, <span>&lt;<a href="https://html.spec.whatwg.org/multipage/server-sent-events.html">https://html.spec.whatwg.org/multipage/server-sent-events.html</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-</dl>
-</section>
-</div>
 </section>
 </div>
 <div id="acknowledgments">
@@ -1400,7 +1565,11 @@ The following values are registered:<a href="#section-5-1" class="pilcrow">¶</a
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">TODO acknowledge.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">Early drafts of <span>[<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span> included a mechanism to support the exchange
+of digests where no content coding is applied, which was removed before
+publication. While the design here is different, it is motivated by discussion
+of the previous design in the HTTP WG. The motivating use cases still mostly
+apply identically.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
@@ -1409,34 +1578,19 @@ The following values are registered:<a href="#section-5-1" class="pilcrow">¶</a
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
 <address class="vcard">
-        <div class="ascii">
-<div dir="auto" class="left"><span class="fn nameRole">Kazuho Oku</span></div>
-<div dir="auto" class="left"><span class="org">Fastly</span></div>
+        <div dir="auto" class="left"><span class="fn nameRole">Lucas Pardue</span></div>
+<div dir="auto" class="left"><span class="org">Cloudflare</span></div>
 <div class="email">
 <span>Email:</span>
-<a href="mailto:kazuhooku@gmail.com" class="email">kazuhooku@gmail.com</a>
-</div>
-</div>
-<div class="alternative-contact">Additional contact information:</div>
-<div class="non-ascii">
-<div dir="auto" class="left"><span class="fn nameRole">奥 一穂</span></div>
-<div dir="auto" class="left"><span class="org">Fastly</span></div>
+<a href="mailto:lucas@lucaspardue.com" class="email">lucas@lucaspardue.com</a>
 </div>
 </address>
 <address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">Tommy Pauly</span></div>
-<div dir="auto" class="left"><span class="org">Apple</span></div>
+        <div dir="auto" class="left"><span class="fn nameRole">Mike West</span></div>
+<div dir="auto" class="left"><span class="org">Google</span></div>
 <div class="email">
 <span>Email:</span>
-<a href="mailto:tpauly@apple.com" class="email">tpauly@apple.com</a>
-</div>
-</address>
-<address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">Martin Thomson</span></div>
-<div dir="auto" class="left"><span class="org">Mozilla</span></div>
-<div class="email">
-<span>Email:</span>
-<a href="mailto:mt@lowentropy.net" class="email">mt@lowentropy.net</a>
+<a href="mailto:mkwst@google.com" class="email">mkwst@google.com</a>
 </div>
 </address>
 </section>
