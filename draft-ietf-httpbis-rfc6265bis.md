@@ -61,14 +61,6 @@ normative:
     date: 1986
     author:
       organization: American National Standards Institute
-  FETCH:
-    target: https://fetch.spec.whatwg.org/
-    title: Fetch
-    author:
-    -
-      ins: A. van Kesteren
-      name: Anne van Kesteren
-      organization: Mozilla
   DOM-DOCUMENT-COOKIE:
     target: https://html.spec.whatwg.org/#dom-document-cookie
     title: HTML - Living Standard
@@ -142,30 +134,36 @@ informative:
       ins: C. Jackson
       name: Collin Jackson
     date: 2011
+  FETCH:
+    target: https://fetch.spec.whatwg.org/
+    title: Fetch Living Standard
+    author:
+    -
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+    ann: WHATWG
   HTML:
     target: https://html.spec.whatwg.org/
     title: HTML Living Standard
     author:
     -
-      ins: I. Hickson
-      name: Ian Hickson
-      organization: Google, Inc.
-    -
-      ins: S. Pieters
-      name: Simon Pieters
-      organization: Opera
-    -
       ins: A. van Kesteren
       name: Anne van Kesteren
-      organization: Mozilla
-    -
-      ins: P. Jägenstedt
-      name: Philip Jägenstedt
-      organization: Opera
     -
       ins: D. Denicola
       name: Domenic Denicola
-      organization: Google, Inc.
+    -
+      ins: D. Farolino
+      name: Dominic Farolino
+    -
+      ins: I. Hickson
+      name: Ian Hickson
+    -
+      ins: P. Jägenstedt
+      name: Philip Jägenstedt
+    -
+      ins: S. Pieters
+      name: Simon Pieters
     ann: WHATWG
   prerendering:
     target: https://www.chromium.org/developers/design-documents/prerender
