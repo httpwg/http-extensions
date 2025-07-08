@@ -6,9 +6,9 @@ HTTP                                                     S. Bingler, Ed.
 Internet-Draft                                                          
 Obsoletes: 6265 (if approved)                               M. West, Ed.
 Intended status: Standards Track                              Google LLC
-Expires: 8 January 2026                                 J. Wilander, Ed.
+Expires: 9 January 2026                                 J. Wilander, Ed.
                                                               Apple, Inc
-                                                             7 July 2025
+                                                             8 July 2025
 
 
                 Cookies: HTTP State Management Mechanism
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 January 2026.
+   This Internet-Draft will expire on 9 January 2026.
 
 Copyright Notice
 
@@ -225,8 +225,8 @@ Table of Contents
    capitals, as shown here.
 
    Requirements phrased in the imperative as part of algorithms (such as
-   "strip any leading space characters" or "return false and abort these
-   steps") are to be interpreted with the meaning of the key word
+   "strip any leading space characters" or "return false and abort this
+   algorithm") are to be interpreted with the meaning of the key word
    ("MUST", "SHOULD", "MAY", etc.) used in introducing the algorithm.
 
    Conformance requirements phrased as algorithms or specific steps can
@@ -255,7 +255,7 @@ Table of Contents
 
    The terms "user agent", "client", "server", "proxy", and "origin
    server" have the same meaning as in the HTTP/1.1 specification
-   ([HTTP], Section 3).
+   (Section 3 of [HTTP]).
 
    The request-host is the name of the host, as known by the user agent,
    to which the user agent is sending an HTTP request or from which it
@@ -274,9 +274,9 @@ Table of Contents
    The terms "active browsing context", "active document", "ancestor
    navigables", "container document", "content navigable", "dedicated
    worker", "Document", "inclusive ancestor navigables", "navigable",
-   "opaque origin", "sandboxed origin browsing context flag", "shared
-   worker", "the worker's Documents", "top-level traversable", and
-   "WorkerGlobalScope" are defined in [HTML].
+   "navigate", "opaque origin", "sandboxed origin browsing context
+   flag", "shared worker", "the worker's Documents", "top-level
+   traversable", and "WorkerGlobalScope" are defined in [HTML].
 
    "Service Workers" are defined in the Service Workers specification
    [SERVICE-WORKERS].
@@ -586,10 +586,10 @@ Table of Contents
    characters are not stripped.  They are part of the cookie-value, and
    will be included in Cookie header fields sent to the server.
 
-   The domain-value is a subdomain as defined by [RFC1034], Section 3.5,
-   and as enhanced by [RFC1123], Section 2.1.  Thus, domain-value is a
-   string of [USASCII] characters, such as an "A-label" as defined in
-   Section 2.3.2.1 of [RFC5890].
+   The domain-value is a subdomain as defined by Section 3.5 of
+   [RFC1034], and as enhanced by Section 2.1 of [RFC1123].  Thus,
+   domain-value is a string of [USASCII] characters, such as an
+   "A-label" as defined in Section 2.3.2.1 of [RFC5890].
 
    The portions of the set-cookie-string produced by the cookie-av term
    are known as attributes.  To maximize compatibility with user agents,
@@ -597,7 +597,7 @@ Table of Contents
    same set-cookie-string.  (See Section 5.7 for how user agents handle
    this case.)
 
-   NOTE: The name of an attribute-value pair is not case-sensitive.  So
+   Note: The name of an attribute-value pair is not case-sensitive.  So
    while they are presented here in CamelCase, such as "HttpOnly" or
    "SameSite", any case is accepted.  E.x.: "httponly", "Httponly",
    "hTTPoNLY", etc.
@@ -611,11 +611,11 @@ Table of Contents
    the user agent over multiple sockets), these responses create a "race
    condition" that can lead to unpredictable behavior.
 
-   NOTE: Some existing user agents differ in their interpretation of
+   Note: Some existing user agents differ in their interpretation of
    two-digit years.  To avoid compatibility issues, servers SHOULD use
    the rfc1123-date format, which requires a four-digit year.
 
-   NOTE: Some user agents store and process dates in cookies as 32-bit
+   Note: Some user agents store and process dates in cookies as 32-bit
    UNIX time_t values.  Implementation bugs in the libraries supporting
    time_t processing on some systems might cause such user agents to
    process dates after the year 2038 incorrectly.
@@ -660,7 +660,7 @@ Table of Contents
    retain the cookie for that duration.  In fact, user agents often
    evict cookies due to memory pressure or privacy concerns.
 
-   NOTE: Some existing user agents do not support the Max-Age attribute.
+   Note: Some existing user agents do not support the Max-Age attribute.
    User agents that do not support the Max-Age attribute ignore the
    attribute.
 
@@ -694,7 +694,7 @@ Table of Contents
    foo.site.example, but the user agent will not accept a cookie with a
    Domain attribute of "bar.site.example" or of "baz.foo.site.example".
 
-   NOTE: For security reasons, many user agents are configured to reject
+   Note: For security reasons, many user agents are configured to reject
    Domain attributes that correspond to "public suffixes".  For example,
    some user agents will reject Domain attributes of "com" or "co.uk".
    (See Section 5.7 for more information.)
@@ -841,10 +841,10 @@ Table of Contents
 
    While Section 5.4 of [HTTP] does not define a length limit for header
    fields it is likely that the web server's implementation does impose
-   a limit; many popular implementations have default limits of 8K.
-   Servers SHOULD avoid setting a large number of large cookies such
-   that the final cookie-string would exceed their header field limit.
-   Not doing so could result in requests to the server failing.
+   a limit; many popular implementations have default limits of 8192
+   octets.  Servers SHOULD avoid setting a large number of large cookies
+   such that the final cookie-string would exceed their header field
+   limit.  Not doing so could result in requests to the server failing.
 
    Servers MUST be tolerant of multiple cookie headers.  For example, an
    HTTP/2 [RFC9113] or HTTP/3 [RFC9114] client or intermediary might
@@ -960,10 +960,10 @@ Table of Contents
    4.  If the year-value is greater than or equal to 0 and less than or
        equal to 69, increment the year-value by 2000.
 
-       1.  NOTE: Some existing user agents interpret two-digit years
+       1.  Note: Some existing user agents interpret two-digit years
            differently.
 
-   5.  Abort these steps and fail to parse the cookie-date if:
+   5.  Abort this algorithm and fail to parse the cookie-date if:
 
        *  at least one of the found-day-of-month, found-month, found-
           year, or found-time flags is not set,
@@ -984,7 +984,8 @@ Table of Contents
        year, hour, minute, and second (in UTC) are the day-of-month-
        value, the month-value, the year-value, the hour-value, the
        minute-value, and the second-value, respectively.  If no such
-       date exists, abort these steps and fail to parse the cookie-date.
+       date exists, abort this algorithm and fail to parse the cookie-
+       date.
 
    7.  Return the parsed-cookie-date as the result of this algorithm.
 
@@ -1229,7 +1230,7 @@ Table of Contents
    compromise the site.
 
    To prevent these issues, UAs MUST match cookie name prefixes case-
-   insensitive.
+   insensitively.
 
    Note: Cookies with different names are still considered separate by
    UAs.  So both __Secure-foo=bar and __secure-foo=baz can exist as
@@ -1280,7 +1281,7 @@ Table of Contents
    entirety, the user agent MUST parse the field-value of the Set-Cookie
    header field as a set-cookie-string (defined below).
 
-   NOTE: The algorithm below is more permissive than the grammar in
+   Note: The algorithm below is more permissive than the grammar in
    Section 4.1.  For example, the algorithm allows cookie-name to be
    comprised of cookie-octets instead of being a token as specified in
    Section 4.1 and the algorithm accommodates some characters that are
@@ -1292,13 +1293,13 @@ Table of Contents
    interoperate with servers that do not follow the recommendations in
    Section 4.
 
-   NOTE: As set-cookie-string may originate from a non-HTTP API, it is
+   Note: As set-cookie-string may originate from a non-HTTP API, it is
    not guaranteed to be free of CTL characters, so this algorithm
    handles them explicitly.  Horizontal tab (%x09) is excluded from the
    CTL characters that lead to set-cookie-string rejection, as it is
    considered whitespace, which is handled separately.
 
-   NOTE: The set-cookie-string may contain octet sequences that appear
+   Note: The set-cookie-string may contain octet sequences that appear
    percent-encoded as per Section 2.1 of [RFC3986].  However, a user
    agent MUST NOT decode these sequences and instead parse the
    individual octets as specified in this algorithm.
@@ -1307,8 +1308,8 @@ Table of Contents
    algorithm to parse a set-cookie-string:
 
    1.  If the set-cookie-string contains a %x00-08 / %x0A-1F / %x7F
-       character (CTL characters excluding HTAB): Abort these steps and
-       ignore the set-cookie-string entirely.
+       character (CTL characters excluding HTAB): Abort this algorithm
+       and ignore the set-cookie-string entirely.
 
    2.  If the set-cookie-string contains a %x3B (";") character:
 
@@ -1336,8 +1337,8 @@ Table of Contents
        string and the value string.
 
    5.  If the sum of the lengths of the name string and the value string
-       is more than 4096 octets, abort these steps and ignore the set-
-       cookie-string entirely.
+       is more than 4096 octets, abort this algorithm and ignore the
+       set-cookie-string entirely.
 
    6.  The cookie-name is the name string, and the cookie-value is the
        value string.
@@ -1361,7 +1362,8 @@ Table of Contents
 
        1.  Consume the remainder of the unparsed-attributes.
 
-       Let the cookie-av string be the characters consumed in this step.
+       Let the cookie-av string be the characters consumed in this step;
+       unparsed-attributes now contains any remaining characters.
 
    4.  If the cookie-av string contains a %x3D ("=") character:
 
@@ -1603,16 +1605,16 @@ Table of Contents
    1.   A user agent MAY ignore a received cookie in its entirety.  See
         Section 5.3.
 
-   2.   If cookie-name is empty and cookie-value is empty, abort these
-        steps and ignore the cookie entirely.
+   2.   If cookie-name is empty and cookie-value is empty, abort this
+        algorithm and ignore the cookie entirely.
 
    3.   If the cookie-name or the cookie-value contains a %x00-08 /
         %x0A-1F / %x7F character (CTL characters excluding HTAB), abort
-        these steps and ignore the cookie entirely.
+        this algorithm and ignore the cookie entirely.
 
    4.   If the sum of the lengths of cookie-name and cookie-value is
-        more than 4096 octets, abort these steps and ignore the cookie
-        entirely.
+        more than 4096 octets, abort this algorithm and ignore the
+        cookie entirely.
 
    5.   Create a new cookie with name cookie-name, value cookie-value.
         Set the creation-time and the last-access-time to the current
@@ -1659,8 +1661,8 @@ Table of Contents
         1.  Let the domain-attribute be the empty string.
 
    8.   If the domain-attribute contains a character that is not in the
-        range of [USASCII] characters, abort these steps and ignore the
-        cookie entirely.
+        range of [USASCII] characters, abort this algorithm and ignore
+        the cookie entirely.
 
    9.   If the user agent is configured to reject "public suffixes" and
         the domain-attribute is a public suffix:
@@ -1672,9 +1674,9 @@ Table of Contents
 
             Otherwise:
 
-            1.  Abort these steps and ignore the cookie entirely.
+            1.  Abort this algorithm and ignore the cookie entirely.
 
-        NOTE: This step prevents attacker.example from disrupting the
+        Note: This step prevents attacker.example from disrupting the
         integrity of site.example by setting a cookie with a Domain
         attribute of "example".
 
@@ -1683,7 +1685,7 @@ Table of Contents
         1.  If the canonicalized request-host does not domain-match the
             domain-attribute:
 
-            1.  Abort these steps and ignore the cookie entirely.
+            1.  Abort this algorithm and ignore the cookie entirely.
 
             Otherwise:
 
@@ -1717,11 +1719,11 @@ Table of Contents
         true.  Otherwise, set the cookie's http-only-flag to false.
 
    15.  If the cookie was received from a "non-HTTP" API and the
-        cookie's http-only-flag is true, abort these steps and ignore
+        cookie's http-only-flag is true, abort this algorithm and ignore
         the cookie entirely.
 
    16.  If the cookie's secure-only-flag is false, and the request-uri
-        does not denote a "secure" connection, then abort these steps
+        does not denote a "secure" connection, then abort this algorithm
         and ignore the cookie entirely if the cookie store contains one
         or more cookies that meet all of the following criteria:
 
@@ -1755,8 +1757,8 @@ Table of Contents
         1.  If the cookie was received from a "non-HTTP" API, and the
             API was called from a navigable's active document whose
             "site for cookies" is not same-site with the top-level
-            origin, then abort these steps and ignore the newly created
-            cookie entirely.
+            origin, then abort this algorithm and ignore the newly
+            created cookie entirely.
 
         2.  If the cookie was received from a "same-site" request (as
             defined in Section 5.2), skip the remaining substeps and
@@ -1774,19 +1776,19 @@ Table of Contents
             sent along with the request had it already existed prior to
             the navigation.
 
-        4.  Abort these steps and ignore the newly created cookie
+        4.  Abort this algorithm and ignore the newly created cookie
             entirely.
 
-   19.  If the cookie's "same-site-flag" is "None", abort these steps
+   19.  If the cookie's "same-site-flag" is "None", abort this algorithm
         and ignore the cookie entirely unless the cookie's secure-only-
         flag is true.
 
    20.  If the cookie-name begins with a case-insensitive match for the
-        string "__Secure-", abort these steps and ignore the cookie
+        string "__Secure-", abort this algorithm and ignore the cookie
         entirely unless the cookie's secure-only-flag is true.
 
    21.  If the cookie-name begins with a case-insensitive match for the
-        string "__Host-", abort these steps and ignore the cookie
+        string "__Host-", abort this algorithm and ignore the cookie
         entirely unless the cookie meets all the following criteria:
 
         1.  The cookie's secure-only-flag is true.
@@ -1797,7 +1799,7 @@ Table of Contents
             attribute-name of "Path", and the cookie's path is /.
 
    22.  If the cookie-name is empty and either of the following
-        conditions are true, abort these steps and ignore the cookie
+        conditions are true, abort this algorithm and ignore the cookie
         entirely:
 
         *  the cookie-value begins with a case-insensitive match for the
@@ -1815,8 +1817,8 @@ Table of Contents
             that there is at most one such cookie.)
 
         2.  If the newly-created cookie was received from a "non-HTTP"
-            API and the old-cookie's http-only-flag is true, abort these
-            steps and ignore the newly created cookie entirely.
+            API and the old-cookie's http-only-flag is true, abort this
+            algorithm and ignore the newly created cookie entirely.
 
         3.  Update the creation-time of the newly-created cookie to
             match the creation-time of the old-cookie.
@@ -1876,7 +1878,7 @@ Table of Contents
 
    A user agent MAY omit the Cookie header field in its entirety.  For
    example, the user agent might wish to block sending cookies during
-   "third-party" requests from setting cookies (see Section 7.1).
+   "third-party" requests (see Section 7.1).
 
    If the user agent does attach a Cookie header field to an HTTP
    request, the user agent MUST generate a single cookie-string and the
@@ -1931,14 +1933,14 @@ Table of Contents
              host of the retrieval's URI domain-matches the cookie's
              domain.
 
-          NOTE: (For user agents configured to reject "public suffixes")
-          It's possible that the public suffix list was changed since a
-          cookie was created.  If this change results in a cookie's
-          domain becoming a public suffix then that cookie is considered
-          invalid as it would have been rejected during creation (See
-          Section 5.7 step 9).  User agents should be careful to avoid
-          retrieving these invalid cookies even if they domain-match the
-          host of the retrieval's URI.
+          -  The cookie's domain is not a public suffix, for user agents
+             configured to reject "public suffixes".
+
+          Note: It's possible that the public suffix list was changed
+          since the cookie was created.  If this change resulted in the
+          cookie's domain becoming a public suffix then that cookie
+          would have been rejected during creation if it had been
+          created now.  (See Section 5.7 step 9).
 
        *  The retrieval's URI's path path-matches the cookie's path.
 
@@ -1946,7 +1948,7 @@ Table of Contents
           URI must denote a "secure" connection (as defined by the user
           agent).
 
-          NOTE: The notion of a "secure" connection is not defined by
+          Note: The notion of a "secure" connection is not defined by
           this document.  Typically, user agents consider a connection
           secure if the connection makes use of transport-layer
           security, such as SSL or TLS [TLS13], or if the host is
@@ -1982,7 +1984,7 @@ Table of Contents
           earlier creation-times are listed before cookies with later
           creation-times.
 
-       NOTE: Not all user agents sort the cookie-list in this order, but
+       Note: Not all user agents sort the cookie-list in this order, but
        this order reflects common practice when this document was
        written, and, historically, there have been servers that
        (erroneously) depended on this order.
@@ -1999,8 +2001,8 @@ Table of Contents
        2.  If the cookies' value is not empty, output the cookie's
            value.
 
-       3.  If there is an unprocessed cookie in the cookie-list, output
-           the characters %x3B and %x20 ("; ").
+       3.  If the cookie was not the last cookie in the cookie-list,
+           output the characters %x3B and %x20 ("; ").
 
 6.  Implementation Considerations
 
@@ -2034,7 +2036,7 @@ Table of Contents
 6.2.  Application Programming Interfaces
 
    One reason the Cookie and Set-Cookie header fields use such esoteric
-   syntax is that many platforms (both in servers and user agents)
+   handling is that many platforms (both in servers and user agents)
    provide a string-based application programming interface (API) to
    cookies, requiring application-layer programmers to generate and
    parse the syntax used by the Cookie and Set-Cookie header fields,
@@ -2545,9 +2547,8 @@ Table of Contents
 
 9.2.  Set-Cookie
 
-   The permanent message header field registry (see
-   [HttpFieldNameRegistry]) needs to be updated with the following
-   registration:
+   The HTTP Field Name Registry (see [HttpFieldNameRegistry]) needs to
+   be updated with the following registration:
 
    Header field name:  Set-Cookie
 
@@ -2577,8 +2578,9 @@ Table of Contents
    New registrations happen on a "RFC Required" basis (see Section 4.7
    of [RFC8126]).  The attribute to be registered MUST match the
    extension-av syntax defined in Section 4.1.1.  Note that attribute
-   names are generally defined in CamelCase, but technically accepted
-   case-insensitively.
+   names are generally defined in CamelCase but MUST be recognized case-
+   insensitively.  Two attribute names that case-insensitively match
+   MUST NOT be registered.
 
 9.3.2.  Registration
 
@@ -2612,13 +2614,6 @@ Table of Contents
    [DOM-DOCUMENT-COOKIE]
               WHATWG, "HTML - Living Standard", 18 May 2021,
               <https://html.spec.whatwg.org/#dom-document-cookie>.
-
-   [FETCH]    van Kesteren, A., "Fetch", n.d.,
-              <https://fetch.spec.whatwg.org/>.
-
-   [HTML]     Hickson, I., Pieters, S., van Kesteren, A., Jägenstedt,
-              P., and D. Denicola, "HTML", n.d.,
-              <https://html.spec.whatwg.org/>.
 
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
@@ -2697,6 +2692,13 @@ Table of Contents
               Computer and communications security (pages 75-88),
               October 2008,
               <http://portal.acm.org/citation.cfm?id=1455770.1455782>.
+
+   [FETCH]    van Kesteren, A., "Fetch Living Standard", n.d.,
+              <https://fetch.spec.whatwg.org/>.  WHATWG
+
+   [HTML]     van Kesteren, A., Denicola, D., Farolino, D., Hickson, I.,
+              Jägenstedt, P., and S. Pieters, "HTML Living Standard",
+              n.d., <https://html.spec.whatwg.org/>.  WHATWG
 
    [HttpFieldNameRegistry]
               "Hypertext Transfer Protocol (HTTP) Field Name Registry",

@@ -1055,7 +1055,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bingler, et al.</td>
-<td class="center">Expires 8 January 2026</td>
+<td class="center">Expires 9 January 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6265" class="eref">6265</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-07" class="published">7 July 2025</time>
+<time datetime="2025-07-08" class="published">8 July 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-08">8 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-01-09">9 January 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1141,7 +1141,7 @@ header fields are widely used on the Internet. This document obsoletes RFC
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 8 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 9 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1514,7 +1514,7 @@ NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 <p id="section-2.1-2">Requirements phrased in the imperative as part of algorithms (such as "strip any
-leading space characters" or "return false and abort these steps") are to be
+leading space characters" or "return false and abort this algorithm") are to be
 interpreted with the meaning of the key word ("MUST", "SHOULD", "MAY", etc.)
 used in introducing the algorithm.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
 <p id="section-2.1-3">Conformance requirements phrased as algorithms or specific steps can be
@@ -1547,7 +1547,7 @@ and WSP (whitespace).<a href="#section-2.2-2" class="pilcrow">¶</a></p>
 <a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
         </h3>
 <p id="section-2.3-1">The terms "user agent", "client", "server", "proxy", and "origin server" have
-the same meaning as in the HTTP/1.1 specification (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>]</span>, Section 3).<a href="#section-2.3-1" class="pilcrow">¶</a></p>
+the same meaning as in the HTTP/1.1 specification (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-3" class="relref">Section 3</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#section-2.3-1" class="pilcrow">¶</a></p>
 <p id="section-2.3-2">The request-host is the name of the host, as known by the user agent, to which
 the user agent is sending an HTTP request or from which it is receiving an HTTP
 response (i.e., the name of the host to which it sent the corresponding HTTP
@@ -1559,9 +1559,10 @@ only if they are equivalent under the i;ascii-casemap collation defined in
 <p id="section-2.3-5">The term string means a sequence of non-NUL octets.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
 <p id="section-2.3-6">The terms "active browsing context", "active document", "ancestor navigables",
 "container document", "content navigable", "dedicated worker", "Document",
-"inclusive ancestor navigables", "navigable", "opaque origin", "sandboxed
-origin browsing context flag", "shared worker", "the worker's Documents",
-"top-level traversable", and "WorkerGlobalScope" are defined in <span>[<a href="#HTML" class="cite xref">HTML</a>]</span>.<a href="#section-2.3-6" class="pilcrow">¶</a></p>
+"inclusive ancestor navigables", "navigable", "navigate", "opaque origin",
+"sandboxed origin browsing context flag", "shared worker", "the worker's
+Documents", "top-level traversable", and "WorkerGlobalScope" are defined in
+<span>[<a href="#HTML" class="cite xref">HTML</a>]</span>.<a href="#section-2.3-6" class="pilcrow">¶</a></p>
 <p id="section-2.3-7">"Service Workers" are defined in the Service Workers specification
 <span>[<a href="#SERVICE-WORKERS" class="cite xref">SERVICE-WORKERS</a>]</span>.<a href="#section-2.3-7" class="pilcrow">¶</a></p>
 <p id="section-2.3-8">The term "origin", the mechanism of deriving an origin from a URI, and the "the
@@ -1887,15 +1888,15 @@ data in a cookie-value SHOULD encode that data, for example, using Base64
 Note that in this case, the initial and trailing DQUOTE characters are not
 stripped. They are part of the cookie-value, and will be included in Cookie
 header fields sent to the server.<a href="#section-4.1.1-7" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-8">The domain-value is a subdomain as defined by <span>[<a href="#RFC1034" class="cite xref">RFC1034</a>]</span>, Section 3.5, and
-as enhanced by <span>[<a href="#RFC1123" class="cite xref">RFC1123</a>]</span>, Section 2.1. Thus, domain-value is a string of
+<p id="section-4.1.1-8">The domain-value is a subdomain as defined by <span><a href="https://rfc-editor.org/rfc/rfc1034#section-3.5" class="relref">Section 3.5</a> of [<a href="#RFC1034" class="cite xref">RFC1034</a>]</span>, and
+as enhanced by <span><a href="https://rfc-editor.org/rfc/rfc1123#section-2.1" class="relref">Section 2.1</a> of [<a href="#RFC1123" class="cite xref">RFC1123</a>]</span>. Thus, domain-value is a string of
 <span>[<a href="#USASCII" class="cite xref">USASCII</a>]</span> characters, such as an "A-label" as defined in
 <span><a href="https://rfc-editor.org/rfc/rfc5890#section-2.3.2.1" class="relref">Section 2.3.2.1</a> of [<a href="#RFC5890" class="cite xref">RFC5890</a>]</span>.<a href="#section-4.1.1-8" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-9">The portions of the set-cookie-string produced by the cookie-av term are
 known as attributes. To maximize compatibility with user agents, servers MUST
 NOT produce two attributes with the same name in the same set-cookie-string.
 (See <a href="#storage-model" class="auto internal xref">Section 5.7</a> for how user agents handle this case.)<a href="#section-4.1.1-9" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-10">NOTE: The name of an attribute-value pair is not case-sensitive. So while they
+<p id="section-4.1.1-10">Note: The name of an attribute-value pair is not case-sensitive. So while they
 are presented here in CamelCase, such as "HttpOnly" or "SameSite", any case is
 accepted. E.x.: "httponly", "Httponly", "hTTPoNLY", etc.<a href="#section-4.1.1-10" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-11">Servers MUST NOT include more than one Set-Cookie header field in the same
@@ -1905,10 +1906,10 @@ handle this case.)<a href="#section-4.1.1-11" class="pilcrow">¶</a></p>
 concurrently to the user agent (e.g., when communicating with the user agent
 over multiple sockets), these responses create a "race condition" that can lead
 to unpredictable behavior.<a href="#section-4.1.1-12" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-13">NOTE: Some existing user agents differ in their interpretation of two-digit
+<p id="section-4.1.1-13">Note: Some existing user agents differ in their interpretation of two-digit
 years. To avoid compatibility issues, servers SHOULD use the rfc1123-date
 format, which requires a four-digit year.<a href="#section-4.1.1-13" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-14">NOTE: Some user agents store and process dates in cookies as 32-bit UNIX time_t
+<p id="section-4.1.1-14">Note: Some user agents store and process dates in cookies as 32-bit UNIX time_t
 values. Implementation bugs in the libraries supporting time_t processing on
 some systems might cause such user agents to process dates after the year 2038
 incorrectly.<a href="#section-4.1.1-14" class="pilcrow">¶</a></p>
@@ -1957,7 +1958,7 @@ represented as the number of seconds until the cookie expires. The user agent
 may adjust the specified duration and is not required to retain the cookie for
 that duration. In fact, user agents often evict cookies due to memory pressure
 or privacy concerns.<a href="#section-4.1.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.1.2.2-2">NOTE: Some existing user agents do not support the Max-Age attribute. User
+<p id="section-4.1.2.2-2">Note: Some existing user agents do not support the Max-Age attribute. User
 agents that do not support the Max-Age attribute ignore the attribute.<a href="#section-4.1.2.2-2" class="pilcrow">¶</a></p>
 <p id="section-4.1.2.2-3">If a cookie has both the Max-Age and the Expires attribute, the Max-Age
 attribute has precedence and controls the expiration date of the cookie. If a
@@ -1989,7 +1990,7 @@ user agent will accept a cookie with a Domain attribute of "site.example" or
 of "foo.site.example" from foo.site.example, but the user agent will not accept
 a cookie with a Domain attribute of "bar.site.example" or of
 "baz.foo.site.example".<a href="#section-4.1.2.3-3" class="pilcrow">¶</a></p>
-<p id="section-4.1.2.3-4">NOTE: For security reasons, many user agents are configured to reject Domain
+<p id="section-4.1.2.3-4">Note: For security reasons, many user agents are configured to reject Domain
 attributes that correspond to "public suffixes". For example, some user
 agents will reject Domain attributes of "com" or "co.uk". (See <a href="#storage-model" class="auto internal xref">Section 5.7</a> for
 more information.)<a href="#section-4.1.2.3-4" class="pilcrow">¶</a></p>
@@ -2165,8 +2166,8 @@ cookie-string = cookie-pair *( ";" SP cookie-pair )
 </div>
 <p id="section-4.2.1-3">While <span><a href="https://rfc-editor.org/rfc/rfc9110#section-5.4" class="relref">Section 5.4</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span> does not define a length limit for header
 fields it is likely that the web server's implementation does impose a limit;
-many popular implementations have default limits of 8K. Servers SHOULD avoid
-setting a large number of large cookies such that the final cookie-string
+many popular implementations have default limits of 8192 octets. Servers SHOULD
+avoid setting a large number of large cookies such that the final cookie-string
 would exceed their header field limit. Not doing so could result in requests
 to the server failing.<a href="#section-4.2.1-3" class="pilcrow">¶</a></p>
 <p id="section-4.2.1-4">Servers MUST be tolerant of multiple cookie headers. For example, an HTTP/2
@@ -2302,12 +2303,12 @@ appear in the cookie-date:<a href="#section-5.1.1-2.2.1" class="pilcrow">¶</a><
 69, increment the year-value by 2000.<a href="#section-5.1.1-2.4.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.1.1-2.4.2">
 <li id="section-5.1.1-2.4.2.1">
-                  <p id="section-5.1.1-2.4.2.1.1">NOTE: Some existing user agents interpret two-digit years differently.<a href="#section-5.1.1-2.4.2.1.1" class="pilcrow">¶</a></p>
+                  <p id="section-5.1.1-2.4.2.1.1">Note: Some existing user agents interpret two-digit years differently.<a href="#section-5.1.1-2.4.2.1.1" class="pilcrow">¶</a></p>
 </li>
               </ol>
 </li>
             <li id="section-5.1.1-2.5">
-              <p id="section-5.1.1-2.5.1">Abort these steps and fail to parse the cookie-date if:<a href="#section-5.1.1-2.5.1" class="pilcrow">¶</a></p>
+              <p id="section-5.1.1-2.5.1">Abort this algorithm and fail to parse the cookie-date if:<a href="#section-5.1.1-2.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.1.1-2.5.2.1">
                   <p id="section-5.1.1-2.5.2.1.1">at least one of the found-day-of-month, found-month, found-year, or
@@ -2337,7 +2338,7 @@ found-time flags is not set,<a href="#section-5.1.1-2.5.2.1.1" class="pilcrow">�
 year, hour, minute, and second (in UTC) are the
 day-of-month-value, the month-value, the year-value, the hour-value,
 the minute-value, and the second-value, respectively. If no such date
-exists, abort these steps and fail to parse the cookie-date.<a href="#section-5.1.1-2.6.1" class="pilcrow">¶</a></p>
+exists, abort this algorithm and fail to parse the cookie-date.<a href="#section-5.1.1-2.6.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.1.1-2.7">
               <p id="section-5.1.1-2.7.1">Return the parsed-cookie-date as the result of this algorithm.<a href="#section-5.1.1-2.7.1" class="pilcrow">¶</a></p>
@@ -2645,7 +2646,8 @@ Cookie: __Secure-SID=12345; __SeCuRe-SID=evil
 </div>
 <p id="section-5.4-11">The server, being case-insensitive, won't be able to tell the difference
 between the two cookies allowing the attacker to compromise the site.<a href="#section-5.4-11" class="pilcrow">¶</a></p>
-<p id="section-5.4-12">To prevent these issues, UAs MUST match cookie name prefixes case-insensitive.<a href="#section-5.4-12" class="pilcrow">¶</a></p>
+<p id="section-5.4-12">To prevent these issues, UAs MUST match cookie name prefixes
+case-insensitively.<a href="#section-5.4-12" class="pilcrow">¶</a></p>
 <p id="section-5.4-13">Note: Cookies with different names are still considered separate by UAs. So
 both <code>__Secure-foo=bar</code> and <code>__secure-foo=baz</code> can exist as distinct cookies
 simultaneously and both would have the requirements of the <code>__Secure-</code> prefix
@@ -2704,7 +2706,7 @@ user agent MAY ignore the Set-Cookie header field in its entirety
 <p id="section-5.6-2">If the user agent does not ignore the Set-Cookie header field in its entirety,
 the user agent MUST parse the field-value of the Set-Cookie header field as a
 set-cookie-string (defined below).<a href="#section-5.6-2" class="pilcrow">¶</a></p>
-<p id="section-5.6-3">NOTE: The algorithm below is more permissive than the grammar in <a href="#sane-set-cookie" class="auto internal xref">Section 4.1</a>.
+<p id="section-5.6-3">Note: The algorithm below is more permissive than the grammar in <a href="#sane-set-cookie" class="auto internal xref">Section 4.1</a>.
 For example, the algorithm allows cookie-name to be comprised of cookie-octets
 instead of being a token as specified in <a href="#sane-set-cookie" class="auto internal xref">Section 4.1</a> and the algorithm
 accommodates some characters that are not cookie-octets according to the
@@ -2713,12 +2715,12 @@ leading and trailing whitespace from the cookie name and value (but maintains
 internal whitespace), whereas the grammar in <a href="#sane-set-cookie" class="auto internal xref">Section 4.1</a> forbids
 whitespace in these positions. User agents use this algorithm so as to
 interoperate with servers that do not follow the recommendations in <a href="#sane-profile" class="auto internal xref">Section 4</a>.<a href="#section-5.6-3" class="pilcrow">¶</a></p>
-<p id="section-5.6-4">NOTE: As set-cookie-string may originate from a non-HTTP API, it is not
+<p id="section-5.6-4">Note: As set-cookie-string may originate from a non-HTTP API, it is not
 guaranteed to be free of CTL characters, so this algorithm handles them
 explicitly. Horizontal tab (%x09) is excluded from the CTL characters that
 lead to set-cookie-string rejection, as it is considered whitespace, which is
 handled separately.<a href="#section-5.6-4" class="pilcrow">¶</a></p>
-<p id="section-5.6-5">NOTE: The set-cookie-string may contain octet sequences that appear
+<p id="section-5.6-5">Note: The set-cookie-string may contain octet sequences that appear
 percent-encoded as per <span><a href="https://rfc-editor.org/rfc/rfc3986#section-2.1" class="relref">Section 2.1</a> of [<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>. However, a user agent
 MUST NOT decode these sequences and instead parse the individual octets
 as specified in this algorithm.<a href="#section-5.6-5" class="pilcrow">¶</a></p>
@@ -2728,7 +2730,7 @@ parse a set-cookie-string:<a href="#section-5.6-6" class="pilcrow">¶</a></p>
 <li id="section-5.6-7.1">
             <p id="section-5.6-7.1.1">If the set-cookie-string contains a %x00-08 / %x0A-1F / %x7F character
 (CTL characters excluding HTAB):
-Abort these steps and ignore the set-cookie-string entirely.<a href="#section-5.6-7.1.1" class="pilcrow">¶</a></p>
+Abort this algorithm and ignore the set-cookie-string entirely.<a href="#section-5.6-7.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.6-7.2">
             <p id="section-5.6-7.2.1">If the set-cookie-string contains a %x3B (";") character:<a href="#section-5.6-7.2.1" class="pilcrow">¶</a></p>
@@ -2765,7 +2767,8 @@ value string.<a href="#section-5.6-7.4.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.6-7.5">
             <p id="section-5.6-7.5.1">If the sum of the lengths of the name string and the value string is more
-than 4096 octets, abort these steps and ignore the set-cookie-string entirely.<a href="#section-5.6-7.5.1" class="pilcrow">¶</a></p>
+than 4096 octets, abort this algorithm and ignore the set-cookie-string
+entirely.<a href="#section-5.6-7.5.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.6-7.6">
             <p id="section-5.6-7.6.1">The cookie-name is the name string, and the cookie-value is the value string.<a href="#section-5.6-7.6.1" class="pilcrow">¶</a></p>
@@ -2797,7 +2800,8 @@ Otherwise:<a href="#section-5.6-9.3.3" class="pilcrow">¶</a></p>
 </li>
             </ol>
 <p id="section-5.6-9.3.5">
-Let the cookie-av string be the characters consumed in this step.<a href="#section-5.6-9.3.5" class="pilcrow">¶</a></p>
+Let the cookie-av string be the characters consumed in this step;
+unparsed-attributes now contains any remaining characters.<a href="#section-5.6-9.3.5" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.6-9.4">
             <p id="section-5.6-9.4.1">If the cookie-av string contains a %x3D ("=") character:<a href="#section-5.6-9.4.1" class="pilcrow">¶</a></p>
@@ -3125,17 +3129,17 @@ user agent MUST process the cookie as follows:<a href="#section-5.7-2" class="pi
 <a href="#ignoring-cookies" class="auto internal xref">Section 5.3</a>.<a href="#section-5.7-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.7-3.2">
-            <p id="section-5.7-3.2.1">If cookie-name is empty and cookie-value is empty, abort these steps and
+            <p id="section-5.7-3.2.1">If cookie-name is empty and cookie-value is empty, abort this algorithm and
 ignore the cookie entirely.<a href="#section-5.7-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.7-3.3">
             <p id="section-5.7-3.3.1">If the cookie-name or the cookie-value contains a
 %x00-08 / %x0A-1F / %x7F character (CTL characters excluding HTAB),
-abort these steps and ignore the cookie entirely.<a href="#section-5.7-3.3.1" class="pilcrow">¶</a></p>
+abort this algorithm and ignore the cookie entirely.<a href="#section-5.7-3.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.7-3.4">
             <p id="section-5.7-3.4.1">If the sum of the lengths of cookie-name and cookie-value is more than
-4096 octets, abort these steps and ignore the cookie entirely.<a href="#section-5.7-3.4.1" class="pilcrow">¶</a></p>
+4096 octets, abort this algorithm and ignore the cookie entirely.<a href="#section-5.7-3.4.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.7-3.5">
             <p id="section-5.7-3.5.1">Create a new cookie with name cookie-name, value cookie-value. Set the
@@ -3202,7 +3206,7 @@ Otherwise:<a href="#section-5.7-3.7.3" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.7-3.8">
             <p id="section-5.7-3.8.1">If the domain-attribute contains a character that is not in the range of <span>[<a href="#USASCII" class="cite xref">USASCII</a>]</span>
-characters, abort these steps and ignore the cookie entirely.<a href="#section-5.7-3.8.1" class="pilcrow">¶</a></p>
+characters, abort this algorithm and ignore the cookie entirely.<a href="#section-5.7-3.8.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.7-3.9">
             <p id="section-5.7-3.9.1">If the user agent is configured to reject "public suffixes" and the
@@ -3220,13 +3224,13 @@ request-host:<a href="#section-5.7-3.9.2.1.1" class="pilcrow">¶</a></p>
 Otherwise:<a href="#section-5.7-3.9.2.1.3" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.7-3.9.2.1.4">
 <li id="section-5.7-3.9.2.1.4.1">
-                    <p id="section-5.7-3.9.2.1.4.1.1">Abort these steps and ignore the cookie entirely.<a href="#section-5.7-3.9.2.1.4.1.1" class="pilcrow">¶</a></p>
+                    <p id="section-5.7-3.9.2.1.4.1.1">Abort this algorithm and ignore the cookie entirely.<a href="#section-5.7-3.9.2.1.4.1.1" class="pilcrow">¶</a></p>
 </li>
                 </ol>
 </li>
             </ol>
 <p id="section-5.7-3.9.3">
-NOTE: This step prevents <code>attacker.example</code> from disrupting the integrity of
+Note: This step prevents <code>attacker.example</code> from disrupting the integrity of
 <code>site.example</code> by setting a cookie with a Domain attribute of "example".<a href="#section-5.7-3.9.3" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.7-3.10">
@@ -3237,7 +3241,7 @@ NOTE: This step prevents <code>attacker.example</code> from disrupting the integ
 domain-attribute:<a href="#section-5.7-3.10.2.1.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.7-3.10.2.1.2">
 <li id="section-5.7-3.10.2.1.2.1">
-                    <p id="section-5.7-3.10.2.1.2.1.1">Abort these steps and ignore the cookie entirely.<a href="#section-5.7-3.10.2.1.2.1.1" class="pilcrow">¶</a></p>
+                    <p id="section-5.7-3.10.2.1.2.1.1">Abort this algorithm and ignore the cookie entirely.<a href="#section-5.7-3.10.2.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 </ol>
 <p id="section-5.7-3.10.2.1.3">
@@ -3288,13 +3292,14 @@ Otherwise, set the cookie's http-only-flag to false.<a href="#section-5.7-3.14.1
 </li>
           <li id="section-5.7-3.15">
             <p id="section-5.7-3.15.1">If the cookie was received from a "non-HTTP" API and the cookie's
-http-only-flag is true, abort these steps and ignore the cookie entirely.<a href="#section-5.7-3.15.1" class="pilcrow">¶</a></p>
+http-only-flag is true, abort this algorithm and ignore the cookie
+entirely.<a href="#section-5.7-3.15.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.7-3.16">
             <p id="section-5.7-3.16.1">If the cookie's secure-only-flag is false, and the request-uri does not
-denote a "secure" connection, then abort these steps and ignore the cookie
-entirely if the cookie store contains one or more cookies that meet all of
-the following criteria:<a href="#section-5.7-3.16.1" class="pilcrow">¶</a></p>
+denote a "secure" connection, then abort this algorithm and ignore the
+cookie entirely if the cookie store contains one or more cookies that meet
+all of the following criteria:<a href="#section-5.7-3.16.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.7-3.16.2">
 <li id="section-5.7-3.16.2.1">
                 <p id="section-5.7-3.16.2.1.1">Their name matches the name of the newly-created cookie.<a href="#section-5.7-3.16.2.1.1" class="pilcrow">¶</a></p>
@@ -3332,7 +3337,7 @@ Otherwise, set the cookie's same-site-flag to "Default".<a href="#section-5.7-3.
 <li id="section-5.7-3.18.2.1">
                 <p id="section-5.7-3.18.2.1.1">If the cookie was received from a "non-HTTP" API, and the API was called
 from a navigable's active document whose "site for cookies" is
-not same-site with the top-level origin, then abort these steps and
+not same-site with the top-level origin, then abort this algorithm and
 ignore the newly created cookie entirely.<a href="#section-5.7-3.18.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.7-3.18.2.2">
@@ -3352,22 +3357,22 @@ value, even if the new cookie wouldn't have been sent along with
 the request had it already existed prior to the navigation.<a href="#section-5.7-3.18.2.3.2" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.7-3.18.2.4">
-                <p id="section-5.7-3.18.2.4.1">Abort these steps and ignore the newly created cookie entirely.<a href="#section-5.7-3.18.2.4.1" class="pilcrow">¶</a></p>
+                <p id="section-5.7-3.18.2.4.1">Abort this algorithm and ignore the newly created cookie entirely.<a href="#section-5.7-3.18.2.4.1" class="pilcrow">¶</a></p>
 </li>
             </ol>
 </li>
           <li id="section-5.7-3.19">
-            <p id="section-5.7-3.19.1">If the cookie's "same-site-flag" is "None", abort these steps and ignore the
+            <p id="section-5.7-3.19.1">If the cookie's "same-site-flag" is "None", abort this algorithm and ignore the
 cookie entirely unless the cookie's secure-only-flag is true.<a href="#section-5.7-3.19.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.7-3.20">
             <p id="section-5.7-3.20.1">If the cookie-name begins with a case-insensitive match for the string
-"__Secure-", abort these steps and ignore the cookie entirely unless the
+"__Secure-", abort this algorithm and ignore the cookie entirely unless the
 cookie's secure-only-flag is true.<a href="#section-5.7-3.20.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.7-3.21">
             <p id="section-5.7-3.21.1">If the cookie-name begins with a case-insensitive match for the string
-"__Host-", abort these steps and ignore the cookie entirely unless the
+"__Host-", abort this algorithm and ignore the cookie entirely unless the
 cookie meets all the following criteria:<a href="#section-5.7-3.21.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.7-3.21.2">
 <li id="section-5.7-3.21.2.1">
@@ -3384,7 +3389,7 @@ of "Path", and the cookie's path is <code>/</code>.<a href="#section-5.7-3.21.2.
 </li>
           <li id="section-5.7-3.22">
             <p id="section-5.7-3.22.1">If the cookie-name is empty and either of the following conditions are
-true, abort these steps and ignore the cookie entirely:<a href="#section-5.7-3.22.1" class="pilcrow">¶</a></p>
+true, abort this algorithm and ignore the cookie entirely:<a href="#section-5.7-3.22.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.7-3.22.2.1">
                 <p id="section-5.7-3.22.2.1.1">the cookie-value begins with a case-insensitive match for the string
@@ -3408,8 +3413,8 @@ cookie.)<a href="#section-5.7-3.23.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.7-3.23.2.2">
                 <p id="section-5.7-3.23.2.2.1">If the newly-created cookie was received from a "non-HTTP" API and the
-old-cookie's http-only-flag is true, abort these steps and ignore the
-newly created cookie entirely.<a href="#section-5.7-3.23.2.2.1" class="pilcrow">¶</a></p>
+old-cookie's http-only-flag is true, abort this algorithm and ignore
+the newly created cookie entirely.<a href="#section-5.7-3.23.2.2.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.7-3.23.2.3">
                 <p id="section-5.7-3.23.2.3.1">Update the creation-time of the newly-created cookie to match the
@@ -3476,9 +3481,9 @@ are defined below depending on the type of retrieval.<a href="#section-5.8-1" cl
 <a href="#section-5.8.1" class="section-number selfRef">5.8.1. </a><a href="#name-the-cookie-header-field" class="section-name selfRef">The Cookie Header Field</a>
           </h4>
 <p id="section-5.8.1-1">The user agent includes stored cookies in the Cookie HTTP request header field.<a href="#section-5.8.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.8.1-2">A user agent MAY omit the Cookie header field in its entirety.  For example, the
-user agent might wish to block sending cookies during "third-party" requests
-from setting cookies (see <a href="#third-party-cookies" class="auto internal xref">Section 7.1</a>).<a href="#section-5.8.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.8.1-2">A user agent MAY omit the Cookie header field in its entirety.  For example,
+the user agent might wish to block sending cookies during "third-party"
+requests (see <a href="#third-party-cookies" class="auto internal xref">Section 7.1</a>).<a href="#section-5.8.1-2" class="pilcrow">¶</a></p>
 <p id="section-5.8.1-3">If the user agent does attach a Cookie header field to an HTTP request, the
 user agent MUST generate a single cookie-string and the user agent MUST compute
 the cookie-string following the algorithm defined in <a href="#retrieval-algorithm" class="auto internal xref">Section 5.8.3</a>,
@@ -3539,15 +3544,16 @@ Or:<a href="#section-5.8.3-2.1.2.1.3" class="pilcrow">¶</a></p>
                       <p id="section-5.8.3-2.1.2.1.4.1.1">The cookie's host-only-flag is false and the canonicalized
 host of the retrieval's URI domain-matches the cookie's domain.<a href="#section-5.8.3-2.1.2.1.4.1.1" class="pilcrow">¶</a></p>
 </li>
+                    <li class="normal" id="section-5.8.3-2.1.2.1.4.2">
+                      <p id="section-5.8.3-2.1.2.1.4.2.1">The cookie's domain is not a public suffix, for user agents configured
+to reject "public suffixes".<a href="#section-5.8.3-2.1.2.1.4.2.1" class="pilcrow">¶</a></p>
+</li>
                   </ul>
 <p id="section-5.8.3-2.1.2.1.5">
-NOTE: (For user agents configured to reject "public suffixes") It's
-possible that the public suffix list was changed since a cookie was
-created. If this change results in a cookie's domain becoming a public
-suffix then that cookie is considered invalid as it would have been
-rejected during creation (See <a href="#storage-model" class="auto internal xref">Section 5.7</a> step 9). User agents
-should be careful to avoid retrieving these invalid cookies even if they
-domain-match the host of the retrieval's URI.<a href="#section-5.8.3-2.1.2.1.5" class="pilcrow">¶</a></p>
+Note: It's possible that the public suffix list was changed since the
+cookie was created. If this change resulted in the cookie's domain
+becoming a public suffix then that cookie would have been rejected during
+creation if it had been created now. (See <a href="#storage-model" class="auto internal xref">Section 5.7</a> step 9).<a href="#section-5.8.3-2.1.2.1.5" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-5.8.3-2.1.2.2">
                   <p id="section-5.8.3-2.1.2.2.1">The retrieval's URI's path path-matches the cookie's path.<a href="#section-5.8.3-2.1.2.2.1" class="pilcrow">¶</a></p>
@@ -3556,7 +3562,7 @@ domain-match the host of the retrieval's URI.<a href="#section-5.8.3-2.1.2.1.5" 
                   <p id="section-5.8.3-2.1.2.3.1">If the cookie's secure-only-flag is true, then the retrieval's URI must
 denote a "secure" connection (as defined by the user agent).<a href="#section-5.8.3-2.1.2.3.1" class="pilcrow">¶</a></p>
 <p id="section-5.8.3-2.1.2.3.2">
-NOTE: The notion of a "secure" connection is not defined by this document.
+Note: The notion of a "secure" connection is not defined by this document.
 Typically, user agents consider a connection secure if the connection makes
 use of transport-layer security, such as SSL or TLS <span>[<a href="#RFC8446" class="cite xref">TLS13</a>]</span>, or if the host is
 trusted. For example, most user agents consider "https" to be a scheme that
@@ -3601,7 +3607,7 @@ creation-times are listed before cookies with later creation-times.<a href="#sec
 </li>
               </ul>
 <p id="section-5.8.3-2.2.3">
-NOTE: Not all user agents sort the cookie-list in this order, but this order
+Note: Not all user agents sort the cookie-list in this order, but this order
 reflects common practice when this document was written, and, historically,
 there have been servers that (erroneously) depended on this order.<a href="#section-5.8.3-2.2.3" class="pilcrow">¶</a></p>
 </li>
@@ -3621,7 +3627,7 @@ the %x3D ("=") character.<a href="#section-5.8.3-2.4.2.1.1" class="pilcrow">¶</
                   <p id="section-5.8.3-2.4.2.2.1">If the cookies' value is not empty, output the cookie's value.<a href="#section-5.8.3-2.4.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li id="section-5.8.3-2.4.2.3">
-                  <p id="section-5.8.3-2.4.2.3.1">If there is an unprocessed cookie in the cookie-list, output the
+                  <p id="section-5.8.3-2.4.2.3.1">If the cookie was not the last cookie in the cookie-list, output the
 characters %x3B and %x20 ("; ").<a href="#section-5.8.3-2.4.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ol>
@@ -3674,8 +3680,8 @@ at any time.<a href="#section-6.1-6" class="pilcrow">¶</a></p>
         <h3 id="name-application-programming-int">
 <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-application-programming-int" class="section-name selfRef">Application Programming Interfaces</a>
         </h3>
-<p id="section-6.2-1">One reason the Cookie and Set-Cookie header fields use such esoteric syntax is
-that many platforms (both in servers and user agents) provide a string-based
+<p id="section-6.2-1">One reason the Cookie and Set-Cookie header fields use such esoteric handling
+is that many platforms (both in servers and user agents) provide a string-based
 application programming interface (API) to cookies, requiring
 application-layer programmers to generate and parse the syntax used by the
 Cookie and Set-Cookie header fields, which many programmers have done incorrectly,
@@ -4213,7 +4219,7 @@ updated with the following registration:<a href="#section-9.1-1" class="pilcrow"
         <h3 id="name-set-cookie-2">
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-set-cookie-2" class="section-name selfRef">Set-Cookie</a>
         </h3>
-<p id="section-9.2-1">The permanent message header field registry (see <span>[<a href="#HttpFieldNameRegistry" class="cite xref">HttpFieldNameRegistry</a>]</span>) needs to be
+<p id="section-9.2-1">The HTTP Field Name Registry (see <span>[<a href="#HttpFieldNameRegistry" class="cite xref">HttpFieldNameRegistry</a>]</span>) needs to be
 updated with the following registration:<a href="#section-9.2-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-9.2-2">
           <dt id="section-9.2-2.1">Header field name:</dt>
@@ -4263,7 +4269,8 @@ reference detailing how the attribute is to be processed and stored.<a href="#se
 <p id="section-9.3.1-2">New registrations happen on a "RFC Required" basis (see Section 4.7 of
 <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>). The attribute to be registered MUST match the <code>extension-av</code>
 syntax defined in <a href="#abnf-syntax" class="auto internal xref">Section 4.1.1</a>. Note that attribute names are generally
-defined in CamelCase, but technically accepted case-insensitively.<a href="#section-9.3.1-2" class="pilcrow">¶</a></p>
+defined in CamelCase but MUST be recognized case-insensitively.  Two attribute
+names that case-insensitively match MUST NOT be registered.<a href="#section-9.3.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="registration">
@@ -4339,14 +4346,6 @@ defined in CamelCase, but technically accepted case-insensitively.<a href="#sect
         <dd>
 <span class="refAuthor">WHATWG</span>, <span class="refTitle">"HTML - Living Standard"</span>, <time datetime="2021-05-18" class="refDate">18 May 2021</time>, <span>&lt;<a href="https://html.spec.whatwg.org/#dom-document-cookie">https://html.spec.whatwg.org/#dom-document-cookie</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="FETCH">[FETCH]</dt>
-        <dd>
-<span class="refAuthor">van Kesteren, A.</span>, <span class="refTitle">"Fetch"</span>, <span>n.d.</span>, <span>&lt;<a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="HTML">[HTML]</dt>
-        <dd>
-<span class="refAuthor">Hickson, I.</span>, <span class="refAuthor">Pieters, S.</span>, <span class="refAuthor">van Kesteren, A.</span>, <span class="refAuthor">Jägenstedt, P.</span>, and <span class="refAuthor">D. Denicola</span>, <span class="refTitle">"HTML"</span>, <span>n.d.</span>, <span>&lt;<a href="https://html.spec.whatwg.org/">https://html.spec.whatwg.org/</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC9110">[HTTP]</dt>
         <dd>
 <span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI 10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>&gt;</span>. </dd>
@@ -4415,6 +4414,16 @@ defined in CamelCase, but technically accepted case-insensitively.<a href="#sect
 <dt id="CSRF">[CSRF]</dt>
         <dd>
 <span class="refAuthor">Barth, A.</span>, <span class="refAuthor">Jackson, C.</span>, and <span class="refAuthor">J. Mitchell</span>, <span class="refTitle">"Robust Defenses for Cross-Site Request Forgery"</span>, <span class="seriesInfo">DOI 10.1145/1455770.1455782</span>, <span class="seriesInfo">ISBN 978-1-59593-810-7</span>, <span class="seriesInfo">ACM CCS '08: Proceedings of the 15th ACM conference on Computer and communications security (pages 75-88)</span>, <time datetime="2008-10" class="refDate">October 2008</time>, <span>&lt;<a href="http://portal.acm.org/citation.cfm?id=1455770.1455782">http://portal.acm.org/citation.cfm?id=1455770.1455782</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="FETCH">[FETCH]</dt>
+        <dd>
+<span class="refAuthor">van Kesteren, A.</span>, <span class="refTitle">"Fetch Living Standard"</span>, <span>n.d.</span>, <span>&lt;<a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>&gt;</span>. <span class="annotation">WHATWG</span>
+        </dd>
+<dd class="break"></dd>
+<dt id="HTML">[HTML]</dt>
+        <dd>
+<span class="refAuthor">van Kesteren, A.</span>, <span class="refAuthor">Denicola, D.</span>, <span class="refAuthor">Farolino, D.</span>, <span class="refAuthor">Hickson, I.</span>, <span class="refAuthor">Jägenstedt, P.</span>, and <span class="refAuthor">S. Pieters</span>, <span class="refTitle">"HTML Living Standard"</span>, <span>n.d.</span>, <span>&lt;<a href="https://html.spec.whatwg.org/">https://html.spec.whatwg.org/</a>&gt;</span>. <span class="annotation">WHATWG</span>
+        </dd>
 <dd class="break"></dd>
 <dt id="HttpFieldNameRegistry">[HttpFieldNameRegistry]</dt>
         <dd>
