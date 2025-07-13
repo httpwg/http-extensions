@@ -331,21 +331,31 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
       <t>
         The cache key for a QUERY request (see <xref target="HTTP-CACHING" section="2"/>) &MUST;
-        incorporate the request content. When doing so, caches &SHOULD; first normalize request
-        content to remove semantically insignificant differences, thereby improving cache
-        efficiency, by:
+        incorporate the request content.
+      </t>
+      <t>
+        Caches <bcp14>MAY</bcp14> remove semantically insignificant differences first, thereby
+        improving cache efficiency.
+      </t>
+      <t>
+        For instance, by
       </t>
       <ul>
-        <li>Removing content encoding(s) (<xref target="HTTP" section="8.4"/>).</li>
-        <li>Normalizing based upon knowledge of format conventions, as indicated by any
+        <li>removing content encoding(s) (<xref target="HTTP" section="8.4"/>).</li>
+        <li>normalizing based upon knowledge of format conventions, as indicated by any
           media subtype suffix in the request's Content-Type field (e.g., "+json", see
           <xref target="RFC6838" section="4.2.8"/>).</li>
-        <li>Normalizing based upon knowledge of the semantics of the content itself, as indicated by
+        <li>normalizing based upon knowledge of the semantics of the content itself, as indicated by
           the request's Content-Type field.</li>
       </ul>
       <t>
-        Note that any such normalization is performed solely for the purpose of generating a cache key; it
+        Note that any such transformation is performed solely for the purpose of generating a cache key; it
         does not change the request itself.
+      </t>
+      <t>
+        Clients can indicate, using the "no-transform" cache directive (<xref target="HTTP-CACHING" section="5.2.1.6"/>),
+        that they wish that no such transformation happens (but note that this directive is just
+        advisory).
       </t>
     </section>
 
@@ -1046,6 +1056,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-11" anchor="changes.since.11">
 <ul>
+  <li>Improve description of caching, clarifying what is required (<eref target="https://github.com/httpwg/http-extensions/tree/reschke-3107"/>)</li>
   <li>Address HTTPDIR/RF feedback on example appendix (<eref target="https://github.com/httpwg/http-extensions/issues/3114"/>)</li>
   <li>Address HTTPDIR/RF feedback on abstract (<eref target="https://github.com/httpwg/http-extensions/issues/3121"/>)</li>
   <li>Address HTTPDIR/RF feedback on introduction (<eref target="https://github.com/httpwg/http-extensions/issues/3122"/>)</li>
