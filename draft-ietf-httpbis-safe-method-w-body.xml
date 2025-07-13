@@ -61,8 +61,12 @@
 
     <abstract>
       <t>
-        This specification defines a new HTTP method, QUERY, as a safe, idempotent
-        request method that can carry request content.
+        This specification defines the QUERY method for HTTP.
+        A QUERY requests that the request target process the enclosed
+        content in a safe/idempotent manner and then respond with the
+        result of that processing. This is similar to POST requests but
+        can be automatically repeated or restarted without concern for
+        partial state changes.
       </t>
     </abstract>
 
@@ -89,7 +93,8 @@
   <section title="Introduction" anchor="introduction">
     <t>
       This specification defines the HTTP QUERY request method as a means of
-      making a safe, idempotent request (<xref target="HTTP" section="9.2"/>) that contains content.
+      making a safe, idempotent request (<xref target="HTTP" section="9.2"/>) containing
+      content that describes how the request is to be processed by the target resource.
     </t>
     <t>
       Most often, this is desirable when the data conveyed in a request is
@@ -253,7 +258,7 @@ q=foo&amp;limit=10&amp;sort=-published
       it is expected to describe the results of the operation.
     </t>
 
-    <section title="Content-Location and Location Fields" anchor="location">
+    <section title="Content-Location Response Field" anchor="content-location">
       <t>
         A successful response (2xx, <xref target="HTTP" section="15.3"/>)
         can include a Content-Location
@@ -264,6 +269,12 @@ q=foo&amp;limit=10&amp;sort=-published
         operation just performed. The indicated resource might be temporary.
       </t>
       <t>
+        See <xref target="example.content-location"/> for an example.
+      </t>
+    </section>
+
+    <section title="Location Response Field" anchor="location">
+      <t>
         A server can create or locate a resource that identifies the query
         operation for future use. If the server does so, the URI of the resource
         can be included in the Location header field of the 2xx response (see <xref
@@ -272,6 +283,9 @@ q=foo&amp;limit=10&amp;sort=-published
         performed without resending the query content. This resource might be
         temporary; if a future request fails, the client can retry using the
         original QUERY resource and the previously submitted content.
+      </t>
+      <t>
+        See <xref target="example.location"/> for an example.
       </t>
     </section>
 
@@ -669,7 +683,8 @@ Accept: application/x-www-form-urlencoded, application/sql
 
     <section title="Content-Location, Location, and Indirect Responses" anchor="example.content-location.location.indirect">
       <t>
-        As described in <xref target="location"/>, the Content-Location and Location response fields in success responses
+        As described in Sections <xref format="counter" target="content-location"/> and
+        <xref format="counter" target="location"/>, the Content-Location and Location response fields in success responses
         (2xx, <xref target="HTTP" section="15.3"/>) provide a way to identify alternate resources
         that will respond to GET requests, either for the received result of the request, or for future
         requests to perform the same operation. Going back to the example from <xref target="example.simple"/>:
@@ -733,12 +748,18 @@ Date: Sun, 17 Nov 2024, 16:10:25 GMT
     "email": "camille.dubois@example.net" }
 ]
 </artwork>
+        <t>
+          Note that there's no guarantee that the server will implement this resource
+          indefinitely, so, after an error response, the client would need to redo
+          the original QUERY request in order to obtain a new alternative location.
+        </t>
       </section>
 
       <section title="Using Location" anchor="example.location">
         <t>
           The Location response field identifies a resource that will respond to GET
-          with a fresh result for the QUERY response it appeared on.
+          with a current result for the same process and parameters as the original
+          QUERY request.
         </t>
 <artwork type="http-message">
 GET /contacts/stored-queries/42 HTTP/1.1
@@ -767,18 +788,14 @@ Date: Sun, 17 Nov 2024, 16:13:17 GMT
 ]
 </artwork>
         <t>
-          Assuming no change in the query result, a subsequent conditional GET request with
+          Assuming that the server still exposes the resource and that there was no change
+          in the query result, a subsequent conditional GET request with
         </t>
 <artwork type="http-message">
 If-None-Match: "42-1"
 </artwork>
         <t>
           would result in a 304 response (Not Modified, <xref target="HTTP" section="15.4.5"/>).
-        </t>
-        <t>
-          Note that there's no guarantee that the server will implement this resource
-          indefinitely, so, after an error response, the client would need to redo
-          the original QUERY request in order to obtain a new alternative location.
         </t>
       </section>
 
@@ -801,7 +818,7 @@ See stored query at "/contacts/stored-queries/42".
 </artwork>
         <t>
           This is similar to including Location on a direct response, except that no result
-          for the query is returned. This allows the server to only generate an alternative
+          for the query is returned. This allows the server to only generate or reuse an alternative
           resource. This resource could then be used as shown in
           <xref target="example.location"/>.
         </t>
@@ -1040,6 +1057,9 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <section title="Since draft-ietf-httpbis-safe-method-w-body-11" anchor="changes.since.11">
 <ul>
   <li>Improve description of caching, clarifying what is required (<eref target="https://github.com/httpwg/http-extensions/tree/reschke-3107"/>)</li>
+  <li>Address HTTPDIR/RF feedback on example appendix (<eref target="https://github.com/httpwg/http-extensions/issues/3114"/>)</li>
+  <li>Address HTTPDIR/RF feedback on abstract (<eref target="https://github.com/httpwg/http-extensions/issues/3121"/>)</li>
+  <li>Address HTTPDIR/RF feedback on introduction (<eref target="https://github.com/httpwg/http-extensions/issues/3122"/>)</li>
 </ul>
 </section>
 </section>
