@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 9 January 2026                                       Cloudflare
+Expires: 14 January 2026                                      Cloudflare
                                                                M. Bishop
                                                                   Akamai
-                                                             8 July 2025
+                                                            13 July 2025
 
 
                          The HTTP QUERY Method
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 January 2026.
+   This Internet-Draft will expire on 14 January 2026.
 
 Copyright Notice
 
@@ -308,21 +308,29 @@ Table of Contents
    [HTTP-CACHING]).
 
    The cache key for a QUERY request (see Section 2 of [HTTP-CACHING])
-   MUST incorporate the request content.  When doing so, caches SHOULD
-   first normalize request content to remove semantically insignificant
-   differences, thereby improving cache efficiency, by:
+   MUST incorporate the request content.
 
-   *  Removing content encoding(s) (Section 8.4 of [HTTP]).
+   Caches MAY remove semantically insignificant differences first,
+   thereby improving cache efficiency.
 
-   *  Normalizing based upon knowledge of format conventions, as
+   For instance, by
+
+   *  removing content encoding(s) (Section 8.4 of [HTTP]).
+
+   *  normalizing based upon knowledge of format conventions, as
       indicated by any media subtype suffix in the request's Content-
       Type field (e.g., "+json", see Section 4.2.8 of [RFC6838]).
 
-   *  Normalizing based upon knowledge of the semantics of the content
+   *  normalizing based upon knowledge of the semantics of the content
       itself, as indicated by the request's Content-Type field.
 
-   Note that any such normalization is performed solely for the purpose
+   Note that any such transformation is performed solely for the purpose
    of generating a cache key; it does not change the request itself.
+
+   Clients can indicate, using the "no-transform" cache directive
+   (Section 5.2.1.6 of [HTTP-CACHING]), that they wish that no such
+   transformation happens (but note that this directive is just
+   advisory).
 
 2.6.  Range Requests
 
@@ -1001,6 +1009,9 @@ B.11.  Since draft-ietf-httpbis-safe-method-w-body-10
       (https://github.com/httpwg/http-extensions/pull/3101)
 
 B.12.  Since draft-ietf-httpbis-safe-method-w-body-11
+
+   *  Improve description of caching, clarifying what is required
+      (https://github.com/httpwg/http-extensions/tree/reschke-3107)
 
    *  Address HTTPDIR/RF feedback on example appendix
       (https://github.com/httpwg/http-extensions/issues/3114)
