@@ -137,11 +137,11 @@ where each:
   compute the digest;
 * value is a `Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}), that
   conveys an encoded version of the byte output produced by the digest
-  calculation. The byte sequence may have one or more Parameters
-  ({{Section 3.1.2 of STRUCTURED-FIELDS}}).
+  calculation.
 
-  Note that parameters are ignored in processing today, but leave room for
-  future extensions.
+  Each Dictionary value can have zero or more Parameters ({{Section 3.1.2 of
+  STRUCTURED-FIELDS}}). This specification does not define any Parameters but
+  extensions MAY define them. Unknown Parameters MUST be ignored.
 
 For example:
 
