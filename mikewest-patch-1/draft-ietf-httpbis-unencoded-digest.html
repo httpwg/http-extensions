@@ -1284,11 +1284,10 @@ compute the digest;<a href="#section-3-4.1.1" class="pilcrow">¶</a></p>
         <li class="normal" id="section-3-4.2">
           <p id="section-3-4.2.1">value is a <code>Byte Sequence</code> (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.3.5" class="relref">Section 3.3.5</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>), that
 conveys an encoded version of the byte output produced by the digest
-calculation. The byte sequence may have one or more Parameters
-(<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.1.2" class="relref">Section 3.1.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-4.2.1" class="pilcrow">¶</a></p>
+calculation.<a href="#section-3-4.2.1" class="pilcrow">¶</a></p>
 <p id="section-3-4.2.2">
-Note that parameters are ignored in processing today, but leave room for
-future extensions.<a href="#section-3-4.2.2" class="pilcrow">¶</a></p>
+Each Dictionary value can have zero or more Parameters (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.1.2" class="relref">Section 3.1.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>). This specification does not define any Parameters but
+extensions <span class="bcp14">MAY</span> define them. Unknown Parameters <span class="bcp14">MUST</span> be ignored.<a href="#section-3-4.2.2" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-3-5">For example:<a href="#section-3-5" class="pilcrow">¶</a></p>
