@@ -139,6 +139,10 @@ where each:
   conveys an encoded version of the byte output produced by the digest
   calculation.
 
+  Each Dictionary value can have zero or more Parameters ({{Section 3.1.2 of
+  STRUCTURED-FIELDS}}). This specification does not define any Parameters but
+  extensions MAY define them. Unknown Parameters MUST be ignored.
+
 For example:
 
 ~~~ http-message
@@ -201,6 +205,10 @@ constraints that operate in addition to this specification.
   ascending, relative, weighted preference. It must be in the range 0 to 10
   inclusive. 1 is the least preferred, 10 is the most preferred, and a value of
   0 means "not acceptable".
+
+  Each Dictionary value can have zero or more Parameters ({{Section 3.1.2 of
+  STRUCTURED-FIELDS}}). This specification does not define any Parameters but
+  extensions MAY define them. Unknown Parameters MUST be ignored.
 
 Examples:
 
