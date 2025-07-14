@@ -137,7 +137,11 @@ where each:
   compute the digest;
 * value is a `Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}), that
   conveys an encoded version of the byte output produced by the digest
-  calculation.
+  calculation. The byte sequence may have one or more Parameters
+  ({{Section 3.1.2 of STRUCTURED-FIELDS}}).
+
+  Note that parameters are ignored in processing today, but leave room for
+  future extensions.
 
 For example:
 
