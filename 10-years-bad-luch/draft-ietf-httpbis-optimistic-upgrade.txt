@@ -4,9 +4,9 @@
 
 HTTPBIS                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Updates: 9112, 9298 (if approved)                           18 July 2025
+Updates: 9112, 9298 (if approved)                           21 July 2025
 Intended status: Standards Track                                        
-Expires: 19 January 2026
+Expires: 22 January 2026
 
 
 Security Considerations for Optimistic Protocol Transitions in HTTP/1.1
@@ -17,8 +17,8 @@ Abstract
    In HTTP/1.1, the client can request a change to a new protocol on the
    existing connection.  This document discusses the security
    considerations that apply to data sent by the client before this
-   request is confirmed, and updates RFC 9112 and RFC 9298 to avoid
-   related security issues.
+   request is confirmed, and updates RFC 9298 to avoid related security
+   issues.
 
 About This Document
 
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 January 2026.
+   This Internet-Draft will expire on 22 January 2026.
 
 Copyright Notice
 
@@ -78,11 +78,10 @@ Table of Contents
    6.  Guidance for Future Upgrade Tokens
      6.1.  Selection of Request Methods
    7.  Guidance for HTTP CONNECT
-   8.  Security Considerations
-   9.  IANA Considerations
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   8.  IANA Considerations
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
    Acknowledgments
    Author's Address
 
@@ -106,12 +105,13 @@ Table of Contents
    HTTP/1.1 is also the only version of HTTP that allows the client to
    change the protocol used for the remainder of the connection.  There
    are two mechanisms to request such a protocol transition.  One
-   mechanism is the Upgrade request header field ([HTTP], Section 7.8),
-   which indicates that the client would like to use this connection for
-   a protocol other than HTTP/1.1.  The server replies with a 101
-   (Switching Protocols) status code if it accepts the protocol change.
+   mechanism is the "Upgrade" request header field ([RFC9110],
+   Section 7.8), which indicates that the client would like to use this
+   connection for a protocol other than HTTP/1.1.  The server replies
+   with a "101 (Switching Protocols)" status code if it accepts the
+   protocol change.
 
-   The other mechanism is the HTTP CONNECT method.  This method
+   The other mechanism is the HTTP "CONNECT" method.  This method
    indicates that the client wishes to establish a TCP connection to the
    specified host and port.  The server replies with a 2xx (Successful)
    response to indicate that the request was accepted and a TCP
@@ -119,7 +119,7 @@ Table of Contents
    acting as a TCP tunnel, not an HTTP/1.1 connection.
 
    Both of these mechanisms also permit the server to reject the
-   request.  For example, [HTTP] says:
+   request.  For example, [RFC9110] says:
 
       A server MAY ignore a received Upgrade header field if it wishes
       to continue using the current protocol on that connection.
@@ -130,11 +130,11 @@ Table of Contents
       invalid port number, typically by responding with a 400 (Bad
       Request) status code.
 
-   Rejections are common, and can happen for a variety of reasons.  A
-   request using Upgrade might be rejected if:
+   Rejections are common, and can happen for a variety of reasons.  An
+   "upgrade" request might be rejected if:
 
-   *  The server does not support any of the client's indicated upgrade
-      tokens (i.e., the client's proposed new protocols), so it
+   *  The server does not support any of the client's indicated Upgrade
+      Tokens (i.e., the client's proposed new protocols), so it
       continues to use HTTP/1.1.
 
    *  The server knows that an upgrade to the offered protocol will not
@@ -142,12 +142,12 @@ Table of Contents
       resource, so it chooses to respond in HTTP/1.1.
 
    *  The server requires the client to authenticate before upgrading
-      the protocol, so it replies with the status code 401
-      (Authentication Required) and provides a challenge in an
-      Authorization response header field ([HTTP], Section 11.6.2).
+      the protocol, so it replies with the status code "401
+      (Authentication Required)" and provides a challenge in an
+      "Authorization" response header ([RFC9110], Section 11.6.2).
 
-   *  The resource has moved, so the server replies with a 3xx
-      (Redirection) status code ([HTTP], Section 3.4).
+   *  The resource has moved, so the server replies with a 3XX redirect
+      status code ([RFC9110], Section 3.4).
 
    Similarly, a CONNECT request might be rejected if:
 
@@ -163,7 +163,7 @@ Table of Contents
    After rejecting a request, the server will continue to interpret
    subsequent bytes on that connection in accordance with HTTP/1.1.
 
-   [HTTP] also states:
+   [RFC9110] also states:
 
       A client cannot begin using an upgraded protocol on the connection
       until it has completely sent the request message (i.e., the client
@@ -190,10 +190,9 @@ Table of Contents
    However, HTTP connections often involve more than two parties, if the
    requests or responses include third-party data.  For example, a
    browser (party 1) might send an HTTP request to an origin (party 2)
-   with path, headers, or content controlled by a website from a
-   different origin (party 3).  Post-transition protocols such as
-   WebSocket similarly are often used to convey data chosen by a third
-   party.
+   with path, headers, or body controlled by a website from a different
+   origin (party 3).  Post-transition protocols such as WebSocket
+   similarly are often used to convey data chosen by a third party.
 
    If the third-party data source is untrusted, we call the data it
    provides "attacker-controlled".  The combination of attacker-
@@ -213,7 +212,7 @@ Table of Contents
    If the server accepts a protocol transition request, it interprets
    the subsequent bytes in accordance with the new protocol.  If it
    rejects the request, it interprets those bytes as HTTP/1.1.  However,
-   the client cannot know which interpretation the server will take
+   the client doesn't know which interpretation the server will take
    until it receives the server's response status code.  If it uses the
    new protocol optimistically, this creates a risk that the server will
    interpret attacker-controlled data in the new protocol as an
@@ -253,12 +252,12 @@ Table of Contents
 5.  Impact on HTTP Upgrade with Existing Upgrade Tokens
 
    This section describes the impact of this document's considerations
-   on some registered upgrade tokens that are believed to be in use at
+   on some registered Upgrade Tokens that are believed to be in use at
    the time of writing.
 
 5.1.  "TLS"
 
-   The "TLS" family of upgrade tokens was defined in [RFC2817], which
+   The "TLS" family of Upgrade Tokens was defined in [RFC2817], which
    correctly highlights the possibility of the server rejecting the
    upgrade.  If a client ignores this possibility and sends TLS data
    optimistically, the result cannot be valid HTTP/1.1: the first octet
@@ -269,7 +268,7 @@ Table of Contents
 
 5.2.  "WebSocket"/"websocket"
 
-   Section 4.1 of [WEBSOCKET] says:
+   Section 4.1 of [RFC6455] says:
 
       Once the client's opening handshake has been sent, the client MUST
       wait for a response from the server before sending any further
@@ -278,11 +277,11 @@ Table of Contents
    Thus, optimistic use of HTTP Upgrade is already forbidden in the
    WebSocket protocol.  Additionally, the WebSocket protocol requires
    high-entropy masking of client-to-server frames (Section 5.1 of
-   [WEBSOCKET]).
+   [RFC6455]).
 
 5.3.  "connect-udp"
 
-   Section 5 of [CONNECT-UDP] says:
+   Section 5 of [RFC9298] says:
 
       A client MAY optimistically start sending UDP packets in HTTP
       Datagrams before receiving the response to its UDP proxying
@@ -306,9 +305,9 @@ Table of Contents
 
 5.4.  "connect-ip"
 
-   The "connect-ip" upgrade token is defined in [CONNECT-IP].
-   Section 11 of [CONNECT-IP] forbids clients from sending packets
-   optimistically in HTTP/1.1, avoiding this issue.
+   The "connect-ip" Upgrade Token is defined in [RFC9484].  Section 11
+   of [RFC9484] forbids clients from sending packets optimistically in
+   HTTP/1.1, avoiding this issue.
 
 6.  Guidance for Future Upgrade Tokens
 
@@ -316,34 +315,35 @@ Table of Contents
    eliminate the security concerns discussed in this document and may be
    applicable in future specifications:
 
-   *  Forbid optimistic use of HTTP Upgrade (Section 4.1 of [WEBSOCKET],
-      Section 11 of [CONNECT-IP]).
+   *  Forbid optimistic use of HTTP Upgrade (WebSocket, Section 4.1 of
+      [RFC6455]).
 
-   *  Embed a fixed preamble that deliberately terminates HTTP/1.1
-      processing (Section 3.4 of [HTTP2]).
+   *  Embed a fixed preamble that terminates HTTP/1.1 processing
+      (HTTP/2, Section 3.4 of [RFC9113]).
 
-   *  Apply high-entropy masking of client-to-server data (Section 5.1
-      of [WEBSOCKET]).
+   *  Apply high-entropy masking of client-to-server data (WebSocket,
+      Section 5.1 of [RFC6455]).
 
-   Future specifications for upgrade tokens should account for the
+   Future specifications for Upgrade Tokens should account for the
    security issues discussed here and provide clear guidance on how
    implementations can avoid them.
 
 6.1.  Selection of Request Methods
 
-   Some upgrade tokens, such as "TLS", are defined for use with any
-   ordinary HTTP method.  The upgraded protocol continues to provide
+   Some Upgrade Tokens, such as "TLS", are defined for use with any
+   ordinary HTTP Method.  The upgraded protocol continues to provide
    HTTP semantics, and will convey the response to this HTTP request.
 
-   The other upgrade tokens mentioned in Section 5 do not preserve HTTP
-   semantics, so the method is not relevant.  All of these upgrade
-   tokens are specified only for GET requests with no content.
+   The other Upgrade Tokens mentioned in Section 5 do not preserve HTTP
+   semantics, so the method is not relevant.  All of these Upgrade
+   Tokens are specified only for requests with the "GET" method and an
+   empty body.
 
-   Future specifications for upgrade tokens should restrict their use to
-   GET requests with no content if the HTTP method is otherwise
-   irrelevant and the request does not need to carry any message
-   content.  This improves consistency with other upgrade tokens and
-   simplifies server implementation.
+   Future specifications for Upgrade Tokens should restrict their use to
+   "GET" requests with an empty body if the HTTP method is otherwise
+   irrelevant and a request body is not required.  This improves
+   consistency with other Upgrade Tokens and simplifies server
+   implementation.
 
 7.  Guidance for HTTP CONNECT
 
@@ -360,46 +360,24 @@ Table of Contents
    (Section 3.1).
 
    At the time of writing, some proxy clients are believed to be
-   vulnerable as described.  As a mitigation, this document updates RFC
-   9112 by adding the following section:
-
-      9.6.1.  Rejecting a CONNECT Request
-
-      In HTTP/1.1, proxy servers MUST close the underlying connection
-      when rejecting a CONNECT request, without processing any further
-      requests on that connection, unless the client is known to wait
-      for a 2xx (Successful) response before forwarding TCP payload
-      data.  This requirement applies whether or not the request
-      includes a "close" connection option.
-
-   Note that this mitigation will frequently impair the performance of
-   correctly implemented clients, especially when returning a 407 (Proxy
-   Authentication Required) response.  This performance loss can be
+   vulnerable as described.  When communicating with potentially
+   vulnerable clients, proxy servers MUST close the underlying
+   connection when rejecting an HTTP/1.1 CONNECT request, without
+   processing any further data on that connection, whether or not the
+   request headers include "Connection: close".  Note that this
+   mitigation will frequently impair the performance of correctly
+   implemented clients, especially when returning a "407 (Proxy
+   Authentication Required)" response.  This performance loss can be
    avoided by using HTTP/2 or HTTP/3, which are not vulnerable to this
    attack.
 
-8.  Security Considerations
-
-   This document describes security considerations related to optimistic
-   use of protocol transitions in HTTP/1.1.
-
-9.  IANA Considerations
+8.  IANA Considerations
 
    This document has no IANA actions.
 
-10.  References
+9.  References
 
-10.1.  Normative References
-
-   [CONNECT-UDP]
-              Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
-              DOI 10.17487/RFC9298, August 2022,
-              <https://www.rfc-editor.org/rfc/rfc9298>.
-
-   [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
-              Ed., "HTTP Semantics", STD 97, RFC 9110,
-              DOI 10.17487/RFC9110, June 2022,
-              <https://www.rfc-editor.org/rfc/rfc9110>.
+9.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -410,30 +388,37 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-   [RFC9112]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
-              Ed., "HTTP/1.1", STD 99, RFC 9112, DOI 10.17487/RFC9112,
-              June 2022, <https://www.rfc-editor.org/rfc/rfc9112>.
+   [RFC9110]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., "HTTP Semantics", STD 97, RFC 9110,
+              DOI 10.17487/RFC9110, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9110>.
 
-10.2.  Informative References
+   [RFC9298]  Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
+              DOI 10.17487/RFC9298, August 2022,
+              <https://www.rfc-editor.org/rfc/rfc9298>.
 
-   [CONNECT-IP]
-              Pauly, T., Ed., Schinazi, D., Chernyakhovsky, A.,
+   [RFC9484]  Pauly, T., Ed., Schinazi, D., Chernyakhovsky, A.,
               Kühlewind, M., and M. Westerlund, "Proxying IP in HTTP",
               RFC 9484, DOI 10.17487/RFC9484, October 2023,
               <https://www.rfc-editor.org/rfc/rfc9484>.
 
-   [HTTP2]    Thomson, M., Ed. and C. Benfield, Ed., "HTTP/2", RFC 9113,
-              DOI 10.17487/RFC9113, June 2022,
-              <https://www.rfc-editor.org/rfc/rfc9113>.
+9.2.  Informative References
 
    [RFC2817]  Khare, R. and S. Lawrence, "Upgrading to TLS Within
               HTTP/1.1", RFC 2817, DOI 10.17487/RFC2817, May 2000,
               <https://www.rfc-editor.org/rfc/rfc2817>.
 
-   [WEBSOCKET]
-              Fette, I. and A. Melnikov, "The WebSocket Protocol",
+   [RFC6455]  Fette, I. and A. Melnikov, "The WebSocket Protocol",
               RFC 6455, DOI 10.17487/RFC6455, December 2011,
               <https://www.rfc-editor.org/rfc/rfc6455>.
+
+   [RFC9112]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., "HTTP/1.1", STD 99, RFC 9112, DOI 10.17487/RFC9112,
+              June 2022, <https://www.rfc-editor.org/rfc/rfc9112>.
+
+   [RFC9113]  Thomson, M., Ed. and C. Benfield, Ed., "HTTP/2", RFC 9113,
+              DOI 10.17487/RFC9113, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9113>.
 
 Acknowledgments
 

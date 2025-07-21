@@ -1,4 +1,4 @@
-# Editor's drafts for bemasc-mbishop-review branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/bemasc-mbishop-review)
+# Editor's drafts for 10-years-bad-luch branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/10-years-bad-luch)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
