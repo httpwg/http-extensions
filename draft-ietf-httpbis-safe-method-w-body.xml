@@ -293,23 +293,28 @@ q=foo&amp;limit=10&amp;sort=-published
       <t>
         In some cases, the server may choose to respond indirectly to the QUERY
         request by redirecting the user agent to a different URI (see
-        <xref target="HTTP" section="15.4"/>). The semantics of the redirect
-        response do not differ from other methods.
+        <xref target="HTTP" section="15.4"/>). The semantics of the various redirect
+        status codes are the same as those defined in in that specification,
       </t>
       <t>
-        For the status code 303 (See Other, <xref target="HTTP" section="15.4.4"/>) in a
-        response to a QUERY request, this specification defines the semantics
+        In particular, the status codes 307 (Temporary Redirect, <xref target="HTTP" format="comma" section="15.4.8"/>) and 308
+        (Permanent Redirect, <xref target="HTTP" format="comma" section="15.4.9"/>) indicate that
+        the target resource resides at a different URI, either temporarily or permanently.
+      </t>
+      <t>
+        Note that in the context of the QUERY method, status codes 301 (Moved Permanently, <xref target="HTTP" format="comma" section="15.4.2"/>)
+        and 302 (Found, <xref target="HTTP" format="comma" section="15.4.3"/>) have exactly the
+        same meaning as status codes 308 and 307, as their only difference in behaviour is restricted
+        to responses to POST requests.
+      </t>
+      <t>
+        For the status code 303 (See Other, <xref target="HTTP" section="15.4.4"/>), this specification defines the semantics
         of the Location response field (<xref target="HTTP" sectionFormat="comma" section="10.2.2"/>) to
         identify an alternate URI that represents the QUERY request, and from which current results
         can be retrieved using a GET request.
       </t>
       <t>
-        On the other hand, response codes such as 307 (Temporary Redirect, <xref target="HTTP" format="comma" section="15.4.8"/>) and 308
-        (Permanent Redirect, <xref target="HTTP" format="comma" section="15.4.9"/>) can be used to request the user agent to redo
-        the QUERY request on the URI specified by the Location field.
-      </t>
-      <t>
-        See <xref target="example.indirect"/> for an example.
+        See <xref target="example.indirect"/> for an example use of the status code 303.
       </t>
     </section>
 
