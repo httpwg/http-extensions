@@ -58,12 +58,12 @@ the server continually sends notifications as they become available.
 
 In the case of Chunked Oblivious HTTP Messages
 {{?CHUNKED-OHTTP=I-D.ietf-ohai-chunked-ohttp}}, the client opens an HTTP request
-and incrementally sends application messages, while the server can start responding
+and incrementally sends application data, while the server can start responding
 even before the HTTP request is fully complete. In this way, the HTTP
 request-response pair could create what is, in effect, a bi-directional
 communication channel.
 
-Applications that rely on incremental delivery of messages are fragile when HTTP intermediaries are involved.
+Applications that rely on incremental delivery of data are fragile when HTTP intermediaries are involved.
 This is because HTTP intermediaries are not only permitted but are frequently
 deployed to buffer complete HTTP messages before forwarding them downstream
 ({{Section 7.6 of HTTP}}).
