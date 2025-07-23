@@ -293,8 +293,7 @@ q=foo&amp;limit=10&amp;sort=-published
       <t>
         In some cases, the server may choose to respond indirectly to the QUERY
         request by redirecting the user agent to a different URI (see
-        <xref target="HTTP" section="15.4"/>). The semantics of the various redirect
-        status codes are the same as those defined in in that specification,
+        <xref target="HTTP" section="15.4"/>).
       </t>
       <t>
         In particular, the status codes 307 (Temporary Redirect, <xref target="HTTP" format="comma" section="15.4.8"/>) and 308
