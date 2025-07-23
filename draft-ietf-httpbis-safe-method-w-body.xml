@@ -309,10 +309,8 @@ q=foo&amp;limit=10&amp;sort=-published
         similar QUERY request to the new target URI referenced by Location.
       </t>
       <t>
-        Note that in the context of the QUERY method, status codes 301 (Moved Permanently, <xref target="HTTP" format="comma" section="15.4.2"/>)
-        and 302 (Found, <xref target="HTTP" format="comma" section="15.4.3"/>) have exactly the
-        same meaning as status codes 308 and 307, as their only difference in behaviour is restricted
-        to responses to POST requests.
+        Note that the exceptions for redirecting a POST as a GET request after a 301 or 302 response
+        do not apply to QUERY requests.
       </t>
       <t>
         For the status code 303 (See Other, <xref target="HTTP" section="15.4.4"/>), this specification defines the semantics
