@@ -313,13 +313,11 @@ q=foo&amp;limit=10&amp;sort=-published
         do not apply to QUERY requests.
       </t>
       <t>
-        For the status code 303 (See Other, <xref target="HTTP" section="15.4.4"/>), this specification defines the semantics
-        of the Location response field (<xref target="HTTP" sectionFormat="comma" section="10.2.2"/>) to
-        identify an alternate URI that represents the QUERY request, and from which current results
-        can be retrieved using a GET request.
-      </t>
-      <t>
-        See <xref target="example.indirect"/> for an example use of the status code 303.
+        A response to QUERY with the status code 303 (See Other, <xref target="HTTP" section="15.4.4"/>)
+        indicates that the original query can be accomplished via a normal retrieval request on the URI referenced
+        by the Location response field (<xref target="HTTP" sectionFormat="comma" section="10.2.2"/>).
+        For HTTP, this means sending a GET request to the new target URI, as illustrated by the example
+        in <xref target="example.indirect"/>.
       </t>
     </section>
 
