@@ -39,7 +39,6 @@ author:
     organization: Cloudflare
     email: "lucas@lucaspardue.com"
 
-
 normative:
 
 informative:

@@ -293,24 +293,31 @@ q=foo&amp;limit=10&amp;sort=-published
       <t>
         In some cases, the server may choose to respond indirectly to the QUERY
         request by redirecting the user agent to a different URI (see
-        <xref target="HTTP" section="15.4"/>). The semantics of the redirect
-        response do not differ from other methods.
+        <xref target="HTTP" section="15.4"/>).
       </t>
       <t>
-        For instance, a 303 (See Other, <xref target="HTTP" section="15.4.4"/>)
-        response would indicate that the Location field identifies an
-        alternate URI from which the results can be retrieved
-        using a GET request (this use case is also covered by the
-        use of the Location response field in a 2xx response).
+        A response with either of the status codes
+        301 (Moved Permanently, <xref target="HTTP" format="comma" section="15.4.2"/>) or
+        308 (Permanent Redirect, <xref target="HTTP" format="comma" section="15.4.9"/>)
+        indicates that the target resource has permanently moved to a different URI referenced by the
+        Location response field (<xref target="HTTP" sectionFormat="comma" section="10.2.2"/>).
+        Likewise, a response with either
+        302 (Found, <xref target="HTTP" format="comma" section="15.4.3"/> or
+        307 (Temporary Redirect, <xref target="HTTP" format="comma" section="15.4.8"/>)
+        indicates that the target resource has temporarily moved. In all four cases, the server is
+        suggesting that the user agent can accomplish its original QUERY request by sending a
+        similar QUERY request to the new target URI referenced by Location.
       </t>
       <t>
-        On the other hand, response codes 307 (Temporary Redirect, <xref target="HTTP" section="15.4.8"/>) and 308
-        (Permanent Redirect, <xref target="HTTP" section="15.4.9"/>) can be used to request the user agent to redo
-        the QUERY request on the URI specified by the Location field.
+        Note that the exceptions for redirecting a POST as a GET request after a 301 or 302 response
+        do not apply to QUERY requests.
       </t>
       <t>
-        Various non-normative examples of successful
-        QUERY responses are illustrated in <xref target="examples"/>.
+        A response to QUERY with the status code 303 (See Other, <xref target="HTTP" section="15.4.4"/>)
+        indicates that the original query can be accomplished via a normal retrieval request on the URI referenced
+        by the Location response field (<xref target="HTTP" sectionFormat="comma" section="10.2.2"/>).
+        For HTTP, this means sending a GET request to the new target URI, as illustrated by the example
+        in <xref target="example.indirect"/>.
       </t>
     </section>
 
@@ -331,21 +338,31 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
       <t>
         The cache key for a QUERY request (see <xref target="HTTP-CACHING" section="2"/>) &MUST;
-        incorporate the request content. When doing so, caches &SHOULD; first normalize request
-        content to remove semantically insignificant differences, thereby improving cache
-        efficiency, by:
+        incorporate the request content.
+      </t>
+      <t>
+        Caches <bcp14>MAY</bcp14> remove semantically insignificant differences first, thereby
+        improving cache efficiency.
+      </t>
+      <t>
+        For instance, by
       </t>
       <ul>
-        <li>Removing content encoding(s) (<xref target="HTTP" section="8.4"/>).</li>
-        <li>Normalizing based upon knowledge of format conventions, as indicated by any
+        <li>removing content encoding(s) (<xref target="HTTP" section="8.4"/>).</li>
+        <li>normalizing based upon knowledge of format conventions, as indicated by any
           media subtype suffix in the request's Content-Type field (e.g., "+json", see
           <xref target="RFC6838" section="4.2.8"/>).</li>
-        <li>Normalizing based upon knowledge of the semantics of the content itself, as indicated by
+        <li>normalizing based upon knowledge of the semantics of the content itself, as indicated by
           the request's Content-Type field.</li>
       </ul>
       <t>
-        Note that any such normalization is performed solely for the purpose of generating a cache key; it
+        Note that any such transformation is performed solely for the purpose of generating a cache key; it
         does not change the request itself.
+      </t>
+      <t>
+        Clients can indicate, using the "no-transform" cache directive (<xref target="HTTP-CACHING" section="5.2.1.6"/>),
+        that they wish that no such transformation happens (but note that this directive is just
+        advisory).
       </t>
     </section>
 
@@ -451,6 +468,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
         (see <xref target="HTTP" section="16.3.1"/>).
       </t>
       <table>
+        <name>QUERY Method Definition</name>
         <thead>
           <tr>
             <th>Method Name</th>
@@ -477,6 +495,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
         (see <xref target="HTTP" section="16.1.1"/>).
       </t>
       <table>
+        <name>Accept-Query Field Definition</name>
         <thead>
           <tr>
             <th>Field Name</th>
@@ -1046,8 +1065,12 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-11" anchor="changes.since.11">
 <ul>
+  <li>Improve description of caching, clarifying what is required (<eref target="https://github.com/httpwg/http-extensions/tree/reschke-3107"/>)</li>
   <li>Address HTTPDIR/RF feedback on example appendix (<eref target="https://github.com/httpwg/http-extensions/issues/3114"/>)</li>
+  <li>Address HTTPDIR/RF feedback on redirection (<eref target="https://github.com/httpwg/http-extensions/issues/3119"/>)</li>
   <li>Address HTTPDIR/RF feedback on abstract (<eref target="https://github.com/httpwg/http-extensions/issues/3121"/>)</li>
+  <li>Address HTTPDIR/RF feedback on introduction (<eref target="https://github.com/httpwg/http-extensions/issues/3122"/>)</li>
+  <li>Consistent Table Captions (<eref target="https://github.com/httpwg/http-extensions/issues/3134"/>)</li>
 </ul>
 </section>
 </section>
