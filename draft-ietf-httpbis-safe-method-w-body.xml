@@ -468,6 +468,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
         (see <xref target="HTTP" section="16.3.1"/>).
       </t>
       <table>
+        <name>QUERY Method Definition</name>
         <thead>
           <tr>
             <th>Method Name</th>
@@ -494,6 +495,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
         (see <xref target="HTTP" section="16.1.1"/>).
       </t>
       <table>
+        <name>Accept-Query Field Definition</name>
         <thead>
           <tr>
             <th>Field Name</th>
@@ -1068,6 +1070,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Address HTTPDIR/RF feedback on redirection (<eref target="https://github.com/httpwg/http-extensions/issues/3119"/>)</li>
   <li>Address HTTPDIR/RF feedback on abstract (<eref target="https://github.com/httpwg/http-extensions/issues/3121"/>)</li>
   <li>Address HTTPDIR/RF feedback on introduction (<eref target="https://github.com/httpwg/http-extensions/issues/3122"/>)</li>
+  <li>Consistent Table Captions (<eref target="https://github.com/httpwg/http-extensions/issues/3134"/>)</li>
 </ul>
 </section>
 </section>
