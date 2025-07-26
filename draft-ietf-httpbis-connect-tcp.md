@@ -207,7 +207,7 @@ The mandatory behaviors above enable endpoints to detect any truncation of incom
 +-+-----+    +-+----------+    +----------+-+    +-----+-+
   +---"abc"--->+-------DATA{"abc"}------->+---"abc"--->|
   |            |  (... timeout @ A ...)   |            |
-  |            +--------TLS Alert-------->+----RST---->|
+  |            +--FIN (no close_notify)-->+----RST---->|
   |            |                          |            |
 ~~~
 {: title="Timeout example (HTTP/1.1)"}
@@ -294,7 +294,7 @@ A malicious client can achieve cause highly asymmetric resource usage at the pro
 While this specification is fully functional under HTTP/1.1, performance-sensitive deployments SHOULD use HTTP/2 or HTTP/3 instead.  When using HTTP/1.1:
 
 * Each CONNECT request requires a new TCP and TLS connection, imposing a higher cost in setup latency, congestion control convergence, CPU time, and data transfer.
-* It may be difficult to implement the recommended unclean shutdown signals ({{closing-connections}}), as many TLS libraries do not support injecting TLS Alerts.
+* It may be difficult to implement the recommended unclean shutdown signals ({{closing-connections}}), as TLS subsystems may close connections gracefully even when this is not desired.
 * The number of active connections through each client may be limited by the number of available TCP client ports, especially if:
   - The client only has one IP address that can be used to reach the proxy.
   - The client is shared between many parties, such as when acting as a gateway or concentrator.
