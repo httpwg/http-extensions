@@ -169,8 +169,11 @@ When closing connections, endpoints are subject to the following requirements:
   - If the connection closed gracefully, the endpoint MUST close the send stream gracefully.
   - Otherwise, the endpoint SHOULD close the send stream abruptly, using a mechanism appropriate to the HTTP version:
     - HTTP/3: RESET_STREAM with H3_CONNECT_ERROR
+      - See {{!RFC9000, Section 19.4}} and {{?RFC9114, Section 8.1}}.
     - HTTP/2: RST_STREAM with CONNECT_ERROR
-    - HTTP/1.1 over TLS: a TLS Error Alert
+      - See {{!RFC9113}}, Sections 6.4 and 7.
+    - HTTP/1.1 over TLS: TCP shutdown without a TLS closure alert
+      - See {{!RFC8446, Section 6.1}}.
     - HTTP/1.1 (insecure): TCP RST.
 * When the receive stream is closed abruptly or without a FINAL_DATA capsule received, the endpoint SHOULD send a TCP RST if the TCP subsystem permits it.
 
@@ -204,7 +207,7 @@ The mandatory behaviors above enable endpoints to detect any truncation of incom
 +-+-----+    +-+----------+    +----------+-+    +-----+-+
   +---"abc"--->+-------DATA{"abc"}------->+---"abc"--->|
   |            |  (... timeout @ A ...)   |            |
-  |            +--------TLS Alert-------->+----RST---->|
+  |            +--FIN (no close_notify)-->+----RST---->|
   |            |                          |            |
 ~~~
 {: title="Timeout example (HTTP/1.1)"}
@@ -291,7 +294,7 @@ A malicious client can achieve cause highly asymmetric resource usage at the pro
 While this specification is fully functional under HTTP/1.1, performance-sensitive deployments SHOULD use HTTP/2 or HTTP/3 instead.  When using HTTP/1.1:
 
 * Each CONNECT request requires a new TCP and TLS connection, imposing a higher cost in setup latency, congestion control convergence, CPU time, and data transfer.
-* It may be difficult to implement the recommended unclean shutdown signals ({{closing-connections}}), as many TLS libraries do not support injecting TLS Alerts.
+* It may be difficult to implement the recommended unclean shutdown signals ({{closing-connections}}), as TLS subsystems may close connections gracefully even when this is not desired.
 * The number of active connections through each client may be limited by the number of available TCP client ports, especially if:
   - The client only has one IP address that can be used to reach the proxy.
   - The client is shared between many parties, such as when acting as a gateway or concentrator.
