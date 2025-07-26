@@ -114,6 +114,11 @@ arrive. As the Incremental header field indicates only how the message content i
 to be forwarded, intermediaries can still buffer the entire header and trailer
 sections of the message before forwarding them downstream.
 
+The request to use incremental forwarding also applies to HTTP implementations.
+Though most HTTP APIs provide the ability to incrementally write message content,
+those that do not for any reason, SHOULD use the presence of the Incremental
+header field to reduce or disable buffering.
+
 The Incremental HTTP header field applies to each HTTP message. Therefore, if
 both the HTTP request and response need to be forwarded incrementally, the
 Incremental HTTP header field MUST be set for both the HTTP request and the
