@@ -240,7 +240,7 @@ Servers that host a proxy under this specification MAY offer support for TLS ear
 
 This specification supports the "Expect: 100-continue" request header ({{?RFC9110, Section 10.1.1}}) in any HTTP version.  The "100 (Continue)" status code confirms receipt of a request at the proxy without waiting for the proxy-destination TCP handshake to succeed or fail.  This might be particularly helpful when the destination host is not responding, as TCP handshakes can hang for several minutes before failing.  Clients MAY send "Expect: 100-continue", and proxies MUST respect it by returning "100 (Continue)" if the request is not immediately rejected.
 
-Proxies implementing this specification SHOULD include a "Proxy-Status" response header {{!RFC9209}} in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  In HTTP/2 or HTTP/3, proxies MAY additionally send a "Proxy-Status" trailer in the event of an unclean shutdown.
+Proxies implementing this specification SHOULD include a "Proxy-Status" response header {{!RFC9209}} in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  In HTTP/2 or HTTP/3, proxies MAY additionally send a "Proxy-Status" trailer in the event of an abrupt stream closure.
 
 # Applicability
 
@@ -294,7 +294,7 @@ A malicious client can achieve cause highly asymmetric resource usage at the pro
 While this specification is fully functional under HTTP/1.1, performance-sensitive deployments SHOULD use HTTP/2 or HTTP/3 instead.  When using HTTP/1.1:
 
 * Each CONNECT request requires a new TCP and TLS connection, imposing a higher cost in setup latency, congestion control convergence, CPU time, and data transfer.
-* It may be difficult to implement the recommended unclean shutdown signals ({{closing-connections}}), as TLS subsystems may close connections gracefully even when this is not desired.
+* It may be difficult to implement the recommended abrupt closure signal ({{closing-connections}}), as TLS subsystems may close connections gracefully even when this is not desired.
 * The number of active connections through each client may be limited by the number of available TCP client ports, especially if:
   - The client only has one IP address that can be used to reach the proxy.
   - The client is shared between many parties, such as when acting as a gateway or concentrator.
