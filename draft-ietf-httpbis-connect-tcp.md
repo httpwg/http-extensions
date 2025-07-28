@@ -168,13 +168,13 @@ When closing connections, endpoints are subject to the following requirements:
 * When a TCP connection reaches the TIME-WAIT or CLOSED state, the associated endpoint MUST close its send stream.
   - If the connection closed gracefully, the endpoint MUST close the send stream gracefully.
   - Otherwise, the endpoint SHOULD close the send stream abruptly, using a mechanism appropriate to the HTTP version:
-    - HTTP/3: RESET_STREAM with H3_CONNECT_ERROR
-      - See {{!RFC9000, Section 19.4}} and {{?RFC9114, Section 8.1}}.
-    - HTTP/2: RST_STREAM with CONNECT_ERROR
-      - See {{!RFC9113}}, Sections 6.4 and 7.
-    - HTTP/1.1 over TLS: TCP shutdown without a TLS closure alert
-      - See {{!RFC8446, Section 6.1}}.
-    - HTTP/1.1 (insecure): TCP RST.
+    - HTTP/3: RESET_STREAM with H3_CONNECT_ERROR;
+      see {{!RFC9000, Section 19.4}} and {{?RFC9114, Section 8.1}}
+    - HTTP/2: RST_STREAM with CONNECT_ERROR;
+      see {{!RFC9113}}, Sections 6.4 and 7
+    - HTTP/1.1 over TLS: TCP shutdown without a TLS closure alert;
+      see {{!RFC8446, Section 6.1}}.
+    - HTTP/1.1 without TLS: TCP RST
 * When the receive stream is closed abruptly or without a FINAL_DATA capsule received, the endpoint SHOULD send a TCP RST if the TCP subsystem permits it.
 
 The mandatory behaviors above enable endpoints to detect any truncation of incoming TCP data.  The recommended behaviors propagate any TCP errors through the proxy connection.
