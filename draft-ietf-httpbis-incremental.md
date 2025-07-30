@@ -115,7 +115,7 @@ to be forwarded, intermediaries can still buffer the entire header and trailer
 sections of the message before forwarding them downstream.
 
 The request to use incremental forwarding also applies to HTTP implementations.
-Though most HTTP APIs provide the ability to incrementally write message content,
+Though most HTTP APIs provide the ability to incrementally transfer message content,
 those that do not for any reason, SHOULD use the presence of the Incremental
 header field to reduce or disable buffering.
 
