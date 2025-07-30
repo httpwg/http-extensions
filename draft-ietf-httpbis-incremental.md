@@ -26,6 +26,7 @@ author:
 normative:
 
 informative:
+  EXTRA-STATUS: RFC6585
   PROXY-STATUS: RFC9209
   SSE:
     target: https://html.spec.whatwg.org/multipage/server-sent-events.html
@@ -149,7 +150,7 @@ requests and maintains service availability across all requests.
 
 When rejecting incremental requests due to reaching the concurrency limit,
 intermediaries SHOULD respond with a 429 Too Many Requests error
-({{Section 4 of RFC6585}}),
+({{Section 4 of EXTRA-STATUS}}),
 accompanied by a connection_limit_reached Proxy-Status response header field
 ({{Section 2.3.12 of PROXY-STATUS}}).
 
