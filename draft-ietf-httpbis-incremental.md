@@ -144,7 +144,7 @@ generally more consistent with HTTP's architecture.
 
 When receiving an incremental request, intermediaries might reject the request
 due to security concerns. The following subsections explore typical scenarios
-under which the intermediaries might reject the requests.
+under which the intermediaries might reject requests.
 
 
 ## Permanent Rejection
