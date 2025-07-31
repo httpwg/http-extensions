@@ -155,6 +155,11 @@ q=foo&amp;limit=10&amp;sort=-published
       rather than as part of the request URI. Unlike POST, however, the method is explicitly safe
       and idempotent, allowing functions like caching and automatic retries to operate.
     </t>
+    <t>
+      Recognizing the design principle that any important resource ought to be
+      identified by a URI, this specification describes how a server can assign URIs to both
+      the query itself or a specific query result, for later use in a GET request.
+    </t>
     <t>Summarizing:</t>
     <table>
       <name>Summary of relevant method properties</name>
@@ -178,6 +183,18 @@ q=foo&amp;limit=10&amp;sort=-published
           <td>yes</td>
           <td>yes</td>
           <td>potentially no</td>
+        </tr>
+        <tr>
+          <td>URI for query itself</td>
+          <td>yes (by definition)</td>
+          <td>optional (Location response field)</td>
+          <td>no</td>
+        </tr>
+        <tr>
+          <td>URI for query result</td>
+          <td>optional (Content-Location response field)</td>
+          <td>optional (Content-Location response field)</td>
+          <td>optional (Content-Location response field)</td>
         </tr>
         <tr>
           <td>Cacheable</td>
