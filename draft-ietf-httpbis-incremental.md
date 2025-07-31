@@ -156,7 +156,7 @@ flights of payload necessary to determine the safety of the request.
 
 When an intermediary rejects an incremental request due to security concerns
 with regard to the payload that the request might convey, the intermediary
-SHOULD respond with a 403 Forbiddn error with a http_request_denied Proxy-Status
+SHOULD respond with a 403 Forbidden error with a http_request_denied Proxy-Status
 response header field ({{Section 2.3.17 of PROXY-STATUS}}).
 
 
