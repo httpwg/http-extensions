@@ -149,10 +149,11 @@ under which the intermediaries might reject requests.
 
 ## Permanent Rejection
 
-Some intermediaries inspect the payload of an HTTP messages and forward them only if
-the content is deemed safe. Such intermediaries might decide to reject
-incremental requests that do not carry sufficient information in its first
-flights of payload necessary to determine the safety of the request.
+Some intermediaries inspect the payload of an HTTP messages and forward them
+only if the content is deemed safe. Any feature that depends on seeing the
+entirety of the message in this way is incompatible with incremental delivery,
+so these intermediaries need to reject requests unless the entire message is
+received.
 
 When an intermediary rejects an incremental request due to security concerns
 with regard to the payload that the request might convey, the intermediary
