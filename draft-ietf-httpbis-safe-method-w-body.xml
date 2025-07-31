@@ -98,21 +98,21 @@
     </t>
     <t>
       Most often, this is desirable when the data conveyed in a request is
-      too voluminous to be encoded into the request's URI. For example,
-      this is a common query pattern:
+      too voluminous to be encoded into the request's URI. A common query pattern is:
     </t>
 <artwork type="http-message">
 GET /feed?q=foo&amp;limit=10&amp;sort=-published HTTP/1.1
 Host: example.org
 </artwork>
     <t>
-      However, for a query with parameters that are complex or large,
-      encoding it in the request URI may not be the best option because
+      However, when the data conveyed is too voluminous to be encoded in the request's URI,
+      this pattern becomes problematic:
     </t>
     <ul>
       <li>often size limits are not known ahead of time because a request can pass through many uncoordinated
       systems (but note that <xref section="4.1" target="HTTP"/> recommends senders and recipients to support at least 8000 octets),</li>
-      <li>expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and</li>
+      <li>expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI,</li>
+      <li>request URIs are more likely to be logged than request content, and may also turn up in bookmarks,</li>
       <li>encoding queries directly into the request URI effectively casts every possible combination of query inputs as distinct
           resources.</li>
     </ul>
