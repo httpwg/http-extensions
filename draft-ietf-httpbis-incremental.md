@@ -147,7 +147,7 @@ due to security concerns. The following subsections explore typical scenarios
 under which the intermediaries might reject the requests.
 
 
-## Permantent Rejection
+## Permanent Rejection
 
 Some intermediaries inspect the payload of an HTTP request and forward them only if
 the request is deemed safe. Such intermediaries might decide to reject
