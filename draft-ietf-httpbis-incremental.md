@@ -142,6 +142,26 @@ generally more consistent with HTTP's architecture.
 
 # Security Considerations
 
+When receiving an incremental request, intermediaries might reject the request
+due to security concerns. The following subsections explore typical scenarios
+under which the intermediaries might reject the requests.
+
+
+## Permantent Rejection
+
+Some intermediaries inspect the payload of the request and forward them only if
+the request is deemed safe. Such intermediaries might decide to reject
+incremental requests that do not carry sufficient information in its first
+flights of payload necessary to determine the safety of the request.
+
+When an intermediary rejects an incremental request due to security concerns
+with regard to the payload that the request might convey, the intermediary
+SHOULD respond with a 403 Forbiddn error with a http_request_denied Proxy-Status
+response header field ({{Section 2.3.17 of PROXY-STATUS}}).
+
+
+## Temporary Rejection
+
 To conserve resources required to handle HTTP requests or connections, it is
 common for intermediaries to impose limits on the maximum number of concurrent
 HTTP requests that they forward, while buffering requests that exceed this
@@ -158,6 +178,9 @@ intermediaries SHOULD respond with a 429 Too Many Requests error
 ({{Section 4 of EXTRA-STATUS}}),
 accompanied by a connection_limit_reached Proxy-Status response header field
 ({{Section 2.3.12 of PROXY-STATUS}}).
+
+
+## Handling of Small Packets
 
 For performance and efficiency reasons, a small amount of buffering might be
 used by intermediaries, even for incremental messages. Immediate forwarding
