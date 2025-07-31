@@ -150,7 +150,7 @@ under which the intermediaries might reject requests.
 ## Permanent Rejection
 
 Some intermediaries inspect the payload of an HTTP messages and forward them only if
-the request is deemed safe. Such intermediaries might decide to reject
+the content is deemed safe. Such intermediaries might decide to reject
 incremental requests that do not carry sufficient information in its first
 flights of payload necessary to determine the safety of the request.
 
