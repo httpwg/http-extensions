@@ -155,14 +155,11 @@ entirety of the message in this way is incompatible with incremental delivery,
 so these intermediaries need to reject requests unless the entire message is
 received.
 
-When an intermediary rejects an incremental request due to security concerns
-with regard to the payload that the request might convey, the intermediary
-SHOULD respond with a 403 Forbidden error with an incremental_refused
-Proxy-Status response header field ({{iana-considerations}}).
-
-Similarly, when an intermediary receives an incremental response but refuses to
-forward it incrementally, it SHOULD respond with a 501 Not Implemented error with
-an incremental_refused Proxy-Status response header field.
+When an intermediary rejects an incremental message -- either a request or a
+response -- due to security concerns with regard to the payload that the message
+might convey, the intermediary SHOULD respond with a 501 Not Implemented error
+with an incremental_refused Proxy-Status response header field
+({{iana-considerations}}).
 
 
 ## Temporary Rejection
