@@ -238,45 +238,42 @@ q=foo&amp;limit=10&amp;sort=-published
   <section title="QUERY" anchor="query">
     <t>
       The QUERY method is used to initiate a server-side query. Unlike
-      the GET method, which requests a
+      the HTTP GET method, which requests that a server return a
       representation of the resource identified by the target URI
       (as defined by <xref target="HTTP" section="7.1"/>), the QUERY
-      method is used to ask the target resource to perform a query operation
-      (described by the request content) within the scope of that target
-      resource (as defined by its origin).
+      method is used to ask the server to perform a query operation
+      (described by the request content) over some set of data at the
+      resource. The content returned in response to a QUERY
+      cannot be assumed to be a representation of the resource identified by
+      the target URI.
     </t>
     <t>
       The content of the request and it's media type define the query.
-      Servers <bcp14>MUST</bcp14> fail the request if the Content-Type
-      request field (<xref target="HTTP" sectionFormat="comma" section="8.3"/>)
-      is missing or is inconsistent with the request content.
+      Implementations &MAY; use a request content of any media type with
+      the QUERY method, provided that it has appropriate query semantics.
     </t>
     <t>
       As for all HTTP methods in general, the target URI's query part
-      takes part in identifying the resource being queried. Whether and how it
-      directly affects the result of the query is specific to the resource
+      takes part in identifying the resource being queried and therefore is
+      not part of the actual query. Whether and how the URI's query part
+      directly affects the result of the query is implementation specific
       and out of scope for this specification.
     </t>
     <t>
-      QUERY requests are safe with regard to the target resource
-      (<xref target="HTTP" sectionFormat="comma" section="9.2.1"/>) --
-      that is, the client does not request or expect any change to the
-      state of the target resource. This does not prevent the server
-      from creating additional HTTP resources through which additional
-      information can be retrieved (see sections below).
+      QUERY requests are both safe and idempotent with regard to the
+      resource identified by the request URI. That is, QUERY requests do not
+      alter the state of the identified resource. However, while processing a
+      QUERY request, a server can be expected to allocate computing and memory
+      resources or even create additional HTTP resources through which the
+      response can be retrieved.
     </t>
     <t>
-      Furthermore, QUERY requests are idempotent
-      (<xref target="HTTP" sectionFormat="comma" section="9.2.2"/>) --
-      they can be retried or repeated when needed, for instance after
-      a connection failure.
+      A successful response to a QUERY request is expected to provide some
+      indication as to the final disposition of the operation. For
+      instance, a successful query that yields no results can be represented
+      by a 204 (No Content, <xref target="HTTP" section="15.3.5"/>) response. If the response includes content,
+      it is expected to describe the results of the operation.
     </t>
-    <t>
-      A 200 (OK) response to a QUERY request indicates that the query
-      was successfully processed and the results of that processing are
-      enclosed as the response content.
-    </t>
-    <cref>describe other status codes</cref>
 
     <section title="Content-Location Response Field" anchor="content-location">
       <t>
