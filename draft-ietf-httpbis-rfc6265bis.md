@@ -368,6 +368,11 @@ cookie with a path of /c,d=e.
 User agents MAY ignore Set-Cookie header fields based on response status codes or
 the user agent's cookie policy (see {{ignoring-cookies}}).
 
+Note: A cookie's octets MUST be processed as {{USASCII}} characters. While
+it's possible a non-HTTP API could pass a set-cookie-string with one or more
+non-{{USASCII}} characters, no attempt should be made to interpret these octets
+as anything other than {{USASCII}} characters.
+
 ## Examples
 
 Using the Set-Cookie header field, a server can send the user agent a short string
@@ -610,6 +615,9 @@ Per the grammar above, the cookie-value MAY be wrapped in DQUOTE characters.
 Note that in this case, the initial and trailing DQUOTE characters are not
 stripped. They are part of the cookie-value, and will be included in Cookie
 header fields sent to the server.
+
+Per the grammar above, cookie-avs MUST NOT contain leading or trailing WSP
+characters as they will be interpreted as BWS and removed.
 
 The domain-value is a subdomain as defined by {{Section 3.5 of RFC1034}}, and
 as enhanced by {{Section 2.1 of RFC1123}}. Thus, domain-value is a string of
@@ -1138,8 +1146,8 @@ This is especially true for Service Workers {{SERVICE-WORKERS}}, which may
 execute code in the background, without any document visible at all.
 
 Note: The descriptions below assume that workers must be same-origin with
-the documents that instantiate them. If this invariant changes, we'll need to
-take the worker's script's URI into account when determining their status.
+the documents that instantiate them. How to handle non-same-origin workers is
+out of scope of this document.
 
 #### Dedicated and Shared Workers {#dedicated-and-shared-requests}
 
@@ -1642,8 +1650,8 @@ user agent MUST process the cookie as follows:
 
     1.  Let the domain-attribute be the empty string.
 
-8.  If the domain-attribute contains a character that is not in the range of {{USASCII}}
-    characters, abort this algorithm and ignore the cookie entirely.
+8.  If the domain-attribute contains a character that is not in CHAR, abort
+    this algorithm and ignore the cookie entirely.
 
 9.  If the user agent is configured to reject "public suffixes" and the
     domain-attribute is a public suffix:
