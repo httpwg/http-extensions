@@ -252,7 +252,7 @@ q=foo&amp;limit=10&amp;sort=-published
       is missing or is inconsistent with the request content.
     </t>
     <t>
-      As for all HTTP methods in general, the target URI's query part
+      As for all HTTP methods, the target URI's query part
       takes part in identifying the resource being queried. Whether and how it
       directly affects the result of the query is specific to the resource
       and out of scope for this specification.
