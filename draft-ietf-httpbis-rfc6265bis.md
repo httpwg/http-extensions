@@ -1145,16 +1145,13 @@ there isn't a clear link between a top-level traversable and a worker.
 This is especially true for Service Workers {{SERVICE-WORKERS}}, which may
 execute code in the background, without any document visible at all.
 
-Note: The descriptions below assume that workers must be same-origin with
-the documents that instantiate them. How to handle non-same-origin workers is
-out of scope of this document.
-
 #### Dedicated and Shared Workers {#dedicated-and-shared-requests}
 
-Dedicated workers are simple, as each dedicated worker is bound to one and only
-one document. Requests generated from a dedicated worker (via `importScripts`,
-`XMLHttpRequest`, `fetch()`, etc) define their "site for cookies" as that
-document's "site for cookies".
+Dedicated workers are simple, as each dedicated worker is bound to one and
+only one document. The worker's "site for cookies" is the document's "site for
+cookies" if the worker's origin is same-site with the document's "site for
+cookies", otherwise its "site for cookies" is an origin set to an opaque
+origin.
 
 Shared workers may be bound to multiple documents at once. As it is quite
 possible for those documents to have distinct "site for cookies" values, the
