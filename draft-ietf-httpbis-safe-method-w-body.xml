@@ -276,7 +276,9 @@ q=foo&amp;limit=10&amp;sort=-published
       was successfully processed and the results of that processing are
       enclosed as the response content.
     </t>
-    <cref>describe other status codes</cref>
+    <t>
+      <cref>describe other status codes</cref>
+    </t>
 
     <section title="Content-Location Response Field" anchor="content-location">
       <t>
