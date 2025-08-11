@@ -5,10 +5,10 @@
 httpbis                                                 奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                T. Pauly
-Expires: 22 January 2026                                           Apple
+Expires: 12 February 2026                                          Apple
                                                               M. Thomson
                                                                  Mozilla
-                                                            21 July 2025
+                                                          11 August 2025
 
 
                        Incremental HTTP Messages
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 January 2026.
+   This Internet-Draft will expire on 12 February 2026.
 
 Copyright Notice
 
@@ -79,13 +79,13 @@ Table of Contents
 
    In the case of Chunked Oblivious HTTP Messages [CHUNKED-OHTTP], the
    client opens an HTTP request and incrementally sends application
-   messages, while the server can start responding even before the HTTP
+   data, while the server can start responding even before the HTTP
    request is fully complete.  In this way, the HTTP request-response
    pair could create what is, in effect, a bi-directional communication
    channel.
 
-   Applications that rely on incremental delivery of messages are
-   fragile when HTTP intermediaries are involved.  This is because HTTP
+   Applications that rely on incremental delivery of data are fragile
+   when HTTP intermediaries are involved.  This is because HTTP
    intermediaries are not only permitted but are frequently deployed to
    buffer complete HTTP messages before forwarding them downstream
    (Section 7.6 of [HTTP]).
@@ -139,6 +139,12 @@ Table of Contents
    intermediaries can still buffer the entire header and trailer
    sections of the message before forwarding them downstream.
 
+   The request to use incremental forwarding also applies to HTTP
+   implementations.  Though most HTTP APIs provide the ability to
+   incrementally transfer message content, those that do not for any
+   reason, SHOULD use the presence of the Incremental header field to
+   reduce or disable buffering.
+
    The Incremental HTTP header field applies to each HTTP message.
    Therefore, if both the HTTP request and response need to be forwarded
    incrementally, the Incremental HTTP header field MUST be set for both
@@ -175,9 +181,10 @@ Table of Contents
    availability across all requests.
 
    When rejecting incremental requests due to reaching the concurrency
-   limit, intermediaries SHOULD respond with a 503 Service Unavailable
-   error, accompanied by a connection_limit_reached Proxy-Status
-   response header field (Section 2.3.12 of [PROXY-STATUS]).
+   limit, intermediaries SHOULD respond with a 429 Too Many Requests
+   error (Section 4 of [EXTRA-STATUS]), accompanied by a
+   connection_limit_reached Proxy-Status response header field
+   (Section 2.3.12 of [PROXY-STATUS]).
 
    For performance and efficiency reasons, a small amount of buffering
    might be used by intermediaries, even for incremental messages.
@@ -234,6 +241,11 @@ Table of Contents
               ohai-chunked-ohttp-05, 2 July 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ohai-
               chunked-ohttp-05>.
+
+   [EXTRA-STATUS]
+              Nottingham, M. and R. Fielding, "Additional HTTP Status
+              Codes", RFC 6585, DOI 10.17487/RFC6585, April 2012,
+              <https://www.rfc-editor.org/rfc/rfc6585>.
 
    [PROXY-STATUS]
               Nottingham, M. and P. Sikora, "The Proxy-Status HTTP

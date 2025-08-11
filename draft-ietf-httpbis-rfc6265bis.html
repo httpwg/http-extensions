@@ -1051,11 +1051,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Cookies: HTTP State Management Mechanism</td>
-<td class="right">July 2025</td>
+<td class="right">August 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bingler, et al.</td>
-<td class="center">Expires 22 January 2026</td>
+<td class="center">Expires 12 February 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6265" class="eref">6265</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-21" class="published">21 July 2025</time>
+<time datetime="2025-08-11" class="published">11 August 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-22">22 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-02-12">12 February 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1141,7 +1141,7 @@ header fields are widely used on the Internet. This document obsoletes RFC
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 22 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 12 February 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1618,6 +1618,10 @@ Set-Cookie: a=b;path=/c,d=e
 cookie with a path of /c,d=e.<a href="#section-3-7" class="pilcrow">¶</a></p>
 <p id="section-3-8">User agents MAY ignore Set-Cookie header fields based on response status codes or
 the user agent's cookie policy (see <a href="#ignoring-cookies" class="auto internal xref">Section 5.3</a>).<a href="#section-3-8" class="pilcrow">¶</a></p>
+<p id="section-3-9">Note: A cookie's octets MUST be processed as <span>[<a href="#USASCII" class="cite xref">USASCII</a>]</span> characters. While
+it's possible a non-HTTP API could pass a set-cookie-string with one or more
+non-<span>[<a href="#USASCII" class="cite xref">USASCII</a>]</span> characters, no attempt should be made to interpret these octets
+as anything other than <span>[<a href="#USASCII" class="cite xref">USASCII</a>]</span> characters.<a href="#section-3-9" class="pilcrow">¶</a></p>
 <div id="examples">
 <section id="section-3.1">
         <h3 id="name-examples">
@@ -1888,31 +1892,33 @@ data in a cookie-value SHOULD encode that data, for example, using Base64
 Note that in this case, the initial and trailing DQUOTE characters are not
 stripped. They are part of the cookie-value, and will be included in Cookie
 header fields sent to the server.<a href="#section-4.1.1-7" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-8">The domain-value is a subdomain as defined by <span><a href="https://rfc-editor.org/rfc/rfc1034#section-3.5" class="relref">Section 3.5</a> of [<a href="#RFC1034" class="cite xref">RFC1034</a>]</span>, and
+<p id="section-4.1.1-8">Per the grammar above, cookie-avs MUST NOT contain leading or trailing WSP
+characters as they will be interpreted as BWS and removed.<a href="#section-4.1.1-8" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-9">The domain-value is a subdomain as defined by <span><a href="https://rfc-editor.org/rfc/rfc1034#section-3.5" class="relref">Section 3.5</a> of [<a href="#RFC1034" class="cite xref">RFC1034</a>]</span>, and
 as enhanced by <span><a href="https://rfc-editor.org/rfc/rfc1123#section-2.1" class="relref">Section 2.1</a> of [<a href="#RFC1123" class="cite xref">RFC1123</a>]</span>. Thus, domain-value is a string of
 <span>[<a href="#USASCII" class="cite xref">USASCII</a>]</span> characters, such as an "A-label" as defined in
-<span><a href="https://rfc-editor.org/rfc/rfc5890#section-2.3.2.1" class="relref">Section 2.3.2.1</a> of [<a href="#RFC5890" class="cite xref">RFC5890</a>]</span>.<a href="#section-4.1.1-8" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-9">The portions of the set-cookie-string produced by the cookie-av term are
+<span><a href="https://rfc-editor.org/rfc/rfc5890#section-2.3.2.1" class="relref">Section 2.3.2.1</a> of [<a href="#RFC5890" class="cite xref">RFC5890</a>]</span>.<a href="#section-4.1.1-9" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-10">The portions of the set-cookie-string produced by the cookie-av term are
 known as attributes. To maximize compatibility with user agents, servers MUST
 NOT produce two attributes with the same name in the same set-cookie-string.
-(See <a href="#storage-model" class="auto internal xref">Section 5.7</a> for how user agents handle this case.)<a href="#section-4.1.1-9" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-10">Note: The name of an attribute-value pair is not case-sensitive. So while they
+(See <a href="#storage-model" class="auto internal xref">Section 5.7</a> for how user agents handle this case.)<a href="#section-4.1.1-10" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-11">Note: The name of an attribute-value pair is not case-sensitive. So while they
 are presented here in CamelCase, such as "HttpOnly" or "SameSite", any case is
-accepted. E.x.: "httponly", "Httponly", "hTTPoNLY", etc.<a href="#section-4.1.1-10" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-11">Servers MUST NOT include more than one Set-Cookie header field in the same
+accepted. E.x.: "httponly", "Httponly", "hTTPoNLY", etc.<a href="#section-4.1.1-11" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-12">Servers MUST NOT include more than one Set-Cookie header field in the same
 response with the same cookie-name. (See <a href="#set-cookie" class="auto internal xref">Section 5.6</a> for how user agents
-handle this case.)<a href="#section-4.1.1-11" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-12">If a server sends multiple responses containing Set-Cookie header fields
+handle this case.)<a href="#section-4.1.1-12" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-13">If a server sends multiple responses containing Set-Cookie header fields
 concurrently to the user agent (e.g., when communicating with the user agent
 over multiple sockets), these responses create a "race condition" that can lead
-to unpredictable behavior.<a href="#section-4.1.1-12" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-13">Note: Some existing user agents differ in their interpretation of two-digit
+to unpredictable behavior.<a href="#section-4.1.1-13" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-14">Note: Some existing user agents differ in their interpretation of two-digit
 years. To avoid compatibility issues, servers SHOULD use the rfc1123-date
-format, which requires a four-digit year.<a href="#section-4.1.1-13" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-14">Note: Some user agents store and process dates in cookies as 32-bit UNIX time_t
+format, which requires a four-digit year.<a href="#section-4.1.1-14" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-15">Note: Some user agents store and process dates in cookies as 32-bit UNIX time_t
 values. Implementation bugs in the libraries supporting time_t processing on
 some systems might cause such user agents to process dates after the year 2038
-incorrectly.<a href="#section-4.1.1-14" class="pilcrow">¶</a></p>
+incorrectly.<a href="#section-4.1.1-15" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sane-set-cookie-semantics">
@@ -2536,18 +2542,16 @@ an opaque origin.<a href="#section-5.2.1-5.4.2.2.1" class="pilcrow">¶</a></p>
 there isn't a clear link between a top-level traversable and a worker.
 This is especially true for Service Workers <span>[<a href="#SERVICE-WORKERS" class="cite xref">SERVICE-WORKERS</a>]</span>, which may
 execute code in the background, without any document visible at all.<a href="#section-5.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.2-2">Note: The descriptions below assume that workers must be same-origin with
-the documents that instantiate them. If this invariant changes, we'll need to
-take the worker's script's URI into account when determining their status.<a href="#section-5.2.2-2" class="pilcrow">¶</a></p>
 <div id="dedicated-and-shared-requests">
 <section id="section-5.2.2.1">
             <h5 id="name-dedicated-and-shared-worker">
 <a href="#section-5.2.2.1" class="section-number selfRef">5.2.2.1. </a><a href="#name-dedicated-and-shared-worker" class="section-name selfRef">Dedicated and Shared Workers</a>
             </h5>
-<p id="section-5.2.2.1-1">Dedicated workers are simple, as each dedicated worker is bound to one and only
-one document. Requests generated from a dedicated worker (via <code>importScripts</code>,
-<code>XMLHttpRequest</code>, <code>fetch()</code>, etc) define their "site for cookies" as that
-document's "site for cookies".<a href="#section-5.2.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.2.1-1">Dedicated workers are simple, as each dedicated worker is bound to one and
+only one document. The worker's "site for cookies" is the document's "site for
+cookies" if the worker's origin is same-site with the document's "site for
+cookies", otherwise its "site for cookies" is an origin set to an opaque
+origin.<a href="#section-5.2.2.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.2.1-2">Shared workers may be bound to multiple documents at once. As it is quite
 possible for those documents to have distinct "site for cookies" values, the
 worker's "site for cookies" will be an origin set to an opaque origin in cases
@@ -3205,8 +3209,8 @@ Otherwise:<a href="#section-5.7-3.7.3" class="pilcrow">¶</a></p>
             </ol>
 </li>
           <li id="section-5.7-3.8">
-            <p id="section-5.7-3.8.1">If the domain-attribute contains a character that is not in the range of <span>[<a href="#USASCII" class="cite xref">USASCII</a>]</span>
-characters, abort this algorithm and ignore the cookie entirely.<a href="#section-5.7-3.8.1" class="pilcrow">¶</a></p>
+            <p id="section-5.7-3.8.1">If the domain-attribute contains a character that is not in CHAR, abort
+this algorithm and ignore the cookie entirely.<a href="#section-5.7-3.8.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.7-3.9">
             <p id="section-5.7-3.9.1">If the user agent is configured to reject "public suffixes" and the

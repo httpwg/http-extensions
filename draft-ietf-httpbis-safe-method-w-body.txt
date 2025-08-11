@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 22 January 2026                                      Cloudflare
+Expires: 12 February 2026                                     Cloudflare
                                                                M. Bishop
                                                                   Akamai
-                                                            21 July 2025
+                                                          11 August 2025
 
 
                          The HTTP QUERY Method
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 January 2026.
+   This Internet-Draft will expire on 12 February 2026.
 
 Copyright Notice
 
@@ -121,14 +121,14 @@ Table of Contents
    by the target resource.
 
    Most often, this is desirable when the data conveyed in a request is
-   too voluminous to be encoded into the request's URI.  For example,
-   this is a common query pattern:
+   too voluminous to be encoded into the request's URI.  A common query
+   pattern is:
 
    GET /feed?q=foo&limit=10&sort=-published HTTP/1.1
    Host: example.org
 
-   However, for a query with parameters that are complex or large,
-   encoding it in the request URI may not be the best option because
+   However, when the data conveyed is too voluminous to be encoded in
+   the request's URI, this pattern becomes problematic:
 
    *  often size limits are not known ahead of time because a request
       can pass through many uncoordinated systems (but note that
@@ -137,7 +137,9 @@ Table of Contents
 
    *  expressing certain kinds of data in the target URI is inefficient
       because of the overhead of encoding that data into a valid URI,
-      and
+
+   *  request URIs are more likely to be logged than request content,
+      and may also turn up in bookmarks,
 
    *  encoding queries directly into the request URI effectively casts
       every possible combination of query inputs as distinct resources.
@@ -156,10 +158,10 @@ Table of Contents
 
    q=foo&limit=10&sort=-published
 
-   This variation, however, suffers from the same basic limitation as
-   GET in that it is not readily apparent -- absent specific knowledge
-   of the resource and server to which the request is being sent -- that
-   a safe, idempotent query is being performed.
+   This variation, however, suffers from the fact that it is not readily
+   apparent -- absent specific knowledge of the resource and server to
+   which the request is being sent -- that a safe, idempotent query is
+   being performed.
 
    The QUERY method provides a solution that spans the gap between the
    use of GET and POST, with the example above being expressed as:
@@ -175,25 +177,38 @@ Table of Contents
    Unlike POST, however, the method is explicitly safe and idempotent,
    allowing functions like caching and automatic retries to operate.
 
+   Recognizing the design principle that any important resource ought to
+   be identified by a URI, this specification describes how a server can
+   assign URIs to both the query itself or a specific query result, for
+   later use in a GET request.
+
    Summarizing:
 
-     +============+============+==================+==================+
-     |            | GET        | QUERY            | POST             |
-     +============+============+==================+==================+
-     | Safe       | yes        | yes              | potentially no   |
-     +------------+------------+------------------+------------------+
-     | Idempotent | yes        | yes              | potentially no   |
-     +------------+------------+------------------+------------------+
-     | Cacheable  | yes        | yes              | yes, but only    |
-     |            |            |                  | for future GET   |
-     |            |            |                  | or HEAD requests |
-     +------------+------------+------------------+------------------+
-     | Content    | "no        | expected         | expected         |
-     | (body)     | defined    | (semantics per   | (semantics per   |
-     |            | semantics" | target resource) | target resource) |
-     +------------+------------+------------------+------------------+
+   +==========+=================+=================+===================+
+   |          |GET              |QUERY            | POST              |
+   +==========+=================+=================+===================+
+   |Safe      |yes              |yes              | potentially no    |
+   +----------+-----------------+-----------------+-------------------+
+   |Idempotent|yes              |yes              | potentially no    |
+   +----------+-----------------+-----------------+-------------------+
+   |URI for   |yes (by          |optional         | no                |
+   |query     |definition)      |(Location        |                   |
+   |itself    |                 |response field)  |                   |
+   +----------+-----------------+-----------------+-------------------+
+   |URI for   |optional         |optional         | optional          |
+   |query     |(Content-Location|(Content-Location| (Content-Location |
+   |result    |response field)  |response field)  | response field)   |
+   +----------+-----------------+-----------------+-------------------+
+   |Cacheable |yes              |yes              | yes, but only for |
+   |          |                 |                 | future GET or     |
+   |          |                 |                 | HEAD requests     |
+   +----------+-----------------+-----------------+-------------------+
+   |Content   |"no defined      |expected         | expected          |
+   |(body)    |semantics"       |(semantics per   | (semantics per    |
+   |          |                 |target resource) | target resource)  |
+   +----------+-----------------+-----------------+-------------------+
 
-               Table 1: Summary of relevant method properties
+              Table 1: Summary of relevant method properties
 
 1.1.  Terminology
 
@@ -277,22 +292,28 @@ Table of Contents
 
    In some cases, the server may choose to respond indirectly to the
    QUERY request by redirecting the user agent to a different URI (see
-   Section 15.4 of [HTTP]).  The semantics of the redirect response do
-   not differ from other methods.
+   Section 15.4 of [HTTP]).
 
-   For instance, a 303 (See Other, Section 15.4.4 of [HTTP]) response
-   would indicate that the Location field identifies an alternate URI
-   from which the results can be retrieved using a GET request (this use
-   case is also covered by the use of the Location response field in a
-   2xx response).
+   A response with either of the status codes 301 (Moved Permanently,
+   [HTTP], Section 15.4.2) or 308 (Permanent Redirect, [HTTP],
+   Section 15.4.9) indicates that the target resource has permanently
+   moved to a different URI referenced by the Location response field
+   ([HTTP], Section 10.2.2).  Likewise, a response with either 302
+   (Found, [HTTP], Section 15.4.3 or 307 (Temporary Redirect, [HTTP],
+   Section 15.4.8) indicates that the target resource has temporarily
+   moved.  In all four cases, the server is suggesting that the user
+   agent can accomplish its original QUERY request by sending a similar
+   QUERY request to the new target URI referenced by Location.
 
-   On the other hand, response codes 307 (Temporary Redirect,
-   Section 15.4.8 of [HTTP]) and 308 (Permanent Redirect, Section 15.4.9
-   of [HTTP]) can be used to request the user agent to redo the QUERY
-   request on the URI specified by the Location field.
+   Note that the exceptions for redirecting a POST as a GET request
+   after a 301 or 302 response do not apply to QUERY requests.
 
-   Various non-normative examples of successful QUERY responses are
-   illustrated in Appendix A.
+   A response to QUERY with the status code 303 (See Other,
+   Section 15.4.4 of [HTTP]) indicates that the original query can be
+   accomplished via a normal retrieval request on the URI referenced by
+   the Location response field ([HTTP], Section 10.2.2).  For HTTP, this
+   means sending a GET request to the new target URI, as illustrated by
+   the example in Appendix A.4.3.
 
 2.4.  Conditional Requests
 
@@ -422,7 +443,7 @@ Table of Contents
             | QUERY       | Yes  | Yes        | Section 2     |
             +-------------+------+------------+---------------+
 
-                                  Table 2
+                      Table 2: QUERY Method Definition
 
 5.2.  Registration of Accept-Query field
 
@@ -439,7 +460,7 @@ Table of Contents
    |              |           |            | document.      |          |
    +--------------+-----------+------------+----------------+----------+
 
-                                  Table 3
+                   Table 3: Accept-Query Field Definition
 
 6.  Normative References
 
@@ -1016,11 +1037,17 @@ B.12.  Since draft-ietf-httpbis-safe-method-w-body-11
    *  Address HTTPDIR/RF feedback on example appendix
       (https://github.com/httpwg/http-extensions/issues/3114)
 
+   *  Address HTTPDIR/RF feedback on redirection
+      (https://github.com/httpwg/http-extensions/issues/3119)
+
    *  Address HTTPDIR/RF feedback on abstract
       (https://github.com/httpwg/http-extensions/issues/3121)
 
    *  Address HTTPDIR/RF feedback on introduction
       (https://github.com/httpwg/http-extensions/issues/3122)
+
+   *  Consistent Table Captions (https://github.com/httpwg/http-
+      extensions/issues/3134)
 
 Acknowledgements
 

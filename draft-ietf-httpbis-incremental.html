@@ -1047,11 +1047,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Incremental HTTP Messages</td>
-<td class="right">July 2025</td>
+<td class="right">August 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Oku, et al.</td>
-<td class="center">Expires 22 January 2026</td>
+<td class="center">Expires 12 February 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-incremental-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-21" class="published">21 July 2025</time>
+<time datetime="2025-08-11" class="published">11 August 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-22">22 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-02-12">12 February 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1113,7 +1113,7 @@ HTTP intermediaries to forward the HTTP message incrementally.<a href="#section-
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 22 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 12 February 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1192,11 +1192,11 @@ capability.<a href="#section-1-2" class="pilcrow">¶</a></p>
 the server continually sends notifications as they become available.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">In the case of Chunked Oblivious HTTP Messages
 <span>[<a href="#CHUNKED-OHTTP" class="cite xref">CHUNKED-OHTTP</a>]</span>, the client opens an HTTP request
-and incrementally sends application messages, while the server can start responding
+and incrementally sends application data, while the server can start responding
 even before the HTTP request is fully complete. In this way, the HTTP
 request-response pair could create what is, in effect, a bi-directional
 communication channel.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">Applications that rely on incremental delivery of messages are fragile when HTTP intermediaries are involved.
+<p id="section-1-5">Applications that rely on incremental delivery of data are fragile when HTTP intermediaries are involved.
 This is because HTTP intermediaries are not only permitted but are frequently
 deployed to buffer complete HTTP messages before forwarding them downstream
 (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.6" class="relref">Section 7.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-1-5" class="pilcrow">¶</a></p>
@@ -1249,22 +1249,26 @@ downstream and continuously forward the bytes of the message body as they
 arrive. As the Incremental header field indicates only how the message content is
 to be forwarded, intermediaries can still buffer the entire header and trailer
 sections of the message before forwarding them downstream.<a href="#section-3-4" class="pilcrow">¶</a></p>
-<p id="section-3-5">The Incremental HTTP header field applies to each HTTP message. Therefore, if
+<p id="section-3-5">The request to use incremental forwarding also applies to HTTP implementations.
+Though most HTTP APIs provide the ability to incrementally transfer message content,
+those that do not for any reason, <span class="bcp14">SHOULD</span> use the presence of the Incremental
+header field to reduce or disable buffering.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">The Incremental HTTP header field applies to each HTTP message. Therefore, if
 both the HTTP request and response need to be forwarded incrementally, the
 Incremental HTTP header field <span class="bcp14">MUST</span> be set for both the HTTP request and the
-response.<a href="#section-3-5" class="pilcrow">¶</a></p>
-<p id="section-3-6">The Incremental field is advisory. Intermediaries that are unaware of the field
+response.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<p id="section-3-7">The Incremental field is advisory. Intermediaries that are unaware of the field
 or that do not support the field might buffer messages, even when explicitly
 requested otherwise.  Clients and servers therefore cannot expect all
 intermediaries to understand and respect a request to deliver messages
 incrementally. Clients can rely on prior knowledge or probe for support on
-individual resources.<a href="#section-3-6" class="pilcrow">¶</a></p>
-<p id="section-3-7">The Incremental header field facilitates the establishment of a bidirectional
+individual resources.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<p id="section-3-8">The Incremental header field facilitates the establishment of a bidirectional
 byte channel over HTTP, as its presence in both requests and responses instructs
 intermediaries to forward early responses (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.5" class="relref">Section 7.5</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) and to
 transmit message contents incrementally in both directions.  However, when developing
 bidirectional protocols over HTTP, Extended CONNECT <span>[<a href="#RFC8441" class="cite xref">RFC8441</a>]</span><span>[<a href="#RFC9220" class="cite xref">RFC9220</a>]</span> is
-generally more consistent with HTTP's architecture.<a href="#section-3-7" class="pilcrow">¶</a></p>
+generally more consistent with HTTP's architecture.<a href="#section-3-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
@@ -1282,8 +1286,9 @@ non-incremental requests, even when the maximum number of incremental requests
 is reached. This approach helps balance the processing of different types of
 requests and maintains service availability across all requests.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3">When rejecting incremental requests due to reaching the concurrency limit,
-intermediaries <span class="bcp14">SHOULD</span> respond with a 503 Service Unavailable error, accompanied
-by a connection_limit_reached Proxy-Status response header field
+intermediaries <span class="bcp14">SHOULD</span> respond with a 429 Too Many Requests error
+(<span><a href="https://rfc-editor.org/rfc/rfc6585#section-4" class="relref">Section 4</a> of [<a href="#EXTRA-STATUS" class="cite xref">EXTRA-STATUS</a>]</span>),
+accompanied by a connection_limit_reached Proxy-Status response header field
 (<span><a href="https://rfc-editor.org/rfc/rfc9209#section-2.3.12" class="relref">Section 2.3.12</a> of [<a href="#PROXY-STATUS" class="cite xref">PROXY-STATUS</a>]</span>).<a href="#section-4-3" class="pilcrow">¶</a></p>
 <p id="section-4-4">For performance and efficiency reasons, a small amount of buffering might be
 used by intermediaries, even for incremental messages. Immediate forwarding
@@ -1373,6 +1378,10 @@ The following values are registered:<a href="#section-5-1" class="pilcrow">¶</a
 <dt id="CHUNKED-OHTTP">[CHUNKED-OHTTP]</dt>
         <dd>
 <span class="refAuthor">Pauly, T.</span> and <span class="refAuthor">M. Thomson</span>, <span class="refTitle">"Chunked Oblivious HTTP Messages"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ohai-chunked-ohttp-05</span>, <time datetime="2025-07-02" class="refDate">2 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ohai-chunked-ohttp-05">https://datatracker.ietf.org/doc/html/draft-ietf-ohai-chunked-ohttp-05</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="EXTRA-STATUS">[EXTRA-STATUS]</dt>
+        <dd>
+<span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">R. Fielding</span>, <span class="refTitle">"Additional HTTP Status Codes"</span>, <span class="seriesInfo">RFC 6585</span>, <span class="seriesInfo">DOI 10.17487/RFC6585</span>, <time datetime="2012-04" class="refDate">April 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6585">https://www.rfc-editor.org/rfc/rfc6585</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="PROXY-STATUS">[PROXY-STATUS]</dt>
         <dd>

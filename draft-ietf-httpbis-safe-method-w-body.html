@@ -1055,11 +1055,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">The HTTP QUERY Method</td>
-<td class="right">July 2025</td>
+<td class="right">August 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Reschke, et al.</td>
-<td class="center">Expires 22 January 2026</td>
+<td class="center">Expires 12 February 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">HTTP</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-21" class="published">21 July 2025</time>
+<time datetime="2025-08-11" class="published">11 August 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-22">22 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-02-12">12 February 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1139,7 +1139,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 22 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 12 February 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1321,8 +1321,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
       content that describes how the request is to be processed by the target resource.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">
       Most often, this is desirable when the data conveyed in a request is
-      too voluminous to be encoded into the request's URI. For example,
-      this is a common query pattern:<a href="#section-1-2" class="pilcrow">¶</a></p>
+      too voluminous to be encoded into the request's URI. A common query pattern is:<a href="#section-1-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-http-message art-text artwork" id="section-1-3">
 <pre>
 GET /feed?q=foo&amp;limit=10&amp;sort=-published HTTP/1.1
@@ -1330,16 +1329,18 @@ Host: example.org
 </pre><a href="#section-1-3" class="pilcrow">¶</a>
 </div>
 <p id="section-1-4">
-      However, for a query with parameters that are complex or large,
-      encoding it in the request URI may not be the best option because<a href="#section-1-4" class="pilcrow">¶</a></p>
+      However, when the data conveyed is too voluminous to be encoded in the request's URI,
+      this pattern becomes problematic:<a href="#section-1-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-5.1">often size limits are not known ahead of time because a request can pass through many uncoordinated
       systems (but note that <span><a href="https://rfc-editor.org/rfc/rfc9110#section-4.1" class="relref">Section 4.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span> recommends senders and recipients to support at least 8000 octets),<a href="#section-1-5.1" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-1-5.2">expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and<a href="#section-1-5.2" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-5.2">expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI,<a href="#section-1-5.2" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-1-5.3">encoding queries directly into the request URI effectively casts every possible combination of query inputs as distinct
-          resources.<a href="#section-1-5.3" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-5.3">request URIs are more likely to be logged than request content, and may also turn up in bookmarks,<a href="#section-1-5.3" class="pilcrow">¶</a>
+</li>
+        <li class="normal" id="section-1-5.4">encoding queries directly into the request URI effectively casts every possible combination of query inputs as distinct
+          resources.<a href="#section-1-5.4" class="pilcrow">¶</a>
 </li>
       </ul>
 <p id="section-1-6">
@@ -1360,8 +1361,8 @@ q=foo&amp;limit=10&amp;sort=-published
 </pre><a href="#section-1-8" class="pilcrow">¶</a>
 </div>
 <p id="section-1-9">
-      This variation, however, suffers from the same basic limitation as GET
-      in that it is not readily apparent -- absent specific knowledge of the
+      This variation, however, suffers from the fact
+      that it is not readily apparent -- absent specific knowledge of the
       resource and server to which the request is being sent -- that a safe,
       idempotent query is being performed.<a href="#section-1-9" class="pilcrow">¶</a></p>
 <p id="section-1-10">
@@ -1380,7 +1381,11 @@ q=foo&amp;limit=10&amp;sort=-published
       As with POST, the input to the query operation is passed as the content of the request
       rather than as part of the request URI. Unlike POST, however, the method is explicitly safe
       and idempotent, allowing functions like caching and automatic retries to operate.<a href="#section-1-12" class="pilcrow">¶</a></p>
-<p id="section-1-13">Summarizing:<a href="#section-1-13" class="pilcrow">¶</a></p>
+<p id="section-1-13">
+      Recognizing the design principle that any important resource ought to be
+      identified by a URI, this specification describes how a server can assign URIs to both
+      the query itself or a specific query result, for later use in a GET request.<a href="#section-1-13" class="pilcrow">¶</a></p>
+<p id="section-1-14">Summarizing:<a href="#section-1-14" class="pilcrow">¶</a></p>
 <span id="name-summary-of-relevant-method-"></span><table class="center" id="table-1">
         <caption>
 <a href="#table-1" class="selfRef">Table 1</a>:
@@ -1406,6 +1411,18 @@ q=foo&amp;limit=10&amp;sort=-published
             <td class="text-left" rowspan="1" colspan="1">yes</td>
             <td class="text-left" rowspan="1" colspan="1">yes</td>
             <td class="text-left" rowspan="1" colspan="1">potentially no</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">URI for query itself</td>
+            <td class="text-left" rowspan="1" colspan="1">yes (by definition)</td>
+            <td class="text-left" rowspan="1" colspan="1">optional (Location response field)</td>
+            <td class="text-left" rowspan="1" colspan="1">no</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">URI for query result</td>
+            <td class="text-left" rowspan="1" colspan="1">optional (Content-Location response field)</td>
+            <td class="text-left" rowspan="1" colspan="1">optional (Content-Location response field)</td>
+            <td class="text-left" rowspan="1" colspan="1">optional (Content-Location response field)</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">Cacheable</td>
@@ -1530,21 +1547,28 @@ q=foo&amp;limit=10&amp;sort=-published
 <p id="section-2.3-1">
         In some cases, the server may choose to respond indirectly to the QUERY
         request by redirecting the user agent to a different URI (see
-        <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4" class="relref">Section 15.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). The semantics of the redirect
-        response do not differ from other methods.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
+        <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4" class="relref">Section 15.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-2.3-1" class="pilcrow">¶</a></p>
 <p id="section-2.3-2">
-        For instance, a 303 (See Other, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.4" class="relref">Section 15.4.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
-        response would indicate that the Location field identifies an
-        alternate URI from which the results can be retrieved
-        using a GET request (this use case is also covered by the
-        use of the Location response field in a 2xx response).<a href="#section-2.3-2" class="pilcrow">¶</a></p>
+        A response with either of the status codes
+        301 (Moved Permanently, <span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.2" class="relref">Section 15.4.2</a></span>) or
+        308 (Permanent Redirect, <span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.9" class="relref">Section 15.4.9</a></span>)
+        indicates that the target resource has permanently moved to a different URI referenced by the
+        Location response field (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a></span>).
+        Likewise, a response with either
+        302 (Found, <span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.3" class="relref">Section 15.4.3</a></span> or
+        307 (Temporary Redirect, <span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.8" class="relref">Section 15.4.8</a></span>)
+        indicates that the target resource has temporarily moved. In all four cases, the server is
+        suggesting that the user agent can accomplish its original QUERY request by sending a
+        similar QUERY request to the new target URI referenced by Location.<a href="#section-2.3-2" class="pilcrow">¶</a></p>
 <p id="section-2.3-3">
-        On the other hand, response codes 307 (Temporary Redirect, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.8" class="relref">Section 15.4.8</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) and 308
-        (Permanent Redirect, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.9" class="relref">Section 15.4.9</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) can be used to request the user agent to redo
-        the QUERY request on the URI specified by the Location field.<a href="#section-2.3-3" class="pilcrow">¶</a></p>
+        Note that the exceptions for redirecting a POST as a GET request after a 301 or 302 response
+        do not apply to QUERY requests.<a href="#section-2.3-3" class="pilcrow">¶</a></p>
 <p id="section-2.3-4">
-        Various non-normative examples of successful
-        QUERY responses are illustrated in <a href="#examples" class="auto internal xref">Appendix A</a>.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
+        A response to QUERY with the status code 303 (See Other, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.4" class="relref">Section 15.4.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
+        indicates that the original query can be accomplished via a normal retrieval request on the URI referenced
+        by the Location response field (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a></span>).
+        For HTTP, this means sending a GET request to the new target URI, as illustrated by the example
+        in <a href="#example.indirect" class="auto internal xref">Appendix A.4.3</a>.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conditional">
@@ -1700,8 +1724,11 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
         IANA is requested to add the QUERY method to the HTTP
         Method Registry at <span>&lt;<a href="http://www.iana.org/assignments/http-methods">http://www.iana.org/assignments/http-methods</a>&gt;</span>
         (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-16.3.1" class="relref">Section 16.3.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-2">
-          <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
+<span id="name-query-method-definition"></span><table class="center" id="table-2">
+          <caption>
+<a href="#table-2" class="selfRef">Table 2</a>:
+<a href="#name-query-method-definition" class="selfRef">QUERY Method Definition</a>
+          </caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Method Name</th>
@@ -1732,8 +1759,11 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
         IANA is requested to add the Accept-Query field to the HTTP Field Name
         Registry at <span>&lt;<a href="https://www.iana.org/assignments/http-fields">https://www.iana.org/assignments/http-fields</a>&gt;</span>
         (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-16.1.1" class="relref">Section 16.1.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-3">
-          <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
+<span id="name-accept-query-field-definiti"></span><table class="center" id="table-3">
+          <caption>
+<a href="#table-3" class="selfRef">Table 3</a>:
+<a href="#name-accept-query-field-definiti" class="selfRef">Accept-Query Field Definition</a>
+          </caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Field Name</th>
@@ -2463,9 +2493,13 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 </li>
           <li class="normal" id="appendix-B.12-1.2">Address HTTPDIR/RF feedback on example appendix (<span><a href="https://github.com/httpwg/http-extensions/issues/3114">https://github.com/httpwg/http-extensions/issues/3114</a></span>)<a href="#appendix-B.12-1.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.12-1.3">Address HTTPDIR/RF feedback on abstract (<span><a href="https://github.com/httpwg/http-extensions/issues/3121">https://github.com/httpwg/http-extensions/issues/3121</a></span>)<a href="#appendix-B.12-1.3" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-B.12-1.3">Address HTTPDIR/RF feedback on redirection (<span><a href="https://github.com/httpwg/http-extensions/issues/3119">https://github.com/httpwg/http-extensions/issues/3119</a></span>)<a href="#appendix-B.12-1.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.12-1.4">Address HTTPDIR/RF feedback on introduction (<span><a href="https://github.com/httpwg/http-extensions/issues/3122">https://github.com/httpwg/http-extensions/issues/3122</a></span>)<a href="#appendix-B.12-1.4" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-B.12-1.4">Address HTTPDIR/RF feedback on abstract (<span><a href="https://github.com/httpwg/http-extensions/issues/3121">https://github.com/httpwg/http-extensions/issues/3121</a></span>)<a href="#appendix-B.12-1.4" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="appendix-B.12-1.5">Address HTTPDIR/RF feedback on introduction (<span><a href="https://github.com/httpwg/http-extensions/issues/3122">https://github.com/httpwg/http-extensions/issues/3122</a></span>)<a href="#appendix-B.12-1.5" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="appendix-B.12-1.6">Consistent Table Captions (<span><a href="https://github.com/httpwg/http-extensions/issues/3134">https://github.com/httpwg/http-extensions/issues/3134</a></span>)<a href="#appendix-B.12-1.6" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
