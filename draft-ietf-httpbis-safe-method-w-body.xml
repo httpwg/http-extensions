@@ -314,13 +314,13 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
       <t>
         A response with either of the status codes
-        301 (Moved Permanently, <xref target="HTTP" format="comma" section="15.4.2"/>) or
-        308 (Permanent Redirect, <xref target="HTTP" format="comma" section="15.4.9"/>)
+        301 (Moved Permanently, <xref target="HTTP" sectionFormat="comma" section="15.4.2"/>) or
+        308 (Permanent Redirect, <xref target="HTTP" sectionFormat="comma" section="15.4.9"/>)
         indicates that the target resource has permanently moved to a different URI referenced by the
         Location response field (<xref target="HTTP" sectionFormat="comma" section="10.2.2"/>).
         Likewise, a response with either
-        302 (Found, <xref target="HTTP" format="comma" section="15.4.3"/> or
-        307 (Temporary Redirect, <xref target="HTTP" format="comma" section="15.4.8"/>)
+        302 (Found, <xref target="HTTP" sectionFormat="comma" section="15.4.3"/> or
+        307 (Temporary Redirect, <xref target="HTTP" sectionFormat="comma" section="15.4.8"/>)
         indicates that the target resource has temporarily moved. In all four cases, the server is
         suggesting that the user agent can accomplish its original QUERY request by sending a
         similar QUERY request to the new target URI referenced by Location.
