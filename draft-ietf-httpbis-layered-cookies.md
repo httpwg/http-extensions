@@ -679,10 +679,10 @@ This helps developers and server operators to know that the cookie was set using
 a `Set-Cookie` header, and is limited in scope to HTTP requests.
 
 
-#### The "__HostHttp-" prefix
+#### The "__Host-Http-" prefix
 
 If a cookie's name begins with a case-sensitive match for the string
-`__HostHttp-`, then the cookie will have been set with a `Secure` attribute, an
+`__Host-Http-`, then the cookie will have been set with a `Secure` attribute, an
 `HttpOnly` attribute, a `Path` attribute with a value of `/`, and no `Domain` attribute.
 
 This helps developers and server operators to know that the cookie was set using
