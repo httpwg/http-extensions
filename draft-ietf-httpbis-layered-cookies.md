@@ -1405,6 +1405,18 @@ boolean _httpOnlyAllowed_, and string _sameSite_:
 
        * cookie's same-site is "`none`".
 
+   * One of the following is true:
+
+       * cookie's name, byte-lowercased, does not start with `__http-`.
+
+       * cookie is Http-prefix compatible.
+
+   * One of the following is true:
+
+       * cookie's name, byte-lowercased, does not start with `__host-http-`.
+
+       * cookie is Http-prefix compatible and Host-prefix compatible.
+
 1. Sort _cookies_ in the following order:
 
    * Cookies whose path's size is greater are listed before cookies whose path's size
