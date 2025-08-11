@@ -1305,7 +1305,7 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
 
 1. If _cookie_'s name, byte-lowercased, starts with `__http-` and _cookie_ is not Http-prefix compatible, then return null.
 
-1. If _cookie_'s name, byte-lowercased, starts with `__hosthttp-` and _cookie_ is not both Host-prefix compatible and Http-prefix compatible, then return null.
+1. If _cookie_'s name, byte-lowercased, starts with `__host-http-` and _cookie_ is not both Host-prefix compatible and Http-prefix compatible, then return null.
 
 1. If _cookie_'s name is the empty byte sequence and one of the following is true:
 
@@ -1315,7 +1315,7 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
 
     * _cookie_'s value, byte-lowercased, starts with `__http-`, or
 
-    * _cookie_'s value, byte-lowercased, starts with `__hosthttp-`,
+    * _cookie_'s value, byte-lowercased, starts with `__host-http-`,
 
    then return null.
 
