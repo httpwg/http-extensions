@@ -24,7 +24,7 @@ author:
 
 normative:
   RFC9112:
-
+    display: HTTP/1.1
 informative:
 
 
