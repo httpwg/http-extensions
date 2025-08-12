@@ -6,7 +6,7 @@ HTTP                                                A. van Kesteren, Ed.
 Internet-Draft                                                     Apple
 Obsoletes: [6265] (if approved)                          J. Hofmann, Ed.
 Intended status: Standards Track                                  Google
-Expires: 12 February 2026                                 11 August 2025
+Expires: 13 February 2026                                 12 August 2025
 
 
                 Cookies: HTTP State Management Mechanism
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 February 2026.
+   This Internet-Draft will expire on 13 February 2026.
 
 Copyright Notice
 
@@ -696,10 +696,10 @@ Table of Contents
    was set using a Set-Cookie header, and is limited in scope to HTTP
    requests.
 
-4.1.3.4.  The "__HostHttp-" prefix
+4.1.3.4.  The "__Host-Http-" prefix
 
    If a cookie's name begins with a case-sensitive match for the string
-   __HostHttp-, then the cookie will have been set with a Secure
+   __Host-Http-, then the cookie will have been set with a Secure
    attribute, an HttpOnly attribute, a Path attribute with a value of /,
    and no Domain attribute.
 
@@ -1396,8 +1396,8 @@ Table of Contents
    15.  If _cookie_'s name, byte-lowercased, starts with __http- and
         _cookie_ is not Http-prefix compatible, then return null.
 
-   16.  If _cookie_'s name, byte-lowercased, starts with __hosthttp- and
-        _cookie_ is not both Host-prefix compatible and Http-prefix
+   16.  If _cookie_'s name, byte-lowercased, starts with __host-http-
+        and _cookie_ is not both Host-prefix compatible and Http-prefix
         compatible, then return null.
 
    17.  If _cookie_'s name is the empty byte sequence and one of the
@@ -1409,7 +1409,7 @@ Table of Contents
 
         *  _cookie_'s value, byte-lowercased, starts with __http-, or
 
-        *  _cookie_'s value, byte-lowercased, starts with __hosthttp-,
+        *  _cookie_'s value, byte-lowercased, starts with __host-http-,
 
         then return null.
 
