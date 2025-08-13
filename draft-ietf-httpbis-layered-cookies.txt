@@ -6,7 +6,7 @@ HTTP                                                A. van Kesteren, Ed.
 Internet-Draft                                                     Apple
 Obsoletes: [6265] (if approved)                          J. Hofmann, Ed.
 Intended status: Standards Track                                  Google
-Expires: 13 February 2026                                 12 August 2025
+Expires: 14 February 2026                                 13 August 2025
 
 
                 Cookies: HTTP State Management Mechanism
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 February 2026.
+   This Internet-Draft will expire on 14 February 2026.
 
 Copyright Notice
 
@@ -542,10 +542,6 @@ Table of Contents
    user agent is not required to retain the cookie for the specified
    duration.  In fact, user agents often evict cookies due to memory
    pressure or privacy concerns.
-
-   NOTE: Some existing user agents do not support the Max-Age attribute.
-   User agents that do not support the Max-Age attribute ignore the
-   attribute.
 
    If a cookie has both the Max-Age and the Expires attribute, the Max-
    Age attribute has precedence and controls the expiration date of the
