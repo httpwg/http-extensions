@@ -4,9 +4,9 @@
 
 HTTPBIS                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Updates: 9112, 9298 (if approved)                         12 August 2025
+Updates: 9112, 9298 (if approved)                         13 August 2025
 Intended status: Standards Track                                        
-Expires: 13 February 2026
+Expires: 14 February 2026
 
 
 Security Considerations for Optimistic Protocol Transitions in HTTP/1.1
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 February 2026.
+   This Internet-Draft will expire on 14 February 2026.
 
 Copyright Notice
 
@@ -320,7 +320,7 @@ Table of Contents
       Section 11 of [CONNECT-IP]).
 
    *  Embed a fixed preamble that deliberately terminates HTTP/1.1
-      processing (Section 3.4 of [HTTP2]).
+      processing (Section 3.4 of [HTTP/2]).
 
    *  Apply high-entropy masking of client-to-server data (Section 5.1
       of [WEBSOCKET]).
@@ -422,7 +422,7 @@ Table of Contents
               RFC 9484, DOI 10.17487/RFC9484, October 2023,
               <https://www.rfc-editor.org/rfc/rfc9484>.
 
-   [HTTP2]    Thomson, M., Ed. and C. Benfield, Ed., "HTTP/2", RFC 9113,
+   [HTTP/2]   Thomson, M., Ed. and C. Benfield, Ed., "HTTP/2", RFC 9113,
               DOI 10.17487/RFC9113, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9113>.
 
