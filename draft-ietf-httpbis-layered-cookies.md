@@ -520,9 +520,6 @@ represented as the number of seconds until the cookie expires. The user agent is
 not required to retain the cookie for the specified duration. In fact, user
 agents often evict cookies due to memory pressure or privacy concerns.
 
-NOTE: Some existing user agents do not support the Max-Age attribute. User
-agents that do not support the Max-Age attribute ignore the attribute.
-
 If a cookie has both the Max-Age and the Expires attribute, the Max-Age
 attribute has precedence and controls the expiration date of the cookie. If a
 cookie has neither the Max-Age nor the Expires attribute, the user agent
