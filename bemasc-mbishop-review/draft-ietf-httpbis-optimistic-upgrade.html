@@ -1415,23 +1415,18 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
       <h2 id="name-guidance-for-http-connect">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-guidance-for-http-connect" class="section-name selfRef">Guidance for HTTP CONNECT</a>
       </h2>
-<p id="section-7-1">In HTTP/1.1, proxy clients that send CONNECT requests on behalf of untrusted TCP clients <span class="bcp14">MUST</span> do one or both of the following:<a href="#section-7-1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-7-2">
-<li id="section-7-2.1">
-          <p id="section-7-2.1.1">Wait for a 2xx (Successful) response before forwarding any TCP payload data.<a href="#section-7-2.1.1" class="pilcrow">¶</a></p>
+<p id="section-7-1">This document updates RFC 9112 to include the remaining text of this section.  The requirements in this section apply only to HTTP/1.1.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">Proxy clients that send CONNECT requests on behalf of untrusted TCP clients <span class="bcp14">MUST</span> do one or both of the following:<a href="#section-7-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-7-3">
+<li id="section-7-3.1">
+          <p id="section-7-3.1.1">Wait for a 2xx (Successful) response before forwarding any TCP payload data.<a href="#section-7-3.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li id="section-7-2.2">
-          <p id="section-7-2.2.1">Send a "Connection: close" request header.<a href="#section-7-2.2.1" class="pilcrow">¶</a></p>
+        <li id="section-7-3.2">
+          <p id="section-7-3.2.1">Send a "Connection: close" request header.<a href="#section-7-3.2.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<p id="section-7-3">Proxy clients that don't implement at least one of these two behaviors are vulnerable to a trivial request smuggling attack (<a href="#request-smuggling" class="auto internal xref">Section 3.1</a>).<a href="#section-7-3" class="pilcrow">¶</a></p>
-<p id="section-7-4">At the time of writing, some proxy clients are believed to be vulnerable as described.  As a mitigation, this document updates RFC 9112 by adding the following section:<a href="#section-7-4" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-7-5.1">
-          <p id="section-7-5.1.1">9.6.1.  Rejecting a CONNECT Request<a href="#section-7-5.1.1" class="pilcrow">¶</a></p>
-<p id="section-7-5.1.2">In HTTP/1.1, proxy servers <span class="bcp14">MUST</span> close the underlying connection when rejecting a CONNECT request, without processing any further requests on that connection, unless the client is known to wait for a 2xx (Successful) response before forwarding TCP payload data.  This requirement applies whether or not the request includes a "close" connection option.<a href="#section-7-5.1.2" class="pilcrow">¶</a></p>
-</li>
-      </ul>
+<p id="section-7-4">Proxy clients that don't implement at least one of these two behaviors are vulnerable to a trivial request smuggling attack (<span>[<a href="#RFC9112" class="cite xref">HTTP/1.1</a>], <a href="https://rfc-editor.org/rfc/rfc9112#section-11.2" class="relref">Section 11.2</a></span>).<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-5">At the time of writing, some proxy clients are believed to be vulnerable as described.  As a mitigation, proxy servers <span class="bcp14">MUST</span> close the underlying connection when rejecting a CONNECT request, without processing any further requests on that connection, unless the client is known to wait for a 2xx (Successful) response before forwarding TCP payload data.  This requirement applies whether or not the request includes a "close" connection option.<a href="#section-7-5" class="pilcrow">¶</a></p>
 <p id="section-7-6">Note that this mitigation will frequently impair the performance of correctly implemented clients, especially when returning a 407 (Proxy Authentication Required) response.  This performance loss can be avoided by using HTTP/2 or HTTP/3, which are not vulnerable to this attack.<a href="#section-7-6" class="pilcrow">¶</a></p>
 </section>
 </div>

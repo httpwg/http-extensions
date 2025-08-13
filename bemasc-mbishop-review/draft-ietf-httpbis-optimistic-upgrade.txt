@@ -347,8 +347,11 @@ Table of Contents
 
 7.  Guidance for HTTP CONNECT
 
-   In HTTP/1.1, proxy clients that send CONNECT requests on behalf of
-   untrusted TCP clients MUST do one or both of the following:
+   This document updates RFC 9112 to include the remaining text of this
+   section.  The requirements in this section apply only to HTTP/1.1.
+
+   Proxy clients that send CONNECT requests on behalf of untrusted TCP
+   clients MUST do one or both of the following:
 
    1.  Wait for a 2xx (Successful) response before forwarding any TCP
        payload data.
@@ -357,20 +360,15 @@ Table of Contents
 
    Proxy clients that don't implement at least one of these two
    behaviors are vulnerable to a trivial request smuggling attack
-   (Section 3.1).
+   ([HTTP/1.1], Section 11.2).
 
    At the time of writing, some proxy clients are believed to be
-   vulnerable as described.  As a mitigation, this document updates RFC
-   9112 by adding the following section:
-
-      9.6.1.  Rejecting a CONNECT Request
-
-      In HTTP/1.1, proxy servers MUST close the underlying connection
-      when rejecting a CONNECT request, without processing any further
-      requests on that connection, unless the client is known to wait
-      for a 2xx (Successful) response before forwarding TCP payload
-      data.  This requirement applies whether or not the request
-      includes a "close" connection option.
+   vulnerable as described.  As a mitigation, proxy servers MUST close
+   the underlying connection when rejecting a CONNECT request, without
+   processing any further requests on that connection, unless the client
+   is known to wait for a 2xx (Successful) response before forwarding
+   TCP payload data.  This requirement applies whether or not the
+   request includes a "close" connection option.
 
    Note that this mitigation will frequently impair the performance of
    correctly implemented clients, especially when returning a 407 (Proxy
