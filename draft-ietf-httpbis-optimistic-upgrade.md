@@ -26,6 +26,8 @@ normative:
   RFC9112:
     display: HTTP/1.1
 informative:
+  RFC9113:
+    display: HTTP/2
 
 
 --- abstract
@@ -136,7 +138,7 @@ The "connect-ip" upgrade token is defined in {{?CONNECT-IP=RFC9484}}.  {{Section
 There are now several good examples of designs that reduce or eliminate the security concerns discussed in this document and may be applicable in future specifications:
 
 * Forbid optimistic use of HTTP Upgrade ({{Section 4.1 of ?WEBSOCKET}}, {{Section 11 of ?CONNECT-IP}}).
-* Embed a fixed preamble that deliberately terminates HTTP/1.1 processing ({{Section 3.4 of ?HTTP2=RFC9113}}).
+* Embed a fixed preamble that deliberately terminates HTTP/1.1 processing ({{Section 3.4 of RFC9113}}).
 * Apply high-entropy masking of client-to-server data ({{Section 5.1 of ?WEBSOCKET}}).
 
 Future specifications for upgrade tokens should account for the security issues discussed here and provide clear guidance on how implementations can avoid them.
