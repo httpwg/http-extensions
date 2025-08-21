@@ -272,13 +272,54 @@ q=foo&amp;limit=10&amp;sort=-published
       a connection failure.
     </t>
     <t>
-      A 200 (OK) response to a QUERY request indicates that the query
+      As per <xref target="HTTP" section="15.3"/>, a 2xx (Successful) response code signals that
+      the request was successfully received, understood, and accepted.
+    </t>
+    <t>
+      In particular, a 200 (OK) response indicates that the query
       was successfully processed and the results of that processing are
       enclosed as the response content.
     </t>
-    <t>
-      <cref>describe other status codes</cref>
-    </t>
+
+    <section title="Media Types and Content Negotiation" anchor="media.types.and.conneg">
+      <t>
+        The semantics of a QUERY request depends both on the request content and the associated
+        metadata, such as the Media Type (<xref target="HTTP" sectionFormat="comma" section="8.3.1"/>).
+        In general, any problem with requests where content and metadata are inconsistent &MUST; be
+        rejected with a 4xx (Client Error) response (<xref target="HTTP" sectionFormat="comma" section="15.5"/>).
+      </t>
+      <t>
+        The list below describe various cases of failures and recommends specific status codes:
+      </t>
+      <ul>
+        <li>
+          A request lacking media type information by definition is incorrect and needs to fail
+          with a 4xx status code such as 400 (Client Error).
+        </li>
+        <li>
+          If a media type is specified, but not supported by the resource, a 415 (Unsupported Media Type)
+          is appropriate. This specifically includes the case where the media type is
+          known in principle, but lacks semantics specific to QUERY (for example "text/xml"). In both cases,
+          the Accept-Query response field (<xref target="field.accept-query"/>) can be used for inform
+          the client of media types which are supported.
+        </li>
+        <li>
+          If a media type is specified, but is inconsistent with the actual request content,
+          a 400 (Bad Request) can be returned. Thus, "content sniffing" is not allowed.
+        </li>
+        <li>
+          If the media type is specified, is understood, and the content is indeed consistent with the
+          type, but the query can not be processed due to the actual contents of the query,
+          the status 422 (Unprocessable Content) can be used. An example would be a syntactically
+          correct SQL query querying a non-existing table.
+        </li>
+        <li>
+          Finally, if the client requests a specific response media type using the Accept
+          field (<xref target="HTTP" sectionFormat="comma" section="12.5.1"/>) which is not supported
+          by the resource, a status code of 406 (Not Acceptable) is appropriate.
+        </li>
+      </ul>
+    </section>
 
     <section title="Content-Location Response Field" anchor="content-location">
       <t>
@@ -861,46 +902,6 @@ See stored query at "/contacts/stored-queries/42".
           <xref target="example.location"/>.
         </t>
       </section>
-    </section>
-
-    <section title="Media (Content) Types and Content Negotiation" anchor="example.content.metadata">
-      <t>
-        The semantics of a QUERY request depends both on the request content and the associated
-        metadata, such as the Media Type (<xref target="HTTP" sectionFormat="comma" section="8.3.1"/>).
-        In general, any problem with requests where content and metadata are inconsistent need to be
-        rejected with a 4xx (Client Error) response (<xref target="HTTP" sectionFormat="comma" section="15.5"/>).
-      </t>
-      <t>
-        The list below describe various cases of failures and recommends specific status codes:
-      </t>
-      <ul>
-        <li>
-          A request lacking media type information by definition is incorrect and needs to fail
-          with a 4xx status code such as 400 (Client Error).
-        </li>
-        <li>
-          If a media type is specified, but not supported by the resource, a 415 (Unsupported Media Type)
-          is appropriate. This specifically includes the case where the media type is
-          known in principle, but lacks semantics specific to QUERY. In both cases,
-          the Accept-Query response field (<xref target="field.accept-query"/>) can used for inform
-          the client of media types which are supported.
-        </li>
-        <li>
-          If a media type is specified, but is inconsistent with the actual request content,
-          a 400 (Bad Request) can be returned. Thus, "content sniffing" is not allowed.
-        </li>
-        <li>
-          If the media type is specified and understood and the content is indeed consistent with the
-          type, but the query can not be processed due to the actual contents of the query,
-          the status 422 (Unprocessable Content) can be used. An example would be a syntactically
-          correct SQL query querying a non-existing table.
-        </li>
-        <li>
-          Finally, if the client requests a specific response media type using the Accept
-          field (<xref target="HTTP" sectionFormat="comma" section="12.5.1"/>) not supported
-          by the resource, a status code of 406 (Not Acceptable) is appropriate.
-        </li>
-      </ul>
     </section>
 
     <section title="More Query Formats" anchor="example.more.query.formats">
