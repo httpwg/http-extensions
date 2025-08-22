@@ -247,7 +247,7 @@ q=foo&amp;limit=10&amp;sort=-published
       The origin server determines the scope of the operation based on the target resource.
     </t>
     <t>
-      The content of the request and it's media type define the query.
+      The content of the request and its media type define the query.
       Servers <bcp14>MUST</bcp14> fail the request if the Content-Type
       request field (<xref target="HTTP" sectionFormat="comma" section="8.3"/>)
       is missing or is inconsistent with the request content.
