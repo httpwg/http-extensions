@@ -242,8 +242,9 @@ q=foo&amp;limit=10&amp;sort=-published
       representation of the resource identified by the target URI
       (as defined by <xref target="HTTP" section="7.1"/>), the QUERY
       method is used to ask the target resource to perform a query operation
-      (described by the request content) within the scope of that target
-      resource (as defined by its origin).
+      within the scope of that target resource.
+      The query operation is described by the request content.
+      The origin server determines the scope of the operation based on the target resource.
     </t>
     <t>
       The content of the request and it's media type define the query.
