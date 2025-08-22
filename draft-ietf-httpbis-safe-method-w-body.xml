@@ -264,7 +264,8 @@ q=foo&amp;limit=10&amp;sort=-published
       that is, the client does not request or expect any change to the
       state of the target resource. This does not prevent the server
       from creating additional HTTP resources through which additional
-      information can be retrieved (see sections below).
+      information can be retrieved (see Sections <xref target="content-location" format="counter"/>
+      and <xref target="location" format="counter"/>).
     </t>
     <t>
       Furthermore, QUERY requests are idempotent
