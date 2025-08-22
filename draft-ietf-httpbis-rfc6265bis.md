@@ -2062,7 +2062,7 @@ site being browsed. Some block cookies based upon user agent cookie policy and/o
 While this document does not endorse or require a specific approach, it is RECOMMENDED that user
 agents adopt a policy for third-party cookies that is as restrictive as compatibility constraints
 permit. Consequently, resources cannot rely upon third-party cookies being treated consistently by
-user agents for the foreseeable future.
+user agents for the foreseeable future. TODO
 
 
 ## Cookie Policy {#cookie-policy}
@@ -2172,7 +2172,7 @@ and Set-Cookie header fields is transmitted in the clear.
     direction, with unpredictable results.
 
 3.  A malicious client could alter the Cookie header fields before transmission,
-    with unpredictable results.
+    with unpredictable results. TODO
 
 Servers SHOULD encrypt and sign the contents of cookies (using whatever format
 the server desires) when transmitting them to the user agent (even when sending
