@@ -70,7 +70,7 @@ normative:
       org: WHATWG
   SAMESITE:
     target: https://html.spec.whatwg.org/#same-site
-    title: HTML - Living Standard
+    title: HTML - Living Standard TODO
     date: 2021-01-26
     author:
     -
@@ -1609,23 +1609,22 @@ user agent MUST process the cookie as follows:
     creation-time and the last-access-time to the current date and time.
 
 6.  If the cookie-attribute-list contains an attribute with an attribute-name
+    of "Max-Age" or an attribute with an attribute-name of "Expires":
+
+    1.  Set the cookie's persistent-flag to true.
+
+    2.  If the cookie-attribute-list contains an attribute with an attribute-name
     of "Max-Age":
 
-    1.  Set the cookie's persistent-flag to true.
+        1. Set the cookie's expiry-time to attribute-value of the last
+           attribute in the cookie-attribute-list with an attribute-name of
+           "Max-Age".
 
-    2.  Set the cookie's expiry-time to attribute-value of the last
-        attribute in the cookie-attribute-list with an attribute-name of
-        "Max-Age".
+        Otherwise:
 
-    Otherwise, if the cookie-attribute-list contains an attribute with an
-    attribute-name of "Expires" (and does not contain an attribute with an
-    attribute-name of "Max-Age"):
-
-    1.  Set the cookie's persistent-flag to true.
-
-    2.  Set the cookie's expiry-time to attribute-value of the last
-        attribute in the cookie-attribute-list with an attribute-name of
-        "Expires".
+        1. Set the cookie's expiry-time to attribute-value of the last
+           attribute in the cookie-attribute-list with an attribute-name of
+           "Expires".
 
     Otherwise:
 
@@ -2114,6 +2113,8 @@ set to expire in two weeks.
 # Security Considerations {#security-considerations}
 
 ## Overview
+
+TODO
 
 Cookies have a number of security pitfalls. This section overviews a few of the
 more salient issues.
