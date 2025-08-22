@@ -301,7 +301,7 @@ q=foo&amp;limit=10&amp;sort=-published
         <li>
           If a media type is specified, but not supported by the resource, a 415 (Unsupported Media Type)
           is appropriate. This specifically includes the case where the media type is
-          known in principle, but lacks semantics specific to QUERY (for example "text/xml"). In both cases,
+          known in principle, but lacks semantics specific to a QUERY to the target resource. In both cases,
           the Accept-Query response field (<xref target="field.accept-query"/>) can be used for inform
           the client of media types which are supported.
         </li>
