@@ -330,15 +330,24 @@ An upload resource MAY enforce one or multiple limits, which are communicated to
 
 The following key-value pairs are defined:
 
-- The value under the `max-size` key specifies a maximum size for the representation data, counted in bytes. The server might not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size during an active upload. The value is an Integer.
-- The value under the `min-size` key specifies a minimum size for the representation data, counted in bytes. The server might not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. The value is an Integer.
-- The value under the `max-append-size` key specifies a maximum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append requests. The value is an Integer.
-- The value under the `min-append-size` key specifies a minimum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append requests. The value is an Integer. Requests completing the upload by including the `Upload-Complete: ?1` header field are exempt from this limit.
-- The value under the `max-age` key specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource as these requests will likely fail. The lifetime MAY be extended but SHOULD NOT be reduced unless the server makes the upload resource immediately inaccessible. The value is an Integer.
+`max-size`:
+: Specifies a maximum size for the representation data, counted in bytes. The server might not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size. The value is an Integer.
+
+`min-size`:
+: Specifies a minimum size for the representation data, counted in bytes. The server might not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. The value is an Integer.
+
+`max-append-size`:
+: Specifies a maximum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append requests. The value is an Integer.
+
+`min-append-size`:
+: Specifies a minimum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append requests. The value is an Integer. Requests completing the upload by including the `Upload-Complete: ?1` header field are exempt from this limit.
+
+`max-age`:
+: Specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource as these requests will likely fail. The lifetime MAY be extended but SHOULD NOT be reduced unless the server makes the upload resource immediately inaccessible. The value is an Integer.
 
 Except for the `max-age` limit, the existence of a limit or its value MUST NOT change throughout the lifetime of the upload resource.
 
-When parsing the `Upload-Limit` header field, unrecognized keys MUST be ignored and MUST NOT fail the parsing to facilitate the addition of new limits in the future. Keys with values other than defined here MUST be ignored.
+Receivers of `Upload-Limit` parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places the additional requirement that Dictionary members with unknown keys, or members using known keys with values of unexpected types, MUST be ignored.
 
 A server that supports the creation of a resumable upload resource ({{upload-creation}}) for a target URI MUST include the `Upload-Limit` header field with the corresponding limits in a response to an `OPTIONS` request sent to this target URI. If a server supports the creation of upload resources for any target URI, it SHOULD include the `Upload-Limit` header field with the corresponding limits in a response to an `OPTIONS` request with the `*` target unless the server is not capable of handling `OPTIONS *` requests. If the server does not apply any limits, it MUST use `min-size=0` instead of an empty header value.
 
