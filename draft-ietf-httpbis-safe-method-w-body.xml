@@ -313,7 +313,7 @@ q=foo&amp;limit=10&amp;sort=-published
           If the media type is specified, is understood, and the content is indeed consistent with the
           type, but the query can not be processed due to the actual contents of the query,
           the status 422 (Unprocessable Content) can be used. An example would be a syntactically
-          correct SQL query querying a non-existing table.
+          correct SQL query that identifies a non-existent table.
         </li>
         <li>
           Finally, if the client requests a specific response media type using the Accept
