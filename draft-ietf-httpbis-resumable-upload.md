@@ -482,7 +482,7 @@ A successful response to a `HEAD` request against an upload resource
 
 The resource SHOULD NOT generate a response with the `301 (Moved Permanently)` and `302 (Found)` status codes because clients might follow the redirect without preserving the `HEAD` method.
 
-### Example {#offset-retrieving-example}
+### Examples {#offset-retrieving-example}
 
 A) The following example shows an offset retrieval request. The server indicates the current offset and that the upload is not complete yet. The client can continue to append representation data.
 
@@ -555,7 +555,7 @@ The upload resource MUST record the length according to {{upload-length}} if the
 
 While the request content is being received, the server SHOULD send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
 
-### Example {#upload-appending-example}
+### Examples {#upload-appending-example}
 
 A) The following example shows an upload append request. The client transfers the next 100 bytes at an offset of 100 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:
 
