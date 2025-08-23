@@ -307,7 +307,9 @@ q=foo&amp;limit=10&amp;sort=-published
         </li>
         <li>
           If a media type is specified, but is inconsistent with the actual request content,
-          a 400 (Bad Request) can be returned. Thus, "content sniffing" is not allowed.
+          a 400 (Bad Request) can be returned. That is, a server is not allowed to infer
+          a media type from the request content and then override a missing or "erroneous" value
+          ("content sniffing").
         </li>
         <li>
           If the media type is specified, is understood, and the content is indeed consistent with the
