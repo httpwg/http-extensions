@@ -500,7 +500,7 @@ Upload-Limit: max-age=3600
 Cache-Control: no-store
 ~~~
 
-B) The following example shows on offset retrieval request for a completed upload. The client does not need to continue the upload.
+B) The following example shows an offset retrieval request for a completed upload. The client does not need to continue the upload.
 
 ~~~ http-message
 HEAD /upload/b530ce8ff HTTP/1.1
