@@ -369,16 +369,16 @@ If the server does not receive the entire request content, for example because o
 
 ### Examples {#upload-creation-example}
 
-A) The following example shows an upload creation, where the entire 100 bytes are transferred in the initial request. The server sends multiple interim responses and one final response from processing the uploaded representation.
+A) The following example shows an upload creation, where the entire 100000000 bytes are transferred in the initial request. The server sends multiple interim responses and one final response from processing the uploaded representation.
 
 ~~~ http-message
 POST /project/123/files HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Content-Length: 100
-Upload-Length: 100
+Content-Length: 100000000
+Upload-Length: 100000000
 
-[content (100 bytes)]
+[content (100000000 bytes)]
 ~~~
 
 ~~~ http-message
@@ -387,7 +387,7 @@ Location: https://example.com/upload/b530ce8ff
 Upload-Limit: max-size=1000000000
 
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Offset: 50
+Upload-Offset: 50000000
 
 HTTP/1.1 200 OK
 Location: https://example.com/upload/b530ce8ff
@@ -397,16 +397,16 @@ Content-Type: application/json
 {"attachmentId": "b530ce8ff"}
 ~~~
 
-B) The following example shows an upload creation, where only the first 25 bytes of a 100 bytes upload are transferred. The server acknowledges the received representation data and that the upload is not complete yet. The client can continue appending data.
+B) The following example shows an upload creation, where only the first 25000000 bytes of a 100000000 bytes upload are transferred. The server acknowledges the received representation data and that the upload is not complete yet. The client can continue appending data.
 
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
-Content-Length: 25
-Upload-Length: 100
+Content-Length: 25000000
+Upload-Length: 100000000
 
-[partial content (25 bytes)]
+[partial content (25000000 bytes)]
 ~~~
 
 ~~~ http-message
@@ -424,10 +424,10 @@ C) The following example shows an upload creation, where the server responds wit
 POST /upload HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Content-Length: 100
-Upload-Length: 100
+Content-Length: 100000000
+Upload-Length: 100000000
 
-[content (100 bytes)]
+[content (100000000 bytes)]
 ~~~
 
 ~~~ http-message
@@ -443,10 +443,10 @@ D) The following example shows an upload creation being rejected by the server. 
 POST /upload HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Content-Length: 100
-Upload-Length: 100
+Content-Length: 100000000
+Upload-Length: 100000000
 
-[content (100 bytes)]
+[content (100000000 bytes)]
 ~~~
 
 ~~~ http-message
@@ -493,9 +493,9 @@ Host: example.com
 
 ~~~ http-message
 HTTP/1.1 204 No Content
-Upload-Offset: 100
+Upload-Offset: 25000000
 Upload-Complete: ?0
-Upload-Length: 500
+Upload-Length: 100000000
 Upload-Limit: max-age=3600
 Cache-Control: no-store
 ~~~
@@ -509,9 +509,9 @@ Host: example.com
 
 ~~~ http-message
 HTTP/1.1 204 No Content
-Upload-Offset: 500
+Upload-Offset: 100000000
 Upload-Complete: ?1
-Upload-Length: 500
+Upload-Length: 100000000
 Cache-Control: no-store
 ~~~
 
@@ -557,38 +557,38 @@ While the request content is being received, the server SHOULD send interim resp
 
 ### Example {#upload-appending-example}
 
-A) The following example shows an upload append request. The client transfers the next 100 bytes at an offset of 100 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:
+A) The following example shows an upload append request. The client transfers the next 25000000 bytes at an offset of 25000000 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:
 
 ~~~ http-message
 PATCH /upload/b530ce8ff HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
-Upload-Offset: 100
-Content-Length: 100
+Upload-Offset: 25000000
+Content-Length: 25000000
 Content-Type: application/partial-upload
 
-[content (100 bytes)]
+[content (25000000 bytes)]
 ~~~
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Offset: 150
+Upload-Offset: 12500000
 
 HTTP/1.1 204 No Content
 Upload-Complete: ?0
 ~~~
 
-B) The next example shows an upload append, where the client transfers the remaining 200 bytes and completes the upload. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:
+B) The next example shows an upload append, where the client transfers the remaining 25000000 bytes and completes the upload. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:
 
 ~~~ http-message
 PATCH /upload/b530ce8ff HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Upload-Offset: 200
-Content-Length: 100
+Upload-Offset: 25000000
+Content-Length: 25000000
 Content-Type: application/partial-upload
 
-[content (100 bytes)]
+[content (25000000 bytes)]
 ~~~
 
 ~~~ http-message
@@ -659,7 +659,7 @@ This section defines the "https://iana.org/assignments/http-problem-types#mismat
 
 Two problem type extension members are defined: the `expected-offset` and `provided-offset` members. A response using this problem type SHOULD populate both members, with the value of `expected-offset` taken from the upload resource and the value of `provided-offset` taken from the upload append request.
 
-The following example shows an example response, where the resource's offset was 100, but the client attempted to append at offset 200:
+The following example shows an example response, where the resource's offset was 12500000, but the client attempted to append at offset 25000000:
 
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
@@ -671,8 +671,8 @@ Content-Type: application/problem+json
   "type":"https://iana.org/assignments/http-problem-types#\
     mismatching-upload-offset",
   "title": "offset from request does not match offset of resource",
-  "expected-offset": 100,
-  "provided-offset": 200
+  "expected-offset": 12500000,
+  "provided-offset": 25000000
 }
 ~~~
 
