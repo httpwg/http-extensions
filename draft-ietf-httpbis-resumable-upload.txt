@@ -93,11 +93,11 @@ Table of Contents
      4.3.  Offset Retrieval
        4.3.1.  Client Behavior
        4.3.2.  Server Behavior
-       4.3.3.  Example
+       4.3.3.  Examples
      4.4.  Upload Append
        4.4.1.  Client Behavior
        4.4.2.  Server Behavior
-       4.4.3.  Example
+       4.4.3.  Examples
      4.5.  Upload Cancellation
        4.5.1.  Client Behavior
        4.5.2.  Server Behavior
@@ -896,7 +896,7 @@ Table of Contents
    Permanently) and 302 (Found) status codes because clients might
    follow the redirect without preserving the HEAD method.
 
-4.3.3.  Example
+4.3.3.  Examples
 
    A) The following example shows an offset retrieval request.  The
    server indicates the current offset and that the upload is not
@@ -912,7 +912,7 @@ Table of Contents
    Upload-Limit: max-age=3600
    Cache-Control: no-store
 
-   B) The following example shows on offset retrieval request for a
+   B) The following example shows an offset retrieval request for a
    completed upload.  The client does not need to continue the upload.
 
    HEAD /upload/b530ce8ff HTTP/1.1
@@ -935,8 +935,8 @@ Table of Contents
 
    The client MUST indicate the offset of the request content inside the
    representation data by including the Upload-Offset request header
-   field.  To ensure that the upload resource will accept request, the
-   offset SHOULD be taken from an immediate previous response for
+   field.  To ensure that the upload resource will accept the request,
+   the offset SHOULD be taken from an immediate previous response for
    retrieving the offset (Section 4.3) or appending representation data
    (Section 4.4).
 
@@ -1035,7 +1035,7 @@ Table of Contents
    inform the client about the upload progress.  These interim responses
    MUST NOT include the Location header field.
 
-4.4.3.  Example
+4.4.3.  Examples
 
    A) The following example shows an upload append request.  The client
    transfers the next 100 bytes at an offset of 100 and does not
@@ -1120,7 +1120,7 @@ Table of Contents
    resource.  The client MUST NOT perform multiple representation data
    transfers for the same upload resource in parallel.
 
-   Even if the client is well behaving and doesn't send concurrent
+   Even if the client is well-behaved and doesn't send concurrent
    requests, network interruptions can occur in such a way that the
    client considers a request as failed while the server is unaware of
    the problem and considers the request still ongoing.  The client
@@ -1186,7 +1186,7 @@ Table of Contents
       to indicate the current upload progress in the Upload-Offset
       header field (see Section 4.2 and Section 4.4).  This allows the
       client to show more accurate progress information about the amount
-      of data receive by the server.  In addition, clients can use this
+      of data received by the server.  In addition, clients can use this
       information to release representation data that was buffered,
       knowing that it doesn't have to be re-transmitted.
 
@@ -1355,8 +1355,8 @@ Table of Contents
 
    HTTP uploads often not only transfer a representation to the server
    but also send back information to the client.  For resumable uploads,
-   this works similar to conventional HTTP uploads.  The server can
-   include information in the response to the request, which transferred
+   this works similarly to conventional HTTP uploads.  The server can
+   include information in the response to the request that transferred
    the remaining representation data and included the Upload-Complete:
    ?1 header field.  Clients can regard this response as the final
    response for the entire upload, as detailed in Section 4.2 and
@@ -1409,7 +1409,7 @@ Table of Contents
    request without additional round trips.
 
    A possible drawback is that the client might be unable to resume an
-   upload.  If an upload is interrupted before the client received a 104
+   upload.  If an upload is interrupted before the client receives a 104
    (Upload Resumption Supported) interim response with the upload
    resource's URI, the client cannot resume that upload due to the
    missing URI.  The interim response might not be received if the
@@ -1435,7 +1435,7 @@ Table of Contents
    automatically upgrade non-resumable uploads to resumable ones.  In a
    non-resumable upload, the representation is transferred in a single
    request, usually POST or PUT, without any ability to resume from
-   interruptions.  The client can offer the server to upgrade such a
+   interruptions.  The client can invite the server to upgrade such a
    request to a resumable upload by adding the Upload-Complete: ?1
    header field to the original request.  The Upload-Length header field
    SHOULD be added if the representation data's length is known upfront.
