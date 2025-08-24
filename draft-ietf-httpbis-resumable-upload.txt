@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 21 February 2026                                     Apple Inc.
+Expires: 25 February 2026                                     Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                          20 August 2025
+                                                          24 August 2025
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 February 2026.
+   This Internet-Draft will expire on 25 February 2026.
 
 Copyright Notice
 
@@ -154,9 +154,12 @@ Table of Contents
    prior to interruption, a sender can resume data transfer at that
    point instead of attempting to transfer all of the data again.  HTTP
    range requests (see Section 14 of [HTTP]) support this concept of
-   resumable data transfers for downloads from server to client.
+   resumable data transfers for downloads from server to client.  While
+   partial PUT is one method for uploading a partial representation (via
+   Content-Range in the request), there are caveats that affect its
+   deployability; see Section 14.5 of [HTTP].
 
-   This specification defines a mechanism for resumable uploads from
+   This specification defines a new mechanism for resumable uploads from
    client to server in a way that is backwards-compatible with
    conventional HTTP uploads.  When an upload is interrupted, clients
    can send subsequent requests to query the server state and use this
