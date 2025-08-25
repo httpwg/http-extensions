@@ -681,6 +681,10 @@ may adjust the specified date and is not required to retain the cookie until
 that date has passed. In fact, user agents often evict cookies due to memory
 pressure or privacy concerns.
 
+The cookie's lifetime is based on the user agent's clock which may differ from
+the server's clock. Servers MUST NOT depend on cookies being evicted exactly at
+the specified date and time of the server's clock.
+
 #### The Max-Age Attribute {#attribute-max-age}
 
 The Max-Age attribute indicates the maximum lifetime of the cookie,
@@ -2123,12 +2127,13 @@ authentication, often becoming vulnerable to attacks such as cross-site request
 forgery {{CSRF}}. Also, when storing session identifiers in cookies, developers
 often create session fixation vulnerabilities.
 
-Transport-layer encryption, such as that employed in HTTPS, is insufficient to
-prevent a network attacker from obtaining or altering a victim's cookies because
-the cookie protocol itself has various vulnerabilities (see "Weak Confidentiality"
-and "Weak Integrity", below). In addition, by default, cookies do not provide
-confidentiality or integrity from network attackers, even when used in conjunction
-with HTTPS.
+Transport-layer encryption, such as that employed in HTTPS, offers a
+significant layer of defense against network attacks on cookies. However, it
+is insufficient in fully preventing a networking attacker from obtaining or
+altering a victim's cookies because of inherent vulnerabilities in the cookie
+protocol itself (see "Weak Confidentiality" and "Weak Integrity", below). In
+addition, by default, cookies do not provide confidentiality or integrity from
+network attackers, even when used in conjunction with HTTPS.
 
 ## Ambient Authority
 
@@ -2165,9 +2170,6 @@ and Set-Cookie header fields is transmitted in the clear.
 
 2.  A malicious intermediary could alter the header fields as they travel in either
     direction, with unpredictable results.
-
-3.  A malicious client could alter the Cookie header fields before transmission,
-    with unpredictable results.
 
 Servers SHOULD encrypt and sign the contents of cookies (using whatever format
 the server desires) when transmitting them to the user agent (even when sending
