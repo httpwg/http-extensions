@@ -2114,8 +2114,6 @@ set to expire in two weeks.
 
 ## Overview
 
-TODO
-
 Cookies have a number of security pitfalls. This section overviews a few of the
 more salient issues.
 
