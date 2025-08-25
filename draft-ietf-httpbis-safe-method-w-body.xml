@@ -387,6 +387,13 @@ q=foo&amp;limit=10&amp;sort=-published
       <t>
         The semantics of Range Requests for QUERY are identical to those for GET,
         as defined in <xref target="HTTP" section="14"/>.
+        Byte Range requests (the only range unit defined at the time of writing),
+        however, offer little value for the results of a QUERY request.
+      </t>
+      <t>
+        Query formats often define their own way for limiting or paging through result
+        sets, such as with "FETCH FIRST ... ROWS ONLY" in SQL. It is expected that these
+        inherent features will be used instead of HTTP Range Requests.
       </t>
     </section>
 
