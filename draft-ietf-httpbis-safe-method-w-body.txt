@@ -1090,6 +1090,9 @@ B.12.  Since draft-ietf-httpbis-safe-method-w-body-11
    *  Address HTTPDIR/RF feedback on introduction
       (https://github.com/httpwg/http-extensions/issues/3122)
 
+   *  Address HTTPDIR/RF feedback on method definition
+      (https://github.com/httpwg/http-extensions/issues/3123)
+
    *  Consistent Table Captions (https://github.com/httpwg/http-
       extensions/issues/3134)
 
