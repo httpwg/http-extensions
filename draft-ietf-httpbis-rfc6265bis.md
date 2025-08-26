@@ -1630,6 +1630,7 @@ user agent MUST process the cookie as follows:
     Otherwise:
 
     1.  Set the cookie's persistent-flag to false.
+
     2.  Set the cookie's expiry-time to the latest representable date.
 
 7.  If the cookie-attribute-list contains an attribute with an
