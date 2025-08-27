@@ -91,7 +91,7 @@ explicit server cancellation:
 implicit server cancellation:
 : e.g., DoS mitigation or internal error
 
-Connection can be dropped due to a variety of network or transport layer reasons triggered by endpoints or on-path elements.
+Connections can be dropped due to a variety of network or transport layer reasons triggered by endpoints or on-path elements.
 
 This specification defines a new mechanism for resumable uploads from client to server in a way that is backwards-compatible with conventional HTTP uploads. When an upload is interrupted, clients can send subsequent requests to query the server state and use this information to send the remaining representation data. Alternatively, they can cancel the upload entirely. Unlike ranged downloads, this protocol does not support transferring an upload as multiple requests in parallel.
 
