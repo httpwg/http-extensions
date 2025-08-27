@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 27 February 2026                                     Apple Inc.
+Expires: 28 February 2026                                     Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                          26 August 2025
+                                                          27 August 2025
 
 
                        Resumable Uploads for HTTP
@@ -16,14 +16,14 @@ Expires: 27 February 2026                                     Apple Inc.
 
 Abstract
 
-   Data transfer using the Hypertext Transfer Protocol (HTTP) is often
-   interrupted by canceled requests or dropped connections.  If the
-   intended recipient can indicate how much of the data was received
-   prior to interruption, a sender can resume data transfer at that
-   point instead of attempting to transfer all of the data again.  HTTP
-   range requests support this concept of resumable downloads from
-   server to client.  This document describes a mechanism that supports
-   resumable uploads from client to server using HTTP.
+   HTTP data transfers can encounter interruption due to reasons such as
+   canceled requests or dropped connections.  If the intended recipient
+   can indicate how much of the data was received prior to interruption,
+   a sender can resume data transfer at that point instead of attempting
+   to transfer all of the data again.  HTTP range requests support this
+   concept of resumable downloads from server to client.  This document
+   describes a mechanism that supports resumable uploads from client to
+   server using HTTP.
 
 About This Document
 
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 February 2026.
+   This Internet-Draft will expire on 28 February 2026.
 
 Copyright Notice
 
@@ -148,16 +148,31 @@ Table of Contents
 
 1.  Introduction
 
-   Data transfer using the Hypertext Transfer Protocol ([HTTP]) is often
-   interrupted by canceled requests or dropped connections.  If the
-   intended recipient can indicate how much of the data was received
-   prior to interruption, a sender can resume data transfer at that
-   point instead of attempting to transfer all of the data again.  HTTP
-   range requests (see Section 14 of [HTTP]) support this concept of
-   resumable data transfers for downloads from server to client.  While
-   partial PUT is one method for uploading a partial representation (via
-   Content-Range in the request), there are caveats that affect its
-   deployability; see Section 14.5 of [HTTP].
+   HTTP data transfers can encounter interruption due to reasons such as
+   canceled requests or dropped connections.  If the intended recipient
+   can indicate how much of the data was received prior to interruption,
+   a sender can resume data transfer at that point instead of attempting
+   to transfer all of the data again.  HTTP range requests (see
+   Section 14 of [HTTP]) support this concept of resumable data
+   transfers for downloads from server to client.  While partial PUT is
+   one method for uploading a partial representation (via Content-Range
+   in the request), there are caveats that affect its deployability; see
+   Section 14.5 of [HTTP].
+
+   Canceled upload request can be triggered for various reasons,
+   including but not limited to:
+
+   explicit client cancellation:  e.g., terminating a user-agent process
+
+   implicit client cancellation:  e.g., terminating a tab, garbage
+      collecting a process or internal error
+
+   explicit server cancellation:  e.g., scheduled maintenance
+
+   implicit server cancellation:  e.g., DoS mitigation or internal error
+
+   Connections can be dropped due to a variety of network or transport
+   layer reasons triggered by endpoints or on-path elements.
 
    This specification defines a new mechanism for resumable uploads from
    client to server in a way that is backwards-compatible with
