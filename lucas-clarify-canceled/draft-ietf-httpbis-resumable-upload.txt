@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 26 February 2026                                     Apple Inc.
+Expires: 28 February 2026                                     Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                          25 August 2025
+                                                          27 August 2025
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 February 2026.
+   This Internet-Draft will expire on 28 February 2026.
 
 Copyright Notice
 
@@ -171,7 +171,7 @@ Table of Contents
 
    implicit server cancellation:  e.g., DoS mitigation or internal error
 
-   Connection can be dropped due to a variety of network or transport
+   Connections can be dropped due to a variety of network or transport
    layer reasons triggered by endpoints or on-path elements.
 
    This specification defines a new mechanism for resumable uploads from
