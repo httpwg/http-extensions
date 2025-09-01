@@ -218,7 +218,7 @@ Client                                       Server
 ~~~
 {: #fig-upload-creation-incomplete title="Upload creation with partial representation data"}
 
-2) Subsequent, intermediate parts are appended ({{upload-appending}}) with the `Upload-Complete` field value set to false, indicating that they are not the last part of the representation data. The offset value in the `Upload-Offset` header field is taken from the previous response when creating the upload or appending to it.
+2) Subsequently, intermediate parts are appended ({{upload-appending}}) with the `Upload-Complete` field value set to false, indicating that they are not the last part of the representation data. The offset value in the `Upload-Offset` header field is taken from the previous response when creating the upload or appending to it.
 
 ~~~ aasvg
 Client                                       Server
