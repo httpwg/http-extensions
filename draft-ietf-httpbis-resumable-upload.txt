@@ -703,8 +703,8 @@ Table of Contents
       the response belongs to the targeted resource processing the
       representation.
 
-   *  2xx (Successful) status code and not the entire representation
-      data was transferred in the request content, the Location response
+   *  2xx (Successful) status code and the entire representation data
+      was not transferred in the request content, the Location response
       header field points the client to the created upload resource.
       The client can continue appending representation data to it
       (Section 4.4).
@@ -971,9 +971,9 @@ Table of Contents
       the corresponding response belongs to the resource processing the
       representation according to the initial request (see Section 4.2).
 
-   *  2xx (Successful) status code and not the entire remaining
-      representation data was transferred in the request content, the
-      client can continue appending representation data.
+   *  2xx (Successful) status code and the entire remaining
+      representation data was not transferred in the request content,
+      the client can continue appending representation data.
 
    *  307 (Temporary Redirect) or 308 (Permanent Redirect) status code,
       the client MAY retry appending to the new URI.
