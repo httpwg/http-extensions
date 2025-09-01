@@ -543,9 +543,10 @@ A client can continue the upload and append representation data by sending a `PA
 
 The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` request header field. To ensure that the upload resource will accept the request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ({{offset-retrieving}}) or appending representation data ({{upload-appending}}).
 
-The request MUST include the `Upload-Complete` header field. Its value is true if the end of the request content is the end of the representation data. If the content is then fully received by the upload resource, the upload will be complete.
+The request MUST include the `Upload-Complete` header field. Its value is true in two cases:
 
-The request content can be empty. If the `Upload-Complete` field is then set to true, the client wants to complete the upload without appending additional representation data.
+- the request has content that is the end of the representation data. Once the content is fully received by the server, the upload is complete.
+- the request has no content. Once the request is processed by the server, the upload is complete. This usage requires the full representation data to have been received via prior requests.
 
 If the client received a final response with a
 
