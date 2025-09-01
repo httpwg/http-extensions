@@ -625,7 +625,7 @@ Table of Contents
 
    A client can use an OPTIONS request to discover support for resumable
    uploads and potential limits before creating an upload resource.  To
-   reduce the liklihood of failing requests, the limits announced in an
+   reduce the likelihood of failing requests, the limits announced in an
    OPTIONS response SHOULD NOT be less restrictive than the limits
    applied to an upload once the upload resource has been created,
    unless the request to create an upload resource included additional
@@ -681,11 +681,11 @@ Table of Contents
 
    The request content can be empty.  If the Upload-Complete header
    field is then set to true, the client intends to upload an empty
-   representation.  An Upload-Complete header field is set to false is
-   also valid.  This can be used to retrieve the upload resource's URI
-   before transferring any representation data.  Since interim responses
-   are optional, this technique provides another mechanism to learn the
-   URI, at the cost of an additional round-trip before data upload can
+   representation.  An Upload-Complete header field set to false is also
+   valid.  This can be used to retrieve the upload resource's URI before
+   transferring any representation data.  Since interim responses are
+   optional, this technique provides another mechanism to learn the URI,
+   at the cost of an additional round-trip before data upload can
    commence.
 
    Representation metadata included in the initial request (see
@@ -895,7 +895,7 @@ Table of Contents
    *  MUST include the offset in the Upload-Offset header field
       (Section 4.1.1),
 
-   *  MUST include the completeless state in the Upload-Complete header
+   *  MUST include the completeness state in the Upload-Complete header
       field (Section 4.1.2),
 
    *  MUST include the length in the Upload-Length header field if known
@@ -1322,8 +1322,8 @@ Table of Contents
 10.1.  Representation Digests
 
    Representation digests help verify the integrity of the entire
-   representation data that has been uploaded so far, which might strech
-   across multiple requests.
+   representation data that has been uploaded so far, which might
+   stretch across multiple requests.
 
    If the client knows the integrity digest of the entire representation
    data before creating an upload resource, it can include the Repr-
