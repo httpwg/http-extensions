@@ -476,7 +476,7 @@ A successful response to a `HEAD` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset}}),
 - MUST include the completeless state in the `Upload-Complete` header field ({{upload-complete}}),
-- MUST include the length in the `Upload-Length` header field unless the client has not supplied one ({{upload-length}}),
+- MUST include the length in the `Upload-Length` header field unless the client has not supplied one, either by providing its own `Upload-Length` ({{upload-length}}) or providing an Upload-Complete:?1 with a Content-Length ({{upload-complete}}),
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
 
