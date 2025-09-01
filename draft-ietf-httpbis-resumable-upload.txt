@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 28 February 2026                                     Apple Inc.
+Expires: 5 March 2026                                         Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                          27 August 2025
+                                                        1 September 2025
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 February 2026.
+   This Internet-Draft will expire on 5 March 2026.
 
 Copyright Notice
 
@@ -367,10 +367,10 @@ Table of Contents
 
          Figure 5: Upload creation with partial representation data
 
-   2) Subsequent, intermediate parts are appended (Section 4.4) with the
-   Upload-Complete field value set to false, indicating that they are
-   not the last part of the representation data.  The offset value in
-   the Upload-Offset header field is taken from the previous response
+   2) Subsequently, intermediate parts are appended (Section 4.4) with
+   the Upload-Complete field value set to false, indicating that they
+   are not the last part of the representation data.  The offset value
+   in the Upload-Offset header field is taken from the previous response
    when creating the upload or appending to it.
 
    Client                                       Server
