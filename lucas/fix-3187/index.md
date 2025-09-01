@@ -1,4 +1,4 @@
-# Editor's drafts for lucas-clarify-canceled branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/lucas-clarify-canceled)
+# Editor's drafts for lucas/fix-3187 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/lucas/fix-3187)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
