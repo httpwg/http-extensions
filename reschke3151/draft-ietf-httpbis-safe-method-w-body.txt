@@ -74,12 +74,13 @@ Table of Contents
      1.1.  Terminology
      1.2.  Notational Conventions
    2.  QUERY
-     2.1.  Content-Location Response Field
-     2.2.  Location Response Field
-     2.3.  Redirection
-     2.4.  Conditional Requests
-     2.5.  Caching
-     2.6.  Range Requests
+     2.1.  Media Types and Content Negotiation
+     2.2.  Content-Location Response Field
+     2.3.  Location Response Field
+     2.4.  Redirection
+     2.5.  Conditional Requests
+     2.6.  Caching
+     2.7.  Range Requests
    3.  The "Accept-Query" Header Field
    4.  Security Considerations
    5.  IANA Considerations
@@ -230,39 +231,82 @@ Table of Contents
 2.  QUERY
 
    The QUERY method is used to initiate a server-side query.  Unlike the
-   HTTP GET method, which requests that a server return a representation
-   of the resource identified by the target URI (as defined by
-   Section 7.1 of [HTTP]), the QUERY method is used to ask the server to
-   perform a query operation (described by the request content) over
-   some set of data at the resource.  The content returned in response
-   to a QUERY cannot be assumed to be a representation of the resource
-   identified by the target URI.
+   GET method, which requests a representation of the resource
+   identified by the target URI (as defined by Section 7.1 of [HTTP]),
+   the QUERY method is used to ask the target resource to perform a
+   query operation within the scope of that target resource.  The query
+   operation is described by the request content.  The origin server
+   determines the scope of the operation based on the target resource.
 
-   The content of the request and it's media type define the query.
-   Implementations MAY use a request content of any media type with the
-   QUERY method, provided that it has appropriate query semantics.
+   The content of the request and its media type define the query.
+   Servers MUST fail the request if the Content-Type request field
+   ([HTTP], Section 8.3) is missing or is inconsistent with the request
+   content.
 
-   As for all HTTP methods in general, the target URI's query part takes
-   part in identifying the resource being queried and therefore is not
-   part of the actual query.  Whether and how the URI's query part
-   directly affects the result of the query is implementation specific
-   and out of scope for this specification.
+   As for all HTTP methods, the target URI's query part takes part in
+   identifying the resource being queried.  Whether and how it directly
+   affects the result of the query is specific to the resource and out
+   of scope for this specification.
 
-   QUERY requests are both safe and idempotent with regard to the
-   resource identified by the request URI.  That is, QUERY requests do
-   not alter the state of the identified resource.  However, while
-   processing a QUERY request, a server can be expected to allocate
-   computing and memory resources or even create additional HTTP
-   resources through which the response can be retrieved.
+   QUERY requests are safe with regard to the target resource ([HTTP],
+   Section 9.2.1) -- that is, the client does not request or expect any
+   change to the state of the target resource.  This does not prevent
+   the server from creating additional HTTP resources through which
+   additional information can be retrieved (see Sections 2.2 and 2.3).
 
-   A successful response to a QUERY request is expected to provide some
-   indication as to the final disposition of the operation.  For
-   instance, a successful query that yields no results can be
-   represented by a 204 (No Content, Section 15.3.5 of [HTTP]) response.
-   If the response includes content, it is expected to describe the
-   results of the operation.
+   Furthermore, QUERY requests are idempotent ([HTTP], Section 9.2.2) --
+   they can be retried or repeated when needed, for instance after a
+   connection failure.
 
-2.1.  Content-Location Response Field
+   As per Section 15.3 of [HTTP], a 2xx (Successful) response code
+   signals that the request was successfully received, understood, and
+   accepted.
+
+   In particular, a 200 (OK) response indicates that the query was
+   successfully processed and the results of that processing are
+   enclosed as the response content.
+
+2.1.  Media Types and Content Negotiation
+
+   The semantics of a QUERY request depends both on the request content
+   and the associated metadata, such as the Media Type ([HTTP],
+   Section 8.3.1).  In general, any problem with requests where content
+   and metadata are inconsistent MUST be rejected with a 4xx (Client
+   Error) response ([HTTP], Section 15.5).
+
+   The list below describe various cases of failures and recommends
+   specific status codes:
+
+   *  A request lacking media type information by definition is
+      incorrect and needs to fail with a 4xx status code such as 400
+      (Client Error).
+
+   *  If a media type is specified, but not supported by the resource, a
+      415 (Unsupported Media Type) is appropriate.  This specifically
+      includes the case where the media type is known in principle, but
+      lacks semantics specific to a QUERY to the target resource.  In
+      both cases, the Accept-Query response field (Section 3) can be
+      used to inform the client of media types which are supported.
+
+   *  If a media type is specified, but is inconsistent with the actual
+      request content, a 400 (Bad Request) can be returned.  That is, a
+      server is not allowed to infer a media type from the request
+      content and then override a missing or "erroneous" value ("content
+      sniffing").
+
+   *  If the media type is specified, is understood, and the content is
+      indeed consistent with the type, but the query can not be
+      processed due to the actual contents of the query, the status 422
+      (Unprocessable Content) can be used.  An example would be a
+      syntactically correct SQL query that identifies a non-existent
+      table.
+
+   *  Finally, if the client requests a specific response media type
+      using the Accept field ([HTTP], Section 12.5.1) which is not
+      supported by the resource, a status code of 406 (Not Acceptable)
+      is appropriate.
+
+2.2.  Content-Location Response Field
 
    A successful response (2xx, Section 15.3 of [HTTP]) can include a
    Content-Location header field containing an identifier for a resource
@@ -274,7 +318,7 @@ Table of Contents
 
    See Appendix A.4.1 for an example.
 
-2.2.  Location Response Field
+2.3.  Location Response Field
 
    A server can create or locate a resource that identifies the query
    operation for future use.  If the server does so, the URI of the
@@ -288,7 +332,7 @@ Table of Contents
 
    See Appendix A.4.2 for an example.
 
-2.3.  Redirection
+2.4.  Redirection
 
    In some cases, the server may choose to respond indirectly to the
    QUERY request by redirecting the user agent to a different URI (see
@@ -315,14 +359,14 @@ Table of Contents
    means sending a GET request to the new target URI, as illustrated by
    the example in Appendix A.4.3.
 
-2.4.  Conditional Requests
+2.5.  Conditional Requests
 
    A conditional QUERY requests that the selected representation (i.e.,
    the query results, after any content negotiation) be returned in the
    response only under the circumstances described by the conditional
    header field(s), as defined in Section 13 of [HTTP].
 
-2.5.  Caching
+2.6.  Caching
 
    The response to a QUERY method is cacheable; a cache MAY use it to
    satisfy subsequent QUERY requests as per Section 4 of
@@ -353,7 +397,7 @@ Table of Contents
    transformation happens (but note that this directive is just
    advisory).
 
-2.6.  Range Requests
+2.7.  Range Requests
 
    The semantics of Range Requests for QUERY are identical to those for
    GET, as defined in Section 14 of [HTTP].  Byte Range requests (the
@@ -611,7 +655,7 @@ A.3.  Discovery of QUERY Formats
 
 A.4.  Content-Location, Location, and Indirect Responses
 
-   As described in Sections 2.1 and 2.2, the Content-Location and
+   As described in Sections 2.2 and 2.3, the Content-Location and
    Location response fields in success responses (2xx, Section 15.3 of
    [HTTP]) provide a way to identify alternate resources that will
    respond to GET requests, either for the received result of the
@@ -718,7 +762,7 @@ A.4.2.  Using Location
 
 A.4.3.  Indirect Responses
 
-   Servers can send "indirect" responses (Section 2.3) using the status
+   Servers can send "indirect" responses (Section 2.4) using the status
    code 303 (See Other, Section 15.4.4 of [HTTP]).
 
    Given the request at the beginning of Appendix A.4, a server might
@@ -1052,6 +1096,9 @@ B.12.  Since draft-ietf-httpbis-safe-method-w-body-11
 
    *  Address HTTPDIR/RF feedback on introduction
       (https://github.com/httpwg/http-extensions/issues/3122)
+
+   *  Address HTTPDIR/RF feedback on method definition
+      (https://github.com/httpwg/http-extensions/issues/3123)
 
    *  Consistent Table Captions (https://github.com/httpwg/http-
       extensions/issues/3134)
