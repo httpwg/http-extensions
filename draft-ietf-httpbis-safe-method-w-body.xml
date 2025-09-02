@@ -393,7 +393,7 @@ q=foo&amp;limit=10&amp;sort=-published
       <t>
         Query formats often define their own way for limiting or paging through result
         sets, such as with "FETCH FIRST ... ROWS ONLY" in SQL. It is expected that these
-        inherent features will be used instead of HTTP Range Requests.
+        built-in features will be used instead of HTTP Range Requests.
       </t>
     </section>
 
