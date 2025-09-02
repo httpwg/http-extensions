@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 5 March 2026                                         Cloudflare
+Expires: 6 March 2026                                         Cloudflare
                                                                M. Bishop
                                                                   Akamai
-                                                        1 September 2025
+                                                        2 September 2025
 
 
                          The HTTP QUERY Method
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 March 2026.
+   This Internet-Draft will expire on 6 March 2026.
 
 Copyright Notice
 
@@ -400,7 +400,14 @@ Table of Contents
 2.7.  Range Requests
 
    The semantics of Range Requests for QUERY are identical to those for
-   GET, as defined in Section 14 of [HTTP].
+   GET, as defined in Section 14 of [HTTP].  Byte Range requests (the
+   only range unit defined at the time of writing), however, offer
+   little value for the results of a QUERY request.
+
+   Query formats often define their own way for limiting or paging
+   through result sets, such as with "FETCH FIRST ... ROWS ONLY" in SQL.
+   It is expected that these built-in features will be used instead of
+   HTTP Range Requests.
 
 3.  The "Accept-Query" Header Field
 
@@ -1095,6 +1102,9 @@ B.12.  Since draft-ietf-httpbis-safe-method-w-body-11
 
    *  Consistent Table Captions (https://github.com/httpwg/http-
       extensions/issues/3134)
+
+   *  Extend discussion of Range Requests (https://github.com/httpwg/
+      http-extensions/issues/3151)
 
 Acknowledgements
 
