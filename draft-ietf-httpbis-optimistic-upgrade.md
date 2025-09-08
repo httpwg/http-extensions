@@ -83,7 +83,7 @@ In some cases, the client might expect that the protocol transition will succeed
 
 # Possible Security Issues
 
-When there are only two distinct parties involved in an HTTP/1.1 connection (i.e., the client and the server), protocol transitions introduce no new security issues: each party must already be prepared for the other to send arbitrary data on the connection at any time.  However, HTTP connections often involve more than two parties, if the requests or responses include third-party data.  For example, a browser (party 1) might send an HTTP request to an origin (party 2) with path, headers, or content controlled by a website from a different origin (party 3).  Post-transition protocols such as WebSocket similarly are often used to convey data chosen by a third party.
+When there are only two distinct parties involved in an HTTP/1.1 connection (i.e., the client and the server), protocol transitions introduce no new security issues: each party must already be prepared for the other to send arbitrary data on the connection at any time.  However, HTTP connections often involve more than two parties, if the requests or responses include third-party data.  For example, a browser (party 1) might send an HTTP request to an origin (party 2) with path, headers, or content controlled by a website from a different origin (party 3).  Post-transition protocols such as WebSocket {{?WEBSOCKET=RFC6455}} similarly are often used to convey data chosen by a third party.
 
 If the third-party data source is untrusted, we call the data it provides "attacker-controlled".  The combination of attacker-controlled data and optimistic protocol transitions results in two significant security issues.
 
@@ -113,7 +113,7 @@ The "TLS" family of upgrade tokens was defined in {{?RFC2817}}, which correctly 
 
 ## "WebSocket"/"websocket"
 
-{{Section 4.1 of ?WEBSOCKET=RFC6455}} says:
+{{Section 4.1 of ?WEBSOCKET}} says:
 
 > Once the client's opening handshake has been sent, the client MUST wait for a response from the server before sending any further data.
 
