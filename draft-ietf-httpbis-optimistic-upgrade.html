@@ -1047,7 +1047,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Schwartz</td>
-<td class="center">Expires 12 March 2026</td>
+<td class="center">Expires 14 March 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1063,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc9112" class="eref">9112</a>, <a href="https://www.rfc-editor.org/rfc/rfc9298" class="eref">9298</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-09-08" class="published">8 September 2025</time>
+<time datetime="2025-09-10" class="published">10 September 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-03-12">12 March 2026</time></dd>
+<dd class="expires"><time datetime="2026-03-14">14 March 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1112,7 +1112,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 12 March 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 14 March 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1232,22 +1232,20 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
       <h2 id="name-background">
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-background" class="section-name selfRef">Background</a>
       </h2>
-<p id="section-2-1">In HTTP/1.1 and later, a single connection can be used for many requests.  In HTTP/2 and HTTP/3, these requests can be multiplexed, as each request is distinguished explicitly by its stream ID.  However, in HTTP/1.1, requests are strictly sequential, and each new request is distinguished implicitly by the closure of the preceding request.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">HTTP/1.1 is also the only version of HTTP that allows the client to change the protocol used for the remainder of the connection.  There are two mechanisms to request such a protocol transition.  One mechanism is the Upgrade request header field (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-7.8" class="relref">Section 7.8</a></span>), which indicates that the client would like to use this connection for a protocol other than HTTP/1.1.  The server replies with a 101 (Switching Protocols) status code if it accepts the protocol change.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">The other mechanism is the HTTP CONNECT method.  This method indicates that the client wishes to establish a TCP connection to the specified host and port.  The server replies with a 2xx (Successful) response to indicate that the request was accepted and a TCP connection was established.  After this point, the TCP connection is acting as a TCP tunnel, not an HTTP/1.1 connection.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-1">In HTTP/1.1 <span>[<a href="#RFC9112" class="cite xref">HTTP/1.1</a>]</span> and later, a single connection can be used for many requests.  In HTTP/2 <span>[<a href="#RFC9113" class="cite xref">HTTP/2</a>]</span> and HTTP/3 <span>[<a href="#RFC9114" class="cite xref">HTTP/3</a>]</span>, these requests can be multiplexed, as each request is distinguished explicitly by its stream ID.  However, in HTTP/1.1, requests are strictly sequential, and each new request is distinguished implicitly by the closure of the preceding request.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">HTTP/1.1 is also the only version of HTTP that allows the client to change the protocol used for the remainder of the connection.  There are two mechanisms to request such a protocol transition.  One mechanism is the Upgrade request header field (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-7.8" class="relref">Section 7.8</a></span>), which indicates that the client would like to use this connection for a protocol other than HTTP/1.1.  The server replies with a 101 (Switching Protocols) status code if it accepts the protocol change (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.2.2" class="relref">Section 15.2.2</a></span>).<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">The other mechanism is the HTTP CONNECT method (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).  This method indicates that the client wishes to establish a TCP connection to the specified host and port.  If accepted, the server replies with a 2xx (Successful) response to indicate that the request was accepted and a TCP connection was established.  After this point, the TCP connection is acting as a TCP tunnel, not an HTTP/1.1 connection.<a href="#section-2-3" class="pilcrow">¶</a></p>
 <p id="section-2-4">Both of these mechanisms also permit the server to reject the request.  For example, <span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span> says:<a href="#section-2-4" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-2-5.1">
-          <p id="section-2-5.1.1">A server <span class="bcp14">MAY</span> ignore a received Upgrade header field if it wishes to continue using the current protocol on that connection.<a href="#section-2-5.1.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
+<blockquote id="section-2-5" cite="https://www.rfc-editor.org/rfc/rfc9110.html#section-7.8-2">
+        <p id="section-2-5.1">A server <span class="bcp14">MAY</span> ignore a received Upgrade header field if it wishes to continue using the current protocol on that connection.<a href="#section-2-5.1" class="pilcrow">¶</a></p>
+<cite>— <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-7.8-2">HTTP, Section 7.8</a></cite>
+</blockquote>
 <p id="section-2-6">and<a href="#section-2-6" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-2-7.1">
-          <p id="section-2-7.1.1">A server <span class="bcp14">MUST</span> reject a CONNECT request that targets an empty or invalid port number, typically by responding with a 400 (Bad Request) status code.<a href="#section-2-7.1.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<p id="section-2-8">Rejections are common, and can happen for a variety of reasons.  A request using Upgrade might be rejected if:<a href="#section-2-8" class="pilcrow">¶</a></p>
+<blockquote id="section-2-7" cite="https://www.rfc-editor.org/rfc/rfc9110.html#section-9.3.6-4">
+        <p id="section-2-7.1">A server <span class="bcp14">MUST</span> reject a CONNECT request that targets an empty or invalid port number, typically by responding with a 400 (Bad Request) status code.<a href="#section-2-7.1" class="pilcrow">¶</a></p>
+<cite>— <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-9.3.6-4">HTTP, Section 9.3.6</a></cite>
+</blockquote>
+<p id="section-2-8">Rejected upgrades are common and can happen for a variety of reasons, such as:<a href="#section-2-8" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2-9.1">
           <p id="section-2-9.1.1">The server does not support any of the client's indicated upgrade tokens (i.e., the client's proposed new protocols), so it continues to use HTTP/1.1.<a href="#section-2-9.1.1" class="pilcrow">¶</a></p>
@@ -1262,7 +1260,7 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
           <p id="section-2-9.4.1">The resource has moved, so the server replies with a 3xx (Redirection) status code (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-3.4" class="relref">Section 3.4</a></span>).<a href="#section-2-9.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-10">Similarly, a CONNECT request might be rejected if:<a href="#section-2-10" class="pilcrow">¶</a></p>
+<p id="section-2-10">Similarly, servers frequently reject HTTP CONNECT requests, such as when:<a href="#section-2-10" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2-11.1">
           <p id="section-2-11.1.1">The server does not support HTTP CONNECT.<a href="#section-2-11.1.1" class="pilcrow">¶</a></p>
@@ -1277,15 +1275,14 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
           <p id="section-2-11.4.1">The proxy requires the client to authenticate before proceeding.<a href="#section-2-11.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-12">After rejecting a request, the server will continue to interpret subsequent bytes on that connection in accordance with HTTP/1.1.<a href="#section-2-12" class="pilcrow">¶</a></p>
+<p id="section-2-12">After rejecting a request, the server will continue to interpret bytes received on that connection in accordance with HTTP/1.1.<a href="#section-2-12" class="pilcrow">¶</a></p>
 <p id="section-2-13"><span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span> also states:<a href="#section-2-13" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-2-14.1">
-          <p id="section-2-14.1.1">A client cannot begin using an upgraded protocol on the connection until it has completely sent the request message (i.e., the client can't change the protocol it is sending in the middle of a message).<a href="#section-2-14.1.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
+<blockquote id="section-2-14" cite="https://www.rfc-editor.org/rfc/rfc9110.html#section-7.8-15">
+        <p id="section-2-14.1">A client cannot begin using an upgraded protocol on the connection until it has completely sent the request message (i.e., the client can't change the protocol it is sending in the middle of a message).<a href="#section-2-14.1" class="pilcrow">¶</a></p>
+<cite>— <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-7.8-15">HTTP, Section 7.8</a></cite>
+</blockquote>
 <p id="section-2-15">However, because of the possibility of rejection, the converse is not true: a client cannot necessarily begin using a new protocol merely because it has finished sending the corresponding request message.<a href="#section-2-15" class="pilcrow">¶</a></p>
-<p id="section-2-16">In some cases, the client might expect that the protocol transition will succeed.  If this expectation is correct, the client might be able to reduce delay by immediately sending the first bytes of the new protocol "optimistically", without waiting for the server's response.  This document explores the security implications of this "optimistic" behavior.<a href="#section-2-16" class="pilcrow">¶</a></p>
+<p id="section-2-16">In some cases, the client might predict that the protocol transition is likely to succeed.  For example, if a request using an upgrade token recently succeeded, the client might expect that that subsequent requests with the same upgrade token will also succeed.  If this expectation is correct, the client can often reduce delay by immediately sending the first bytes of the new protocol "optimistically", without waiting for the server's response.  This document explores the security implications of this "optimistic" behavior.<a href="#section-2-16" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="possible-security-issues">
@@ -1302,7 +1299,7 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
         </h3>
 <p id="section-3.1-1">In a Request Smuggling attack (<span>[<a href="#RFC9112" class="cite xref">HTTP/1.1</a>], <a href="https://rfc-editor.org/rfc/rfc9112#section-11.2" class="relref">Section 11.2</a></span>) the attacker-controlled data is chosen in such a way that it is interpreted by the server as an additional HTTP request.  These attacks allow the attacker to speak on behalf of the client while bypassing the client's own rules about what requests it will issue.  Request Smuggling can occur if the client and server have distinct interpretations of the data that flows between them.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2">If the server accepts a protocol transition request, it interprets the subsequent bytes in accordance with the new protocol.  If it rejects the request, it interprets those bytes as HTTP/1.1.  However, the client cannot know which interpretation the server will take until it receives the server's response status code.  If it uses the new protocol optimistically, this creates a risk that the server will interpret attacker-controlled data in the new protocol as an additional HTTP request issued by the client.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.1-3">As a trivial example, consider an HTTP CONNECT client providing connectivity to an untrusted application.  If the client is authenticated to the proxy server using a connection-level authentication method such as TLS Client Certificates, the attacker could send an HTTP/1.1 POST request for the proxy server at the beginning of its TCP connection.  If the client delivers this data optimistically, and the CONNECT request fails, the server would misinterpret the application's data as a subsequent authenticated request issued by the client.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">As a trivial example, consider an HTTP CONNECT client providing connectivity to an untrusted application.  If the client is authenticated to the proxy server using a connection-level authentication method such as TLS Client Certificates (<span>[<a href="#TLS" class="cite xref">TLS</a>], <a href="https://rfc-editor.org/rfc/rfc8446#section-4.4.2" class="relref">Section 4.4.2</a></span>), the attacker could send an HTTP/1.1 POST request (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.3" class="relref">Section 9.3.3</a></span>) for the proxy server at the beginning of its TCP connection.  If the client delivers this data optimistically, and the CONNECT request fails, the server would misinterpret the application's data as a subsequent authenticated request issued by the client.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="parser-exploits">
@@ -1320,7 +1317,7 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
       <h2 id="name-operational-issues">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-operational-issues" class="section-name selfRef">Operational Issues</a>
       </h2>
-<p id="section-4-1">If the server rejects the transition request, the connection can continue to be used for HTTP/1.1.  There is no requirement to close the connection in response to a rejected transition, and keeping the connection open has performance advantages if additional HTTP requests to this server are likely.  Thus, it is normally inappropriate to close the connection in response to a rejected transition.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">If the server rejects the transition request, the connection can continue to be used for HTTP/1.1.  There is no general requirement to close the connection in response to a rejected transition, and keeping the connection open has performance advantages if additional HTTP requests to this server are likely.  Thus, it is normally inappropriate to close the connection in response to a rejected transition.<a href="#section-4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="existing">
@@ -1328,13 +1325,13 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
       <h2 id="name-impact-on-http-upgrade-with">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-impact-on-http-upgrade-with" class="section-name selfRef">Impact on HTTP Upgrade with Existing Upgrade Tokens</a>
       </h2>
-<p id="section-5-1">This section describes the impact of this document's considerations on some registered upgrade tokens that are believed to be in use at the time of writing.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">This section describes the impact of this document's considerations on some registered upgrade tokens <span>[<a href="#IANA-UPGR" class="cite xref">IANA-UPGR</a>]</span> that are believed to be in use at the time of writing.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <div id="tls">
 <section id="section-5.1">
         <h3 id="name-tls">
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-tls" class="section-name selfRef">"TLS"</a>
         </h3>
-<p id="section-5.1-1">The "TLS" family of upgrade tokens was defined in <span>[<a href="#RFC2817" class="cite xref">RFC2817</a>]</span>, which correctly highlights the possibility of the server rejecting the upgrade. If a client ignores this possibility and sends TLS data optimistically, the result cannot be valid HTTP/1.1: the first octet of a TLS connection must be 22 (ContentType.handshake), but this is not an allowed character in an HTTP/1.1 method.  A compliant HTTP/1.1 server will treat this as a parsing error and close the connection without processing further requests.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-1">The "TLS" family of upgrade tokens was defined in <span>[<a href="#RFC2817" class="cite xref">RFC2817</a>]</span>, which correctly highlights the possibility of the server rejecting the upgrade. If a client ignores this possibility and sends TLS data optimistically, the result cannot be valid HTTP/1.1: the first octet of a TLS connection must be 22 (ContentType.handshake), but this is not an allowed character in an HTTP/1.1 method (see <span>[<a href="#TLS" class="cite xref">TLS</a>], <a href="https://rfc-editor.org/rfc/rfc8446#section-5.1" class="relref">Section 5.1</a></span> and <span>[<a href="#RFC9112" class="cite xref">HTTP/1.1</a>], <a href="https://rfc-editor.org/rfc/rfc9112#section-3" class="relref">Section 3</a></span>).  A compliant HTTP/1.1 server will treat this as a parsing error and close the connection without processing further requests.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="websocketwebsocket">
@@ -1343,11 +1340,9 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-websocket-websocket" class="section-name selfRef">"WebSocket"/"websocket"</a>
         </h3>
 <p id="section-5.2-1"><span><a href="https://rfc-editor.org/rfc/rfc6455#section-4.1" class="relref">Section 4.1</a> of [<a href="#WEBSOCKET" class="cite xref">WEBSOCKET</a>]</span> says:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-5.2-2.1">
-            <p id="section-5.2-2.1.1">Once the client's opening handshake has been sent, the client <span class="bcp14">MUST</span> wait for a response from the server before sending any further data.<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
+<blockquote id="section-5.2-2">
+          <p id="section-5.2-2.1">Once the client's opening handshake has been sent, the client <span class="bcp14">MUST</span> wait for a response from the server before sending any further data.<a href="#section-5.2-2.1" class="pilcrow">¶</a></p>
+</blockquote>
 <p id="section-5.2-3">Thus, optimistic use of HTTP Upgrade is already forbidden in the WebSocket protocol.  Additionally, the WebSocket protocol requires high-entropy masking of client-to-server frames (<span><a href="https://rfc-editor.org/rfc/rfc6455#section-5.1" class="relref">Section 5.1</a> of [<a href="#WEBSOCKET" class="cite xref">WEBSOCKET</a>]</span>).<a href="#section-5.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1357,11 +1352,9 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
 <a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-connect-udp" class="section-name selfRef">"connect-udp"</a>
         </h3>
 <p id="section-5.3-1"><span><a href="https://rfc-editor.org/rfc/rfc9298#section-5" class="relref">Section 5</a> of [<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span> says:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-5.3-2.1">
-            <p id="section-5.3-2.1.1">A client <span class="bcp14">MAY</span> optimistically start sending UDP packets in HTTP Datagrams before receiving the response to its UDP proxying request.<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
+<blockquote id="section-5.3-2">
+          <p id="section-5.3-2.1">A client <span class="bcp14">MAY</span> optimistically start sending UDP packets in HTTP Datagrams before receiving the response to its UDP proxying request.<a href="#section-5.3-2.1" class="pilcrow">¶</a></p>
+</blockquote>
 <p id="section-5.3-3">However, in HTTP/1.1, this "proxying request" is an HTTP Upgrade request.  This upgrade is likely to be rejected in certain circumstances, such as when the UDP destination address (which is attacker-controlled) is invalid.  Additionally, the contents of the "connect-udp" protocol stream can include untrusted material (i.e., the UDP packets, which might come from other applications on the client device).  This creates the possibility of Request Smuggling attacks.  To avoid these concerns, this document replaces that text to exclude HTTP/1.1 from any optimistic sending, as follows:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-5.3-4.1">
@@ -1494,9 +1487,21 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
         <dd>
 <span class="refAuthor">Thomson, M., Ed.</span> and <span class="refAuthor">C. Benfield, Ed.</span>, <span class="refTitle">"HTTP/2"</span>, <span class="seriesInfo">RFC 9113</span>, <span class="seriesInfo">DOI 10.17487/RFC9113</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9113">https://www.rfc-editor.org/rfc/rfc9113</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC9114">[HTTP/3]</dt>
+        <dd>
+<span class="refAuthor">Bishop, M., Ed.</span>, <span class="refTitle">"HTTP/3"</span>, <span class="seriesInfo">RFC 9114</span>, <span class="seriesInfo">DOI 10.17487/RFC9114</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9114">https://www.rfc-editor.org/rfc/rfc9114</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA-UPGR">[IANA-UPGR]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"Hypertext Transfer Protocol (HTTP) Upgrade Token Registry"</span>, <span>n.d.</span>, <span>&lt;<a href="https://www.iana.org/assignments/http-upgrade-tokens/">https://www.iana.org/assignments/http-upgrade-tokens/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC2817">[RFC2817]</dt>
         <dd>
 <span class="refAuthor">Khare, R.</span> and <span class="refAuthor">S. Lawrence</span>, <span class="refTitle">"Upgrading to TLS Within HTTP/1.1"</span>, <span class="seriesInfo">RFC 2817</span>, <span class="seriesInfo">DOI 10.17487/RFC2817</span>, <time datetime="2000-05" class="refDate">May 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2817">https://www.rfc-editor.org/rfc/rfc2817</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="TLS">[TLS]</dt>
+        <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="WEBSOCKET">[WEBSOCKET]</dt>
       <dd>
@@ -1518,28 +1523,31 @@ appear in all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶<
           <p id="appendix-A-2.1.1">Mike Bishop<a href="#appendix-A-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.2">
-          <p id="appendix-A-2.2.1">Mark Nottingham<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.2.1">Mohamed Boucadair<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.3">
-          <p id="appendix-A-2.3.1">Kazuho Oku<a href="#appendix-A-2.3.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.3.1">Mark Nottingham<a href="#appendix-A-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.4">
-          <p id="appendix-A-2.4.1">Lucas Pardue<a href="#appendix-A-2.4.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.4.1">Kazuho Oku<a href="#appendix-A-2.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.5">
-          <p id="appendix-A-2.5.1">David Schinazi<a href="#appendix-A-2.5.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.5.1">Lucas Pardue<a href="#appendix-A-2.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.6">
-          <p id="appendix-A-2.6.1">Glenn Strauss<a href="#appendix-A-2.6.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.6.1">David Schinazi<a href="#appendix-A-2.6.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.7">
-          <p id="appendix-A-2.7.1">Michael Sweet<a href="#appendix-A-2.7.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.7.1">Glenn Strauss<a href="#appendix-A-2.7.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.8">
-          <p id="appendix-A-2.8.1">Willy Tarreau<a href="#appendix-A-2.8.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.8.1">Michael Sweet<a href="#appendix-A-2.8.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.9">
-          <p id="appendix-A-2.9.1">Martin Thomson<a href="#appendix-A-2.9.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.9.1">Willy Tarreau<a href="#appendix-A-2.9.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-2.10">
+          <p id="appendix-A-2.10.1">Martin Thomson<a href="#appendix-A-2.10.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
