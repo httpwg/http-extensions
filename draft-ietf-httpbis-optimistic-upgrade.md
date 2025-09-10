@@ -28,6 +28,13 @@ normative:
 informative:
   RFC9113:
     display: HTTP/2
+  RFC9114:
+    display: HTTP/3
+  IANA-UPGR:
+    title: Hypertext Transfer Protocol (HTTP) Upgrade Token Registry
+    target: https://www.iana.org/assignments/http-upgrade-tokens/
+    author:
+      org: IANA
 
 
 --- abstract
@@ -43,43 +50,46 @@ In HTTP/1.1, the client can request a change to a new protocol on the existing c
 
 # Background {#background}
 
-In HTTP/1.1 and later, a single connection can be used for many requests.  In HTTP/2 and HTTP/3, these requests can be multiplexed, as each request is distinguished explicitly by its stream ID.  However, in HTTP/1.1, requests are strictly sequential, and each new request is distinguished implicitly by the closure of the preceding request.
+In HTTP/1.1 {{RFC9112}} and later, a single connection can be used for many requests.  In HTTP/2 {{RFC9113}} and HTTP/3 {{RFC9114}}, these requests can be multiplexed, as each request is distinguished explicitly by its stream ID.  However, in HTTP/1.1, requests are strictly sequential, and each new request is distinguished implicitly by the closure of the preceding request.
 
-HTTP/1.1 is also the only version of HTTP that allows the client to change the protocol used for the remainder of the connection.  There are two mechanisms to request such a protocol transition.  One mechanism is the Upgrade request header field ({{!HTTP=RFC9110, Section 7.8}}), which indicates that the client would like to use this connection for a protocol other than HTTP/1.1.  The server replies with a 101 (Switching Protocols) status code if it accepts the protocol change.
+HTTP/1.1 is also the only version of HTTP that allows the client to change the protocol used for the remainder of the connection.  There are two mechanisms to request such a protocol transition.  One mechanism is the Upgrade request header field ({{!HTTP=RFC9110, Section 7.8}}), which indicates that the client would like to use this connection for a protocol other than HTTP/1.1.  The server replies with a 101 (Switching Protocols) status code if it accepts the protocol change ({{HTTP, Section 15.2.2}}).
 
-The other mechanism is the HTTP CONNECT method.  This method indicates that the client wishes to establish a TCP connection to the specified host and port.  The server replies with a 2xx (Successful) response to indicate that the request was accepted and a TCP connection was established.  After this point, the TCP connection is acting as a TCP tunnel, not an HTTP/1.1 connection.
+The other mechanism is the HTTP CONNECT method ({{Section 9.3.6 of HTTP}}).  This method indicates that the client wishes to establish a TCP connection to the specified host and port.  If accepted, the server replies with a 2xx (Successful) response to indicate that the request was accepted and a TCP connection was established.  After this point, the TCP connection is acting as a TCP tunnel, not an HTTP/1.1 connection.
 
 Both of these mechanisms also permit the server to reject the request.  For example, {{HTTP}} says:
 
 > A server MAY ignore a received Upgrade header field if it wishes to continue using the current protocol on that connection.
+{:quote quotedFrom="HTTP, Section 7.8" cite="https://www.rfc-editor.org/rfc/rfc9110.html#section-7.8-2"}
 
 and
 
 > A server MUST reject a CONNECT request that targets an empty or invalid port number, typically by responding with a 400 (Bad Request) status code.
+{:quote quotedFrom="HTTP, Section 9.3.6" cite="https://www.rfc-editor.org/rfc/rfc9110.html#section-9.3.6-4"}
 
-Rejections are common, and can happen for a variety of reasons.  A request using Upgrade might be rejected if:
+Rejected upgrades are common and can happen for a variety of reasons, such as:
 
 * The server does not support any of the client's indicated upgrade tokens (i.e., the client's proposed new protocols), so it continues to use HTTP/1.1.
 * The server knows that an upgrade to the offered protocol will not provide any improvement over HTTP/1.1 for this request to this resource, so it chooses to respond in HTTP/1.1.
 * The server requires the client to authenticate before upgrading the protocol, so it replies with the status code 401 (Authentication Required) and provides a challenge in an Authorization response header field ({{!HTTP, Section 11.6.2}}).
 * The resource has moved, so the server replies with a 3xx (Redirection) status code ({{!HTTP, Section 3.4}}).
 
-Similarly, a CONNECT request might be rejected if:
+Similarly, servers frequently reject HTTP CONNECT requests, such as when:
 
 * The server does not support HTTP CONNECT.
 * The specified destination is not allowed under server policy.
 * The destination cannot be resolved, is unreachable, or does not accept the connection.
 * The proxy requires the client to authenticate before proceeding.
 
-After rejecting a request, the server will continue to interpret subsequent bytes on that connection in accordance with HTTP/1.1.
+After rejecting a request, the server will continue to interpret bytes received on that connection in accordance with HTTP/1.1.
 
 {{!HTTP}} also states:
 
 > A client cannot begin using an upgraded protocol on the connection until it has completely sent the request message (i.e., the client can't change the protocol it is sending in the middle of a message).
+{:quote quotedFrom="HTTP, Section 7.8" cite="https://www.rfc-editor.org/rfc/rfc9110.html#section-7.8-15"}
 
 However, because of the possibility of rejection, the converse is not true: a client cannot necessarily begin using a new protocol merely because it has finished sending the corresponding request message.
 
-In some cases, the client might expect that the protocol transition will succeed.  If this expectation is correct, the client might be able to reduce delay by immediately sending the first bytes of the new protocol "optimistically", without waiting for the server's response.  This document explores the security implications of this "optimistic" behavior.
+In some cases, the client might predict that the protocol transition is likely to succeed.  For example, if a request using an upgrade token recently succeeded, the client might expect that that subsequent requests with the same upgrade token will also succeed.  If this expectation is correct, the client can often reduce delay by immediately sending the first bytes of the new protocol "optimistically", without waiting for the server's response.  This document explores the security implications of this "optimistic" behavior.
 
 # Possible Security Issues
 
@@ -93,7 +103,7 @@ In a Request Smuggling attack ({{RFC9112, Section 11.2}}) the attacker-controlle
 
 If the server accepts a protocol transition request, it interprets the subsequent bytes in accordance with the new protocol.  If it rejects the request, it interprets those bytes as HTTP/1.1.  However, the client cannot know which interpretation the server will take until it receives the server's response status code.  If it uses the new protocol optimistically, this creates a risk that the server will interpret attacker-controlled data in the new protocol as an additional HTTP request issued by the client.
 
-As a trivial example, consider an HTTP CONNECT client providing connectivity to an untrusted application.  If the client is authenticated to the proxy server using a connection-level authentication method such as TLS Client Certificates, the attacker could send an HTTP/1.1 POST request for the proxy server at the beginning of its TCP connection.  If the client delivers this data optimistically, and the CONNECT request fails, the server would misinterpret the application's data as a subsequent authenticated request issued by the client.
+As a trivial example, consider an HTTP CONNECT client providing connectivity to an untrusted application.  If the client is authenticated to the proxy server using a connection-level authentication method such as TLS Client Certificates ({{?TLS=RFC8446, Section 4.4.2}}), the attacker could send an HTTP/1.1 POST request ({{HTTP, Section 9.3.3}}) for the proxy server at the beginning of its TCP connection.  If the client delivers this data optimistically, and the CONNECT request fails, the server would misinterpret the application's data as a subsequent authenticated request issued by the client.
 
 ## Parser Exploits
 
@@ -101,21 +111,22 @@ A related category of attacks use protocol disagreement to exploit vulnerabiliti
 
 # Operational Issues
 
-If the server rejects the transition request, the connection can continue to be used for HTTP/1.1.  There is no requirement to close the connection in response to a rejected transition, and keeping the connection open has performance advantages if additional HTTP requests to this server are likely.  Thus, it is normally inappropriate to close the connection in response to a rejected transition.
+If the server rejects the transition request, the connection can continue to be used for HTTP/1.1.  There is no general requirement to close the connection in response to a rejected transition, and keeping the connection open has performance advantages if additional HTTP requests to this server are likely.  Thus, it is normally inappropriate to close the connection in response to a rejected transition.
 
 # Impact on HTTP Upgrade with Existing Upgrade Tokens {#existing}
 
-This section describes the impact of this document's considerations on some registered upgrade tokens that are believed to be in use at the time of writing.
+This section describes the impact of this document's considerations on some registered upgrade tokens {{IANA-UPGR}} that are believed to be in use at the time of writing.
 
 ## "TLS"
 
-The "TLS" family of upgrade tokens was defined in {{?RFC2817}}, which correctly highlights the possibility of the server rejecting the upgrade. If a client ignores this possibility and sends TLS data optimistically, the result cannot be valid HTTP/1.1: the first octet of a TLS connection must be 22 (ContentType.handshake), but this is not an allowed character in an HTTP/1.1 method.  A compliant HTTP/1.1 server will treat this as a parsing error and close the connection without processing further requests.
+The "TLS" family of upgrade tokens was defined in {{?RFC2817}}, which correctly highlights the possibility of the server rejecting the upgrade. If a client ignores this possibility and sends TLS data optimistically, the result cannot be valid HTTP/1.1: the first octet of a TLS connection must be 22 (ContentType.handshake), but this is not an allowed character in an HTTP/1.1 method (see {{TLS, Section 5.1}} and {{RFC9112, Section 3}}).  A compliant HTTP/1.1 server will treat this as a parsing error and close the connection without processing further requests.
 
 ## "WebSocket"/"websocket"
 
 {{Section 4.1 of ?WEBSOCKET}} says:
 
 > Once the client's opening handshake has been sent, the client MUST wait for a response from the server before sending any further data.
+{:quote}
 
 Thus, optimistic use of HTTP Upgrade is already forbidden in the WebSocket protocol.  Additionally, the WebSocket protocol requires high-entropy masking of client-to-server frames ({{Section 5.1 of ?WEBSOCKET}}).
 
@@ -124,6 +135,7 @@ Thus, optimistic use of HTTP Upgrade is already forbidden in the WebSocket proto
 {{Section 5 of !CONNECT-UDP=RFC9298}} says:
 
 > A client MAY optimistically start sending UDP packets in HTTP Datagrams before receiving the response to its UDP proxying request.
+{:quote}
 
 However, in HTTP/1.1, this "proxying request" is an HTTP Upgrade request.  This upgrade is likely to be rejected in certain circumstances, such as when the UDP destination address (which is attacker-controlled) is invalid.  Additionally, the contents of the "connect-udp" protocol stream can include untrusted material (i.e., the UDP packets, which might come from other applications on the client device).  This creates the possibility of Request Smuggling attacks.  To avoid these concerns, this document replaces that text to exclude HTTP/1.1 from any optimistic sending, as follows:
 
@@ -183,6 +195,7 @@ This document has no IANA actions.
 This document benefited from valuable reviews and suggestions by:
 
 * Mike Bishop
+* Mohamed Boucadair
 * Mark Nottingham
 * Kazuho Oku
 * Lucas Pardue
