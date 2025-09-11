@@ -4,9 +4,9 @@
 
 HTTPBIS                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Updates: 9112, 9298 (if approved)                      10 September 2025
+Updates: 9112, 9298 (if approved)                      11 September 2025
 Intended status: Standards Track                                        
-Expires: 14 March 2026
+Expires: 15 March 2026
 
 
 Security Considerations for Optimistic Protocol Transitions in HTTP/1.1
@@ -17,8 +17,8 @@ Abstract
    In HTTP/1.1, the client can request a change to a new protocol on the
    existing connection.  This document discusses the security
    considerations that apply to data sent by the client before this
-   request is confirmed, and updates RFC 9112 and RFC 9298 to avoid
-   related security issues.
+   request is confirmed, and adds new requirements to RFC 9112 and RFC
+   9298 to avoid related security issues.
 
 About This Document
 
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 March 2026.
+   This Internet-Draft will expire on 15 March 2026.
 
 Copyright Notice
 
@@ -65,24 +65,25 @@ Copyright Notice
 Table of Contents
 
    1.  Conventions and Definitions
-   2.  Background
-   3.  Possible Security Issues
-     3.1.  Request Smuggling
-     3.2.  Parser Exploits
-   4.  Operational Issues
-   5.  Impact on HTTP Upgrade with Existing Upgrade Tokens
-     5.1.  "TLS"
-     5.2.  "WebSocket"/"websocket"
-     5.3.  "connect-udp"
-     5.4.  "connect-ip"
-   6.  Guidance for Future Upgrade Tokens
-     6.1.  Selection of Request Methods
-   7.  Guidance for HTTP CONNECT
-   8.  Security Considerations
-   9.  IANA Considerations
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   2.  Overview
+   3.  Background
+   4.  Possible Security Issues
+     4.1.  Request Smuggling
+     4.2.  Parser Exploits
+   5.  Operational Issues
+   6.  Impact on HTTP Upgrade with Existing Upgrade Tokens
+     6.1.  "TLS"
+     6.2.  "WebSocket"/"websocket"
+     6.3.  "connect-udp"
+     6.4.  "connect-ip"
+   7.  Guidance for Future Upgrade Tokens
+     7.1.  Selection of Request Methods
+   8.  Guidance for HTTP CONNECT
+   9.  Security Considerations
+   10. IANA Considerations
+   11. References
+     11.1.  Normative References
+     11.2.  Informative References
    Acknowledgments
    Author's Address
 
@@ -94,7 +95,25 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-2.  Background
+2.  Overview
+
+   This document discusses certain security considerations that arise
+   when switching from HTTP/1.1 to a different protocol on the same
+   connection.  It provides:
+
+   *  A review of the relevant standards.
+
+   *  A discussion of the security risks that may apply if a client
+      sends data before the transition is confirmed.
+
+   *  Security evaluation of existing upgrade tokens.
+
+   *  Guidance for implementations and future standards documents.
+
+   Updates to RFC 9112 and RFC 9298, including new normative
+   requirements, are provided in Section 8 and Section 6.3.
+
+3.  Background
 
    In HTTP/1.1 [HTTP/1.1] and later, a single connection can be used for
    many requests.  In HTTP/2 [HTTP/2] and HTTP/3 [HTTP/3], these
@@ -196,7 +215,7 @@ Table of Contents
    document explores the security implications of this "optimistic"
    behavior.
 
-3.  Possible Security Issues
+4.  Possible Security Issues
 
    When there are only two distinct parties involved in an HTTP/1.1
    connection (i.e., the client and the server), protocol transitions
@@ -215,7 +234,7 @@ Table of Contents
    controlled data and optimistic protocol transitions results in two
    significant security issues.
 
-3.1.  Request Smuggling
+4.1.  Request Smuggling
 
    In a Request Smuggling attack ([HTTP/1.1], Section 11.2) the
    attacker-controlled data is chosen in such a way that it is
@@ -245,7 +264,7 @@ Table of Contents
    application's data as a subsequent authenticated request issued by
    the client.
 
-3.2.  Parser Exploits
+4.2.  Parser Exploits
 
    A related category of attacks use protocol disagreement to exploit
    vulnerabilities in the server's request parsing logic.  These attacks
@@ -256,7 +275,7 @@ Table of Contents
    assumption to be violated, exposing vulnerabilities in the server's
    HTTP request parser.
 
-4.  Operational Issues
+5.  Operational Issues
 
    If the server rejects the transition request, the connection can
    continue to be used for HTTP/1.1.  There is no general requirement to
@@ -266,13 +285,13 @@ Table of Contents
    inappropriate to close the connection in response to a rejected
    transition.
 
-5.  Impact on HTTP Upgrade with Existing Upgrade Tokens
+6.  Impact on HTTP Upgrade with Existing Upgrade Tokens
 
    This section describes the impact of this document's considerations
    on some registered upgrade tokens [IANA-UPGR] that are believed to be
    in use at the time of writing.
 
-5.1.  "TLS"
+6.1.  "TLS"
 
    The "TLS" family of upgrade tokens was defined in [RFC2817], which
    correctly highlights the possibility of the server rejecting the
@@ -284,7 +303,7 @@ Table of Contents
    will treat this as a parsing error and close the connection without
    processing further requests.
 
-5.2.  "WebSocket"/"websocket"
+6.2.  "WebSocket"/"websocket"
 
    Section 4.1 of [WEBSOCKET] says:
 
@@ -297,7 +316,7 @@ Table of Contents
    high-entropy masking of client-to-server frames (Section 5.1 of
    [WEBSOCKET]).
 
-5.3.  "connect-udp"
+6.3.  "connect-udp"
 
    Section 5 of [CONNECT-UDP] says:
 
@@ -321,13 +340,13 @@ Table of Contents
       Clients MUST NOT send UDP packets optimistically in HTTP/1.x due
       to the risk of request smuggling attacks.
 
-5.4.  "connect-ip"
+6.4.  "connect-ip"
 
    The "connect-ip" upgrade token is defined in [CONNECT-IP].
    Section 11 of [CONNECT-IP] forbids clients from sending packets
    optimistically in HTTP/1.1, avoiding this issue.
 
-6.  Guidance for Future Upgrade Tokens
+7.  Guidance for Future Upgrade Tokens
 
    There are now several good examples of designs that reduce or
    eliminate the security concerns discussed in this document and may be
@@ -346,13 +365,13 @@ Table of Contents
    security issues discussed here and provide clear guidance on how
    implementations can avoid them.
 
-6.1.  Selection of Request Methods
+7.1.  Selection of Request Methods
 
    Some upgrade tokens, such as "TLS", are defined for use with any
    ordinary HTTP method.  The upgraded protocol continues to provide
    HTTP semantics, and will convey the response to this HTTP request.
 
-   The other upgrade tokens mentioned in Section 5 do not preserve HTTP
+   The other upgrade tokens mentioned in Section 6 do not preserve HTTP
    semantics, so the method is not relevant.  All of these upgrade
    tokens are specified only for GET requests with no content.
 
@@ -362,7 +381,7 @@ Table of Contents
    content.  This improves consistency with other upgrade tokens and
    simplifies server implementation.
 
-7.  Guidance for HTTP CONNECT
+8.  Guidance for HTTP CONNECT
 
    This document updates RFC 9112 to include the remaining text of this
    section.  The requirements in this section apply only to HTTP/1.1.
@@ -393,18 +412,18 @@ Table of Contents
    avoided by using HTTP/2 or HTTP/3, which are not vulnerable to this
    attack.
 
-8.  Security Considerations
+9.  Security Considerations
 
    This document describes security considerations related to optimistic
    use of protocol transitions in HTTP/1.1.
 
-9.  IANA Considerations
+10.  IANA Considerations
 
    This document has no IANA actions.
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [CONNECT-UDP]
               Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
@@ -429,7 +448,7 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-10.2.  Informative References
+11.2.  Informative References
 
    [CONNECT-IP]
               Pauly, T., Ed., Schinazi, D., Chernyakhovsky, A.,
@@ -469,6 +488,8 @@ Acknowledgments
    *  Mike Bishop
 
    *  Mohamed Boucadair
+
+   *  Gorry Fairhurst
 
    *  Mark Nottingham
 
