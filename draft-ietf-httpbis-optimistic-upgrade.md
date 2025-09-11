@@ -39,7 +39,7 @@ informative:
 
 --- abstract
 
-In HTTP/1.1, the client can request a change to a new protocol on the existing connection.  This document discusses the security considerations that apply to data sent by the client before this request is confirmed, and updates RFC 9112 and RFC 9298 to avoid related security issues.
+In HTTP/1.1, the client can request a change to a new protocol on the existing connection.  This document discusses the security considerations that apply to data sent by the client before this request is confirmed, and adds new requirements to RFC 9112 and RFC 9298 to avoid related security issues.
 
 
 --- middle
@@ -47,6 +47,17 @@ In HTTP/1.1, the client can request a change to a new protocol on the existing c
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
+
+# Overview
+
+This document discusses certain security considerations that arise when switching from HTTP/1.1 to a different protocol on the same connection.  It provides:
+
+* A review of the relevant standards.
+* A discussion of the security risks that may apply if a client sends data before the transition is confirmed.
+* Security evaluation of existing upgrade tokens.
+* Guidance for implementations and future standards documents.
+
+Updates to RFC 9112 and RFC 9298, including new normative requirements, are provided in {{connect}} and {{connect-udp}}.
 
 # Background {#background}
 
@@ -130,7 +141,7 @@ The "TLS" family of upgrade tokens was defined in {{?RFC2817}}, which correctly 
 
 Thus, optimistic use of HTTP Upgrade is already forbidden in the WebSocket protocol.  Additionally, the WebSocket protocol requires high-entropy masking of client-to-server frames ({{Section 5.1 of ?WEBSOCKET}}).
 
-## "connect-udp"
+## "connect-udp" {#connect-udp}
 
 {{Section 5 of !CONNECT-UDP=RFC9298}} says:
 
@@ -163,7 +174,7 @@ The other upgrade tokens mentioned in {{existing}} do not preserve HTTP semantic
 
 Future specifications for upgrade tokens should restrict their use to GET requests with no content if the HTTP method is otherwise irrelevant and the request does not need to carry any message content.  This improves consistency with other upgrade tokens and simplifies server implementation.
 
-# Guidance for HTTP CONNECT
+# Guidance for HTTP CONNECT {#connect}
 
 This document updates RFC 9112 to include the remaining text of this section.  The requirements in this section apply only to HTTP/1.1.
 
@@ -196,6 +207,7 @@ This document benefited from valuable reviews and suggestions by:
 
 * Mike Bishop
 * Mohamed Boucadair
+* Gorry Fairhurst
 * Mark Nottingham
 * Kazuho Oku
 * Lucas Pardue
