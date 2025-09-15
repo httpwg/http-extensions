@@ -4,9 +4,9 @@
 
 HTTPBIS                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Updates: 9112, 9298 (if approved)                      11 September 2025
+Updates: 9112, 9298 (if approved)                      15 September 2025
 Intended status: Standards Track                                        
-Expires: 15 March 2026
+Expires: 19 March 2026
 
 
 Security Considerations for Optimistic Protocol Transitions in HTTP/1.1
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 March 2026.
+   This Internet-Draft will expire on 19 March 2026.
 
 Copyright Notice
 
@@ -78,7 +78,7 @@ Table of Contents
      6.4.  "connect-ip"
    7.  Guidance for Future Upgrade Tokens
      7.1.  Selection of Request Methods
-   8.  Guidance for HTTP CONNECT
+   8.  Requirements for HTTP CONNECT
    9.  Security Considerations
    10. IANA Considerations
    11. References
@@ -229,10 +229,10 @@ Table of Contents
    WebSocket [WEBSOCKET] similarly are often used to convey data chosen
    by a third party.
 
-   If the third-party data source is untrusted, we call the data it
-   provides "attacker-controlled".  The combination of attacker-
-   controlled data and optimistic protocol transitions results in two
-   significant security issues.
+   If the third-party data source is untrusted, then the data it
+   provides is potentially "attacker-controlled".  The combination of
+   attacker-controlled data and optimistic protocol transitions results
+   in two significant security issues.
 
 4.1.  Request Smuggling
 
@@ -263,6 +263,39 @@ Table of Contents
    the CONNECT request fails, the server would misinterpret the
    application's data as a subsequent authenticated request issued by
    the client.
+
+ ## REQUESTS ##
+
+ # The malicious application requests a TCP connection to a nonexistent
+ # destination, which will fail.
+ CONNECT no-such-destination.example:443 HTTP/1.1
+ Host: no-such-destination.example:443
+
+ # Before connection fails, the malicious application sends data on the
+ # proxied TCP connection that forms a valid POST request to the proxy.
+ # The vulnerable client optimistically forwards this data to the proxy.
+ POST /upload HTTP/1.1
+ Host: proxy.example
+ Content-Length: 123456
+
+ <POST body controlled by the malicious application>
+
+ ## RESPONSES ##
+
+ # When TCP connection establishment fails, the proxy responds by
+ # rejecting the CONNECT request, but the client has already forwarded
+ # the malicious TCP payload data to the proxy.
+ HTTP/1.1 504 Gateway Timeout
+ Content-Length: 0
+
+ # The proxy interprets the smuggled POST request as coming from the
+ # client.  If connection-based authentication is in use (e.g., using
+ # TLS client certificate authentication), the proxy treats this
+ # malicious request as authenticated.
+ HTTP/1.1 200 OK
+ Content-Length: 0
+
+     Figure 1: Example request smuggling attack using HTTP CONNECT
 
 4.2.  Parser Exploits
 
@@ -381,7 +414,7 @@ Table of Contents
    content.  This improves consistency with other upgrade tokens and
    simplifies server implementation.
 
-8.  Guidance for HTTP CONNECT
+8.  Requirements for HTTP CONNECT
 
    This document updates RFC 9112 to include the remaining text of this
    section.  The requirements in this section apply only to HTTP/1.1.
@@ -403,8 +436,11 @@ Table of Contents
    the underlying connection when rejecting a CONNECT request, without
    processing any further requests on that connection, unless the client
    is known to wait for a 2xx (Successful) response before forwarding
-   TCP payload data.  This requirement applies whether or not the
-   request includes a "close" connection option.
+   TCP payload data (i.e., complying with item 1 above).  This
+   requirement applies whether or not the request includes a "close"
+   connection option.  Proxy servers can identify compliant clients
+   using the request's User-Agent header field and the user-agent
+   vendor's documentation regarding its compliance.
 
    Note that this mitigation will frequently impair the performance of
    correctly implemented clients, especially when returning a 407 (Proxy
