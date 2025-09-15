@@ -106,7 +106,7 @@ In some cases, the client might predict that the protocol transition is likely t
 
 When there are only two distinct parties involved in an HTTP/1.1 connection (i.e., the client and the server), protocol transitions introduce no new security issues: each party must already be prepared for the other to send arbitrary data on the connection at any time.  However, HTTP connections often involve more than two parties, if the requests or responses include third-party data.  For example, a browser (party 1) might send an HTTP request to an origin (party 2) with path, headers, or content controlled by a website from a different origin (party 3).  Post-transition protocols such as WebSocket {{?WEBSOCKET=RFC6455}} similarly are often used to convey data chosen by a third party.
 
-If the third-party data source is untrusted, we call the data it provides "attacker-controlled".  The combination of attacker-controlled data and optimistic protocol transitions results in two significant security issues.
+If the third-party data source is untrusted, then the data it provides is potentially "attacker-controlled".  The combination of attacker-controlled data and optimistic protocol transitions results in two significant security issues.
 
 ## Request Smuggling
 
@@ -115,6 +115,41 @@ In a Request Smuggling attack ({{RFC9112, Section 11.2}}) the attacker-controlle
 If the server accepts a protocol transition request, it interprets the subsequent bytes in accordance with the new protocol.  If it rejects the request, it interprets those bytes as HTTP/1.1.  However, the client cannot know which interpretation the server will take until it receives the server's response status code.  If it uses the new protocol optimistically, this creates a risk that the server will interpret attacker-controlled data in the new protocol as an additional HTTP request issued by the client.
 
 As a trivial example, consider an HTTP CONNECT client providing connectivity to an untrusted application.  If the client is authenticated to the proxy server using a connection-level authentication method such as TLS Client Certificates ({{?TLS=RFC8446, Section 4.4.2}}), the attacker could send an HTTP/1.1 POST request ({{HTTP, Section 9.3.3}}) for the proxy server at the beginning of its TCP connection.  If the client delivers this data optimistically, and the CONNECT request fails, the server would misinterpret the application's data as a subsequent authenticated request issued by the client.
+
+~~~ http-message
+## REQUESTS ##
+
+# The malicious application requests a TCP connection to a nonexistent
+# destination, which will fail.
+CONNECT no-such-destination.example:443 HTTP/1.1
+Host: no-such-destination.example:443
+
+# Before connection fails, the malicious application sends data on the
+# proxied TCP connection that forms a valid POST request to the proxy.
+# The vulnerable client optimistically forwards this data to the proxy.
+POST /upload HTTP/1.1
+Host: proxy.example
+Content-Length: 123456
+
+<POST body controlled by the malicious application>
+
+## RESPONSES ##
+
+# When TCP connection establishment fails, the proxy responds by
+# rejecting the CONNECT request, but the client has already forwarded
+# the malicious TCP payload data to the proxy.
+HTTP/1.1 504 Gateway Timeout
+Content-Length: 0
+
+# The proxy interprets the smuggled POST request as coming from the
+# client.  If connection-based authentication is in use (e.g., using
+# TLS client certificate authentication), the proxy treats this
+# malicious request as authenticated.
+HTTP/1.1 200 OK
+Content-Length: 0
+
+~~~
+{:figure title="Example request smuggling attack using HTTP CONNECT"}
 
 ## Parser Exploits
 
@@ -174,7 +209,7 @@ The other upgrade tokens mentioned in {{existing}} do not preserve HTTP semantic
 
 Future specifications for upgrade tokens should restrict their use to GET requests with no content if the HTTP method is otherwise irrelevant and the request does not need to carry any message content.  This improves consistency with other upgrade tokens and simplifies server implementation.
 
-# Guidance for HTTP CONNECT {#connect}
+# Requirements for HTTP CONNECT {#connect}
 
 This document updates RFC 9112 to include the remaining text of this section.  The requirements in this section apply only to HTTP/1.1.
 
@@ -185,7 +220,7 @@ Proxy clients that send CONNECT requests on behalf of untrusted TCP clients MUST
 
 Proxy clients that don't implement at least one of these two behaviors are vulnerable to a trivial request smuggling attack ({{RFC9112, Section 11.2}}).
 
-At the time of writing, some proxy clients are believed to be vulnerable as described.  As a mitigation, proxy servers MUST close the underlying connection when rejecting a CONNECT request, without processing any further requests on that connection, unless the client is known to wait for a 2xx (Successful) response before forwarding TCP payload data.  This requirement applies whether or not the request includes a "close" connection option.
+At the time of writing, some proxy clients are believed to be vulnerable as described.  As a mitigation, proxy servers MUST close the underlying connection when rejecting a CONNECT request, without processing any further requests on that connection, unless the client is known to wait for a 2xx (Successful) response before forwarding TCP payload data (i.e., complying with item 1 above).  This requirement applies whether or not the request includes a "close" connection option.  Proxy servers can identify compliant clients using the request's User-Agent header field and the user-agent vendor's documentation regarding its compliance.
 
 Note that this mitigation will frequently impair the performance of correctly implemented clients, especially when returning a 407 (Proxy Authentication Required) response.  This performance loss can be avoided by using HTTP/2 or HTTP/3, which are not vulnerable to this attack.
 
