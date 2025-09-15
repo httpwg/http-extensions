@@ -116,7 +116,7 @@ If the server accepts a protocol transition request, it interprets the subsequen
 
 As a trivial example, consider an HTTP CONNECT client providing connectivity to an untrusted application.  If the client is authenticated to the proxy server using a connection-level authentication method such as TLS Client Certificates ({{?TLS=RFC8446, Section 4.4.2}}), the attacker could send an HTTP/1.1 POST request ({{HTTP, Section 9.3.3}}) for the proxy server at the beginning of its TCP connection.  If the client delivers this data optimistically, and the CONNECT request fails, the server would misinterpret the application's data as a subsequent authenticated request issued by the client.
 
-~~~ http-message
+~~~
 ## REQUESTS ##
 
 # The malicious application requests a TCP connection to a nonexistent
