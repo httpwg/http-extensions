@@ -70,7 +70,7 @@ normative:
       org: WHATWG
   SAMESITE:
     target: https://html.spec.whatwg.org/#same-site
-    title: HTML - Living Standard TODO
+    title: HTML - Living Standard
     date: 2021-01-26
     author:
     -
