@@ -98,9 +98,9 @@ After rejecting a request, the server will continue to interpret bytes received 
 > A client cannot begin using an upgraded protocol on the connection until it has completely sent the request message (i.e., the client can't change the protocol it is sending in the middle of a message).
 {:quote quotedFrom="HTTP, Section 7.8" cite="https://www.rfc-editor.org/rfc/rfc9110.html#section-7.8-15"}
 
-However, because of the possibility of rejection, the converse is not true: a client cannot necessarily begin using a new protocol merely because it has finished sending the corresponding request message.
+In other words, completion of the request message is a **necessary** condition for the client to begin using the new protocol.  However, it is important to clarify that this is not a **sufficient** condition, because the server might reject the request.
 
-In some cases, the client might predict that the protocol transition is likely to succeed.  For example, if a request using an upgrade token recently succeeded, the client might expect that that subsequent requests with the same upgrade token will also succeed.  If this expectation is correct, the client can often reduce delay by immediately sending the first bytes of the new protocol "optimistically", without waiting for the server's response.  This document explores the security implications of this "optimistic" behavior.
+In some cases, the client might predict that the server is likely to accept a requested protocol transition.  For example, if a request using an upgrade token recently succeeded, the client might expect that subsequent requests with the same upgrade token will also succeed.  If this expectation is correct, the client can often reduce delay by immediately sending the first bytes of the new protocol "optimistically", without waiting for the server's response.  This document explores the security implications of this "optimistic" behavior.
 
 # Possible Security Issues
 
