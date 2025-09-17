@@ -5,7 +5,7 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                              Google LLC
-Expires: 20 March 2026                                 16 September 2025
+Expires: 21 March 2026                                 17 September 2025
 
 
              The No-Vary-Search HTTP Response Header Field
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 March 2026.
+   This Internet-Draft will expire on 21 March 2026.
 
 Copyright Notice
 
@@ -729,7 +729,21 @@ Table of Contents
 
 Acknowledgments
 
-   TODO acknowledge.
+   This document benefited from valuable reviews and suggestions by:
+
+   *  Adam Rice
+
+   *  Julian Reschke
+
+   *  Kevin McNee
+
+   *  Liviu Tinta
+
+   *  Mark Nottingham
+
+   *  Martin Thomson
+
+   *  Valentin Gosu
 
 Index
 
