@@ -449,7 +449,7 @@ Table of Contents
    mitigation if the client is known to wait for a 2xx (Successful)
    response before forwarding untrusted TCP payload data (i.e.,
    complying with item 1 above).  Proxy servers can identify compliant
-   clients using the request's User-Agent header field and the user-
+   clients using the request's User-Agent header field and the user
    agent vendor's documentation regarding its compliance.
 
 9.  Security Considerations
