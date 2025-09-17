@@ -220,9 +220,11 @@ Proxy clients that send CONNECT requests on behalf of untrusted TCP clients MUST
 
 Proxy clients that don't implement at least one of these two behaviors are vulnerable to a trivial request smuggling attack ({{RFC9112, Section 11.2}}).
 
-At the time of writing, some proxy clients are believed to be vulnerable as described.  As a mitigation, proxy servers MUST close the underlying connection when rejecting a CONNECT request, without processing any further requests on that connection, unless the client is known to wait for a 2xx (Successful) response before forwarding TCP payload data (i.e., complying with item 1 above).  This requirement applies whether or not the request includes a "close" connection option.  Proxy servers can identify compliant clients using the request's User-Agent header field and the user-agent vendor's documentation regarding its compliance.
+At the time of writing, some proxy clients are believed to be vulnerable as described.  As a mitigation, proxy servers MUST close the underlying connection when rejecting a CONNECT request, without processing any further requests on that connection.  This requirement applies whether or not the request includes a "close" connection option.
 
 Note that this mitigation will frequently impair the performance of correctly implemented clients, especially when returning a 407 (Proxy Authentication Required) response.  This performance loss can be avoided by using HTTP/2 or HTTP/3, which are not vulnerable to this attack.
+
+As a performance optimization, proxy servers MAY disable this mitigation if the client is known to wait for a 2xx (Successful) response before forwarding untrusted TCP payload data (i.e., complying with item 1 above).  Proxy servers can identify compliant clients using the request's User-Agent header field and the user agent vendor's documentation regarding its compliance.
 
 # Security Considerations
 
