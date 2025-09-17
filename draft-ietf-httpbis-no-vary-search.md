@@ -485,4 +485,12 @@ Comments
 # Acknowledgments
 {:numbered="false"}
 
-TODO acknowledge.
+This document benefited from valuable reviews and suggestions by:
+
+* Adam Rice
+* Julian Reschke
+* Kevin McNee
+* Liviu Tinta
+* Mark Nottingham
+* Martin Thomson
+* Valentin Gosu
