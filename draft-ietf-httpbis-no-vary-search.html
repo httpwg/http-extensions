@@ -10,12 +10,12 @@
 <meta content="
        This specification defines a proposed HTTP response header field for changing how URL search parameters impact caching. 
     " name="description">
-<meta content="xml2rfc 3.30.1" name="generator">
+<meta content="xml2rfc 3.30.2" name="generator">
 <meta content="http" name="keyword">
 <meta content="caching" name="keyword">
 <meta content="draft-ietf-httpbis-no-vary-search-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.1
+  xml2rfc 3.30.2
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
@@ -1050,7 +1050,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Denicola &amp; Roman</td>
-<td class="center">Expires 21 March 2026</td>
+<td class="center">Expires 22 March 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1063,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-no-vary-search-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-09-17" class="published">17 September 2025</time>
+<time datetime="2025-09-18" class="published">18 September 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-03-21">21 March 2026</time></dd>
+<dd class="expires"><time datetime="2026-03-22">22 March 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1122,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 21 March 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 March 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1260,7 +1260,7 @@ No-Vary-Search: params=("utm_source" "utm_medium" "utm_campaign")
 No-Vary-Search: params, except=("productId")
 </pre><a href="#section-1-7" class="pilcrow">¶</a>
 </div>
-<p id="section-1-8"><a href="#header-definition" class="auto internal xref">Section 3</a> defines the header, using the <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> framework. <a href="#data-model" class="auto internal xref">Section 4</a> and <a href="#parsing" class="auto internal xref">Section 5</a> illustrate the data model for how the header can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. <a href="#comparing" class="auto internal xref">Section 6</a> gives the key algorithm for comparing if two URLs are equivalent under the influence of the header; notably, it leans on the decomposition of the query component into keys and values given by the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format specified in <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>. Finally, <a href="#caching" class="auto internal xref">Section 7</a> explains how to modify <span>[<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span> to take into account this new equivalence.<a href="#section-1-8" class="pilcrow">¶</a></p>
+<p id="section-1-8"><a href="#header-definition" class="auto internal xref">Section 3</a> defines the header, using the <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> framework. <a href="#data-model" class="auto internal xref">Section 4</a> and <a href="#parsing" class="auto internal xref">Section 5</a> illustrate the data model for how the header can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. <a href="#comparing" class="auto internal xref">Section 6</a> gives the key algorithm for comparing if two URLs are equivalent under the influence of the header; notably, it leans on the decomposition of the query component into keys and values given by the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format specified in <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>. (As such, this header is not useful for URLs whose query component does not follow that format.) Finally, <a href="#caching" class="auto internal xref">Section 7</a> explains how to modify <span>[<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span> to take into account this new equivalence.<a href="#section-1-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
