@@ -95,6 +95,25 @@ View [saved issues](issues.html), or the latest GitHub [issues](https://github.c
 | [Incremental HTTP Messages](nvs-acks/draft-ietf-httpbis-incremental.html "Incremental HTTP Messages (HTML)") | [plain text](nvs-acks/draft-ietf-httpbis-incremental.txt "Incremental HTTP Messages (Text)") | same as main |
 | [Cookies: HTTP State Management Mechanism](nvs-acks/draft-ietf-httpbis-rfc6265bis.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](nvs-acks/draft-ietf-httpbis-rfc6265bis.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
 
+## Preview for branch [bemasc-abrupt-tls](bemasc-abrupt-tls)
+
+| Draft |     |     |     |
+| ----- | --- | --- | --- |
+| [Resumable Uploads](bemasc-abrupt-tls/draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | same as main |
+| [HTTP Cache Groups](bemasc-abrupt-tls/draft-ietf-httpbis-cache-groups.html "HTTP Cache Groups (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-cache-groups.txt "HTTP Cache Groups (Text)") | same as main |
+| [Optimistic HTTP Upgrade Security](bemasc-abrupt-tls/draft-ietf-httpbis-optimistic-upgrade.html "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-optimistic-upgrade.txt "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (Text)") | same as main |
+| [HTTP Unencoded Digest](bemasc-abrupt-tls/draft-ietf-httpbis-unencoded-digest.html "HTTP Unencoded Digest (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-unencoded-digest.txt "HTTP Unencoded Digest (Text)") | same as main |
+| [The HTTP Wrap Up Capsule](bemasc-abrupt-tls/draft-ietf-httpbis-wrap-up.html "The HTTP Wrap Up Capsule (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-wrap-up.txt "The HTTP Wrap Up Capsule (Text)") | same as main |
+| [The HTTP QUERY Method](bemasc-abrupt-tls/draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | same as main |
+| [HTTP Server Secondary Cert Auth](bemasc-abrupt-tls/draft-ietf-httpbis-secondary-server-certs.html "Secondary Certificate Authentication of HTTP Servers (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-secondary-server-certs.txt "Secondary Certificate Authentication of HTTP Servers (Text)") | same as main |
+| [No-Vary-Search](bemasc-abrupt-tls/draft-ietf-httpbis-no-vary-search.html "The No-Vary-Search HTTP Response Header Field (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-no-vary-search.txt "The No-Vary-Search HTTP Response Header Field (Text)") | same as main |
+| [Cookies](bemasc-abrupt-tls/draft-ietf-httpbis-layered-cookies.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-layered-cookies.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
+| [Retrofit Structured Fields](bemasc-abrupt-tls/draft-ietf-httpbis-retrofit.html "Retrofit Structured Fields for HTTP (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-retrofit.txt "Retrofit Structured Fields for HTTP (Text)") | same as main |
+| [Templated CONNECT-TCP](bemasc-abrupt-tls/draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-connect-tcp.txt&url_2=https://httpwg.github.io/http-extensions/bemasc-abrupt-tls/draft-ietf-httpbis-connect-tcp.txt) |
+| [Compression Dictionary Transport](bemasc-abrupt-tls/draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | same as main |
+| [Incremental HTTP Messages](bemasc-abrupt-tls/draft-ietf-httpbis-incremental.html "Incremental HTTP Messages (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-incremental.txt "Incremental HTTP Messages (Text)") | same as main |
+| [Cookies: HTTP State Management Mechanism](bemasc-abrupt-tls/draft-ietf-httpbis-rfc6265bis.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](bemasc-abrupt-tls/draft-ietf-httpbis-rfc6265bis.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
+
 ## Preview for branch [nvs-formurlencoded](nvs-formurlencoded)
 
 | Draft |     |     |     |
