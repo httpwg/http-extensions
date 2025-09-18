@@ -26,6 +26,7 @@ author:
 normative:
 
 informative:
+  EXTRA-STATUS: RFC6585
   PROXY-STATUS: RFC9209
   SSE:
     target: https://html.spec.whatwg.org/multipage/server-sent-events.html
@@ -58,12 +59,12 @@ the server continually sends notifications as they become available.
 
 In the case of Chunked Oblivious HTTP Messages
 {{?CHUNKED-OHTTP=I-D.ietf-ohai-chunked-ohttp}}, the client opens an HTTP request
-and incrementally sends application messages, while the server can start responding
+and incrementally sends application data, while the server can start responding
 even before the HTTP request is fully complete. In this way, the HTTP
 request-response pair could create what is, in effect, a bi-directional
 communication channel.
 
-Applications that rely on incremental delivery of messages are fragile when HTTP intermediaries are involved.
+Applications that rely on incremental delivery of data are fragile when HTTP intermediaries are involved.
 This is because HTTP intermediaries are not only permitted but are frequently
 deployed to buffer complete HTTP messages before forwarding them downstream
 ({{Section 7.6 of HTTP}}).
@@ -114,6 +115,11 @@ arrive. As the Incremental header field indicates only how the message content i
 to be forwarded, intermediaries can still buffer the entire header and trailer
 sections of the message before forwarding them downstream.
 
+The request to use incremental forwarding also applies to HTTP implementations.
+Though most HTTP APIs provide the ability to incrementally transfer message content,
+those that do not for any reason, SHOULD use the presence of the Incremental
+header field to reduce or disable buffering.
+
 The Incremental HTTP header field applies to each HTTP message. Therefore, if
 both the HTTP request and response need to be forwarded incrementally, the
 Incremental HTTP header field MUST be set for both the HTTP request and the
@@ -148,8 +154,9 @@ is reached. This approach helps balance the processing of different types of
 requests and maintains service availability across all requests.
 
 When rejecting incremental requests due to reaching the concurrency limit,
-intermediaries SHOULD respond with a 503 Service Unavailable error, accompanied
-by a connection_limit_reached Proxy-Status response header field
+intermediaries SHOULD respond with a 429 Too Many Requests error
+({{Section 4 of EXTRA-STATUS}}),
+accompanied by a connection_limit_reached Proxy-Status response header field
 ({{Section 2.3.12 of PROXY-STATUS}}).
 
 For performance and efficiency reasons, a small amount of buffering might be

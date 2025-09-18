@@ -98,21 +98,21 @@
     </t>
     <t>
       Most often, this is desirable when the data conveyed in a request is
-      too voluminous to be encoded into the request's URI. For example,
-      this is a common query pattern:
+      too voluminous to be encoded into the request's URI. A common query pattern is:
     </t>
 <artwork type="http-message">
 GET /feed?q=foo&amp;limit=10&amp;sort=-published HTTP/1.1
 Host: example.org
 </artwork>
     <t>
-      However, for a query with parameters that are complex or large,
-      encoding it in the request URI may not be the best option because
+      However, when the data conveyed is too voluminous to be encoded in the request's URI,
+      this pattern becomes problematic:
     </t>
     <ul>
       <li>often size limits are not known ahead of time because a request can pass through many uncoordinated
       systems (but note that <xref section="4.1" target="HTTP"/> recommends senders and recipients to support at least 8000 octets),</li>
-      <li>expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI, and</li>
+      <li>expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI,</li>
+      <li>request URIs are more likely to be logged than request content, and may also turn up in bookmarks,</li>
       <li>encoding queries directly into the request URI effectively casts every possible combination of query inputs as distinct
           resources.</li>
     </ul>
@@ -134,8 +134,8 @@ Content-Type: application/x-www-form-urlencoded
 q=foo&amp;limit=10&amp;sort=-published
 </artwork>
     <t>
-      This variation, however, suffers from the same basic limitation as GET
-      in that it is not readily apparent -- absent specific knowledge of the
+      This variation, however, suffers from the fact
+      that it is not readily apparent -- absent specific knowledge of the
       resource and server to which the request is being sent -- that a safe,
       idempotent query is being performed.
     </t>
@@ -154,6 +154,11 @@ q=foo&amp;limit=10&amp;sort=-published
       As with POST, the input to the query operation is passed as the content of the request
       rather than as part of the request URI. Unlike POST, however, the method is explicitly safe
       and idempotent, allowing functions like caching and automatic retries to operate.
+    </t>
+    <t>
+      Recognizing the design principle that any important resource ought to be
+      identified by a URI, this specification describes how a server can assign URIs to both
+      the query itself or a specific query result, for later use in a GET request.
     </t>
     <t>Summarizing:</t>
     <table>
@@ -178,6 +183,18 @@ q=foo&amp;limit=10&amp;sort=-published
           <td>yes</td>
           <td>yes</td>
           <td>potentially no</td>
+        </tr>
+        <tr>
+          <td>URI for query itself</td>
+          <td>yes (by definition)</td>
+          <td>optional (Location response field)</td>
+          <td>no</td>
+        </tr>
+        <tr>
+          <td>URI for query result</td>
+          <td>optional (Content-Location response field)</td>
+          <td>optional (Content-Location response field)</td>
+          <td>optional (Content-Location response field)</td>
         </tr>
         <tr>
           <td>Cacheable</td>
@@ -221,42 +238,92 @@ q=foo&amp;limit=10&amp;sort=-published
   <section title="QUERY" anchor="query">
     <t>
       The QUERY method is used to initiate a server-side query. Unlike
-      the HTTP GET method, which requests that a server return a
+      the GET method, which requests a
       representation of the resource identified by the target URI
       (as defined by <xref target="HTTP" section="7.1"/>), the QUERY
-      method is used to ask the server to perform a query operation
-      (described by the request content) over some set of data at the
-      resource. The content returned in response to a QUERY
-      cannot be assumed to be a representation of the resource identified by
-      the target URI.
+      method is used to ask the target resource to perform a query operation
+      within the scope of that target resource.
+      The query operation is described by the request content.
+      The origin server determines the scope of the operation based on the target resource.
     </t>
     <t>
-      The content of the request and it's media type define the query.
-      Implementations &MAY; use a request content of any media type with
-      the QUERY method, provided that it has appropriate query semantics.
+      The content of the request and its media type define the query.
+      Servers <bcp14>MUST</bcp14> fail the request if the Content-Type
+      request field (<xref target="HTTP" sectionFormat="comma" section="8.3"/>)
+      is missing or is inconsistent with the request content.
     </t>
     <t>
-      As for all HTTP methods in general, the target URI's query part
-      takes part in identifying the resource being queried and therefore is
-      not part of the actual query. Whether and how the URI's query part
-      directly affects the result of the query is implementation specific
+      As for all HTTP methods, the target URI's query part
+      takes part in identifying the resource being queried. Whether and how it
+      directly affects the result of the query is specific to the resource
       and out of scope for this specification.
     </t>
     <t>
-      QUERY requests are both safe and idempotent with regard to the
-      resource identified by the request URI. That is, QUERY requests do not
-      alter the state of the identified resource. However, while processing a
-      QUERY request, a server can be expected to allocate computing and memory
-      resources or even create additional HTTP resources through which the
-      response can be retrieved.
+      QUERY requests are safe with regard to the target resource
+      (<xref target="HTTP" sectionFormat="comma" section="9.2.1"/>) --
+      that is, the client does not request or expect any change to the
+      state of the target resource. This does not prevent the server
+      from creating additional HTTP resources through which additional
+      information can be retrieved (see Sections <xref target="content-location" format="counter"/>
+      and <xref target="location" format="counter"/>).
     </t>
     <t>
-      A successful response to a QUERY request is expected to provide some
-      indication as to the final disposition of the operation. For
-      instance, a successful query that yields no results can be represented
-      by a 204 (No Content, <xref target="HTTP" section="15.3.5"/>) response. If the response includes content,
-      it is expected to describe the results of the operation.
+      Furthermore, QUERY requests are idempotent
+      (<xref target="HTTP" sectionFormat="comma" section="9.2.2"/>) --
+      they can be retried or repeated when needed, for instance after
+      a connection failure.
     </t>
+    <t>
+      As per <xref target="HTTP" section="15.3"/>, a 2xx (Successful) response code signals that
+      the request was successfully received, understood, and accepted.
+    </t>
+    <t>
+      In particular, a 200 (OK) response indicates that the query
+      was successfully processed and the results of that processing are
+      enclosed as the response content.
+    </t>
+
+    <section title="Media Types and Content Negotiation" anchor="media.types.and.conneg">
+      <t>
+        The semantics of a QUERY request depends both on the request content and the associated
+        metadata, such as the Media Type (<xref target="HTTP" sectionFormat="comma" section="8.3.1"/>).
+        In general, any problem with requests where content and metadata are inconsistent &MUST; be
+        rejected with a 4xx (Client Error) response (<xref target="HTTP" sectionFormat="comma" section="15.5"/>).
+      </t>
+      <t>
+        The list below describe various cases of failures and recommends specific status codes:
+      </t>
+      <ul>
+        <li>
+          A request lacking media type information by definition is incorrect and needs to fail
+          with a 4xx status code such as 400 (Client Error).
+        </li>
+        <li>
+          If a media type is specified, but not supported by the resource, a 415 (Unsupported Media Type)
+          is appropriate. This specifically includes the case where the media type is
+          known in principle, but lacks semantics specific to a QUERY to the target resource. In both cases,
+          the Accept-Query response field (<xref target="field.accept-query"/>) can be used to inform
+          the client of media types which are supported.
+        </li>
+        <li>
+          If a media type is specified, but is inconsistent with the actual request content,
+          a 400 (Bad Request) can be returned. That is, a server is not allowed to infer
+          a media type from the request content and then override a missing or "erroneous" value
+          ("content sniffing").
+        </li>
+        <li>
+          If the media type is specified, is understood, and the content is indeed consistent with the
+          type, but the query can not be processed due to the actual contents of the query,
+          the status 422 (Unprocessable Content) can be used. An example would be a syntactically
+          correct SQL query that identifies a non-existent table.
+        </li>
+        <li>
+          Finally, if the client requests a specific response media type using the Accept
+          field (<xref target="HTTP" sectionFormat="comma" section="12.5.1"/>) which is not supported
+          by the resource, a status code of 406 (Not Acceptable) is appropriate.
+        </li>
+      </ul>
+    </section>
 
     <section title="Content-Location Response Field" anchor="content-location">
       <t>
@@ -297,13 +364,13 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
       <t>
         A response with either of the status codes
-        301 (Moved Permanently, <xref target="HTTP" format="comma" section="15.4.2"/>) or
-        308 (Permanent Redirect, <xref target="HTTP" format="comma" section="15.4.9"/>)
+        301 (Moved Permanently, <xref target="HTTP" sectionFormat="comma" section="15.4.2"/>) or
+        308 (Permanent Redirect, <xref target="HTTP" sectionFormat="comma" section="15.4.9"/>)
         indicates that the target resource has permanently moved to a different URI referenced by the
         Location response field (<xref target="HTTP" sectionFormat="comma" section="10.2.2"/>).
         Likewise, a response with either
-        302 (Found, <xref target="HTTP" format="comma" section="15.4.3"/> or
-        307 (Temporary Redirect, <xref target="HTTP" format="comma" section="15.4.8"/>)
+        302 (Found, <xref target="HTTP" sectionFormat="comma" section="15.4.3"/> or
+        307 (Temporary Redirect, <xref target="HTTP" sectionFormat="comma" section="15.4.8"/>)
         indicates that the target resource has temporarily moved. In all four cases, the server is
         suggesting that the user agent can accomplish its original QUERY request by sending a
         similar QUERY request to the new target URI referenced by Location.
@@ -370,6 +437,13 @@ q=foo&amp;limit=10&amp;sort=-published
       <t>
         The semantics of Range Requests for QUERY are identical to those for GET,
         as defined in <xref target="HTTP" section="14"/>.
+        Byte Range requests (the only range unit defined at the time of writing),
+        however, offer little value for the results of a QUERY request.
+      </t>
+      <t>
+        Query formats often define their own way for limiting or paging through result
+        sets, such as with "FETCH FIRST ... ROWS ONLY" in SQL. It is expected that these
+        built-in features will be used instead of HTTP Range Requests.
       </t>
     </section>
 
@@ -1070,7 +1144,9 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Address HTTPDIR/RF feedback on redirection (<eref target="https://github.com/httpwg/http-extensions/issues/3119"/>)</li>
   <li>Address HTTPDIR/RF feedback on abstract (<eref target="https://github.com/httpwg/http-extensions/issues/3121"/>)</li>
   <li>Address HTTPDIR/RF feedback on introduction (<eref target="https://github.com/httpwg/http-extensions/issues/3122"/>)</li>
+  <li>Address HTTPDIR/RF feedback on method definition  (<eref target="https://github.com/httpwg/http-extensions/issues/3123"/>)</li>
   <li>Consistent Table Captions (<eref target="https://github.com/httpwg/http-extensions/issues/3134"/>)</li>
+  <li>Extend discussion of Range Requests (<eref target="https://github.com/httpwg/http-extensions/issues/3151"/>)</li>
 </ul>
 </section>
 </section>
