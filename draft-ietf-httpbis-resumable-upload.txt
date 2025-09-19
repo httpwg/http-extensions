@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 22 March 2026                                        Apple Inc.
+Expires: 23 March 2026                                        Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                       18 September 2025
+                                                       19 September 2025
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 March 2026.
+   This Internet-Draft will expire on 23 March 2026.
 
 Copyright Notice
 
@@ -956,13 +956,15 @@ Table of Contents
    (Section 4.4).
 
    The request MUST include the Upload-Complete header field.  Its value
-   is true if the end of the request content is the end of the
-   representation data.  If the content is then fully received by the
-   upload resource, the upload will be complete.
+   is true in two cases:
 
-   The request content can be empty.  If the Upload-Complete field is
-   then set to true, the client wants to complete the upload without
-   appending additional representation data.
+   *  the request has content that is the end of the representation
+      data.  Once the content is fully received by the server, the
+      upload is complete.
+
+   *  the request has no content.  Once the request is processed by the
+      server, the upload is complete.  This usage requires the full
+      representation data to have been received via prior requests.
 
    If the client received a final response with a
 
