@@ -325,6 +325,25 @@ q=foo&amp;limit=10&amp;sort=-published
       </ul>
     </section>
 
+    <section title="GET-equivalent Resource" anchor="get-equivalent">
+      <t>
+        For any QUERY request, the <em>GET-equivalent Resource</em> is defined as
+        representing that QUERY request and its target, taking both message content and
+        metadata into account (<xref target="HTTP" section="6"/>). In particular,
+        this includes representation metadata (<xref target="HTTP" section="8"/>),
+        such as the content's media type.
+      </t>
+      <t>
+        In other words, the GET-equivalent resource is derived from the resource
+        implementing QUERY by incorporating the request content.
+      </t>
+      <t>
+        The definition of the GET-equivalent resource is used as a means to define
+        behavior for other HTTP aspects, such as selected representations. Servers can
+        assign URIs to these resources, making them accessible for GET requests.
+      </t>
+    </section>
+
     <section title="Content-Location Response Field" anchor="content-location">
       <t>
         A successful response (2xx, <xref target="HTTP" section="15.3"/>)
@@ -342,8 +361,8 @@ q=foo&amp;limit=10&amp;sort=-published
 
     <section title="Location Response Field" anchor="location">
       <t>
-        A server can create or locate a resource that identifies the query
-        operation for future use. If the server does so, the URI of the resource
+        A server can assign a URI to the GET-equivalent resource (<xref target="get-equivalent"/>)
+        of a QUERY request. If the server does so, the URI of that resource
         can be included in the Location header field of the 2xx response (see <xref
         target="HTTP" section="10.2.2"/>). This represents a claim that a client can
         send a GET request to the indicated URI to repeat the query operation just
