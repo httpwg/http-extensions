@@ -457,10 +457,10 @@ Location: https://example.com/upload/b530ce8ff
 HTTP/1.1 500 Internal Server Error
 ~~~
 
-D) The following example shows an upload creation being rejected by the server. The client cannot continue the upload.
+D) The following example shows an upload creation being rejected by the server because uploads to the target resource are not allowed. The client cannot continue the upload.
 
 ~~~ http-message
-POST /upload HTTP/1.1
+POST /upload-not-allowed HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
 Content-Length: 100000000
@@ -470,7 +470,7 @@ Upload-Length: 100000000
 ~~~
 
 ~~~ http-message
-HTTP/1.1 400 Bad Request
+HTTP/1.1 405 Method Not Allowed
 ~~~
 
 ## Offset Retrieval {#offset-retrieving}
