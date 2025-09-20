@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 23 March 2026                                        Apple Inc.
+Expires: 24 March 2026                                        Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                       19 September 2025
+                                                       20 September 2025
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 March 2026.
+   This Internet-Draft will expire on 24 March 2026.
 
 Copyright Notice
 
@@ -700,7 +700,7 @@ Table of Contents
 
    *  2xx (Successful) status code and the entire representation data
       was transferred in the request content, the upload is complete and
-      the response belongs to the targeted resource processing the
+      the response comes from the targeted resource processing the
       representation.
 
    *  2xx (Successful) status code and the entire representation data
@@ -970,7 +970,7 @@ Table of Contents
 
    *  2xx (Successful) status code and the remaining representation data
       was transferred in the request content, the upload is complete and
-      the corresponding response belongs to the resource processing the
+      the corresponding response comes from the resource processing the
       representation according to the initial request (see Section 4.2).
 
    *  2xx (Successful) status code and the entire remaining
