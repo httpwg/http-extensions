@@ -285,7 +285,7 @@ An upload resource is specific to the upload of one representation. For uploadin
 
 The server can clean up an upload resource and make it inaccessible immediately after the upload is complete. However, if a client didn't receive the last response acknowledging the upload's completion and the upload resource is not available anymore, the client cannot verify the upload's state with the server. Therefore, the server SHOULD keep the upload resource available for a reasonable amount of time after the upload is complete.
 
-An upload resource SHOULD NOT reuse the URI from a previous upload resource, unless reasonable time has passed to ensure that no client will attempt to access the previous upload resource. Otherwise, a client might access the upload resource corresponding to a different representation than it intends to transfer.
+An upload resource SHOULD NOT reuse the URI from a previous upload resource, unless reasonable time has passed to ensure that no client will attempt to access the previous upload resource. Otherwise, a client might access the upload resource corresponding to a different representation than it intends to transfer. Additional considerations for the upload resource URI are presented in {{security-considerations}}.
 
 ## State
 
