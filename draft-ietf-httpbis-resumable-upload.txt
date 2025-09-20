@@ -572,9 +572,9 @@ Table of Contents
       representation data, counted in bytes.  The server might not
       create an upload resource if the length (Section 4.1.3) deduced
       from the upload creation request is larger than the maximum size.
-      The upload resource can stop the upload if the offset
-      (Section 4.1.1) exceeds the maximum size.  The value is an
-      Integer.
+      The server might also deactivate the upload resource if the offset
+      (Section 4.1.1) exceeds the maximum size during an active upload.
+      The value is an Integer.
 
    *  The value under the min-size key specifies a minimum size for the
       representation data, counted in bytes.  The server might not
