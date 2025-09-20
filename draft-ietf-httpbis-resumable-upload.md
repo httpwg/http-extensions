@@ -431,10 +431,10 @@ Upload-Length: 100000000
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Location: https://example.com/upload/b530ce8ff
+Location: https://example.com/upload/3fd4994ad
 
 HTTP/1.1 201 Created
-Location: https://example.com/upload/b530ce8ff
+Location: https://example.com/upload/3fd4994ad
 Upload-Limit: max-size=1000000000
 ~~~
 
@@ -452,7 +452,7 @@ Upload-Length: 100000000
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Location: https://example.com/upload/b530ce8ff
+Location: https://example.com/upload/0587fa44b
 
 HTTP/1.1 500 Internal Server Error
 ~~~
@@ -507,7 +507,7 @@ The resource SHOULD NOT generate a response with the `301 (Moved Permanently)` a
 A) The following example shows an offset retrieval request. The server indicates the current offset and that the upload is not complete yet. The client can continue to append representation data.
 
 ~~~ http-message
-HEAD /upload/b530ce8ff HTTP/1.1
+HEAD /upload/c35e2cd29 HTTP/1.1
 Host: example.com
 ~~~
 
@@ -523,7 +523,7 @@ Cache-Control: no-store
 B) The following example shows an offset retrieval request for a completed upload. The client does not need to continue the upload.
 
 ~~~ http-message
-HEAD /upload/b530ce8ff HTTP/1.1
+HEAD /upload/a9edb781b HTTP/1.1
 Host: example.com
 ~~~
 
@@ -581,7 +581,7 @@ While the request content is being received, the server SHOULD send interim resp
 A) The following example shows an upload append request. The client transfers the next 25000000 bytes at an offset of 25000000 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:
 
 ~~~ http-message
-PATCH /upload/b530ce8ff HTTP/1.1
+PATCH /upload/37a504d87 HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
 Upload-Offset: 25000000
@@ -602,7 +602,7 @@ Upload-Complete: ?0
 B) The next example shows an upload append, where the client transfers the remaining 25000000 bytes and completes the upload. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:
 
 ~~~ http-message
-PATCH /upload/b530ce8ff HTTP/1.1
+PATCH /upload/d38d6ffe8 HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
 Upload-Offset: 25000000
@@ -643,7 +643,7 @@ The resource SHOULD NOT generate a response with the `301 (Moved Permanently)` a
 The following example shows an upload cancellation:
 
 ~~~ http-message
-DELETE /upload/b530ce8ff HTTP/1.1
+DELETE /upload/5688a431c HTTP/1.1
 Host: example.com
 ~~~
 
