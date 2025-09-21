@@ -410,12 +410,20 @@ q=foo&amp;limit=10&amp;sort=-published
 
     <section title="Conditional Requests" anchor="conditional">
       <t>
-        A conditional QUERY requests that the selected representation
+        The selected representation (<xref target="HTTP" section="3.3"/>) of a QUERY
+        request is the same as for a GET request to the equivalent resource
+        (<xref target="equivalent-resource"/>) of that QUERY request.
+      </t>
+      <t>
+        A conditional QUERY requests that that selected representation
         (i.e., the query results, after any content negotiation) be
         returned in the response only under the circumstances described by the
         conditional header field(s), as defined in
         <xref target="HTTP" section="13"/>.
       </t>
+<!--      <t>
+        See <xref target="example.conditional"/> for examples.
+      </t>-->
     </section>
 
     <section title="Caching" anchor="caching">
