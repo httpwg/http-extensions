@@ -97,7 +97,8 @@ Table of Contents
        A.4.1.  Using Content-Location
        A.4.2.  Using Location
        A.4.3.  Indirect Responses
-     A.5.  More Query Formats
+     A.5.  Conditional Requests
+     A.6.  More Query Formats
    Appendix B.  Change Log
      B.1.  Since draft-ietf-httpbis-safe-method-w-body-00
      B.2.  Since draft-ietf-httpbis-safe-method-w-body-01
@@ -386,6 +387,8 @@ Table of Contents
    the query results, after any content negotiation) be returned in the
    response only under the circumstances described by the conditional
    header field(s), as defined in Section 13 of [HTTP].
+
+   See Appendix A.5 for examples.
 
 2.7.  Caching
 
@@ -801,13 +804,76 @@ A.4.3.  Indirect Responses
    only generate or reuse an alternative resource.  This resource could
    then be used as shown in Appendix A.4.2.
 
-A.5.  More Query Formats
+A.5.  Conditional Requests
+
+   Consider a resource implementing QUERY that supports "application/
+   sql" and "application/xslt+xml" ([XSLT]) as request media types, and
+   which can generate responses as "text/csv" and "application/json".
+   The database being queried contains RFC document information, and the
+   query returns document information grouped by decade:
+
+   QUERY /rfc-index.xml HTTP/1.1
+   Host: example.org
+   Date: Sun, 7 Sep 2025, 00:00:00 GMT
+   Content-Type: application/xslt+xml
+   Accept: text/csv
+
+   ...Query content using XSLT...
+
+   Response:
+
+   HTTP/1.1 200 OK
+   Date: Sun, 7 Sep 2025, 00:00:00 GMT
+   Content-Type: text/csv
+   Accept-Query: "application/sql", "application/xslt+xml"
+   Last-Modified: Sun, 31 Aug 2025, 00:00:00 GMT
+   Etag: "1756598400/1/2"
+   Vary: Accept-Query, Content-Type
+
+   decade, total, with errata, % with errata, average page count
+   1960, 26, 5, 19.2, 5.3
+   1970, 666, 18, 2.7, 6.1
+   1980, 376, 44, 11.7, 23.4
+   1990, 1593, 269, 16.9, 25.5
+   2000, 2888, 1048, 36.3, 27.3
+   2010, 2954, 895, 30.3, 26.1
+   2020, 1133, 230, 20.3, 26.2
+
+   Note that for the purpose of this example, the response contains both
+   "Last-Modified" and "ETag" validator fields (xref target="RFC9110"
+   section="8.8"/>).
+
+   Later on, the client repeats the query, but specifies that results
+   should only be returned when changed:
+
+   QUERY /rfc-index.xml HTTP/1.1
+   Host: example.org
+   Date: Mon, 8, Sep 2025, 11:00:00 GMT
+   Content-Type: application/sql
+   Accept: text/csv
+   If-Modified-Since: Sun, 31 Aug 2025, 00:00:00 GMT
+   Vary: Accept-Query, Content-Type
+
+   ...Same query, but using SQL...
+
+   The data being queried did not change, therefore the server responds
+   with:
+
+   HTTP/1.1 304 Not Modified
+   Date: Mon, 8 Sep 2025, 11:00:00 GMT
+   Content-Type: text/csv
+   Accept-Query: "application/sql", "application/xslt+xml"
+   Last-Modified: Sun, 31 Aug 2025, 00:00:00 GMT
+   Etag: "1756598400/1/2"
+   Vary: Accept-Query, Content-Type
+
+A.6.  More Query Formats
 
    The following examples show requests on a JSON-shaped ([RFC8259])
    database of RFC errata.
 
-   The request below uses XSLT ([XSLT]) to extract errata information
-   summarized per year and the defined errata types.
+   The request below uses XSLT to extract errata information summarized
+   per year and the defined errata types.
 
    QUERY /errata.json HTTP/1.1
    Host: example.org

@@ -1258,7 +1258,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.5">
-                <p id="section-toc.1-1.8.2.5.1"><a href="#appendix-A.5" class="auto internal xref">A.5</a>.  <a href="#name-more-query-formats" class="internal xref">More Query Formats</a></p>
+                <p id="section-toc.1-1.8.2.5.1"><a href="#appendix-A.5" class="auto internal xref">A.5</a>.  <a href="#name-conditional-requests-2" class="internal xref">Conditional Requests</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.6">
+                <p id="section-toc.1-1.8.2.6.1"><a href="#appendix-A.6" class="auto internal xref">A.6</a>.  <a href="#name-more-query-formats" class="internal xref">More Query Formats</a></p>
 </li>
             </ul>
 </li>
@@ -1663,6 +1666,8 @@ q=foo&amp;limit=10&amp;sort=-published
         returned in the response only under the circumstances described by the
         conditional header field(s), as defined in
         <span><a href="https://rfc-editor.org/rfc/rfc9110#section-13" class="relref">Section 13</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2.6-2" class="pilcrow">¶</a></p>
+<p id="section-2.6-3">
+        See <a href="#example.conditional" class="auto internal xref">Appendix A.5</a> for examples.<a href="#section-2.6-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="caching">
@@ -2225,18 +2230,97 @@ See stored query at "/contacts/stored-queries/42".
 </div>
 </section>
 </div>
-<div id="example.more.query.formats">
+<div id="example.conditional">
 <section id="appendix-A.5">
-        <h3 id="name-more-query-formats">
-<a href="#appendix-A.5" class="section-number selfRef">A.5. </a><a href="#name-more-query-formats" class="section-name selfRef">More Query Formats</a>
+        <h3 id="name-conditional-requests-2">
+<a href="#appendix-A.5" class="section-number selfRef">A.5. </a><a href="#name-conditional-requests-2" class="section-name selfRef">Conditional Requests</a>
         </h3>
 <p id="appendix-A.5-1">
+        Consider a resource implementing QUERY that supports "application/sql" and
+        "application/xslt+xml" (<span>[<a href="#XSLT" class="cite xref">XSLT</a>]</span>) as request media types, and
+        which can generate responses
+        as "text/csv" and "application/json". The database being queried contains RFC document
+        information, and the query returns document information grouped by decade:<a href="#appendix-A.5-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-2">
+<pre>
+QUERY /rfc-index.xml HTTP/1.1
+Host: example.org
+Date: Sun, 7 Sep 2025, 00:00:00 GMT
+Content-Type: application/xslt+xml
+Accept: text/csv
+
+...Query content using XSLT...
+</pre><a href="#appendix-A.5-2" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A.5-3">
+        Response:<a href="#appendix-A.5-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-4">
+<pre>
+HTTP/1.1 200 OK
+Date: Sun, 7 Sep 2025, 00:00:00 GMT
+Content-Type: text/csv
+Accept-Query: "application/sql", "application/xslt+xml"
+Last-Modified: Sun, 31 Aug 2025, 00:00:00 GMT
+Etag: "1756598400/1/2"
+Vary: Accept-Query, Content-Type
+
+decade, total, with errata, % with errata, average page count
+1960, 26, 5, 19.2, 5.3
+1970, 666, 18, 2.7, 6.1
+1980, 376, 44, 11.7, 23.4
+1990, 1593, 269, 16.9, 25.5
+2000, 2888, 1048, 36.3, 27.3
+2010, 2954, 895, 30.3, 26.1
+2020, 1133, 230, 20.3, 26.2
+</pre><a href="#appendix-A.5-4" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A.5-5">
+        Note that for the purpose of this example, the response contains both
+        "Last-Modified" and "ETag" validator fields (xref target="RFC9110" section="8.8"/&gt;).<a href="#appendix-A.5-5" class="pilcrow">¶</a></p>
+<p id="appendix-A.5-6">
+        Later on, the client repeats the query, but specifies that results should only
+        be returned when changed:<a href="#appendix-A.5-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-7">
+<pre>
+QUERY /rfc-index.xml HTTP/1.1
+Host: example.org
+Date: Mon, 8, Sep 2025, 11:00:00 GMT
+Content-Type: application/sql
+Accept: text/csv
+If-Modified-Since: Sun, 31 Aug 2025, 00:00:00 GMT
+Vary: Accept-Query, Content-Type
+
+...Same query, but using SQL...
+</pre><a href="#appendix-A.5-7" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A.5-8">
+        The data being queried did not change, therefore the server responds with:<a href="#appendix-A.5-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-9">
+<pre>
+HTTP/1.1 304 Not Modified
+Date: Mon, 8 Sep 2025, 11:00:00 GMT
+Content-Type: text/csv
+Accept-Query: "application/sql", "application/xslt+xml"
+Last-Modified: Sun, 31 Aug 2025, 00:00:00 GMT
+Etag: "1756598400/1/2"
+Vary: Accept-Query, Content-Type
+
+</pre><a href="#appendix-A.5-9" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="example.more.query.formats">
+<section id="appendix-A.6">
+        <h3 id="name-more-query-formats">
+<a href="#appendix-A.6" class="section-number selfRef">A.6. </a><a href="#name-more-query-formats" class="section-name selfRef">More Query Formats</a>
+        </h3>
+<p id="appendix-A.6-1">
         The following examples show requests on a JSON-shaped (<span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span>) database of
-        RFC errata.<a href="#appendix-A.5-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.5-2">
-        The request below uses XSLT (<span>[<a href="#XSLT" class="cite xref">XSLT</a>]</span>) to extract errata information summarized per year and
-        the defined errata types.<a href="#appendix-A.5-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-3">
+        RFC errata.<a href="#appendix-A.6-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.6-2">
+        The request below uses XSLT to extract errata information summarized per year and
+        the defined errata types.<a href="#appendix-A.6-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-http-message art-text artwork" id="appendix-A.6-3">
 <pre>
 QUERY /errata.json HTTP/1.1
 Host: example.org
@@ -2285,11 +2369,11 @@ Accept: application/xml, text/csv
   &lt;/template&gt;
 
 &lt;/transform&gt;
-</pre><a href="#appendix-A.5-3" class="pilcrow">¶</a>
+</pre><a href="#appendix-A.6-3" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.5-4">
-      Response:<a href="#appendix-A.5-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-5">
+<p id="appendix-A.6-4">
+      Response:<a href="#appendix-A.6-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-http-message art-text artwork" id="appendix-A.6-5">
 <pre>
 HTTP/1.1 200 OK
 Content-Type: text/csv
@@ -2323,13 +2407,13 @@ year, total, rejected, verified, hdu, reported
 2023, 262, 38, 121, 33, 70
 2024, 322, 33, 125, 23, 141
 9999, 1, 0, 0, 1, 0
-</pre><a href="#appendix-A.5-5" class="pilcrow">¶</a>
+</pre><a href="#appendix-A.6-5" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.5-6">
+<p id="appendix-A.6-6">
       Note the Accept-Query response field indicating that another query format -- JSONPath
       (<span>[<a href="#RFC9535" class="cite xref">RFC9535</a>]</span>) -- is supported as well. The request below would report the
-      identifiers of all rejected errata submitted since 2024:<a href="#appendix-A.5-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-7">
+      identifiers of all rejected errata submitted since 2024:<a href="#appendix-A.6-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-http-message art-text artwork" id="appendix-A.6-7">
 <pre>
 QUERY /errata.json HTTP/1.1
 Host: example.org
@@ -2341,11 +2425,11 @@ $..[
      &amp;&amp; @.submit_date&gt;"2024"
    ]
    ["doc-id"]
-</pre><a href="#appendix-A.5-7" class="pilcrow">¶</a>
+</pre><a href="#appendix-A.6-7" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.5-8">
-        Response:<a href="#appendix-A.5-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-9">
+<p id="appendix-A.6-8">
+        Response:<a href="#appendix-A.6-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-http-message art-text artwork" id="appendix-A.6-9">
 <pre>
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -2363,7 +2447,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   "RFC9656","RFC9110","RFC2324","RFC2549","RFC6797","RFC2549",
   "RFC8894"
 ]
-</pre><a href="#appendix-A.5-9" class="pilcrow">¶</a>
+</pre><a href="#appendix-A.6-9" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
