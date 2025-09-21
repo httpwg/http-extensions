@@ -940,9 +940,8 @@ See stored query at "/contacts/stored-queries/42".
       <t>
         Consider a resource implementing QUERY that supports "application/sql" and
         "application/xslt+xml" (<xref target="XSLT"/>) as request media types, and
-        which can generate responses
-        as "text/csv" and "application/json". The database being queried contains RFC document
-        information, and the query returns document information grouped by decade:
+        which can generate responses as "text/csv" . The database being queried contains RFC document
+        information, and the query returns information grouped by decade:
       </t>
 <artwork type="http-message">
 QUERY /rfc-index.xml HTTP/1.1
@@ -959,11 +958,11 @@ Accept: text/csv
 <artwork type="http-message">
 HTTP/1.1 200 OK
 Date: Sun, 7 Sep 2025, 00:00:00 GMT
+Location: /stored-queries/4815162342
 Content-Type: text/csv
 Accept-Query: "application/sql", "application/xslt+xml"
-Last-Modified: Sun, 31 Aug 2025, 00:00:00 GMT
-Etag: "1756598400/1/2"
-Vary: Accept-Query, Content-Type
+Last-Modified: Sun, 31 Aug 2025, 08:44:00 GMT
+Vary: Accept-Query, Content-Encoding, Content-Type
 
 decade, total, with errata, % with errata, average page count
 1960, 26, 5, 19.2, 5.3
@@ -975,8 +974,7 @@ decade, total, with errata, % with errata, average page count
 2020, 1133, 230, 20.3, 26.2
 </artwork>
       <t>
-        Note that for the purpose of this example, the response contains both
-        "Last-Modified" and "ETag" validator fields (xref target="RFC9110" section="8.8"/>).
+        Here, the server has assigned a URI for the equivalent resource (<xref target="location"/>).
       </t>
       <t>
         Later on, the client repeats the query, but specifies that results should only
@@ -988,7 +986,7 @@ Host: example.org
 Date: Mon, 8, Sep 2025, 11:00:00 GMT
 Content-Type: application/sql
 Accept: text/csv
-If-Modified-Since: Sun, 31 Aug 2025, 00:00:00 GMT
+If-Modified-Since: Sun, 31 Aug 2025, 08:44:00 GMT
 Vary: Accept-Query, Content-Type
 
 ...Same query, but using SQL...
@@ -1000,12 +998,47 @@ Vary: Accept-Query, Content-Type
 HTTP/1.1 304 Not Modified
 Date: Mon, 8 Sep 2025, 11:00:00 GMT
 Content-Type: text/csv
+Location: /stored-queries/4815162342
 Accept-Query: "application/sql", "application/xslt+xml"
-Last-Modified: Sun, 31 Aug 2025, 00:00:00 GMT
-Etag: "1756598400/1/2"
+Last-Modified: Sun, 31 Aug 2025, 08:44:00 GMT
 Vary: Accept-Query, Content-Type
 
 </artwork>
+      <t>
+        As the server returned a URI for the equivalent resource, it's possible to
+        use that URI with GET; in particular, this avoids re-sending the query request's
+        content:
+      </t>
+<artwork type="http-message">
+GET /stored-queries/4815162342 HTTP/1.1
+Host: example.org
+Date: Sun, 21, Sep 2025, 12:08:00 GMT
+Accept: text/csv
+If-Modified-Since: Sun, 31 Aug 2025, 00:00:00 GMT
+
+</artwork>
+      <t>
+        Here, the state of the database indeed changed, so new content is returned:
+      </t>
+      <artwork type="http-message">
+HTTP/1.1 200 OK
+Date: Sun, 21, Sep 2025, 12:08:00 GMT
+Content-Type: text/csv
+Last-Modified: Thu, 18 Sep 2025, 19:56:00 GMT
+Vary: Accept-Query, Content-Encoding, Content-Type
+
+decade, total, with errata, % with errata, average page count
+1960, 26, 5, 19.2, 5.3
+1970, 666, 18, 2.7, 6.1
+1980, 376, 44, 11.7, 23.4
+1990, 1593, 269, 16.9, 25.5
+2000, 2888, 1048, 36.3, 27.3
+2010, 2954, 895, 30.3, 26.1
+2020, 1133, 230, 20.3, 26.2
+</artwork>
+      <t>
+        (Note the change in the row for this decade.)
+      </t>
     </section>
 
     <section title="More Query Formats" anchor="example.more.query.formats">
