@@ -1945,10 +1945,10 @@ Upload-Length: 100000000
 <div class="lang-http-message sourcecode" id="section-4.2.3-6">
 <pre>
 HTTP/1.1 104 Upload Resumption Supported
-Location: https://example.com/upload/b530ce8ff
+Location: https://example.com/upload/3fd4994ad
 
 HTTP/1.1 201 Created
-Location: https://example.com/upload/b530ce8ff
+Location: https://example.com/upload/3fd4994ad
 Upload-Limit: max-size=1000000000
 </pre><a href="#section-4.2.3-6" class="pilcrow">¶</a>
 </div>
@@ -1967,7 +1967,7 @@ Upload-Length: 100000000
 <div class="lang-http-message sourcecode" id="section-4.2.3-9">
 <pre>
 HTTP/1.1 104 Upload Resumption Supported
-Location: https://example.com/upload/b530ce8ff
+Location: https://example.com/upload/0587fa44b
 
 HTTP/1.1 500 Internal Server Error
 </pre><a href="#section-4.2.3-9" class="pilcrow">¶</a>
@@ -2057,7 +2057,7 @@ HTTP/1.1 405 Method Not Allowed
 <p id="section-4.3.3-1">A) The following example shows an offset retrieval request. The server indicates the current offset and that the upload is not complete yet. The client can continue to append representation data.<a href="#section-4.3.3-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.3.3-2">
 <pre>
-HEAD /upload/b530ce8ff HTTP/1.1
+HEAD /upload/c35e2cd29 HTTP/1.1
 Host: example.com
 </pre><a href="#section-4.3.3-2" class="pilcrow">¶</a>
 </div>
@@ -2074,7 +2074,7 @@ Cache-Control: no-store
 <p id="section-4.3.3-4">B) The following example shows an offset retrieval request for a completed upload. The client does not need to continue the upload.<a href="#section-4.3.3-4" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.3.3-5">
 <pre>
-HEAD /upload/b530ce8ff HTTP/1.1
+HEAD /upload/a9edb781b HTTP/1.1
 Host: example.com
 </pre><a href="#section-4.3.3-5" class="pilcrow">¶</a>
 </div>
@@ -2156,7 +2156,7 @@ Cache-Control: no-store
 <p id="section-4.4.3-1">A) The following example shows an upload append request. The client transfers the next 25000000 bytes at an offset of 25000000 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:<a href="#section-4.4.3-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.4.3-2">
 <pre>
-PATCH /upload/b530ce8ff HTTP/1.1
+PATCH /upload/37a504d87 HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
 Upload-Offset: 25000000
@@ -2178,7 +2178,7 @@ Upload-Complete: ?0
 <p id="section-4.4.3-4">B) The next example shows an upload append, where the client transfers the remaining 25000000 bytes and completes the upload. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:<a href="#section-4.4.3-4" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.4.3-5">
 <pre>
-PATCH /upload/b530ce8ff HTTP/1.1
+PATCH /upload/d38d6ffe8 HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
 Upload-Offset: 25000000
@@ -2236,7 +2236,7 @@ Content-Type: application/json
 <p id="section-4.5.3-1">The following example shows an upload cancellation:<a href="#section-4.5.3-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.5.3-2">
 <pre>
-DELETE /upload/b530ce8ff HTTP/1.1
+DELETE /upload/5688a431c HTTP/1.1
 Host: example.com
 </pre><a href="#section-4.5.3-2" class="pilcrow">¶</a>
 </div>
