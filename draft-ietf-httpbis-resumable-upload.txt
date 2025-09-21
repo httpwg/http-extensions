@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 24 March 2026                                        Apple Inc.
+Expires: 25 March 2026                                        Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                       20 September 2025
+                                                       21 September 2025
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 March 2026.
+   This Internet-Draft will expire on 25 March 2026.
 
 Copyright Notice
 
@@ -832,9 +832,10 @@ Table of Contents
    HTTP/1.1 500 Internal Server Error
 
    D) The following example shows an upload creation being rejected by
-   the server.  The client cannot continue the upload.
+   the server because uploads to the target resource are not allowed.
+   The client cannot continue the upload.
 
-   POST /upload HTTP/1.1
+   POST /upload-not-allowed HTTP/1.1
    Host: example.com
    Upload-Complete: ?1
    Content-Length: 100000000
@@ -842,7 +843,7 @@ Table of Contents
 
    [content (100000000 bytes)]
 
-   HTTP/1.1 400 Bad Request
+   HTTP/1.1 405 Method Not Allowed
 
 4.3.  Offset Retrieval
 
