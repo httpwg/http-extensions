@@ -421,9 +421,9 @@ q=foo&amp;limit=10&amp;sort=-published
         conditional header field(s), as defined in
         <xref target="HTTP" section="13"/>.
       </t>
-<!--      <t>
+      <t>
         See <xref target="example.conditional"/> for examples.
-      </t>-->
+      </t>
     </section>
 
     <section title="Caching" anchor="caching">
@@ -936,13 +936,85 @@ See stored query at "/contacts/stored-queries/42".
       </section>
     </section>
 
+    <section title="Conditional Requests" anchor="example.conditional">
+      <t>
+        Consider a resource implementing QUERY that supports "application/sql" and
+        "application/xslt+xml" (<xref target="XSLT"/>) as request media types, and
+        which can generate responses
+        as "text/csv" and "application/json". The database being queried contains RFC document
+        information, and the query returns document information grouped by decade:
+      </t>
+<artwork type="http-message">
+QUERY /rfc-index.xml HTTP/1.1
+Host: example.org
+Date: Sun, 7 Sep 2025, 00:00:00 GMT
+Content-Type: application/xslt+xml
+Accept: text/csv
+
+...Query content using XSLT...
+</artwork>
+      <t>
+        Response:
+      </t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Date: Sun, 7 Sep 2025, 00:00:00 GMT
+Content-Type: text/csv
+Accept-Query: "application/sql", "application/xslt+xml"
+Last-Modified: Sun, 31 Aug 2025, 00:00:00 GMT
+Etag: "1756598400/1/2"
+Vary: Accept-Query, Content-Type
+
+decade, total, with errata, % with errata, average page count
+1960, 26, 5, 19.2, 5.3
+1970, 666, 18, 2.7, 6.1
+1980, 376, 44, 11.7, 23.4
+1990, 1593, 269, 16.9, 25.5
+2000, 2888, 1048, 36.3, 27.3
+2010, 2954, 895, 30.3, 26.1
+2020, 1133, 230, 20.3, 26.2
+</artwork>
+      <t>
+        Note that for the purpose of this example, the response contains both
+        "Last-Modified" and "ETag" validator fields (xref target="RFC9110" section="8.8"/>).
+      </t>
+      <t>
+        Later on, the client repeats the query, but specifies that results should only
+        be returned when changed:
+      </t>
+<artwork type="http-message">
+QUERY /rfc-index.xml HTTP/1.1
+Host: example.org
+Date: Mon, 8, Sep 2025, 11:00:00 GMT
+Content-Type: application/sql
+Accept: text/csv
+If-Modified-Since: Sun, 31 Aug 2025, 00:00:00 GMT
+Vary: Accept-Query, Content-Type
+
+...Same query, but using SQL...
+</artwork>
+      <t>
+        The data being queried did not change, therefore the server responds with:
+      </t>
+<artwork type="http-message">
+HTTP/1.1 304 Not Modified
+Date: Mon, 8 Sep 2025, 11:00:00 GMT
+Content-Type: text/csv
+Accept-Query: "application/sql", "application/xslt+xml"
+Last-Modified: Sun, 31 Aug 2025, 00:00:00 GMT
+Etag: "1756598400/1/2"
+Vary: Accept-Query, Content-Type
+
+</artwork>
+    </section>
+
     <section title="More Query Formats" anchor="example.more.query.formats">
       <t>
         The following examples show requests on a JSON-shaped (<xref target="RFC8259"/>) database of
         RFC errata.
       </t>
       <t>
-        The request below uses XSLT (<xref target="XSLT"/>) to extract errata information summarized per year and
+        The request below uses XSLT to extract errata information summarized per year and
         the defined errata types.
       </t>
 <artwork type="http-message">
