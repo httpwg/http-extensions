@@ -456,11 +456,10 @@ Table of Contents
    the server SHOULD keep the upload resource available for a reasonable
    amount of time after the upload is complete.
 
-   An upload resource SHOULD NOT reuse the URI from a previous upload
-   resource, unless reasonable time has passed to ensure that no client
-   will attempt to access the previous upload resource.  Otherwise, a
-   client might access the upload resource corresponding to a different
-   representation than it intends to transfer.
+   An upload resource SHOULD be unique.  Reuse of a URI for a different
+   upload resource SHOULD be avoided in order to reduce the chance of
+   misdirected or corrupted upload resources, as well as the potential
+   security issues described in Section 13.
 
 4.1.  State
 
