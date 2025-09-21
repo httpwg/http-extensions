@@ -378,7 +378,11 @@ Table of Contents
 
 2.6.  Conditional Requests
 
-   A conditional QUERY requests that the selected representation (i.e.,
+   The selected representation (Section 3.3 of [HTTP]) of a QUERY
+   request is the same as for a GET request to the equivalent resource
+   (Section 2.2) of that QUERY request.
+
+   A conditional QUERY requests that that selected representation (i.e.,
    the query results, after any content negotiation) be returned in the
    response only under the circumstances described by the conditional
    header field(s), as defined in Section 13 of [HTTP].

@@ -1654,11 +1654,15 @@ q=foo&amp;limit=10&amp;sort=-published
 <a href="#section-2.6" class="section-number selfRef">2.6. </a><a href="#name-conditional-requests" class="section-name selfRef">Conditional Requests</a>
         </h3>
 <p id="section-2.6-1">
-        A conditional QUERY requests that the selected representation
+        The selected representation (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-3.3" class="relref">Section 3.3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) of a QUERY
+        request is the same as for a GET request to the equivalent resource
+        (<a href="#equivalent-resource" class="auto internal xref">Section 2.2</a>) of that QUERY request.<a href="#section-2.6-1" class="pilcrow">¶</a></p>
+<p id="section-2.6-2">
+        A conditional QUERY requests that that selected representation
         (i.e., the query results, after any content negotiation) be
         returned in the response only under the circumstances described by the
         conditional header field(s), as defined in
-        <span><a href="https://rfc-editor.org/rfc/rfc9110#section-13" class="relref">Section 13</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2.6-1" class="pilcrow">¶</a></p>
+        <span><a href="https://rfc-editor.org/rfc/rfc9110#section-13" class="relref">Section 13</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2.6-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="caching">
