@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 23 March 2026                                        Cloudflare
+Expires: 25 March 2026                                        Cloudflare
                                                                M. Bishop
                                                                   Akamai
-                                                       19 September 2025
+                                                       21 September 2025
 
 
                          The HTTP QUERY Method
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 March 2026.
+   This Internet-Draft will expire on 25 March 2026.
 
 Copyright Notice
 
@@ -75,7 +75,7 @@ Table of Contents
      1.2.  Notational Conventions
    2.  QUERY
      2.1.  Media Types and Content Negotiation
-     2.2.  GET-equivalent Resource
+     2.2.  Equivalent Resource
      2.3.  Content-Location Response Field
      2.4.  Location Response Field
      2.5.  Redirection
@@ -307,21 +307,21 @@ Table of Contents
       supported by the resource, a status code of 406 (Not Acceptable)
       is appropriate.
 
-2.2.  GET-equivalent Resource
+2.2.  Equivalent Resource
 
-   For any QUERY request, the _GET-equivalent Resource_ is defined as
-   representing that QUERY request and its target, taking both message
-   content and metadata into account (Section 6 of [HTTP]).  In
-   particular, this includes representation metadata (Section 8 of
-   [HTTP]), such as the content's media type.
+   The _equivalent resource_ for any given QUERY request is a resource
+   responding to GET requests, representing that QUERY request and its
+   target, taking both message content and metadata into account
+   (Section 6 of [HTTP]).  In particular, this includes representation
+   metadata (Section 8 of [HTTP]), such as the content's media type.
 
-   In other words, the GET-equivalent resource is derived from the
-   resource implementing QUERY by incorporating the request content.
+   In other words, the equivalent resource is derived from the resource
+   implementing QUERY by incorporating the request content.
 
-   The definition of the GET-equivalent resource is used as a means to
-   define behavior for other HTTP aspects, such as selected
-   representations.  Servers can assign URIs to these resources, making
-   them accessible for GET requests.
+   The term _equivalent resource_ is used as a means to define behavior
+   for other HTTP aspects, such as selected representations.  Servers
+   can but do not have to assign URIs to these resources, making them
+   accessible for GET requests.
 
 2.3.  Content-Location Response Field
 
@@ -337,15 +337,15 @@ Table of Contents
 
 2.4.  Location Response Field
 
-   A server can assign a URI to the GET-equivalent resource
-   (Section 2.2) of a QUERY request.  If the server does so, the URI of
-   that resource can be included in the Location header field of the 2xx
-   response (see Section 10.2.2 of [HTTP]).  This represents a claim
-   that a client can send a GET request to the indicated URI to repeat
-   the query operation just performed without resending the query
-   content.  This resource might be temporary; if a future request
-   fails, the client can retry using the original QUERY resource and the
-   previously submitted content.
+   A server can assign a URI to the equivalent resource (Section 2.2) of
+   a QUERY request.  If the server does so, the URI of that resource can
+   be included in the Location header field of the 2xx response (see
+   Section 10.2.2 of [HTTP]).  This represents a claim that a client can
+   send a GET request to the indicated URI to repeat the query operation
+   just performed without resending the query content.  This resource's
+   URI might be temporary; if a future request fails, the client can
+   retry using the original QUERY request target and the previously
+   submitted content.
 
    See Appendix A.4.2 for an example.
 

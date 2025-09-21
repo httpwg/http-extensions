@@ -1059,7 +1059,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Reschke, et al.</td>
-<td class="center">Expires 23 March 2026</td>
+<td class="center">Expires 25 March 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">HTTP</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-09-19" class="published">19 September 2025</time>
+<time datetime="2025-09-21" class="published">21 September 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-03-23">23 March 2026</time></dd>
+<dd class="expires"><time datetime="2026-03-25">25 March 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1139,7 +1139,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 23 March 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 25 March 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1186,7 +1186,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-media-types-and-content-neg" class="internal xref">Media Types and Content Negotiation</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
-                <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-get-equivalent-resource" class="internal xref">GET-equivalent Resource</a></p>
+                <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-equivalent-resource" class="internal xref">Equivalent Resource</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3">
                 <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="auto internal xref">2.3</a>.  <a href="#name-content-location-response-f" class="internal xref">Content-Location Response Field</a></p>
@@ -1561,24 +1561,25 @@ q=foo&amp;limit=10&amp;sort=-published
         </ul>
 </section>
 </div>
-<div id="get-equivalent">
+<div id="equivalent-resource">
 <section id="section-2.2">
-        <h3 id="name-get-equivalent-resource">
-<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-get-equivalent-resource" class="section-name selfRef">GET-equivalent Resource</a>
+        <h3 id="name-equivalent-resource">
+<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-equivalent-resource" class="section-name selfRef">Equivalent Resource</a>
         </h3>
 <p id="section-2.2-1">
-        For any QUERY request, the <em>GET-equivalent Resource</em> is defined as
-        representing that QUERY request and its target, taking both message content and
-        metadata into account (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-6" class="relref">Section 6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). In particular,
-        this includes representation metadata (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8" class="relref">Section 8</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>),
+        The <em>equivalent resource</em> for any given QUERY request is a resource
+        responding to GET requests, representing that QUERY request and its target, taking
+        both message content and metadata into account (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-6" class="relref">Section 6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).
+        In particular, this includes representation metadata (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8" class="relref">Section 8</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>),
         such as the content's media type.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 <p id="section-2.2-2">
-        In other words, the GET-equivalent resource is derived from the resource
+        In other words, the equivalent resource is derived from the resource
         implementing QUERY by incorporating the request content.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
 <p id="section-2.2-3">
-        The definition of the GET-equivalent resource is used as a means to define
+        The term <em>equivalent resource</em> is used as a means to define
         behavior for other HTTP aspects, such as selected representations. Servers can
-        assign URIs to these resources, making them accessible for GET requests.<a href="#section-2.2-3" class="pilcrow">¶</a></p>
+        but do not have to assign URIs to these resources, making them accessible
+        for GET requests.<a href="#section-2.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="content-location">
@@ -1604,13 +1605,13 @@ q=foo&amp;limit=10&amp;sort=-published
 <a href="#section-2.4" class="section-number selfRef">2.4. </a><a href="#name-location-response-field" class="section-name selfRef">Location Response Field</a>
         </h3>
 <p id="section-2.4-1">
-        A server can assign a URI to the GET-equivalent resource (<a href="#get-equivalent" class="auto internal xref">Section 2.2</a>)
+        A server can assign a URI to the equivalent resource (<a href="#equivalent-resource" class="auto internal xref">Section 2.2</a>)
         of a QUERY request. If the server does so, the URI of that resource
         can be included in the Location header field of the 2xx response (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). This represents a claim that a client can
         send a GET request to the indicated URI to repeat the query operation just
-        performed without resending the query content. This resource might be
+        performed without resending the query content. This resource's URI might be
         temporary; if a future request fails, the client can retry using the
-        original QUERY resource and the previously submitted content.<a href="#section-2.4-1" class="pilcrow">¶</a></p>
+        original QUERY request target and the previously submitted content.<a href="#section-2.4-1" class="pilcrow">¶</a></p>
 <p id="section-2.4-2">
         See <a href="#example.location" class="auto internal xref">Appendix A.4.2</a> for an example.<a href="#section-2.4-2" class="pilcrow">¶</a></p>
 </section>
