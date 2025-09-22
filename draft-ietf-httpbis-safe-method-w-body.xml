@@ -940,7 +940,7 @@ See stored query at "/contacts/stored-queries/42".
       <t>
         Consider a resource implementing QUERY that supports "application/sql" and
         "application/xslt+xml" (<xref target="XSLT"/>) as request media types, and
-        which can generate responses as "text/csv" . The database being queried contains RFC document
+        which can generate responses as "text/csv" . The data set being queried contains RFC document
         information, and the query returns information grouped by decade:
       </t>
 <artwork type="http-message">
@@ -974,7 +974,8 @@ decade, total, with errata, % with errata, average page count
 2020, 1133, 230, 20.3, 26.2
 </artwork>
       <t>
-        Here, the server has assigned a URI for the equivalent resource (<xref target="location"/>).
+        Here, the server has assigned the path "/stored-queries/4815162342" to the equivalent
+        resource (<xref target="location"/>) for subsequent use with GET.
       </t>
       <t>
         Later on, the client repeats the query, but specifies that results should only
@@ -1005,8 +1006,8 @@ Vary: Accept-Query, Content-Type
 
 </artwork>
       <t>
-        As the server returned a URI for the equivalent resource, it's possible to
-        use that URI with GET; in particular, this avoids re-sending the query request's
+        As the server identified a URI for the equivalent resource, that resource can
+        be accessed with GET. In particular, this avoids re-sending the query request's
         content:
       </t>
 <artwork type="http-message">
@@ -1018,7 +1019,7 @@ If-Modified-Since: Sun, 31 Aug 2025, 00:00:00 GMT
 
 </artwork>
       <t>
-        Here, the state of the database indeed changed, so new content is returned:
+        Here, the state of the data set indeed changed, so new content is returned:
       </t>
       <artwork type="http-message">
 HTTP/1.1 200 OK
