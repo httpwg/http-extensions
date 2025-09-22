@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 25 March 2026                                        Cloudflare
+Expires: 26 March 2026                                        Cloudflare
                                                                M. Bishop
                                                                   Akamai
-                                                       21 September 2025
+                                                       22 September 2025
 
 
                          The HTTP QUERY Method
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 March 2026.
+   This Internet-Draft will expire on 26 March 2026.
 
 Copyright Notice
 
@@ -808,7 +808,7 @@ A.5.  Conditional Requests
 
    Consider a resource implementing QUERY that supports "application/
    sql" and "application/xslt+xml" ([XSLT]) as request media types, and
-   which can generate responses as "text/csv" . The database being
+   which can generate responses as "text/csv" . The data set being
    queried contains RFC document information, and the query returns
    information grouped by decade:
 
@@ -839,8 +839,8 @@ A.5.  Conditional Requests
    2010, 2954, 895, 30.3, 26.1
    2020, 1133, 230, 20.3, 26.2
 
-   Here, the server has assigned a URI for the equivalent resource
-   (Section 2.4).
+   Here, the server has assigned the path "/stored-queries/4815162342"
+   to the equivalent resource (Section 2.4) for subsequent use with GET.
 
    Later on, the client repeats the query, but specifies that results
    should only be returned when changed:
@@ -866,8 +866,8 @@ A.5.  Conditional Requests
    Last-Modified: Sun, 31 Aug 2025, 08:44:00 GMT
    Vary: Accept-Query, Content-Type
 
-   As the server returned a URI for the equivalent resource, it's
-   possible to use that URI with GET; in particular, this avoids re-
+   As the server identified a URI for the equivalent resource, that
+   resource can be accessed with GET.  In particular, this avoids re-
    sending the query request's content:
 
    GET /stored-queries/4815162342 HTTP/1.1
@@ -876,7 +876,7 @@ A.5.  Conditional Requests
    Accept: text/csv
    If-Modified-Since: Sun, 31 Aug 2025, 00:00:00 GMT
 
-   Here, the state of the database indeed changed, so new content is
+   Here, the state of the data set indeed changed, so new content is
    returned:
 
    HTTP/1.1 200 OK
