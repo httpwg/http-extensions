@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 26 March 2026                                        Cloudflare
+Expires: 27 March 2026                                        Cloudflare
                                                                M. Bishop
                                                                   Akamai
-                                                       22 September 2025
+                                                       23 September 2025
 
 
                          The HTTP QUERY Method
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 March 2026.
+   This Internet-Draft will expire on 27 March 2026.
 
 Copyright Notice
 
@@ -895,6 +895,86 @@ A.5.  Conditional Requests
    2020, 1133, 230, 20.3, 26.2
 
    (Note the change in the row for this decade.)
+
+   The diagrams below illustrate the use of conditional requests and how
+   they can differ when a URI is assigned to the equivalent resource
+   (and when the client is taking advantage of it).  The fictitious
+   field name "Validator" is used for demonstration purposes.
+
+   Client                             Resource
+   |                                         |
+   |                                         |
+   | QUERY with content                      |
+   +---------------------------------------->|
+   |                                         |
+   |                                         |
+   |                                  200 OK |
+   |                          Validator: foo |
+   |<----------------------------------------+
+   |                                         |
+   |                                         |
+   | QUERY with content                      |
+   | (conditional on 'foo')                  |
+   +---------------------------------------->|
+   |                                         |
+   |                                         |
+   |                        304 Not Modified |
+   |                          Validator: foo |
+   |<----------------------------------------+
+   |                                         |
+   |                                         |
+   |                                  +--------------+
+   |                                  | State Change |
+   |                                  +--------------+
+   |                                         |
+   | QUERY with content                      |
+   | (conditional on 'foo')                  |
+   +---------------------------------------->|
+   |                                         |
+   |                                         |
+   |                                  200 OK |
+   |                          Validator: bar |
+   |<----------------------------------------+
+
+                    Figure 1: Data Flow with QUERY only
+
+Client                             Resource           Equivalent Resource
+|                                         |
+|                                         |
+| QUERY with content                      |
++---------------------------------------->| (generates)              /xyz
+|                                         +-----------------------------o
+|                                         |                             |
+|                                  200 OK |                             |
+|                          Validator: foo |                             |
+|                          Location: /xyz |                             |
+|<----------------------------------------+                             |
+|                                                                       |
+|                                                                       |
+| GET                                                                   |
+| (conditional on 'foo')                                                |
++---------------------------------------------------------------------->|
+|                                                                       |
+|                                                                       |
+|                                                      304 Not Modified |
+|                                                        Validator: foo |
+|<----------------------------------------------------------------------+
+|                                                                       |
+|                                                                       |
+|                                                                +--------------+
+|                                                                | State Change |
+|                                                                +--------------+
+|                                                                       |
+| GET                                                                   |
+| (conditional on 'foo')                                                |
++---------------------------------------------------------------------->|
+|                                                                       |
+|                                                                       |
+|                                                                200 OK |
+|                                                        Validator: bar |
+|<----------------------------------------------------------------------+
+
+         Figure 2: Data Flow with GET to Equivalent Resource
 
 A.6.  More Query Formats
 
