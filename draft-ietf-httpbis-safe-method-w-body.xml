@@ -1040,6 +1040,83 @@ decade, total, with errata, % with errata, average page count
       <t>
         (Note the change in the row for this decade.)
       </t>
+      <t>
+        The diagrams below illustrate the use of conditional requests and how they can differ
+        when a URI is assigned to the equivalent resource (and when the client is taking advantage
+        of it). The fictitious field name "Validator" is used for demonstration purposes.
+      </t>
+      <figure title="Data Flow with QUERY only" align="center"><artwork type="diagram"><![CDATA[
+Client                             Resource
+|                                         |
+|                                         |
+| QUERY with content                      |
++---------------------------------------->|
+|                                         |
+|                                         |
+|                                  200 OK |
+|                          Validator: foo |
+|<----------------------------------------+
+|                                         |
+|                                         |
+| QUERY with content                      |
+| (conditional on 'foo')                  |
++---------------------------------------->|
+|                                         |
+|                                         |
+|                        304 Not Modified |
+|                          Validator: foo |
+|<----------------------------------------+
+|                                         |
+|                                         |
+|                                  +--------------+
+|                                  | State Change |
+|                                  +--------------+
+|                                         |
+| QUERY with content                      |
+| (conditional on 'foo')                  |
++---------------------------------------->|
+|                                         |
+|                                         |
+|                                  200 OK |
+|                          Validator: bar |
+|<----------------------------------------+
+]]></artwork></figure>
+      <figure title="Data Flow with GET to Equivalent Resource" align="center"><artwork type="diagram"><![CDATA[
+Client                             Resource           Equivalent Resource
+|                                         |
+|                                         |
+| QUERY with content                      |
++---------------------------------------->| (generates)              /xyz
+|                                         +-----------------------------o
+|                                         |                             |
+|                                  200 OK |                             |
+|                          Validator: foo |                             |
+|                          Location: /xyz |                             |
+|<----------------------------------------+                             |
+|                                                                       |
+|                                                                       |
+| GET                                                                   |
+| (conditional on 'foo')                                                |
++---------------------------------------------------------------------->|
+|                                                                       |
+|                                                                       |
+|                                                      304 Not Modified |
+|                                                        Validator: foo |
+|<----------------------------------------------------------------------+
+|                                                                       |
+|                                                                       |
+|                                                                +--------------+
+|                                                                | State Change |
+|                                                                +--------------+
+|                                                                       |
+| GET                                                                   |
+| (conditional on 'foo')                                                |
++---------------------------------------------------------------------->|
+|                                                                       |
+|                                                                       |
+|                                                                200 OK |
+|                                                        Validator: bar |
+|<----------------------------------------------------------------------+]]></artwork></figure>
     </section>
 
     <section title="More Query Formats" anchor="example.more.query.formats">
