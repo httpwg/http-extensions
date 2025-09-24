@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 27 March 2026                                        Cloudflare
+Expires: 28 March 2026                                        Cloudflare
                                                                M. Bishop
                                                                   Akamai
-                                                       23 September 2025
+                                                       24 September 2025
 
 
                          The HTTP QUERY Method
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 March 2026.
+   This Internet-Draft will expire on 28 March 2026.
 
 Copyright Notice
 
@@ -321,7 +321,8 @@ Table of Contents
 
    The term _equivalent resource_ is used as a means to define behavior
    for other HTTP aspects, such as selected representations.  Servers
-   can but do not have to assign URIs to these resources, making them
+   can but do not have to assign URIs to these resources (see
+   Section 1.1 of [URI]).  If they do so, these resources will become
    accessible for GET requests.
 
 2.3.  Content-Location Response Field
@@ -379,7 +380,7 @@ Table of Contents
 
 2.6.  Conditional Requests
 
-   The selected representation (Section 3.3 of [HTTP]) of a QUERY
+   The selected representation (Section 3.2 of [HTTP]) of a QUERY
    request is the same as for a GET request to the equivalent resource
    (Section 2.2) of that QUERY request.
 
@@ -580,6 +581,11 @@ Table of Contents
               Ed., "JSONPath: Query Expressions for JSON", RFC 9535,
               DOI 10.17487/RFC9535, February 2024,
               <https://www.rfc-editor.org/info/rfc9535>.
+
+   [URI]      Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66,
+              RFC 3986, January 2005,
+              <https://www.rfc-editor.org/rfc/rfc3986>.
 
    [URL]      WHATWG, "URL", <https://url.spec.whatwg.org>.
 
