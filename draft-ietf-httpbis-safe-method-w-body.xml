@@ -340,7 +340,8 @@ q=foo&amp;limit=10&amp;sort=-published
       <t>
         The term <em>equivalent resource</em> is used as a means to define
         behavior for other HTTP aspects, such as selected representations. Servers can
-        but do not have to assign URIs to these resources, making them accessible
+        but do not have to assign URIs to these resources (see
+        <xref target="URI" section="1.1"/>). If they do so, these resources will become accessible
         for GET requests.
       </t>
     </section>
@@ -410,7 +411,7 @@ q=foo&amp;limit=10&amp;sort=-published
 
     <section title="Conditional Requests" anchor="conditional">
       <t>
-        The selected representation (<xref target="HTTP" section="3.3"/>) of a QUERY
+        The selected representation (<xref target="HTTP" section="3.2"/>) of a QUERY
         request is the same as for a GET request to the equivalent resource
         (<xref target="equivalent-resource"/>) of that QUERY request.
       </t>
@@ -670,6 +671,17 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6838.xml"/>
     <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8259.xml"/>
     <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9535.xml"/>
+    <reference anchor="URI">
+      <front>
+        <title abbrev="URI Generic Syntax">Uniform Resource Identifier (URI): Generic Syntax</title>
+        <author initials="T." surname="Berners-Lee" fullname="Tim Berners-Lee"/>
+        <author initials="R." surname="Fielding" fullname="Roy T. Fielding"/>
+        <author initials="L." surname="Masinter" fullname="Larry Masinter"/>
+        <date month="January" year="2005"/>
+      </front>
+      <seriesInfo name="STD" value="66"/>
+      <seriesInfo name="RFC" value="3986"/>
+    </reference>
     <reference anchor="URL" target="https://url.spec.whatwg.org">
       <front>
         <title>URL</title>
