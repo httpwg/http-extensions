@@ -1057,7 +1057,9 @@ decade, total, with errata, % with errata, average page count
         when a URI is assigned to the equivalent resource (and when the client is taking advantage
         of it). The fictitious field name "Validator" is used for demonstration purposes.
       </t>
-      <figure title="Data Flow with QUERY only" align="center"><artwork type="diagram"><![CDATA[
+      <figure title="Data Flow with QUERY only">
+        <artset>
+          <artwork type="ascii-art" name="flow-query" align="center"><![CDATA[
 Client                             Resource
 |                                         |
 |                                         |
@@ -1092,8 +1094,52 @@ Client                             Resource
 |                                  200 OK |
 |                          Validator: bar |
 |<----------------------------------------+
-]]></artwork></figure>
-      <figure title="Data Flow with GET to Equivalent Resource" align="center"><artwork type="diagram"><![CDATA[
+]]></artwork>
+<artwork type="svg">
+<?BEGININC flow-query.svg ?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="576" width="416" viewBox="0 0 416 576" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+<path d="M 8,48 L 8,560" fill="none" stroke="black"/>
+<path d="M 288,384 L 288,416" fill="none" stroke="black"/>
+<path d="M 344,48 L 344,376" fill="none" stroke="black"/>
+<path d="M 344,424 L 344,560" fill="none" stroke="black"/>
+<path d="M 408,384 L 408,416" fill="none" stroke="black"/>
+<path d="M 8,96 L 336,96" fill="none" stroke="black"/>
+<path d="M 16,176 L 344,176" fill="none" stroke="black"/>
+<path d="M 8,256 L 336,256" fill="none" stroke="black"/>
+<path d="M 16,336 L 344,336" fill="none" stroke="black"/>
+<path d="M 288,384 L 408,384" fill="none" stroke="black"/>
+<path d="M 288,416 L 408,416" fill="none" stroke="black"/>
+<path d="M 8,480 L 336,480" fill="none" stroke="black"/>
+<path d="M 16,560 L 344,560" fill="none" stroke="black"/>
+<polygon class="arrowhead" points="344,480 332,474.4 332,485.6" fill="black" transform="rotate(0,336,480)"/>
+<polygon class="arrowhead" points="344,256 332,250.4 332,261.6" fill="black" transform="rotate(0,336,256)"/>
+<polygon class="arrowhead" points="344,96 332,90.4 332,101.6" fill="black" transform="rotate(0,336,96)"/>
+<polygon class="arrowhead" points="24,560 12,554.4 12,565.6" fill="black" transform="rotate(180,16,560)"/>
+<polygon class="arrowhead" points="24,336 12,330.4 12,341.6" fill="black" transform="rotate(180,16,336)"/>
+<polygon class="arrowhead" points="24,176 12,170.4 12,181.6" fill="black" transform="rotate(180,16,176)"/>
+<g class="text">
+<text x="28" y="36">Client</text>
+<text x="316" y="36">Resource</text>
+<text x="92" y="84">QUERY with content</text>
+<text x="308" y="148">200 OK</text>
+<text x="276" y="164">Validator: foo</text>
+<text x="92" y="228">QUERY with content</text>
+<text x="108" y="244">(conditional on 'foo')</text>
+<text x="268" y="308">304 Not Modified</text>
+<text x="276" y="324">Validator: foo</text>
+<text x="348" y="404">State Change</text>
+<text x="92" y="452">QUERY with content</text>
+<text x="108" y="468">(conditional on 'foo')</text>
+<text x="308" y="532">200 OK</text>
+<text x="276" y="548">Validator: bar</text>
+</g>
+</svg>
+<?ENDINC flow-query.svg ?>
+</artwork>
+</artset></figure>
+      <figure title="Data Flow with GET to Equivalent Resource">
+        <artset>
+          <artwork type="ascii-art" name="flow-query-get" align="center"><![CDATA[
 Client                             Resource           Equivalent Resource
 |                                         |
 |                                         |
@@ -1128,7 +1174,57 @@ Client                             Resource           Equivalent Resource
 |                                                                       |
 |                                                                200 OK |
 |                                                        Validator: bar |
-|<----------------------------------------------------------------------+]]></artwork></figure>
+|<----------------------------------------------------------------------+]]></artwork>
+<artwork type="svg">
+<?BEGININC flow-query-get.svg ?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="592" width="656" viewBox="0 0 656 592" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+<path d="M 8,48 L 8,576" fill="none" stroke="black"/>
+<path d="M 344,48 L 344,192" fill="none" stroke="black"/>
+<path d="M 528,400 L 528,432" fill="none" stroke="black"/>
+<path d="M 584,112 L 584,392" fill="none" stroke="black"/>
+<path d="M 584,440 L 584,576" fill="none" stroke="black"/>
+<path d="M 648,400 L 648,432" fill="none" stroke="black"/>
+<path d="M 8,96 L 336,96" fill="none" stroke="black"/>
+<path d="M 344,112 L 576,112" fill="none" stroke="black"/>
+<path d="M 16,192 L 344,192" fill="none" stroke="black"/>
+<path d="M 8,272 L 576,272" fill="none" stroke="black"/>
+<path d="M 16,352 L 584,352" fill="none" stroke="black"/>
+<path d="M 528,400 L 648,400" fill="none" stroke="black"/>
+<path d="M 528,432 L 648,432" fill="none" stroke="black"/>
+<path d="M 8,496 L 576,496" fill="none" stroke="black"/>
+<path d="M 16,576 L 584,576" fill="none" stroke="black"/>
+<polygon class="arrowhead" points="584,496 572,490.4 572,501.6" fill="black" transform="rotate(0,576,496)"/>
+<polygon class="arrowhead" points="584,272 572,266.4 572,277.6" fill="black" transform="rotate(0,576,272)"/>
+<polygon class="arrowhead" points="344,96 332,90.4 332,101.6" fill="black" transform="rotate(0,336,96)"/>
+<polygon class="arrowhead" points="24,576 12,570.4 12,581.6" fill="black" transform="rotate(180,16,576)"/>
+<polygon class="arrowhead" points="24,352 12,346.4 12,357.6" fill="black" transform="rotate(180,16,352)"/>
+<polygon class="arrowhead" points="24,192 12,186.4 12,197.6" fill="black" transform="rotate(180,16,192)"/>
+<circle cx="584" cy="112" r="6" class="opendot" fill="white" stroke="black"/>
+<g class="text">
+<text x="28" y="36">Client</text>
+<text x="316" y="36">Resource</text>
+<text x="512" y="36">Equivalent Resource</text>
+<text x="92" y="84">QUERY with content</text>
+<text x="400" y="100">(generates)</text>
+<text x="572" y="100">/xyz</text>
+<text x="308" y="148">200 OK</text>
+<text x="276" y="164">Validator: foo</text>
+<text x="276" y="180">Location: /xyz</text>
+<text x="32" y="244">GET</text>
+<text x="108" y="260">(conditional on 'foo')</text>
+<text x="508" y="324">304 Not Modified</text>
+<text x="516" y="340">Validator: foo</text>
+<text x="588" y="420">State Change</text>
+<text x="32" y="468">GET</text>
+<text x="108" y="484">(conditional on 'foo')</text>
+<text x="548" y="548">200 OK</text>
+<text x="516" y="564">Validator: bar</text>
+</g>
+</svg>
+<?ENDINC flow-query-get.svg ?>
+</artwork>
+  </artset>
+</figure>
     </section>
 
     <section title="More Query Formats" anchor="example.more.query.formats">
