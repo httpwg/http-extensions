@@ -907,40 +907,40 @@ A.5.  Conditional Requests
    (and when the client is taking advantage of it).  The fictitious
    field name "Validator" is used for demonstration purposes.
 
-   Client                             Resource
-   |                                         |
-   |                                         |
-   | QUERY with content                      |
-   +---------------------------------------->|
-   |                                         |
-   |                                         |
-   |                                  200 OK |
-   |                          Validator: foo |
-   |<----------------------------------------+
-   |                                         |
-   |                                         |
-   | QUERY with content                      |
-   | (conditional on 'foo')                  |
-   +---------------------------------------->|
-   |                                         |
-   |                                         |
-   |                        304 Not Modified |
-   |                          Validator: foo |
-   |<----------------------------------------+
-   |                                         |
-   |                                         |
-   |                                  +--------------+
-   |                                  | State Change |
-   |                                  +--------------+
-   |                                         |
-   | QUERY with content                      |
-   | (conditional on 'foo')                  |
-   +---------------------------------------->|
-   |                                         |
-   |                                         |
-   |                                  200 OK |
-   |                          Validator: bar |
-   |<----------------------------------------+
+            Client                             Resource
+            |                                         |
+            |                                         |
+            | QUERY with content                      |
+            +---------------------------------------->|
+            |                                         |
+            |                                         |
+            |                                  200 OK |
+            |                          Validator: foo |
+            |<----------------------------------------+
+            |                                         |
+            |                                         |
+            | QUERY with content                      |
+            | (conditional on 'foo')                  |
+            +---------------------------------------->|
+            |                                         |
+            |                                         |
+            |                        304 Not Modified |
+            |                          Validator: foo |
+            |<----------------------------------------+
+            |                                         |
+            |                                         |
+            |                                  +--------------+
+            |                                  | State Change |
+            |                                  +--------------+
+            |                                         |
+            | QUERY with content                      |
+            | (conditional on 'foo')                  |
+            +---------------------------------------->|
+            |                                         |
+            |                                         |
+            |                                  200 OK |
+            |                          Validator: bar |
+            |<----------------------------------------+
 
                     Figure 1: Data Flow with QUERY only
 
