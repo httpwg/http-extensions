@@ -157,7 +157,7 @@ received.
 
 When an intermediary rejects an incremental message -- either a request or a
 response -- due to security concerns with regard to the payload that the message
-might convey, the intermediary SHOULD respond with a 501 Not Implemented error
+might convey, the intermediary SHOULD respond with a 501 (Not Implemented) error
 with an incremental_refused Proxy-Status response header field
 ({{iana-considerations}}).
 
