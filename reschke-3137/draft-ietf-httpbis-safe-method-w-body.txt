@@ -916,11 +916,9 @@ A.5.  Conditional Requests
             |                          Validator: foo |
             |<----------------------------------------+
             |                                         |
-            |                                         |
             | QUERY with content                      |
             | (conditional on 'foo')                  |
             +---------------------------------------->|
-            |                                         |
             |                                         |
             |                        304 Not Modified |
             |                          Validator: foo |
@@ -934,7 +932,6 @@ A.5.  Conditional Requests
             | QUERY with content                      |
             | (conditional on 'foo')                  |
             +---------------------------------------->|
-            |                                         |
             |                                         |
             |                                  200 OK |
             |                          Validator: bar |
