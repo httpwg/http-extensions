@@ -93,7 +93,7 @@ implicit server cancellation:
 
 Connections can be dropped due to a variety of network or transport layer reasons triggered by endpoints or on-path elements.
 
-This specification defines a new mechanism for resumable uploads from client to server in a way that is backwards-compatible with conventional HTTP uploads. When an upload is interrupted, clients can send subsequent requests to query the server state and use this information to send the remaining representation data. Alternatively, they can cancel the upload entirely. Unlike ranged downloads, this protocol does not support transferring an upload as multiple requests in parallel.
+This specification defines a new mechanism for resumable uploads from client to server that can seamlessly fall back to conventional uploads. When an upload is interrupted, clients can send subsequent requests to query the server state and use this information to send the remaining representation data. Alternatively, they can cancel the upload entirely. Unlike ranged downloads, this protocol does not support transferring an upload as multiple requests in parallel.
 
 Utilizing resumable uploads, applications can recover from unintended interruptions, but also interrupt an upload on purpose to later resume it, for example, when a user wants to pause an upload, the device's network connectivity changes, or bandwidth should be saved for higher priority tasks.
 
@@ -285,7 +285,7 @@ An upload resource is specific to the upload of one representation. For uploadin
 
 The server can clean up an upload resource and make it inaccessible immediately after the upload is complete. However, if a client didn't receive the last response acknowledging the upload's completion and the upload resource is not available anymore, the client cannot verify the upload's state with the server. Therefore, the server SHOULD keep the upload resource available for a reasonable amount of time after the upload is complete.
 
-An upload resource SHOULD NOT reuse the URI from a previous upload resource, unless reasonable time has passed to ensure that no client will attempt to access the previous upload resource. Otherwise, a client might access the upload resource corresponding to a different representation than it intends to transfer.
+An upload resource SHOULD be unique. Reuse of a URI for a different upload resource SHOULD be avoided in order to reduce the chance of misdirected or corrupted upload resources, as well as the potential security issues described in {{security-considerations}}.
 
 ## State
 
@@ -330,7 +330,7 @@ An upload resource MAY enforce one or multiple limits, which are communicated to
 
 The following key-value pairs are defined:
 
-- The value under the `max-size` key specifies a maximum size for the representation data, counted in bytes. The server might not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The upload resource can stop the upload if the offset ({{upload-offset}}) exceeds the maximum size. The value is an Integer.
+- The value under the `max-size` key specifies a maximum size for the representation data, counted in bytes. The server might not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size during an active upload. The value is an Integer.
 - The value under the `min-size` key specifies a minimum size for the representation data, counted in bytes. The server might not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. The value is an Integer.
 - The value under the `max-append-size` key specifies a maximum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append requests. The value is an Integer.
 - The value under the `min-append-size` key specifies a minimum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append requests. The value is an Integer. Requests completing the upload by including the `Upload-Complete: ?1` header field are exempt from this limit.
@@ -366,7 +366,7 @@ Representation metadata included in the initial request (see {{Section 8.3 of HT
 
 If the client received a final response with a
 
-- `2xx (Successful)` status code and the entire representation data was transferred in the request content, the upload is complete and the response belongs to the targeted resource processing the representation.
+- `2xx (Successful)` status code and the entire representation data was transferred in the request content, the upload is complete and the response comes from the targeted resource processing the representation.
 - `2xx (Successful)` status code and the entire representation data was not transferred in the request content, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
 - `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
 - `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}) if it received the URI of the upload resource in a `104 (Upload Resumption Supported)` interim response.
@@ -431,10 +431,10 @@ Upload-Length: 100000000
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Location: https://example.com/upload/b530ce8ff
+Location: https://example.com/upload/3fd4994ad
 
 HTTP/1.1 201 Created
-Location: https://example.com/upload/b530ce8ff
+Location: https://example.com/upload/3fd4994ad
 Upload-Limit: max-size=1000000000
 ~~~
 
@@ -452,15 +452,15 @@ Upload-Length: 100000000
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Location: https://example.com/upload/b530ce8ff
+Location: https://example.com/upload/0587fa44b
 
 HTTP/1.1 500 Internal Server Error
 ~~~
 
-D) The following example shows an upload creation being rejected by the server. The client cannot continue the upload.
+D) The following example shows an upload creation being rejected by the server because uploads to the target resource are not allowed. The client cannot continue the upload.
 
 ~~~ http-message
-POST /upload HTTP/1.1
+POST /upload-not-allowed HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
 Content-Length: 100000000
@@ -470,7 +470,7 @@ Upload-Length: 100000000
 ~~~
 
 ~~~ http-message
-HTTP/1.1 400 Bad Request
+HTTP/1.1 405 Method Not Allowed
 ~~~
 
 ## Offset Retrieval {#offset-retrieving}
@@ -507,7 +507,7 @@ The resource SHOULD NOT generate a response with the `301 (Moved Permanently)` a
 A) The following example shows an offset retrieval request. The server indicates the current offset and that the upload is not complete yet. The client can continue to append representation data.
 
 ~~~ http-message
-HEAD /upload/b530ce8ff HTTP/1.1
+HEAD /upload/c35e2cd29 HTTP/1.1
 Host: example.com
 ~~~
 
@@ -523,7 +523,7 @@ Cache-Control: no-store
 B) The following example shows an offset retrieval request for a completed upload. The client does not need to continue the upload.
 
 ~~~ http-message
-HEAD /upload/b530ce8ff HTTP/1.1
+HEAD /upload/a9edb781b HTTP/1.1
 Host: example.com
 ~~~
 
@@ -550,7 +550,7 @@ The request MUST include the `Upload-Complete` header field. Its value is true i
 
 If the client received a final response with a
 
-- `2xx (Successful)` status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response belongs to the resource processing the representation according to the initial request (see {{upload-creation}}).
+- `2xx (Successful)` status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request (see {{upload-creation}}).
 - `2xx (Successful)` status code and the entire remaining representation data was not transferred in the request content, the client can continue appending representation data.
 - `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry appending to the new URI.
 - `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
@@ -581,7 +581,7 @@ While the request content is being received, the server SHOULD send interim resp
 A) The following example shows an upload append request. The client transfers the next 25000000 bytes at an offset of 25000000 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:
 
 ~~~ http-message
-PATCH /upload/b530ce8ff HTTP/1.1
+PATCH /upload/37a504d87 HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
 Upload-Offset: 25000000
@@ -602,7 +602,7 @@ Upload-Complete: ?0
 B) The next example shows an upload append, where the client transfers the remaining 25000000 bytes and completes the upload. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:
 
 ~~~ http-message
-PATCH /upload/b530ce8ff HTTP/1.1
+PATCH /upload/d38d6ffe8 HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
 Upload-Offset: 25000000
@@ -643,7 +643,7 @@ The resource SHOULD NOT generate a response with the `301 (Moved Permanently)` a
 The following example shows an upload cancellation:
 
 ~~~ http-message
-DELETE /upload/b530ce8ff HTTP/1.1
+DELETE /upload/5688a431c HTTP/1.1
 Host: example.com
 ~~~
 
