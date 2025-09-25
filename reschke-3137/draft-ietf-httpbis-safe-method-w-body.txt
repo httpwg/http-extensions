@@ -924,7 +924,6 @@ A.5.  Conditional Requests
             |                          Validator: foo |
             |<----------------------------------------+
             |                                         |
-            |                                         |
             |                                  +--------------+
             |                                  | State Change |
             |                                  +--------------+
@@ -940,41 +939,36 @@ A.5.  Conditional Requests
 
                     Figure 1: Data Flow with QUERY only
 
-Client                             Resource           Equivalent Resource
-|                                         |
+Client                             Resource
 |                                         |
 | QUERY with content                      |
-+---------------------------------------->| (generates)              /xyz
++---------------------------------------->|           Equivalent Resource
 |                                         +-----------------------------o
-|                                         |                             |
+|                                         |            (generates /xyz) |
 |                                  200 OK |                             |
 |                          Validator: foo |                             |
 |                          Location: /xyz |                             |
 |<----------------------------------------+                             |
 |                                                                       |
-|                                                                       |
 | GET                                                                   |
 | (conditional on 'foo')                                                |
 +---------------------------------------------------------------------->|
-|                                                                       |
 |                                                                       |
 |                                                      304 Not Modified |
 |                                                        Validator: foo |
 |<----------------------------------------------------------------------+
 |                                                                       |
-|                                                                       |
 |                                                                +--------------+
 |                                                                | State Change |
 |                                                                +--------------+
-|                                                                       |
 | GET                                                                   |
 | (conditional on 'foo')                                                |
 +---------------------------------------------------------------------->|
 |                                                                       |
-|                                                                       |
 |                                                                200 OK |
 |                                                        Validator: bar |
 |<----------------------------------------------------------------------+
+|                                                                       |
 
          Figure 2: Data Flow with GET to Equivalent Resource
 
