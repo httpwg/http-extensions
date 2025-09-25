@@ -1094,6 +1094,7 @@ Client                             Resource
 |                                  200 OK |
 |                          Validator: bar |
 |<----------------------------------------+
+|                                         |
 ]]></artwork>
 <artwork type="svg">
 <?BEGININC flow-query.svg ?>
