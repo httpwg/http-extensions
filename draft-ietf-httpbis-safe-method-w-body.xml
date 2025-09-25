@@ -1487,11 +1487,11 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   Ashok Malhotra participated in early discussions leading to this
   specification:
 </t>
-<author initials="A." surname="Malhotra" fullname="Ashok Malhotra">
+<contact initials="A." surname="Malhotra" fullname="Ashok Malhotra">
   <address>
     <email>malhotrasahib@gmail.com</email>
   </address>
-</author>
+</contact>
 </section>
 </back>
 </rfc>
