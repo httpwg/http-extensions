@@ -909,7 +909,6 @@ A.5.  Conditional Requests
 
             Client                             Resource
             |                                         |
-            |                                         |
             | QUERY with content                      |
             +---------------------------------------->|
             |                                         |
