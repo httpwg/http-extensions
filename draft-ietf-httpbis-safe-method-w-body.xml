@@ -1069,7 +1069,6 @@ Client                             Resource
 |                          Validator: foo |
 |<----------------------------------------+
 |                                         |
-|                                         |
 | QUERY with content                      |
 | (conditional on 'foo')                  |
 +---------------------------------------->|
