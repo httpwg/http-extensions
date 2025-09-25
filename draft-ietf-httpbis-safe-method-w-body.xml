@@ -1062,7 +1062,6 @@ decade, total, with errata, % with errata, average page count
           <artwork type="ascii-art" name="flow-query" align="center"><![CDATA[
 Client                             Resource
 |                                         |
-|                                         |
 | QUERY with content                      |
 +---------------------------------------->|
 |                                         |
