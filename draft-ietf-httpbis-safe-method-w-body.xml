@@ -1138,7 +1138,6 @@ Client                             Resource
           <artwork type="ascii-art" name="flow-query-get" align="center"><![CDATA[
 Client                             Resource           Equivalent Resource
 |                                         |
-|                                         |
 | QUERY with content                      |
 +---------------------------------------->| (generates)              /xyz
 |                                         +-----------------------------o
@@ -1148,11 +1147,9 @@ Client                             Resource           Equivalent Resource
 |                          Location: /xyz |                             |
 |<----------------------------------------+                             |
 |                                                                       |
-|                                                                       |
 | GET                                                                   |
 | (conditional on 'foo')                                                |
 +---------------------------------------------------------------------->|
-|                                                                       |
 |                                                                       |
 |                                                      304 Not Modified |
 |                                                        Validator: foo |
@@ -1162,11 +1159,9 @@ Client                             Resource           Equivalent Resource
 |                                                                +--------------+
 |                                                                | State Change |
 |                                                                +--------------+
-|                                                                       |
 | GET                                                                   |
 | (conditional on 'foo')                                                |
 +---------------------------------------------------------------------->|
-|                                                                       |
 |                                                                       |
 |                                                                200 OK |
 |                                                        Validator: bar |
