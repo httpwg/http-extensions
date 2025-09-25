@@ -941,10 +941,10 @@ A.5.  Conditional Requests
 
 Client                             Resource
 |                                         |
-| QUERY with content                      |
-+---------------------------------------->|           Equivalent Resource
+| QUERY with content                      |           Equivalent Resource
++---------------------------------------->|              (generates /xyz)
 |                                         +-----------------------------o
-|                                         |            (generates /xyz) |
+|                                         |                             |
 |                                  200 OK |                             |
 |                          Validator: foo |                             |
 |                          Location: /xyz |                             |
