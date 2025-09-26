@@ -1295,6 +1295,10 @@ B.12.  Since draft-ietf-httpbis-safe-method-w-body-11
    *  Consistent Table Captions (https://github.com/httpwg/http-
       extensions/issues/3134)
 
+   *  Define "Equivalent Resource", update description of Conditional
+      Requests, add examples (https://github.com/httpwg/http-extensions/
+      issues/3137)
+
    *  Extend discussion of Range Requests (https://github.com/httpwg/
       http-extensions/issues/3151)
 
