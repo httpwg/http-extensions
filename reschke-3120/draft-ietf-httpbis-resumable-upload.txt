@@ -175,13 +175,12 @@ Table of Contents
    layer reasons triggered by endpoints or on-path elements.
 
    This specification defines a new mechanism for resumable uploads from
-   client to server in a way that is backwards-compatible with
-   conventional HTTP uploads.  When an upload is interrupted, clients
-   can send subsequent requests to query the server state and use this
-   information to send the remaining representation data.
-   Alternatively, they can cancel the upload entirely.  Unlike ranged
-   downloads, this protocol does not support transferring an upload as
-   multiple requests in parallel.
+   client to server that can seamlessly fall back to conventional
+   uploads.  When an upload is interrupted, clients can send subsequent
+   requests to query the server state and use this information to send
+   the remaining representation data.  Alternatively, they can cancel
+   the upload entirely.  Unlike ranged downloads, this protocol does not
+   support transferring an upload as multiple requests in parallel.
 
    Utilizing resumable uploads, applications can recover from unintended
    interruptions, but also interrupt an upload on purpose to later
@@ -457,11 +456,10 @@ Table of Contents
    the server SHOULD keep the upload resource available for a reasonable
    amount of time after the upload is complete.
 
-   An upload resource SHOULD NOT reuse the URI from a previous upload
-   resource, unless reasonable time has passed to ensure that no client
-   will attempt to access the previous upload resource.  Otherwise, a
-   client might access the upload resource corresponding to a different
-   representation than it intends to transfer.
+   An upload resource SHOULD be unique.  Reuse of a URI for a different
+   upload resource SHOULD be avoided in order to reduce the chance of
+   misdirected or corrupted upload resources, as well as the potential
+   security issues described in Section 13.
 
 4.1.  State
 
@@ -572,9 +570,9 @@ Table of Contents
       representation data, counted in bytes.  The server might not
       create an upload resource if the length (Section 4.1.3) deduced
       from the upload creation request is larger than the maximum size.
-      The upload resource can stop the upload if the offset
-      (Section 4.1.1) exceeds the maximum size.  The value is an
-      Integer.
+      The server might also deactivate the upload resource if the offset
+      (Section 4.1.1) exceeds the maximum size during an active upload.
+      The value is an Integer.
 
    *  The value under the min-size key specifies a minimum size for the
       representation data, counted in bytes.  The server might not
@@ -700,7 +698,7 @@ Table of Contents
 
    *  2xx (Successful) status code and the entire representation data
       was transferred in the request content, the upload is complete and
-      the response belongs to the targeted resource processing the
+      the response comes from the targeted resource processing the
       representation.
 
    *  2xx (Successful) status code and the entire representation data
@@ -809,10 +807,10 @@ Table of Contents
    [partial content (25000000 bytes)]
 
    HTTP/1.1 104 Upload Resumption Supported
-   Location: https://example.com/upload/b530ce8ff
+   Location: https://example.com/upload/3fd4994ad
 
    HTTP/1.1 201 Created
-   Location: https://example.com/upload/b530ce8ff
+   Location: https://example.com/upload/3fd4994ad
    Upload-Limit: max-size=1000000000
 
    C) The following example shows an upload creation, where the server
@@ -828,14 +826,15 @@ Table of Contents
    [content (100000000 bytes)]
 
    HTTP/1.1 104 Upload Resumption Supported
-   Location: https://example.com/upload/b530ce8ff
+   Location: https://example.com/upload/0587fa44b
 
    HTTP/1.1 500 Internal Server Error
 
    D) The following example shows an upload creation being rejected by
-   the server.  The client cannot continue the upload.
+   the server because uploads to the target resource are not allowed.
+   The client cannot continue the upload.
 
-   POST /upload HTTP/1.1
+   POST /upload-not-allowed HTTP/1.1
    Host: example.com
    Upload-Complete: ?1
    Content-Length: 100000000
@@ -843,7 +842,7 @@ Table of Contents
 
    [content (100000000 bytes)]
 
-   HTTP/1.1 400 Bad Request
+   HTTP/1.1 405 Method Not Allowed
 
 4.3.  Offset Retrieval
 
@@ -917,7 +916,7 @@ Table of Contents
    server indicates the current offset and that the upload is not
    complete yet.  The client can continue to append representation data.
 
-   HEAD /upload/b530ce8ff HTTP/1.1
+   HEAD /upload/c35e2cd29 HTTP/1.1
    Host: example.com
 
    HTTP/1.1 204 No Content
@@ -930,7 +929,7 @@ Table of Contents
    B) The following example shows an offset retrieval request for a
    completed upload.  The client does not need to continue the upload.
 
-   HEAD /upload/b530ce8ff HTTP/1.1
+   HEAD /upload/a9edb781b HTTP/1.1
    Host: example.com
 
    HTTP/1.1 204 No Content
@@ -970,7 +969,7 @@ Table of Contents
 
    *  2xx (Successful) status code and the remaining representation data
       was transferred in the request content, the upload is complete and
-      the corresponding response belongs to the resource processing the
+      the corresponding response comes from the resource processing the
       representation according to the initial request (see Section 4.2).
 
    *  2xx (Successful) status code and the entire remaining
@@ -1059,7 +1058,7 @@ Table of Contents
    not indicate that the upload is then completed.  The server generates
    one interim response and finally acknowledges the new offset:
 
-   PATCH /upload/b530ce8ff HTTP/1.1
+   PATCH /upload/37a504d87 HTTP/1.1
    Host: example.com
    Upload-Complete: ?0
    Upload-Offset: 25000000
@@ -1079,7 +1078,7 @@ Table of Contents
    server processes the uploaded representation and generates the
    responding response, in this example containing extracted meta data:
 
-   PATCH /upload/b530ce8ff HTTP/1.1
+   PATCH /upload/d38d6ffe8 HTTP/1.1
    Host: example.com
    Upload-Complete: ?1
    Upload-Offset: 25000000
@@ -1125,7 +1124,7 @@ Table of Contents
 
    The following example shows an upload cancellation:
 
-   DELETE /upload/b530ce8ff HTTP/1.1
+   DELETE /upload/5688a431c HTTP/1.1
    Host: example.com
 
    HTTP/1.1 204 No Content
