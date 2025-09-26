@@ -149,8 +149,8 @@ under which the intermediaries might reject requests.
 
 ## Permanent Rejection
 
-Some intermediaries inspect the payload of an HTTP messages and forward them
-only if the content is deemed safe. Any feature that depends on seeing the
+Some intermediaries inspect the payload of HTTP messages and forward them only
+if their content is deemed safe. Any feature that depends on seeing the
 entirety of the message in this way is incompatible with incremental delivery,
 so these intermediaries need to reject requests unless the entire message is
 received.
