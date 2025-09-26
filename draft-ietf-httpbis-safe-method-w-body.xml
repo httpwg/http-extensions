@@ -1461,6 +1461,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Address HTTPDIR/RF feedback on introduction (<eref target="https://github.com/httpwg/http-extensions/issues/3122"/>)</li>
   <li>Address HTTPDIR/RF feedback on method definition  (<eref target="https://github.com/httpwg/http-extensions/issues/3123"/>)</li>
   <li>Consistent Table Captions (<eref target="https://github.com/httpwg/http-extensions/issues/3134"/>)</li>
+  <li>Define "Equivalent Resource", update description of Conditional Requests, add examples  (<eref target="https://github.com/httpwg/http-extensions/issues/3137"/>)</li>
   <li>Extend discussion of Range Requests (<eref target="https://github.com/httpwg/http-extensions/issues/3151"/>)</li>
 </ul>
 </section>
