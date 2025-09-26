@@ -2134,8 +2134,8 @@ altering a victim's cookies because of inherent vulnerabilities in the cookie
 protocol itself (see "Weak Confidentiality" and "Weak Integrity", below). In
 addition, by default, cookies do not provide confidentiality or integrity from
 network attackers, even when used in conjunction with HTTPS. This means that
-a cookie must explicitly specify any protective attributes. For example, the
-cookie:
+a cookie needs to explicitly specify any protective attributes. For example,
+the cookie:
 
 ```
 Set-Cookie: a=b
