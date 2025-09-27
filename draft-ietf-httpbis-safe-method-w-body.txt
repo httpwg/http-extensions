@@ -398,8 +398,7 @@ Table of Contents
    [HTTP-CACHING]).
 
    The cache key for a QUERY request (see Section 2 of [HTTP-CACHING])
-   MUST incorporate the request content (Section 6 of [HTTP-CACHING])
-   and related metadata (Section 8 of [HTTP-CACHING]).
+   MUST incorporate the request content.
 
    Caches MAY remove semantically insignificant differences first,
    thereby improving cache efficiency.
@@ -422,13 +421,6 @@ Table of Contents
    (Section 5.2.1.6 of [HTTP-CACHING]), that they wish that no such
    transformation happens (but note that this directive is just
    advisory).
-
-   Note that caching QUERY method responses is inherently more complex
-   than caching responses to GET, as complete reading of the request's
-   content is needed in order to determine the cache key.  If a QUERY
-   response supplies a Location response field (Section 2.4) to indicate
-   a URI for an equivalent resource (Section 2.2), clients can switch to
-   GET for subsequent requests, thereby simplifying processing.
 
 2.8.  Range Requests
 
