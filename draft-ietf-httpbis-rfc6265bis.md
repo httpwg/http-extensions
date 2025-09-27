@@ -2133,7 +2133,18 @@ is insufficient in fully preventing a networking attacker from obtaining or
 altering a victim's cookies because of inherent vulnerabilities in the cookie
 protocol itself (see "Weak Confidentiality" and "Weak Integrity", below). In
 addition, by default, cookies do not provide confidentiality or integrity from
-network attackers, even when used in conjunction with HTTPS.
+network attackers, even when used in conjunction with HTTPS. This means that
+a cookie needs to explicitly specify any protective attributes. For example,
+the cookie:
+
+```
+Set-Cookie: a=b
+```
+
+doesn't specify the Secure attribute and will therefore be accessible on both
+secure and insecure connections, regardless of the original connection type it
+was created on. This behavior could allow an attacker to read or modify the
+cookie.
 
 ## Ambient Authority
 
