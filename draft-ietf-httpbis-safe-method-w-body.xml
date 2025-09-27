@@ -434,8 +434,7 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
       <t>
         The cache key for a QUERY request (see <xref target="HTTP-CACHING" section="2"/>) &MUST;
-        incorporate the request content (<xref target="HTTP-CACHING" section="6"/>) and related
-        metadata (<xref target="HTTP-CACHING" section="8"/>).
+        incorporate the request content.
       </t>
       <t>
         Caches <bcp14>MAY</bcp14> remove semantically insignificant differences first, thereby
@@ -460,13 +459,6 @@ q=foo&amp;limit=10&amp;sort=-published
         Clients can indicate, using the "no-transform" cache directive (<xref target="HTTP-CACHING" section="5.2.1.6"/>),
         that they wish that no such transformation happens (but note that this directive is just
         advisory).
-      </t>
-      <t>
-        Note that caching QUERY method responses is inherently more complex than caching responses
-        to GET, as complete reading of the request's content is needed in order to determine
-        the cache key. If a QUERY response supplies a Location response field (<xref target="location"/>)
-        to indicate a URI for an equivalent resource (<xref target="equivalent-resource"/>), clients
-        can switch to GET for subsequent requests, thereby simplifying processing.
       </t>
     </section>
 
