@@ -5,8 +5,8 @@
 HTTP                                                      P. Meenan, Ed.
 Internet-Draft                                                Google LLC
 Intended status: Standards Track                           Y. Weiss, Ed.
-Expires: 30 March 2026                                       Shopify Inc
-                                                       26 September 2025
+Expires: 31 March 2026                                       Shopify Inc
+                                                       27 September 2025
 
 
                     Compression Dictionary Transport
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 March 2026.
+   This Internet-Draft will expire on 31 March 2026.
 
 Copyright Notice
 
