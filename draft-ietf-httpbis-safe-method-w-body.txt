@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 30 March 2026                                        Cloudflare
+Expires: 31 March 2026                                        Cloudflare
                                                                M. Bishop
                                                                   Akamai
-                                                       26 September 2025
+                                                       27 September 2025
 
 
                          The HTTP QUERY Method
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 March 2026.
+   This Internet-Draft will expire on 31 March 2026.
 
 Copyright Notice
 
@@ -398,7 +398,8 @@ Table of Contents
    [HTTP-CACHING]).
 
    The cache key for a QUERY request (see Section 2 of [HTTP-CACHING])
-   MUST incorporate the request content.
+   MUST incorporate the request content (Section 6 of [HTTP-CACHING])
+   and related metadata (Section 8 of [HTTP-CACHING]).
 
    Caches MAY remove semantically insignificant differences first,
    thereby improving cache efficiency.
@@ -421,6 +422,13 @@ Table of Contents
    (Section 5.2.1.6 of [HTTP-CACHING]), that they wish that no such
    transformation happens (but note that this directive is just
    advisory).
+
+   Note that caching QUERY method responses is inherently more complex
+   than caching responses to GET, as complete reading of the request's
+   content is needed in order to determine the cache key.  If a QUERY
+   response supplies a Location response field (Section 2.4) to indicate
+   a URI for an equivalent resource (Section 2.2), clients can switch to
+   GET for subsequent requests, thereby simplifying processing.
 
 2.8.  Range Requests
 
