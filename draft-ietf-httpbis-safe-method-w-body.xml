@@ -1457,6 +1457,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Improve description of caching, clarifying what is required (<eref target="https://github.com/httpwg/http-extensions/tree/reschke-3107"/>)</li>
   <li>Address HTTPDIR/RF feedback on example appendix (<eref target="https://github.com/httpwg/http-extensions/issues/3114"/>)</li>
   <li>Address HTTPDIR/RF feedback on redirection (<eref target="https://github.com/httpwg/http-extensions/issues/3119"/>)</li>
+  <li>Address HTTPDIR/RF feedback on caching (<eref target="https://github.com/httpwg/http-extensions/issues/3120"/>)</li>
   <li>Address HTTPDIR/RF feedback on abstract (<eref target="https://github.com/httpwg/http-extensions/issues/3121"/>)</li>
   <li>Address HTTPDIR/RF feedback on introduction (<eref target="https://github.com/httpwg/http-extensions/issues/3122"/>)</li>
   <li>Address HTTPDIR/RF feedback on method definition  (<eref target="https://github.com/httpwg/http-extensions/issues/3123"/>)</li>
