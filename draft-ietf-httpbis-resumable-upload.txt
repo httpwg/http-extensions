@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 1 April 2026                                         Apple Inc.
+Expires: 2 April 2026                                         Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                       28 September 2025
+                                                       29 September 2025
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 April 2026.
+   This Internet-Draft will expire on 2 April 2026.
 
 Copyright Notice
 
@@ -566,50 +566,53 @@ Table of Contents
 
    The following key-value pairs are defined:
 
-   *  The value under the max-size key specifies a maximum size for the
-      representation data, counted in bytes.  The server might not
-      create an upload resource if the length (Section 4.1.3) deduced
-      from the upload creation request is larger than the maximum size.
-      The server might also deactivate the upload resource if the offset
-      (Section 4.1.1) exceeds the maximum size during an active upload.
-      The value is an Integer.
+   max-size:  Specifies a maximum size for the representation data,
+      counted in bytes.  The server might not create an upload resource
+      if the length (Section 4.1.3) deduced from the upload creation
+      request is larger than the maximum size.  The server might also
+      deactivate the upload resource if the offset (Section 4.1.1)
+      exceeds the maximum size.  The value is an Integer.
 
-   *  The value under the min-size key specifies a minimum size for the
-      representation data, counted in bytes.  The server might not
-      create an upload resource if the length (Section 4.1.3) deduced
-      from the upload creation request is smaller than the minimum size
-      or no length can be deduced at all.  The value is an Integer.
+   min-size:  Specifies a minimum size for the representation data,
+      counted in bytes.  The server might not create an upload resource
+      if the length (Section 4.1.3) deduced from the upload creation
+      request is smaller than the minimum size or no length can be
+      deduced at all.  The value is an Integer.
 
-   *  The value under the max-append-size key specifies a maximum size
-      counted in bytes for the request content in a single upload append
-      request (Section 4.4).  The server might reject requests exceeding
-      this limit.  A client that is aware of this limit MUST NOT send
-      larger upload append requests.  The value is an Integer.
+   max-append-size:  Specifies a maximum size counted in bytes for the
+      request content in a single upload append request (Section 4.4).
+      The server might reject requests exceeding this limit.  A client
+      that is aware of this limit MUST NOT send larger upload append
+      requests.  The value is an Integer.
 
-   *  The value under the min-append-size key specifies a minimum size
-      counted in bytes for the request content in a single upload append
-      request (Section 4.4).  The server might reject requests below
-      this limit.  A client that is aware of this limit MUST NOT send
-      smaller upload append requests.  The value is an Integer.
-      Requests completing the upload by including the Upload-Complete:
-      ?1 header field are exempt from this limit.
+   min-append-size:  Specifies a minimum size counted in bytes for the
+      request content in a single upload append request (Section 4.4).
+      The server might reject requests below this limit.  A client that
+      is aware of this limit MUST NOT send smaller upload append
+      requests.  The value is an Integer.  Requests completing the
+      upload by including the Upload-Complete: ?1 header field are
+      exempt from this limit.
 
-   *  The value under the max-age key specifies the remaining lifetime
-      of the upload resource in seconds counted from the generation of
-      the response.  After the resource's lifetime is reached, the
-      server might make the upload resource inaccessible and a client
-      SHOULD NOT attempt to access the upload resource as these requests
-      will likely fail.  The lifetime MAY be extended but SHOULD NOT be
-      reduced unless the server makes the upload resource immediately
-      inaccessible.  The value is an Integer.
+   max-age:  Specifies the remaining lifetime of the upload resource in
+      seconds counted from the generation of the response.  After the
+      resource's lifetime is reached, the server might make the upload
+      resource inaccessible and a client SHOULD NOT attempt to access
+      the upload resource as these requests will likely fail.  The
+      lifetime MAY be extended but SHOULD NOT be reduced unless the
+      server makes the upload resource immediately inaccessible.  The
+      value is an Integer.
 
    Except for the max-age limit, the existence of a limit or its value
    MUST NOT change throughout the lifetime of the upload resource.
 
-   When parsing the Upload-Limit header field, unrecognized keys MUST be
-   ignored and MUST NOT fail the parsing to facilitate the addition of
-   new limits in the future.  Keys with values other than defined here
-   MUST be ignored.
+   Receivers of Upload-Limit parse the Dictionary as described in
+   Section 4.2 of [STRUCTURED-FIELDS].  Where the Dictionary is
+   successfully parsed, this document places two additional requirements
+   on Dictionary members.  First, a member with an unknown key MUST be
+   ignored.  Second, a member with a known key but a value of unexpected
+   type MUST cause the entire Upload-Limit header field to be ignored,
+   or alternatively the complete HTTP message MUST be treated as
+   malformed.
 
    A server that supports the creation of a resumable upload resource
    (Section 4.2) for a target URI MUST include the Upload-Limit header
