@@ -82,7 +82,7 @@
         <eref target="https://github.com/httpwg/http-extensions/labels/query-method"/>.
       </t>
       <t>
-        The changes in this draft are summarized in <xref target="changes.since.11"/>.
+        The changes in this draft are summarized in <xref target="changes.since.12"/>.
       </t>
     </note>
 
@@ -1465,6 +1465,11 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Define "Equivalent Resource", update description of Conditional Requests, add examples  (<eref target="https://github.com/httpwg/http-extensions/issues/3137"/>)</li>
   <li>Extend discussion of Range Requests (<eref target="https://github.com/httpwg/http-extensions/issues/3151"/>)</li>
 </ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-12" anchor="changes.since.12">
+<t>
+  None yet.
+</t>
 </section>
 </section>
 
