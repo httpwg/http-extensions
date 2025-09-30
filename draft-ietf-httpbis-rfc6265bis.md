@@ -592,7 +592,7 @@ secure-av         = "Secure"
 httponly-av       = "HttpOnly"
 samesite-av       = "SameSite" BWS "=" BWS samesite-value
 samesite-value    = "Strict" / "Lax" / "None"
-extension-av      = *av-octet
+extension-av      = 1*av-octet
 av-octet          = %x20-3A / %x3C-7E
                       ; any CHAR except CTLs or ";"
 ~~~
@@ -616,7 +616,7 @@ Note that in this case, the initial and trailing DQUOTE characters are not
 stripped. They are part of the cookie-value, and will be included in Cookie
 header fields sent to the server.
 
-Per the grammar above, cookie-avs MUST NOT contain leading or trailing WSP
+Per the grammar above, extension-av MUST NOT contain leading or trailing WSP
 characters as they will be interpreted as BWS and removed.
 
 The domain-value is a subdomain as defined by {{Section 3.5 of RFC1034}}, and
