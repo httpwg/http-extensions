@@ -395,7 +395,7 @@ So, for example, given any non-default value for `No-Vary-Search`, such as `No-V
     <tt>https://example.com/?a=%f6</tt><br>
     <tt>https://example.com/?a=%ef%bf%bd</tt>
   </dt>
-  <dd>Both values are parsed as U+FFFD ( )</dd>
+  <dd>Both values are parsed as U+FFFD (�)</dd>
 
   <dt>
     <tt>https://example.com/?a=x&&&&</tt><br>
