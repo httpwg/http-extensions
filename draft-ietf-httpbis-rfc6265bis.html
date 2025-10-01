@@ -1873,7 +1873,7 @@ secure-av         = "Secure"
 httponly-av       = "HttpOnly"
 samesite-av       = "SameSite" BWS "=" BWS samesite-value
 samesite-value    = "Strict" / "Lax" / "None"
-extension-av      = *av-octet
+extension-av      = 1*av-octet
 av-octet          = %x20-3A / %x3C-7E
                       ; any CHAR except CTLs or ";"
 </pre><a href="#section-4.1.1-2" class="pilcrow">¶</a>
@@ -1892,7 +1892,7 @@ data in a cookie-value SHOULD encode that data, for example, using Base64
 Note that in this case, the initial and trailing DQUOTE characters are not
 stripped. They are part of the cookie-value, and will be included in Cookie
 header fields sent to the server.<a href="#section-4.1.1-7" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-8">Per the grammar above, cookie-avs MUST NOT contain leading or trailing WSP
+<p id="section-4.1.1-8">Per the grammar above, extension-av MUST NOT contain leading or trailing WSP
 characters as they will be interpreted as BWS and removed.<a href="#section-4.1.1-8" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-9">The domain-value is a subdomain as defined by <span><a href="https://rfc-editor.org/rfc/rfc1034#section-3.5" class="relref">Section 3.5</a> of [<a href="#RFC1034" class="cite xref">RFC1034</a>]</span>, and
 as enhanced by <span><a href="https://rfc-editor.org/rfc/rfc1123#section-2.1" class="relref">Section 2.1</a> of [<a href="#RFC1123" class="cite xref">RFC1123</a>]</span>. Thus, domain-value is a string of
