@@ -1,4 +1,4 @@
-# Editor's drafts for draft-ietf-httpbis-no-vary-search-03 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/draft-ietf-httpbis-no-vary-search-03)
+# Editor's drafts for reschke-no-vary-terminology branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/reschke-no-vary-terminology)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |

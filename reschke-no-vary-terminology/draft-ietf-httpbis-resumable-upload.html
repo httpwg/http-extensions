@@ -1046,11 +1046,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Resumable Uploads</td>
-<td class="right">September 2025</td>
+<td class="right">October 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Kleidl, et al.</td>
-<td class="center">Expires 2 April 2026</td>
+<td class="center">Expires 4 April 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1063,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-resumable-upload-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-09-29" class="published">29 September 2025</time>
+<time datetime="2025-10-01" class="published">1 October 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-04-02">2 April 2026</time></dd>
+<dd class="expires"><time datetime="2026-04-04">4 April 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1128,7 +1128,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 2 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 4 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1429,7 +1429,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <dd class="break"></dd>
 </dl>
 <p id="section-1-4">Connections can be dropped due to a variety of network or transport layer reasons triggered by endpoints or on-path elements.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">This specification defines a new mechanism for resumable uploads from client to server in a way that is backwards-compatible with conventional HTTP uploads. When an upload is interrupted, clients can send subsequent requests to query the server state and use this information to send the remaining representation data. Alternatively, they can cancel the upload entirely. Unlike ranged downloads, this protocol does not support transferring an upload as multiple requests in parallel.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-5">This specification defines a new mechanism for resumable uploads from client to server that can seamlessly fall back to conventional uploads. When an upload is interrupted, clients can send subsequent requests to query the server state and use this information to send the remaining representation data. Alternatively, they can cancel the upload entirely. Unlike ranged downloads, this protocol does not support transferring an upload as multiple requests in parallel.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">Utilizing resumable uploads, applications can recover from unintended interruptions, but also interrupt an upload on purpose to later resume it, for example, when a user wants to pause an upload, the device's network connectivity changes, or bandwidth should be saved for higher priority tasks.<a href="#section-1-6" class="pilcrow">¶</a></p>
 <p id="section-1-7">The document introduces the concept of an upload resource to facilitate resumable uploads (<a href="#upload-resource" class="auto internal xref">Section 4</a>) and defines new header fields to communicate the state of the upload (<a href="#state" class="auto internal xref">Section 4.1</a>), the status code <code>104 (Upload Resumption Supported)</code> to indicate the server's support for resumable uploads (<a href="#status-code-104" class="auto internal xref">Section 5</a>), and the <code>application/partial-upload</code> media type to label partial representation data when resuming an upload (<a href="#media-type-partial-upload" class="auto internal xref">Section 6</a>).<a href="#section-1-7" class="pilcrow">¶</a></p>
 </section>
@@ -1767,7 +1767,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-4-1">A resumable upload is enabled through interaction with an upload resource. When a resumable upload begins, the server is asked to create an upload resource through a request to another resource (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>). This upload resource is responsible for handling the upload of a representation. Using the upload resource, the client can query the upload progress (<a href="#offset-retrieving" class="auto internal xref">Section 4.3</a>), append representation data (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>), or cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 4.5</a>).<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">An upload resource is specific to the upload of one representation. For uploading multiple representations, multiple upload resources have to be used.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3">The server can clean up an upload resource and make it inaccessible immediately after the upload is complete. However, if a client didn't receive the last response acknowledging the upload's completion and the upload resource is not available anymore, the client cannot verify the upload's state with the server. Therefore, the server <span class="bcp14">SHOULD</span> keep the upload resource available for a reasonable amount of time after the upload is complete.<a href="#section-4-3" class="pilcrow">¶</a></p>
-<p id="section-4-4">An upload resource <span class="bcp14">SHOULD NOT</span> reuse the URI from a previous upload resource, unless reasonable time has passed to ensure that no client will attempt to access the previous upload resource. Otherwise, a client might access the upload resource corresponding to a different representation than it intends to transfer.<a href="#section-4-4" class="pilcrow">¶</a></p>
+<p id="section-4-4">An upload resource <span class="bcp14">SHOULD</span> be unique. Reuse of a URI for a different upload resource <span class="bcp14">SHOULD</span> be avoided in order to reduce the chance of misdirected or corrupted upload resources, as well as the potential security issues described in <a href="#security-considerations" class="auto internal xref">Section 13</a>.<a href="#section-4-4" class="pilcrow">¶</a></p>
 <div id="state">
 <section id="section-4.1">
         <h3 id="name-state">
@@ -1822,25 +1822,40 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           </h4>
 <p id="section-4.1.4-1">An upload resource <span class="bcp14">MAY</span> enforce one or multiple limits, which are communicated to the client via the <code>Upload-Limit</code> response header field. <code>Upload-Limit</code> is a Dictionary Structured Header Field (<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>). Its value is a Dictionary (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.2" class="relref">Section 3.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>). Other values <span class="bcp14">MUST</span> cause the entire header field to be ignored.<a href="#section-4.1.4-1" class="pilcrow">¶</a></p>
 <p id="section-4.1.4-2">The following key-value pairs are defined:<a href="#section-4.1.4-2" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-4.1.4-3.1">
-              <p id="section-4.1.4-3.1.1">The value under the <code>max-size</code> key specifies a maximum size for the representation data, counted in bytes. The server might not create an upload resource if the length (<a href="#upload-length" class="auto internal xref">Section 4.1.3</a>) deduced from the upload creation request is larger than the maximum size. The upload resource can stop the upload if the offset (<a href="#upload-offset" class="auto internal xref">Section 4.1.1</a>) exceeds the maximum size. The value is an Integer.<a href="#section-4.1.4-3.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-4.1.4-3.2">
-              <p id="section-4.1.4-3.2.1">The value under the <code>min-size</code> key specifies a minimum size for the representation data, counted in bytes. The server might not create an upload resource if the length (<a href="#upload-length" class="auto internal xref">Section 4.1.3</a>) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. The value is an Integer.<a href="#section-4.1.4-3.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-4.1.4-3.3">
-              <p id="section-4.1.4-3.3.1">The value under the <code>max-append-size</code> key specifies a maximum size counted in bytes for the request content in a single upload append request (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>). The server might reject requests exceeding this limit. A client that is aware of this limit <span class="bcp14">MUST NOT</span> send larger upload append requests. The value is an Integer.<a href="#section-4.1.4-3.3.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-4.1.4-3.4">
-              <p id="section-4.1.4-3.4.1">The value under the <code>min-append-size</code> key specifies a minimum size counted in bytes for the request content in a single upload append request (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>). The server might reject requests below this limit. A client that is aware of this limit <span class="bcp14">MUST NOT</span> send smaller upload append requests. The value is an Integer. Requests completing the upload by including the <code>Upload-Complete: ?1</code> header field are exempt from this limit.<a href="#section-4.1.4-3.4.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-4.1.4-3.5">
-              <p id="section-4.1.4-3.5.1">The value under the <code>max-age</code> key specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and a client <span class="bcp14">SHOULD NOT</span> attempt to access the upload resource as these requests will likely fail. The lifetime <span class="bcp14">MAY</span> be extended but <span class="bcp14">SHOULD NOT</span> be reduced unless the server makes the upload resource immediately inaccessible. The value is an Integer.<a href="#section-4.1.4-3.5.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
+<span class="break"></span><dl class="dlParallel" id="section-4.1.4-3">
+            <dt id="section-4.1.4-3.1">
+<code>max-size</code>:</dt>
+            <dd style="margin-left: 1.5em" id="section-4.1.4-3.2">
+              <p id="section-4.1.4-3.2.1">Specifies a maximum size for the representation data, counted in bytes. The server might not create an upload resource if the length (<a href="#upload-length" class="auto internal xref">Section 4.1.3</a>) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset (<a href="#upload-offset" class="auto internal xref">Section 4.1.1</a>) exceeds the maximum size. The value is an Integer.<a href="#section-4.1.4-3.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-4.1.4-3.3">
+<code>min-size</code>:</dt>
+            <dd style="margin-left: 1.5em" id="section-4.1.4-3.4">
+              <p id="section-4.1.4-3.4.1">Specifies a minimum size for the representation data, counted in bytes. The server might not create an upload resource if the length (<a href="#upload-length" class="auto internal xref">Section 4.1.3</a>) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. The value is an Integer.<a href="#section-4.1.4-3.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-4.1.4-3.5">
+<code>max-append-size</code>:</dt>
+            <dd style="margin-left: 1.5em" id="section-4.1.4-3.6">
+              <p id="section-4.1.4-3.6.1">Specifies a maximum size counted in bytes for the request content in a single upload append request (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>). The server might reject requests exceeding this limit. A client that is aware of this limit <span class="bcp14">MUST NOT</span> send larger upload append requests. The value is an Integer.<a href="#section-4.1.4-3.6.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-4.1.4-3.7">
+<code>min-append-size</code>:</dt>
+            <dd style="margin-left: 1.5em" id="section-4.1.4-3.8">
+              <p id="section-4.1.4-3.8.1">Specifies a minimum size counted in bytes for the request content in a single upload append request (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>). The server might reject requests below this limit. A client that is aware of this limit <span class="bcp14">MUST NOT</span> send smaller upload append requests. The value is an Integer. Requests completing the upload by including the <code>Upload-Complete: ?1</code> header field are exempt from this limit.<a href="#section-4.1.4-3.8.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-4.1.4-3.9">
+<code>max-age</code>:</dt>
+            <dd style="margin-left: 1.5em" id="section-4.1.4-3.10">
+              <p id="section-4.1.4-3.10.1">Specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and a client <span class="bcp14">SHOULD NOT</span> attempt to access the upload resource as these requests will likely fail. The lifetime <span class="bcp14">MAY</span> be extended but <span class="bcp14">SHOULD NOT</span> be reduced unless the server makes the upload resource immediately inaccessible. The value is an Integer.<a href="#section-4.1.4-3.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
 <p id="section-4.1.4-4">Except for the <code>max-age</code> limit, the existence of a limit or its value <span class="bcp14">MUST NOT</span> change throughout the lifetime of the upload resource.<a href="#section-4.1.4-4" class="pilcrow">¶</a></p>
-<p id="section-4.1.4-5">When parsing the <code>Upload-Limit</code> header field, unrecognized keys <span class="bcp14">MUST</span> be ignored and <span class="bcp14">MUST NOT</span> fail the parsing to facilitate the addition of new limits in the future. Keys with values other than defined here <span class="bcp14">MUST</span> be ignored.<a href="#section-4.1.4-5" class="pilcrow">¶</a></p>
+<p id="section-4.1.4-5">Receivers of <code>Upload-Limit</code> parse the Dictionary as described in <span><a href="https://rfc-editor.org/rfc/rfc9651#section-4.2" class="relref">Section 4.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key <span class="bcp14">MUST</span> be ignored. Second, a member with a known key but a value of unexpected type <span class="bcp14">MUST</span> cause the entire <code>Upload-Limit</code> header field to be ignored, or alternatively the complete HTTP message <span class="bcp14">MUST</span> be treated as malformed.<a href="#section-4.1.4-5" class="pilcrow">¶</a></p>
 <p id="section-4.1.4-6">A server that supports the creation of a resumable upload resource (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) for a target URI <span class="bcp14">MUST</span> include the <code>Upload-Limit</code> header field with the corresponding limits in a response to an <code>OPTIONS</code> request sent to this target URI. If a server supports the creation of upload resources for any target URI, it <span class="bcp14">SHOULD</span> include the <code>Upload-Limit</code> header field with the corresponding limits in a response to an <code>OPTIONS</code> request with the <code>*</code> target unless the server is not capable of handling <code>OPTIONS *</code> requests. If the server does not apply any limits, it <span class="bcp14">MUST</span> use <code>min-size=0</code> instead of an empty header value.<a href="#section-4.1.4-6" class="pilcrow">¶</a></p>
 <p id="section-4.1.4-7">A client can use an <code>OPTIONS</code> request to discover support for resumable uploads and potential limits before creating an upload resource. To reduce the likelihood of failing requests, the limits announced in an <code>OPTIONS</code> response <span class="bcp14">SHOULD NOT</span> be less restrictive than the limits applied to an upload once the upload resource has been created, unless the request to create an upload resource included additional information that warrants different limits. For example, a server might announce a general maximum size limit of 1GB, but reduce it to 100MB when the media type indicates an image.<a href="#section-4.1.4-7" class="pilcrow">¶</a></p>
 <p id="section-4.1.4-8">Servers, including intermediaries, can (and often do) apply restrictions on the size of individual request message content. There is no standard mechanism to communicate such existing size restriction. A server that implements one can respond with a 413 Content Too Large status code; see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.5.14" class="relref">Section 15.5.14</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>. Appending to an upload resource, as a series of appends, can be used to upload data up to the <code>max-size</code> limit without encountering per-message limits. The <code>min-append-size</code> and <code>max-append-size</code> limits apply to the upload resource. Servers might apply restrictions that are smaller than the append limits, which would also result in a failed request. Clients could deal with such situations by retrying an upload append using a smaller size, as long as the new size resides between <code>min-append-size</code> and <code>max-append-size</code>. Cases where an append uses <code>min-append-size</code> yet fails with a 413 Content Too Large response might indicate a deployment mismatch that cannot be recovered from.<a href="#section-4.1.4-8" class="pilcrow">¶</a></p>
@@ -1868,7 +1883,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-4.2.1-7">If the client received a final response with a<a href="#section-4.2.1-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.2.1-8.1">
-              <p id="section-4.2.1-8.1.1"><code>2xx (Successful)</code> status code and the entire representation data was transferred in the request content, the upload is complete and the response belongs to the targeted resource processing the representation.<a href="#section-4.2.1-8.1.1" class="pilcrow">¶</a></p>
+              <p id="section-4.2.1-8.1.1"><code>2xx (Successful)</code> status code and the entire representation data was transferred in the request content, the upload is complete and the response comes from the targeted resource processing the representation.<a href="#section-4.2.1-8.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.2.1-8.2">
               <p id="section-4.2.1-8.2.1"><code>2xx (Successful)</code> status code and the entire representation data was not transferred in the request content, the <code>Location</code> response header field points the client to the created upload resource. The client can continue appending representation data to it (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>).<a href="#section-4.2.1-8.2.1" class="pilcrow">¶</a></p>
@@ -1945,10 +1960,10 @@ Upload-Length: 100000000
 <div class="lang-http-message sourcecode" id="section-4.2.3-6">
 <pre>
 HTTP/1.1 104 Upload Resumption Supported
-Location: https://example.com/upload/b530ce8ff
+Location: https://example.com/upload/3fd4994ad
 
 HTTP/1.1 201 Created
-Location: https://example.com/upload/b530ce8ff
+Location: https://example.com/upload/3fd4994ad
 Upload-Limit: max-size=1000000000
 </pre><a href="#section-4.2.3-6" class="pilcrow">¶</a>
 </div>
@@ -1967,15 +1982,15 @@ Upload-Length: 100000000
 <div class="lang-http-message sourcecode" id="section-4.2.3-9">
 <pre>
 HTTP/1.1 104 Upload Resumption Supported
-Location: https://example.com/upload/b530ce8ff
+Location: https://example.com/upload/0587fa44b
 
 HTTP/1.1 500 Internal Server Error
 </pre><a href="#section-4.2.3-9" class="pilcrow">¶</a>
 </div>
-<p id="section-4.2.3-10">D) The following example shows an upload creation being rejected by the server. The client cannot continue the upload.<a href="#section-4.2.3-10" class="pilcrow">¶</a></p>
+<p id="section-4.2.3-10">D) The following example shows an upload creation being rejected by the server because uploads to the target resource are not allowed. The client cannot continue the upload.<a href="#section-4.2.3-10" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.2.3-11">
 <pre>
-POST /upload HTTP/1.1
+POST /upload-not-allowed HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
 Content-Length: 100000000
@@ -1986,7 +2001,7 @@ Upload-Length: 100000000
 </div>
 <div class="lang-http-message sourcecode" id="section-4.2.3-12">
 <pre>
-HTTP/1.1 400 Bad Request
+HTTP/1.1 405 Method Not Allowed
 </pre><a href="#section-4.2.3-12" class="pilcrow">¶</a>
 </div>
 </section>
@@ -2057,7 +2072,7 @@ HTTP/1.1 400 Bad Request
 <p id="section-4.3.3-1">A) The following example shows an offset retrieval request. The server indicates the current offset and that the upload is not complete yet. The client can continue to append representation data.<a href="#section-4.3.3-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.3.3-2">
 <pre>
-HEAD /upload/b530ce8ff HTTP/1.1
+HEAD /upload/c35e2cd29 HTTP/1.1
 Host: example.com
 </pre><a href="#section-4.3.3-2" class="pilcrow">¶</a>
 </div>
@@ -2074,7 +2089,7 @@ Cache-Control: no-store
 <p id="section-4.3.3-4">B) The following example shows an offset retrieval request for a completed upload. The client does not need to continue the upload.<a href="#section-4.3.3-4" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.3.3-5">
 <pre>
-HEAD /upload/b530ce8ff HTTP/1.1
+HEAD /upload/a9edb781b HTTP/1.1
 Host: example.com
 </pre><a href="#section-4.3.3-5" class="pilcrow">¶</a>
 </div>
@@ -2103,12 +2118,19 @@ Cache-Control: no-store
           </h4>
 <p id="section-4.4.1-1">A client can continue the upload and append representation data by sending a <code>PATCH</code> request with the <code>application/partial-upload</code> media type (<a href="#media-type-partial-upload" class="auto internal xref">Section 6</a>) to the upload resource. The request content is the representation data to append.<a href="#section-4.4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.4.1-2">The client <span class="bcp14">MUST</span> indicate the offset of the request content inside the representation data by including the <code>Upload-Offset</code> request header field. To ensure that the upload resource will accept the request, the offset <span class="bcp14">SHOULD</span> be taken from an immediate previous response for retrieving the offset (<a href="#offset-retrieving" class="auto internal xref">Section 4.3</a>) or appending representation data (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>).<a href="#section-4.4.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.4.1-3">The request <span class="bcp14">MUST</span> include the <code>Upload-Complete</code> header field. Its value is true if the end of the request content is the end of the representation data. If the content is then fully received by the upload resource, the upload will be complete.<a href="#section-4.4.1-3" class="pilcrow">¶</a></p>
-<p id="section-4.4.1-4">The request content can be empty. If the <code>Upload-Complete</code> field is then set to true, the client wants to complete the upload without appending additional representation data.<a href="#section-4.4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.4.1-3">The request <span class="bcp14">MUST</span> include the <code>Upload-Complete</code> header field. Its value is true in two cases:<a href="#section-4.4.1-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.4.1-4.1">
+              <p id="section-4.4.1-4.1.1">the request has content that is the end of the representation data. Once the content is fully received by the server, the upload is complete.<a href="#section-4.4.1-4.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.4.1-4.2">
+              <p id="section-4.4.1-4.2.1">the request has no content. Once the request is processed by the server, the upload is complete. This usage requires the full representation data to have been received via prior requests.<a href="#section-4.4.1-4.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
 <p id="section-4.4.1-5">If the client received a final response with a<a href="#section-4.4.1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.4.1-6.1">
-              <p id="section-4.4.1-6.1.1"><code>2xx (Successful)</code> status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response belongs to the resource processing the representation according to the initial request (see <a href="#upload-creation" class="auto internal xref">Section 4.2</a>).<a href="#section-4.4.1-6.1.1" class="pilcrow">¶</a></p>
+              <p id="section-4.4.1-6.1.1"><code>2xx (Successful)</code> status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request (see <a href="#upload-creation" class="auto internal xref">Section 4.2</a>).<a href="#section-4.4.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.4.1-6.2">
               <p id="section-4.4.1-6.2.1"><code>2xx (Successful)</code> status code and the entire remaining representation data was not transferred in the request content, the client can continue appending representation data.<a href="#section-4.4.1-6.2.1" class="pilcrow">¶</a></p>
@@ -2149,7 +2171,7 @@ Cache-Control: no-store
 <p id="section-4.4.3-1">A) The following example shows an upload append request. The client transfers the next 25000000 bytes at an offset of 25000000 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:<a href="#section-4.4.3-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.4.3-2">
 <pre>
-PATCH /upload/b530ce8ff HTTP/1.1
+PATCH /upload/37a504d87 HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
 Upload-Offset: 25000000
@@ -2171,7 +2193,7 @@ Upload-Complete: ?0
 <p id="section-4.4.3-4">B) The next example shows an upload append, where the client transfers the remaining 25000000 bytes and completes the upload. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:<a href="#section-4.4.3-4" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.4.3-5">
 <pre>
-PATCH /upload/b530ce8ff HTTP/1.1
+PATCH /upload/d38d6ffe8 HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
 Upload-Offset: 25000000
@@ -2229,7 +2251,7 @@ Content-Type: application/json
 <p id="section-4.5.3-1">The following example shows an upload cancellation:<a href="#section-4.5.3-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.5.3-2">
 <pre>
-DELETE /upload/b530ce8ff HTTP/1.1
+DELETE /upload/5688a431c HTTP/1.1
 Host: example.com
 </pre><a href="#section-4.5.3-2" class="pilcrow">¶</a>
 </div>
