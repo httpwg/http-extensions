@@ -531,7 +531,7 @@ Table of Contents
 
    https://example.com/?a=%f6
    https://example.com/?a=%ef%bf%bd
-      Both values are parsed as U+FFFD ( )
+      Both values are parsed as U+FFFD (�)
 
    https://example.com/?a=x&&&&
    https://example.com/?a=x
