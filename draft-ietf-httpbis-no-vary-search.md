@@ -131,7 +131,7 @@ And if the resource instead wants to take an allowlist-based approach, where onl
 No-Vary-Search: params, except=("productId")
 ~~~~
 
-{{header-definition}} defines the header, using the {{STRUCTURED-FIELDS}} framework. {{data-model}} and {{parsing}} illustrate the data model for how the header can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. {{comparing}} gives the key algorithm for comparing if two URLs are equivalent under the influence of the header; notably, it leans on the decomposition of the query component into keys and values given by the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format specified in {{WHATWG-URL}}. (As such, this header is not useful for URLs whose query component does not follow that format.) Finally, {{caching}} explains how to modify {{HTTP-CACHING}} to take into account this new equivalence.
+{{header-definition}} defines the header field, using the {{STRUCTURED-FIELDS}} framework. {{data-model}} and {{parsing}} illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. {{comparing}} gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format specified in {{WHATWG-URL}}. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, {{caching}} explains how to modify {{HTTP-CACHING}} to take into account this new equivalence.
 
 # Conventions and Definitions
 
@@ -270,9 +270,9 @@ The following inputs are all invalid and will cause the default URL search varia
 | `No-Vary-Search: params=?1`                       | `No-Vary-Search: params`                          |
 | `No-Vary-Search: key-order=?1`                    | `No-Vary-Search: key-order`                       |
 | `No-Vary-Search: params, key-order, except=("x")` | `No-Vary-Search: key-order, params, except=("x")` |
-| `No-Vary-Search: params=?0`                       | (omit the header)                                 |
-| `No-Vary-Search: params=()`                       | (omit the header)                                 |
-| `No-Vary-Search: key-order=?0`                    | (omit the header)                                 |
+| `No-Vary-Search: params=?0`                       | (omit the header field)                           |
+| `No-Vary-Search: params=()`                       | (omit the header field)                           |
+| `No-Vary-Search: key-order=?0`                    | (omit the header field)                           |
 
 ## Parse a key {#parse-a-key}
 
@@ -293,7 +293,7 @@ To _parse a key_ given an ASCII string _keyString_:
 
 ### Examples
 
-The parse a key algorithm allows encoding non-ASCII key strings in the ASCII structured header format, similar to how the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format {{WHATWG-URL}} allows encoding an entire entry list of keys and values in ASCII URL format. For example,
+The parse a key algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format {{WHATWG-URL}} allows encoding an entire entry list of keys and values in ASCII URL format. For example,
 
 ~~~~http-message
 No-Vary-Search: params=("%C3%A9+%E6%B0%97")
@@ -395,7 +395,7 @@ So, for example, given any non-default value for `No-Vary-Search`, such as `No-V
     <tt>https://example.com/?a=%f6</tt><br>
     <tt>https://example.com/?a=%ef%bf%bd</tt>
   </dt>
-  <dd>Both values are parsed as U+FFFD (�)</dd>
+  <dd>Both values are parsed as U+FFFD ( )</dd>
 
   <dt>
     <tt>https://example.com/?a=x&&&&</tt><br>
