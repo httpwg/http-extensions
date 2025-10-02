@@ -315,10 +315,14 @@ The length of an upload is the number of bytes of representation data that the c
 
 Even the client might not know the total length of the representation data when starting the transfer, for example, because the representation is taken from a streaming source. However, a client SHOULD communicate the length to the upload resource as soon as it becomes known. There are two different ways for the client to indicate and the upload resource to discover the length from requests for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}):
 
-- If the request includes the `Upload-Complete` field value set to true and a valid `Content-Length` header field, the request content is the remaining representation data. The length is then the sum of the current offset ({{upload-offset}}) and the `Content-Length` header field value.
-- The request can include the `Upload-Length` request and response header field. `Upload-Length` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the number of bytes of the entire representation data. Other values MUST cause the entire header field to be ignored.
+1. If the request includes the `Upload-Complete` field value set to true and a valid `Content-Length` header field, the request content is the remaining representation data. The length is then the sum of the current offset ({{upload-offset}}) and the `Content-Length` header field value.
+2. The request can include the `Upload-Length` header field defined below.
 
-If both indicators are present in the same request, their indicated lengths MUST match. If multiple requests include indicators, their indicated values MUST match. A server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) in responses to indicate inconsistent length values.
+The `Upload-Length` request and response header field is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the number of bytes of the entire representation data. Other values MUST cause the entire header field to be ignored.
+
+If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. If multiple requests include indicators, their indicated values MUST match. A server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) in responses to indicate inconsistent length values.
+
+The `Upload-Length` field can be used in response to an offset retrieval; see {{offset-retrieving-server}}.
 
 The upload resource might not know the length until the upload is complete.
 
@@ -499,7 +503,7 @@ If the client received a response with a
 - `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
 - `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY retry retrieving the offset.
 
-### Server Behavior
+### Server Behavior {#offset-retrieving-server}
 
 A successful response to a `HEAD` request against an upload resource
 
