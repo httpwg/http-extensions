@@ -620,17 +620,23 @@ Table of Contents
    malformed.
 
    A server that supports the creation of a resumable upload resource
-   (Section 4.2) for a target URI MUST include the Upload-Limit header
-   field with the corresponding limits in a response to an OPTIONS
-   request sent to this target URI.  If a server supports the creation
-   of upload resources for any target URI, it SHOULD include the Upload-
-   Limit header field with the corresponding limits in a response to an
-   OPTIONS request with the * target unless the server is not capable of
-   handling OPTIONS * requests.  If the server does not apply any
-   limits, it MUST use min-size=0 instead of an empty header value.
+   (Section 4.2) for a target URI MUST include the Accept-Patch
+   (Section 3.1 of [PATCH]) header field in response to an OPTIONS
+   request for the target URI.  If a server supports the creation of
+   upload resources for any target URI, it SHOULD include the Accept-
+   Patch header field in response to an OPTIONS request for the target *
+   (if this target is supported).  The value of the Accept-Patch header
+   field MUST include the full application/partial-upload media type,
+   even if it already contains */* or application/*. The Upload-Limit
+   header field SHOULD be included in the response to an OPTIONS request
+   if limits apply.
 
    A client can use an OPTIONS request to discover support for resumable
-   uploads and potential limits before creating an upload resource.  To
+   uploads and potential limits before creating an upload resource.
+   While the values */* and application/* in the Accept-Patch response
+   header field indicate the acceptance of the application/partial-
+   upload in PATCH requests, it does not necessarily indicate support
+   for all aspects of resumable uploads as defined in this document.  To
    reduce the likelihood of failing requests, the limits announced in an
    OPTIONS response SHOULD NOT be less restrictive than the limits
    applied to an upload once the upload resource has been created,
@@ -1752,7 +1758,7 @@ Appendix A.  Changes
 
 Since draft-ietf-httpbis-resumable-upload-09
 
-   None yet
+   *  Requires Accept-Patch in OPTIONS
 
 Since draft-ietf-httpbis-resumable-upload-08
 
