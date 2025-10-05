@@ -219,13 +219,9 @@ To _parse a URL search variance_ given _value_:
     1. Set _result_'s vary params to the result of applying parse a key ({{parse-a-key}}) to each item in _value_\["`except`"].
 1. Return _result_.
 
-{:aside}
-> In general, this algorithm is strict and tends to return the default URL search variance whenever it sees something it doesn't recognize. This is because the default URL search variance behavior will just cause fewer cache hits, which is an acceptable fallback behavior.
->
-> However, unrecognized keys at the top level are ignored, to make it easier to extend this specification in the future. To avoid misbehavior with existing client software, such extensions will likely expand, rather than reduce, the set of requests that a cached response can match.
+In general, this algorithm returns the default URL search variance whenever it sees something it doesn't recognize. This conservative approach results in fewer cache hits, which is an acceptable fallback behavior. However, unrecognized keys at the top level are ignored to allow future extensions to this specification. Such extensions will likely expand, rather than reduce, the set of requests that a cached response can match to avoid misbehavior with existing client software.
 
-{:aside}
-> The input to this algorithm is generally obtained by parsing a structured field ({{Section 4.2 of STRUCTURED-FIELDS}}) using field_type "dictionary".
+The input to this algorithm is generally obtained by parsing a structured field ({{Section 4.2 of STRUCTURED-FIELDS}}) using field_type "dictionary". 
 
 ## Obtain a URL search variance {#obtain-a-url-search-variance}
 
@@ -431,19 +427,18 @@ Cache implementations MAY fail to reuse a stored response whose target URI match
 * has a non-empty value for the `No-Vary-Search` field, and
 * has a `No-Vary-Search` field value different from the stored response being considered for reuse.
 
-{:aside}
-> Caches aren't required to reuse stored responses, generally. However, the above expressly empowers caches to, if it is advantageous for performance or other reasons, search a smaller number of stored responses.
->
-> That is, because caches might store more than one response for a given pathname, they need a way to efficiently look up the No-Vary-Search value without accessing all cached responses. Such a cache might take steps like the following to identify a stored response in a performant way, before checking the other conditions in {{Section 4 of HTTP-CACHING}}:
->
-> 1. Let exactMatch be cache\[presentedTargetURI\]. If it is a stored response that can be reused, return it.
-> 1. Let targetPath be presentedTargetURI, with query parameters removed.
-> 1. Let lastNVS be mostRecentNVS\[targetPath\]. If it does not exist, return null.
-> 1. Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order is to be be ignored).
-> 1. Let nvsMatch be cache\[simplifiedURL\]. If it does not exist, return null. (It is assumed that this was written when storing in the cache, in addition to the exact URL.)
-> 1. Let searchVariance be obtained ({{obtain-a-url-search-variance}}) from nvsMatch.
-> 1. If nvsMatch's target URI and presentedTargetURI are not equivalent modulo search variance ({{comparing}}) given searchVariance, then return null.
-> 1. If nvsMatch is a stored response that can be reused, return it. Otherwise, return null.
+Caches aren't required to reuse stored responses, generally. However, the above expressly empowers caches to, if it is advantageous for performance or other reasons, search a smaller number of stored responses.
+
+Because caches might store more than one response for a given pathname, they need a way to efficiently look up the No-Vary-Search value without accessing all cached responses. Such a cache might take steps like the following to identify a stored response in a performant way, before checking the other conditions in {{Section 4 of HTTP-CACHING}}:
+
+1. Let exactMatch be cache[presentedTargetURI]. If it is a stored response that can be reused, return it.
+2. Let targetPath be presentedTargetURI, with query parameters removed.
+3. Let lastNVS be mostRecentNVS[targetPath]. If it does not exist, return null.
+4. Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order is to be be ignored).
+5. Let nvsMatch be cache[simplifiedURL]. If it does not exist, return null. (It is assumed that this was written when storing in the cache, in addition to the exact URL.)
+6. Let searchVariance be obtained ({{obtain-a-url-search-variance}}) from nvsMatch.
+7. If nvsMatch's target URI and presentedTargetURI are not equivalent modulo search variance ({{comparing}}) given searchVariance, then return null.
+8. If nvsMatch is a stored response that can be reused, return it. Otherwise, return null.
 
 To aid cache implementation efficiency, servers SHOULD NOT send different non-empty values for the `No-Vary-Search` field in response to requests for a given pathname over time, unless there is a need to update how they handle the query component. Doing so would cause cache implementations that use a strategy like the above to miss some stored responses that could otherwise have been reused.
 
