@@ -419,11 +419,15 @@ So, for example, given any non-default value for `No-Vary-Search`, such as `No-V
 
 # Caching {#caching}
 
-If a cache {{HTTP-CACHING}} implements this specification, the presented target URI requirement in {{Section 4 of HTTP-CACHING}} is replaced with:
+If a cache {{HTTP-CACHING}} implements this specification, the presented target URI requirement in {{Section 4 of HTTP-CACHING}}:
 
-* one of the following:
-  * the presented target URI ({{Section 7.1 of HTTP}}) and that of the stored response match, or
-  * the presented target URI and that of the stored response are equivalent modulo search variance ({{comparing}}), given the variance obtained ({{obtain-a-url-search-variance}}) from the stored response.
+> the presented target URI (Section 7.1 of [HTTP]) and that of the stored response match, and
+{:quote}
+
+is replaced with:
+
+> the presented target URI (Section 7.1 of [HTTP]) and that of the stored response match or are equivalent modulo search variance, and
+{:quote}
 
 Cache implementations MAY fail to reuse a stored response whose target URI matches _only_ modulo URL search variance, if the cache has more recently stored a response which:
 
