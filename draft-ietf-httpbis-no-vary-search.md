@@ -464,7 +464,7 @@ This proposal is adjacent to the highly-privacy-relevant space of [navigational 
 
 IANA is requested to enter the following into the Hypertext Transfer Protocol (HTTP) Field Name Registry (<https://www.iana.org/assignments/http-fields/http-fields.xhtml>):
 
-Field Name;
+Field Name:
 : `No-Vary-Search`
 
 Status:
