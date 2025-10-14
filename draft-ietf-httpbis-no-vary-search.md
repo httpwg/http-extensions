@@ -46,7 +46,7 @@ normative:
          name: Anne van Kesteren
          org: Apple Inc.
    ann: WHATWG
-  STRUCTURED-FIELDS: RFC8941
+  STRUCTURED-FIELDS: RFC9651
   WHATWG-ENCODING:
    target: https://encoding.spec.whatwg.org/
    title: Encoding Living Standard
