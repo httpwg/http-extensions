@@ -1,4 +1,4 @@
-# Editor's drafts for reschke-no-vary-terminology branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/reschke-no-vary-terminology)
+# Editor's drafts for reschke-no-vary-i3277 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/reschke-no-vary-i3277)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |

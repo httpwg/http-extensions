@@ -5,7 +5,7 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                              Google LLC
-Expires: 4 April 2026                                     1 October 2025
+Expires: 17 April 2026                                   14 October 2025
 
 
              The No-Vary-Search HTTP Response Header Field
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 April 2026.
+   This Internet-Draft will expire on 17 April 2026.
 
 Copyright Notice
 
@@ -704,8 +704,8 @@ Table of Contents
 
    [STRUCTURED-FIELDS]
               Nottingham, M. and P. Kamp, "Structured Field Values for
-              HTTP", RFC 8941, DOI 10.17487/RFC8941, February 2021,
-              <https://www.rfc-editor.org/rfc/rfc8941>.
+              HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
+              <https://www.rfc-editor.org/rfc/rfc9651>.
 
    [WHATWG-ENCODING]
               van Kesteren, A., "Encoding Living Standard", n.d.,

@@ -6,9 +6,9 @@ HTTP                                                     S. Bingler, Ed.
 Internet-Draft                                                          
 Obsoletes: 6265 (if approved)                               M. West, Ed.
 Intended status: Standards Track                              Google LLC
-Expires: 4 April 2026                                   J. Wilander, Ed.
+Expires: 17 April 2026                                  J. Wilander, Ed.
                                                               Apple, Inc
-                                                          1 October 2025
+                                                         14 October 2025
 
 
                 Cookies: HTTP State Management Mechanism
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 April 2026.
+   This Internet-Draft will expire on 17 April 2026.
 
 Copyright Notice
 
@@ -569,7 +569,7 @@ Table of Contents
    httponly-av       = "HttpOnly"
    samesite-av       = "SameSite" BWS "=" BWS samesite-value
    samesite-value    = "Strict" / "Lax" / "None"
-   extension-av      = *av-octet
+   extension-av      = 1*av-octet
    av-octet          = %x20-3A / %x3C-7E
                          ; any CHAR except CTLs or ";"
 
@@ -592,7 +592,7 @@ Table of Contents
    characters are not stripped.  They are part of the cookie-value, and
    will be included in Cookie header fields sent to the server.
 
-   Per the grammar above, cookie-avs MUST NOT contain leading or
+   Per the grammar above, extension-av MUST NOT contain leading or
    trailing WSP characters as they will be interpreted as BWS and
    removed.
 
