@@ -658,22 +658,22 @@ Table of Contents
 
 10.  IANA Considerations
 
-   IANA should do the following:
-
 10.1.  HTTP Field Names
 
-   Enter the following into the Hypertext Transfer Protocol (HTTP) Field
-   Name Registry:
+   IANA is requested to enter the following into the Hypertext Transfer
+   Protocol (HTTP) Field Name Registry
+   (https://www.iana.org/assignments/http-fields/http-fields.xhtml
+   (https://www.iana.org/assignments/http-fields/http-fields.xhtml)):
 
-   Field Name  No-Vary-Search
+   Field Name:  No-Vary-Search
 
-   Status  permanent
+   Status:  permanent
 
-   Structured Type  Dictionary
+   Structured Type:  Dictionary
 
-   Reference  this document
+   Reference:  this document
 
-   Comments  (none)
+   Comments:  (none)
 
 11.  References
 
