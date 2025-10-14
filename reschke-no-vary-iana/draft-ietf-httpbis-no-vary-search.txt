@@ -665,7 +665,7 @@ Table of Contents
    (https://www.iana.org/assignments/http-fields/http-fields.xhtml
    (https://www.iana.org/assignments/http-fields/http-fields.xhtml)):
 
-   Field Name;  No-Vary-Search
+   Field Name:  No-Vary-Search
 
    Status:  permanent
 
