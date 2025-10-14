@@ -281,11 +281,9 @@ The following inputs are all invalid and will cause the default URL search varia
 (((!parse a key)))
 To _parse a key_ given an ASCII string _keyString_:
 
-  1. Let _keyBytes_ be the [isomorphic encoding](https://infra.spec.whatwg.org/#isomorphic-encode) {{WHATWG-INFRA}} of _keyString_.
+  1. Replace any 0x2B (+) in _keyString_ with 0x20 (SP).
 
-  1. Replace any 0x2B (+) in _keyBytes_ with 0x20 (SP).
-
-  1. Let _keyBytesDecoded_ be the [percent-decoding](https://url.spec.whatwg.org/#percent-decode) {{WHATWG-URL}} of _keyBytes_.
+  1. Let _keyBytesDecoded_ be the [percent-decoding](https://url.spec.whatwg.org/#percent-decode) {{WHATWG-URL}} of _keyString_.
 
   1. Let _keyStringDecoded_ be the [UTF-8 decoding without BOM](https://encoding.spec.whatwg.org/#utf-8-decode-without-bom) {{WHATWG-ENCODING}} of _keyBytesDecoded_.
 
