@@ -396,7 +396,7 @@ The server MUST record the length according to {{upload-length}} if the `Upload-
 
 While the request content is being received, the server MAY send additional interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
 
-If the server does not receive the entire request content, for example because of canceled requests or dropped connections, it SHOULD append as much of the request content as possible to the upload resource. The upload resource MUST NOT be considered complete then.
+The server might not receive the entire request content when the upload is interrupted, for example because of dropped connections or canceled requests. In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
 
 ### Examples {#upload-creation-example}
 
@@ -571,7 +571,7 @@ If the client received a final response with a
 
 An upload resource applies a `PATCH` request with the `application/partial-upload` media type ({{media-type-partial-upload}}) by appending the patch document in the request content to the upload resource.
 
-If the upload resource does not receive the entire patch document, for example because of canceled requests or dropped connections, it SHOULD append as much of the patch document as possible, starting at its beginning and without discontinuities. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of PATCH}}.
+The server might not receive the entire patch document when the upload is interrupted, for example because of dropped connections or canceled requests. In this case, the server SHOULD append as much of the patch document as possible to the upload resource, starting at its beginning and without discontinuities. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of PATCH}}. Saving the received data allows the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
 
 If the `Upload-Offset` request header field value does not match the current offset ({{upload-offset}}), the upload resource MUST reject the request with a `409 (Conflict)` status code. The response MUST include the correct offset in the `Upload-Offset` header field. The response can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" ({{mismatching-offset}}).
 
