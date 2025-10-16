@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 17 April 2026                                        Apple Inc.
+Expires: 19 April 2026                                        Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                         14 October 2025
+                                                         16 October 2025
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 April 2026.
+   This Internet-Draft will expire on 19 April 2026.
 
 Copyright Notice
 
@@ -366,10 +366,10 @@ Table of Contents
 
          Figure 5: Upload creation with partial representation data
 
-   2) Subsequently, intermediate parts are appended (Section 4.4) with
-   the Upload-Complete field value set to false, indicating that they
-   are not the last part of the representation data.  The offset value
-   in the Upload-Offset header field is taken from the previous response
+   2) Next, intermediate parts are appended (Section 4.4) with the
+   Upload-Complete field value set to false, indicating that they are
+   not the last part of the representation data.  The offset value in
+   the Upload-Offset header field is taken from the previous response
    when creating the upload or appending to it.
 
    Client                                       Server
@@ -660,8 +660,6 @@ Table of Contents
    between min-append-size and max-append-size.  Cases where an append
    uses min-append-size yet fails with a 413 Content Too Large response
    might indicate a deployment mismatch that cannot be recovered from.
-
-   Uploading as a series of parts
 
 4.2.  Upload Creation
 
@@ -1561,7 +1559,7 @@ Table of Contents
    or intermediary might normally permit in conventional single upload
    request message content.  Servers or intermediaries need to consider
    that relying solely on message content limits to constrain resources
-   allocated to uploads might not an effective strategy when using
+   allocated to uploads might not be an effective strategy when using
    resumable uploads.
 
 14.  IANA Considerations
