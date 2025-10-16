@@ -477,9 +477,9 @@ Table of Contents
    representation data.
 
    Representation data received by the upload resource cannot be removed
-   again and, therefore, the offset MUST NOT decrease.  If the upload
-   resource loses representation data, the server MUST consider the
-   upload resource invalid and reject further interaction with it.
+   again and, therefore, the offset MUST NOT decrease.  If the server
+   loses any part of the state, it MUST deactivate the upload resource
+   and reject further interaction with it.
 
    The Upload-Offset request and response header field conveys the
    offset.  Upload-Offset is an Item Structured Header Field
