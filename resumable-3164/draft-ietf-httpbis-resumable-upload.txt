@@ -751,7 +751,7 @@ Table of Contents
    If the Upload-Complete request header field is set to true, the
    client intends to transfer the entire representation data in one
    request.  If the request content was fully received, no resumable
-   upload is needed and the resource proceeds to process the request and
+   upload is needed and the server proceeds to process the request and
    generate a response.
 
    If the Upload-Complete header field is set to false, the client
@@ -1029,19 +1029,19 @@ Table of Contents
    If the Upload-Complete request header field is set to true, the
    client intends to transfer the remaining representation data in one
    request.  If the request content was fully received, the upload is
-   marked as complete and the upload resource SHOULD generate the
-   response that matches what the resource, that was targeted by the
-   initial upload creation (Section 4.2), would have generated if it had
-   received the entire representation in the initial request.  However,
-   the response MUST include the Upload-Complete header field with a
-   true value, allowing clients to identify whether a response, in
-   particular error responses, is related to the resumable upload itself
-   or the processing of the upload representation.
+   marked as complete and the server SHOULD generate the response that
+   matches what the resource, that was targeted by the initial upload
+   creation (Section 4.2), would have generated if it had received the
+   entire representation in the initial request.  However, the response
+   MUST include the Upload-Complete header field with a true value,
+   allowing clients to identify whether a response, in particular error
+   responses, is related to the resumable upload itself or the
+   processing of the upload representation.
 
    If the Upload-Complete request header field is set to false, the
    client intends to transfer the remaining representation over multiple
-   requests.  If the request content was fully received, the upload
-   resource acknowledges the appended data by sending a 2xx (Successful)
+   requests.  If the request content was fully received, the server
+   acknowledges the appended data by sending a 2xx (Successful)
    response.
 
    If the request didn't complete the upload, any response, successful
