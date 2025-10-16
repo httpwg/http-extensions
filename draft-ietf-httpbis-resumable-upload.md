@@ -559,13 +559,16 @@ The request MUST include the `Upload-Complete` header field. Its value is true i
 - the request has content that is the end of the representation data. Once the content is fully received by the server, the upload is complete.
 - the request has no content. Once the request is processed by the server, the upload is complete. This usage requires the full representation data to have been received via prior requests.
 
-If the client received a final response with a
+If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request (see {{upload-creation}}). Note that the status code does not necessary indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case that the representation was fully transmitted, but an error occurred while processing it. Resuming the upload would not resolve this error.
 
-- `2xx (Successful)` status code and the remaining representation data was transferred in the request content, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request (see {{upload-creation}}).
-- `2xx (Successful)` status code and the entire remaining representation data was not transferred in the request content, the client can continue appending representation data.
-- `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry appending to the new URI.
-- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
-- `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
+If the client received a final response with the `Upload-Complete: ?0` header field or the header field missing, the next step depends on the status code:
+
+- A `2xx (Successful)` status code indicates that representation data was appended but the upload is not complete. The client can continue appending representation data.
+- For a `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry appending to the new URI.
+- For a `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
+- For a `5xx (Server Error)` status code, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
+
+If no final response was received at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
 
 ### Server Behavior
 
@@ -579,9 +582,7 @@ If the upload is already complete ({{upload-complete}}), the server MUST NOT mod
 
 If the `Upload-Complete` request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully received, the upload is marked as complete and the upload resource SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had received the entire representation in the initial request. However, the response MUST include the `Upload-Complete` header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the upload representation.
 
-If the `Upload-Complete` request header field is set to false, the client intends to transfer the remaining representation over multiple requests. If the request content was fully received, the upload resource acknowledges the appended data by sending a `2xx (Successful)` response.
-
-If the request didn't complete the upload, any response, successful or not, MUST include the `Upload-Complete` header field with a false value, indicating that this response does not belong to the processing of the uploaded representation.
+If the `Upload-Complete` request header field is set to false, the client intends to transfer the remaining representation over multiple requests. If the request content was fully received, the upload resource acknowledges the appended data by sending a `2xx (Successful)` response with the `Upload-Complete` header field set to false.
 
 The server MUST record the length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete` header fields are included in the request. If the length is known, the server MUST prevent the offset from exceeding the upload length by stopping to append bytes once the offset reaches the length, rejecting the request, marking the upload resource invalid and rejecting any further interaction with it. It is not sufficient to rely on the `Content-Length` header field for enforcement because the header field might not be present.
 
