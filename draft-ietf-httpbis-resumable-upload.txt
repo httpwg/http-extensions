@@ -762,7 +762,8 @@ Table of Contents
    corresponding limits if existing.
 
    The server MUST record the length according to Section 4.1.3 if the
-   necessary header fields are included in the request.
+   Upload-Length or Upload-Complete header fields are included in the
+   request.
 
    While the request content is being received, the server MAY send
    additional interim responses with a 104 (Upload Resumption Supported)
@@ -1048,10 +1049,10 @@ Table of Contents
    value, indicating that this response does not belong to the
    processing of the uploaded representation.
 
-   The upload resource MUST record the length according to Section 4.1.3
-   if the necessary header fields are included in the request.  If the
-   length is known, the upload resource MUST prevent the offset from
-   exceeding the upload length by stopping to append bytes once the
+   The server MUST record the length according to Section 4.1.3 if the
+   Upload-Length or Upload-Complete header fields are included in the
+   request.  If the length is known, the server MUST prevent the offset
+   from exceeding the upload length by stopping to append bytes once the
    offset reaches the length, rejecting the request, marking the upload
    resource invalid and rejecting any further interaction with it.  It
    is not sufficient to rely on the Content-Length header field for
