@@ -454,7 +454,9 @@ Table of Contents
    completion and the upload resource is not available anymore, the
    client cannot verify the upload's state with the server.  Therefore,
    the server SHOULD keep the upload resource available for a reasonable
-   amount of time after the upload is complete.
+   amount of time after the upload is complete, or provide an alternate,
+   application-specific way for the client to verify the completion of
+   the upload.
 
    An upload resource SHOULD be unique.  Reuse of a URI for a different
    upload resource SHOULD be avoided in order to reduce the chance of
