@@ -1050,7 +1050,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Kleidl, et al.</td>
-<td class="center">Expires 19 April 2026</td>
+<td class="center">Expires 20 April 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1063,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-resumable-upload-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-10-16" class="published">16 October 2025</time>
+<time datetime="2025-10-17" class="published">17 October 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-04-19">19 April 2026</time></dd>
+<dd class="expires"><time datetime="2026-04-20">20 April 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1128,7 +1128,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 19 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 20 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1611,7 +1611,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-example-2-upload-as-a-serie" class="section-name selfRef">Example 2: Upload as a series of parts</a>
         </h3>
 <p id="section-3.2-1">In some cases, clients might prefer to upload a representation as a series of parts sent serially across multiple HTTP messages. One use case is to overcome server limits on HTTP message content size. Another use case is where the client does not know the final size of the representation data, such as when the data originates from a streaming source.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2-2">This example shows how the client, with prior knowledge about the server's resumable upload support, can upload parts of a representation incrementally.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">This example shows how the client, communicating to a server known to support resumable upload, can upload parts of a representation incrementally.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.2-3">1) If the client is aware that the server supports resumable upload, it can start an upload with the <code>Upload-Complete</code> field value set to false and the first part of the representation.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 <span id="name-upload-creation-with-partia"></span><div id="fig-upload-creation-incomplete">
 <figure id="figure-5">

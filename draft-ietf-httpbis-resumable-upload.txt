@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 19 April 2026                                        Apple Inc.
+Expires: 20 April 2026                                        Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                         16 October 2025
+                                                         17 October 2025
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 April 2026.
+   This Internet-Draft will expire on 20 April 2026.
 
 Copyright Notice
 
@@ -345,9 +345,9 @@ Table of Contents
    the representation data, such as when the data originates from a
    streaming source.
 
-   This example shows how the client, with prior knowledge about the
-   server's resumable upload support, can upload parts of a
-   representation incrementally.
+   This example shows how the client, communicating to a server known to
+   support resumable upload, can upload parts of a representation
+   incrementally.
 
    1) If the client is aware that the server supports resumable upload,
    it can start an upload with the Upload-Complete field value set to
