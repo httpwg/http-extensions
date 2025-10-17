@@ -200,7 +200,7 @@ Client                                       Server
 
 In some cases, clients might prefer to upload a representation as a series of parts sent serially across multiple HTTP messages. One use case is to overcome server limits on HTTP message content size. Another use case is where the client does not know the final size of the representation data, such as when the data originates from a streaming source.
 
-This example shows how the client, with prior knowledge about the server's resumable upload support, can upload parts of a representation incrementally.
+This example shows how the client, communicating to a server known to support resumable upload, can upload parts of a representation incrementally.
 
 1) If the client is aware that the server supports resumable upload, it can start an upload with the `Upload-Complete` field value set to false and the first part of the representation.
 
