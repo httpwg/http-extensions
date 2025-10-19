@@ -396,7 +396,7 @@ The server MUST record the length according to {{upload-length}} if the `Upload-
 
 While the request content is being received, the server MAY send additional interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
 
-The server might not receive the entire request content when the upload is interrupted, for example because of dropped connections or canceled requests. In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
+The server might not receive the entire request content when the upload is interrupted, for example because of dropped connection or canceled request. In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
 
 ### Examples {#upload-creation-example}
 
