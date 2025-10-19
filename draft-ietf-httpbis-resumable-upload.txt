@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 20 April 2026                                        Apple Inc.
+Expires: 22 April 2026                                        Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                         17 October 2025
+                                                         19 October 2025
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 April 2026.
+   This Internet-Draft will expire on 22 April 2026.
 
 Copyright Notice
 
@@ -874,12 +874,13 @@ Table of Contents
    The offset can be less than or equal to the number of bytes of
    representation data that the client has already sent.  The client MAY
    reject an offset which is greater than the number of bytes it has
-   already sent during this upload.  The client is expected to handle
-   backtracking of a reasonable length.  If the offset is invalid for
-   this upload, or if the client cannot backtrack to the offset and
-   reproduce the same representation data it has already sent, the
-   upload MUST be considered a failure.  The client SHOULD cancel the
-   upload (Section 4.5) after rejecting the offset.
+   already sent during this upload by not continuing the upload and
+   canceling the upload resource (Section 4.5).  The client is expected
+   to handle backtracking of a reasonable length.  If the offset is
+   invalid for this upload, or if the client cannot backtrack to the
+   offset and reproduce the same representation data it has already
+   sent, the upload MUST be considered a failure.  The client then MUST
+   NOT continue the upload and SHOULD cancel the upload (Section 4.5).
 
    The client MUST NOT perform offset retrieval while creation
    (Section 4.2) or appending (Section 4.4) is in progress as this can
