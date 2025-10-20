@@ -412,44 +412,44 @@ The server might not receive the entire request content when the upload is inter
 
 ### Examples {#upload-creation-example}
 
-A) The following example shows an upload creation, where the entire 100000000 bytes are transferred in the initial request. The server sends multiple interim responses and one final response from processing the uploaded representation.
+A) The following example shows an upload creation, where the entire 123456789 bytes are transferred in the initial request. The server sends multiple interim responses and one final response from processing the uploaded representation.
 
 ~~~ http-message
 POST /project/123/files HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Content-Length: 100000000
-Upload-Length: 100000000
+Content-Length: 123456789
+Upload-Length: 123456789
 
-[content (100000000 bytes)]
+[content (123456789 bytes)]
 ~~~
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
 Location: https://example.com/upload/b530ce8ff
-Upload-Limit: max-size=1000000000
+Upload-Limit: max-size=1234567890
 
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Offset: 50000000
+Upload-Offset: 23456789
 
 HTTP/1.1 200 OK
 Location: https://example.com/upload/b530ce8ff
-Upload-Limit: max-size=1000000000
+Upload-Limit: max-size=1234567890
 Content-Type: application/json
 
 {"attachmentId": "b530ce8ff"}
 ~~~
 
-B) The following example shows an upload creation, where only the first 25000000 bytes of a 100000000 bytes upload are transferred. The server acknowledges the received representation data and that the upload is not complete yet. The client can continue appending data.
+B) The following example shows an upload creation, where only the first 23456789 bytes of a 123456789 bytes upload are transferred. The server acknowledges the received representation data and that the upload is not complete yet. The client can continue appending data.
 
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
-Content-Length: 25000000
-Upload-Length: 100000000
+Content-Length: 23456789
+Upload-Length: 123456789
 
-[partial content (25000000 bytes)]
+[partial content (23456789 bytes)]
 ~~~
 
 ~~~ http-message
@@ -458,7 +458,7 @@ Location: https://example.com/upload/3fd4994ad
 
 HTTP/1.1 201 Created
 Location: https://example.com/upload/3fd4994ad
-Upload-Limit: max-size=1000000000
+Upload-Limit: max-size=1234567890
 ~~~
 
 C) The following example shows an upload creation, where the server responds with a 5xx status code. Thanks to the interim response containing the upload resource URI, the client can resume the upload.
@@ -467,10 +467,10 @@ C) The following example shows an upload creation, where the server responds wit
 POST /upload HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Content-Length: 100000000
-Upload-Length: 100000000
+Content-Length: 123456789
+Upload-Length: 123456789
 
-[content (100000000 bytes)]
+[content (123456789 bytes)]
 ~~~
 
 ~~~ http-message
@@ -486,10 +486,10 @@ D) The following example shows an upload creation being rejected by the server b
 POST /upload-not-allowed HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Content-Length: 100000000
-Upload-Length: 100000000
+Content-Length: 123456789
+Upload-Length: 123456789
 
-[content (100000000 bytes)]
+[content (123456789 bytes)]
 ~~~
 
 ~~~ http-message
@@ -607,38 +607,38 @@ While the request content is being received, the server SHOULD send interim resp
 
 ### Examples {#upload-appending-example}
 
-A) The following example shows an upload append request. The client transfers the next 25000000 bytes at an offset of 25000000 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:
+A) The following example shows an upload append request. The client transfers the next 23456789 bytes at an offset of 23456789 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:
 
 ~~~ http-message
 PATCH /upload/37a504d87 HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
-Upload-Offset: 25000000
-Content-Length: 25000000
+Upload-Offset: 23456789
+Content-Length: 23456789
 Content-Type: application/partial-upload
 
-[content (25000000 bytes)]
+[content (23456789 bytes)]
 ~~~
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Offset: 12500000
+Upload-Offset: 35185184
 
 HTTP/1.1 204 No Content
 Upload-Complete: ?0
 ~~~
 
-B) The next example shows an upload append, where the client transfers the remaining 25000000 bytes and completes the upload. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:
+B) The next example shows an upload append, where the client transfers the remaining 4567890 bytes and completes the upload with a length of 1234567890 bytes. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:
 
 ~~~ http-message
 PATCH /upload/d38d6ffe8 HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Upload-Offset: 25000000
-Content-Length: 25000000
+Upload-Offset: 1230000000
+Content-Length: 4567890
 Content-Type: application/partial-upload
 
-[content (25000000 bytes)]
+[content (4567890 bytes)]
 ~~~
 
 ~~~ http-message
