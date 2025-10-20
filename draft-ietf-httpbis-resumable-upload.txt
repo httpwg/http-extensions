@@ -1282,6 +1282,15 @@ Table of Contents
       information to release representation data that was buffered,
       knowing that it doesn't have to be re-transmitted.
 
+   When creating or appending resumable uploads, the client can generate
+   a 100-continue expectation because it wants an indication that the
+   server is willing to accept the upload.  The client MAY treat an
+   interim response with the 104 (Upload Resumption Supported) status
+   code as fulfilling the 100-continue expectation and start sending the
+   request content.  However, the server MUST NOT omit the 100
+   (Continue) response because it has sent an interim response with the
+   104 (Upload Resumption Supported) status code.
+
 6.  Media Type application/partial-upload
 
    The application/partial-upload media type describes a contiguous

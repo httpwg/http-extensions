@@ -2327,6 +2327,7 @@ HTTP/1.1 204 No Content
           <p id="section-5-2.2.1">While processing the content of a request to append representation data or create an upload, the server can regularly send interim responses with the <code>104 (Upload Resumption Supported)</code> status code to indicate the current upload progress in the <code>Upload-Offset</code> header field (see <a href="#upload-creation" class="auto internal xref">Section 4.2</a> and <a href="#upload-appending" class="auto internal xref">Section 4.4</a>). This allows the client to show more accurate progress information about the amount of data received by the server. In addition, clients can use this information to release representation data that was buffered, knowing that it doesn't have to be re-transmitted.<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
+<p id="section-5-3">When creating or appending resumable uploads, the client can generate a 100-continue expectation because it wants an indication that the server is willing to accept the upload. The client <span class="bcp14">MAY</span> treat an interim response with the <code>104 (Upload Resumption Supported)</code> status code as fulfilling the 100-continue expectation and start sending the request content. However, the server <span class="bcp14">MUST NOT</span> omit the <code>100 (Continue)</code> response because it has sent an interim response with the <code>104 (Upload Resumption Supported)</code> status code.<a href="#section-5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="media-type-partial-upload">
