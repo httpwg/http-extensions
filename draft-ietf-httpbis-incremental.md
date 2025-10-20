@@ -100,12 +100,19 @@ intermediaries to start forwarding the message downstream before the entire
 message is received.
 
 The Incremental header field is defined as a structured field
-{{STRUCTURED-FIELDS}} of type Item.  There is just one valid value, which is of
-type Boolean: "?1".
+{{STRUCTURED-FIELDS}} of a boolean Item.
 
 ~~~
-Incremental = ?1
+Incremental = sf-boolean
 ~~~
+
+A true value ("?1") indicates that the sender requests intermediaries to forward
+the message incrementally, as described below.
+
+A false value ("?0") indicates the default behavior defined in {{HTTP}}, where
+intermediaries might buffer the entire message before forwarding it. This
+behavior is equivalent to the case where the Incremental header field is not
+present.
 
 Upon receiving a header section that includes an Incremental header field with a
 true value, HTTP intermediaries SHOULD NOT buffer the entire message before
