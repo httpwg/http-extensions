@@ -679,10 +679,12 @@ Table of Contents
    (Section 12.1.1).
 
    If the client knows the representation data's length, it SHOULD
-   include the Upload-Length header field (Section 4.1.3) in the request
-   to help the server allocate necessary resources for the upload and
-   provide early feedback if the representation violates a limit
-   (Section 4.1.4).
+   indicate the length in the request to help the server allocate
+   necessary resources for the upload and provide early feedback if the
+   representation violates a limit (Section 4.1.4).  This indication can
+   be done through the Upload-Length header field or the combination of
+   the Content-Length and Upload-Complete: ?1 header fields (see
+   Section 4.1.3).
 
    The client SHOULD respect any limits (Section 4.1.4) announced in the
    Upload-Limit header field in interim or final responses.  In
