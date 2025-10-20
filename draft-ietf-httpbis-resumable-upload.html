@@ -1463,25 +1463,24 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-example-1-complete-upload-o" class="section-name selfRef">Example 1: Complete upload of representation data with known size</a>
         </h3>
 <p id="section-3.1-1">In this example, the client first attempts to upload representation data with a known size in a single HTTP request to the resource at <code>/project/123/files</code>. An interruption occurs and the client then attempts to resume the upload using subsequent HTTP requests to the upload resource at <code>/uploads/abc</code>.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">1) The client notifies the server that it wants to begin an upload (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>). The server reserves the required resources to accept the upload from the client, and the client begins transferring the entire representation data in the request content.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.1-3">An interim response can be sent to the client, which signals the server's support of resumable upload as well as the upload resource's URI via the Location header field (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">1) The client notifies the server that it wants to begin an upload (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>). The server reserves the required resources to accept the upload from the client and then sends an interim response to the client, which signals the server's support of resumable upload as well as the upload resource's URI via the Location header field (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). The client can start sending the representation data in the request content immediately after the request header. Alternatively, it could also await the acknowledgement in form of the interim response.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <span id="name-upload-creation"></span><div id="fig-upload-creation">
 <figure id="figure-1">
-          <div id="section-3.1-4.1">
-            <div class="alignLeft art-svg artwork" id="section-3.1-4.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="304" width="520" viewBox="0 0 520 304" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,272" fill="none" stroke="black"></path>
-                <path d="M 368,48 L 368,272" fill="none" stroke="black"></path>
-                <path d="M 512,160 L 512,192" fill="none" stroke="black"></path>
-                <path d="M 16,96 L 360,96" fill="none" stroke="black"></path>
-                <path d="M 376,160 L 512,160" fill="none" stroke="black"></path>
+          <div id="section-3.1-3.1">
+            <div class="alignLeft art-svg artwork" id="section-3.1-3.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="336" width="520" viewBox="0 0 520 336" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,304" fill="none" stroke="black"></path>
+                <path d="M 368,48 L 368,304" fill="none" stroke="black"></path>
+                <path d="M 512,192 L 512,224" fill="none" stroke="black"></path>
+                <path d="M 16,128 L 360,128" fill="none" stroke="black"></path>
                 <path d="M 376,192 L 512,192" fill="none" stroke="black"></path>
-                <path d="M 16,256 L 360,256" fill="none" stroke="black"></path>
-                <path d="M 16,288 L 120,288" fill="none" stroke="black"></path>
-                <path d="M 256,288 L 360,288" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="384,192 372,186.4 372,197.6" fill="black" transform="rotate(180,376,192)"></polygon>
-                <polygon class="arrowhead" points="368,96 356,90.4 356,101.6" fill="black" transform="rotate(0,360,96)"></polygon>
-                <polygon class="arrowhead" points="24,256 12,250.4 12,261.6" fill="black" transform="rotate(180,16,256)"></polygon>
+                <path d="M 376,224 L 512,224" fill="none" stroke="black"></path>
+                <path d="M 16,288 L 360,288" fill="none" stroke="black"></path>
+                <path d="M 16,320 L 120,320" fill="none" stroke="black"></path>
+                <path d="M 256,320 L 360,320" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="384,224 372,218.4 372,229.6" fill="black" transform="rotate(180,376,224)"></polygon>
+                <polygon class="arrowhead" points="368,128 356,122.4 356,133.6" fill="black" transform="rotate(0,360,128)"></polygon>
+                <polygon class="arrowhead" points="24,288 12,282.4 12,293.6" fill="black" transform="rotate(180,16,288)"></polygon>
                 <g class="text">
                   <text x="28" y="36">Client</text>
                   <text x="348" y="36">Server</text>
@@ -1489,33 +1488,34 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
                   <text x="132" y="68">/project/123/files</text>
                   <text x="84" y="84">Upload-Complete:</text>
                   <text x="164" y="84">?1</text>
-                  <text x="408" y="132">Reserve</text>
-                  <text x="480" y="132">resources</text>
-                  <text x="392" y="148">for</text>
-                  <text x="436" y="148">upload</text>
-                  <text x="120" y="228">104</text>
-                  <text x="164" y="228">Upload</text>
-                  <text x="236" y="228">Resumption</text>
-                  <text x="320" y="228">Supported</text>
-                  <text x="144" y="244">Location:</text>
-                  <text x="236" y="244">/uploads/abc</text>
-                  <text x="8" y="292">X</text>
-                  <text x="140" y="292">Flow</text>
-                  <text x="208" y="292">Interrupted</text>
-                  <text x="368" y="292">X</text>
+                  <text x="84" y="116">[representation]</text>
+                  <text x="408" y="164">Reserve</text>
+                  <text x="480" y="164">resources</text>
+                  <text x="392" y="180">for</text>
+                  <text x="436" y="180">upload</text>
+                  <text x="120" y="260">104</text>
+                  <text x="164" y="260">Upload</text>
+                  <text x="236" y="260">Resumption</text>
+                  <text x="320" y="260">Supported</text>
+                  <text x="144" y="276">Location:</text>
+                  <text x="236" y="276">/uploads/abc</text>
+                  <text x="8" y="324">X</text>
+                  <text x="140" y="324">Flow</text>
+                  <text x="208" y="324">Interrupted</text>
+                  <text x="368" y="324">X</text>
                 </g>
-              </svg><a href="#section-3.1-4.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-3.1-3.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
 <a href="#name-upload-creation" class="selfRef">Upload Creation</a>
           </figcaption></figure>
 </div>
-<p id="section-3.1-5">2) If the connection to the server is interrupted, the client might want to resume the upload. However, before this is possible the client needs to know the amount of representation data that the server received before the interruption. It does so by retrieving the offset (<a href="#offset-retrieving" class="auto internal xref">Section 4.3</a>) from the upload resource.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">2) If the connection to the server is interrupted, the client might want to resume the upload. However, before this is possible the client needs to know the amount of representation data that the server received before the interruption. It does so by retrieving the offset (<a href="#offset-retrieving" class="auto internal xref">Section 4.3</a>) from the upload resource.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
 <span id="name-offset-retrieval"></span><div id="fig-offset-retrieving">
 <figure id="figure-2">
-          <div id="section-3.1-6.1">
-            <div class="alignLeft art-svg artwork" id="section-3.1-6.1.1">
+          <div id="section-3.1-5.1">
+            <div class="alignLeft art-svg artwork" id="section-3.1-5.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="176" width="416" viewBox="0 0 416 176" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,48 L 8,160" fill="none" stroke="black"></path>
                 <path d="M 408,48 L 408,160" fill="none" stroke="black"></path>
@@ -1534,25 +1534,25 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
                   <text x="324" y="132">Upload-Offset:</text>
                   <text x="392" y="132">X</text>
                 </g>
-              </svg><a href="#section-3.1-6.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-3.1-5.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
 <a href="#name-offset-retrieval" class="selfRef">Offset Retrieval</a>
           </figcaption></figure>
 </div>
-<p id="section-3.1-7">3) The client can resume the upload by sending the remaining representation data to the upload resource (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>), appending to the already stored representation data in the upload using the <code>application/partial-upload</code> media type. The <code>Upload-Offset</code> value is included to ensure that the client and server agree on the offset that the upload resumes from. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to <code>/project/123/files</code> would have produced if it had not been interrupted, e.g. a <code>200 (OK)</code> response.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.1-6">3) The client can resume the upload by sending the remaining representation data to the upload resource (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>), appending to the already stored representation data in the upload using the <code>application/partial-upload</code> media type. The <code>Upload-Offset</code> value is included to ensure that the client and server agree on the offset that the upload resumes from. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to <code>/project/123/files</code> would have produced if it had not been interrupted, e.g. a <code>200 (OK)</code> response.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
 <span id="name-upload-append"></span><div id="fig-upload-appending">
 <figure id="figure-3">
-          <div id="section-3.1-8.1">
-            <div class="alignLeft art-svg artwork" id="section-3.1-8.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="208" width="416" viewBox="0 0 416 208" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,192" fill="none" stroke="black"></path>
-                <path d="M 408,48 L 408,192" fill="none" stroke="black"></path>
-                <path d="M 16,128 L 400,128" fill="none" stroke="black"></path>
-                <path d="M 16,176 L 400,176" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="408,128 396,122.4 396,133.6" fill="black" transform="rotate(0,400,128)"></polygon>
-                <polygon class="arrowhead" points="24,176 12,170.4 12,181.6" fill="black" transform="rotate(180,16,176)"></polygon>
+          <div id="section-3.1-7.1">
+            <div class="alignLeft art-svg artwork" id="section-3.1-7.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="416" viewBox="0 0 416 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,224" fill="none" stroke="black"></path>
+                <path d="M 408,48 L 408,224" fill="none" stroke="black"></path>
+                <path d="M 16,160 L 400,160" fill="none" stroke="black"></path>
+                <path d="M 16,208 L 400,208" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="408,160 396,154.4 396,165.6" fill="black" transform="rotate(0,400,160)"></polygon>
+                <polygon class="arrowhead" points="24,208 12,202.4 12,213.6" fill="black" transform="rotate(180,16,208)"></polygon>
                 <g class="text">
                   <text x="28" y="36">Client</text>
                   <text x="388" y="36">Server</text>
@@ -1564,21 +1564,25 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
                   <text x="144" y="100">X</text>
                   <text x="72" y="116">Content-Type:</text>
                   <text x="236" y="116">application/partial-upload</text>
-                  <text x="360" y="164">200</text>
-                  <text x="388" y="164">OK</text>
+                  <text x="80" y="148">[representation</text>
+                  <text x="164" y="148">from</text>
+                  <text x="212" y="148">offset</text>
+                  <text x="252" y="148">X]</text>
+                  <text x="360" y="196">200</text>
+                  <text x="388" y="196">OK</text>
                 </g>
-              </svg><a href="#section-3.1-8.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-3.1-7.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
 <a href="#name-upload-append" class="selfRef">Upload Append</a>
           </figcaption></figure>
 </div>
-<p id="section-3.1-9">4) If the client is not interested in completing the upload, it can instruct the upload resource to delete the upload and free all related resources (<a href="#upload-cancellation" class="auto internal xref">Section 4.5</a>).<a href="#section-3.1-9" class="pilcrow">¶</a></p>
+<p id="section-3.1-8">4) If the client is not interested in completing the upload, it can instruct the upload resource to delete the upload and free all related resources (<a href="#upload-cancellation" class="auto internal xref">Section 4.5</a>).<a href="#section-3.1-8" class="pilcrow">¶</a></p>
 <span id="name-upload-cancellation"></span><div id="fig-upload-cancellation">
 <figure id="figure-4">
-          <div id="section-3.1-10.1">
-            <div class="alignLeft art-svg artwork" id="section-3.1-10.1.1">
+          <div id="section-3.1-9.1">
+            <div class="alignLeft art-svg artwork" id="section-3.1-9.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="160" width="416" viewBox="0 0 416 160" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,48 L 8,144" fill="none" stroke="black"></path>
                 <path d="M 408,48 L 408,144" fill="none" stroke="black"></path>
@@ -1595,7 +1599,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
                   <text x="324" y="116">No</text>
                   <text x="368" y="116">Content</text>
                 </g>
-              </svg><a href="#section-3.1-10.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-3.1-9.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
@@ -1616,13 +1620,13 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <figure id="figure-5">
           <div id="section-3.2-4.1">
             <div class="alignLeft art-svg artwork" id="section-3.2-4.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="192" width="416" viewBox="0 0 416 192" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,176" fill="none" stroke="black"></path>
-                <path d="M 408,48 L 408,176" fill="none" stroke="black"></path>
-                <path d="M 16,96 L 400,96" fill="none" stroke="black"></path>
-                <path d="M 16,160 L 400,160" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="408,96 396,90.4 396,101.6" fill="black" transform="rotate(0,400,96)"></polygon>
-                <polygon class="arrowhead" points="24,160 12,154.4 12,165.6" fill="black" transform="rotate(180,16,160)"></polygon>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="224" width="416" viewBox="0 0 416 224" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,208" fill="none" stroke="black"></path>
+                <path d="M 408,48 L 408,208" fill="none" stroke="black"></path>
+                <path d="M 16,128 L 400,128" fill="none" stroke="black"></path>
+                <path d="M 16,192 L 400,192" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="408,128 396,122.4 396,133.6" fill="black" transform="rotate(0,400,128)"></polygon>
+                <polygon class="arrowhead" points="24,192 12,186.4 12,197.6" fill="black" transform="rotate(180,16,192)"></polygon>
                 <g class="text">
                   <text x="28" y="36">Client</text>
                   <text x="388" y="36">Server</text>
@@ -1630,10 +1634,12 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
                   <text x="132" y="68">/project/123/files</text>
                   <text x="84" y="84">Upload-Complete:</text>
                   <text x="164" y="84">?0</text>
-                  <text x="320" y="132">201</text>
-                  <text x="368" y="132">Created</text>
-                  <text x="256" y="148">Location:</text>
-                  <text x="348" y="148">/uploads/abc</text>
+                  <text x="52" y="116">[partial</text>
+                  <text x="152" y="116">representation]</text>
+                  <text x="320" y="164">201</text>
+                  <text x="368" y="164">Created</text>
+                  <text x="256" y="180">Location:</text>
+                  <text x="348" y="180">/uploads/abc</text>
                 </g>
               </svg><a href="#section-3.2-4.1.1" class="pilcrow">¶</a>
 </div>
@@ -1647,13 +1653,13 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <figure id="figure-6">
           <div id="section-3.2-6.1">
             <div class="alignLeft art-svg artwork" id="section-3.2-6.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="208" width="416" viewBox="0 0 416 208" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,192" fill="none" stroke="black"></path>
-                <path d="M 408,48 L 408,192" fill="none" stroke="black"></path>
-                <path d="M 16,128 L 400,128" fill="none" stroke="black"></path>
-                <path d="M 16,176 L 400,176" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="408,128 396,122.4 396,133.6" fill="black" transform="rotate(0,400,128)"></polygon>
-                <polygon class="arrowhead" points="24,176 12,170.4 12,181.6" fill="black" transform="rotate(180,16,176)"></polygon>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="416" viewBox="0 0 416 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,224" fill="none" stroke="black"></path>
+                <path d="M 408,48 L 408,224" fill="none" stroke="black"></path>
+                <path d="M 16,160 L 400,160" fill="none" stroke="black"></path>
+                <path d="M 16,208 L 400,208" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="408,160 396,154.4 396,165.6" fill="black" transform="rotate(0,400,160)"></polygon>
+                <polygon class="arrowhead" points="24,208 12,202.4 12,213.6" fill="black" transform="rotate(180,16,208)"></polygon>
                 <g class="text">
                   <text x="28" y="36">Client</text>
                   <text x="388" y="36">Server</text>
@@ -1665,9 +1671,14 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
                   <text x="144" y="100">X</text>
                   <text x="72" y="116">Content-Type:</text>
                   <text x="236" y="116">application/partial-upload</text>
-                  <text x="296" y="164">204</text>
-                  <text x="324" y="164">No</text>
-                  <text x="368" y="164">Content</text>
+                  <text x="52" y="148">[partial</text>
+                  <text x="148" y="148">representation</text>
+                  <text x="228" y="148">from</text>
+                  <text x="276" y="148">offset</text>
+                  <text x="316" y="148">X]</text>
+                  <text x="296" y="196">204</text>
+                  <text x="324" y="196">No</text>
+                  <text x="368" y="196">Content</text>
                 </g>
               </svg><a href="#section-3.2-6.1.1" class="pilcrow">¶</a>
 </div>
@@ -1681,16 +1692,16 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <figure id="figure-7">
           <div id="section-3.2-8.1">
             <div class="alignLeft art-svg artwork" id="section-3.2-8.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="320" width="416" viewBox="0 0 416 320" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,304" fill="none" stroke="black"></path>
-                <path d="M 408,48 L 408,304" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="352" width="416" viewBox="0 0 416 352" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,336" fill="none" stroke="black"></path>
+                <path d="M 408,48 L 408,336" fill="none" stroke="black"></path>
                 <path d="M 16,80 L 400,80" fill="none" stroke="black"></path>
                 <path d="M 16,144 L 400,144" fill="none" stroke="black"></path>
-                <path d="M 16,240 L 400,240" fill="none" stroke="black"></path>
-                <path d="M 16,288 L 400,288" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="408,240 396,234.4 396,245.6" fill="black" transform="rotate(0,400,240)"></polygon>
+                <path d="M 16,272 L 400,272" fill="none" stroke="black"></path>
+                <path d="M 16,320 L 400,320" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="408,272 396,266.4 396,277.6" fill="black" transform="rotate(0,400,272)"></polygon>
                 <polygon class="arrowhead" points="408,80 396,74.4 396,85.6" fill="black" transform="rotate(0,400,80)"></polygon>
-                <polygon class="arrowhead" points="24,288 12,282.4 12,293.6" fill="black" transform="rotate(180,16,288)"></polygon>
+                <polygon class="arrowhead" points="24,320 12,314.4 12,325.6" fill="black" transform="rotate(180,16,320)"></polygon>
                 <polygon class="arrowhead" points="24,144 12,138.4 12,149.6" fill="black" transform="rotate(180,16,144)"></polygon>
                 <g class="text">
                   <text x="28" y="36">Client</text>
@@ -1710,9 +1721,14 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
                   <text x="144" y="212">Y</text>
                   <text x="72" y="228">Content-Type:</text>
                   <text x="236" y="228">application/partial-upload</text>
-                  <text x="296" y="276">204</text>
-                  <text x="324" y="276">No</text>
-                  <text x="368" y="276">Content</text>
+                  <text x="52" y="260">[partial</text>
+                  <text x="148" y="260">representation</text>
+                  <text x="228" y="260">from</text>
+                  <text x="276" y="260">offset</text>
+                  <text x="316" y="260">Y]</text>
+                  <text x="296" y="308">204</text>
+                  <text x="324" y="308">No</text>
+                  <text x="368" y="308">Content</text>
                 </g>
               </svg><a href="#section-3.2-8.1.1" class="pilcrow">¶</a>
 </div>
@@ -1726,26 +1742,31 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <figure id="figure-8">
           <div id="section-3.2-10.1">
             <div class="alignLeft art-svg artwork" id="section-3.2-10.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="208" width="416" viewBox="0 0 416 208" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,192" fill="none" stroke="black"></path>
-                <path d="M 408,48 L 408,192" fill="none" stroke="black"></path>
-                <path d="M 16,128 L 400,128" fill="none" stroke="black"></path>
-                <path d="M 16,176 L 400,176" fill="none" stroke="black"></path>
-                <polygon class="arrowhead" points="408,128 396,122.4 396,133.6" fill="black" transform="rotate(0,400,128)"></polygon>
-                <polygon class="arrowhead" points="24,176 12,170.4 12,181.6" fill="black" transform="rotate(180,16,176)"></polygon>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="416" viewBox="0 0 416 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,224" fill="none" stroke="black"></path>
+                <path d="M 408,48 L 408,224" fill="none" stroke="black"></path>
+                <path d="M 16,160 L 400,160" fill="none" stroke="black"></path>
+                <path d="M 16,208 L 400,208" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="408,160 396,154.4 396,165.6" fill="black" transform="rotate(0,400,160)"></polygon>
+                <polygon class="arrowhead" points="24,208 12,202.4 12,213.6" fill="black" transform="rotate(180,16,208)"></polygon>
                 <g class="text">
                   <text x="28" y="36">Client</text>
                   <text x="388" y="36">Server</text>
                   <text x="40" y="68">PATCH</text>
                   <text x="116" y="68">/uploads/abc</text>
-                  <text x="76" y="84">Upload-Offset:</text>
-                  <text x="144" y="84">Z</text>
-                  <text x="84" y="100">Upload-Complete:</text>
-                  <text x="164" y="100">?1</text>
+                  <text x="84" y="84">Upload-Complete:</text>
+                  <text x="164" y="84">?1</text>
+                  <text x="76" y="100">Upload-Offset:</text>
+                  <text x="144" y="100">Z</text>
                   <text x="72" y="116">Content-Type:</text>
                   <text x="236" y="116">application/partial-upload</text>
-                  <text x="360" y="164">200</text>
-                  <text x="388" y="164">OK</text>
+                  <text x="60" y="148">[remaining</text>
+                  <text x="164" y="148">representation</text>
+                  <text x="244" y="148">from</text>
+                  <text x="292" y="148">offset</text>
+                  <text x="332" y="148">Z]</text>
+                  <text x="360" y="196">200</text>
+                  <text x="388" y="196">OK</text>
                 </g>
               </svg><a href="#section-3.2-10.1.1" class="pilcrow">¶</a>
 </div>
@@ -2079,8 +2100,8 @@ Host: example.com
 <div class="lang-http-message sourcecode" id="section-4.3.3-3">
 <pre>
 HTTP/1.1 204 No Content
-Upload-Offset: 25000000
 Upload-Complete: ?0
+Upload-Offset: 25000000
 Upload-Length: 100000000
 Upload-Limit: max-age=3600
 Cache-Control: no-store
@@ -2096,8 +2117,8 @@ Host: example.com
 <div class="lang-http-message sourcecode" id="section-4.3.3-6">
 <pre>
 HTTP/1.1 204 No Content
-Upload-Offset: 100000000
 Upload-Complete: ?1
+Upload-Offset: 100000000
 Upload-Length: 100000000
 Cache-Control: no-store
 </pre><a href="#section-4.3.3-6" class="pilcrow">¶</a>

@@ -251,17 +251,20 @@ Table of Contents
 
    1) The client notifies the server that it wants to begin an upload
    (Section 4.2).  The server reserves the required resources to accept
-   the upload from the client, and the client begins transferring the
-   entire representation data in the request content.
-
-   An interim response can be sent to the client, which signals the
-   server's support of resumable upload as well as the upload resource's
-   URI via the Location header field (Section 10.2.2 of [HTTP]).
+   the upload from the client and then sends an interim response to the
+   client, which signals the server's support of resumable upload as
+   well as the upload resource's URI via the Location header field
+   (Section 10.2.2 of [HTTP]).  The client can start sending the
+   representation data in the request content immediately after the
+   request header.  Alternatively, it could also await the
+   acknowledgement in form of the interim response.
 
    Client                                  Server
    |                                            |
    | POST /project/123/files                    |
    | Upload-Complete: ?1                        |
+   |                                            |
+   | [representation]                           |
    |------------------------------------------->|
    |                                            |
    |                                            | Reserve resources
@@ -313,6 +316,8 @@ Table of Contents
    | Upload-Complete: ?1                             |
    | Upload-Offset: X                                |
    | Content-Type: application/partial-upload        |
+   |                                                 |
+   | [representation from offset X]                  |
    |------------------------------------------------>|
    |                                                 |
    |                                          200 OK |
@@ -357,6 +362,8 @@ Table of Contents
    |                                                 |
    | POST /project/123/files                         |
    | Upload-Complete: ?0                             |
+   |                                                 |
+   | [partial representation]                        |
    |------------------------------------------------>|
    |                                                 |
    |                                     201 Created |
@@ -378,6 +385,8 @@ Table of Contents
    | Upload-Complete: ?0                             |
    | Upload-Offset: X                                |
    | Content-Type: application/partial-upload        |
+   |                                                 |
+   | [partial representation from offset X]          |
    |------------------------------------------------>|
    |                                                 |
    |                                  204 No Content |
@@ -405,6 +414,8 @@ Table of Contents
    | Upload-Complete: ?0                             |
    | Upload-Offset: Y                                |
    | Content-Type: application/partial-upload        |
+   |                                                 |
+   | [partial representation from offset Y]          |
    |------------------------------------------------>|
    |                                                 |
    |                                  204 No Content |
@@ -423,9 +434,11 @@ Table of Contents
    Client                                       Server
    |                                                 |
    | PATCH /uploads/abc                              |
-   | Upload-Offset: Z                                |
    | Upload-Complete: ?1                             |
+   | Upload-Offset: Z                                |
    | Content-Type: application/partial-upload        |
+   |                                                 |
+   | [remaining representation from offset Z]        |
    |------------------------------------------------>|
    |                                                 |
    |                                          200 OK |
@@ -939,8 +952,8 @@ Table of Contents
    Host: example.com
 
    HTTP/1.1 204 No Content
-   Upload-Offset: 25000000
    Upload-Complete: ?0
+   Upload-Offset: 25000000
    Upload-Length: 100000000
    Upload-Limit: max-age=3600
    Cache-Control: no-store
@@ -952,8 +965,8 @@ Table of Contents
    Host: example.com
 
    HTTP/1.1 204 No Content
-   Upload-Offset: 100000000
    Upload-Complete: ?1
+   Upload-Offset: 100000000
    Upload-Length: 100000000
    Cache-Control: no-store
 
