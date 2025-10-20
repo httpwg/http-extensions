@@ -255,9 +255,9 @@ Table of Contents
    client, which signals the server's support of resumable upload as
    well as the upload resource's URI via the Location header field
    (Section 10.2.2 of [HTTP]).  The client can start sending the
-   representation data in the request content without delay right after
-   the request header.  Alternatively, it could also await the
-   acknoledgement in form of the interim response.
+   representation data in the request content immediately after the
+   request header.  Alternatively, it could also await the
+   acknowledgement in form of the interim response.
 
    Client                                  Server
    |                                            |
