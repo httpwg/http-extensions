@@ -1245,40 +1245,48 @@ of Item and Boolean <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCT
 intermediaries to start forwarding the message downstream before the entire
 message is received.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">The Incremental header field is defined as a structured field
-<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> of type Item.  There is just one valid value, which is of
-type Boolean: "?1".<a href="#section-3-2" class="pilcrow">¶</a></p>
+<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> of type Item.
+Only Boolean values (<span><a href="https://rfc-editor.org/rfc/rfc8941#section-3.3.6" class="relref">Section 3.3.6</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>) are valid;
+a recipient ignores the field if it contains any other type.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3-3">
 <pre>
-Incremental = ?1
+Incremental = sf-boolean
 </pre><a href="#section-3-3" class="pilcrow">¶</a>
 </div>
-<p id="section-3-4">Upon receiving a header section that includes an Incremental header field with a
+<p id="section-3-4">A true value ("?1") indicates that the sender requests intermediaries to forward
+the message incrementally, as described below.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-5">A false value ("?0") indicates the default behavior defined in <span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span>, where
+intermediaries might buffer the entire message before forwarding it.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">Upon receiving a header section that includes an Incremental header field with a
 true value, HTTP intermediaries <span class="bcp14">SHOULD NOT</span> buffer the entire message before
 forwarding it.  Instead, intermediaries <span class="bcp14">SHOULD</span> transmit the header section
 downstream and continuously forward the bytes of the message body as they
 arrive. As the Incremental header field indicates only how the message content is
 to be forwarded, intermediaries can still buffer the entire header and trailer
-sections of the message before forwarding them downstream.<a href="#section-3-4" class="pilcrow">¶</a></p>
-<p id="section-3-5">The request to use incremental forwarding also applies to HTTP implementations.
+sections of the message before forwarding them downstream.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<p id="section-3-7">The request to use incremental forwarding also applies to HTTP implementations.
 Though most HTTP APIs provide the ability to incrementally transfer message content,
 those that do not for any reason, <span class="bcp14">SHOULD</span> use the presence of the Incremental
-header field to reduce or disable buffering.<a href="#section-3-5" class="pilcrow">¶</a></p>
-<p id="section-3-6">The Incremental HTTP header field applies to each HTTP message. Therefore, if
+header field to reduce or disable buffering.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<p id="section-3-8">The Incremental HTTP header field applies to each HTTP message. Therefore, if
 both the HTTP request and response need to be forwarded incrementally, the
 Incremental HTTP header field <span class="bcp14">MUST</span> be set for both the HTTP request and the
-response.<a href="#section-3-6" class="pilcrow">¶</a></p>
-<p id="section-3-7">The Incremental field is advisory. Intermediaries that are unaware of the field
+response.<a href="#section-3-8" class="pilcrow">¶</a></p>
+<p id="section-3-9">The Incremental field is advisory. Intermediaries that are unaware of the field
 or that do not support the field might buffer messages, even when explicitly
 requested otherwise.  Clients and servers therefore cannot expect all
 intermediaries to understand and respect a request to deliver messages
 incrementally. Clients can rely on prior knowledge or probe for support on
-individual resources.<a href="#section-3-7" class="pilcrow">¶</a></p>
-<p id="section-3-8">The Incremental header field facilitates the establishment of a bidirectional
+individual resources.<a href="#section-3-9" class="pilcrow">¶</a></p>
+<p id="section-3-10">The Incremental header field facilitates the establishment of a bidirectional
 byte channel over HTTP, as its presence in both requests and responses instructs
 intermediaries to forward early responses (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.5" class="relref">Section 7.5</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) and to
 transmit message contents incrementally in both directions.  However, when developing
 bidirectional protocols over HTTP, Extended CONNECT <span>[<a href="#RFC8441" class="cite xref">RFC8441</a>]</span><span>[<a href="#RFC9220" class="cite xref">RFC9220</a>]</span> is
-generally more consistent with HTTP's architecture.<a href="#section-3-8" class="pilcrow">¶</a></p>
+generally more consistent with HTTP's architecture.<a href="#section-3-10" class="pilcrow">¶</a></p>
+<p id="section-3-11">This document does not define any parameters for the Incremental header field
+value, but future documents might define parameters. Receivers <span class="bcp14">MUST</span> ignore
+unknown parameters.<a href="#section-3-11" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">

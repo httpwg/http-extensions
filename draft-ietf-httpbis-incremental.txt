@@ -128,10 +128,18 @@ Table of Contents
    the entire message is received.
 
    The Incremental header field is defined as a structured field
-   [STRUCTURED-FIELDS] of type Item.  There is just one valid value,
-   which is of type Boolean: "?1".
+   [STRUCTURED-FIELDS] of type Item.  Only Boolean values (Section 3.3.6
+   of [STRUCTURED-FIELDS]) are valid; a recipient ignores the field if
+   it contains any other type.
 
-   Incremental = ?1
+   Incremental = sf-boolean
+
+   A true value ("?1") indicates that the sender requests intermediaries
+   to forward the message incrementally, as described below.
+
+   A false value ("?0") indicates the default behavior defined in
+   [HTTP], where intermediaries might buffer the entire message before
+   forwarding it.
 
    Upon receiving a header section that includes an Incremental header
    field with a true value, HTTP intermediaries SHOULD NOT buffer the
@@ -168,6 +176,10 @@ Table of Contents
    bidirectional protocols over HTTP, Extended CONNECT
    [RFC8441][RFC9220] is generally more consistent with HTTP's
    architecture.
+
+   This document does not define any parameters for the Incremental
+   header field value, but future documents might define parameters.
+   Receivers MUST ignore unknown parameters.
 
 4.  Security Considerations
 
