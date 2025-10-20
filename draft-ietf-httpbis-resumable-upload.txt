@@ -1616,6 +1616,16 @@ Table of Contents
    waiting for the upload to complete before scanning the entire
    representation, or disabling resumable uploads.
 
+   There can be a significant delay between the creation of an upload
+   resource and its completion.  Policy decisions or authorization
+   checks performed on the initial request might become outdated or
+   invalid by the time the upload completes.  To mitigate
+   vulnerabilities arising from time-of-check to time-of-use (TOCTOU)
+   conditions, the server SHOULD validate that the user is still allowed
+   to perform the requested action before finalizing the upload.  This
+   includes, for example, validating access privileges and quota
+   policies associated with the upload resource.
+
    Resumable uploads are vulnerable to Slowloris-style attacks
    [SLOWLORIS].  A malicious client may create upload resources and keep
    them alive by regularly sending PATCH requests with no or small
