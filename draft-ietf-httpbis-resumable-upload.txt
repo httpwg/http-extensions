@@ -617,13 +617,20 @@ Table of Contents
       seconds counted from the generation of the response.  After the
       resource's lifetime is reached, the server might make the upload
       resource inaccessible and a client SHOULD NOT attempt to access
-      the upload resource as these requests will likely fail.  The
-      lifetime MAY be extended but SHOULD NOT be reduced unless the
-      server makes the upload resource immediately inaccessible.  The
-      value is an Integer.
+      the upload resource as these requests will likely fail.  The value
+      is an Integer.
 
-   Except for the max-age limit, the existence of a limit or its value
-   MUST NOT change throughout the lifetime of the upload resource.
+   Clients usually discover limits through the Upload-Limit header field
+   when the upload resource is created (Section 4.2).  Throughout the
+   lifetime of the upload resource, these limits SHOULD NOT change in a
+   way that causes failures for clients adhering to the initially
+   discovered limits.  In particular, whereas the values for max-size,
+   max-append-size, and max-age can increase without harm, they SHOULD
+   NOT decrease as they can cause ongoing uploads to fail.  Similarly,
+   the value for min-append-size SHOULD NOT increase.  If the client
+   discovers that it cannot continue the upload while adhering to the
+   limits, it SHOULD stop the current request immediately and cancel the
+   upload (Section 4.5).
 
    Receivers of Upload-Limit parse the Dictionary as described in
    Section 4.2 of [STRUCTURED-FIELDS].  Where the Dictionary is
