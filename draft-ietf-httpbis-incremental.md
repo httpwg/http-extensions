@@ -112,9 +112,7 @@ A true value ("?1") indicates that the sender requests intermediaries to forward
 the message incrementally, as described below.
 
 A false value ("?0") indicates the default behavior defined in {{HTTP}}, where
-intermediaries might buffer the entire message before forwarding it. This
-behavior is equivalent to the case where the Incremental header field is not
-present.
+intermediaries might buffer the entire message before forwarding it.
 
 Upon receiving a header section that includes an Incremental header field with a
 true value, HTTP intermediaries SHOULD NOT buffer the entire message before
