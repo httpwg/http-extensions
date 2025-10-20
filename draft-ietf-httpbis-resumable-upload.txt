@@ -759,12 +759,12 @@ Table of Contents
    server can choose to offer resumption support by creating an upload
    resource.  If so, it SHOULD announce the upload resource by sending
    an interim response with the 104 (Upload Resumption Supported) status
-   code and the Location header field pointing to the upload resource
-   unless the server is not capable of sending interim responses.  The
-   interim response MUST include the Upload-Limit header field with the
-   corresponding limits (Section 4.1.4) if existing.  The interim
-   response allows the client to resume the upload even if the message
-   exchange gets later interrupted.
+   code unless the server is not capable of sending interim responses.
+   The interim response allows the client to resume the upload even if
+   the message exchange gets later interrupted.  When sent, it MUST
+   include Location header field pointing to the upload resource and
+   MUST include the Upload-Limit header field with the corresponding
+   limits (Section 4.1.4) if existing.
 
    The resource targeted by this initial request is responsible for
    processing the representation data transferred in the resumable
@@ -779,21 +779,31 @@ Table of Contents
 
    If the Upload-Complete header field is set to false, the client
    intends to transfer the representation over multiple requests.  If
-   the request content was fully received, the server MUST announce the
-   upload resource by referencing it in the Location response header
-   field.  Servers are RECOMMENDED to use the 201 (Created) status code.
-   The response MUST include the Upload-Limit header field with the
-   corresponding limits if existing.
+   the request content was fully received, the server MUST include the
+   Location response header field pointing to the upload resource and
+   MUST include the Upload-Limit header field with the corresponding
+   limits if existing.  Servers are RECOMMENDED to use the 201 (Created)
+   status code.
 
    The server MUST record the length according to Section 4.1.3 if the
    Upload-Length or Upload-Complete header fields are included in the
    request.
 
    While the request content is being received, the server MAY send
-   additional interim responses with a 104 (Upload Resumption Supported)
+   multiple interim responses with a 104 (Upload Resumption Supported)
    status code and the Upload-Offset header field set to the current
-   offset to inform the client about the upload progress.  These interim
-   responses MUST NOT include the Location header field.
+   offset to inform the client about the upload progress.
+
+   Where a response requires a Location header field to be included, all
+   interim and final response messages for the same request MUST contain
+   an identical Location value.  However, final responses including the
+   Upload-Complete: ?1 header field are exempt from this requirement
+   because they are the result of processing the transferred
+   representation and the Location value does not necessarily represent
+   the upload location.  Where the Location value is expected to be
+   identical across multiple messages, clients SHOULD verify this.  If
+   verification fails, clients SHOULD abort the current request and
+   cancel the upload (Section 4.5).
 
    The server might not receive the entire request content when the
    upload is interrupted, for example because of dropped connection or
