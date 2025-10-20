@@ -982,27 +982,37 @@ Table of Contents
       server, the upload is complete.  This usage requires the full
       representation data to have been received via prior requests.
 
-   If the client received a final response with a
+   If the client received a final response with the Upload-Complete: ?1
+   header field, the upload is complete and the corresponding response
+   comes from the resource processing the representation according to
+   the initial request (see Section 4.2).  Note that the status code
+   does not necessary indicate success. 4xx (Client Error) or 5xx
+   (Server Error) status codes indicate in this case that the
+   representation was fully transmitted, but an error occurred while
+   processing it.  Resuming the upload would not resolve this error.
 
-   *  2xx (Successful) status code and the remaining representation data
-      was transferred in the request content, the upload is complete and
-      the corresponding response comes from the resource processing the
-      representation according to the initial request (see Section 4.2).
+   If the client received a final response with the Upload-Complete: ?0
+   header field or the header field missing, the next step depends on
+   the status code:
 
-   *  2xx (Successful) status code and the entire remaining
-      representation data was not transferred in the request content,
-      the client can continue appending representation data.
+   *  A 2xx (Successful) status code indicates that representation data
+      was appended but the upload is not complete.  The client can
+      continue appending representation data.
 
-   *  307 (Temporary Redirect) or 308 (Permanent Redirect) status code,
-      the client MAY retry appending to the new URI.
+   *  For a 307 (Temporary Redirect) or 308 (Permanent Redirect) status
+      code, the client MAY retry appending to the new URI.
 
-   *  4xx (Client Error) status code, the client SHOULD NOT attempt to
-      retry or resume the upload, unless the semantics of the response
-      allow or recommend the client to retry the request.
+   *  For a 4xx (Client Error) status code, the client SHOULD NOT
+      attempt to retry or resume the upload, unless the semantics of the
+      response allow or recommend the client to retry the request.
 
-   *  5xx (Server Error) status code or no final response at all due to
-      connectivity issues, the client MAY automatically attempt upload
-      resumption by retrieving the current offset (Section 4.3).
+   *  For a 5xx (Server Error) status code, the client MAY automatically
+      attempt upload resumption by retrieving the current offset
+      (Section 4.3).
+
+   If no final response was received at all due to connectivity issues,
+   the client MAY automatically attempt upload resumption by retrieving
+   the current offset (Section 4.3).
 
 4.4.2.  Server Behavior
 
@@ -1050,12 +1060,7 @@ Table of Contents
    client intends to transfer the remaining representation over multiple
    requests.  If the request content was fully received, the upload
    resource acknowledges the appended data by sending a 2xx (Successful)
-   response.
-
-   If the request didn't complete the upload, any response, successful
-   or not, MUST include the Upload-Complete header field with a false
-   value, indicating that this response does not belong to the
-   processing of the uploaded representation.
+   response with the Upload-Complete header field set to false.
 
    The server MUST record the length according to Section 4.1.3 if the
    Upload-Length or Upload-Complete header fields are included in the
