@@ -146,6 +146,10 @@ transmit message contents incrementally in both directions.  However, when devel
 bidirectional protocols over HTTP, Extended CONNECT {{?RFC8441}}{{?RFC9220}} is
 generally more consistent with HTTP's architecture.
 
+This document does not define any parameters for the Incremental header field
+value, but future documents might define parameters. Receivers MUST ignore
+unknown parameters.
+
 
 # Security Considerations
 
