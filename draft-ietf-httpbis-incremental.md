@@ -100,7 +100,9 @@ intermediaries to start forwarding the message downstream before the entire
 message is received.
 
 The Incremental header field is defined as a structured field
-{{STRUCTURED-FIELDS}} of a boolean Item.
+{{STRUCTURED-FIELDS}} of type Item.
+Only Boolean values ({{Section 3.3.6 of STRUCTURED-FIELDS}}) are valid;
+a recipient ignores the field if it contains any other type.
 
 ~~~
 Incremental = sf-boolean
