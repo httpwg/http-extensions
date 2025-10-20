@@ -125,15 +125,15 @@ The remainder of this section uses examples to illustrate different interactions
 
 In this example, the client first attempts to upload representation data with a known size in a single HTTP request to the resource at `/project/123/files`. An interruption occurs and the client then attempts to resume the upload using subsequent HTTP requests to the upload resource at `/uploads/abc`.
 
-1) The client notifies the server that it wants to begin an upload ({{upload-creation}}). The server reserves the required resources to accept the upload from the client, and the client begins transferring the entire representation data in the request content.
-
-An interim response can be sent to the client, which signals the server's support of resumable upload as well as the upload resource's URI via the Location header field ({{Section 10.2.2 of HTTP}}).
+1) The client notifies the server that it wants to begin an upload ({{upload-creation}}). The server reserves the required resources to accept the upload from the client and then sends an interim response to the client, which signals the server's support of resumable upload as well as the upload resource's URI via the Location header field ({{Section 10.2.2 of HTTP}}). The client can start sending the representation data in the request content immediately after the request header. Alternatively, it could also await the acknowledgement in form of the interim response.
 
 ~~~ aasvg
 Client                                  Server
 |                                            |
 | POST /project/123/files                    |
 | Upload-Complete: ?1                        |
+|                                            |
+| [representation]                           |
 |------------------------------------------->|
 |                                            |
 |                                            | Reserve resources
@@ -174,6 +174,8 @@ Client                                       Server
 | Upload-Complete: ?1                             |
 | Upload-Offset: X                                |
 | Content-Type: application/partial-upload        |
+|                                                 |
+| [representation from offset X]                  |
 |------------------------------------------------>|
 |                                                 |
 |                                          200 OK |
@@ -209,6 +211,8 @@ Client                                       Server
 |                                                 |
 | POST /project/123/files                         |
 | Upload-Complete: ?0                             |
+|                                                 |
+| [partial representation]                        |
 |------------------------------------------------>|
 |                                                 |
 |                                     201 Created |
@@ -227,6 +231,8 @@ Client                                       Server
 | Upload-Complete: ?0                             |
 | Upload-Offset: X                                |
 | Content-Type: application/partial-upload        |
+|                                                 |
+| [partial representation from offset X]          |
 |------------------------------------------------>|
 |                                                 |
 |                                  204 No Content |
@@ -251,6 +257,8 @@ Client                                       Server
 | Upload-Complete: ?0                             |
 | Upload-Offset: Y                                |
 | Content-Type: application/partial-upload        |
+|                                                 |
+| [partial representation from offset Y]          |
 |------------------------------------------------>|
 |                                                 |
 |                                  204 No Content |
@@ -266,9 +274,11 @@ Client                                       Server
 Client                                       Server
 |                                                 |
 | PATCH /uploads/abc                              |
-| Upload-Offset: Z                                |
 | Upload-Complete: ?1                             |
+| Upload-Offset: Z                                |
 | Content-Type: application/partial-upload        |
+|                                                 |
+| [remaining representation from offset Z]        |
 |------------------------------------------------>|
 |                                                 |
 |                                          200 OK |
@@ -524,8 +534,8 @@ Host: example.com
 
 ~~~ http-message
 HTTP/1.1 204 No Content
-Upload-Offset: 25000000
 Upload-Complete: ?0
+Upload-Offset: 25000000
 Upload-Length: 100000000
 Upload-Limit: max-age=3600
 Cache-Control: no-store
@@ -540,8 +550,8 @@ Host: example.com
 
 ~~~ http-message
 HTTP/1.1 204 No Content
-Upload-Offset: 100000000
 Upload-Complete: ?1
+Upload-Offset: 100000000
 Upload-Length: 100000000
 Cache-Control: no-store
 ~~~
