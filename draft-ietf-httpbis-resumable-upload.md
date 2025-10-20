@@ -125,7 +125,7 @@ The remainder of this section uses examples to illustrate different interactions
 
 In this example, the client first attempts to upload representation data with a known size in a single HTTP request to the resource at `/project/123/files`. An interruption occurs and the client then attempts to resume the upload using subsequent HTTP requests to the upload resource at `/uploads/abc`.
 
-1) The client notifies the server that it wants to begin an upload ({{upload-creation}}). The server reserves the required resources to accept the upload from the client and then sends an interim response to the client, which signals the server's support of resumable upload as well as the upload resource's URI via the Location header field ({{Section 10.2.2 of HTTP}}). The client can start sending the representation data in the request content without delay right after the request header. Alternatively, it could also await the acknoledgement in form of the interim response.
+1) The client notifies the server that it wants to begin an upload ({{upload-creation}}). The server reserves the required resources to accept the upload from the client and then sends an interim response to the client, which signals the server's support of resumable upload as well as the upload resource's URI via the Location header field ({{Section 10.2.2 of HTTP}}). The client can start sending the representation data in the request content immediately after the request header. Alternatively, it could also await the acknowledgement in form of the interim response.
 
 ~~~ aasvg
 Client                                  Server
