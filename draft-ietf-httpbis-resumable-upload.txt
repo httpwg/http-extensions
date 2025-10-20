@@ -1840,7 +1840,17 @@ Appendix A.  Changes
 
 Since draft-ietf-httpbis-resumable-upload-09
 
-   *  Requires Accept-Patch in OPTIONS
+   *  Requires Accept-Patch in OPTIONS.
+
+   *  Add security consideration regarding time-of-check to time-of-use.
+
+   *  Lift requirement on Upload-Complete for all final responses.
+
+   *  Relax requirements on limit changes.
+
+   *  Describe the interaction between 100 and 104 responses.
+
+   *  Numerous editorial improvements.
 
 Since draft-ietf-httpbis-resumable-upload-08
 
