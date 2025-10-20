@@ -990,7 +990,12 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-09
 {:numbered="false"}
 
-* Requires Accept-Patch in OPTIONS
+* Requires Accept-Patch in OPTIONS.
+* Add security consideration regarding time-of-check to time-of-use.
+* Lift requirement on Upload-Complete for all final responses.
+* Relax requirements on limit changes.
+* Describe the interaction between 100 and 104 responses.
+* Numerous editorial improvements.
 
 ## Since draft-ietf-httpbis-resumable-upload-08
 {:numbered="false"}
