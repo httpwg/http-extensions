@@ -590,7 +590,12 @@ The server might not receive the entire patch document when the upload is interr
 
 If the `Upload-Offset` request header field value does not match the current offset ({{upload-offset}}), the upload resource MUST reject the request with a `409 (Conflict)` status code. The response MUST include the correct offset in the `Upload-Offset` header field. The response can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" ({{mismatching-offset}}).
 
-If the upload is already complete ({{upload-complete}}), the server MUST NOT modify the upload resource and MUST reject the request. The server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#completed-upload" in the response ({{completed-upload}}).
+If the upload is already complete ({{upload-complete}}), the server MUST NOT modify the upload resource and MUST reject the request. The choice of response depends on the nature of the upload request and server state, including but not limited to:
+
+- If the client attempted to append a non-zero length document, the server MUST treat this as an inconsistent length failure. The server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) in the response.
+- If the client attempted to append a zero-length document:
+  - If the server retains knowledge of the upload resource but it is not available, the `410 (Gone)` status code can be used; the response could also contain a `Location` header field to indicate the location of the completed upload. The server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#completed-upload" ({{completed-upload}}) in the response.
+  - If the server has not retained knowledge of the upload resource, a `404 (Not Found)` status code can be used.
 
 If the `Upload-Complete` request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully received, the upload is marked as complete and the upload resource SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had received the entire representation in the initial request. However, the response MUST include the `Upload-Complete` header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the upload representation.
 
