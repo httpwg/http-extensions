@@ -274,8 +274,8 @@ Client                                       Server
 Client                                       Server
 |                                                 |
 | PATCH /uploads/abc                              |
-| Upload-Offset: Z                                |
 | Upload-Complete: ?1                             |
+| Upload-Offset: Z                                |
 | Content-Type: application/partial-upload        |
 |                                                 |
 | [remaining representation from offset Z]        |
@@ -534,8 +534,8 @@ Host: example.com
 
 ~~~ http-message
 HTTP/1.1 204 No Content
-Upload-Offset: 25000000
 Upload-Complete: ?0
+Upload-Offset: 25000000
 Upload-Length: 100000000
 Upload-Limit: max-age=3600
 Cache-Control: no-store
@@ -550,8 +550,8 @@ Host: example.com
 
 ~~~ http-message
 HTTP/1.1 204 No Content
-Upload-Offset: 100000000
 Upload-Complete: ?1
+Upload-Offset: 100000000
 Upload-Length: 100000000
 Cache-Control: no-store
 ~~~
