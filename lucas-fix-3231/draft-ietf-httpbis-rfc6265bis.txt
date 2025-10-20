@@ -569,7 +569,7 @@ Table of Contents
    httponly-av       = "HttpOnly"
    samesite-av       = "SameSite" BWS "=" BWS samesite-value
    samesite-value    = "Strict" / "Lax" / "None"
-   extension-av      = *av-octet
+   extension-av      = 1*av-octet
    av-octet          = %x20-3A / %x3C-7E
                          ; any CHAR except CTLs or ";"
 
@@ -592,7 +592,7 @@ Table of Contents
    characters are not stripped.  They are part of the cookie-value, and
    will be included in Cookie header fields sent to the server.
 
-   Per the grammar above, cookie-avs MUST NOT contain leading or
+   Per the grammar above, extension-av MUST NOT contain leading or
    trailing WSP characters as they will be interpreted as BWS and
    removed.
 
@@ -2208,7 +2208,16 @@ Table of Contents
    vulnerabilities in the cookie protocol itself (see "Weak
    Confidentiality" and "Weak Integrity", below).  In addition, by
    default, cookies do not provide confidentiality or integrity from
-   network attackers, even when used in conjunction with HTTPS.
+   network attackers, even when used in conjunction with HTTPS.  This
+   means that a cookie needs to explicitly specify any protective
+   attributes.  For example, the cookie:
+
+   Set-Cookie: a=b
+
+   doesn't specify the Secure attribute and will therefore be accessible
+   on both secure and insecure connections, regardless of the original
+   connection type it was created on.  This behavior could allow an
+   attacker to read or modify the cookie.
 
 8.2.  Ambient Authority
 
