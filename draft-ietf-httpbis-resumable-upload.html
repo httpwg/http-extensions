@@ -1938,45 +1938,45 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-examples">
 <a href="#section-4.2.3" class="section-number selfRef">4.2.3. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
           </h4>
-<p id="section-4.2.3-1">A) The following example shows an upload creation, where the entire 100000000 bytes are transferred in the initial request. The server sends multiple interim responses and one final response from processing the uploaded representation.<a href="#section-4.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.3-1">A) The following example shows an upload creation, where the entire 123456789 bytes are transferred in the initial request. The server sends multiple interim responses and one final response from processing the uploaded representation.<a href="#section-4.2.3-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.2.3-2">
 <pre>
 POST /project/123/files HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Content-Length: 100000000
-Upload-Length: 100000000
+Content-Length: 123456789
+Upload-Length: 123456789
 
-[content (100000000 bytes)]
+[content (123456789 bytes)]
 </pre><a href="#section-4.2.3-2" class="pilcrow">¶</a>
 </div>
 <div class="lang-http-message sourcecode" id="section-4.2.3-3">
 <pre>
 HTTP/1.1 104 Upload Resumption Supported
 Location: https://example.com/upload/b530ce8ff
-Upload-Limit: max-size=1000000000
+Upload-Limit: max-size=1234567890
 
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Offset: 50000000
+Upload-Offset: 23456789
 
 HTTP/1.1 200 OK
 Location: https://example.com/upload/b530ce8ff
-Upload-Limit: max-size=1000000000
+Upload-Limit: max-size=1234567890
 Content-Type: application/json
 
 {"attachmentId": "b530ce8ff"}
 </pre><a href="#section-4.2.3-3" class="pilcrow">¶</a>
 </div>
-<p id="section-4.2.3-4">B) The following example shows an upload creation, where only the first 25000000 bytes of a 100000000 bytes upload are transferred. The server acknowledges the received representation data and that the upload is not complete yet. The client can continue appending data.<a href="#section-4.2.3-4" class="pilcrow">¶</a></p>
+<p id="section-4.2.3-4">B) The following example shows an upload creation, where only the first 23456789 bytes of a 123456789 bytes upload are transferred. The server acknowledges the received representation data and that the upload is not complete yet. The client can continue appending data.<a href="#section-4.2.3-4" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.2.3-5">
 <pre>
 POST /upload HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
-Content-Length: 25000000
-Upload-Length: 100000000
+Content-Length: 23456789
+Upload-Length: 123456789
 
-[partial content (25000000 bytes)]
+[partial content (23456789 bytes)]
 </pre><a href="#section-4.2.3-5" class="pilcrow">¶</a>
 </div>
 <div class="lang-http-message sourcecode" id="section-4.2.3-6">
@@ -1986,7 +1986,7 @@ Location: https://example.com/upload/3fd4994ad
 
 HTTP/1.1 201 Created
 Location: https://example.com/upload/3fd4994ad
-Upload-Limit: max-size=1000000000
+Upload-Limit: max-size=1234567890
 </pre><a href="#section-4.2.3-6" class="pilcrow">¶</a>
 </div>
 <p id="section-4.2.3-7">C) The following example shows an upload creation, where the server responds with a 5xx status code. Thanks to the interim response containing the upload resource URI, the client can resume the upload.<a href="#section-4.2.3-7" class="pilcrow">¶</a></p>
@@ -1995,10 +1995,10 @@ Upload-Limit: max-size=1000000000
 POST /upload HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Content-Length: 100000000
-Upload-Length: 100000000
+Content-Length: 123456789
+Upload-Length: 123456789
 
-[content (100000000 bytes)]
+[content (123456789 bytes)]
 </pre><a href="#section-4.2.3-8" class="pilcrow">¶</a>
 </div>
 <div class="lang-http-message sourcecode" id="section-4.2.3-9">
@@ -2015,10 +2015,10 @@ HTTP/1.1 500 Internal Server Error
 POST /upload-not-allowed HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Content-Length: 100000000
-Upload-Length: 100000000
+Content-Length: 123456789
+Upload-Length: 123456789
 
-[content (100000000 bytes)]
+[content (123456789 bytes)]
 </pre><a href="#section-4.2.3-11" class="pilcrow">¶</a>
 </div>
 <div class="lang-http-message sourcecode" id="section-4.2.3-12">
@@ -2204,39 +2204,39 @@ Cache-Control: no-store
           <h4 id="name-examples-3">
 <a href="#section-4.4.3" class="section-number selfRef">4.4.3. </a><a href="#name-examples-3" class="section-name selfRef">Examples</a>
           </h4>
-<p id="section-4.4.3-1">A) The following example shows an upload append request. The client transfers the next 25000000 bytes at an offset of 25000000 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:<a href="#section-4.4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.4.3-1">A) The following example shows an upload append request. The client transfers the next 23456789 bytes at an offset of 23456789 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:<a href="#section-4.4.3-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.4.3-2">
 <pre>
 PATCH /upload/37a504d87 HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
-Upload-Offset: 25000000
-Content-Length: 25000000
+Upload-Offset: 23456789
+Content-Length: 23456789
 Content-Type: application/partial-upload
 
-[content (25000000 bytes)]
+[content (23456789 bytes)]
 </pre><a href="#section-4.4.3-2" class="pilcrow">¶</a>
 </div>
 <div class="lang-http-message sourcecode" id="section-4.4.3-3">
 <pre>
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Offset: 12500000
+Upload-Offset: 35185184
 
 HTTP/1.1 204 No Content
 Upload-Complete: ?0
 </pre><a href="#section-4.4.3-3" class="pilcrow">¶</a>
 </div>
-<p id="section-4.4.3-4">B) The next example shows an upload append, where the client transfers the remaining 25000000 bytes and completes the upload. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:<a href="#section-4.4.3-4" class="pilcrow">¶</a></p>
+<p id="section-4.4.3-4">B) The next example shows an upload append, where the client transfers the remaining 4567890 bytes and completes the upload with a length of 1234567890 bytes. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:<a href="#section-4.4.3-4" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.4.3-5">
 <pre>
 PATCH /upload/d38d6ffe8 HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Upload-Offset: 25000000
-Content-Length: 25000000
+Upload-Offset: 1230000000
+Content-Length: 4567890
 Content-Type: application/partial-upload
 
-[content (25000000 bytes)]
+[content (4567890 bytes)]
 </pre><a href="#section-4.4.3-5" class="pilcrow">¶</a>
 </div>
 <div class="lang-http-message sourcecode" id="section-4.4.3-6">
@@ -3156,9 +3156,26 @@ If an upload is spread across multiple requests, data integrity issues can be fo
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-C-1">This document is based on an Internet-Draft specification written by <span class="contact-name">Jiten Mehta</span>, <span class="contact-name">Stefan Matsson</span>, and the authors of this document.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
+<p id="appendix-C-1">This document is based on an Internet-Draft specification written by Jiten Mehta, Stefan Matsson, and the authors of this document.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
 <p id="appendix-C-2">The <a href="https://tus.io/">tus v1 protocol</a> is a specification for a resumable file upload protocol over HTTP. It inspired the early design of this protocol. Members of the tus community helped significantly in the process of bringing this work to the IETF.<a href="#appendix-C-2" class="pilcrow">¶</a></p>
-<p id="appendix-C-3">The authors would like to thank <span class="contact-name">Mark Nottingham</span> for substantive contributions to the text, and <span class="contact-name">Roy T. Fielding</span> and <span class="contact-name">Julian Reschke</span> for their thorough reviews of the document.<a href="#appendix-C-3" class="pilcrow">¶</a></p>
+<p id="appendix-C-3">The authors would like to thank Mark Nottingham for substantive contributions to the text, along with the following in alphabetical order for their thorough reviews of the document:<a href="#appendix-C-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-C-4.1">
+          <p id="appendix-C-4.1.1">Mike Bishop<a href="#appendix-C-4.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-4.2">
+          <p id="appendix-C-4.2.1">Roy T. Fielding<a href="#appendix-C-4.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-4.3">
+          <p id="appendix-C-4.3.1">Julian Reschke<a href="#appendix-C-4.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-4.4">
+          <p id="appendix-C-4.4.1">Glenn Strauss<a href="#appendix-C-4.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-4.5">
+          <p id="appendix-C-4.5.1">Willy Tarreau<a href="#appendix-C-4.5.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
 </section>
 </div>
 <div id="authors-addresses">
