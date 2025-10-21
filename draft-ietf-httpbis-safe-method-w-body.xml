@@ -1467,9 +1467,9 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 </ul>
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-12" anchor="changes.since.12">
-<t>
-  None yet.
-</t>
+<ul>
+  <li>Ack Asbjørn Ulsberg (<eref target="https://github.com/httpwg/http-extensions/issues/3299"/>)</li>
+</ul>
 </section>
 </section>
 
@@ -1488,7 +1488,6 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   Will Hawkins.
 </t>
 </section>
-
 <section title="Contributors" anchor="contributors" numbered="false">
 <t>
   Ashok Malhotra participated in early discussions leading to this
@@ -1497,6 +1496,16 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <contact initials="A." surname="Malhotra" fullname="Ashok Malhotra">
   <address>
     <email>malhotrasahib@gmail.com</email>
+  </address>
+</contact>
+<t>
+  Discussion on the this HTTP method was reopened by Asbjørn Ulsberg during
+  the HTTP Workshop in 2019:
+</t>
+<contact initials="A." surname="Ulsberg" fullname="Asbjørn Ulsberg">
+  <address>
+    <email>asbjorn@ulsberg.no</email>
+    <uri>https://asbjor.nu/</uri>
   </address>
 </contact>
 </section>
