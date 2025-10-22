@@ -1,5 +1,5 @@
 ---
-title: "Requesting Incremental Forwarding of HTTP Messages"
+title: "Incremental Forwarding of HTTP Messages"
 docname: draft-ietf-httpbis-incremental-latest
 category: std
 wg: httpbis
