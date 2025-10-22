@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 24 April 2026                                        Cloudflare
+Expires: 25 April 2026                                        Cloudflare
                                                                M. Bishop
                                                                   Akamai
-                                                         21 October 2025
+                                                         22 October 2025
 
 
                          The HTTP QUERY Method
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 April 2026.
+   This Internet-Draft will expire on 25 April 2026.
 
 Copyright Notice
 
@@ -1316,7 +1316,8 @@ B.12.  Since draft-ietf-httpbis-safe-method-w-body-11
 
 B.13.  Since draft-ietf-httpbis-safe-method-w-body-12
 
-   None yet.
+   *  Ack Asbjørn Ulsberg (https://github.com/httpwg/http-extensions/
+      issues/3299)
 
 Acknowledgements
 
@@ -1334,6 +1335,14 @@ Contributors
 
    Ashok Malhotra
    Email: malhotrasahib@gmail.com
+
+
+   Discussion on the this HTTP method was reopened by Asbjørn Ulsberg
+   during the HTTP Workshop in 2019:
+
+   Asbjørn Ulsberg
+   Email: asbjorn@ulsberg.no
+   URI:   https://asbjor.nu/
 
 
 Authors' Addresses
