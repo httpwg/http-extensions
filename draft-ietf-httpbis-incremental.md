@@ -90,7 +90,7 @@ downstream before receiving the complete message.
 {::boilerplate bcp14-tagged}
 
 This document relies on structured field definitions
-of Item and Boolean {{!STRUCTURED-FIELDS=RFC8941}}.
+of Item and Boolean {{!STRUCTURED-FIELDS=RFC9651}}.
 
 
 # The Incremental Header Field
