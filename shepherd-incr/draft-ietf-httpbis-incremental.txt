@@ -11,7 +11,7 @@ Expires: 25 April 2026                                             Apple
                                                          22 October 2025
 
 
-           Requesting Incremental Forwarding of HTTP Messages
+                Incremental Forwarding of HTTP Messages
                  draft-ietf-httpbis-incremental-latest
 
 Abstract
