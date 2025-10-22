@@ -104,7 +104,7 @@ The Incremental header field is defined as a structured field
 type Boolean: "?1".
 
 ~~~
-Incremental = ?1
+Incremental: ?1
 ~~~
 
 Upon receiving a header section that includes an Incremental header field with a
