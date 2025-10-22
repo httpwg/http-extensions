@@ -24,10 +24,11 @@ author:
     email: mt@lowentropy.net
 
 normative:
-
-informative:
   EXTRA-STATUS: RFC6585
   PROXY-STATUS: RFC9209
+  STRUCTURED-FIELDS: RFC9651
+
+informative:
   SSE:
     target: https://html.spec.whatwg.org/multipage/server-sent-events.html
     title: Server-Sent Events
@@ -90,7 +91,7 @@ downstream before receiving the complete message.
 {::boilerplate bcp14-tagged}
 
 This document relies on structured field definitions
-of Item and Boolean {{!STRUCTURED-FIELDS=RFC9651}}.
+of Item and Boolean {{STRUCTURED-FIELDS}}.
 
 
 # The Incremental Header Field
