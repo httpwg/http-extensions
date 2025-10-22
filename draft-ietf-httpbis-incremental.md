@@ -111,7 +111,7 @@ Incremental: ?1
 Upon receiving a header section that includes an Incremental header field with a
 true value, HTTP intermediaries SHOULD NOT buffer the entire message before
 forwarding it.  Instead, intermediaries SHOULD transmit the header section
-downstream and continuously forward the bytes of the message body as they
+downstream and continuously forward the bytes of the message content as they
 arrive. As the Incremental header field indicates only how the message content is
 to be forwarded, intermediaries can still buffer the entire header and trailer
 sections of the message before forwarding them downstream.
@@ -150,15 +150,15 @@ under which the intermediaries might reject requests.
 
 ## Permanent Rejection
 
-Some intermediaries inspect the payload of HTTP messages and forward them only
+Some intermediaries inspect the content of HTTP messages and forward them only
 if their content is deemed safe. Any feature that depends on seeing the
 entirety of the message in this way is incompatible with incremental delivery,
 so these intermediaries need to reject requests unless the entire message is
 received.
 
 When an intermediary rejects an incremental message -- either a request or a
-response -- due to security concerns with regard to the payload that the message
-might convey, the intermediary SHOULD respond with a 501 (Not Implemented) error
+response -- due to security concerns with regard to the content of the message,
+the intermediary SHOULD respond with a 501 (Not Implemented) error
 with an incremental_refused Proxy-Status response header field
 ({{iana-considerations}}).
 
