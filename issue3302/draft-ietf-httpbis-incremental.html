@@ -1294,9 +1294,12 @@ unknown parameters.<a href="#section-3-11" class="pilcrow">¶</a></p>
       <h2 id="name-security-considerations">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-4-1">When receiving an incremental request, intermediaries might reject the request
-due to security concerns. The following subsections explore typical scenarios
-under which the intermediaries might reject requests.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">When receiving an request or response that asks for incremental forwarding,
+intermediaries might reject the request due to security concerns.
+An intermediary that understands this feature <span class="bcp14">MUST</span> generate an error response
+rather than buffering an entire message before forwarding.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">The following subsections explore typical scenarios
+under which the intermediaries might reject requests.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <div id="permanent-rejection">
 <section id="section-4.1">
         <h3 id="name-permanent-rejection">
@@ -1304,14 +1307,11 @@ under which the intermediaries might reject requests.<a href="#section-4-1" clas
         </h3>
 <p id="section-4.1-1">Some intermediaries inspect the payload of HTTP messages and forward them only
 if their content is deemed safe. Any feature that depends on seeing the
-entirety of the message in this way is incompatible with incremental delivery.
-An intermediary that understands this field therefore <span class="bcp14">MUST</span> reject requests
-that ask for incremental forwarding if it cannot comply.
-Note that an intermediary does not need to reject messages
-if the entire message has been received.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2">When an intermediary rejects an incremental message -- either a request or a
-response -- due to security concerns with regard to the payload that the message
-might convey, the intermediary <span class="bcp14">SHOULD</span> respond with a 501 (Not Implemented) error
+entirety of the message in this way is incompatible with incremental delivery.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">When an intermediary is asked to incrementally forward message and cannot --
+whether that messaage is a request or a response --
+due to security concerns about the message content,
+the intermediary <span class="bcp14">SHOULD</span> respond with a 501 (Not Implemented) error
 with an incremental_refused Proxy-Status response header field
 (<a href="#iana-considerations" class="auto internal xref">Section 5</a>).<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 </section>
