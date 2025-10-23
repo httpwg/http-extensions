@@ -153,8 +153,12 @@ unknown parameters.
 
 # Security Considerations
 
-When receiving an incremental request, intermediaries might reject the request
-due to security concerns. The following subsections explore typical scenarios
+When receiving an request or response that asks for incremental forwarding,
+intermediaries might reject the request due to security concerns.
+An intermediary that understands this feature MUST generate an error response
+rather than buffering an entire message before forwarding.
+
+The following subsections explore typical scenarios
 under which the intermediaries might reject requests.
 
 
@@ -163,14 +167,11 @@ under which the intermediaries might reject requests.
 Some intermediaries inspect the payload of HTTP messages and forward them only
 if their content is deemed safe. Any feature that depends on seeing the
 entirety of the message in this way is incompatible with incremental delivery.
-An intermediary that understands this field therefore MUST reject requests
-that ask for incremental forwarding if it cannot comply.
-Note that an intermediary does not need to reject messages
-if the entire message has been received.
 
-When an intermediary rejects an incremental message -- either a request or a
-response -- due to security concerns with regard to the payload that the message
-might convey, the intermediary SHOULD respond with a 501 (Not Implemented) error
+When an intermediary is asked to incrementally forward message and cannot --
+whether that messaage is a request or a response --
+due to security concerns about the message content,
+the intermediary SHOULD respond with a 501 (Not Implemented) error
 with an incremental_refused Proxy-Status response header field
 ({{iana-considerations}}).
 
