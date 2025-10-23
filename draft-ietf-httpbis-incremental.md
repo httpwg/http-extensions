@@ -1,5 +1,5 @@
 ---
-title: "Incremental HTTP Messages"
+title: "Incremental Forwarding of HTTP Messages"
 docname: draft-ietf-httpbis-incremental-latest
 category: std
 wg: httpbis
@@ -24,10 +24,11 @@ author:
     email: mt@lowentropy.net
 
 normative:
-
-informative:
   EXTRA-STATUS: RFC6585
   PROXY-STATUS: RFC9209
+  STRUCTURED-FIELDS: RFC9651
+
+informative:
   SSE:
     target: https://html.spec.whatwg.org/multipage/server-sent-events.html
     title: Server-Sent Events
@@ -90,7 +91,7 @@ downstream before receiving the complete message.
 {::boilerplate bcp14-tagged}
 
 This document relies on structured field definitions
-of Item and Boolean {{!STRUCTURED-FIELDS=RFC8941}}.
+of Item and Boolean {{STRUCTURED-FIELDS}}.
 
 
 # The Incremental Header Field
@@ -105,11 +106,15 @@ Only Boolean values ({{Section 3.3.6 of STRUCTURED-FIELDS}}) are valid;
 a recipient ignores the field if it contains any other type.
 
 ~~~
-Incremental = sf-boolean
+Incremental: ?1
 ~~~
 
 A true value ("?1") indicates that the sender requests intermediaries to forward
 the message incrementally, as described below.
+
+~~~
+Incremental: ?0
+~~~
 
 A false value ("?0") indicates the default behavior defined in {{HTTP}}, where
 intermediaries might buffer the entire message before forwarding it.
@@ -117,7 +122,7 @@ intermediaries might buffer the entire message before forwarding it.
 Upon receiving a header section that includes an Incremental header field with a
 true value, HTTP intermediaries SHOULD NOT buffer the entire message before
 forwarding it.  Instead, intermediaries SHOULD transmit the header section
-downstream and continuously forward the bytes of the message body as they
+downstream and continuously forward the bytes of the message content as they
 arrive. As the Incremental header field indicates only how the message content is
 to be forwarded, intermediaries can still buffer the entire header and trailer
 sections of the message before forwarding them downstream.
@@ -160,15 +165,15 @@ under which the intermediaries might reject requests.
 
 ## Permanent Rejection
 
-Some intermediaries inspect the payload of HTTP messages and forward them only
+Some intermediaries inspect the content of HTTP messages and forward them only
 if their content is deemed safe. Any feature that depends on seeing the
 entirety of the message in this way is incompatible with incremental delivery,
 so these intermediaries need to reject requests unless the entire message is
 received.
 
 When an intermediary rejects an incremental message -- either a request or a
-response -- due to security concerns with regard to the payload that the message
-might convey, the intermediary SHOULD respond with a 501 (Not Implemented) error
+response -- due to security concerns with regard to the content of the message,
+the intermediary SHOULD respond with a 501 (Not Implemented) error
 with an incremental_refused Proxy-Status response header field
 ({{iana-considerations}}).
 
@@ -187,7 +192,7 @@ is reached. This approach helps balance the processing of different types of
 requests and maintains service availability across all requests.
 
 When rejecting incremental requests due to reaching the concurrency limit,
-intermediaries SHOULD respond with a 429 Too Many Requests error
+intermediaries SHOULD respond with a 429 (Too Many Requests) error
 ({{Section 4 of EXTRA-STATUS}}),
 accompanied by a connection_limit_reached Proxy-Status response header field
 ({{Section 2.3.12 of PROXY-STATUS}}).
