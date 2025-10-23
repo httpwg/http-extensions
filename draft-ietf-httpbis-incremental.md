@@ -163,8 +163,10 @@ under which the intermediaries might reject requests.
 Some intermediaries inspect the payload of HTTP messages and forward them only
 if their content is deemed safe. Any feature that depends on seeing the
 entirety of the message in this way is incompatible with incremental delivery.
-An intermediary therefore MUST reject requests that ask for incremental forwarding
-unless the entire message is received.
+An intermediary that understands this field therefore MUST reject requests
+that ask for incremental forwarding if it cannot comply.
+Note that an intermediary does not need to reject messages
+if the entire message has been received.
 
 When an intermediary rejects an incremental message -- either a request or a
 response -- due to security concerns with regard to the payload that the message
