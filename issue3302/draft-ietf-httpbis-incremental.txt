@@ -5,10 +5,10 @@
 httpbis                                                 奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                T. Pauly
-Expires: 25 April 2026                                             Apple
+Expires: 26 April 2026                                             Apple
                                                               M. Thomson
                                                                  Mozilla
-                                                         22 October 2025
+                                                         23 October 2025
 
 
                        Incremental HTTP Messages
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 April 2026.
+   This Internet-Draft will expire on 26 April 2026.
 
 Copyright Notice
 
@@ -193,9 +193,10 @@ Table of Contents
    Some intermediaries inspect the payload of HTTP messages and forward
    them only if their content is deemed safe.  Any feature that depends
    on seeing the entirety of the message in this way is incompatible
-   with incremental delivery.  An intermediary therefore MUST reject
-   requests that ask for incremental forwarding unless the entire
-   message is received.
+   with incremental delivery.  An intermediary that understands this
+   field therefore MUST reject requests that ask for incremental
+   forwarding if it cannot comply.  Note that an intermediary does not
+   need to reject messages if the entire message has been received.
 
    When an intermediary rejects an incremental message -- either a
    request or a response -- due to security concerns with regard to the
