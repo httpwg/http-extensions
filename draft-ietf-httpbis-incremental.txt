@@ -5,10 +5,10 @@
 httpbis                                                 奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                T. Pauly
-Expires: 26 April 2026                                             Apple
+Expires: 27 April 2026                                             Apple
                                                               M. Thomson
                                                                  Mozilla
-                                                         23 October 2025
+                                                         24 October 2025
 
 
                 Incremental Forwarding of HTTP Messages
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 April 2026.
+   This Internet-Draft will expire on 27 April 2026.
 
 Copyright Notice
 
@@ -143,6 +143,11 @@ Table of Contents
    [HTTP], where intermediaries might buffer the entire message before
    forwarding it.
 
+   The Incremental HTTP header field applies to each HTTP message.
+   Therefore, if both the HTTP request and response need to be forwarded
+   incrementally, the Incremental HTTP header field MUST be set for both
+   the HTTP request and the response.
+
    Upon receiving a header section that includes an Incremental header
    field with a true value, HTTP intermediaries SHOULD NOT buffer the
    entire message before forwarding it.  Instead, intermediaries SHOULD
@@ -152,18 +157,19 @@ Table of Contents
    forwarded, intermediaries can still buffer the entire header and
    trailer sections of the message before forwarding them downstream.
 
+   If an intermediary decides outright to refuse forwarding the message
+   body incrementally, the intermediary MUST generate an error response
+   rather than buffering an entire message before forwarding.  Typical
+   scenarios under which an intermediary might refuse are discussed in
+   Section 4.
+
    The request to use incremental forwarding also applies to HTTP
    implementations.  Though most HTTP APIs provide the ability to
    incrementally transfer message content, those that do not for any
    reason, SHOULD use the presence of the Incremental header field to
    reduce or disable buffering.
 
-   The Incremental HTTP header field applies to each HTTP message.
-   Therefore, if both the HTTP request and response need to be forwarded
-   incrementally, the Incremental HTTP header field MUST be set for both
-   the HTTP request and the response.
-
-   The Incremental field is advisory.  Intermediaries that are unaware
+   The Incremental field is advisory, as intermediaries that are unaware
    of the field or that do not support the field might buffer messages,
    even when explicitly requested otherwise.  Clients and servers
    therefore cannot expect all intermediaries to understand and respect
@@ -185,24 +191,23 @@ Table of Contents
 
 4.  Security Considerations
 
-   When receiving an incremental request, intermediaries might reject
-   the request due to security concerns.  The following subsections
-   explore typical scenarios under which the intermediaries might reject
-   requests.
+   When receiving a request or response that asks for incremental
+   forwarding, intermediaries might reject the request due to security
+   concerns.  The following subsections explore typical scenarios under
+   which the intermediaries might reject requests.
 
 4.1.  Permanent Rejection
 
    Some intermediaries inspect the content of HTTP messages and forward
    them only if their content is deemed safe.  Any feature that depends
    on seeing the entirety of the message in this way is incompatible
-   with incremental delivery, so these intermediaries need to reject
-   requests unless the entire message is received.
+   with incremental delivery.
 
-   When an intermediary rejects an incremental message -- either a
-   request or a response -- due to security concerns with regard to the
-   content of the message, the intermediary SHOULD respond with a 501
-   (Not Implemented) error with an incremental_refused Proxy-Status
-   response header field (Section 5).
+   When an intermediary is asked to incrementally forward message and
+   cannot -- whether that message is a request or a response -- due to
+   security concerns about the message content, the intermediary SHOULD
+   respond with a 501 (Not Implemented) error with an
+   incremental_refused Proxy-Status response header field (Section 5).
 
 4.2.  Temporary Rejection
 
