@@ -158,7 +158,7 @@ unknown parameters.
 
 # Security Considerations
 
-When receiving an request or response that asks for incremental forwarding,
+When receiving a request or response that asks for incremental forwarding,
 intermediaries might reject the request due to security concerns. The following
 subsections explore typical scenarios under which the intermediaries might
 reject requests.
