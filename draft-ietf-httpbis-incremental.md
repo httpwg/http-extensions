@@ -130,7 +130,7 @@ sections of the message before forwarding them downstream.
 If an intermediary decides outright to refuse forwarding the message body
 incrementally, the intermediary MUST generate an error response rather than
 buffering an entire message before forwarding. Typical scenarios under which an
-intermediary might refuse are dicussed in {{security-considerations}}.
+intermediary might refuse are discussed in {{security-considerations}}.
 
 The request to use incremental forwarding also applies to HTTP implementations.
 Though most HTTP APIs provide the ability to incrementally transfer message content,
