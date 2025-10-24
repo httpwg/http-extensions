@@ -114,6 +114,11 @@ the message incrementally, as described below.
 A false value ("?0") indicates the default behavior defined in {{HTTP}}, where
 intermediaries might buffer the entire message before forwarding it.
 
+The Incremental HTTP header field applies to each HTTP message. Therefore, if
+both the HTTP request and response need to be forwarded incrementally, the
+Incremental HTTP header field MUST be set for both the HTTP request and the
+response.
+
 Upon receiving a header section that includes an Incremental header field with a
 true value, HTTP intermediaries SHOULD NOT buffer the entire message before
 forwarding it.  Instead, intermediaries SHOULD transmit the header section
@@ -122,19 +127,19 @@ arrive. As the Incremental header field indicates only how the message content i
 to be forwarded, intermediaries can still buffer the entire header and trailer
 sections of the message before forwarding them downstream.
 
+If an intermediary decides outright to refuse forwarding the message body
+incrementally, the intermediary MUST generate an error response rather than
+buffering an entire message before forwarding. Typical scenarios under which an
+intermediary might refuse are discussed in {{security-considerations}}.
+
 The request to use incremental forwarding also applies to HTTP implementations.
 Though most HTTP APIs provide the ability to incrementally transfer message content,
 those that do not for any reason, SHOULD use the presence of the Incremental
 header field to reduce or disable buffering.
 
-The Incremental HTTP header field applies to each HTTP message. Therefore, if
-both the HTTP request and response need to be forwarded incrementally, the
-Incremental HTTP header field MUST be set for both the HTTP request and the
-response.
-
-The Incremental field is advisory. Intermediaries that are unaware of the field
-or that do not support the field might buffer messages, even when explicitly
-requested otherwise.  Clients and servers therefore cannot expect all
+The Incremental field is advisory, as intermediaries that are unaware of the
+field or that do not support the field might buffer messages, even when
+explicitly requested otherwise.  Clients and servers therefore cannot expect all
 intermediaries to understand and respect a request to deliver messages
 incrementally. Clients can rely on prior knowledge or probe for support on
 individual resources.
@@ -153,13 +158,10 @@ unknown parameters.
 
 # Security Considerations
 
-When receiving an request or response that asks for incremental forwarding,
-intermediaries might reject the request due to security concerns.
-An intermediary that understands this feature MUST generate an error response
-rather than buffering an entire message before forwarding.
-
-The following subsections explore typical scenarios
-under which the intermediaries might reject requests.
+When receiving a request or response that asks for incremental forwarding,
+intermediaries might reject the request due to security concerns. The following
+subsections explore typical scenarios under which the intermediaries might
+reject requests.
 
 
 ## Permanent Rejection
