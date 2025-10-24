@@ -2,7 +2,7 @@
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
-| [Incremental HTTP Messages](./draft-ietf-httpbis-incremental.html "Incremental HTTP Messages (HTML)") | [plain text](./draft-ietf-httpbis-incremental.txt "Incremental HTTP Messages (Text)") | same as main |
+| [Incremental Forwarding of HTTP Messages](./draft-ietf-httpbis-incremental.html "Incremental Forwarding of HTTP Messages (HTML)") | [plain text](./draft-ietf-httpbis-incremental.txt "Incremental Forwarding of HTTP Messages (Text)") | same as main |
 | [No-Vary-Search](./draft-ietf-httpbis-no-vary-search.html "The No-Vary-Search HTTP Response Header Field (HTML)") | [plain text](./draft-ietf-httpbis-no-vary-search.txt "The No-Vary-Search HTTP Response Header Field (Text)") | same as main |
 | [Cookies](./draft-ietf-httpbis-layered-cookies.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](./draft-ietf-httpbis-layered-cookies.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
 | [Resumable Uploads](./draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](./draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | same as main |

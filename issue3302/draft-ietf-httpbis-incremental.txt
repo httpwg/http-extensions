@@ -11,7 +11,7 @@ Expires: 27 April 2026                                             Apple
                                                          24 October 2025
 
 
-                       Incremental HTTP Messages
+                Incremental Forwarding of HTTP Messages
                  draft-ietf-httpbis-incremental-latest
 
 Abstract
@@ -132,10 +132,12 @@ Table of Contents
    of [STRUCTURED-FIELDS]) are valid; a recipient ignores the field if
    it contains any other type.
 
-   Incremental = sf-boolean
+   Incremental: ?1
 
    A true value ("?1") indicates that the sender requests intermediaries
    to forward the message incrementally, as described below.
+
+   Incremental: ?0
 
    A false value ("?0") indicates the default behavior defined in
    [HTTP], where intermediaries might buffer the entire message before
@@ -150,10 +152,10 @@ Table of Contents
    field with a true value, HTTP intermediaries SHOULD NOT buffer the
    entire message before forwarding it.  Instead, intermediaries SHOULD
    transmit the header section downstream and continuously forward the
-   bytes of the message body as they arrive.  As the Incremental header
-   field indicates only how the message content is to be forwarded,
-   intermediaries can still buffer the entire header and trailer
-   sections of the message before forwarding them downstream.
+   bytes of the message content as they arrive.  As the Incremental
+   header field indicates only how the message content is to be
+   forwarded, intermediaries can still buffer the entire header and
+   trailer sections of the message before forwarding them downstream.
 
    If an intermediary decides outright to refuse forwarding the message
    body incrementally, the intermediary MUST generate an error response
@@ -196,13 +198,13 @@ Table of Contents
 
 4.1.  Permanent Rejection
 
-   Some intermediaries inspect the payload of HTTP messages and forward
+   Some intermediaries inspect the content of HTTP messages and forward
    them only if their content is deemed safe.  Any feature that depends
    on seeing the entirety of the message in this way is incompatible
    with incremental delivery.
 
    When an intermediary is asked to incrementally forward message and
-   cannot -- whether that messaage is a request or a response -- due to
+   cannot -- whether that message is a request or a response -- due to
    security concerns about the message content, the intermediary SHOULD
    respond with a 501 (Not Implemented) error with an
    incremental_refused Proxy-Status response header field (Section 5).
@@ -222,7 +224,7 @@ Table of Contents
    availability across all requests.
 
    When rejecting incremental requests due to reaching the concurrency
-   limit, intermediaries SHOULD respond with a 429 Too Many Requests
+   limit, intermediaries SHOULD respond with a 429 (Too Many Requests)
    error (Section 4 of [EXTRA-STATUS]), accompanied by a
    connection_limit_reached Proxy-Status response header field
    (Section 2.3.12 of [PROXY-STATUS]).
@@ -274,10 +276,20 @@ Table of Contents
 
 6.1.  Normative References
 
+   [EXTRA-STATUS]
+              Nottingham, M. and R. Fielding, "Additional HTTP Status
+              Codes", RFC 6585, DOI 10.17487/RFC6585, April 2012,
+              <https://www.rfc-editor.org/rfc/rfc6585>.
+
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
               DOI 10.17487/RFC9110, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9110>.
+
+   [PROXY-STATUS]
+              Nottingham, M. and P. Sikora, "The Proxy-Status HTTP
+              Response Header Field", RFC 9209, DOI 10.17487/RFC9209,
+              June 2022, <https://www.rfc-editor.org/rfc/rfc9209>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -290,8 +302,8 @@ Table of Contents
 
    [STRUCTURED-FIELDS]
               Nottingham, M. and P. Kamp, "Structured Field Values for
-              HTTP", RFC 8941, DOI 10.17487/RFC8941, February 2021,
-              <https://www.rfc-editor.org/rfc/rfc8941>.
+              HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
+              <https://www.rfc-editor.org/rfc/rfc9651>.
 
 6.2.  Informative References
 
@@ -301,16 +313,6 @@ Table of Contents
               ohai-chunked-ohttp-06, 13 September 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ohai-
               chunked-ohttp-06>.
-
-   [EXTRA-STATUS]
-              Nottingham, M. and R. Fielding, "Additional HTTP Status
-              Codes", RFC 6585, DOI 10.17487/RFC6585, April 2012,
-              <https://www.rfc-editor.org/rfc/rfc6585>.
-
-   [PROXY-STATUS]
-              Nottingham, M. and P. Sikora, "The Proxy-Status HTTP
-              Response Header Field", RFC 9209, DOI 10.17487/RFC9209,
-              June 2022, <https://www.rfc-editor.org/rfc/rfc9209>.
 
    [RFC8441]  McManus, P., "Bootstrapping WebSockets with HTTP/2",
               RFC 8441, DOI 10.17487/RFC8441, September 2018,

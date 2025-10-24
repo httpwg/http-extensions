@@ -787,8 +787,8 @@ Table of Contents
    status code.
 
    The server MUST record the length according to Section 4.1.3 if the
-   Upload-Length or Upload-Complete header fields are included in the
-   request.
+   Upload-Length or Upload-Complete: ?1 header fields are included in
+   the request.
 
    While the request content is being received, the server MAY send
    multiple interim responses with a 104 (Upload Resumption Supported)
