@@ -117,7 +117,8 @@ Incremental: ?0
 ~~~
 
 A false value ("?0") indicates the default behavior defined in {{HTTP}}, where
-intermediaries might buffer the entire message before forwarding it.
+intermediaries might buffer the entire message before forwarding it. However,
+this explicit signal might increase intermediaries' confidence in doing so.
 
 The Incremental HTTP header field applies to each HTTP message. Therefore, if
 both the HTTP request and response need to be forwarded incrementally, the
