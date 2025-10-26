@@ -120,9 +120,9 @@ Table of Contents
 1.  Introduction
 
    This specification defines the HTTP QUERY request method as a means
-   of making a safe, idempotent request (Section 9.2 of [HTTP])
-   containing content that describes how the request is to be processed
-   by the target resource.
+   of making a safe, idempotent request (Section 9.2 of [HTTP]) that
+   encloses a representation describing how the request is to be
+   processed by the target resource.
 
    Most often, this is desirable when the data conveyed in a request is
    too voluminous to be encoded into the request's URI.  A common query
@@ -358,11 +358,11 @@ Table of Contents
    QUERY request by redirecting the user agent to a different URI (see
    Section 15.4 of [HTTP]).
 
-   A response with either of the status codes 301 (Moved Permanently,
-   [HTTP], Section 15.4.2) or 308 (Permanent Redirect, [HTTP],
-   Section 15.4.9) indicates that the target resource has permanently
-   moved to a different URI referenced by the Location response field
-   ([HTTP], Section 10.2.2).  Likewise, a response with either 302
+   A response with either status codes 301 (Moved Permanently, [HTTP],
+   Section 15.4.2) or 308 (Permanent Redirect, [HTTP], Section 15.4.9)
+   indicates that the target resource has permanently moved to a
+   different URI referenced by the Location response field ([HTTP],
+   Section 10.2.2).  Likewise, a response with either status codes 302
    (Found, [HTTP], Section 15.4.3) or 307 (Temporary Redirect, [HTTP],
    Section 15.4.8) indicates that the target resource has temporarily
    moved.  In all four cases, the server is suggesting that the user
