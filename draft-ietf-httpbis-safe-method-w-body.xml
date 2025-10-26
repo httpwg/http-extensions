@@ -291,7 +291,7 @@ q=foo&amp;limit=10&amp;sort=-published
         rejected with a 4xx (Client Error) response (<xref target="HTTP" sectionFormat="comma" section="15.5"/>).
       </t>
       <t>
-        The list below describe various cases of failures and recommends specific status codes:
+        The list below describes various cases of failures and recommends specific status codes:
       </t>
       <ul>
         <li>
@@ -313,7 +313,7 @@ q=foo&amp;limit=10&amp;sort=-published
         </li>
         <li>
           If the media type is specified, is understood, and the content is indeed consistent with the
-          type, but the query can not be processed due to the actual contents of the query,
+          type, but the query cannot be processed due to the actual contents of the query,
           the status 422 (Unprocessable Content) can be used. An example would be a syntactically
           correct SQL query that identifies a non-existent table.
         </li>
@@ -390,7 +390,7 @@ q=foo&amp;limit=10&amp;sort=-published
         indicates that the target resource has permanently moved to a different URI referenced by the
         Location response field (<xref target="HTTP" sectionFormat="comma" section="10.2.2"/>).
         Likewise, a response with either
-        302 (Found, <xref target="HTTP" sectionFormat="comma" section="15.4.3"/> or
+        302 (Found, <xref target="HTTP" sectionFormat="comma" section="15.4.3"/>) or
         307 (Temporary Redirect, <xref target="HTTP" sectionFormat="comma" section="15.4.8"/>)
         indicates that the target resource has temporarily moved. In all four cases, the server is
         suggesting that the user agent can accomplish its original QUERY request by sending a
@@ -430,7 +430,7 @@ q=foo&amp;limit=10&amp;sort=-published
     <section title="Caching" anchor="caching">
       <t>
         The response to a QUERY method is cacheable; a cache &MAY; use it to satisfy subsequent
-        QUERY requests as per <xref target="HTTP-CACHING" section="4"/>).
+        QUERY requests as per <xref target="HTTP-CACHING" section="4"/>.
       </t>
       <t>
         The cache key for a QUERY request (see <xref target="HTTP-CACHING" section="2"/>) &MUST;
@@ -960,7 +960,7 @@ See stored query at "/contacts/stored-queries/42".
       <t>
         Consider a resource implementing QUERY that supports "application/sql" and
         "application/xslt+xml" (<xref target="XSLT"/>) as request media types, and
-        which can generate responses as "text/csv" . The data set being queried contains RFC document
+        which can generate responses as "text/csv". The data set being queried contains RFC document
         information, and the query returns information grouped by decade:
       </t>
 <artwork type="http-message">
