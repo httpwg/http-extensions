@@ -93,8 +93,8 @@
   <section title="Introduction" anchor="introduction">
     <t>
       This specification defines the HTTP QUERY request method as a means of
-      making a safe, idempotent request (<xref target="HTTP" section="9.2"/>) containing
-      content that describes how the request is to be processed by the target resource.
+      making a safe, idempotent request (<xref target="HTTP" section="9.2"/>) that
+      encloses a representation describing how the request is to be processed by the target resource.
     </t>
     <t>
       Most often, this is desirable when the data conveyed in a request is
@@ -384,12 +384,12 @@ q=foo&amp;limit=10&amp;sort=-published
         <xref target="HTTP" section="15.4"/>).
       </t>
       <t>
-        A response with either of the status codes
+        A response with either status codes
         301 (Moved Permanently, <xref target="HTTP" sectionFormat="comma" section="15.4.2"/>) or
         308 (Permanent Redirect, <xref target="HTTP" sectionFormat="comma" section="15.4.9"/>)
         indicates that the target resource has permanently moved to a different URI referenced by the
         Location response field (<xref target="HTTP" sectionFormat="comma" section="10.2.2"/>).
-        Likewise, a response with either
+        Likewise, a response with either status codes
         302 (Found, <xref target="HTTP" sectionFormat="comma" section="15.4.3"/>) or
         307 (Temporary Redirect, <xref target="HTTP" sectionFormat="comma" section="15.4.8"/>)
         indicates that the target resource has temporarily moved. In all four cases, the server is
