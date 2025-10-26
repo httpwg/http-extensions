@@ -1488,39 +1488,39 @@ q=foo&amp;limit=10&amp;sort=-published
       representation of the resource identified by the target URI
       (as defined by <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.1" class="relref">Section 7.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>), the QUERY
       method is used to ask the target resource to perform a query operation
-      within the scope of that target resource.
-      The query operation is described by the request content.
-      The origin server determines the scope of the operation based on the target resource.<a href="#section-2-1" class="pilcrow">¶</a></p>
+      within the scope of that target resource.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">
       The content of the request and its media type define the query.
+      The origin server determines the scope of the operation based on the target resource.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">
       Servers <span class="bcp14">MUST</span> fail the request if the Content-Type
       request field (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-8.3" class="relref">Section 8.3</a></span>)
-      is missing or is inconsistent with the request content.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">
+      is missing or is inconsistent with the request content.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">
       As for all HTTP methods, the target URI's query part
       takes part in identifying the resource being queried. Whether and how it
       directly affects the result of the query is specific to the resource
-      and out of scope for this specification.<a href="#section-2-3" class="pilcrow">¶</a></p>
-<p id="section-2-4">
+      and out of scope for this specification.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">
       QUERY requests are safe with regard to the target resource
       (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.2.1" class="relref">Section 9.2.1</a></span>) --
       that is, the client does not request or expect any change to the
       state of the target resource. This does not prevent the server
       from creating additional HTTP resources through which additional
       information can be retrieved (see Sections <a href="#content-location" class="auto internal xref">2.3</a>
-      and <a href="#location" class="auto internal xref">2.4</a>).<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">
+      and <a href="#location" class="auto internal xref">2.4</a>).<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">
       Furthermore, QUERY requests are idempotent
       (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.2.2" class="relref">Section 9.2.2</a></span>) --
       they can be retried or repeated when needed, for instance after
-      a connection failure.<a href="#section-2-5" class="pilcrow">¶</a></p>
-<p id="section-2-6">
-      As per <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">Section 15.3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>, a 2xx (Successful) response code signals that
-      the request was successfully received, understood, and accepted.<a href="#section-2-6" class="pilcrow">¶</a></p>
+      a connection failure.<a href="#section-2-6" class="pilcrow">¶</a></p>
 <p id="section-2-7">
+      As per <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">Section 15.3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>, a 2xx (Successful) response code signals that
+      the request was successfully received, understood, and accepted.<a href="#section-2-7" class="pilcrow">¶</a></p>
+<p id="section-2-8">
       In particular, a 200 (OK) response indicates that the query
       was successfully processed and the results of that processing are
-      enclosed as the response content.<a href="#section-2-7" class="pilcrow">¶</a></p>
+      enclosed as the response content.<a href="#section-2-8" class="pilcrow">¶</a></p>
 <div id="media.types.and.conneg">
 <section id="section-2.1">
         <h3 id="name-media-types-and-content-neg">

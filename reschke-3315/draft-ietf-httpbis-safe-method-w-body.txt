@@ -236,11 +236,12 @@ Table of Contents
    GET method, which requests a representation of the resource
    identified by the target URI (as defined by Section 7.1 of [HTTP]),
    the QUERY method is used to ask the target resource to perform a
-   query operation within the scope of that target resource.  The query
-   operation is described by the request content.  The origin server
-   determines the scope of the operation based on the target resource.
+   query operation within the scope of that target resource.
 
-   The content of the request and its media type define the query.
+   The content of the request and its media type define the query.  The
+   origin server determines the scope of the operation based on the
+   target resource.
+
    Servers MUST fail the request if the Content-Type request field
    ([HTTP], Section 8.3) is missing or is inconsistent with the request
    content.
