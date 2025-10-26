@@ -242,11 +242,12 @@ q=foo&amp;limit=10&amp;sort=-published
       (as defined by <xref target="HTTP" section="7.1"/>), the QUERY
       method is used to ask the target resource to perform a query operation
       within the scope of that target resource.
-      The query operation is described by the request content.
-      The origin server determines the scope of the operation based on the target resource.
     </t>
     <t>
       The content of the request and its media type define the query.
+      The origin server determines the scope of the operation based on the target resource.
+    </t>
+    <t>
       Servers <bcp14>MUST</bcp14> fail the request if the Content-Type
       request field (<xref target="HTTP" sectionFormat="comma" section="8.3"/>)
       is missing or is inconsistent with the request content.
