@@ -162,10 +162,9 @@ Table of Contents
 
    q=foo&limit=10&sort=-published
 
-   This variation, however, suffers from the fact that it is not readily
-   apparent -- absent specific knowledge of the resource and server to
-   which the request is being sent -- that a safe, idempotent query is
-   being performed.
+   In this variation, however, it is not readily apparent -- absent
+   specific knowledge of the resource and server to which the request is
+   being sent -- that a safe, idempotent query is being performed.
 
    The QUERY method provides a solution that spans the gap between the
    use of GET and POST, with the example above being expressed as:
