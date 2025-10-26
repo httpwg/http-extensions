@@ -1685,34 +1685,32 @@ q=foo&amp;limit=10&amp;sort=-published
         incorporate the request content (<span><a href="https://rfc-editor.org/rfc/rfc9111#section-6" class="relref">Section 6</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>) and related
         metadata (<span><a href="https://rfc-editor.org/rfc/rfc9111#section-8" class="relref">Section 8</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>).<a href="#section-2.7-2" class="pilcrow">¶</a></p>
 <p id="section-2.7-3">
-        Caches <span class="bcp14">MAY</span> remove semantically insignificant differences first, thereby
-        improving cache efficiency.<a href="#section-2.7-3" class="pilcrow">¶</a></p>
-<p id="section-2.7-4">
-        For instance, by<a href="#section-2.7-4" class="pilcrow">¶</a></p>
+        To improve cache efficiency, caches <span class="bcp14">MAY</span> remove semantically
+        insignificant differences first. For instance, by:<a href="#section-2.7-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-2.7-5.1">removing content encoding(s) (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-2.7-5.1" class="pilcrow">¶</a>
+<li class="normal" id="section-2.7-4.1">removing content encoding(s) (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-2.7-4.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-2.7-5.2">normalizing based upon knowledge of format conventions, as indicated by any
+          <li class="normal" id="section-2.7-4.2">normalizing based upon knowledge of format conventions, as indicated by any
           media subtype suffix in the request's Content-Type field (e.g., "+json", see
-          <span><a href="https://rfc-editor.org/rfc/rfc6838#section-4.2.8" class="relref">Section 4.2.8</a> of [<a href="#RFC6838" class="cite xref">RFC6838</a>]</span>).<a href="#section-2.7-5.2" class="pilcrow">¶</a>
+          <span><a href="https://rfc-editor.org/rfc/rfc6838#section-4.2.8" class="relref">Section 4.2.8</a> of [<a href="#RFC6838" class="cite xref">RFC6838</a>]</span>).<a href="#section-2.7-4.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-2.7-5.3">normalizing based upon knowledge of the semantics of the content itself, as indicated by
-          the request's Content-Type field.<a href="#section-2.7-5.3" class="pilcrow">¶</a>
+          <li class="normal" id="section-2.7-4.3">normalizing based upon knowledge of the semantics of the content itself, as indicated by
+          the request's Content-Type field.<a href="#section-2.7-4.3" class="pilcrow">¶</a>
 </li>
         </ul>
-<p id="section-2.7-6">
+<p id="section-2.7-5">
         Note that any such transformation is performed solely for the purpose of generating a cache key; it
-        does not change the request itself.<a href="#section-2.7-6" class="pilcrow">¶</a></p>
-<p id="section-2.7-7">
+        does not change the request itself.<a href="#section-2.7-5" class="pilcrow">¶</a></p>
+<p id="section-2.7-6">
         Clients can indicate, using the "no-transform" cache directive (<span><a href="https://rfc-editor.org/rfc/rfc9111#section-5.2.1.6" class="relref">Section 5.2.1.6</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>),
         that they wish that no such transformation happens (but note that this directive is just
-        advisory).<a href="#section-2.7-7" class="pilcrow">¶</a></p>
-<p id="section-2.7-8">
+        advisory).<a href="#section-2.7-6" class="pilcrow">¶</a></p>
+<p id="section-2.7-7">
         Note that caching QUERY method responses is inherently more complex than caching responses
         to GET, as complete reading of the request's content is needed in order to determine
         the cache key. If a QUERY response supplies a Location response field (<a href="#location" class="auto internal xref">Section 2.4</a>)
         to indicate a URI for an equivalent resource (<a href="#equivalent-resource" class="auto internal xref">Section 2.2</a>), clients
-        can switch to GET for subsequent requests, thereby simplifying processing.<a href="#section-2.7-8" class="pilcrow">¶</a></p>
+        can switch to GET for subsequent requests, thereby simplifying processing.<a href="#section-2.7-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="range">

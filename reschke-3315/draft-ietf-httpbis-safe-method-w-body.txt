@@ -401,10 +401,8 @@ Table of Contents
    MUST incorporate the request content (Section 6 of [HTTP-CACHING])
    and related metadata (Section 8 of [HTTP-CACHING]).
 
-   Caches MAY remove semantically insignificant differences first,
-   thereby improving cache efficiency.
-
-   For instance, by
+   To improve cache efficiency, caches MAY remove semantically
+   insignificant differences first.  For instance, by:
 
    *  removing content encoding(s) (Section 8.4 of [HTTP]).
 
