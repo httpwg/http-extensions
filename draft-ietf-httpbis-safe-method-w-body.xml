@@ -438,11 +438,8 @@ q=foo&amp;limit=10&amp;sort=-published
         metadata (<xref target="HTTP-CACHING" section="8"/>).
       </t>
       <t>
-        Caches <bcp14>MAY</bcp14> remove semantically insignificant differences first, thereby
-        improving cache efficiency.
-      </t>
-      <t>
-        For instance, by
+        To improve cache efficiency, caches <bcp14>MAY</bcp14> remove semantically
+        insignificant differences first. For instance, by:
       </t>
       <ul>
         <li>removing content encoding(s) (<xref target="HTTP" section="8.4"/>).</li>
