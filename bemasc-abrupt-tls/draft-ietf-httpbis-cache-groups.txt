@@ -3,9 +3,9 @@
 
 
 HTTP                                                       M. Nottingham
-Internet-Draft                                                Cloudflare
-Intended status: Standards Track                         26 October 2025
-Expires: 29 April 2026
+Internet-Draft                                           29 October 2025
+Intended status: Standards Track                                        
+Expires: 2 May 2026
 
 
                            HTTP Cache Groups
@@ -14,8 +14,8 @@ Expires: 29 April 2026
 Abstract
 
    This specification introduces a means of describing the relationships
-   between stored responses in HTTP caches, grouping them by associating
-   a stored response with one or more strings.
+   between stored responses in HTTP caches, "grouping" them by
+   associating a stored response with one or more strings.
 
 About This Document
 
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 April 2026.
+   This Internet-Draft will expire on 2 May 2026.
 
 Copyright Notice
 
@@ -101,8 +101,8 @@ Table of Contents
 
    In addition to sharing invalidation events, the relationships
    indicated by grouping can also be used by caches to optimise their
-   operation (e.g., to inform the operation of cache eviction
-   algorithms).
+   operation; for example, it could be used to inform the operation of
+   cache eviction algorithms.
 
    Section 2 introduces a means of describing the relationships between
    stored responses in HTTP caches, by associating those responses with
@@ -133,10 +133,10 @@ Table of Contents
 
 2.  The Cache-Groups Response Header Field
 
-   The Cache-Groups HTTP response header field is a List of Strings
-   (Sections 3.1 and 3.3.3 of [STRUCTURED-FIELDS]).  Each member of the
-   List is a value that identifies a group that the response belongs to.
-   These Strings are opaque -- while they might have some meaning to the
+   The Cache-Groups HTTP Response Header is a List of Strings (Sections
+   3.1 and 3.3.1 of [STRUCTURED-FIELDS]).  Each member of the list is a
+   value that identifies a group that the response belongs to.  These
+   strings are opaque -- while they might have some meaning to the
    server that creates them, the cache does not have any insight into
    their structure or content (beyond uniquely identifying a group).
 
@@ -172,7 +172,7 @@ Table of Contents
    A cache that invalidates a stored response MAY invalidate any stored
    responses that share groups (per Section 2.1) with that response.
    Note that further grouped invalidations are not triggered by a
-   grouped invalidation; i.e., this mechanism does not cascade.
+   grouped invalidation; i.e., this mechanism does not "cascade."
 
    Cache extensions can explicitly strengthen the requirement above.
    For example, a targeted cache control header field [TARGETED] might
@@ -182,8 +182,8 @@ Table of Contents
 3.  The Cache-Group-Invalidation Response Header Field
 
    The Cache-Group-Invalidation response header field is a List of
-   Strings (Sections 3.1 and 3.3.3 of [STRUCTURED-FIELDS]).  Each member
-   of the List is a value that identifies a group that the response
+   Strings (Sections 3.1 and 3.3.1 of [STRUCTURED-FIELDS]).  Each member
+   of the list is a value that identifies a group that the response
    invalidates, per Section 2.2.1.
 
    For example, following a POST request that has side effects on two
@@ -294,8 +294,7 @@ Appendix A.  Acknowledgements
 Author's Address
 
    Mark Nottingham
-   Cloudflare
-   Melbourne
+   Prahran
    Australia
    Email: mnot@mnot.net
    URI:   https://www.mnot.net/

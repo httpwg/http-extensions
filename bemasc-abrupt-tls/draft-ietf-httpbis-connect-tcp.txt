@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                         26 October 2025
-Expires: 29 April 2026
+Intended status: Standards Track                         29 October 2025
+Expires: 2 May 2026
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 April 2026.
+   This Internet-Draft will expire on 2 May 2026.
 
 Copyright Notice
 
@@ -340,13 +340,16 @@ Table of Contents
       -  Otherwise, the endpoint SHOULD close the send stream abruptly,
          using a mechanism appropriate to the HTTP version:
 
-         o  HTTP/3: RESET_STREAM with H3_CONNECT_ERROR
+         o  HTTP/3: reset the stream with H3_CONNECT_ERROR; see
+            [RFC9000], Section 19.4 and [RFC9114], Section 8.1
 
-         o  HTTP/2: RST_STREAM with CONNECT_ERROR
+         o  HTTP/2: reset the stream with CONNECT_ERROR; see [RFC9113],
+            Sections 6.4 and 7
 
-         o  HTTP/1.1 over TLS: a TLS Error Alert
+         o  HTTP/1.1 over TLS: TCP shutdown without a TLS closure alert;
+            see [RFC8446], Section 6.1.
 
-         o  HTTP/1.1 (insecure): TCP RST.
+         o  HTTP/1.1 without TLS: TCP RST
 
    *  When the receive stream is closed abruptly or without a FINAL_DATA
       capsule received, the endpoint SHOULD send a TCP RST if the TCP
@@ -381,7 +384,7 @@ Table of Contents
    +-+-----+    +-+----------+    +----------+-+    +-----+-+
      +---"abc"--->+-------DATA{"abc"}------->+---"abc"--->|
      |            |  (... timeout @ A ...)   |            |
-     |            +--------TLS Alert-------->+----RST---->|
+     |            +--FIN (no close_notify)-->+----RST---->|
      |            |                          |            |
 
                     Figure 5: Timeout example (HTTP/1.1)
@@ -445,8 +448,8 @@ Table of Contents
    Status" response header [RFC9209] in any success or failure response
    (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client
    behaviors and diagnostics.  In HTTP/2 or HTTP/3, proxies MAY
-   additionally send a "Proxy-Status" trailer in the event of an unclean
-   shutdown.
+   additionally send a "Proxy-Status" trailer in the event of an abrupt
+   stream closure.
 
 5.  Applicability
 
@@ -561,9 +564,18 @@ Table of Contents
       imposing a higher cost in setup latency, congestion control
       convergence, CPU time, and data transfer.
 
-   *  It may be difficult to implement the recommended unclean shutdown
-      signals (Section 3.4), as many TLS libraries do not support
-      injecting TLS Alerts.
+   *  The graceful and abrupt closure signals (Section 3.4) are more
+      likely to be missing or corrupted:
+
+      -  Some implementations may be unable to emit the recommended
+         abrupt closure signals, due to limitations in their TCP and TLS
+         subsystems.
+
+      -  Faulty implementations may fail to send a TLS closure alert
+         during graceful shutdown, or fail to report an error when the
+         expected closure alert is not received.  These misbehaviors are
+         not compliant with [RFC8446], but they are common nonetheless
+         among HTTP/1.1 implementations today.
 
    *  The number of active connections through each client may be
       limited by the number of available TCP client ports, especially
