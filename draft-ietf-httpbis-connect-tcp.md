@@ -294,9 +294,9 @@ A malicious client can achieve cause highly asymmetric resource usage at the pro
 While this specification is fully functional under HTTP/1.1, performance-sensitive deployments SHOULD use HTTP/2 or HTTP/3 instead.  When using HTTP/1.1:
 
 * Each CONNECT request requires a new TCP and TLS connection, imposing a higher cost in setup latency, congestion control convergence, CPU time, and data transfer.
-* The abrupt closure signals ({{closing-connections}}) are more likely to be missing or corrupted:
-  - Some implementations may be unable to omit the TLS closure alert or send a TCP RST, as recommended.
-  - Faulty implementations may fail to send a TLS closure alert during graceful shutdown.
+* The graceful and abrupt closure signals ({{closing-connections}}) are more likely to be missing or corrupted:
+  - Some implementations may be unable to emit the recommended abrupt closure signals, due to limitations in their TCP and TLS subsystems.
+  - Faulty implementations may fail to send a TLS closure alert during graceful shutdown, or fail to report an error when the expected closure alert is not received.  These misbehaviors are not compliant with {{RFC8446}}, but they are common nonetheless among HTTP/1.1 implementations today.
 * The number of active connections through each client may be limited by the number of available TCP client ports, especially if:
   - The client only has one IP address that can be used to reach the proxy.
   - The client is shared between many parties, such as when acting as a gateway or concentrator.
