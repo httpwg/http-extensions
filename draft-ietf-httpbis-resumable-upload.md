@@ -1049,7 +1049,10 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
 
-None yet.
+* Clarify client and server handling of `409 (Conflict)` responses, requiring clients to treat them as recoverable and adding an example.
+* Refine the "Concurrency" section to outline different server strategies (Latest Request Wins, Exclusive Locking, Optimistic Concurrency Control).
+* Strengthen the recommendation for retrying `5xx` errors and connection issues to `SHOULD`.
+* Clarify that a `HEAD` request in the "Offset Retrieval" section can serve as a hint for servers to abort prior in-flight requests.
 
 ## Since draft-ietf-httpbis-resumable-upload-09
 {:numbered="false"}
