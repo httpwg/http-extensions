@@ -504,7 +504,7 @@ If the client wants to resume the upload after an interruption, it has to know t
 
 The offset can be less than or equal to the number of bytes of representation data that the client has already sent. The client MAY reject an offset which is greater than the number of bytes it has already sent during this upload by not continuing the upload and canceling the upload resource ({{upload-cancellation}}). The client is expected to handle backtracking of a reasonable length. If the offset is invalid for this upload, or if the client cannot backtrack to the offset and reproduce the same representation data it has already sent, the upload MUST be considered a failure. The client then MUST NOT continue the upload and SHOULD cancel the upload ({{upload-cancellation}}).
 
-The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or appending ({{upload-appending}}) is in progress as this can cause the previous request to be terminated by the server as described in {{concurrency}}.
+The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or appending ({{upload-appending}}) is in progress as this may cause the previous request to be terminated by the server as described in {{concurrency}}.
 
 If the client received a response with a
 
@@ -579,7 +579,7 @@ If the client received a final response with the `Upload-Complete: ?0` header fi
 
 - A `2xx (Successful)` status code indicates that representation data was appended but the upload is not complete. The client can continue appending representation data.
 - For a `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry appending to the new URI.
-- For a `409 (Conflict)` status code, the client SHOULD attempt to resume the upload by using the offset from the `Upload-Offset` response header field.
+- For a `409 (Conflict)` status code, the client SHOULD attempt to resume the upload by either retrieving the current offset ({{offset-retrieving}}) or using the value from the response's `Upload-Offset` header field.
 - For other `4xx (Client Error)` status codes, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
 - For a `5xx (Server Error)` status code or if no final response was received at all due to connectivity issues, the client SHOULD automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
 
@@ -654,56 +654,6 @@ Content-Type: application/json
 }
 ~~~
 
-C) The following example shows a client attempting to resume an upload with an incorrect offset. The server rejects the request with a `409 (Conflict)` status code and includes the correct offset in the `Upload-Offset` header field. The client then retries the request with the correct offset.
-
-~~~ http-message
-PATCH /upload/e422fcae4 HTTP/1.1
-Host: example.com
-Upload-Complete: ?1
-Upload-Offset: 1230000001
-Content-Length: 4567890
-Content-Type: application/partial-upload
-
-[content (4567890 bytes)]
-~~~
-
-~~~ http-message
-HTTP/1.1 409 Conflict
-Upload-Offset: 1230000000
-Content-Type: application/problem+json
-
-{
-  "type":"https://iana.org/assignments/http-problem-types#\
-    mismatching-upload-offset",
-  "title": "offset from request does not match offset of resource",
-  "expected-offset": 1230000000,
-  "provided-offset": 1230000001
-}
-~~~
-
-~~~ http-message
-PATCH /upload/e422fcae4 HTTP/1.1
-Host: example.com
-Upload-Complete: ?1
-Upload-Offset: 1230000000
-Content-Length: 4567891
-Content-Type: application/partial-upload
-
-[content (4567891 bytes)]
-~~~
-
-~~~ http-message
-HTTP/1.1 200 OK
-Upload-Complete: ?1
-Content-Type: application/json
-
-{
-  "metadata": {
-    [...]
-  }
-}
-~~~
-
 ## Upload Cancellation {#upload-cancellation}
 
 ### Client Behavior
@@ -739,13 +689,13 @@ Even if the client is well-behaved and doesn't send concurrent requests, network
 
 To meet these requirements, a server can use various strategies. Three common approaches are:
 
-1.  **Latest Request Wins**: If the server receives a new request while a previous one is in-flight, it abruptly terminates the previous HTTP connection or stream before processing the new request.
+1.  **Preemptive Cancellation**: If the server receives a new request for an upload resource while a previous request for the same resource is in-flight, it abruptly terminates the previous HTTP connection or stream before processing the new request.
 
-2.  **Exclusive Locking**: The server processes requests sequentially, effectively creating a lock. A new request is only processed after the previous one completes. This can be simpler to implement but may lead to delays if a request hangs from the server's perspective.
+2.  **Pessimistic Locking**: The server processes requests for a given upload resource sequentially, effectively creating an exclusive lock on that resource. A new request is only processed after the previous one completes. This can be simpler to implement but may lead to delays if a request hangs from the server's perspective.
 
 3.  **Optimistic Concurrency Control**: By maintaining the upload's state in a strongly consistent datastore, the server can atomically check if the `Upload-Offset` in a request matches the resource's current state. If they do not match, the server can reject the request with a `409 (Conflict)` status code.
 
-Servers SHOULD choose a strategy that best fits their architecture while fulfilling the requirements of this section. Regardless of the chosen strategy, clients MUST be prepared to handle a `409 (Conflict)` response as a recoverable error, as described in {{upload-appending}}.
+Servers SHOULD choose a strategy that best fits their architecture while fulfilling the requirements of this section. Regardless of the chosen strategy, clients SHOULD be prepared to handle a `409 (Conflict)` response as a recoverable error, as described in {{upload-appending}}.
 
 # Status Code `104 (Upload Resumption Supported)` {#status-code-104}
 
