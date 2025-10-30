@@ -356,6 +356,9 @@ The following key-value pairs are defined:
 `min-append-size`:
 : Specifies a minimum size counted in bytes for the request content in a single upload append request ({{upload-appending}}). The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append requests. The value is an Integer. Requests completing the upload by including the `Upload-Complete: ?1` header field are exempt from this limit.
 
+`append-granularity`:
+: Specifies that the size of request content in bytes SHOULD be an integer multiple of this value for an upload append request ({{upload-appending}}), and for an upload creation request ({{upload-creation}}) that contains content. The server might reject requests that do not adhere to this limit (see {{inconsistent-granularity}}). A client that is aware of this limit MUST adhere to this requirement. The value is an Integer. Requests completing the upload by including the `Upload-Complete: ?1` header field are exempt from this limit.
+
 `max-age`:
 : Specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource as these requests will likely fail. The value is an Integer.
 
@@ -408,7 +411,7 @@ While the request content is being received, the server MAY send multiple interi
 
 Where a response requires a `Location` header field to be included, all interim and final response messages for the same request MUST contain an identical `Location` value. However, final responses including the `Upload-Complete: ?1` header field are exempt from this requirement because they are the result of processing the transferred representation and the `Location` value does not necessarily represent the upload location. Where the `Location` value is expected to be identical across multiple messages, clients SHOULD verify this. If verification fails, clients SHOULD abort the current request and cancel the upload ({{upload-cancellation}}).
 
-The server might not receive the entire request content when the upload is interrupted, for example because of dropped connection or canceled request. In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
+The server might not receive or process the entire request content, for example because of a dropped connection, a canceled request, or a request that does not adhere to the append-granularity limit (see {{inconsistent-granularity}}). In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from the end of the successfully processed data. In addition, the upload resource MUST NOT be considered complete then.
 
 ### Examples {#upload-creation-example}
 
@@ -590,6 +593,8 @@ The server might not receive the entire patch document when the upload is interr
 
 If the `Upload-Offset` request header field value does not match the current offset ({{upload-offset}}), the upload resource MUST reject the request with a `409 (Conflict)` status code. The response MUST include the correct offset in the `Upload-Offset` header field. The response can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" ({{mismatching-offset}}).
 
+If the request content size violates a server-advertised `append-granularity` limit (see {{upload-limit}}), the server MAY process and accept a portion of the request content that adheres to the granularity, discarding the remainder. In this case, the server SHOULD respond with a `400 (Bad Request)` status code and use the problem type "https://iana.org/assignments/http-problem-types#inconsistent-upload-granularity" ({{inconsistent-granularity}}). The response MUST include an `Upload-Offset` header field indicating the new offset after accepting the partial content, allowing the client to recover and resume the upload.
+
 If the upload is already complete ({{upload-complete}}), the server MUST NOT modify the upload resource and MUST reject the request. The choice of response depends on the nature of the upload request and server state, including but not limited to:
 
 - If the client attempted to append a non-zero length document, the server MUST treat this as an inconsistent length failure. The server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) in the response.
@@ -763,6 +768,26 @@ Content-Type: application/problem+json
   "type":"https://iana.org/assignments/http-problem-types#\
     inconsistent-upload-length",
   "title": "inconsistent length values for upload"
+}
+~~~
+
+## Inconsistent Granularity {#inconsistent-granularity}
+
+This section defines the "https://iana.org/assignments/http-problem-types#inconsistent-upload-granularity" problem type {{PROBLEM}}. A server SHOULD use this problem type when responding to a upload creation ({{upload-creation}}) or upload append request ({{upload-appending}}) to indicate that the request content size violates the server's advertised `append-granularity` limit. The server MAY still accept a portion of the request content.
+
+The following example shows a response where the server accepted a portion of the request, resulting in a new offset of 262144, and signals that the client should resume from there:
+
+~~~ http-message
+# NOTE: '\' line wrapping per RFC 8792
+
+HTTP/1.1 400 Bad Request
+Content-Type: application/problem+json
+Upload-Offset: 262144
+
+{
+  "type":"https://iana.org/assignments/http-problem-types#\
+    inconsistent-upload-granularity",
+  "title": "Request content size violates append-granularity limit"
 }
 ~~~
 
@@ -984,6 +1009,20 @@ Recommended HTTP status code:
 Reference:
 : {{inconsistent-length}} of this document
 
+IANA is asked to register the following entry in the "HTTP Problem Types" registry:
+
+Type URI:
+: https://iana.org/assignments/http-problem-types#inconsistent-upload-granularity
+
+Title:
+: Inconsistent Upload Granularity
+
+Recommended HTTP status code:
+: 400
+
+Reference:
+: {{inconsistent-granularity}} of this document
+
 --- back
 
 # Changes
@@ -992,7 +1031,7 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
 
-None yet.
+* Introduced `append-granularity` limit and corresponding problem type.
 
 ## Since draft-ietf-httpbis-resumable-upload-09
 {:numbered="false"}
