@@ -515,15 +515,15 @@ If the client received a response with a
 
 ### Server Behavior {#offset-retrieving-server}
 
-Upon receiving a `HEAD` request, a server MAY treat it as a hint to abort a previous, possibly stalled, upload creation or append request for the same resource. See {{concurrency}} for more details on handling concurrency.
-
-A successful response to a `HEAD` request against an upload resource:
+A successful response to a `HEAD` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset}}),
 - MUST include the completeness state in the `Upload-Complete` header field ({{upload-complete}}),
 - MUST include the length in the `Upload-Length` header field, unless the client has not supplied one, by providing the corresponding headers as described in ({{upload-length}}),
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
+
+Upon receiving a `HEAD` request, a server MAY treat it as a hint to abort a previous, possibly stalled, upload creation or append request for the same resource. See {{concurrency}} for more details on handling concurrency.
 
 The resource SHOULD NOT generate a response with the `301 (Moved Permanently)` and `302 (Found)` status codes because clients might follow the redirect without preserving the `HEAD` method.
 
@@ -693,7 +693,7 @@ To meet these requirements, a server can use various strategies. Three common ap
 
 2.  **Pessimistic Locking**: The server processes requests for a given upload resource sequentially, effectively creating an exclusive lock on that resource. A new request is only processed after the previous one completes. This can be simpler to implement but may lead to delays if a request hangs from the server's perspective.
 
-3.  **Optimistic Concurrency Control**: By maintaining the upload's state in a strongly consistent datastore, the server can atomically check if the `Upload-Offset` in a request matches the resource's current state. If they do not match, the server can reject the request with a `409 (Conflict)` status code.
+3.  **Optimistic Concurrency Control**: The server detects concurrent modifications by atomically checking the resource's state before applying changes. If a conflict is detected, the server rejects the request with a 409 (Conflict) status code, ensuring that only one of multiple parallel requests can succeed.
 
 Servers SHOULD choose a strategy that best fits their architecture while fulfilling the requirements of this section. Regardless of the chosen strategy, clients SHOULD be prepared to handle a `409 (Conflict)` response as a recoverable error, as described in {{upload-appending}}.
 
