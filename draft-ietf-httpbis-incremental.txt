@@ -5,10 +5,10 @@
 httpbis                                                 奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                T. Pauly
-Expires: 27 April 2026                                             Apple
+Expires: 8 May 2026                                                Apple
                                                               M. Thomson
                                                                  Mozilla
-                                                         24 October 2025
+                                                         4 November 2025
 
 
                 Incremental Forwarding of HTTP Messages
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 April 2026.
+   This Internet-Draft will expire on 8 May 2026.
 
 Copyright Notice
 
@@ -141,7 +141,8 @@ Table of Contents
 
    A false value ("?0") indicates the default behavior defined in
    [HTTP], where intermediaries might buffer the entire message before
-   forwarding it.
+   forwarding it.  However, this explicit signal might increase
+   intermediaries' confidence in doing so.
 
    The Incremental HTTP header field applies to each HTTP message.
    Therefore, if both the HTTP request and response need to be forwarded
