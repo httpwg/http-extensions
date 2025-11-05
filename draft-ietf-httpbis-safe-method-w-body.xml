@@ -1466,6 +1466,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <section title="Since draft-ietf-httpbis-safe-method-w-body-12" anchor="changes.since.12">
 <ul>
   <li>Ack Asbjørn Ulsberg (<eref target="https://github.com/httpwg/http-extensions/issues/3299"/>)</li>
+  <li>LC feedback from Rahul Gupta (<eref target="https://github.com/httpwg/http-extensions/issues/3315"/>)</li>
 </ul>
 </section>
 </section>
