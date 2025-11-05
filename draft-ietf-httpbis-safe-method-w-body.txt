@@ -1316,6 +1316,9 @@ B.13.  Since draft-ietf-httpbis-safe-method-w-body-12
    *  Ack Asbjørn Ulsberg (https://github.com/httpwg/http-extensions/
       issues/3299)
 
+   *  LC feedback from Rahul Gupta (https://github.com/httpwg/http-
+      extensions/issues/3315)
+
 Acknowledgements
 
    We thank all members of the HTTP Working Group for ideas, reviews,
