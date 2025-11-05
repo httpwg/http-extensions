@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 8 May 2026                                           Cloudflare
+Expires: 9 May 2026                                           Cloudflare
                                                                M. Bishop
                                                                   Akamai
-                                                         4 November 2025
+                                                         5 November 2025
 
 
                          The HTTP QUERY Method
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 May 2026.
+   This Internet-Draft will expire on 9 May 2026.
 
 Copyright Notice
 
@@ -120,9 +120,9 @@ Table of Contents
 1.  Introduction
 
    This specification defines the HTTP QUERY request method as a means
-   of making a safe, idempotent request (Section 9.2 of [HTTP])
-   containing content that describes how the request is to be processed
-   by the target resource.
+   of making a safe, idempotent request (Section 9.2 of [HTTP]) that
+   encloses a representation describing how the request is to be
+   processed by the target resource.
 
    Most often, this is desirable when the data conveyed in a request is
    too voluminous to be encoded into the request's URI.  A common query
@@ -162,10 +162,9 @@ Table of Contents
 
    q=foo&limit=10&sort=-published
 
-   This variation, however, suffers from the fact that it is not readily
-   apparent -- absent specific knowledge of the resource and server to
-   which the request is being sent -- that a safe, idempotent query is
-   being performed.
+   In this variation, however, it is not readily apparent -- absent
+   specific knowledge of the resource and server to which the request is
+   being sent -- that a safe, idempotent query is being performed.
 
    The QUERY method provides a solution that spans the gap between the
    use of GET and POST, with the example above being expressed as:
@@ -237,11 +236,12 @@ Table of Contents
    GET method, which requests a representation of the resource
    identified by the target URI (as defined by Section 7.1 of [HTTP]),
    the QUERY method is used to ask the target resource to perform a
-   query operation within the scope of that target resource.  The query
-   operation is described by the request content.  The origin server
-   determines the scope of the operation based on the target resource.
+   query operation within the scope of that target resource.
 
-   The content of the request and its media type define the query.
+   The content of the request and its media type define the query.  The
+   origin server determines the scope of the operation based on the
+   target resource.
+
    Servers MUST fail the request if the Content-Type request field
    ([HTTP], Section 8.3) is missing or is inconsistent with the request
    content.
@@ -277,7 +277,7 @@ Table of Contents
    and metadata are inconsistent MUST be rejected with a 4xx (Client
    Error) response ([HTTP], Section 15.5).
 
-   The list below describe various cases of failures and recommends
+   The list below describes various cases of failures and recommends
    specific status codes:
 
    *  A request lacking media type information by definition is
@@ -298,8 +298,8 @@ Table of Contents
       sniffing").
 
    *  If the media type is specified, is understood, and the content is
-      indeed consistent with the type, but the query can not be
-      processed due to the actual contents of the query, the status 422
+      indeed consistent with the type, but the query cannot be processed
+      due to the actual contents of the query, the status 422
       (Unprocessable Content) can be used.  An example would be a
       syntactically correct SQL query that identifies a non-existent
       table.
@@ -358,12 +358,12 @@ Table of Contents
    QUERY request by redirecting the user agent to a different URI (see
    Section 15.4 of [HTTP]).
 
-   A response with either of the status codes 301 (Moved Permanently,
-   [HTTP], Section 15.4.2) or 308 (Permanent Redirect, [HTTP],
-   Section 15.4.9) indicates that the target resource has permanently
-   moved to a different URI referenced by the Location response field
-   ([HTTP], Section 10.2.2).  Likewise, a response with either 302
-   (Found, [HTTP], Section 15.4.3 or 307 (Temporary Redirect, [HTTP],
+   A response with either status codes 301 (Moved Permanently, [HTTP],
+   Section 15.4.2) or 308 (Permanent Redirect, [HTTP], Section 15.4.9)
+   indicates that the target resource has permanently moved to a
+   different URI referenced by the Location response field ([HTTP],
+   Section 10.2.2).  Likewise, a response with either status codes 302
+   (Found, [HTTP], Section 15.4.3) or 307 (Temporary Redirect, [HTTP],
    Section 15.4.8) indicates that the target resource has temporarily
    moved.  In all four cases, the server is suggesting that the user
    agent can accomplish its original QUERY request by sending a similar
@@ -395,17 +395,14 @@ Table of Contents
 2.7.  Caching
 
    The response to a QUERY method is cacheable; a cache MAY use it to
-   satisfy subsequent QUERY requests as per Section 4 of
-   [HTTP-CACHING]).
+   satisfy subsequent QUERY requests as per Section 4 of [HTTP-CACHING].
 
    The cache key for a QUERY request (see Section 2 of [HTTP-CACHING])
    MUST incorporate the request content (Section 6 of [HTTP-CACHING])
    and related metadata (Section 8 of [HTTP-CACHING]).
 
-   Caches MAY remove semantically insignificant differences first,
-   thereby improving cache efficiency.
-
-   For instance, by
+   To improve cache efficiency, caches MAY remove semantically
+   insignificant differences first.  For instance, by:
 
    *  removing content encoding(s) (Section 8.4 of [HTTP]).
 
@@ -823,7 +820,7 @@ A.5.  Conditional Requests
 
    Consider a resource implementing QUERY that supports "application/
    sql" and "application/xslt+xml" ([XSLT]) as request media types, and
-   which can generate responses as "text/csv" . The data set being
+   which can generate responses as "text/csv".  The data set being
    queried contains RFC document information, and the query returns
    information grouped by decade:
 
