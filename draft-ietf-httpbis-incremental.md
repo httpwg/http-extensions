@@ -267,4 +267,9 @@ Reference:
 # Acknowledgments
 {:numbered="false"}
 
-TODO acknowledge.
+The authors would like to thank many members of the IETF HTTP working group for
+their discussions and feedback on this specification. In particular, the authors
+would like to thank {{{Mark Thomas}}}, {{{Piotr Sikora}}},
+{{{Thibault Meunier}}}, {{{Marius Kleidl}}}, {{{Ben Schwartz}}},
+{{{Willy Tarreau}}}, {{{Will Hawkins}}}, {{{Mark Nottingham}}}, and
+{{{Lucas Pardue}}} for close review and sugggested changes.
