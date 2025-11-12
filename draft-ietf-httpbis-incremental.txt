@@ -5,10 +5,10 @@
 httpbis                                                 奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                T. Pauly
-Expires: 9 May 2026                                                Apple
+Expires: 16 May 2026                                               Apple
                                                               M. Thomson
                                                                  Mozilla
-                                                         5 November 2025
+                                                        12 November 2025
 
 
                 Incremental Forwarding of HTTP Messages
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 May 2026.
+   This Internet-Draft will expire on 16 May 2026.
 
 Copyright Notice
 
@@ -329,7 +329,12 @@ Table of Contents
 
 Acknowledgments
 
-   TODO acknowledge.
+   The authors would like to thank many members of the IETF HTTP working
+   group for their discussions and feedback on this specification.  In
+   particular, the authors would like to thank Mark Thomas, Piotr
+   Sikora, Thibault Meunier, Marius Kleidl, Ben Schwartz, Willy Tarreau,
+   Will Hawkins, Mark Nottingham, and Lucas Pardue for close review and
+   sugggested changes.
 
 Authors' Addresses
 
