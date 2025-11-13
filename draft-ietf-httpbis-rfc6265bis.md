@@ -340,7 +340,8 @@ system for use with cookies it does require that the system uses only
 Name System (DNS) is a typical and conventional example this document will
 reference name resolution in terms of DNS.
 
-Name resolution systems that directly expose Unicode are out of scope of this document.
+Name resolution systems that directly expose non-ASCII characters, such as
+Unicode, are out of scope of this document.
 
 # Overview
 
@@ -1692,7 +1693,7 @@ user agent MUST process the cookie as follows:
 10. If the domain-attribute is non-empty:
 
     1.  If request-host-canonical does not domain-match
-        (See {{domain-matching}}) the domain-attribute:
+        (see {{domain-matching}}) the domain-attribute:
 
         1.  Abort this algorithm and ignore the cookie entirely.
 
@@ -1740,7 +1741,7 @@ user agent MUST process the cookie as follows:
 
     2.  Their secure-only-flag is true.
 
-    3.  Their domain domain-matches (See {{domain-matching}}) the domain of the
+    3.  Their domain domain-matches (see {{domain-matching}}) the domain of the
         newly-created cookie, or vice-versa.
 
     4.  The path of the newly-created cookie path-matches the path of the
@@ -1931,7 +1932,7 @@ cookie-string from a given cookie store.
      Or:
 
      *   The cookie's host-only-flag is false and retrieval-host-canonical
-         domain-matches (See {{domain-matching}}) the cookie's domain.
+         domain-matches (see {{domain-matching}}) the cookie's domain.
 
      *  The cookie's domain is not a public suffix, for user agents configured
         to reject "public suffixes".
