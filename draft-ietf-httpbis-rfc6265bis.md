@@ -64,18 +64,49 @@ normative:
   DOM-DOCUMENT-COOKIE:
     target: https://html.spec.whatwg.org/#dom-document-cookie
     title: HTML - Living Standard
-    date: 2021-05-18
     author:
     -
-      org: WHATWG
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+    -
+      ins: D. Denicola
+      name: Domenic Denicola
+    -
+      ins: D. Farolino
+      name: Dominic Farolino
+    -
+      ins: I. Hickson
+      name: Ian Hickson
+    -
+      ins: P. Jägenstedt
+      name: Philip Jägenstedt
+    -
+      ins: S. Pieters
+      name: Simon Pieters
+    ann: WHATWG
   SAMESITE:
     target: https://html.spec.whatwg.org/#same-site
-    title: HTML - Living Standard
-    date: 2021-01-26
+    title: HTML Living Standard
     author:
     -
-      org: WHATWG
-
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+    -
+      ins: D. Denicola
+      name: Domenic Denicola
+    -
+      ins: D. Farolino
+      name: Dominic Farolino
+    -
+      ins: I. Hickson
+      name: Ian Hickson
+    -
+      ins: P. Jägenstedt
+      name: Philip Jägenstedt
+    -
+      ins: S. Pieters
+      name: Simon Pieters
+    ann: WHATWG
 informative:
   RFC3986:
   RFC4648:
