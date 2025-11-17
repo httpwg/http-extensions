@@ -570,6 +570,11 @@ Table of Contents
               HTTP", RFC 9651, September 2024,
               <https://www.rfc-editor.org/rfc/rfc9651>.
 
+   [URI]      Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66,
+              RFC 3986, January 2005,
+              <https://www.rfc-editor.org/rfc/rfc3986>.
+
 7.  Informative References
 
    [FETCH]    WHATWG, "FETCH", <https://fetch.spec.whatwg.org>.
@@ -588,11 +593,6 @@ Table of Contents
               Ed., "JSONPath: Query Expressions for JSON", RFC 9535,
               DOI 10.17487/RFC9535, February 2024,
               <https://www.rfc-editor.org/info/rfc9535>.
-
-   [URI]      Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
-              Resource Identifier (URI): Generic Syntax", STD 66,
-              RFC 3986, January 2005,
-              <https://www.rfc-editor.org/rfc/rfc3986>.
 
    [URL]      WHATWG, "URL", <https://url.spec.whatwg.org>.
 
@@ -1322,7 +1322,8 @@ B.13.  Since draft-ietf-httpbis-safe-method-w-body-12
 
 B.14.  Since draft-ietf-httpbis-safe-method-w-body-13
 
-   None yet.
+   *  URI reference is normative (https://github.com/httpwg/http-
+      extensions/issues/3331)
 
 Acknowledgements
 
