@@ -6,9 +6,9 @@ HTTP                                                     S. Bingler, Ed.
 Internet-Draft                                                          
 Obsoletes: 6265 (if approved)                               M. West, Ed.
 Intended status: Standards Track                              Google LLC
-Expires: 16 May 2026                                    J. Wilander, Ed.
+Expires: 21 May 2026                                    J. Wilander, Ed.
                                                               Apple, Inc
-                                                        12 November 2025
+                                                        17 November 2025
 
 
                 Cookies: HTTP State Management Mechanism
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 May 2026.
+   This Internet-Draft will expire on 21 May 2026.
 
 Copyright Notice
 
@@ -95,11 +95,11 @@ Table of Contents
        3.2.1.  Cookie Producing Implementations
        3.2.2.  Cookie Consuming Implementations
    4.  Server Requirements
-     4.1.  Set-Cookie
+     4.1.  Set-Cookie Header
        4.1.1.  Syntax
        4.1.2.  Semantics (Non-Normative)
        4.1.3.  Cookie Name Prefixes
-     4.2.  Cookie
+     4.2.  Cookie Header
        4.2.1.  Syntax
        4.2.2.  Semantics
    5.  User Agent Requirements
@@ -423,7 +423,7 @@ Table of Contents
 
    == Server -> User Agent ==
 
-   Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT
+   Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2026 10:18:14 GMT
 
    == User Agent -> Server ==
 
@@ -527,7 +527,7 @@ Table of Contents
    This section describes the syntax and semantics of a well-behaved
    profile of the Cookie and Set-Cookie header fields.
 
-4.1.  Set-Cookie
+4.1.  Set-Cookie Header
 
    The Set-Cookie HTTP response header field is used to send cookies
    from the server to the user agent.
@@ -841,7 +841,7 @@ Table of Contents
 
    Set-Cookie: __Host-SID=12345; Secure; Path=/
 
-4.2.  Cookie
+4.2.  Cookie Header
 
 4.2.1.  Syntax
 
@@ -1101,20 +1101,19 @@ Table of Contents
    users can reasonably rely upon to determine whether or not they trust
    a particular website.  The origin of that URI represents the context
    in which a user most likely believes themselves to be interacting.
-   We'll define this origin, the top-level traversable's active
-   document's origin, as the "top-level origin".
+   This origin, the top-level traversable's active document's origin, is
+   defined as the "top-level origin".
 
-   For a document displayed in a top-level traversable, we can stop
-   here: the document's "site for cookies" is the top-level origin.
+   For a document displayed in a top-level traversable, the document's
+   "site for cookies" is the top-level origin.
 
-   For container documents, we need to audit the origins of each of a
-   document's ancestor navigables' active documents in order to account
-   for the "multiple-nested scenarios" described in Section 4 of
-   [RFC7034].  A document's "site for cookies" is the top-level origin
-   if and only if the top-level origin is same-site with the document's
-   origin, and with each of the document's ancestor documents' origins.
-   Otherwise its "site for cookies" is an origin set to an opaque
-   origin.
+   For container documents, the origins of each of a document's ancestor
+   navigables' active documents must be audited in order to account for
+   the "multiple-nested scenarios" described in Section 4 of [RFC7034].
+   A document's "site for cookies" is the top-level origin if and only
+   if the top-level origin is same-site with the document's origin, and
+   with each of the document's ancestor documents' origins.  Otherwise
+   its "site for cookies" is an origin set to an opaque origin.
 
    Given a Document (document), the following algorithm returns its
    "site for cookies":
@@ -2629,8 +2628,10 @@ Table of Contents
 10.1.  Normative References
 
    [DOM-DOCUMENT-COOKIE]
-              WHATWG, "HTML - Living Standard", 18 May 2021,
-              <https://html.spec.whatwg.org/#dom-document-cookie>.
+              van Kesteren, A., Denicola, D., Farolino, D., Hickson, I.,
+              Jägenstedt, P., and S. Pieters, "HTML - Living Standard",
+              n.d., <https://html.spec.whatwg.org/#dom-document-cookie>.
+              WHATWG
 
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
@@ -2679,8 +2680,9 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-   [SAMESITE] WHATWG, "HTML - Living Standard", 26 January 2021,
-              <https://html.spec.whatwg.org/#same-site>.
+   [SAMESITE] van Kesteren, A., Denicola, D., Farolino, D., Hickson, I.,
+              Jägenstedt, P., and S. Pieters, "HTML Living Standard",
+              n.d., <https://html.spec.whatwg.org/#same-site>.  WHATWG
 
    [USASCII]  American National Standards Institute, "Coded Character
               Set -- 7-bit American Standard Code for Information
