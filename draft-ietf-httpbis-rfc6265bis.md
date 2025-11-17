@@ -64,18 +64,49 @@ normative:
   DOM-DOCUMENT-COOKIE:
     target: https://html.spec.whatwg.org/#dom-document-cookie
     title: HTML - Living Standard
-    date: 2021-05-18
     author:
     -
-      org: WHATWG
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+    -
+      ins: D. Denicola
+      name: Domenic Denicola
+    -
+      ins: D. Farolino
+      name: Dominic Farolino
+    -
+      ins: I. Hickson
+      name: Ian Hickson
+    -
+      ins: P. Jägenstedt
+      name: Philip Jägenstedt
+    -
+      ins: S. Pieters
+      name: Simon Pieters
+    ann: WHATWG
   SAMESITE:
     target: https://html.spec.whatwg.org/#same-site
-    title: HTML - Living Standard
-    date: 2021-01-26
+    title: HTML Living Standard
     author:
     -
-      org: WHATWG
-
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+    -
+      ins: D. Denicola
+      name: Domenic Denicola
+    -
+      ins: D. Farolino
+      name: Dominic Farolino
+    -
+      ins: I. Hickson
+      name: Ian Hickson
+    -
+      ins: P. Jägenstedt
+      name: Philip Jägenstedt
+    -
+      ins: S. Pieters
+      name: Simon Pieters
+    ann: WHATWG
 informative:
   RFC3986:
   RFC4648:
@@ -450,7 +481,7 @@ exceeds its quota or if the user manually deletes the server's cookie.
 ~~~ example
 == Server -> User Agent ==
 
-Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT
+Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2026 10:18:14 GMT
 
 == User Agent -> Server ==
 
@@ -550,7 +581,7 @@ inadvertently create cookies that cannot be read by other servers.
 This section describes the syntax and semantics of a well-behaved profile of the
 Cookie and Set-Cookie header fields.
 
-## Set-Cookie {#sane-set-cookie}
+## Set-Cookie Header {#sane-set-cookie}
 
 The Set-Cookie HTTP response header field is used to send cookies from the server to
 the user agent.
@@ -855,7 +886,7 @@ While the following would be accepted if set from a secure origin (e.g.
 Set-Cookie: __Host-SID=12345; Secure; Path=/
 ~~~
 
-## Cookie {#sane-cookie}
+## Cookie Header {#sane-cookie}
 
 ### Syntax {#server-syntax}
 
@@ -1102,14 +1133,14 @@ The URI displayed in a user agent's address bar is the only security context
 directly exposed to users, and therefore the only signal users can reasonably
 rely upon to determine whether or not they trust a particular website. The
 origin of that URI represents the context in which a user most likely believes
-themselves to be interacting. We'll define this origin, the top-level
-traversable's active document's origin, as the "top-level origin".
+themselves to be interacting. This origin, the top-level traversable's active
+document's origin, is defined as the "top-level origin".
 
-For a document displayed in a top-level traversable, we can stop here: the
-document's "site for cookies" is the top-level origin.
+For a document displayed in a top-level traversable, the document's "site for
+cookies" is the top-level origin.
 
-For container documents, we need to audit the origins of each of a document's
-ancestor navigables' active documents in order to account for the
+For container documents, the origins of each of a document's ancestor
+navigables' active documents must be audited in order to account for the
 "multiple-nested scenarios" described in {{Section 4 of RFC7034}}. A document's
 "site for cookies" is the top-level origin if and only if the top-level origin
 is same-site with the document's origin, and with each of the document's
