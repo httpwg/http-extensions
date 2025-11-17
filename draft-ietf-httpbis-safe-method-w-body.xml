@@ -548,9 +548,9 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     </t>
     <t>
       If a server creates a temporary resource to represent the results of a QUERY
-      request (e.g., for use in the Location or Content-Location field) and the request
-      contains sensitive information that cannot be logged, then the URI of this
-      resource &SHOULD; be chosen such that it does not include any sensitive
+      request (e.g., for use in the Location or Content-Location field), assigns a URI
+      to that resource, and the request contains sensitive information that cannot be logged,
+      then that URI &SHOULD; be chosen such that it does not include any sensitive
       portions of the original request content.
     </t>
     <t>
@@ -1472,6 +1472,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <section title="Since draft-ietf-httpbis-safe-method-w-body-13" anchor="changes.since.13">
 <ul>
   <li>URI reference is normative (<eref target="https://github.com/httpwg/http-extensions/issues/3331"/>)</li>
+  <li>inconsistency between Sections 2.4 and 4 wrt URI assignments (<eref target="https://github.com/httpwg/http-extensions/issues/3332"/>)</li>
 </ul>
 </section>
 </section>
