@@ -82,7 +82,7 @@
         <eref target="https://github.com/httpwg/http-extensions/labels/query-method"/>.
       </t>
       <t>
-        The changes in this draft are summarized in <xref target="changes.since.12"/>.
+        The changes in this draft are summarized in <xref target="changes.since.13"/>.
       </t>
     </note>
 
@@ -1468,6 +1468,9 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   <li>Ack Asbjørn Ulsberg (<eref target="https://github.com/httpwg/http-extensions/issues/3299"/>)</li>
   <li>LC feedback from Rahul Gupta (<eref target="https://github.com/httpwg/http-extensions/issues/3315"/>)</li>
 </ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-13" anchor="changes.since.13">
+<t>None yet.</t>
 </section>
 </section>
 
