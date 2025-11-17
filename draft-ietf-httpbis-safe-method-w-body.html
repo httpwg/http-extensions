@@ -1797,9 +1797,9 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
       motivate the use of QUERY over GET.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3">
       If a server creates a temporary resource to represent the results of a QUERY
-      request (e.g., for use in the Location or Content-Location field) and the request
-      contains sensitive information that cannot be logged, then the URI of this
-      resource <span class="bcp14">SHOULD</span> be chosen such that it does not include any sensitive
+      request (e.g., for use in the Location or Content-Location field), assigns a URI
+      to that resource, and the request contains sensitive information that cannot be logged,
+      then that URI <span class="bcp14">SHOULD</span> be chosen such that it does not include any sensitive
       portions of the original request content.<a href="#section-4-3" class="pilcrow">¶</a></p>
 <p id="section-4-4">
       Caches that normalize QUERY content incorrectly or in ways that are
@@ -2852,6 +2852,8 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
         </h3>
 <ul class="normal">
 <li class="normal" id="appendix-B.14-1.1">URI reference is normative (<span><a href="https://github.com/httpwg/http-extensions/issues/3331">https://github.com/httpwg/http-extensions/issues/3331</a></span>)<a href="#appendix-B.14-1.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="appendix-B.14-1.2">inconsistency between Sections 2.4 and 4 wrt URI assignments (<span><a href="https://github.com/httpwg/http-extensions/issues/3332">https://github.com/httpwg/http-extensions/issues/3332</a></span>)<a href="#appendix-B.14-1.2" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>

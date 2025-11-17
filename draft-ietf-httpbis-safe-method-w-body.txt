@@ -497,10 +497,10 @@ Table of Contents
 
    If a server creates a temporary resource to represent the results of
    a QUERY request (e.g., for use in the Location or Content-Location
-   field) and the request contains sensitive information that cannot be
-   logged, then the URI of this resource SHOULD be chosen such that it
-   does not include any sensitive portions of the original request
-   content.
+   field), assigns a URI to that resource, and the request contains
+   sensitive information that cannot be logged, then that URI SHOULD be
+   chosen such that it does not include any sensitive portions of the
+   original request content.
 
    Caches that normalize QUERY content incorrectly or in ways that are
    significantly different from how the resource processes the content
@@ -1324,6 +1324,9 @@ B.14.  Since draft-ietf-httpbis-safe-method-w-body-13
 
    *  URI reference is normative (https://github.com/httpwg/http-
       extensions/issues/3331)
+
+   *  inconsistency between Sections 2.4 and 4 wrt URI assignments
+      (https://github.com/httpwg/http-extensions/issues/3332)
 
 Acknowledgements
 
