@@ -665,17 +665,6 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       </front>
       <seriesInfo name="RFC" value="9651"/>
     </reference>
-  </references>
-  <references title="Informative References">
-    <reference anchor="FETCH" target="https://fetch.spec.whatwg.org">
-      <front>
-        <title>FETCH</title>
-        <author><organization>WHATWG</organization></author>
-      </front>
-    </reference>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6838.xml"/>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8259.xml"/>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9535.xml"/>
     <reference anchor="URI">
       <front>
         <title abbrev="URI Generic Syntax">Uniform Resource Identifier (URI): Generic Syntax</title>
@@ -687,6 +676,17 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       <seriesInfo name="STD" value="66"/>
       <seriesInfo name="RFC" value="3986"/>
     </reference>
+  </references>
+  <references title="Informative References">
+    <reference anchor="FETCH" target="https://fetch.spec.whatwg.org">
+      <front>
+        <title>FETCH</title>
+        <author><organization>WHATWG</organization></author>
+      </front>
+    </reference>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6838.xml"/>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8259.xml"/>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9535.xml"/>
     <reference anchor="URL" target="https://url.spec.whatwg.org">
       <front>
         <title>URL</title>
@@ -1470,7 +1470,9 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 </ul>
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-13" anchor="changes.since.13">
-<t>None yet.</t>
+<ul>
+  <li>URI reference is normative (<eref target="https://github.com/httpwg/http-extensions/issues/3331"/>)</li>
+</ul>
 </section>
 </section>
 
