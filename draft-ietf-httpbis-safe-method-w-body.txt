@@ -5,10 +5,10 @@
 HTTP                                                          J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
-Expires: 21 May 2026                                          Cloudflare
+Expires: 22 May 2026                                          Cloudflare
                                                                M. Bishop
                                                                   Akamai
-                                                        17 November 2025
+                                                        18 November 2025
 
 
                          The HTTP QUERY Method
@@ -18,7 +18,7 @@ Abstract
 
    This specification defines the QUERY method for HTTP.  A QUERY
    requests that the request target process the enclosed content in a
-   safe/idempotent manner and then respond with the result of that
+   safe and idempotent manner and then respond with the result of that
    processing.  This is similar to POST requests but can be
    automatically repeated or restarted without concern for partial state
    changes.
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 May 2026.
+   This Internet-Draft will expire on 22 May 2026.
 
 Copyright Notice
 
@@ -125,9 +125,7 @@ Table of Contents
    encloses a representation describing how the request is to be
    processed by the target resource.
 
-   Most often, this is desirable when the data conveyed in a request is
-   too voluminous to be encoded into the request's URI.  A common query
-   pattern is:
+   A common query pattern is:
 
    GET /feed?q=foo&limit=10&sort=-published HTTP/1.1
    Host: example.org
@@ -1327,6 +1325,9 @@ B.14.  Since draft-ietf-httpbis-safe-method-w-body-13
 
    *  inconsistency between Sections 2.4 and 4 wrt URI assignments
       (https://github.com/httpwg/http-extensions/issues/3332)
+
+   *  IESG review nits (https://github.com/httpwg/http-extensions/
+      issues/3333)
 
 Acknowledgements
 
