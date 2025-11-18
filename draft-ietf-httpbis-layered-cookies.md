@@ -1898,6 +1898,4 @@ Revamped the document to allow for more detailed requirements on browsers in dow
 
 Many thanks to Adam Barth for laying the groundwork for a modern cookie specification with RFC 6265.
 
-And thanks to John Wilander, Lily Chen, Mike West, Steven Bingler, and Steven Englehardt for improving upon that work in subsequent drafts.
-
-Further thanks goes to Dylan Cutler and Yoav Weiss (in alphabetical order) for their substantial contributions to this document.
+And many thanks to Steven Bingler, Lily Chen, Dylan Cutler, Steven Englehardt, Yoav Weiss, Mike West, and John Wilander for improving upon that work.
