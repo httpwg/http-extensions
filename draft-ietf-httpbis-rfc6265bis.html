@@ -1196,6 +1196,9 @@ header fields are widely used on the Internet. This document obsoletes RFC
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3">
                 <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="auto internal xref">2.3</a>.  <a href="#name-terminology" class="internal xref">Terminology</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4">
+                <p id="section-toc.1-1.2.2.4.1"><a href="#section-2.4" class="auto internal xref">2.4</a>.  <a href="#name-name-resolution-system" class="internal xref">Name Resolution System</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
@@ -1407,6 +1410,9 @@ header fields are widely used on the Internet. This document obsoletes RFC
 </li>
                 </ul>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.9">
+                <p id="section-toc.1-1.8.2.9.1"><a href="#section-8.9" class="auto internal xref">8.9</a>.  <a href="#name-public-suffix-list" class="internal xref">Public Suffix List</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
@@ -1572,15 +1578,28 @@ in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.2.1" class="relre
 public registry, such as "com", "co.uk", and "pvt.k12.wy.us". A domain's
 "registrable domain" is the domain's public suffix plus the label to its left.
 That is, for <code>https://www.site.example</code>, the public suffix is <code>example</code>, and the
-registrable domain is <code>site.example</code>. Whenever possible, user agents SHOULD
-use an up-to-date public suffix list, such as the one maintained by the Mozilla
-project at <span>[<a href="#PSL" class="cite xref">PSL</a>]</span>.<a href="#section-2.3-10" class="pilcrow">¶</a></p>
+registrable domain is <code>site.example</code>. See <a href="#public-suffix-list-security" class="auto internal xref">Section 8.9</a> for security
+considerations.<a href="#section-2.3-10" class="pilcrow">¶</a></p>
 <p id="section-2.3-11">The term "request", as well as a request's "client", "current url", "method",
 "target browsing context", and "url list", are defined in <span>[<a href="#FETCH" class="cite xref">FETCH</a>]</span>.<a href="#section-2.3-11" class="pilcrow">¶</a></p>
 <p id="section-2.3-12">The term "non-HTTP APIs" refers to non-HTTP mechanisms used to set and retrieve
 cookies, such as a web browser API that exposes cookies to scripts.<a href="#section-2.3-12" class="pilcrow">¶</a></p>
 <p id="section-2.3-13">The term "top-level navigation" refers to a navigation of a top-level
 traversable.<a href="#section-2.3-13" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="name-resolution-system">
+<section id="section-2.4">
+        <h3 id="name-name-resolution-system">
+<a href="#section-2.4" class="section-number selfRef">2.4. </a><a href="#name-name-resolution-system" class="section-name selfRef">Name Resolution System</a>
+        </h3>
+<p id="section-2.4-1">While this document does not strictly prescribe any specific name resolution
+system for use with cookies it does require that the system uses only
+<span>[<a href="#USASCII" class="cite xref">USASCII</a>]</span> characters or uses an ASCII-compatible encoding (ACE). As the Domain
+Name System (DNS) is a typical and conventional example this document will
+reference name resolution in terms of DNS.<a href="#section-2.4-1" class="pilcrow">¶</a></p>
+<p id="section-2.4-2">Name resolution systems that directly expose non-ASCII characters, such as
+Unicode, are out of scope of this document.<a href="#section-2.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1982,11 +2001,10 @@ user agent).<a href="#section-4.1.2.2-3" class="pilcrow">¶</a></p>
             </h5>
 <p id="section-4.1.2.3-1">The Domain attribute specifies those hosts to which the cookie will be sent.
 For example, if the value of the Domain attribute is "site.example", the user
-agent will include the cookie in the Cookie header field when making HTTP requests to
-site.example, www.site.example, and www.corp.site.example. (Note that a
-leading %x2E ("."), if present, is ignored even though that character is not
-permitted.)  If the server omits the Domain attribute, the user agent
-will return the cookie only to the origin server.<a href="#section-4.1.2.3-1" class="pilcrow">¶</a></p>
+agent will include the cookie in the Cookie header field when making HTTP
+requests to site.example, www.site.example, and www.corp.site.example. If the
+server omits the Domain attribute, the user agent will return the cookie only
+to the origin server.<a href="#section-4.1.2.3-1" class="pilcrow">¶</a></p>
 <p id="section-4.1.2.3-2">WARNING: Some existing user agents treat an absent Domain attribute as if the
 Domain attribute were present and contained the current host name. For
 example, if site.example returns a Set-Cookie header field without a Domain
@@ -2365,11 +2383,19 @@ exists, abort this algorithm and fail to parse the cookie-date.<a href="#section
               <p id="section-5.1.2-2.1.1">Convert the host name to a sequence of individual domain name labels.<a href="#section-5.1.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.1.2-2.2">
-              <p id="section-5.1.2-2.2.1">Convert each label that is not a Non-Reserved LDH (NR-LDH) label, to an
-A-label (see <span><a href="https://rfc-editor.org/rfc/rfc5890#section-2.3.2.1" class="relref">Section 2.3.2.1</a> of [<a href="#RFC5890" class="cite xref">RFC5890</a>]</span> for the former and latter).<a href="#section-5.1.2-2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-5.1.2-2.2.1">All labels must be one of U-label, A-label, or Non-Reserved LDH (NR-LDH)
+label (see <span><a href="https://rfc-editor.org/rfc/rfc5890#section-2.3.1" class="relref">Section 2.3.1</a> of [<a href="#RFC5890" class="cite xref">RFC5890</a>]</span>). If any label is not one of these
+then abort this algorithm and fail to canonicalize the host name.<a href="#section-5.1.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.1.2-2.3">
-              <p id="section-5.1.2-2.3.1">Concatenate the resulting labels, separated by a %x2E (".") character.<a href="#section-5.1.2-2.3.1" class="pilcrow">¶</a></p>
+              <p id="section-5.1.2-2.3.1">Convert each U-label to an A-label (see <span><a href="https://rfc-editor.org/rfc/rfc5890#section-2.3.2.1" class="relref">Section 2.3.2.1</a> of [<a href="#RFC5890" class="cite xref">RFC5890</a>]</span>).<a href="#section-5.1.2-2.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-5.1.2-2.4">
+              <p id="section-5.1.2-2.4.1">If any label is a Fake A-label then abort this algorithm and fail to
+canonicalize the host name.<a href="#section-5.1.2-2.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-5.1.2-2.5">
+              <p id="section-5.1.2-2.5.1">Concatenate the resulting labels, separated by a %x2E (".") character.<a href="#section-5.1.2-2.5.1" class="pilcrow">¶</a></p>
 </li>
           </ol>
 </section>
@@ -2379,26 +2405,27 @@ A-label (see <span><a href="https://rfc-editor.org/rfc/rfc5890#section-2.3.2.1" 
           <h4 id="name-domain-matching">
 <a href="#section-5.1.3" class="section-number selfRef">5.1.3. </a><a href="#name-domain-matching" class="section-name selfRef">Domain Matching</a>
           </h4>
-<p id="section-5.1.3-1">A string domain-matches a given domain string if at least one of the following
-conditions hold:<a href="#section-5.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.3-1">Note: This algorithm expects that both inputs are canonicalized.<a href="#section-5.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.3-2">A string domain-matches a given domain string if at least one of the following
+conditions hold:<a href="#section-5.1.3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.1.3-2.1">
-              <p id="section-5.1.3-2.1.1">The domain string and the string are identical. (Note that both the domain
+<li class="normal" id="section-5.1.3-3.1">
+              <p id="section-5.1.3-3.1.1">The domain string and the string are identical. (Note that both the domain
 string and the string will have been canonicalized to lower case at this
-point.)<a href="#section-5.1.3-2.1.1" class="pilcrow">¶</a></p>
+point.)<a href="#section-5.1.3-3.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-5.1.3-2.2">
-              <p id="section-5.1.3-2.2.1">All of the following conditions hold:<a href="#section-5.1.3-2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-5.1.3-3.2">
+              <p id="section-5.1.3-3.2.1">All of the following conditions hold:<a href="#section-5.1.3-3.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.1.3-2.2.2.1">
-                  <p id="section-5.1.3-2.2.2.1.1">The domain string is a suffix of the string.<a href="#section-5.1.3-2.2.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.1.3-3.2.2.1">
+                  <p id="section-5.1.3-3.2.2.1.1">The domain string is a suffix of the string.<a href="#section-5.1.3-3.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-5.1.3-2.2.2.2">
-                  <p id="section-5.1.3-2.2.2.2.1">The last character of the string that is not included in the domain
-string is a %x2E (".") character.<a href="#section-5.1.3-2.2.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-5.1.3-3.2.2.2">
+                  <p id="section-5.1.3-3.2.2.2.1">The last character of the string that is not included in the domain
+string is a %x2E (".") character.<a href="#section-5.1.3-3.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-5.1.3-2.2.2.3">
-                  <p id="section-5.1.3-2.2.2.3.1">The string is a host name (i.e., not an IP address).<a href="#section-5.1.3-2.2.2.3.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-5.1.3-3.2.2.3">
+                  <p id="section-5.1.3-3.2.2.3.1">The string is a host name (i.e., not an IP address).<a href="#section-5.1.3-3.2.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
@@ -3219,18 +3246,24 @@ this algorithm and ignore the cookie entirely.<a href="#section-5.7-3.8.1" class
 domain-attribute is a public suffix:<a href="#section-5.7-3.9.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.7-3.9.2">
 <li id="section-5.7-3.9.2.1">
-                <p id="section-5.7-3.9.2.1.1">If the domain-attribute is identical to the canonicalized
-request-host:<a href="#section-5.7-3.9.2.1.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.7-3.9.2.1.2">
-<li id="section-5.7-3.9.2.1.2.1">
-                    <p id="section-5.7-3.9.2.1.2.1.1">Let the domain-attribute be the empty string.<a href="#section-5.7-3.9.2.1.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-5.7-3.9.2.1.1">Let request-host-canonical be the canonicalized request-host.<a href="#section-5.7-3.9.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li id="section-5.7-3.9.2.2">
+                <p id="section-5.7-3.9.2.2.1">If request-host fails to be canonicalized then abort this algorithm and
+ignore the cookie entirely.<a href="#section-5.7-3.9.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li id="section-5.7-3.9.2.3">
+                <p id="section-5.7-3.9.2.3.1">If the domain-attribute is identical to the request-host-canonical:<a href="#section-5.7-3.9.2.3.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.7-3.9.2.3.2">
+<li id="section-5.7-3.9.2.3.2.1">
+                    <p id="section-5.7-3.9.2.3.2.1.1">Let the domain-attribute be the empty string.<a href="#section-5.7-3.9.2.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 </ol>
-<p id="section-5.7-3.9.2.1.3">
-Otherwise:<a href="#section-5.7-3.9.2.1.3" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.7-3.9.2.1.4">
-<li id="section-5.7-3.9.2.1.4.1">
-                    <p id="section-5.7-3.9.2.1.4.1.1">Abort this algorithm and ignore the cookie entirely.<a href="#section-5.7-3.9.2.1.4.1.1" class="pilcrow">¶</a></p>
+<p id="section-5.7-3.9.2.3.3">
+Otherwise:<a href="#section-5.7-3.9.2.3.3" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.7-3.9.2.3.4">
+<li id="section-5.7-3.9.2.3.4.1">
+                    <p id="section-5.7-3.9.2.3.4.1.1">Abort this algorithm and ignore the cookie entirely.<a href="#section-5.7-3.9.2.3.4.1.1" class="pilcrow">¶</a></p>
 </li>
                 </ol>
 </li>
@@ -3243,8 +3276,8 @@ Note: This step prevents <code>attacker.example</code> from disrupting the integ
             <p id="section-5.7-3.10.1">If the domain-attribute is non-empty:<a href="#section-5.7-3.10.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.7-3.10.2">
 <li id="section-5.7-3.10.2.1">
-                <p id="section-5.7-3.10.2.1.1">If the canonicalized request-host does not domain-match the
-domain-attribute:<a href="#section-5.7-3.10.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-5.7-3.10.2.1.1">If request-host-canonical does not domain-match
+(see <a href="#domain-matching" class="auto internal xref">Section 5.1.3</a>) the domain-attribute:<a href="#section-5.7-3.10.2.1.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.7-3.10.2.1.2">
 <li id="section-5.7-3.10.2.1.2.1">
                     <p id="section-5.7-3.10.2.1.2.1.1">Abort this algorithm and ignore the cookie entirely.<a href="#section-5.7-3.10.2.1.2.1.1" class="pilcrow">¶</a></p>
@@ -3269,7 +3302,7 @@ Otherwise:<a href="#section-5.7-3.10.3" class="pilcrow">¶</a></p>
                 <p id="section-5.7-3.10.4.1.1">Set the cookie's host-only-flag to true.<a href="#section-5.7-3.10.4.1.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.7-3.10.4.2">
-                <p id="section-5.7-3.10.4.2.1">Set the cookie's domain to the canonicalized request-host.<a href="#section-5.7-3.10.4.2.1" class="pilcrow">¶</a></p>
+                <p id="section-5.7-3.10.4.2.1">Set the cookie's domain to request-host-canonical.<a href="#section-5.7-3.10.4.2.1" class="pilcrow">¶</a></p>
 </li>
             </ol>
 </li>
@@ -3314,8 +3347,8 @@ all of the following criteria:<a href="#section-5.7-3.16.1" class="pilcrow">¶</
                 <p id="section-5.7-3.16.2.2.1">Their secure-only-flag is true.<a href="#section-5.7-3.16.2.2.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.7-3.16.2.3">
-                <p id="section-5.7-3.16.2.3.1">Their domain domain-matches the domain of the newly-created cookie, or
-vice-versa.<a href="#section-5.7-3.16.2.3.1" class="pilcrow">¶</a></p>
+                <p id="section-5.7-3.16.2.3.1">Their domain domain-matches (see <a href="#domain-matching" class="auto internal xref">Section 5.1.3</a>) the domain of the
+newly-created cookie, or vice-versa.<a href="#section-5.7-3.16.2.3.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.7-3.16.2.4">
                 <p id="section-5.7-3.16.2.4.1">The path of the newly-created cookie path-matches the path of the
@@ -3532,109 +3565,116 @@ is "non-HTTP".<a href="#section-5.8.2-3" class="pilcrow">¶</a></p>
 cookie-string from a given cookie store.<a href="#section-5.8.3-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.8.3-2">
 <li id="section-5.8.3-2.1">
-              <p id="section-5.8.3-2.1.1">Let cookie-list be the set of cookies from the cookie store that meets all
-of the following requirements:<a href="#section-5.8.3-2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-5.8.3-2.1.1">Let retrieval-host-canonical be the canonicalized host of the retrieval's URI.<a href="#section-5.8.3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-5.8.3-2.2">
+              <p id="section-5.8.3-2.2.1">If the host of the retrieval's URI fails to be canonicalized then abort this
+algorithm.<a href="#section-5.8.3-2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-5.8.3-2.3">
+              <p id="section-5.8.3-2.3.1">Let cookie-list be the set of cookies from the cookie store that meets all
+of the following requirements:<a href="#section-5.8.3-2.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.8.3-2.1.2.1">
-                  <p id="section-5.8.3-2.1.2.1.1">Either:<a href="#section-5.8.3-2.1.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.8.3-2.3.2.1">
+                  <p id="section-5.8.3-2.3.2.1.1">Either:<a href="#section-5.8.3-2.3.2.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.8.3-2.1.2.1.2.1">
-                      <p id="section-5.8.3-2.1.2.1.2.1.1">The cookie's host-only-flag is true and the canonicalized
-host of the retrieval's URI is identical to the cookie's domain.<a href="#section-5.8.3-2.1.2.1.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.8.3-2.3.2.1.2.1">
+                      <p id="section-5.8.3-2.3.2.1.2.1.1">The cookie's host-only-flag is true and retrieval-host-canonical is
+identical to the cookie's domain.<a href="#section-5.8.3-2.3.2.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
                   </ul>
-<p id="section-5.8.3-2.1.2.1.3">
-Or:<a href="#section-5.8.3-2.1.2.1.3" class="pilcrow">¶</a></p>
+<p id="section-5.8.3-2.3.2.1.3">
+Or:<a href="#section-5.8.3-2.3.2.1.3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.8.3-2.1.2.1.4.1">
-                      <p id="section-5.8.3-2.1.2.1.4.1.1">The cookie's host-only-flag is false and the canonicalized
-host of the retrieval's URI domain-matches the cookie's domain.<a href="#section-5.8.3-2.1.2.1.4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.8.3-2.3.2.1.4.1">
+                      <p id="section-5.8.3-2.3.2.1.4.1.1">The cookie's host-only-flag is false and retrieval-host-canonical
+domain-matches (see <a href="#domain-matching" class="auto internal xref">Section 5.1.3</a>) the cookie's domain.<a href="#section-5.8.3-2.3.2.1.4.1.1" class="pilcrow">¶</a></p>
 </li>
-                    <li class="normal" id="section-5.8.3-2.1.2.1.4.2">
-                      <p id="section-5.8.3-2.1.2.1.4.2.1">The cookie's domain is not a public suffix, for user agents configured
-to reject "public suffixes".<a href="#section-5.8.3-2.1.2.1.4.2.1" class="pilcrow">¶</a></p>
+                    <li class="normal" id="section-5.8.3-2.3.2.1.4.2">
+                      <p id="section-5.8.3-2.3.2.1.4.2.1">The cookie's domain is not a public suffix, for user agents configured
+to reject "public suffixes".<a href="#section-5.8.3-2.3.2.1.4.2.1" class="pilcrow">¶</a></p>
 </li>
                   </ul>
-<p id="section-5.8.3-2.1.2.1.5">
+<p id="section-5.8.3-2.3.2.1.5">
 Note: It's possible that the public suffix list was changed since the
 cookie was created. If this change resulted in the cookie's domain
 becoming a public suffix then that cookie would have been rejected during
-creation if it had been created now. (See <a href="#storage-model" class="auto internal xref">Section 5.7</a> step 9).<a href="#section-5.8.3-2.1.2.1.5" class="pilcrow">¶</a></p>
+creation if it had been created now. (See <a href="#storage-model" class="auto internal xref">Section 5.7</a> step 9).<a href="#section-5.8.3-2.3.2.1.5" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-5.8.3-2.1.2.2">
-                  <p id="section-5.8.3-2.1.2.2.1">The retrieval's URI's path path-matches the cookie's path.<a href="#section-5.8.3-2.1.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-5.8.3-2.3.2.2">
+                  <p id="section-5.8.3-2.3.2.2.1">The retrieval's URI's path path-matches the cookie's path.<a href="#section-5.8.3-2.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-5.8.3-2.1.2.3">
-                  <p id="section-5.8.3-2.1.2.3.1">If the cookie's secure-only-flag is true, then the retrieval's URI must
-denote a "secure" connection (as defined by the user agent).<a href="#section-5.8.3-2.1.2.3.1" class="pilcrow">¶</a></p>
-<p id="section-5.8.3-2.1.2.3.2">
+                <li class="normal" id="section-5.8.3-2.3.2.3">
+                  <p id="section-5.8.3-2.3.2.3.1">If the cookie's secure-only-flag is true, then the retrieval's URI must
+denote a "secure" connection (as defined by the user agent).<a href="#section-5.8.3-2.3.2.3.1" class="pilcrow">¶</a></p>
+<p id="section-5.8.3-2.3.2.3.2">
 Note: The notion of a "secure" connection is not defined by this document.
 Typically, user agents consider a connection secure if the connection makes
 use of transport-layer security, such as SSL or TLS <span>[<a href="#RFC8446" class="cite xref">TLS13</a>]</span>, or if the host is
 trusted. For example, most user agents consider "https" to be a scheme that
-denotes a secure protocol and "localhost" to be trusted host.<a href="#section-5.8.3-2.1.2.3.2" class="pilcrow">¶</a></p>
+denotes a secure protocol and "localhost" to be trusted host.<a href="#section-5.8.3-2.3.2.3.2" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-5.8.3-2.1.2.4">
-                  <p id="section-5.8.3-2.1.2.4.1">If the cookie's http-only-flag is true, then exclude the cookie if the
-retrieval's type is "non-HTTP".<a href="#section-5.8.3-2.1.2.4.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-5.8.3-2.3.2.4">
+                  <p id="section-5.8.3-2.3.2.4.1">If the cookie's http-only-flag is true, then exclude the cookie if the
+retrieval's type is "non-HTTP".<a href="#section-5.8.3-2.3.2.4.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-5.8.3-2.1.2.5">
-                  <p id="section-5.8.3-2.1.2.5.1">If the cookie's same-site-flag is not "None" and the retrieval's same-site
+                <li class="normal" id="section-5.8.3-2.3.2.5">
+                  <p id="section-5.8.3-2.3.2.5.1">If the cookie's same-site-flag is not "None" and the retrieval's same-site
 status is "cross-site", then exclude the cookie unless all of the
-following conditions are met:<a href="#section-5.8.3-2.1.2.5.1" class="pilcrow">¶</a></p>
+following conditions are met:<a href="#section-5.8.3-2.3.2.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.8.3-2.1.2.5.2.1">
-                      <p id="section-5.8.3-2.1.2.5.2.1.1">The retrieval's type is "HTTP".<a href="#section-5.8.3-2.1.2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.8.3-2.3.2.5.2.1">
+                      <p id="section-5.8.3-2.3.2.5.2.1.1">The retrieval's type is "HTTP".<a href="#section-5.8.3-2.3.2.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                    <li class="normal" id="section-5.8.3-2.1.2.5.2.2">
-                      <p id="section-5.8.3-2.1.2.5.2.2.1">The same-site-flag is "Lax" or "Default".<a href="#section-5.8.3-2.1.2.5.2.2.1" class="pilcrow">¶</a></p>
+                    <li class="normal" id="section-5.8.3-2.3.2.5.2.2">
+                      <p id="section-5.8.3-2.3.2.5.2.2.1">The same-site-flag is "Lax" or "Default".<a href="#section-5.8.3-2.3.2.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                    <li class="normal" id="section-5.8.3-2.1.2.5.2.3">
-                      <p id="section-5.8.3-2.1.2.5.2.3.1">The HTTP request associated with the retrieval uses a "safe" method.<a href="#section-5.8.3-2.1.2.5.2.3.1" class="pilcrow">¶</a></p>
+                    <li class="normal" id="section-5.8.3-2.3.2.5.2.3">
+                      <p id="section-5.8.3-2.3.2.5.2.3.1">The HTTP request associated with the retrieval uses a "safe" method.<a href="#section-5.8.3-2.3.2.5.2.3.1" class="pilcrow">¶</a></p>
 </li>
-                    <li class="normal" id="section-5.8.3-2.1.2.5.2.4">
-                      <p id="section-5.8.3-2.1.2.5.2.4.1">The target browsing context of the HTTP request associated with the
-retrieval is the active browsing context or a top-level traversable.<a href="#section-5.8.3-2.1.2.5.2.4.1" class="pilcrow">¶</a></p>
+                    <li class="normal" id="section-5.8.3-2.3.2.5.2.4">
+                      <p id="section-5.8.3-2.3.2.5.2.4.1">The target browsing context of the HTTP request associated with the
+retrieval is the active browsing context or a top-level traversable.<a href="#section-5.8.3-2.3.2.5.2.4.1" class="pilcrow">¶</a></p>
 </li>
                   </ul>
 </li>
               </ul>
 </li>
-            <li id="section-5.8.3-2.2">
-              <p id="section-5.8.3-2.2.1">The user agent SHOULD sort the cookie-list in the following order:<a href="#section-5.8.3-2.2.1" class="pilcrow">¶</a></p>
+            <li id="section-5.8.3-2.4">
+              <p id="section-5.8.3-2.4.1">The user agent SHOULD sort the cookie-list in the following order:<a href="#section-5.8.3-2.4.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.8.3-2.2.2.1">
-                  <p id="section-5.8.3-2.2.2.1.1">Cookies with longer paths are listed before cookies with shorter
-paths.<a href="#section-5.8.3-2.2.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.8.3-2.4.2.1">
+                  <p id="section-5.8.3-2.4.2.1.1">Cookies with longer paths are listed before cookies with shorter
+paths.<a href="#section-5.8.3-2.4.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li class="normal" id="section-5.8.3-2.2.2.2">
-                  <p id="section-5.8.3-2.2.2.2.1">Among cookies that have equal-length path fields, cookies with earlier
-creation-times are listed before cookies with later creation-times.<a href="#section-5.8.3-2.2.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-5.8.3-2.4.2.2">
+                  <p id="section-5.8.3-2.4.2.2.1">Among cookies that have equal-length path fields, cookies with earlier
+creation-times are listed before cookies with later creation-times.<a href="#section-5.8.3-2.4.2.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
-<p id="section-5.8.3-2.2.3">
+<p id="section-5.8.3-2.4.3">
 Note: Not all user agents sort the cookie-list in this order, but this order
 reflects common practice when this document was written, and, historically,
-there have been servers that (erroneously) depended on this order.<a href="#section-5.8.3-2.2.3" class="pilcrow">¶</a></p>
+there have been servers that (erroneously) depended on this order.<a href="#section-5.8.3-2.4.3" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-5.8.3-2.3">
-              <p id="section-5.8.3-2.3.1">Update the last-access-time of each cookie in the cookie-list to the
-current date and time.<a href="#section-5.8.3-2.3.1" class="pilcrow">¶</a></p>
+            <li id="section-5.8.3-2.5">
+              <p id="section-5.8.3-2.5.1">Update the last-access-time of each cookie in the cookie-list to the
+current date and time.<a href="#section-5.8.3-2.5.1" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-5.8.3-2.4">
-              <p id="section-5.8.3-2.4.1">Serialize the cookie-list into a cookie-string by processing each cookie
-in the cookie-list in order:<a href="#section-5.8.3-2.4.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.8.3-2.4.2">
-<li id="section-5.8.3-2.4.2.1">
-                  <p id="section-5.8.3-2.4.2.1.1">If the cookies' name is not empty, output the cookie's name followed by
-the %x3D ("=") character.<a href="#section-5.8.3-2.4.2.1.1" class="pilcrow">¶</a></p>
+            <li id="section-5.8.3-2.6">
+              <p id="section-5.8.3-2.6.1">Serialize the cookie-list into a cookie-string by processing each cookie
+in the cookie-list in order:<a href="#section-5.8.3-2.6.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.8.3-2.6.2">
+<li id="section-5.8.3-2.6.2.1">
+                  <p id="section-5.8.3-2.6.2.1.1">If the cookies' name is not empty, output the cookie's name followed by
+the %x3D ("=") character.<a href="#section-5.8.3-2.6.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.8.3-2.4.2.2">
-                  <p id="section-5.8.3-2.4.2.2.1">If the cookies' value is not empty, output the cookie's value.<a href="#section-5.8.3-2.4.2.2.1" class="pilcrow">¶</a></p>
+                <li id="section-5.8.3-2.6.2.2">
+                  <p id="section-5.8.3-2.6.2.2.1">If the cookies' value is not empty, output the cookie's value.<a href="#section-5.8.3-2.6.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.8.3-2.4.2.3">
-                  <p id="section-5.8.3-2.4.2.3.1">If the cookie was not the last cookie in the cookie-list, output the
-characters %x3B and %x20 ("; ").<a href="#section-5.8.3-2.4.2.3.1" class="pilcrow">¶</a></p>
+                <li id="section-5.8.3-2.6.2.3">
+                  <p id="section-5.8.3-2.6.2.3.1">If the cookie was not the last cookie in the cookie-list, output the
+characters %x3B and %x20 ("; ").<a href="#section-5.8.3-2.6.2.3.1" class="pilcrow">¶</a></p>
 </li>
               </ol>
 </li>
@@ -4181,6 +4221,19 @@ of such an enforcement mode should be seen as a temporary, transitional measure
 to ease adoption of "Lax" enforcement by default.<a href="#section-8.8.6-4" class="pilcrow">¶</a></p>
 </section>
 </div>
+</section>
+</div>
+<div id="public-suffix-list-security">
+<section id="section-8.9">
+        <h3 id="name-public-suffix-list">
+<a href="#section-8.9" class="section-number selfRef">8.9. </a><a href="#name-public-suffix-list" class="section-name selfRef">Public Suffix List</a>
+        </h3>
+<p id="section-8.9-1">The boundaries of cookies depend on a site's "registrable domain" which in turn
+depends on the public suffix of the domain.<a href="#section-8.9-1" class="pilcrow">¶</a></p>
+<p id="section-8.9-2">Whenever possible, user agents SHOULD use an up-to-date public suffix list,
+such as the one maintained by the Mozilla project at <span>[<a href="#PSL" class="cite xref">PSL</a>]</span>.<a href="#section-8.9-2" class="pilcrow">¶</a></p>
+<p id="section-8.9-3">Failure to do so could allow malicious or sensitive cookies to leak between
+registrable domains.<a href="#section-8.9-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
