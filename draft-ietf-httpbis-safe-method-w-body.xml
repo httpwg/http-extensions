@@ -63,7 +63,7 @@
       <t>
         This specification defines the QUERY method for HTTP.
         A QUERY requests that the request target process the enclosed
-        content in a safe/idempotent manner and then respond with the
+        content in a safe and idempotent manner and then respond with the
         result of that processing. This is similar to POST requests but
         can be automatically repeated or restarted without concern for
         partial state changes.
@@ -97,8 +97,7 @@
       encloses a representation describing how the request is to be processed by the target resource.
     </t>
     <t>
-      Most often, this is desirable when the data conveyed in a request is
-      too voluminous to be encoded into the request's URI. A common query pattern is:
+      A common query pattern is:
     </t>
 <artwork type="http-message">
 GET /feed?q=foo&amp;limit=10&amp;sort=-published HTTP/1.1
