@@ -225,10 +225,9 @@ informative:
 This document defines the HTTP Cookie and Set-Cookie header fields. These
 header fields can be used by HTTP servers to store state (called cookies) at
 HTTP user agents, letting the servers maintain a stateful session over the
-mostly stateless HTTP protocol. Although cookies have many historical
-infelicities that degrade their security and privacy, the Cookie and Set-Cookie
-header fields are widely used on the Internet. This document obsoletes RFC
-6265.
+mostly stateless HTTP protocol. Although cookies have many historical flaws
+that degrade their security and privacy, the Cookie and Set-Cookie header
+fields are widely used on the Internet. This document obsoletes RFC 6265.
 
 --- middle
 
@@ -247,12 +246,12 @@ user agent. The scope indicates the maximum amount of time in which the user
 agent should return the cookie, the servers to which the user agent should
 return the cookie, and the connection types for which the cookie is applicable.
 
-For historical reasons, cookies contain a number of security and privacy
-infelicities. For example, a server can indicate that a given cookie is
-intended for "secure" connections, but the Secure attribute does not provide
-integrity in the presence of an active network attacker. Similarly, cookies
-for a given host are shared across all the ports on that host, even though the
-usual "same-origin policy" used by web browsers isolates content retrieved via
+For historical reasons, cookies contain a number of security and privacy flaws.
+For example, a server can indicate that a given cookie is intended for "secure"
+connections, but the Secure attribute does not provide integrity in the
+presence of an active network attacker. Similarly, cookies for a given host
+are shared across all the ports on that host, even though the usual
+"same-origin policy" used by web browsers isolates content retrieved via
 different ports.
 
 This specification applies to developers of both cookie-producing servers and
