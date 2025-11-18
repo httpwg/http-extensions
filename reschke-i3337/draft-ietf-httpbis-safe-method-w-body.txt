@@ -1134,10 +1134,11 @@ Appendix B.  Selection of the Method Name 'QUERY'
 
    The method name "QUERY" ultimately was chosen because:
 
-   *  All of these use a generic media type for the request content
-      ("application/xml").
+   *  The alternatives use a generic media type for the request content
+      ("application/xml"); the semantics of the request depends solely
+      on the request content.
 
-   *  The three options all originate from the WebDAV activity, about
+   *  Furthermore, they all originate from the WebDAV activity, about
       which many have mixed feelings.
 
    *  "QUERY" captures the relation with the URI's query component well.
