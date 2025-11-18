@@ -35,7 +35,7 @@ Editorial Note
    code and issues list for this draft can be found at
    https://github.com/httpwg/http-extensions/labels/query-method.
 
-   The changes in this draft are summarized in Appendix B.14.
+   The changes in this draft are summarized in Appendix C.14.
 
 Status of This Memo
 
@@ -99,21 +99,22 @@ Table of Contents
        A.4.3.  Indirect Responses
      A.5.  Conditional Requests
      A.6.  More Query Formats
-   Appendix B.  Change Log
-     B.1.  Since draft-ietf-httpbis-safe-method-w-body-00
-     B.2.  Since draft-ietf-httpbis-safe-method-w-body-01
-     B.3.  Since draft-ietf-httpbis-safe-method-w-body-02
-     B.4.  Since draft-ietf-httpbis-safe-method-w-body-03
-     B.5.  Since draft-ietf-httpbis-safe-method-w-body-04
-     B.6.  Since draft-ietf-httpbis-safe-method-w-body-05
-     B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
-     B.8.  Since draft-ietf-httpbis-safe-method-w-body-07
-     B.9.  Since draft-ietf-httpbis-safe-method-w-body-08
-     B.10. Since draft-ietf-httpbis-safe-method-w-body-09
-     B.11. Since draft-ietf-httpbis-safe-method-w-body-10
-     B.12. Since draft-ietf-httpbis-safe-method-w-body-11
-     B.13. Since draft-ietf-httpbis-safe-method-w-body-12
-     B.14. Since draft-ietf-httpbis-safe-method-w-body-13
+   Appendix B.  Selection of the Method Name 'QUERY'
+   Appendix C.  Change Log
+     C.1.  Since draft-ietf-httpbis-safe-method-w-body-00
+     C.2.  Since draft-ietf-httpbis-safe-method-w-body-01
+     C.3.  Since draft-ietf-httpbis-safe-method-w-body-02
+     C.4.  Since draft-ietf-httpbis-safe-method-w-body-03
+     C.5.  Since draft-ietf-httpbis-safe-method-w-body-04
+     C.6.  Since draft-ietf-httpbis-safe-method-w-body-05
+     C.7.  Since draft-ietf-httpbis-safe-method-w-body-06
+     C.8.  Since draft-ietf-httpbis-safe-method-w-body-07
+     C.9.  Since draft-ietf-httpbis-safe-method-w-body-08
+     C.10. Since draft-ietf-httpbis-safe-method-w-body-09
+     C.11. Since draft-ietf-httpbis-safe-method-w-body-10
+     C.12. Since draft-ietf-httpbis-safe-method-w-body-11
+     C.13. Since draft-ietf-httpbis-safe-method-w-body-12
+     C.14. Since draft-ietf-httpbis-safe-method-w-body-13
    Acknowledgements
    Contributors
    Authors' Addresses
@@ -576,6 +577,22 @@ Table of Contents
 7.  Informative References
 
    [FETCH]    WHATWG, "FETCH", <https://fetch.spec.whatwg.org>.
+
+   [RFC3253]  Clemm, G., Amsden, J., Ellison, T., Kaler, C., and J.
+              Whitehead, "Versioning Extensions to WebDAV (Web
+              Distributed Authoring and Versioning)", RFC 3253,
+              DOI 10.17487/RFC3253, March 2002,
+              <https://www.rfc-editor.org/info/rfc3253>.
+
+   [RFC4918]  Dusseault, L., Ed., "HTTP Extensions for Web Distributed
+              Authoring and Versioning (WebDAV)", RFC 4918,
+              DOI 10.17487/RFC4918, June 2007,
+              <https://www.rfc-editor.org/info/rfc4918>.
+
+   [RFC5323]  Reschke, J., Ed., Reddy, S., Davis, J., and A. Babich,
+              "Web Distributed Authoring and Versioning (WebDAV)
+              SEARCH", RFC 5323, DOI 10.17487/RFC5323, November 2008,
+              <https://www.rfc-editor.org/info/rfc5323>.
 
    [RFC6838]  Freed, N., Klensin, J., and T. Hansen, "Media Type
               Specifications and Registration Procedures", BCP 13,
@@ -1103,11 +1120,34 @@ A.6.  More Query Formats
      "RFC8894"
    ]
 
-Appendix B.  Change Log
+Appendix B.  Selection of the Method Name 'QUERY'
+
+   The HTTP Method Registry (http://www.iana.org/assignments/http-
+   methods) already contains three other methods with the properties
+   "safe" and "idempotent": "PROPFIND" ([RFC4918]), REPORT" ([RFC3253]),
+   and "SEARCH" ([RFC5323]).
+
+   It would have been possible to re-use any of these, updating it in a
+   way that it matches what this specification defines as the new method
+   "QUERY".  Indeed, the early stages of this specification used
+   "SEARCH".
+
+   The method name "QUERY" ultimately was chosen because:
+
+   *  The alternatives use a generic media type for the request content
+      ("application/xml"); the semantics of the request depends solely
+      on the request content.
+
+   *  Furthermore, they all originate from the WebDAV activity, about
+      which many have mixed feelings.
+
+   *  "QUERY" captures the relation with the URI's query component well.
+
+Appendix C.  Change Log
 
    This section is to be removed before publishing as an RFC.
 
-B.1.  Since draft-ietf-httpbis-safe-method-w-body-00
+C.1.  Since draft-ietf-httpbis-safe-method-w-body-00
 
    *  Use "example/query" media type instead of undefined "text/query"
       (https://github.com/httpwg/http-extensions/issues/1450)
@@ -1128,7 +1168,7 @@ B.1.  Since draft-ietf-httpbis-safe-method-w-body-00
    *  Relax restriction of generic XML media type in request content
       (https://github.com/httpwg/http-extensions/issues/1535)
 
-B.2.  Since draft-ietf-httpbis-safe-method-w-body-01
+C.2.  Since draft-ietf-httpbis-safe-method-w-body-01
 
    *  Add minimal description of cacheability
       (https://github.com/httpwg/http-extensions/issues/1552)
@@ -1139,7 +1179,7 @@ B.2.  Since draft-ietf-httpbis-safe-method-w-body-01
    *  Update HTTP reference (https://github.com/httpwg/http-extensions/
       issues/1669)
 
-B.3.  Since draft-ietf-httpbis-safe-method-w-body-02
+C.3.  Since draft-ietf-httpbis-safe-method-w-body-02
 
    *  In Section 3, slightly rephrase statement about significance of
       ordering (https://github.com/httpwg/http-extensions/issues/1896)
@@ -1150,12 +1190,12 @@ B.3.  Since draft-ietf-httpbis-safe-method-w-body-02
    *  Updated references (https://github.com/httpwg/http-extensions/
       issues/2157)
 
-B.4.  Since draft-ietf-httpbis-safe-method-w-body-03
+C.4.  Since draft-ietf-httpbis-safe-method-w-body-03
 
    *  In Section 3, clarify scope (https://github.com/httpwg/http-
       extensions/issues/1913)
 
-B.5.  Since draft-ietf-httpbis-safe-method-w-body-04
+C.5.  Since draft-ietf-httpbis-safe-method-w-body-04
 
    *  Describe role of Content-Location and Location fields
       (https://github.com/httpwg/http-extensions/issues/1745)
@@ -1166,7 +1206,7 @@ B.5.  Since draft-ietf-httpbis-safe-method-w-body-04
    *  Use "target URI" instead of "effective request URI"
       (https://github.com/httpwg/http-extensions/issues/2883)
 
-B.6.  Since draft-ietf-httpbis-safe-method-w-body-05
+C.6.  Since draft-ietf-httpbis-safe-method-w-body-05
 
    *  Updated language and examples about redirects and method rewriting
       (https://github.com/httpwg/http-extensions/issues/1917)
@@ -1180,7 +1220,7 @@ B.6.  Since draft-ietf-httpbis-safe-method-w-body-05
    *  Field registration for "Accept-Query" (https://github.com/httpwg/
       http-extensions/issues/2903)
 
-B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
+C.7.  Since draft-ietf-httpbis-safe-method-w-body-06
 
    *  Improve language about sensitive information in URIs
       (https://github.com/httpwg/http-extensions/issues/1895)
@@ -1218,7 +1258,7 @@ B.7.  Since draft-ietf-httpbis-safe-method-w-body-06
    *  Move examples into index (https://github.com/httpwg/http-
       extensions/issues/2957)
 
-B.8.  Since draft-ietf-httpbis-safe-method-w-body-07
+C.8.  Since draft-ietf-httpbis-safe-method-w-body-07
 
    *  Examples Section revised (https://github.com/httpwg/http-
       extensions/issues/1906)
@@ -1226,7 +1266,7 @@ B.8.  Since draft-ietf-httpbis-safe-method-w-body-07
    *  Discuss Range Requests (https://github.com/httpwg/http-extensions/
       issues/2979)
 
-B.9.  Since draft-ietf-httpbis-safe-method-w-body-08
+C.9.  Since draft-ietf-httpbis-safe-method-w-body-08
 
    *  Mention the role of the query part of the request URI
       (https://github.com/httpwg/http-extensions/issues/3004)
@@ -1244,7 +1284,7 @@ B.9.  Since draft-ietf-httpbis-safe-method-w-body-08
    *  Hopefully more clarity wrt query content vs URI query component
       (https://github.com/httpwg/http-extensions/issues/3059)
 
-B.10.  Since draft-ietf-httpbis-safe-method-w-body-09
+C.10.  Since draft-ietf-httpbis-safe-method-w-body-09
 
    *  Clarify cacheability of POST (https://github.com/httpwg/http-
       extensions/issues/3068)
@@ -1260,7 +1300,7 @@ B.10.  Since draft-ietf-httpbis-safe-method-w-body-09
    *  Slightly rephrase semantics for Content-Location
       (https://github.com/httpwg/http-extensions/issues/3071)
 
-B.11.  Since draft-ietf-httpbis-safe-method-w-body-10
+C.11.  Since draft-ietf-httpbis-safe-method-w-body-10
 
    *  Editorial nits (https://github.com/httpwg/http-extensions/
       pull/3080, ack martinthomson)
@@ -1277,7 +1317,7 @@ B.11.  Since draft-ietf-httpbis-safe-method-w-body-10
    *  Address most Rahul Gupta's additional feedback
       (https://github.com/httpwg/http-extensions/pull/3101)
 
-B.12.  Since draft-ietf-httpbis-safe-method-w-body-11
+C.12.  Since draft-ietf-httpbis-safe-method-w-body-11
 
    *  Improve description of caching, clarifying what is required
       (https://github.com/httpwg/http-extensions/tree/reschke-3107)
@@ -1310,7 +1350,7 @@ B.12.  Since draft-ietf-httpbis-safe-method-w-body-11
    *  Extend discussion of Range Requests (https://github.com/httpwg/
       http-extensions/issues/3151)
 
-B.13.  Since draft-ietf-httpbis-safe-method-w-body-12
+C.13.  Since draft-ietf-httpbis-safe-method-w-body-12
 
    *  Ack Asbjørn Ulsberg (https://github.com/httpwg/http-extensions/
       issues/3299)
@@ -1318,7 +1358,7 @@ B.13.  Since draft-ietf-httpbis-safe-method-w-body-12
    *  LC feedback from Rahul Gupta (https://github.com/httpwg/http-
       extensions/issues/3315)
 
-B.14.  Since draft-ietf-httpbis-safe-method-w-body-13
+C.14.  Since draft-ietf-httpbis-safe-method-w-body-13
 
    *  URI reference is normative (https://github.com/httpwg/http-
       extensions/issues/3331)
@@ -1328,6 +1368,9 @@ B.14.  Since draft-ietf-httpbis-safe-method-w-body-13
 
    *  IESG review nits (https://github.com/httpwg/http-extensions/
       issues/3333)
+
+   *  Explain relation to SEARCH etc (https://github.com/httpwg/http-
+      extensions/issues/3337)
 
 Acknowledgements
 
