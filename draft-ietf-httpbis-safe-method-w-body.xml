@@ -1374,8 +1374,9 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   The method name "QUERY" ultimately was chosen because:
 </t>
 <ul>
-  <li>All of these use a generic media type for the request content ("application/xml").</li>
-  <li>The three options all originate from the WebDAV activity, about which many have mixed feelings.</li>
+  <li>The alternatives use a generic media type for the request content ("application/xml"); the
+  semantics of the request depends solely on the request content.</li>
+  <li>Furthermore, they all originate from the WebDAV activity, about which many have mixed feelings.</li>
   <li>"QUERY" captures the relation with the URI's query component well.</li>
 </ul>
 </section>
