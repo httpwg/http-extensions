@@ -1472,6 +1472,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <ul>
   <li>URI reference is normative (<eref target="https://github.com/httpwg/http-extensions/issues/3331"/>)</li>
   <li>inconsistency between Sections 2.4 and 4 wrt URI assignments (<eref target="https://github.com/httpwg/http-extensions/issues/3332"/>)</li>
+  <li>IESG review nits (<eref target="https://github.com/httpwg/http-extensions/issues/3333"/>)</li>
 </ul>
 </section>
 </section>
