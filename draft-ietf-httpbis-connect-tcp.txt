@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                        18 November 2025
-Expires: 22 May 2026
+Intended status: Standards Track                        19 November 2025
+Expires: 23 May 2026
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 May 2026.
+   This Internet-Draft will expire on 23 May 2026.
 
 Copyright Notice
 
@@ -518,10 +518,10 @@ Table of Contents
    that proxies can apply:
 
    *  *Connection Pileup*: A malicious client can attempt to open a
-      large number of proxy<->destination connections to exhaust the
-      proxy's memory, port, or file descriptor limits.  When using
-      HTTP/2 or HTTP/3, each incremental TCP connection imposes a much
-      higher cost on the proxy than on the attacker.
+      large number of connections to exhaust the proxy's memory, port,
+      or file descriptor limits.  When using HTTP/2 or HTTP/3, each
+      incremental TCP connection imposes a much higher cost on the proxy
+      than on the attacker.
 
       -  Mitigation: Limit the number of concurrent connections per
          client.
@@ -540,7 +540,7 @@ Table of Contents
 
    *  *WAIT Abuse*: An attacker can force the proxy into a TIME-WAIT,
       CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a
-      proxy<->destination 4-tuple for up to four minutes after the
+      proxy-to-destination 4-tuple for up to four minutes after the
       client's connection is closed.
 
       -  Mitigation: Limit the number of connections for each client to
@@ -576,9 +576,9 @@ Table of Contents
          as a gateway or concentrator.
 
       -  The proxied connections are often closed by the destination.
-         This causes the client to initiate closure of the
-         client<->proxy connection, leaving the client in a TIME-WAIT
-         state for up to four minutes.
+         This causes the client to initiate closure of the client-to-
+         proxy connection, leaving the client in a TIME-WAIT state for
+         up to four minutes.
 
 7.2.  Gateway Compatibility
 
