@@ -277,11 +277,11 @@ A small additional risk is posed by the use of a URI Template parser on the clie
 
 A malicious client can achieve cause highly asymmetric resource usage at the proxy by colluding with a destination server and violating the ordinary rules of TCP or HTTP.  Some example attacks, and mitigations that proxies can apply:
 
-* **Connection Pileup**: A malicious client can attempt to open a large number of proxy<->destination connections to exhaust the proxy's memory, port, or file descriptor limits. When using HTTP/2 or HTTP/3, each incremental TCP connection imposes a much higher cost on the proxy than on the attacker.
+* **Connection Pileup**: A malicious client can attempt to open a large number of connections to exhaust the proxy's memory, port, or file descriptor limits. When using HTTP/2 or HTTP/3, each incremental TCP connection imposes a much higher cost on the proxy than on the attacker.
   - Mitigation: Limit the number of concurrent connections per client.
 * **Window Bloat**: An attacker can grow the receive window size by simulating a "long, fat network" {{?RFC7323}}, then fill the window (from the sender) and stop acknowledging it (at the receiver).  This leaves the proxy buffering up to 1 GiB of TCP data until some timeout, while the attacker does not have to retain a large buffer.
   - Mitigation: Limit the maximum receive window for TCP and HTTP connections, and the size of userspace buffers used for proxying.  Alternatively, monitor the connections' send queues and limit the total buffered data per client.
-* **WAIT Abuse**: An attacker can force the proxy into a TIME-WAIT, CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a proxy<->destination 4-tuple for up to four minutes after the client's connection is closed.
+* **WAIT Abuse**: An attacker can force the proxy into a TIME-WAIT, CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a proxy-to-destination 4-tuple for up to four minutes after the client's connection is closed.
   - Mitigation: Limit the number of connections for each client to each destination, even if those connections are in a waiting state and the corresponding CONNECT stream is closed.  Alternatively, allocate a large range of IP addresses for TCP connections (especially in IPv6).
 
 # Operational Considerations
@@ -295,7 +295,7 @@ While this specification is fully functional under HTTP/1.1, performance-sensiti
 * The number of active connections through each client may be limited by the number of available TCP client ports, especially if:
   - The client only has one IP address that can be used to reach the proxy.
   - The client is shared between many parties, such as when acting as a gateway or concentrator.
-  - The proxied connections are often closed by the destination. This causes the client to initiate closure of the client<->proxy connection, leaving the client in a TIME-WAIT state for up to four minutes.
+  - The proxied connections are often closed by the destination. This causes the client to initiate closure of the client-to-proxy connection, leaving the client in a TIME-WAIT state for up to four minutes.
 
 ## Gateway Compatibility
 
