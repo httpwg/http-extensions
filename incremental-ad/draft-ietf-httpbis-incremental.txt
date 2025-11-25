@@ -5,10 +5,10 @@
 httpbis                                                 奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                T. Pauly
-Expires: 27 May 2026                                               Apple
+Expires: 29 May 2026                                               Apple
                                                               M. Thomson
                                                                  Mozilla
-                                                        23 November 2025
+                                                        25 November 2025
 
 
                 Incremental Forwarding of HTTP Messages
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 May 2026.
+   This Internet-Draft will expire on 29 May 2026.
 
 Copyright Notice
 
@@ -197,9 +197,9 @@ Table of Contents
 4.  Security Considerations
 
    When receiving a request or response that asks for incremental
-   forwarding, intermediaries might reject the request due to security
-   concerns.  The following subsections explore typical scenarios under
-   which the intermediaries might reject requests.
+   forwarding, intermediaries might reject the HTTP request due to
+   security concerns.  The following subsections explore typical
+   scenarios under which the intermediaries might reject requests.
 
    Note that rejecting requests based on the value of the Incremental
    field only occurs when an intermediary understands the field.
