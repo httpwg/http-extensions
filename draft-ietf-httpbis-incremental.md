@@ -170,9 +170,9 @@ unknown parameters.
 # Security Considerations {#security}
 
 When receiving a request or response that asks for incremental forwarding,
-intermediaries might reject the request due to security concerns. The following
-subsections explore typical scenarios under which the intermediaries might
-reject requests.
+intermediaries might reject the HTTP request due to security concerns.
+The following subsections explore typical scenarios
+under which the intermediaries might reject requests.
 
 Note that rejecting requests based on the value of the Incremental field
 only occurs when an intermediary understands the field.
