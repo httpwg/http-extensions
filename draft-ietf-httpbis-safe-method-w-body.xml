@@ -177,10 +177,10 @@ q=foo&amp;limit=10&amp;sort=-published
           <td>potentially no</td>
         </tr>
         <tr>
-          <td>Idempotent</td>
+          <td>Idempotence guarantee</td>
           <td>yes</td>
           <td>yes</td>
-          <td>potentially no</td>
+          <td>no</td>
         </tr>
         <tr>
           <td>URI for query itself</td>
