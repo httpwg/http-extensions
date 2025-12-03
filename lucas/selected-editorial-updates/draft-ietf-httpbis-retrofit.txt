@@ -3,9 +3,9 @@
 
 
 HTTP                                                       M. Nottingham
-Internet-Draft                                           1 December 2025
+Internet-Draft                                           3 December 2025
 Intended status: Standards Track                                        
-Expires: 4 June 2026
+Expires: 6 June 2026
 
 
                   Retrofit Structured Fields for HTTP
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 June 2026.
+   This Internet-Draft will expire on 6 June 2026.
 
 Copyright Notice
 
@@ -557,9 +557,9 @@ Table of Contents
 
    [COOKIES]  Bingler, S., West, M., and J. Wilander, "Cookies: HTTP
               State Management Mechanism", Work in Progress, Internet-
-              Draft, draft-ietf-httpbis-rfc6265bis-21, 24 September
-              2025, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              httpbis-rfc6265bis-21>.
+              Draft, draft-ietf-httpbis-rfc6265bis-22, 1 December 2025,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
+              rfc6265bis-22>.
 
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,

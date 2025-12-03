@@ -1,4 +1,4 @@
-# Editor's drafts for draft-ietf-httpbis-rfc6265bis-22 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/draft-ietf-httpbis-rfc6265bis-22)
+# Editor's drafts for lucas/selected-editorial-updates branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/lucas/selected-editorial-updates)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
