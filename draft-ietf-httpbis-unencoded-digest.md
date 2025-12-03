@@ -128,7 +128,8 @@ The term "digest" is to be interpreted as described in {{DIGEST-FIELDS}}.
 
 The `Unencoded-Digest` HTTP field can be used in requests and responses to
 communicate digests that are calculated using a hashing algorithm applied to the
-representation with no content coding ({{Section 8.4.1 of HTTP}}).
+entire selected representation data with no content codings applied ({{Section
+8.4.1 of HTTP}}).
 
 Apart from the content coding concerns, `Unencoded-Digest` behaves similarly
 to `Repr-Digest` ({{Section 3 of DIGEST-FIELDS}}). In the absence of content
