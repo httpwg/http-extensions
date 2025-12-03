@@ -1065,6 +1065,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="workgroup">HTTP</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
 <dd class="internet-draft">draft-ietf-httpbis-unencoded-digest-latest</dd>
+<dt class="label-updates">Updates:</dt>
+<dd class="updates">
+<a href="https://www.rfc-editor.org/rfc/rfc9530" class="eref">9530</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
 <time datetime="2025-12-03" class="published">3 December 2025</time>
@@ -1238,6 +1241,10 @@ from HTTP integrity fields is not preferable. This specification defines the
 Unencoded-Digest and Want-Unencoded-Digest fields to support a simpler validation
 workflow in some scenarios where content coding is applied. These fields
 complement the other integrity fields defined in <span>[<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">This document updates the term "Integrity fields" defined in <span>[<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>
+to also include the Unencoded-Digest field, and the term "Integrity preference
+fields" defined in <span>[<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span> to also include the Want-Unencoded-Digest
+field.<a href="#section-1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1256,10 +1263,6 @@ Dictionary, and Integer.<a href="#section-2-3" class="pilcrow">¶</a></p>
 <p id="section-2-4">The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "content" in this document are to be
 interpreted as described in <span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">"Integrity fields" is the collective term for <code>Content-Digest</code>, <code>Repr-Digest</code>,
-and <code>Unencoded-Digest</code>.<a href="#section-2-5" class="pilcrow">¶</a></p>
-<p id="section-2-6">"Integrity preference fields" is the collective term for <code>Want-Repr-Digest</code>,
-<code>Want-Content-Digest</code>, and <code>Want-Unencoded-Digest</code>.<a href="#section-2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="unencoded-digest">

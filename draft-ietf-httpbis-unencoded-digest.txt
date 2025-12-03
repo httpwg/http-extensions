@@ -4,9 +4,9 @@
 
 HTTP                                                           L. Pardue
 Internet-Draft                                                Cloudflare
-Intended status: Standards Track                                 M. West
-Expires: 6 June 2026                                              Google
-                                                         3 December 2025
+Updates: 9530 (if approved)                                      M. West
+Intended status: Standards Track                                  Google
+Expires: 6 June 2026                                     3 December 2025
 
 
                          HTTP Unencoded Digest
@@ -133,6 +133,11 @@ Table of Contents
    where content coding is applied.  These fields complement the other
    integrity fields defined in [DIGEST-FIELDS].
 
+   This document updates the term "Integrity fields" defined in
+   [DIGEST-FIELDS] to also include the Unencoded-Digest field, and the
+   term "Integrity preference fields" defined in [DIGEST-FIELDS] to also
+   include the Want-Unencoded-Digest field.
+
 2.  Conventions and Definitions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -151,12 +156,6 @@ Table of Contents
    The definitions "representation", "selected representation",
    "representation data", "representation metadata", and "content" in
    this document are to be interpreted as described in [HTTP].
-
-   "Integrity fields" is the collective term for Content-Digest, Repr-
-   Digest, and Unencoded-Digest.
-
-   "Integrity preference fields" is the collective term for Want-Repr-
-   Digest, Want-Content-Digest, and Want-Unencoded-Digest.
 
 3.  The Unencoded-Digest Field
 
