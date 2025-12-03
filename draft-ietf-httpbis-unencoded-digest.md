@@ -277,7 +277,7 @@ ca cc 4b e7 02 00 7e af 07 44
 18 00 00 00
 
 ~~~
-{: title="GET response with GZIP-encoded content"}
+{: title="GET response with GZIP content coding"}
 
 The second example demonstrates a range request with content negotiation.
 
@@ -290,13 +290,13 @@ Range: bytes=0-10
 ~~~
 {: title="Range request with content negotiation"}
 
-The server responds with a 206 Partial Content response using GZIP encoding, it
-has three different Integrity fields. The `Content-Digest` relates to the
-response message content that can be used to validate the integrity of the
+The server responds with a 206 (Partial Content) response using GZIP content
+coding, it has three different Integrity fields. The `Content-Digest` relates to
+the response content that can be used to validate the integrity of the
 received part. `Repr-Digest` and `Unencoded-Digest` can be used later once the
 entire object is reconstructed. The choice of which to use is left to the
-application that would consider a range of factors outside the scope of
-this document.
+application that would consider a range of factors outside the scope of this
+document.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -313,7 +313,7 @@ Unencoded-Digest: \
 
 1f 8b 08 00 79 1f 08 64 00 ff
 ~~~
-{: title="Partial response with GZIP encoding"}
+{: title="Partial response with GZIP content coding"}
 
 
 # Security Considerations
