@@ -1373,11 +1373,18 @@ Want-Unencoded-Digest: sha-512=3, sha-256=10, unixsum=0
       <h2 id="name-messages-containing-both-un">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-messages-containing-both-un" class="section-name selfRef">Messages containing both Unencoded-Digest and Content-Encoding</a>
       </h2>
-<p id="section-5-1">Digests delivered through <code>Unencoded-Digest</code> apply to the unencoded representation. If a message is
-received with content coding, a recipient needs to decode the message in order
-to calculate the digest that can subsequently be used for validation. If
-multiple content codings are applied, the recipient needs to decode all
-encodings in order before validation.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">Digests delivered through <code>Unencoded-Digest</code> apply to the unencoded
+representation. If a message is received with content coding, a recipient needs
+to decode the message in order to calculate the digest that can subsequently be
+used for validation. If multiple content codings are applied, the recipient
+needs to decode all encodings in order before validation.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">Since the digest is calculated on unencoded representation bytes, validation of
+a message with content coding (as described above) can only succeed where the
+decoded output produces the same byte sequence as the input. While many
+registered content codings behave this way, there is no requirement for them to
+do so and it remains a possibility that decoding could produce a
+different byte sequence. In order to avoid unintended validation failures, care
+is advised when selecting content coding for use with <code>Unencoded-Digest</code>.<a href="#section-5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="integrity-fields-are-complementary">
