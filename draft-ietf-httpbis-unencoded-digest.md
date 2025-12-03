@@ -119,6 +119,10 @@ The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "content" in this document are to be
 interpreted as described in {{!HTTP=RFC9110}}.
 
+This document uses the line folding strategies described in {{!FOLDING=RFC8792}}.
+
+The term "digest" is to be interpreted as described in {{DIGEST-FIELDS}}.
+
 
 # The Unencoded-Digest Field {#unencoded-digest}
 
