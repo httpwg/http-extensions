@@ -5,8 +5,8 @@
 HTTP                                                           L. Pardue
 Internet-Draft                                                Cloudflare
 Intended status: Standards Track                                 M. West
-Expires: 31 May 2026                                              Google
-                                                        27 November 2025
+Expires: 6 June 2026                                              Google
+                                                         3 December 2025
 
 
                          HTTP Unencoded Digest
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 May 2026.
+   This Internet-Draft will expire on 6 June 2026.
 
 Copyright Notice
 
@@ -274,7 +274,9 @@ Table of Contents
    complementary needs, particularly the cases described in Section 1.
 
    In the following examples, the unencoded response data is the string
-   "An unexceptional string" following by an LF.
+   "An unexceptional string" following by an LF.  For presentation
+   purposes, the response body is displayed as a sequence of hex-encoded
+   bytes because it contains non-printable characters.
 
    The first example demonstrates a request that uses content
    negotiation.
