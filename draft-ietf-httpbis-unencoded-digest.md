@@ -229,7 +229,7 @@ Since the digest is calculated on unencoded representation bytes, validation of
 a message with content coding (as described above) can only succeed where the
 decoded output produces the same byte sequence as the input. While many
 registered content codings behave this way, there is no requirement for them to
-do so and it remains a possibility that a reverse coding could produce a
+do so and it remains a possibility that decoding could produce a
 different byte sequence. In order to avoid unintended validation failures, care
 is advised when selecting content coding for use with `Unencoded-Digest`.
 
