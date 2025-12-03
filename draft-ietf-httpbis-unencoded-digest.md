@@ -243,10 +243,10 @@ is advised when selecting content coding for use with `Unencoded-Digest`.
 Integrity fields can be used in combination to address different and
 complementary needs, particularly the cases described in {{introduction}}.
 
-In the following examples, the unencoded response data is the string "An
-unexceptional string" following by an LF. For presentation purposes, the
-response content is displayed as a sequence of hex-encoded bytes because it
-contains non-printable characters.
+In the following examples, the selected representation data with no content
+codings applied is: "An unexceptional string" following by an LF. For
+presentation purposes, the response content is displayed as a sequence of
+hex-encoded bytes because it contains non-printable characters.
 
 The first example demonstrates a request that uses content negotiation.
 
@@ -265,6 +265,7 @@ and `Unencoded-Digest` therefore differ.
 NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 200 OK
+Content-Type: text/plain
 Content-Encoding: gzip
 Repr-Digest: \
   sha-256=:XyjvEuFb1P5rqc2le3vQm7M96DwZhvmOwqHLu2xVpY4=:
@@ -303,6 +304,7 @@ document.
 NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 206 Partial Content
+Content-Type: text/plain
 Content-Encoding: gzip
 Content-Range: bytes 0-9/44
 Content-Digest: \
