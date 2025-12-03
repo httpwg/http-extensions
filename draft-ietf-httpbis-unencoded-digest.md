@@ -233,6 +233,7 @@ do so and it remains a possibility that decoding could produce a
 different byte sequence. In order to avoid unintended validation failures, care
 is advised when selecting content coding for use with `Unencoded-Digest`.
 
+
 # Integrity Fields are Complementary
 
 Integrity fields can be used in combination to address different and
@@ -326,6 +327,11 @@ the message, allowing for validation of the received bytes before further
 processing. An attacker that can substitute various parts of an HTTP message
 presents several risks, {{Sections 6.1, 6.2 and 6.3 of DIGEST-FIELDS}}
 describe relevant considerations and mitigations.
+
+A content coding may provide encryption capabilities, for example "aes128gcm"
+({{?RFC8188}}. Using Unencoded-Digest with such content codings can leak
+information about the original data because header fields are visible to anyone
+who can read the HTTP message. This could be used as a side channel.
 
 
 # IANA Considerations
