@@ -100,7 +100,7 @@ workflow in some scenarios where content coding is applied. These fields
 complement the other integrity fields defined in {{DIGEST-FIELDS}}.
 
 This document updates the term "Integrity fields" defined in {{DIGEST-FIELDS}}
-to also include the Unencoded-Digest field, and term "Integrity preference
+to also include the Unencoded-Digest field, and the term "Integrity preference
 fields" defined in {{DIGEST-FIELDS}} to also include the Want-Unencoded-Digest
 field.
 
