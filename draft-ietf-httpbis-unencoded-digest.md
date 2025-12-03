@@ -79,7 +79,7 @@ field value that indicates a series of encodings adds further complexity.
 A more complex example involves HTTP Range Requests ({{Section 14 of
 HTTP}}), where a client fetches multiple partial representations from
 different origins and "stitches" them back into a whole. Unfortunately, if the
-origins apply different content coding, the `Repr-Digest` field will vary by the
+origins apply different content codings, the `Repr-Digest` field will vary by the
 server's selected encoding (i.e. the Content-Encoding header field, {{Section
 8.4 of HTTP}}). This provides a challenge for a client - in order to verify the
 integrity of the pieced-together whole it would need to remove the encoding of
@@ -87,7 +87,7 @@ each part, combine them, and then encode the result in order to compare against
 one or more `Repr-Digest`s.
 
 The Accept-Encoding header field ({{Section 12.5.3 of HTTP}}) provides the means
-to indicate preferences for content coding. It is possible for an endpoint to
+to indicate preferences for content codings. It is possible for an endpoint to
 indicate a preference for no encoding, for example by sending the "identity"
 token. However, codings often provide data compression that is advantageous.
 Disabling content coding in order to simplify integrity checking is possibly an
@@ -133,7 +133,7 @@ entire selected representation data with no content codings applied ({{Section
 
 Apart from the content coding concerns, `Unencoded-Digest` behaves similarly
 to `Repr-Digest` ({{Section 3 of DIGEST-FIELDS}}). In the absence of content
-coding, `Unencoded-Digest` is identical to `Repr-Digest`.
+codings, `Unencoded-Digest` is identical to `Repr-Digest`.
 
 `Unencoded-Digest` is a `Dictionary` (see {{Section 3.2 of STRUCTURED-FIELDS}})
 where each:
@@ -225,13 +225,13 @@ Want-Unencoded-Digest: sha-512=3, sha-256=10, unixsum=0
 # Messages containing both Unencoded-Digest and Content-Encoding {#encoding-and-unencoded}
 
 Digests delivered through `Unencoded-Digest` apply to the unencoded
-representation. If a message is received with content coding, a recipient needs
+representation. If a message is received with content codings, a recipient needs
 to decode the message in order to calculate the digest that can subsequently be
 used for validation. If multiple content codings are applied, the recipient
 needs to decode all encodings in order before validation.
 
 Since the digest is calculated on unencoded representation bytes, validation of
-a message with content coding (as described above) can only succeed where the
+a message with content codings (as described above) can only succeed where the
 decoded output produces the same byte sequence as the input. While many
 registered content codings behave this way, there is no requirement for them to
 do so and it remains a possibility that decoding could produce a
