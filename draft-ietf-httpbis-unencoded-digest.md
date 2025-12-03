@@ -219,11 +219,19 @@ Want-Unencoded-Digest: sha-512=3, sha-256=10, unixsum=0
 
 # Messages containing both Unencoded-Digest and Content-Encoding {#encoding-and-unencoded}
 
-Digests delivered through `Unencoded-Digest` apply to the unencoded representation. If a message is
-received with content coding, a recipient needs to decode the message in order
-to calculate the digest that can subsequently be used for validation. If
-multiple content codings are applied, the recipient needs to decode all
-encodings in order before validation.
+Digests delivered through `Unencoded-Digest` apply to the unencoded
+representation. If a message is received with content coding, a recipient needs
+to decode the message in order to calculate the digest that can subsequently be
+used for validation. If multiple content codings are applied, the recipient
+needs to decode all encodings in order before validation.
+
+Since the digest is calculated on unencoded representation bytes, validation of
+a message with content coding (as described above) can only succeed where the
+decoded output produces the same byte sequence as the input. While many
+registered content codings behave this way, there is no requirement for them to
+do so and it remains a possibility that decoding could produce a
+different byte sequence. In order to avoid unintended validation failures, care
+is advised when selecting content coding for use with `Unencoded-Digest`.
 
 # Integrity Fields are Complementary
 
