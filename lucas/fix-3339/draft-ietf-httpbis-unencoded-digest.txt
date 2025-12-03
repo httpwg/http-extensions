@@ -273,9 +273,9 @@ Table of Contents
    only succeed where the decoded output produces the same byte sequence
    as the input.  While many registered content codings behave this way,
    there is no requirement for them to do so and it remains a
-   possibility that a reverse coding could produce a different byte
-   sequence.  In order to avoid unintended validation failures, care is
-   advised when selecting content coding for use with Unencoded-Digest.
+   possibility that decoding could produce a different byte sequence.
+   In order to avoid unintended validation failures, care is advised
+   when selecting content coding for use with Unencoded-Digest.
 
 6.  Integrity Fields are Complementary
 
