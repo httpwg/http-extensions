@@ -245,7 +245,7 @@ complementary needs, particularly the cases described in {{introduction}}.
 
 In the following examples, the unencoded response data is the string "An
 unexceptional string" following by an LF. For presentation purposes, the
-response body is displayed as a sequence of hex-encoded bytes because it
+response content is displayed as a sequence of hex-encoded bytes because it
 contains non-printable characters.
 
 The first example demonstrates a request that uses content negotiation.
