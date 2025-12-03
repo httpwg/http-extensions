@@ -77,7 +77,9 @@ Table of Contents
    6.  Integrity Fields are Complementary
    7.  Security Considerations
    8.  IANA Considerations
-   9.  Normative References
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
    Acknowledgments
    Authors' Addresses
 
@@ -366,6 +368,12 @@ Table of Contents
    Sections 6.1, 6.2 and 6.3 of [DIGEST-FIELDS] describe relevant
    considerations and mitigations.
 
+   A content coding may provide encryption capabilities, for example
+   "aes128gcm" ([RFC8188]).  Using Unencoded-Digest with such content
+   codings can leak information about the original data because header
+   fields are visible to anyone who can read the HTTP message.  This
+   could be used as a side channel.
+
 8.  IANA Considerations
 
    Should this document be adopted and achieve working group consensus,
@@ -386,7 +394,9 @@ Table of Contents
           Table 1: Hypertext Transfer Protocol (HTTP) Field Name
                              Registry Update
 
-9.  Normative References
+9.  References
+
+9.1.  Normative References
 
    [DIGEST-FIELDS]
               Polli, R. and L. Pardue, "Digest Fields", RFC 9530,
@@ -420,6 +430,12 @@ Table of Contents
               Nottingham, M. and P. Kamp, "Structured Field Values for
               HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
               <https://www.rfc-editor.org/rfc/rfc9651>.
+
+9.2.  Informative References
+
+   [RFC8188]  Thomson, M., "Encrypted Content-Encoding for HTTP",
+              RFC 8188, DOI 10.17487/RFC8188, June 2017,
+              <https://www.rfc-editor.org/rfc/rfc8188>.
 
 Acknowledgments
 
