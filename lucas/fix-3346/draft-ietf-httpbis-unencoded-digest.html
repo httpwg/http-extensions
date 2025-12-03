@@ -1505,7 +1505,7 @@ processing. An attacker that can substitute various parts of an HTTP message
 presents several risks, Sections <a href="https://rfc-editor.org/rfc/rfc9530#section-6.1" class="relref">6.1</a>, <a href="https://rfc-editor.org/rfc/rfc9530#section-6.2" class="relref">6.2</a> and <a href="https://rfc-editor.org/rfc/rfc9530#section-6.3" class="relref">6.3</a> of <span>[<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>
 describe relevant considerations and mitigations.<a href="#section-7-2" class="pilcrow">¶</a></p>
 <p id="section-7-3">A content coding may provide encryption capabilities, for example "aes128gcm"
-(<span>[<a href="#RFC8188" class="cite xref">RFC8188</a>]</span>. Using Unencoded-Digest with such content codings can leak
+(<span>[<a href="#RFC8188" class="cite xref">RFC8188</a>]</span>). Using Unencoded-Digest with such content codings can leak
 information about the original data because header fields are visible to anyone
 who can read the HTTP message. This could be used as a side channel.<a href="#section-7-3" class="pilcrow">¶</a></p>
 </section>

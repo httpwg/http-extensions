@@ -369,7 +369,7 @@ Table of Contents
    considerations and mitigations.
 
    A content coding may provide encryption capabilities, for example
-   "aes128gcm" ([RFC8188].  Using Unencoded-Digest with such content
+   "aes128gcm" ([RFC8188]).  Using Unencoded-Digest with such content
    codings can leak information about the original data because header
    fields are visible to anyone who can read the HTTP message.  This
    could be used as a side channel.
