@@ -197,10 +197,10 @@ If `Want-Unencoded-Digest` is used in a response, it indicates that the server
 would like the client to provide the `Unencoded-Digest` field on future requests.
 
 `Want-Unencoded-Digest` is only a hint. The receiver of the field can ignore it
-and send an `Unencoded-Digest` field using any algorithm or omit one entirely. It
-is not a protocol error if preferences are ignored. Applications that use
-`Unencoded-Digest` and `Want-Unencoded-Digest` can define expectations or
-constraints that operate in addition to this specification.
+and send an `Unencoded-Digest` field using any algorithm or omit the field
+entirely. It is not a protocol error if preferences are ignored. Applications
+that use `Unencoded-Digest` and `Want-Unencoded-Digest` can define expectations
+or constraints that operate in addition to this specification.
 
 `Want-Unencoded-Digest` is of type `Dictionary` where each:
 
