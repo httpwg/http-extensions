@@ -134,8 +134,8 @@ Table of Contents
    integrity fields defined in [DIGEST-FIELDS].
 
    This document updates the term "Integrity fields" defined in
-   [DIGEST-FIELDS] to also include the Unencoded-Digest field, and term
-   "Integrity preference fields" defined in [DIGEST-FIELDS] to also
+   [DIGEST-FIELDS] to also include the Unencoded-Digest field, and the
+   term "Integrity preference fields" defined in [DIGEST-FIELDS] to also
    include the Want-Unencoded-Digest field.
 
 2.  Conventions and Definitions
