@@ -1054,7 +1054,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pardue &amp; West</td>
-<td class="center">Expires 6 June 2026</td>
+<td class="center">Expires 7 June 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc9530" class="eref">9530</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-03" class="published">3 December 2025</time>
+<time datetime="2025-12-04" class="published">4 December 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-06-06">6 June 2026</time></dd>
+<dd class="expires"><time datetime="2026-06-07">7 June 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1132,7 +1132,7 @@ fields for this purpose.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 7 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1233,13 +1233,13 @@ towards efficient decoding at the cost of complex encoding. A Content-Encoding
 field value that indicates a series of encodings adds further complexity.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">A more complex example involves HTTP Range Requests (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-14" class="relref">Section 14</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>), where a client fetches multiple partial representations from
 different origins and "stitches" them back into a whole. Unfortunately, if the
-origins apply different content coding, the <code>Repr-Digest</code> field will vary by the
+origins apply different content codings, the <code>Repr-Digest</code> field will vary by the
 server's selected encoding (i.e. the Content-Encoding header field, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). This provides a challenge for a client - in order to verify the
 integrity of the pieced-together whole it would need to remove the encoding of
 each part, combine them, and then encode the result in order to compare against
 one or more <code>Repr-Digest</code>s.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">The Accept-Encoding header field (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.3" class="relref">Section 12.5.3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) provides the means
-to indicate preferences for content coding. It is possible for an endpoint to
+to indicate preferences for content codings. It is possible for an endpoint to
 indicate a preference for no encoding, for example by sending the "identity"
 token. However, codings often provide data compression that is advantageous.
 Disabling content coding in order to simplify integrity checking is possibly an
@@ -1271,6 +1271,8 @@ Dictionary, and Integer.<a href="#section-2-3" class="pilcrow">¶</a></p>
 <p id="section-2-4">The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "content" in this document are to be
 interpreted as described in <span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">This document uses the line folding strategies described in <span>[<a href="#FOLDING" class="cite xref">FOLDING</a>]</span>.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">The term "digest" is to be interpreted as described in <span>[<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>.<a href="#section-2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="unencoded-digest">
@@ -1280,10 +1282,10 @@ interpreted as described in <span>[<a href="#HTTP" class="cite xref">HTTP</a>]</
       </h2>
 <p id="section-3-1">The <code>Unencoded-Digest</code> HTTP field can be used in requests and responses to
 communicate digests that are calculated using a hashing algorithm applied to the
-representation with no content coding (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4.1" class="relref">Section 8.4.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-3-1" class="pilcrow">¶</a></p>
+entire selected representation data with no content codings applied (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4.1" class="relref">Section 8.4.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">Apart from the content coding concerns, <code>Unencoded-Digest</code> behaves similarly
 to <code>Repr-Digest</code> (<span><a href="https://rfc-editor.org/rfc/rfc9530#section-3" class="relref">Section 3</a> of [<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span>). In the absence of content
-coding, <code>Unencoded-Digest</code> is identical to <code>Repr-Digest</code>.<a href="#section-3-2" class="pilcrow">¶</a></p>
+codings, <code>Unencoded-Digest</code> is identical to <code>Repr-Digest</code>.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3"><code>Unencoded-Digest</code> is a <code>Dictionary</code> (see <span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.2" class="relref">Section 3.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>)
 where each:<a href="#section-3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -1348,10 +1350,10 @@ request URI and representation metadata where no content coding is applied.<a hr
 <p id="section-4-2">If <code>Want-Unencoded-Digest</code> is used in a response, it indicates that the server
 would like the client to provide the <code>Unencoded-Digest</code> field on future requests.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3"><code>Want-Unencoded-Digest</code> is only a hint. The receiver of the field can ignore it
-and send an <code>Unencoded-Digest</code> field using any algorithm or omit one entirely. It
-is not a protocol error if preferences are ignored. Applications that use
-<code>Unencoded-Digest</code> and <code>Want-Unencoded-Digest</code> can define expectations or
-constraints that operate in addition to this specification.<a href="#section-4-3" class="pilcrow">¶</a></p>
+and send an <code>Unencoded-Digest</code> field using any algorithm or omit the field
+entirely. It is not a protocol error if preferences are ignored. Applications
+that use <code>Unencoded-Digest</code> and <code>Want-Unencoded-Digest</code> can define expectations
+or constraints that operate in addition to this specification.<a href="#section-4-3" class="pilcrow">¶</a></p>
 <p id="section-4-4"><code>Want-Unencoded-Digest</code> is of type <code>Dictionary</code> where each:<a href="#section-4-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4-5.1">
@@ -1382,12 +1384,12 @@ Want-Unencoded-Digest: sha-512=3, sha-256=10, unixsum=0
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-messages-containing-both-un" class="section-name selfRef">Messages containing both Unencoded-Digest and Content-Encoding</a>
       </h2>
 <p id="section-5-1">Digests delivered through <code>Unencoded-Digest</code> apply to the unencoded
-representation. If a message is received with content coding, a recipient needs
+representation. If a message is received with content codings, a recipient needs
 to decode the message in order to calculate the digest that can subsequently be
 used for validation. If multiple content codings are applied, the recipient
 needs to decode all encodings in order before validation.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <p id="section-5-2">Since the digest is calculated on unencoded representation bytes, validation of
-a message with content coding (as described above) can only succeed where the
+a message with content codings (as described above) can only succeed where the
 decoded output produces the same byte sequence as the input. While many
 registered content codings behave this way, there is no requirement for them to
 do so and it remains a possibility that decoding could produce a
@@ -1402,10 +1404,10 @@ is advised when selecting content coding for use with <code>Unencoded-Digest</co
       </h2>
 <p id="section-6-1">Integrity fields can be used in combination to address different and
 complementary needs, particularly the cases described in <a href="#introduction" class="auto internal xref">Section 1</a>.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">In the following examples, the unencoded response data is the string "An
-unexceptional string" following by an LF. For presentation purposes, the
-response body is displayed as a sequence of hex-encoded bytes because it
-contains non-printable characters.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-2">In the following examples, the selected representation data with no content
+codings applied is: "An unexceptional string" following by an LF. For
+presentation purposes, the response content is displayed as a sequence of
+hex-encoded bytes because it contains non-printable characters.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <p id="section-6-3">The first example demonstrates a request that uses content negotiation.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <span id="name-get-request-with-content-ne"></span><figure id="figure-1">
         <div class="lang-http-message sourcecode" id="section-6-4.1">
@@ -1421,12 +1423,13 @@ Accept-Encoding: gzip
         </figcaption></figure>
 <p id="section-6-5">The server responds with the full GZIP-encoded representation. The <code>Repr-Digest</code>
 and <code>Unencoded-Digest</code> therefore differ.<a href="#section-6-5" class="pilcrow">¶</a></p>
-<span id="name-get-response-with-gzip-enco"></span><figure id="figure-2">
+<span id="name-get-response-with-gzip-cont"></span><figure id="figure-2">
         <div class="lang-http-message sourcecode" id="section-6-6.1">
 <pre>
 NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 200 OK
+Content-Type: text/plain
 Content-Encoding: gzip
 Repr-Digest: \
   sha-256=:XyjvEuFb1P5rqc2le3vQm7M96DwZhvmOwqHLu2xVpY4=:
@@ -1442,7 +1445,7 @@ ca cc 4b e7 02 00 7e af 07 44
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
-<a href="#name-get-response-with-gzip-enco" class="selfRef">GET response with GZIP-encoded content</a>
+<a href="#name-get-response-with-gzip-cont" class="selfRef">GET response with GZIP content coding</a>
         </figcaption></figure>
 <p id="section-6-7">The second example demonstrates a range request with content negotiation.<a href="#section-6-7" class="pilcrow">¶</a></p>
 <span id="name-range-request-with-content-"></span><figure id="figure-3">
@@ -1458,19 +1461,20 @@ Range: bytes=0-10
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
 <a href="#name-range-request-with-content-" class="selfRef">Range request with content negotiation</a>
         </figcaption></figure>
-<p id="section-6-9">The server responds with a 206 Partial Content response using GZIP encoding, it
-has three different Integrity fields. The <code>Content-Digest</code> relates to the
-response message content that can be used to validate the integrity of the
+<p id="section-6-9">The server responds with a 206 (Partial Content) response using GZIP content
+coding, it has three different Integrity fields. The <code>Content-Digest</code> relates to
+the response content that can be used to validate the integrity of the
 received part. <code>Repr-Digest</code> and <code>Unencoded-Digest</code> can be used later once the
 entire object is reconstructed. The choice of which to use is left to the
-application that would consider a range of factors outside the scope of
-this document.<a href="#section-6-9" class="pilcrow">¶</a></p>
+application that would consider a range of factors outside the scope of this
+document.<a href="#section-6-9" class="pilcrow">¶</a></p>
 <span id="name-partial-response-with-gzip-"></span><figure id="figure-4">
         <div class="lang-http-message sourcecode" id="section-6-10.1">
 <pre>
 NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 206 Partial Content
+Content-Type: text/plain
 Content-Encoding: gzip
 Content-Range: bytes 0-9/44
 Content-Digest: \
@@ -1484,7 +1488,7 @@ Unencoded-Digest: \
 </pre>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
-<a href="#name-partial-response-with-gzip-" class="selfRef">Partial response with GZIP encoding</a>
+<a href="#name-partial-response-with-gzip-" class="selfRef">Partial response with GZIP content coding</a>
         </figcaption></figure>
 </section>
 </div>
@@ -1566,6 +1570,10 @@ asked to update the "Hypertext Transfer Protocol (HTTP) Field Name Registry"
 <dt id="DIGEST-FIELDS">[DIGEST-FIELDS]</dt>
         <dd>
 <span class="refAuthor">Polli, R.</span> and <span class="refAuthor">L. Pardue</span>, <span class="refTitle">"Digest Fields"</span>, <span class="seriesInfo">RFC 9530</span>, <span class="seriesInfo">DOI 10.17487/RFC9530</span>, <time datetime="2024-02" class="refDate">February 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9530">https://www.rfc-editor.org/rfc/rfc9530</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="FOLDING">[FOLDING]</dt>
+        <dd>
+<span class="refAuthor">Watsen, K.</span>, <span class="refAuthor">Auerswald, E.</span>, <span class="refAuthor">Farrel, A.</span>, and <span class="refAuthor">Q. Wu</span>, <span class="refTitle">"Handling Long Lines in Content of Internet-Drafts and RFCs"</span>, <span class="seriesInfo">RFC 8792</span>, <span class="seriesInfo">DOI 10.17487/RFC8792</span>, <time datetime="2020-06" class="refDate">June 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8792">https://www.rfc-editor.org/rfc/rfc8792</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="HTTP">[HTTP]</dt>
         <dd>
