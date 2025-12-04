@@ -79,7 +79,7 @@ field value that indicates a series of encodings adds further complexity.
 A more complex example involves HTTP Range Requests ({{Section 14 of
 HTTP}}), where a client fetches multiple partial representations from
 different origins and "stitches" them back into a whole. Unfortunately, if the
-origins apply different content coding, the `Repr-Digest` field will vary by the
+origins apply different content codings, the `Repr-Digest` field will vary by the
 server's selected encoding (i.e. the Content-Encoding header field, {{Section
 8.4 of HTTP}}). This provides a challenge for a client - in order to verify the
 integrity of the pieced-together whole it would need to remove the encoding of
@@ -87,7 +87,7 @@ each part, combine them, and then encode the result in order to compare against
 one or more `Repr-Digest`s.
 
 The Accept-Encoding header field ({{Section 12.5.3 of HTTP}}) provides the means
-to indicate preferences for content coding. It is possible for an endpoint to
+to indicate preferences for content codings. It is possible for an endpoint to
 indicate a preference for no encoding, for example by sending the "identity"
 token. However, codings often provide data compression that is advantageous.
 Disabling content coding in order to simplify integrity checking is possibly an
@@ -119,16 +119,21 @@ The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "content" in this document are to be
 interpreted as described in {{!HTTP=RFC9110}}.
 
+This document uses the line folding strategies described in {{!FOLDING=RFC8792}}.
+
+The term "digest" is to be interpreted as described in {{DIGEST-FIELDS}}.
+
 
 # The Unencoded-Digest Field {#unencoded-digest}
 
 The `Unencoded-Digest` HTTP field can be used in requests and responses to
 communicate digests that are calculated using a hashing algorithm applied to the
-representation with no content coding ({{Section 8.4.1 of HTTP}}).
+entire selected representation data with no content codings applied ({{Section
+8.4.1 of HTTP}}).
 
 Apart from the content coding concerns, `Unencoded-Digest` behaves similarly
 to `Repr-Digest` ({{Section 3 of DIGEST-FIELDS}}). In the absence of content
-coding, `Unencoded-Digest` is identical to `Repr-Digest`.
+codings, `Unencoded-Digest` is identical to `Repr-Digest`.
 
 `Unencoded-Digest` is a `Dictionary` (see {{Section 3.2 of STRUCTURED-FIELDS}})
 where each:
@@ -193,10 +198,10 @@ If `Want-Unencoded-Digest` is used in a response, it indicates that the server
 would like the client to provide the `Unencoded-Digest` field on future requests.
 
 `Want-Unencoded-Digest` is only a hint. The receiver of the field can ignore it
-and send an `Unencoded-Digest` field using any algorithm or omit one entirely. It
-is not a protocol error if preferences are ignored. Applications that use
-`Unencoded-Digest` and `Want-Unencoded-Digest` can define expectations or
-constraints that operate in addition to this specification.
+and send an `Unencoded-Digest` field using any algorithm or omit the field
+entirely. It is not a protocol error if preferences are ignored. Applications
+that use `Unencoded-Digest` and `Want-Unencoded-Digest` can define expectations
+or constraints that operate in addition to this specification.
 
 `Want-Unencoded-Digest` is of type `Dictionary` where each:
 
@@ -220,13 +225,13 @@ Want-Unencoded-Digest: sha-512=3, sha-256=10, unixsum=0
 # Messages containing both Unencoded-Digest and Content-Encoding {#encoding-and-unencoded}
 
 Digests delivered through `Unencoded-Digest` apply to the unencoded
-representation. If a message is received with content coding, a recipient needs
+representation. If a message is received with content codings, a recipient needs
 to decode the message in order to calculate the digest that can subsequently be
 used for validation. If multiple content codings are applied, the recipient
 needs to decode all encodings in order before validation.
 
 Since the digest is calculated on unencoded representation bytes, validation of
-a message with content coding (as described above) can only succeed where the
+a message with content codings (as described above) can only succeed where the
 decoded output produces the same byte sequence as the input. While many
 registered content codings behave this way, there is no requirement for them to
 do so and it remains a possibility that decoding could produce a
@@ -239,10 +244,10 @@ is advised when selecting content coding for use with `Unencoded-Digest`.
 Integrity fields can be used in combination to address different and
 complementary needs, particularly the cases described in {{introduction}}.
 
-In the following examples, the unencoded response data is the string "An
-unexceptional string" following by an LF. For presentation purposes, the
-response body is displayed as a sequence of hex-encoded bytes because it
-contains non-printable characters.
+In the following examples, the selected representation data with no content
+codings applied is: "An unexceptional string" following by an LF. For
+presentation purposes, the response content is displayed as a sequence of
+hex-encoded bytes because it contains non-printable characters.
 
 The first example demonstrates a request that uses content negotiation.
 
@@ -261,6 +266,7 @@ and `Unencoded-Digest` therefore differ.
 NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 200 OK
+Content-Type: text/plain
 Content-Encoding: gzip
 Repr-Digest: \
   sha-256=:XyjvEuFb1P5rqc2le3vQm7M96DwZhvmOwqHLu2xVpY4=:
@@ -274,7 +280,7 @@ ca cc 4b e7 02 00 7e af 07 44
 18 00 00 00
 
 ~~~
-{: title="GET response with GZIP-encoded content"}
+{: title="GET response with GZIP content coding"}
 
 The second example demonstrates a range request with content negotiation.
 
@@ -287,18 +293,19 @@ Range: bytes=0-10
 ~~~
 {: title="Range request with content negotiation"}
 
-The server responds with a 206 Partial Content response using GZIP encoding, it
-has three different Integrity fields. The `Content-Digest` relates to the
-response message content that can be used to validate the integrity of the
+The server responds with a 206 (Partial Content) response using GZIP content
+coding, it has three different Integrity fields. The `Content-Digest` relates to
+the response content that can be used to validate the integrity of the
 received part. `Repr-Digest` and `Unencoded-Digest` can be used later once the
 entire object is reconstructed. The choice of which to use is left to the
-application that would consider a range of factors outside the scope of
-this document.
+application that would consider a range of factors outside the scope of this
+document.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 206 Partial Content
+Content-Type: text/plain
 Content-Encoding: gzip
 Content-Range: bytes 0-9/44
 Content-Digest: \
@@ -310,7 +317,7 @@ Unencoded-Digest: \
 
 1f 8b 08 00 79 1f 08 64 00 ff
 ~~~
-{: title="Partial response with GZIP encoding"}
+{: title="Partial response with GZIP content coding"}
 
 
 # Security Considerations
