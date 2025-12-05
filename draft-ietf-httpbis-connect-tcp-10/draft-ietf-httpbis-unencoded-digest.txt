@@ -4,9 +4,9 @@
 
 HTTP                                                           L. Pardue
 Internet-Draft                                                Cloudflare
-Intended status: Standards Track                                 M. West
-Expires: 6 June 2026                                              Google
-                                                         3 December 2025
+Updates: 9530 (if approved)                                      M. West
+Intended status: Standards Track                                  Google
+Expires: 8 June 2026                                     5 December 2025
 
 
                          HTTP Unencoded Digest
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 June 2026.
+   This Internet-Draft will expire on 8 June 2026.
 
 Copyright Notice
 
@@ -113,7 +113,7 @@ Table of Contents
    A more complex example involves HTTP Range Requests (Section 14 of
    [HTTP]), where a client fetches multiple partial representations from
    different origins and "stitches" them back into a whole.
-   Unfortunately, if the origins apply different content coding, the
+   Unfortunately, if the origins apply different content codings, the
    Repr-Digest field will vary by the server's selected encoding (i.e.
    the Content-Encoding header field, Section 8.4 of [HTTP]).  This
    provides a challenge for a client - in order to verify the integrity
@@ -122,11 +122,12 @@ Table of Contents
    compare against one or more Repr-Digests.
 
    The Accept-Encoding header field (Section 12.5.3 of [HTTP]) provides
-   the means to indicate preferences for content coding.  It is possible
-   for an endpoint to indicate a preference for no encoding, for example
-   by sending the "identity" token.  However, codings often provide data
-   compression that is advantageous.  Disabling content coding in order
-   to simplify integrity checking is possibly an unacceptable trade off.
+   the means to indicate preferences for content codings.  It is
+   possible for an endpoint to indicate a preference for no encoding,
+   for example by sending the "identity" token.  However, codings often
+   provide data compression that is advantageous.  Disabling content
+   coding in order to simplify integrity checking is possibly an
+   unacceptable trade off.
 
    For a variety of reasons, decoding and re-encoding content in order
    to benefit from HTTP integrity fields is not preferable.  This
@@ -134,6 +135,11 @@ Table of Contents
    fields to support a simpler validation workflow in some scenarios
    where content coding is applied.  These fields complement the other
    integrity fields defined in [DIGEST-FIELDS].
+
+   This document updates the term "Integrity fields" defined in
+   [DIGEST-FIELDS] to also include the Unencoded-Digest field, and the
+   term "Integrity preference fields" defined in [DIGEST-FIELDS] to also
+   include the Want-Unencoded-Digest field.
 
 2.  Conventions and Definitions
 
@@ -146,9 +152,6 @@ Table of Contents
    This document uses the Augmented BNF defined in [RFC5234] and updated
    by [RFC7405].  This includes the rules: LF (line feed)
 
-   This document uses the line folding strategies described in
-   [FOLDING].
-
    This document uses the following terminology from Section 3 of
    [STRUCTURED-FIELDS] to specify syntax and parsing: Byte Sequence,
    Dictionary, and Integer.
@@ -157,21 +160,18 @@ Table of Contents
    "representation data", "representation metadata", and "content" in
    this document are to be interpreted as described in [HTTP].
 
-   The terms "checksum" and "digest" are to be interpreted as described
-   in [DIGEST-FIELDS].
+   This document uses the line folding strategies described in
+   [FOLDING].
 
-   "Integrity fields" is the collective term for Content-Digest, Repr-
-   Digest, and Unencoded-Digest.
-
-   "Integrity preference fields" is the collective term for Want-Repr-
-   Digest, Want-Content-Digest, and Want-Unencoded-Digest.
+   The term "digest" is to be interpreted as described in
+   [DIGEST-FIELDS].
 
 3.  The Unencoded-Digest Field
 
    The Unencoded-Digest HTTP field can be used in requests and responses
    to communicate digests that are calculated using a hashing algorithm
-   applied to the selected representation with no content codings
-   applied (Section 8.4.1 of [HTTP]).
+   applied to the entire selected representation data with no content
+   codings applied (Section 8.4.1 of [HTTP]).
 
    Apart from the content coding concerns, Unencoded-Digest behaves
    similarly to Repr-Digest (Section 3 of [DIGEST-FIELDS]).  In the
@@ -270,11 +270,20 @@ Table of Contents
 5.  Messages containing both Unencoded-Digest and Content-Encoding
 
    Digests delivered through Unencoded-Digest apply to the unencoded
-   representation.  If a message is received with content coding, a
+   representation.  If a message is received with content codings, a
    recipient needs to decode the message in order to calculate the
    digest that can subsequently be used for validation.  If multiple
    content codings are applied, the recipient needs to decode all
    encodings in order before validation.
+
+   Since the digest is calculated on unencoded representation bytes,
+   validation of a message with content codings (as described above) can
+   only succeed where the decoded output produces the same byte sequence
+   as the input.  While many registered content codings behave this way,
+   there is no requirement for them to do so and it remains a
+   possibility that decoding could produce a different byte sequence.
+   In order to avoid unintended validation failures, care is advised
+   when selecting content coding for use with Unencoded-Digest.
 
 6.  Integrity Fields are Complementary
 
@@ -282,10 +291,9 @@ Table of Contents
    complementary needs, particularly the cases described in Section 1.
 
    In the following examples, the selected representation data with no
-   content codings applied (e.g., see Section 8.3 of [HTTP]) is the
-   string "An unexceptional string" following by an LF.  For
-   presentation purposes, the response content is displayed as a
-   sequence of hex-encoded bytes because it contains non-printable
+   content codings applied is: "An unexceptional string" following by an
+   LF.  For presentation purposes, the response content is displayed as
+   a sequence of hex-encoded bytes because it contains non-printable
    characters.
 
    The first example demonstrates a request that uses content
@@ -340,6 +348,7 @@ Table of Contents
    NOTE: '\' line wrapping per RFC 8792
 
    HTTP/1.1 206 Partial Content
+   Content-Type: text/plain
    Content-Encoding: gzip
    Content-Range: bytes 0-9/44
    Content-Digest: \
@@ -369,9 +378,11 @@ Table of Contents
    Sections 6.1, 6.2 and 6.3 of [DIGEST-FIELDS] describe relevant
    considerations and mitigations.
 
-   If a content coding provides encryption features (e.g., see the
-   aes128gcm content coding defined in [RFC8188]), the value of
-   Unencoded-Digest can disclose information on the original data.
+   A content coding may provide encryption capabilities, for example
+   "aes128gcm" ([RFC8188]).  Using Unencoded-Digest with such content
+   codings can leak information about the original data because header
+   fields are visible to anyone who can read the HTTP message.  This
+   could be used as a side channel.
 
 8.  IANA Considerations
 

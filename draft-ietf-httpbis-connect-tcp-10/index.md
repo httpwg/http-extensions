@@ -1,4 +1,4 @@
-# Editor's drafts for ioggstream-unencoded-review branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/ioggstream-unencoded-review)
+# Editor's drafts for draft-ietf-httpbis-connect-tcp-10 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/draft-ietf-httpbis-connect-tcp-10)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
