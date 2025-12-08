@@ -217,8 +217,14 @@ accompanied by a connection_limit_reached Proxy-Status response header field
 For performance and efficiency reasons, a small amount of buffering might be
 used by intermediaries, even for incremental messages. Immediate forwarding
 might be exploited to cause an intermediary to waste effort on many small
-packets.  Enabling incremental delivery might instead set limits on the number
-bytes that are buffered or the time that buffers are held before forwarding.
+packets.
+
+Enabling incremental delivery might set limits on the number
+bytes that are buffered before forwarding.
+Any intermediary that buffers incoming data
+MUST limit the time that buffers are held before forwarding;
+an intermediary cannot rely on receiving more bytes to drive progress.
+
 Any buffering could adversely affect application latency, even if it improves
 efficiency.  In all cases, intermediaries cannot hold data in buffers
 indefinitely, so data needs to be forwarded when either the time limit or the
