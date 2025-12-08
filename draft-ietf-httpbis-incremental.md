@@ -234,7 +234,8 @@ byte limit is reached.
 # IANA Considerations
 
 An HTTP field named Incremental is registered
-in the Hypertext Transfer Protocol (HTTP) Field Name Registry,
+in the [Hypertext Transfer Protocol (HTTP) Field Name
+Registry](https://www.iana.org/assignments/http-fields/http-fields.xhtml),
 following the procedures in {{Section 18.4 of !HTTP=RFC9110}}.
 The following values are registered:
 
@@ -254,8 +255,9 @@ Comments:
 : None
 {:compact}
 
-An HTTP Proxy Error Type is registered in the HTTP Proxy Error Types registry as
-shown below:
+An HTTP Proxy Error Type is registered in the [HTTP Proxy Error Types
+Registry](https://www.iana.org/assignments/http-proxy-status/http-proxy-status.xhtml#http-proxy-error-types)
+as shown below:
 
 Name:
 : incremental_refused
