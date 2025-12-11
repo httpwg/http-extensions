@@ -366,3 +366,6 @@ of digests where no content coding is applied, which was removed before
 publication. While the design here is different, it is motivated by discussion
 of the previous design in the HTTP WG. The motivating use cases still mostly
 apply identically.
+
+The following people provided detailed feedback on the document: Mike Bishop,
+Roberto Polli, and Martin Thomson.
