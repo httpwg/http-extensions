@@ -91,7 +91,7 @@ to indicate preferences for content codings. It is possible for an endpoint to
 indicate a preference for no encoding, for example by sending the "identity"
 token. However, codings often provide data compression that is advantageous.
 Disabling content coding in order to simplify integrity checking is possibly an
-unacceptable trade off.
+unacceptable trade-off.
 
 For a variety of reasons, decoding and re-encoding content in order to benefit
 from HTTP integrity fields is not preferable. This specification defines the
@@ -236,7 +236,7 @@ decoded output produces the same byte sequence as the input. While many
 registered content codings behave this way, there is no requirement for them to
 do so and it remains a possibility that decoding could produce a
 different byte sequence. In order to avoid unintended validation failures, care
-is advised when selecting content coding for use with `Unencoded-Digest`.
+is advised when selecting content codings for use with `Unencoded-Digest`.
 
 
 # Integrity Fields are Complementary
@@ -332,7 +332,7 @@ opportunity for an attacker to direct malicious data into a decoder. One
 possible mitigation would be to also provide a Content-Digest or Repr-Digest in
 the message, allowing for validation of the received bytes before further
 processing. An attacker that can substitute various parts of an HTTP message
-presents several risks, {{Sections 6.1, 6.2 and 6.3 of DIGEST-FIELDS}}
+presents several risks; {{Sections 6.1, 6.2 and 6.3 of DIGEST-FIELDS}}
 describe relevant considerations and mitigations.
 
 A content coding may provide encryption capabilities, for example "aes128gcm"
@@ -343,9 +343,8 @@ who can read the HTTP message. This could be used as a side channel.
 
 # IANA Considerations
 
-Should this document be adopted and achieve working group consensus, IANA is
-asked to update the "Hypertext Transfer Protocol (HTTP) Field Name Registry"
-{{?HTTP=RFC9110}} as shown in the table below:
+IANA is asked to update the "Hypertext Transfer Protocol (HTTP) Field Name
+Registry" {{?HTTP=RFC9110}} as shown in the table below:
 
 |-----------------------|-----------|-----------------|--------------------------------------------|
 | Field Name            | Status    | Structured Type | Reference                                  |
