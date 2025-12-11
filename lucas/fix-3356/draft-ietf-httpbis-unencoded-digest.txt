@@ -20,6 +20,9 @@ Abstract
    unencoded representation.  The Unencoded-Digest and Want-Unencoded-
    Digest fields complement existing integrity fields for this purpose.
 
+   This document updates the terms "Integrity fields" and "Integrity
+   preference fields" defined in RFC 9530.
+
 About This Document
 
    This note is to be removed before publishing as an RFC.
@@ -111,9 +114,9 @@ Table of Contents
    value that indicates a series of encodings adds further complexity.
 
    A more complex example involves HTTP Range Requests (Section 14 of
-   [HTTP]), where a client fetches multiple partial representations from
-   different origins and "stitches" them back into a whole.
-   Unfortunately, if the origins apply different content codings, the
+   [HTTP]), where a client issues multiple requests to obtain partial
+   representations and "stitches" them back into a whole.
+   Unfortunately, if the responses have different content codings, the
    Repr-Digest field will vary by the server's selected encoding (i.e.
    the Content-Encoding header field, Section 8.4 of [HTTP]).  This
    provides a challenge for a client - in order to verify the integrity
@@ -127,7 +130,7 @@ Table of Contents
    for example by sending the "identity" token.  However, codings often
    provide data compression that is advantageous.  Disabling content
    coding in order to simplify integrity checking is possibly an
-   unacceptable trade off.
+   unacceptable trade-off.
 
    For a variety of reasons, decoding and re-encoding content in order
    to benefit from HTTP integrity fields is not preferable.  This
@@ -190,7 +193,7 @@ Table of Contents
 
       Each Dictionary value can have zero or more Parameters
       (Section 3.1.2 of [STRUCTURED-FIELDS]).  This specification does
-      not define any Parameters but extensions MAY define them.  Unknown
+      not define any Parameters; future extensions may do so.  Unknown
       Parameters MUST be ignored.
 
    For example:
@@ -216,10 +219,10 @@ Table of Contents
 
    A recipient MAY ignore any or all digests.  Application-specific
    behavior or local policy MAY set additional constraints on the
-   processing and validation practices of the conveyed digests.  The
-   security considerations cover some of the issues related to ignoring
-   digests (see Section 6.6 of [DIGEST-FIELDS]) and validating multiple
-   digests (see Section 6.7 of [DIGEST-FIELDS]).
+   processing and validation practices of the conveyed digests.
+   Security considerations related to ignoring digests or validating
+   multiple digests are presented in Sections 6.6 and 6.7 of
+   [DIGEST-FIELDS] respectively.
 
    A sender MAY send a digest without knowing whether the recipient
    supports a given hashing algorithm.  A sender MAY send a digest if it
@@ -246,7 +249,8 @@ Table of Contents
    omit the field entirely.  It is not a protocol error if preferences
    are ignored.  Applications that use Unencoded-Digest and Want-
    Unencoded-Digest can define expectations or constraints that operate
-   in addition to this specification.
+   in addition to this specification.  Ignored preferences are an
+   application-specific concern.
 
    Want-Unencoded-Digest is of type Dictionary where each:
 
@@ -259,7 +263,7 @@ Table of Contents
 
       Each Dictionary value can have zero or more Parameters
       (Section 3.1.2 of [STRUCTURED-FIELDS]).  This specification does
-      not define any Parameters but extensions MAY define them.  Unknown
+      not define any Parameters; future extensions may do so.  Unknown
       Parameters MUST be ignored.
 
    Examples:
@@ -337,7 +341,7 @@ Table of Contents
    GET /boringstring HTTP/1.1
    Host: example.org
    Accept-Encoding: gzip
-   Range: bytes=0-10
+   Range: bytes=0-9
 
               Figure 3: Range request with content negotiation
 
@@ -379,7 +383,7 @@ Table of Contents
    decoder.  One possible mitigation would be to also provide a Content-
    Digest or Repr-Digest in the message, allowing for validation of the
    received bytes before further processing.  An attacker that can
-   substitute various parts of an HTTP message presents several risks,
+   substitute various parts of an HTTP message presents several risks;
    Sections 6.1, 6.2 and 6.3 of [DIGEST-FIELDS] describe relevant
    considerations and mitigations.
 
@@ -391,7 +395,6 @@ Table of Contents
 
 8.  IANA Considerations
 
-   Should this document be adopted and achieve working group consensus,
    IANA is asked to update the "Hypertext Transfer Protocol (HTTP) Field
    Name Registry" [HTTP] as shown in the table below:
 
@@ -464,6 +467,9 @@ Acknowledgments
    removed before publication.  While the design here is different, it
    is motivated by discussion of the previous design in the HTTP WG.
    The motivating use cases still mostly apply identically.
+
+   The following people provided detailed feedback on the document: Mike
+   Bishop, Roberto Polli, and Martin Thomson.
 
 Authors' Addresses
 
