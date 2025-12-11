@@ -48,6 +48,9 @@ unambiguous exchange of integrity digests of unencoded representation. The
 Unencoded-Digest and Want-Unencoded-Digest fields complement existing integrity
 fields for this purpose.
 
+This document updates the terms "Integrity fields" and "Integrity preference
+fields" defined in RFC 9530.
+
 
 --- middle
 
