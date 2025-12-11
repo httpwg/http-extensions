@@ -148,8 +148,8 @@ where each:
   calculation.
 
   Each Dictionary value can have zero or more Parameters ({{Section 3.1.2 of
-  STRUCTURED-FIELDS}}). This specification does not define any Parameters but
-  extensions MAY define them. Unknown Parameters MUST be ignored.
+  STRUCTURED-FIELDS}}). This specification does not define any Parameters;
+  future extensions may do so. Unknown Parameters MUST be ignored.
 
 For example:
 
@@ -216,8 +216,8 @@ preferences are an application-specific concern.
   0 means "not acceptable".
 
   Each Dictionary value can have zero or more Parameters ({{Section 3.1.2 of
-  STRUCTURED-FIELDS}}). This specification does not define any Parameters but
-  extensions MAY define them. Unknown Parameters MUST be ignored.
+  STRUCTURED-FIELDS}}). This specification does not define any Parameters;
+  future extensions may do so. Unknown Parameters MUST be ignored.
 
 Examples:
 
