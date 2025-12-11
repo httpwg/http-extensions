@@ -7,13 +7,15 @@
 <title>HTTP Unencoded Digest</title>
 <meta content="Lucas Pardue" name="author">
 <meta content="Mike West" name="author">
-<meta content="
+<meta content='
        The Repr-Digest and Content-Digest integrity fields are subject to HTTP content
 coding considerations. There are some use cases that benefit from the
 unambiguous exchange of integrity digests of unencoded representation. The
 Unencoded-Digest and Want-Unencoded-Digest fields complement existing integrity
 fields for this purpose. 
-    " name="description">
+       This document updates the terms "Integrity fields" and "Integrity preference
+fields" defined in RFC 9530. 
+    ' name="description">
 <meta content="xml2rfc 3.31.0" name="generator">
 <meta content="next generation" name="keyword">
 <meta content="unicorn" name="keyword">
@@ -1097,6 +1099,8 @@ coding considerations. There are some use cases that benefit from the
 unambiguous exchange of integrity digests of unencoded representation. The
 Unencoded-Digest and Want-Unencoded-Digest fields complement existing integrity
 fields for this purpose.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This document updates the terms "Integrity fields" and "Integrity preference
+fields" defined in RFC 9530.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1231,9 +1235,9 @@ could contend with other activities. Even on the server side, the re-encoding of
 received data might not be acceptable; some coding algorithms are optimized
 towards efficient decoding at the cost of complex encoding. A Content-Encoding
 field value that indicates a series of encodings adds further complexity.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">A more complex example involves HTTP Range Requests (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-14" class="relref">Section 14</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>), where a client fetches multiple partial representations from
-different origins and "stitches" them back into a whole. Unfortunately, if the
-origins apply different content codings, the <code>Repr-Digest</code> field will vary by the
+<p id="section-1-4">A more complex example involves HTTP Range Requests (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-14" class="relref">Section 14</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>), where a client issues multiple requests to obtain partial representations
+and "stitches" them back into a whole. Unfortunately, if the responses have
+different content codings, the <code>Repr-Digest</code> field will vary by the
 server's selected encoding (i.e. the Content-Encoding header field, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). This provides a challenge for a client - in order to verify the
 integrity of the pieced-together whole it would need to remove the encoding of
 each part, combine them, and then encode the result in order to compare against

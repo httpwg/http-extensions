@@ -20,6 +20,9 @@ Abstract
    unencoded representation.  The Unencoded-Digest and Want-Unencoded-
    Digest fields complement existing integrity fields for this purpose.
 
+   This document updates the terms "Integrity fields" and "Integrity
+   preference fields" defined in RFC 9530.
+
 About This Document
 
    This note is to be removed before publishing as an RFC.
@@ -111,9 +114,9 @@ Table of Contents
    value that indicates a series of encodings adds further complexity.
 
    A more complex example involves HTTP Range Requests (Section 14 of
-   [HTTP]), where a client fetches multiple partial representations from
-   different origins and "stitches" them back into a whole.
-   Unfortunately, if the origins apply different content codings, the
+   [HTTP]), where a client issues multiple requests to obtain partial
+   representations and "stitches" them back into a whole.
+   Unfortunately, if the responses have different content codings, the
    Repr-Digest field will vary by the server's selected encoding (i.e.
    the Content-Encoding header field, Section 8.4 of [HTTP]).  This
    provides a challenge for a client - in order to verify the integrity
