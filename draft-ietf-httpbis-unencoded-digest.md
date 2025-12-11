@@ -201,7 +201,8 @@ would like the client to provide the `Unencoded-Digest` field on future requests
 and send an `Unencoded-Digest` field using any algorithm or omit the field
 entirely. It is not a protocol error if preferences are ignored. Applications
 that use `Unencoded-Digest` and `Want-Unencoded-Digest` can define expectations
-or constraints that operate in addition to this specification.
+or constraints that operate in addition to this specification.  Ignored
+preferences are an application-specific concern.
 
 `Want-Unencoded-Digest` is of type `Dictionary` where each:
 
