@@ -292,7 +292,7 @@ The second example demonstrates a range request with content negotiation.
 GET /boringstring HTTP/1.1
 Host: example.org
 Accept-Encoding: gzip
-Range: bytes=0-10
+Range: bytes=0-9
 
 ~~~
 {: title="Range request with content negotiation"}
