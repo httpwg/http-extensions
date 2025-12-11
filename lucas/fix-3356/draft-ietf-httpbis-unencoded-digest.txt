@@ -285,14 +285,13 @@ Table of Contents
    only succeed where the decoded output produces the same byte sequence
    as the input.  While Section 8.4.1 of [HTTP] describes content
    codings to operate "without loss of information", that doesn't
-   necessarily mean a byte-for-byte equivalence.  It's entirely possible
-   for content codings to perform semantically-meaningless
-   transformations that nevertheless result in a decoded byte sequence
-   that does not exactly match the original unencoded representation.
-   In order to avoid unintended validation failures, care is advised
-   when selecting content codings for use with Unencoded-Digest; many
-   registered content codings do provide byte-for-byte equivalence and
-   are appropriate.
+   necessarily mean a byte-for-byte equivalence.  A content coding could
+   perform semantically-meaningless transformations that nevertheless
+   result in a decoded byte sequence that does not exactly match the
+   original unencoded representation.  In order to avoid unintended
+   validation failures, care is advised when selecting content codings
+   for use with Unencoded-Digest; many registered content codings do
+   provide byte-for-byte equivalence and are appropriate.
 
 6.  Integrity Fields are Complementary
 
