@@ -238,8 +238,8 @@ Since the digest is calculated on unencoded representation bytes, validation of
 a message with content codings (as described above) can only succeed where the
 decoded output produces the same byte sequence as the input. While {{Section
 8.4.1 of !HTTP=RFC9110}} describes content codings to operate "without loss of
-information", that doesn't necessarily mean a byte-for-byte equivalence. It's
-entirely possible for content codings to perform semantically-meaningless
+information", that doesn't necessarily mean a byte-for-byte equivalence. A
+content coding could perform semantically-meaningless
 transformations that nevertheless result in a decoded byte sequence that does
 not exactly match the original unencoded representation. In order to avoid
 unintended validation failures, care is advised when selecting content codings
