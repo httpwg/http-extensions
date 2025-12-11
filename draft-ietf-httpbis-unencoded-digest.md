@@ -91,7 +91,7 @@ to indicate preferences for content codings. It is possible for an endpoint to
 indicate a preference for no encoding, for example by sending the "identity"
 token. However, codings often provide data compression that is advantageous.
 Disabling content coding in order to simplify integrity checking is possibly an
-unacceptable trade off.
+unacceptable trade-off.
 
 For a variety of reasons, decoding and re-encoding content in order to benefit
 from HTTP integrity fields is not preferable. This specification defines the
