@@ -77,9 +77,9 @@ towards efficient decoding at the cost of complex encoding. A Content-Encoding
 field value that indicates a series of encodings adds further complexity.
 
 A more complex example involves HTTP Range Requests ({{Section 14 of
-HTTP}}), where a client fetches multiple partial representations from
-different origins and "stitches" them back into a whole. Unfortunately, if the
-origins apply different content codings, the `Repr-Digest` field will vary by the
+HTTP}}), where a client issues multiple requests to obtain partial representations
+and "stitches" them back into a whole. Unfortunately, if the responses have
+different content codings, the `Repr-Digest` field will vary by the
 server's selected encoding (i.e. the Content-Encoding header field, {{Section
 8.4 of HTTP}}). This provides a challenge for a client - in order to verify the
 integrity of the pieced-together whole it would need to remove the encoding of
