@@ -5,10 +5,10 @@
 httpbis                                                 奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                T. Pauly
-Expires: 11 June 2026                                              Apple
+Expires: 14 June 2026                                              Apple
                                                               M. Thomson
                                                                  Mozilla
-                                                         8 December 2025
+                                                        11 December 2025
 
 
                 Incremental Forwarding of HTTP Messages
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 June 2026.
+   This Internet-Draft will expire on 14 June 2026.
 
 Copyright Notice
 
@@ -242,26 +242,20 @@ Table of Contents
    For performance and efficiency reasons, a small amount of buffering
    might be used by intermediaries, even for incremental messages.
    Immediate forwarding might be exploited to cause an intermediary to
-   waste effort on many small packets.
-
-   Enabling incremental delivery might set limits on the number bytes
-   that are buffered before forwarding.  Any intermediary that buffers
-   incoming data MUST limit the time that buffers are held before
-   forwarding; an intermediary cannot rely on receiving more bytes to
-   drive progress.
-
-   Any buffering could adversely affect application latency, even if it
-   improves efficiency.  In all cases, intermediaries cannot hold data
-   in buffers indefinitely, so data needs to be forwarded when either
-   the time limit or the byte limit is reached.
+   waste effort on many small packets.  Enabling incremental delivery
+   might instead set limits on the number bytes that are buffered or the
+   time that buffers are held before forwarding.  Any buffering could
+   adversely affect application latency, even if it improves efficiency.
+   In all cases, intermediaries cannot hold data in buffers
+   indefinitely, so data needs to be forwarded when either the time
+   limit or the byte limit is reached.
 
 5.  IANA Considerations
 
    An HTTP field named Incremental is registered in the Hypertext
-   Transfer Protocol (HTTP) Field Name Registry
-   (https://www.iana.org/assignments/http-fields/http-fields.xhtml),
-   following the procedures in Section 18.4 of [HTTP].  The following
-   values are registered:
+   Transfer Protocol (HTTP) Field Name Registry, following the
+   procedures in Section 18.4 of [HTTP].  The following values are
+   registered:
 
    Field Name:  Incremental
    Status:  permanent
@@ -270,8 +264,7 @@ Table of Contents
    Comments:  None
 
    An HTTP Proxy Error Type is registered in the HTTP Proxy Error Types
-   Registry (https://www.iana.org/assignments/http-proxy-status/http-
-   proxy-status.xhtml#http-proxy-error-types) as shown below:
+   registry as shown below:
 
    Name:  incremental_refused
    Description:  The HTTP message contained the Incremental HTTP header

@@ -1,4 +1,4 @@
-# Editor's drafts for incremental-artart branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/incremental-artart)
+# Editor's drafts for lucas/fix-3350 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/lucas/fix-3350)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
