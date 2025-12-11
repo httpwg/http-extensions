@@ -243,7 +243,7 @@ content coding could perform semantically-meaningless
 transformations that nevertheless result in a decoded byte sequence that does
 not exactly match the original unencoded representation. In order to avoid
 unintended validation failures, care is advised when selecting content codings
-for use with `Unencoded-Digest`; many registered content codings do provide
+for use with `Unencoded-Digest`; that said, most registered content codings do provide
 byte-for-byte equivalence and are appropriate.
 
 
