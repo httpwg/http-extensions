@@ -175,9 +175,9 @@ Unencoded-Digest: \
 
 A recipient MAY ignore any or all digests. Application-specific behavior or
 local policy MAY set additional constraints on the processing and validation
-practices of the conveyed digests. The security considerations cover some of
-the issues related to ignoring digests (see {{Section 6.6 of DIGEST-FIELDS}})
-and validating multiple digests (see {{Section 6.7 of DIGEST-FIELDS}}).
+practices of the conveyed digests. Security considerations related to ignoring
+digests or validating multiple digests are presented in {{Sections 6.6 and
+6.7 of DIGEST-FIELDS}} respectively.
 
 A sender MAY send a digest without knowing whether the recipient supports a
 given hashing algorithm. A sender MAY send a digest if it knows the recipient
