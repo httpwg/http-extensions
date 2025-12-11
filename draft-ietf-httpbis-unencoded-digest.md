@@ -236,11 +236,13 @@ needs to decode all encodings in order before validation.
 
 Since the digest is calculated on unencoded representation bytes, validation of
 a message with content codings (as described above) can only succeed where the
-decoded output produces the same byte sequence as the input. While many
-registered content codings behave this way, there is no requirement for them to
-do so and it remains a possibility that decoding could produce a
-different byte sequence. In order to avoid unintended validation failures, care
-is advised when selecting content codings for use with `Unencoded-Digest`.
+decoded output produces the same byte sequence as the input. While {{Section
+8.4.1 of !HTTP=RFC9110}} describes content codings to operate "without loss of
+information", that doesn't necessarily mean a byte-for-byte equivalence. Many
+registered content codings do provide equivalence but there is no requirement
+for it; it remains a possibility that decoding could produce a different byte
+sequence. In order to avoid unintended validation failures, care is advised when
+selecting content codings for use with `Unencoded-Digest`.
 
 
 # Integrity Fields are Complementary
