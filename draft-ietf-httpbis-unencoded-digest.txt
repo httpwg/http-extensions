@@ -6,7 +6,7 @@ HTTP                                                           L. Pardue
 Internet-Draft                                                Cloudflare
 Updates: 9530 (if approved)                                      M. West
 Intended status: Standards Track                                  Google
-Expires: 14 June 2026                                   11 December 2025
+Expires: 15 June 2026                                   12 December 2025
 
 
                          HTTP Unencoded Digest
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 June 2026.
+   This Internet-Draft will expire on 15 June 2026.
 
 Copyright Notice
 
@@ -283,11 +283,15 @@ Table of Contents
    Since the digest is calculated on unencoded representation bytes,
    validation of a message with content codings (as described above) can
    only succeed where the decoded output produces the same byte sequence
-   as the input.  While many registered content codings behave this way,
-   there is no requirement for them to do so and it remains a
-   possibility that decoding could produce a different byte sequence.
-   In order to avoid unintended validation failures, care is advised
-   when selecting content codings for use with Unencoded-Digest.
+   as the input.  While Section 8.4.1 of [HTTP] describes content
+   codings to operate "without loss of information", that doesn't
+   necessarily mean a byte-for-byte equivalence.  A content coding could
+   perform semantically-meaningless transformations that nevertheless
+   result in a decoded byte sequence that does not exactly match the
+   original unencoded representation.  In order to avoid unintended
+   validation failures, care is advised when selecting content codings
+   for use with Unencoded-Digest; that said, most registered content
+   codings do provide byte-for-byte equivalence and are appropriate.
 
 6.  Integrity Fields are Complementary
 

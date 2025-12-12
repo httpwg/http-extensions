@@ -1056,7 +1056,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pardue &amp; West</td>
-<td class="center">Expires 14 June 2026</td>
+<td class="center">Expires 15 June 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1072,12 +1072,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc9530" class="eref">9530</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-11" class="published">11 December 2025</time>
+<time datetime="2025-12-12" class="published">12 December 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-06-14">14 June 2026</time></dd>
+<dd class="expires"><time datetime="2026-06-15">15 June 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1136,7 +1136,7 @@ fields" defined in RFC 9530.<a href="#section-abstract-2" class="pilcrow">¶</a>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 14 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 15 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1394,11 +1394,14 @@ used for validation. If multiple content codings are applied, the recipient
 needs to decode all encodings in order before validation.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <p id="section-5-2">Since the digest is calculated on unencoded representation bytes, validation of
 a message with content codings (as described above) can only succeed where the
-decoded output produces the same byte sequence as the input. While many
-registered content codings behave this way, there is no requirement for them to
-do so and it remains a possibility that decoding could produce a
-different byte sequence. In order to avoid unintended validation failures, care
-is advised when selecting content codings for use with <code>Unencoded-Digest</code>.<a href="#section-5-2" class="pilcrow">¶</a></p>
+decoded output produces the same byte sequence as the input. While <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4.1" class="relref">Section 8.4.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span> describes content codings to operate "without loss of
+information", that doesn't necessarily mean a byte-for-byte equivalence. A
+content coding could perform semantically-meaningless
+transformations that nevertheless result in a decoded byte sequence that does
+not exactly match the original unencoded representation. In order to avoid
+unintended validation failures, care is advised when selecting content codings
+for use with <code>Unencoded-Digest</code>; that said, most registered content codings do provide
+byte-for-byte equivalence and are appropriate.<a href="#section-5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="integrity-fields-are-complementary">
