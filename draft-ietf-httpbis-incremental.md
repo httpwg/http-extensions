@@ -217,8 +217,14 @@ accompanied by a connection_limit_reached Proxy-Status response header field
 For performance and efficiency reasons, a small amount of buffering might be
 used by intermediaries, even for incremental messages. Immediate forwarding
 might be exploited to cause an intermediary to waste effort on many small
-packets.  Enabling incremental delivery might instead set limits on the number
-bytes that are buffered or the time that buffers are held before forwarding.
+packets.
+
+Enabling incremental delivery might set limits on the number
+bytes that are buffered before forwarding.
+Any intermediary that buffers incoming data
+MUST limit the time that buffers are held before forwarding;
+an intermediary cannot rely on receiving more bytes to drive progress.
+
 Any buffering could adversely affect application latency, even if it improves
 efficiency.  In all cases, intermediaries cannot hold data in buffers
 indefinitely, so data needs to be forwarded when either the time limit or the
@@ -228,7 +234,8 @@ byte limit is reached.
 # IANA Considerations
 
 An HTTP field named Incremental is registered
-in the Hypertext Transfer Protocol (HTTP) Field Name Registry,
+in the [Hypertext Transfer Protocol (HTTP) Field Name
+Registry](https://www.iana.org/assignments/http-fields/http-fields.xhtml),
 following the procedures in {{Section 18.4 of !HTTP=RFC9110}}.
 The following values are registered:
 
@@ -248,8 +255,9 @@ Comments:
 : None
 {:compact}
 
-An HTTP Proxy Error Type is registered in the HTTP Proxy Error Types registry as
-shown below:
+An HTTP Proxy Error Type is registered in the [HTTP Proxy Error Types
+Registry](https://www.iana.org/assignments/http-proxy-status/http-proxy-status.xhtml#http-proxy-error-types)
+as shown below:
 
 Name:
 : incremental_refused
