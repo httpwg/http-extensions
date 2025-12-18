@@ -239,7 +239,7 @@ To _obtain a URL search variance_ given a [response](https://fetch.spec.whatwg.o
 
 ### Examples
 
-The following illustrates how various inputs are parsed, in terms of their impacting on the resulting no-vary params and vary params:
+The following illustrates how various inputs are parsed, in terms of their impact on the resulting no-vary params and vary params:
 
 | Input                                  | Result                                                    |
 |----------------------------------------+-----------------------------------------------------------|
