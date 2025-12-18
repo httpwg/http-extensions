@@ -371,16 +371,16 @@ Due to how the application/x-www-form-urlencoded parser canonicalizes query stri
 
 So, for example, given any non-default value for `No-Vary-Search`, such as `No-Vary-Search: key-order`, we will have the following equivalences:
 
-| URI A                         | URI B                             | Reason for Equivalence                              |
-|-------------------------------+-----------------------------------+-----------------------------------------------------|
-| https://example.com           | https://example.com/?             | A null query is parsed the same as an empty string  |
-| https://example.com/?a=x      | https://example.com/?%61=%78      | Parsing performs percent-decoding                   |
-| https://example.com/?a=é      | https://example.com/?a=%C3%A9     | Parsing performs percent-decoding                   |
-| https://example.com/?a=%f6    | https://example.com/?a=%ef%bf%bd  | Both values are parsed as U+FFFD (�)                |
-| https://example.com/?a=x&&&&  | https://example.com/?a=x          | Parsing splits on `&` and discards empty strings    |
-| https://example.com/?a=       | https://example.com/?a            | Both parse as having an empty string value for `a`  |
-| https://example.com/?a=%20    | https://example.com/?a= &         | `%20` is parsed as U+0020 SPACE                     |
-| https://example.com/?a=+      | https://example.com/?a= &         | `+` is parsed as U+0020 SPACE                       |
+| URI A                           | URI B                               | Reason for Equivalence                              |
+|---------------------------------+-------------------------------------+-----------------------------------------------------|
+| `https://example.com`           | `https://example.com/?`             | A null query is parsed the same as an empty string  |
+| `https://example.com/?a=x`      | `https://example.com/?%61=%78`      | Parsing performs percent-decoding                   |
+| `https://example.com/?a=é`      | `https://example.com/?a=%C3%A9`     | Parsing performs percent-decoding                   |
+| `https://example.com/?a=%f6`    | `https://example.com/?a=%ef%bf%bd`  | Both values are parsed as U+FFFD (�)                |
+| `https://example.com/?a=x&&&&`  | `https://example.com/?a=x`          | Parsing splits on `&` and discards empty strings    |
+| `https://example.com/?a=`       | `https://example.com/?a`            | Both parse as having an empty string value for `a`  |
+| `https://example.com/?a=%20`    | `https://example.com/?a= &`         | `%20` is parsed as U+0020 SPACE                     |
+| `https://example.com/?a=+`      | `https://example.com/?a= &`         | `+` is parsed as U+0020 SPACE                       |
 
 # Caching {#caching}
 
