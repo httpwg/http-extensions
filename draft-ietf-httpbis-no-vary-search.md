@@ -380,7 +380,7 @@ So, for example, given any non-default value for `No-Vary-Search`, such as `No-V
 | https://example.com/?a=x&&&&  | https://example.com/?a=x          | Parsing splits on `&` and discards empty strings    |
 | https://example.com/?a=       | https://example.com/?a            | Both parse as having an empty string value for `a`  |
 | https://example.com/?a=%20    | https://example.com/?a= &         | `%20` is parsed as U+0020 SPACE                     |
-| https://example.com/?a=+      | https://example.com/?a= &         | `+` is parsed as U+0020 SPACE                       |  
+| https://example.com/?a=+      | https://example.com/?a= &         | `+` is parsed as U+0020 SPACE                       |
 
 # Caching {#caching}
 
