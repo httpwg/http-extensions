@@ -250,7 +250,6 @@ The following illustrates how various inputs are parsed, in terms of their impac
 The following inputs are all invalid and will cause the default URL search variance to be returned:
 
 {:compact}
-  * `No-Vary-Search: unknown-key`
   * `No-Vary-Search: key-order="not a boolean"`
   * `No-Vary-Search: params="not a boolean or inner list"`
   * `No-Vary-Search: params=(not-a-string)`
