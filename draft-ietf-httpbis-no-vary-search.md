@@ -131,6 +131,8 @@ And if the resource instead wants to take an allowlist-based approach, where onl
 No-Vary-Search: params, except=("productId")
 ~~~~
 
+Note that common approaches for ensuring caches return non-cached responses by changing query parameters are often ineffective when combined with the No-Vary-Search header field.
+
 {{header-definition}} defines the header field, using the {{STRUCTURED-FIELDS}} framework. {{data-model}} and {{parsing}} illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. {{comparing}} gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format specified in {{WHATWG-URL}}. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, {{caching}} explains how to modify {{HTTP-CACHING}} to take into account this new equivalence.
 
 # Conventions and Definitions
