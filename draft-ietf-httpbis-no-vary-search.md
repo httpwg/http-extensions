@@ -153,8 +153,7 @@ It has the following authoring conformance requirements:
 * If present, the `key-order` entry's value MUST be a boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}).
 * If present, the `params` entry's value MUST be an inner list of strings ({{Section 3.1.1 of STRUCTURED-FIELDS}}).
 * If present, the `except` entry's value MUST be an inner list of strings ({{Section 3.1.1 of STRUCTURED-FIELDS}}).
-* The `params` entry MUST only be present if the `except` entry is not present.
-* The `except` entry MUST only be present if the `params` entry is not present.
+* The `except` entry MUST NOT be present if the `params` entry is also present.
 
 The dictionary MAY contain entries whose keys are not one of `key-order`, `params`, and `except`, but their meaning is not defined by this specification. Implementations of this specification will ignore such entries (but future documents might assign meaning to such entries).
 
