@@ -97,7 +97,7 @@ Table of Contents
    presented target URI (Section 7.1 of [HTTP]).  However, sometimes
    multiple URIs can represent the same resource.  This leads to caches
    not always being as helpful as they could be: if the cache contains a
-   response under one URI, but the resource is then requested under
+   response under one URI, but the response is then requested under
    another, the cached version will be ignored.
 
    The No-Vary-Search HTTP header field tackles a specific subset of
