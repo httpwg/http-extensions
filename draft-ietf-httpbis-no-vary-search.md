@@ -139,7 +139,7 @@ No-Vary-Search: params, except=("productId")
 
 {::boilerplate bcp14-tagged}
 
-In this document, the terms "URI" and "URL" are used mostly interchangeably, depending on context ({{URI}} and {{HTTP}} vs the algorithms specified in {{WHATWG-URL}}). 
+In this document, the terms "URI" and "URL" are used interchangeably, depending on context. "URI" is used in the context of {{URI}}, {{HTTP}}, and {{HTTP-CACHING}}, whereas "URL" is used in the context of the algorithms specified in {{WHATWG-URL}}.
 
 
 This document also adopts some conventions and notation typical in WHATWG and W3C usage, especially as it relates to algorithms. See {{WHATWG-INFRA}}, and in particular:
