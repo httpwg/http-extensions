@@ -298,7 +298,7 @@ To _parse a key_ given an ASCII string _keyString_:
 
 ### Examples
 
-The parse a key algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format {{WHATWG-URL}} allows encoding an entire entry list of keys and values in URI (which is constricted to ASCII characters). For example,
+The parse a key algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format {{WHATWG-URL}} allows encoding an entire entry list of keys and values in a URI (which is restricted to ASCII characters). For example,
 
 ~~~~http-message
 No-Vary-Search: params=("%C3%A9+%E6%B0%97")
