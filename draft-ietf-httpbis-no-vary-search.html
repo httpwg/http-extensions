@@ -8,7 +8,7 @@
 <meta content="Domenic Denicola" name="author">
 <meta content="Jeremy Roman" name="author">
 <meta content="
-       This specification defines a proposed HTTP response header field for changing how URL search parameters impact caching. 
+       This specification defines a proposed HTTP response header field for changing how URI query parameters impact caching. 
     " name="description">
 <meta content="xml2rfc 3.31.0" name="generator">
 <meta content="http" name="keyword">
@@ -19,12 +19,12 @@
     Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
-    intervaltree 3.1.0
+    intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 5.3.1
-    platformdirs 4.5.0
+    lxml 6.0.2
+    platformdirs 4.5.1
     pycountry 24.6.1
-    PyYAML 6.0.2
+    PyYAML 6.0.3
     requests 2.32.5
     wcwidth 0.2.14
 -->
@@ -1045,11 +1045,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">No-Vary-Search</td>
-<td class="right">December 2025</td>
+<td class="right">January 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Denicola &amp; Roman</td>
-<td class="center">Expires 15 June 2026</td>
+<td class="center">Expires 9 July 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1062,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-no-vary-search-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-12" class="published">12 December 2025</time>
+<time datetime="2026-01-05" class="published">5 January 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-06-15">15 June 2026</time></dd>
+<dd class="expires"><time datetime="2026-07-09">9 July 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1084,7 +1084,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">The No-Vary-Search HTTP Response Header Field</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This specification defines a proposed HTTP response header field for changing how URL search parameters impact caching.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This specification defines a proposed HTTP response header field for changing how URI query parameters impact caching.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1121,7 +1121,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 15 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 9 July 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1130,7 +1130,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2025 IETF Trust and the persons identified as the
+            Copyright (c) 2026 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1240,8 +1240,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">HTTP caching <span>[<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span> is based on reusing resources which match across a number of cache keys. One of the most prominent is the presented target URI (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.1" class="relref">Section 7.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). However, sometimes multiple URLs can represent the same resource. This leads to caches not always being as helpful as they could be: if the cache contains the resource under one URI, but the resource is then requested under another, the cached version will be ignored.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">The <code>No-Vary-Search</code> HTTP header field tackles a specific subset of this general problem, for when a resource has multiple URLs which differ only in certain query components. It allows resources to declare that some or all parts of the query do not semantically affect the served resource, and thus can be ignored for cache matching purposes. For example, if the order of the query parameter keys do not semantically affect the served resource, this is indicated using<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-1">HTTP caching <span>[<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span> is based on reusing resources which match across a number of cache keys. One of the most prominent is the presented target URI (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.1" class="relref">Section 7.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). However, sometimes multiple URIs can represent the same resource. This leads to caches not always being as helpful as they could be: if the cache contains a response under one URI, but the response is then requested under another, the cached version will be ignored.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">The <code>No-Vary-Search</code> HTTP header field tackles a specific subset of this general problem, for when different URIs that only differ in
+certain query parameters identify the same resource. It allows resources to declare that some or all parts of the query component do not semantically affect the served resource, and thus can be ignored for cache matching purposes. For example, if the order of the query parameters do not affect which resource is identified, this is indicated using<a href="#section-1-2" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-1-3">
 <pre>
 No-Vary-Search: key-order
@@ -1259,7 +1260,7 @@ No-Vary-Search: params=("utm_source" "utm_medium" "utm_campaign")
 No-Vary-Search: params, except=("productId")
 </pre><a href="#section-1-7" class="pilcrow">¶</a>
 </div>
-<p id="section-1-8"><a href="#header-definition" class="auto internal xref">Section 3</a> defines the header field, using the <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> framework. <a href="#data-model" class="auto internal xref">Section 4</a> and <a href="#parsing" class="auto internal xref">Section 5</a> illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. <a href="#comparing" class="auto internal xref">Section 6</a> gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format specified in <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, <a href="#caching" class="auto internal xref">Section 7</a> explains how to modify <span>[<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span> to take into account this new equivalence.<a href="#section-1-8" class="pilcrow">¶</a></p>
+<p id="section-1-8"><a href="#header-definition" class="auto internal xref">Section 3</a> defines the header field, using the <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> framework. <a href="#data-model" class="auto internal xref">Section 4</a> and <a href="#parsing" class="auto internal xref">Section 5</a> illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. <a href="#comparing" class="auto internal xref">Section 6</a> gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format specified in <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, <a href="#caching" class="auto internal xref">Section 7</a> explains how to extend <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span> to take this new equivalence into account.<a href="#section-1-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1271,16 +1272,17 @@ No-Vary-Search: params, except=("productId")
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">This document also adopts some conventions and notation typical in WHATWG and W3C usage, especially as it relates to algorithms. See <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span>, and in particular:<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-2">In this document, the terms "URI" and "URL" are used interchangeably, depending on context. "URI" is used in the context of <span>[<a href="#URI" class="cite xref">URI</a>]</span>, <span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span>, and <span>[<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>, whereas "URL" is used in the context of the algorithms specified in <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">This document also adopts some conventions and notation typical in WHATWG and W3C usage, especially as it relates to algorithms. See <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span>, and in particular:<a href="#section-2-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-2-3.1">
-          <p id="section-2-3.1.1">its definition of lists, including the list literal notation « 1, 2, 3 ».<a href="#section-2-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-2-4.1">
+          <p id="section-2-4.1.1">its definition of lists, including the list literal notation « 1, 2, 3 ».<a href="#section-2-4.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-2-3.2">
-          <p id="section-2-3.2.1">its definition of strings, including their representation as code units.<a href="#section-2-3.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-2-4.2">
+          <p id="section-2-4.2.1">its definition of strings, including their representation as code units.<a href="#section-2-4.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-4">(Other concepts used are called out using inline references.)<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">(Other concepts used are called out using inline references.)<a href="#section-2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="header-definition">
@@ -1635,13 +1637,13 @@ To <em><span id="iref-parse-a-key-23" class="iref"></span><a href="#parse-a-key"
           <h4 id="name-examples-2">
 <a href="#section-5.3.1" class="section-number selfRef">5.3.1. </a><a href="#name-examples-2" class="section-name selfRef">Examples</a>
           </h4>
-<p id="section-5.3.1-1">The <span id="iref-parse-a-key-24" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> allows encoding an entire entry list of keys and values in ASCII URL format. For example,<a href="#section-5.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.1-1">The <span id="iref-parse-a-key-24" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> allows encoding an entire entry list of keys and values in a URI (which is restricted to ASCII characters). For example,<a href="#section-5.3.1-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-5.3.1-2">
 <pre>
 No-Vary-Search: params=("%C3%A9+%E6%B0%97")
 </pre><a href="#section-5.3.1-2" class="pilcrow">¶</a>
 </div>
-<p id="section-5.3.1-3">will result in a URL search variance whose vary params are « "<code>é 気</code>" ». As explained in a later example, the canonicalization process during equivalence testing means this will treat as equivalent URL strings such as:<a href="#section-5.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.3.1-3">will result in a URL search variance whose vary params are « "<code>é 気</code>" ». As explained in a later example, the canonicalization process during equivalence testing means this will treat as equivalent URIs such as:<a href="#section-5.3.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.3.1-4.1">
               <p id="section-5.3.1-4.1.1"><code>https://example.com/?é 気=1</code><a href="#section-5.3.1-4.1.1" class="pilcrow">¶</a></p>
@@ -1901,7 +1903,7 @@ In this case, even URL pairs that might appear the same after running the <a hre
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-8-1">The main risk to be aware of is the impact of mismatched URLs. In particular, this could cause the user to see a response that was originally fetched from a URL different from the one displayed when they hovered a link, or the URL displayed in the URL bar.<a href="#section-8-1" class="pilcrow">¶</a></p>
-<p id="section-8-2">However, since the impact is limited to query parameters, this does not cross the relevant security boundary, which is the <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin">origin</a> <span>[<a href="#HTML" class="cite xref">HTML</a>]</span>. (Or perhaps just the <a href="https://url.spec.whatwg.org/#concept-url-host">host</a>, from <a href="https://url.spec.whatwg.org/#url-rendering-simplification">the perspective of web browser security UI</a>. <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>) Indeed, we have already given origins complete control over how they present the (URL, reponse body) pair, including on the client side via technology such as <a href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate">history.replaceState()</a> or service workers.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-2">However, since the impact is limited to query parameters, this does not cross the relevant security boundary, which is the <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin">origin</a> <span>[<a href="#HTML" class="cite xref">HTML</a>]</span>. (Or perhaps just the <a href="https://url.spec.whatwg.org/#concept-url-host">host</a>, from <a href="https://url.spec.whatwg.org/#url-rendering-simplification">the perspective of web browser security UI</a>. <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>) Indeed, we have already given origins complete control over how they present the (URL, response body) pair, including on the client side via technology such as <a href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate">history.replaceState()</a> or service workers.<a href="#section-8-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="privacy-considerations">
@@ -1909,7 +1911,7 @@ In this case, even URL pairs that might appear the same after running the <a hre
       <h2 id="name-privacy-considerations">
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-privacy-considerations" class="section-name selfRef">Privacy Considerations</a>
       </h2>
-<p id="section-9-1">This proposal is adjacent to the highly-privacy-relevant space of <a href="https://privacycg.github.io/nav-tracking-mitigations/#terminology">navigational tracking</a>, which often uses query parameters to pass along user identifiers. However, we believe this proposal itself does not have privacy impacts. It does not interfere with <a href="https://privacycg.github.io/nav-tracking-mitigations/#deployed-mitigations">existing navigational tracking mitigations</a>, or any known future ones being contemplated. Indeed, if a page were to encode user identifiers in its URL, the only ability this proposal gives is to <em>reduce</em> such user tracking by preventing server processing of such user IDs (since the server is bypassed in favor of the cache). <span>[<a href="#NAV-TRACKING-MITIGATIONS" class="cite xref">NAV-TRACKING-MITIGATIONS</a>]</span><a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-9-1">This proposal is adjacent to the highly-privacy-relevant space of <a href="https://privacycg.github.io/nav-tracking-mitigations/#terminology">navigational tracking</a>, which often uses query parameters to pass along user identifiers. However, we believe this proposal itself does not have privacy impacts. It does not interfere with <a href="https://privacycg.github.io/nav-tracking-mitigations/#deployed-mitigations">existing navigational tracking mitigations</a>, or any known future ones being contemplated. Indeed, if a page were to encode user identifiers in its URI, the only ability this proposal gives is to <em>reduce</em> such user tracking by preventing server processing of such user IDs (since the server is bypassed in favor of the cache). <span>[<a href="#NAV-TRACKING-MITIGATIONS" class="cite xref">NAV-TRACKING-MITIGATIONS</a>]</span><a href="#section-9-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
@@ -1989,6 +1991,10 @@ In this case, even URL pairs that might appear the same after running the <a hre
 <dt id="STRUCTURED-FIELDS">[STRUCTURED-FIELDS]</dt>
         <dd>
 <span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">P. Kamp</span>, <span class="refTitle">"Structured Field Values for HTTP"</span>, <span class="seriesInfo">RFC 9651</span>, <span class="seriesInfo">DOI 10.17487/RFC9651</span>, <time datetime="2024-09" class="refDate">September 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9651">https://www.rfc-editor.org/rfc/rfc9651</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="URI">[URI]</dt>
+        <dd>
+<span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="WHATWG-ENCODING">[WHATWG-ENCODING]</dt>
         <dd>

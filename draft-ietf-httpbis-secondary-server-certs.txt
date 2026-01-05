@@ -5,8 +5,8 @@
 HTTP                                                     E. Gorbaty, Ed.
 Internet-Draft                                                     Apple
 Intended status: Standards Track                          M. Bishop, Ed.
-Expires: 15 June 2026                                             Akamai
-                                                        12 December 2025
+Expires: 9 July 2026                                              Akamai
+                                                          5 January 2026
 
 
           Secondary Certificate Authentication of HTTP Servers
@@ -51,11 +51,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 June 2026.
+   This Internet-Draft will expire on 9 July 2026.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
