@@ -35,6 +35,7 @@ author:
     email: jbroman@chromium.org
 
 normative:
+  URI: RFC3986
   HTTP: RFC9110
   HTTP-CACHING: RFC9111
   FETCH:
@@ -105,15 +106,16 @@ informative:
 
 --- abstract
 
-This specification defines a proposed HTTP response header field for changing how URL search parameters impact caching.
+This specification defines a proposed HTTP response header field for changing how URI query parameters impact caching.
 
 --- middle
 
 # Introduction
 
-HTTP caching {{HTTP-CACHING}} is based on reusing resources which match across a number of cache keys. One of the most prominent is the presented target URI ({{Section 7.1 of HTTP}}). However, sometimes multiple URLs can represent the same resource. This leads to caches not always being as helpful as they could be: if the cache contains the resource under one URI, but the resource is then requested under another, the cached version will be ignored.
+HTTP caching {{HTTP-CACHING}} is based on reusing resources which match across a number of cache keys. One of the most prominent is the presented target URI ({{Section 7.1 of HTTP}}). However, sometimes multiple URIs can represent the same resource. This leads to caches not always being as helpful as they could be: if the cache contains a response under one URI, but the response is then requested under another, the cached version will be ignored.
 
-The `No-Vary-Search` HTTP header field tackles a specific subset of this general problem, for when a resource has multiple URLs which differ only in certain query components. It allows resources to declare that some or all parts of the query do not semantically affect the served resource, and thus can be ignored for cache matching purposes. For example, if the order of the query parameter keys do not semantically affect the served resource, this is indicated using
+The `No-Vary-Search` HTTP header field tackles a specific subset of this general problem, for when different URIs that only differ in
+certain query parameters identify the same resource. It allows resources to declare that some or all parts of the query component do not semantically affect the served resource, and thus can be ignored for cache matching purposes. For example, if the order of the query parameters do not affect which resource is identified, this is indicated using
 
 ~~~~http-message
 No-Vary-Search: key-order
@@ -131,11 +133,14 @@ And if the resource instead wants to take an allowlist-based approach, where onl
 No-Vary-Search: params, except=("productId")
 ~~~~
 
-{{header-definition}} defines the header field, using the {{STRUCTURED-FIELDS}} framework. {{data-model}} and {{parsing}} illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. {{comparing}} gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format specified in {{WHATWG-URL}}. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, {{caching}} explains how to modify {{HTTP-CACHING}} to take into account this new equivalence.
+{{header-definition}} defines the header field, using the {{STRUCTURED-FIELDS}} framework. {{data-model}} and {{parsing}} illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. {{comparing}} gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format specified in {{WHATWG-URL}}. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, {{caching}} explains how to extend {{Section 4 of HTTP-CACHING}} to take this new equivalence into account.
 
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
+
+In this document, the terms "URI" and "URL" are used interchangeably, depending on context. "URI" is used in the context of {{URI}}, {{HTTP}}, and {{HTTP-CACHING}}, whereas "URL" is used in the context of the algorithms specified in {{WHATWG-URL}}.
+
 
 This document also adopts some conventions and notation typical in WHATWG and W3C usage, especially as it relates to algorithms. See {{WHATWG-INFRA}}, and in particular:
 
@@ -293,13 +298,13 @@ To _parse a key_ given an ASCII string _keyString_:
 
 ### Examples
 
-The parse a key algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format {{WHATWG-URL}} allows encoding an entire entry list of keys and values in ASCII URL format. For example,
+The parse a key algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format {{WHATWG-URL}} allows encoding an entire entry list of keys and values in a URI (which is restricted to ASCII characters). For example,
 
 ~~~~http-message
 No-Vary-Search: params=("%C3%A9+%E6%B0%97")
 ~~~~
 
-will result in a URL search variance whose vary params are « "`é 気`" ». As explained in a later example, the canonicalization process during equivalence testing means this will treat as equivalent URL strings such as:
+will result in a URL search variance whose vary params are « "`é 気`" ». As explained in a later example, the canonicalization process during equivalence testing means this will treat as equivalent URIs such as:
 
 <!-- link "a later example" and "equivalence testing" -->
 
@@ -451,11 +456,11 @@ To aid cache implementation efficiency, servers SHOULD NOT send different non-em
 
 The main risk to be aware of is the impact of mismatched URLs. In particular, this could cause the user to see a response that was originally fetched from a URL different from the one displayed when they hovered a link, or the URL displayed in the URL bar.
 
-However, since the impact is limited to query parameters, this does not cross the relevant security boundary, which is the [origin](https://html.spec.whatwg.org/multipage/browsers.html#concept-origin) {{HTML}}. (Or perhaps just the [host](https://url.spec.whatwg.org/#concept-url-host), from [the perspective of web browser security UI](https://url.spec.whatwg.org/#url-rendering-simplification). {{WHATWG-URL}}) Indeed, we have already given origins complete control over how they present the (URL, reponse body) pair, including on the client side via technology such as [history.replaceState()](https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate) or service workers.
+However, since the impact is limited to query parameters, this does not cross the relevant security boundary, which is the [origin](https://html.spec.whatwg.org/multipage/browsers.html#concept-origin) {{HTML}}. (Or perhaps just the [host](https://url.spec.whatwg.org/#concept-url-host), from [the perspective of web browser security UI](https://url.spec.whatwg.org/#url-rendering-simplification). {{WHATWG-URL}}) Indeed, we have already given origins complete control over how they present the (URL, response body) pair, including on the client side via technology such as [history.replaceState()](https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate) or service workers.
 
 # Privacy Considerations
 
-This proposal is adjacent to the highly-privacy-relevant space of [navigational tracking](https://privacycg.github.io/nav-tracking-mitigations/#terminology), which often uses query parameters to pass along user identifiers. However, we believe this proposal itself does not have privacy impacts. It does not interfere with [existing navigational tracking mitigations](https://privacycg.github.io/nav-tracking-mitigations/#deployed-mitigations), or any known future ones being contemplated. Indeed, if a page were to encode user identifiers in its URL, the only ability this proposal gives is to *reduce* such user tracking by preventing server processing of such user IDs (since the server is bypassed in favor of the cache). {{NAV-TRACKING-MITIGATIONS}}
+This proposal is adjacent to the highly-privacy-relevant space of [navigational tracking](https://privacycg.github.io/nav-tracking-mitigations/#terminology), which often uses query parameters to pass along user identifiers. However, we believe this proposal itself does not have privacy impacts. It does not interfere with [existing navigational tracking mitigations](https://privacycg.github.io/nav-tracking-mitigations/#deployed-mitigations), or any known future ones being contemplated. Indeed, if a page were to encode user identifiers in its URI, the only ability this proposal gives is to *reduce* such user tracking by preventing server processing of such user IDs (since the server is bypassed in favor of the cache). {{NAV-TRACKING-MITIGATIONS}}
 
 # IANA Considerations
 
