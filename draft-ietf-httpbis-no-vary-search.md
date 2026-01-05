@@ -204,11 +204,13 @@ To _parse a URL search variance_ given _value_:
     1. If _value_\["`params`"] is not an array, then return the default URL search variance.
     1. If any item in _value_\["`params`"] is not a string, then return the default URL search variance.
     1. Set _result_'s no-vary params to the result of applying parse a key ({{parse-a-key}}) to each item in _value_\["`params`"].
+    1. If any item in _result_'s no-vary params is an error, then return the default URL search variance.
     1. Set _result_'s vary params to __wildcard__.
 1. Otherwise, if _value_\["`except`"] exists:
     1. If _value_\["`except`"] is not an array, then return the default URL search variance.
     1. If any item in _value_\["`except`"] is not a string, then return the default URL search variance.
     1. Set _result_'s vary params to the result of applying parse a key ({{parse-a-key}}) to each item in _value_\["`except`"].
+    1. If any item in _result_'s vary params is an error, then return the default URL search variance.
     1. Set _result_'s no-vary params to __wildcard__.
 1. Return _result_.
 
