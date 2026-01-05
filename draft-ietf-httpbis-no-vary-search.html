@@ -1480,7 +1480,7 @@ To <em><span id="iref-obtain-a-url-search-variance-1" class="iref"></span><a hre
           <h4 id="name-examples">
 <a href="#section-5.2.1" class="section-number selfRef">5.2.1. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
           </h4>
-<p id="section-5.2.1-1">The following illustrates how various inputs are parsed, in terms of their impacting on the resulting no-vary params and vary params:<a href="#section-5.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.1-1">The following illustrates how various inputs are parsed, in terms of their impact on the resulting no-vary params and vary params:<a href="#section-5.2.1-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
             <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
 <thead>
@@ -1514,40 +1514,37 @@ To <em><span id="iref-obtain-a-url-search-variance-1" class="iref"></span><a hre
 <p id="section-5.2.1-3">The following inputs are all invalid and will cause the <span id="iref-default-url-search-variance-2" class="iref"></span>default URL search variance to be returned:<a href="#section-5.2.1-3" class="pilcrow">¶</a></p>
 <ul class="compact">
 <li class="compact" id="section-5.2.1-4.1">
-              <p id="section-5.2.1-4.1.1"><code>No-Vary-Search: unknown-key</code><a href="#section-5.2.1-4.1.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.1.1"><code>No-Vary-Search: key-order="not a boolean"</code><a href="#section-5.2.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.2">
-              <p id="section-5.2.1-4.2.1"><code>No-Vary-Search: key-order="not a boolean"</code><a href="#section-5.2.1-4.2.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.2.1"><code>No-Vary-Search: params="not a boolean or inner list"</code><a href="#section-5.2.1-4.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.3">
-              <p id="section-5.2.1-4.3.1"><code>No-Vary-Search: params="not a boolean or inner list"</code><a href="#section-5.2.1-4.3.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.3.1"><code>No-Vary-Search: params=(not-a-string)</code><a href="#section-5.2.1-4.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.4">
-              <p id="section-5.2.1-4.4.1"><code>No-Vary-Search: params=(not-a-string)</code><a href="#section-5.2.1-4.4.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.4.1"><code>No-Vary-Search: params=("a"), except=("x")</code><a href="#section-5.2.1-4.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.5">
-              <p id="section-5.2.1-4.5.1"><code>No-Vary-Search: params=("a"), except=("x")</code><a href="#section-5.2.1-4.5.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.5.1"><code>No-Vary-Search: params=(), except=()</code><a href="#section-5.2.1-4.5.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.6">
-              <p id="section-5.2.1-4.6.1"><code>No-Vary-Search: params=(), except=()</code><a href="#section-5.2.1-4.6.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.6.1"><code>No-Vary-Search: params=?0, except=("x")</code><a href="#section-5.2.1-4.6.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.7">
-              <p id="section-5.2.1-4.7.1"><code>No-Vary-Search: params=?0, except=("x")</code><a href="#section-5.2.1-4.7.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.7.1"><code>No-Vary-Search: params, except=(not-a-string)</code><a href="#section-5.2.1-4.7.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.8">
-              <p id="section-5.2.1-4.8.1"><code>No-Vary-Search: params, except=(not-a-string)</code><a href="#section-5.2.1-4.8.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.8.1"><code>No-Vary-Search: params, except="not an inner list"</code><a href="#section-5.2.1-4.8.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.9">
-              <p id="section-5.2.1-4.9.1"><code>No-Vary-Search: params, except="not an inner list"</code><a href="#section-5.2.1-4.9.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.9.1"><code>No-Vary-Search: params, except=?1</code><a href="#section-5.2.1-4.9.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.10">
-              <p id="section-5.2.1-4.10.1"><code>No-Vary-Search: params, except=?1</code><a href="#section-5.2.1-4.10.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.10.1"><code>No-Vary-Search: except=("x")</code><a href="#section-5.2.1-4.10.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.11">
-              <p id="section-5.2.1-4.11.1"><code>No-Vary-Search: except=("x")</code><a href="#section-5.2.1-4.11.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="compact" id="section-5.2.1-4.12">
-              <p id="section-5.2.1-4.12.1"><code>No-Vary-Search: except=()</code><a href="#section-5.2.1-4.12.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.11.1"><code>No-Vary-Search: except=()</code><a href="#section-5.2.1-4.11.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-5.2.1-5">The following inputs are valid, but somewhat unconventional. They are shown alongside their more conventional form.<a href="#section-5.2.1-5" class="pilcrow">¶</a></p>

@@ -317,7 +317,7 @@ Table of Contents
 5.2.1.  Examples
 
    The following illustrates how various inputs are parsed, in terms of
-   their impacting on the resulting no-vary params and vary params:
+   their impact on the resulting no-vary params and vary params:
 
           +========================+============================+
           | Input                  | Result                     |
@@ -337,7 +337,6 @@ Table of Contents
    The following inputs are all invalid and will cause the default URL
    search variance to be returned:
 
-   *  No-Vary-Search: unknown-key
    *  No-Vary-Search: key-order="not a boolean"
    *  No-Vary-Search: params="not a boolean or inner list"
    *  No-Vary-Search: params=(not-a-string)
