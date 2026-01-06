@@ -371,16 +371,16 @@ Due to how the application/x-www-form-urlencoded parser canonicalizes query stri
 
 So, for example, given any non-default value for `No-Vary-Search`, such as `No-Vary-Search: key-order`, we will have the following equivalences:
 
-| URI A                     | URI B                         | Reason for Equivalence                              |
-|---------------------------+-------------------------------+-----------------------------------------------------|
-| `https://e.com`           | `https://e.com/?`             | A null query is parsed the same as an empty string  |
-| `https://e.com/?a=x`      | `https://e.com/?%61=%78`      | Parsing performs percent-decoding                   |
-| `https://e.com/?a=é`      | `https://e.com/?a=%C3%A9`     | Parsing performs percent-decoding                   |
-| `https://e.com/?a=%f6`    | `https://e.com/?a=%ef%bf%bd`  | Both values are parsed as U+FFFD (�)                |
-| `https://e.com/?a=x&&&&`  | `https://e.com/?a=x`          | Parsing splits on `&` and discards empty strings    |
-| `https://e.com/?a=`       | `https://e.com/?a`            | Both parse as having an empty string value for `a`  |
-| `https://e.com/?a=%20`    | `https://e.com/?a= &`         | `%20` is parsed as U+0020 SPACE                     |
-| `https://e.com/?a=+`      | `https://e.com/?a= &`         | `+` is parsed as U+0020 SPACE                       |
+| Query A &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Query B &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Reason for Equivalence |
+|-------------+-----------------+-----------------------------------------------------|
+| null        | `?`             | A null query is parsed the same as an empty string  |
+| `?a=x`      | `?%61=%78`      | Parsing performs percent-decoding                   |
+| `?a=é`      | `?a=%C3%A9`     | Parsing performs percent-decoding                   |
+| `?a=%f6`    | `?a=%ef%bf%bd`  | Both values are parsed as U+FFFD (�)                |
+| `?a=x&&&&`  | `?a=x`          | Parsing splits on `&` and discards empty strings    |
+| `?a=`       | `?a`            | Both parse as having an empty string value for `a`  |
+| `?a=%20`    | `?a= &`         | `%20` is parsed as U+0020 SPACE                     |
+| `?a=+`      | `?a= &`         | `+` is parsed as U+0020 SPACE                       |
 
 # Caching {#caching}
 
