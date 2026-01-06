@@ -371,12 +371,12 @@ Due to how the application/x-www-form-urlencoded parser canonicalizes query stri
 
 So, for example, given any non-default value for `No-Vary-Search`, such as `No-Vary-Search: key-order`, we will have the following equivalences:
 
-| Query A &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Query B &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Reason for Equivalence |
+| Query A &nbsp; | Query B &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Explanation |
 |-------------+-----------------+-----------------------------------------------------|
 | null        | `?`             | A null query is parsed the same as an empty string  |
 | `?a=x`      | `?%61=%78`      | Parsing performs percent-decoding                   |
 | `?a=é`      | `?a=%C3%A9`     | Parsing performs percent-decoding                   |
-| `?a=%f6`    | `?a=%ef%bf%bd`  | Both values are parsed as U+FFFD (�)                |
+| `?a=%f6`    | `?a=%ef%bf%bd`  | Both values are parsed as U+FFFD (&#xfffd;)         |
 | `?a=x&&&&`  | `?a=x`          | Parsing splits on `&` and discards empty strings    |
 | `?a=`       | `?a`            | Both parse as having an empty string value for `a`  |
 | `?a=%20`    | `?a= &`         | `%20` is parsed as U+0020 SPACE                     |
