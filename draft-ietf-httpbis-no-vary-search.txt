@@ -5,7 +5,7 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                              Google LLC
-Expires: 9 July 2026                                      5 January 2026
+Expires: 10 July 2026                                     6 January 2026
 
 
              The No-Vary-Search HTTP Response Header Field
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 July 2026.
+   This Internet-Draft will expire on 10 July 2026.
 
 Copyright Notice
 
@@ -122,6 +122,10 @@ Table of Contents
    affect the served resource, they can use
 
    No-Vary-Search: params, except=("productId")
+
+   Note that "cache busting" by sending unique query parameters to avoid
+   retrieving a cached response can be made ineffective by the No-Vary-
+   Search header field.
 
    Section 3 defines the header field, using the [STRUCTURED-FIELDS]
    framework.  Section 4 and Section 5 illustrate the data model for how
