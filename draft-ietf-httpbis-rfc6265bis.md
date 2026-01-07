@@ -620,9 +620,7 @@ cookie-av         = expires-av / max-age-av / domain-av /
 expires-av        = "Expires" BWS "=" BWS sane-cookie-date
 sane-cookie-date  =
     <IMF-fixdate, defined in [HTTP], Section 5.6.7>
-max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
-non-zero-digit    = %x31-39
-                      ; digits 1 through 9
+max-age-av        = "Max-Age" BWS "=" BWS 1*DIGIT
 domain-av         = "Domain" BWS "=" BWS domain-value
 domain-value      = <subdomain>
                       ; see details below
