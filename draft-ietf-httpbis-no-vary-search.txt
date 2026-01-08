@@ -5,7 +5,7 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                              Google LLC
-Expires: 11 July 2026                                     7 January 2026
+Expires: 12 July 2026                                     8 January 2026
 
 
              The No-Vary-Search HTTP Response Header Field
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 July 2026.
+   This Internet-Draft will expire on 12 July 2026.
 
 Copyright Notice
 
@@ -556,17 +556,16 @@ Table of Contents
 7.  Caching
 
    If a cache [HTTP-CACHING] implements this specification, the
-   presented target URI requirement in Section 4 of [HTTP-CACHING] is
-   replaced with:
+   presented target URI requirement in Section 4 of [HTTP-CACHING]:
 
-   *  one of the following:
+   |  the presented target URI (Section 7.1 of [HTTP]) and that of the
+   |  stored response match, and
 
-      -  the presented target URI (Section 7.1 of [HTTP]) and that of
-         the stored response match, or
+   is replaced with:
 
-      -  the presented target URI and that of the stored response are
-         equivalent modulo search variance (Section 6), given the
-         variance obtained (Section 5.2) from the stored response.
+   |  the presented target URI (Section 7.1 of [HTTP]) and that of the
+   |  stored response match or are equivalent modulo search variance,
+   |  and
 
    Cache implementations MAY fail to reuse a stored response whose
    target URI matches _only_ modulo URL search variance, if the cache
