@@ -6,7 +6,7 @@ HTTP                                                A. van Kesteren, Ed.
 Internet-Draft                                                     Apple
 Obsoletes: [6265] (if approved)                          J. Hofmann, Ed.
 Intended status: Standards Track                                  Google
-Expires: 12 July 2026                                     8 January 2026
+Expires: 16 July 2026                                    12 January 2026
 
 
                 Cookies: HTTP State Management Mechanism
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 July 2026.
+   This Internet-Draft will expire on 16 July 2026.
 
 Copyright Notice
 
@@ -436,9 +436,7 @@ Table of Contents
    expires-av        = "Expires" BWS "=" BWS sane-cookie-date
    sane-cookie-date  =
        <IMF-fixdate, defined in [HTTP], Section 5.6.7>
-   max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
-   non-zero-digit    = %x31-39
-                         ; digits 1 through 9
+   max-age-av        = "Max-Age" BWS "=" BWS 1*DIGIT
    domain-av         = "Domain" BWS "=" BWS domain-value
    domain-value      = <subdomain>
                          ; see details below
