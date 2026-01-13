@@ -21,7 +21,7 @@ venue:
   home: https://httpwg.org/
   mail: ietf-http-wg@w3.org
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
-  repo: https://github.com/httpwg/http-extensions/labels/unecoded-digest
+  repo: https://github.com/httpwg/http-extensions/labels/unencoded-digest
 github-issue-label: unencoded-digest
 updates: 9530
 
