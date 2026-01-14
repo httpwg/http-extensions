@@ -165,11 +165,11 @@ It has the following authoring conformance requirements:
 The dictionary MAY contain entries whose keys are not one of `key-order`, `params`, and `except`, but their meaning is not defined by this specification. Implementations of this specification will ignore such entries (but future documents might assign meaning to such entries).
 
 {:aside}
-> As always, the authoring conformance requirements are not binding on implementations. Implementations instead need to implement the processing model given by the obtain a URL search variance algorithm ({{obtain-a-url-search-variance}}).
+> As always, the authoring conformance requirements are not binding on implementations. Implementations instead need to implement the processing model given by the obtain a URL variation config algorithm ({{obtain-a-url-variation-config}}).
 
 # Data model {#data-model}
 
-A _URL search variance_ consists of the following:
+A _URL variation config_ consists of the following:
 
 {: vspace="0"}
 no-vary params
@@ -181,30 +181,30 @@ vary params
 vary on key order
 : a boolean
 
-(((!default URL search variance)))
-The _default URL search variance_ is a URL search variance whose no-vary params is an empty list, vary params is __wildcard__, and vary on key order is true.
+(((!default URL variation config)))
+The _default URL variation config_ is a URL variation config whose no-vary params is an empty list, vary params is __wildcard__, and vary on key order is true.
 
-*[default URL search variance]:
+*[default URL variation config]:
 
-The obtain a URL search variance algorithm ({{obtain-a-url-search-variance}}) ensures that all URL search variances obey the following constraints:
+The obtain a URL variation config algorithm ({{obtain-a-url-variation-config}}) ensures that all URL variation configs obey the following constraints:
 
 * vary params is a list if and only if the no-vary params is __wildcard__; and
 * no-vary params is a list if and only if the vary params is __wildcard__.
 
 # Parsing {#parsing}
 
-## Parse a URL search variance {#parse-a-url-search-variance}
+## Parse a URL variation config {#parse-a-url-variation-config}
 
-*[parse a URL search variance]: #parse-a-url-search-variance
+*[parse a URL variation config]: #parse-a-url-variation-config
 
-(((!parse a URL search variance)))
-To _parse a URL search variance_ given _value_:
+(((!parse a URL variation config)))
+To _parse a URL variation config_ given _value_:
 
-1. If _value_ is null, then return the default URL search variance.
-1. Let _result_ be a new URL search variance.
+1. If _value_ is null, then return the default URL variation config.
+1. Let _result_ be a new URL variation config.
 1. Set _result_'s vary on key order to true.
 1. If _value_\["`key-order`"] exists:
-    1. If _value_\["`key-order`"] is not a boolean, then return the default URL search variance.
+    1. If _value_\["`key-order`"] is not a boolean, then return the default URL variation config.
     1. Set _result_'s vary on key order to the boolean negation of _value_\["`key-order`"].
 1. If _value_\["`params`"] exists:
     1. If _value_\["`params`"] is a boolean:
@@ -215,34 +215,34 @@ To _parse a URL search variance_ given _value_:
             1. Set _result_'s no-vary params to the empty list.
             1. Set _result_'s vary params to __wildcard__.
     1. Otherwise, if _value_\["`params`"] is an array:
-        1. If any item in _value_\["`params`"] is not a string, then return the default URL search variance.
+        1. If any item in _value_\["`params`"] is not a string, then return the default URL variation config.
         1. Set _result_'s no-vary params to the result of applying parse a key ({{parse-a-key}}) to each item in _value_\["`params`"].
         1. Set _result_'s vary params to __wildcard__.
-    1. Otherwise, return the default URL search variance.
+    1. Otherwise, return the default URL variation config.
 1. If _value_\["`except`"] exists:
-    1. If _value_\["`params`"] is not true, then return the default URL search variance.
-    1. If _value_\["`except`"] is not an array, then return the default URL search variance.
-    1. If any item in _value_\["`except`"] is not a string, then return the default URL search variance.
+    1. If _value_\["`params`"] is not true, then return the default URL variation config.
+    1. If _value_\["`except`"] is not an array, then return the default URL variation config.
+    1. If any item in _value_\["`except`"] is not a string, then return the default URL variation config.
     1. Set _result_'s vary params to the result of applying parse a key ({{parse-a-key}}) to each item in _value_\["`except`"].
 1. Return _result_.
 
 {:aside}
-> In general, this algorithm is strict and tends to return the default URL search variance whenever it sees something it doesn't recognize. This is because the default URL search variance behavior will just cause fewer cache hits, which is an acceptable fallback behavior.
+> In general, this algorithm is strict and tends to return the default URL variation config whenever it sees something it doesn't recognize. This is because the default URL variation config behavior will just cause fewer cache hits, which is an acceptable fallback behavior.
 >
 > However, unrecognized keys at the top level are ignored, to make it easier to extend this specification in the future. To avoid misbehavior with existing client software, such extensions will likely expand, rather than reduce, the set of requests that a cached response can match.
 
 {:aside}
 > The input to this algorithm is generally obtained by parsing a structured field ({{Section 4.2 of STRUCTURED-FIELDS}}) using field_type "dictionary".
 
-## Obtain a URL search variance {#obtain-a-url-search-variance}
+## Obtain a URL variation config {#obtain-a-url-variation-config}
 
-*[obtain a URL search variance]: #obtain-a-url-search-variance
+*[obtain a URL variation config]: #obtain-a-url-variation-config
 
-(((!obtain a URL search variance)))
-To _obtain a URL search variance_ given a [response](https://fetch.spec.whatwg.org/#concept-response) _response_:
+(((!obtain a URL variation config)))
+To _obtain a URL variation config_ given a [response](https://fetch.spec.whatwg.org/#concept-response) _response_:
 
 1. Let _fieldValue_ be the result of [getting a structured field value](https://fetch.spec.whatwg.org/#concept-header-list-get-structured-header) {{FETCH}} given \``No-Vary-Search`\` and "`dictionary`" from _response_'s header list.
-1. Return the result of parsing a URL search variance ({{parse-a-url-search-variance}}) given _fieldValue_. (((parse a URL search variance)))
+1. Return the result of parsing a URL variation config ({{parse-a-url-variation-config}}) given _fieldValue_. (((parse a URL variation config)))
 
 ### Examples
 
@@ -254,7 +254,7 @@ The following illustrates how various inputs are parsed, in terms of their impac
 | `No-Vary-Search: params=("a")`         | no-vary params: « "`a`" »<br>vary params: __wildcard__    |
 | `No-Vary-Search: params, except=("x")` | no-vary params: __wildcard__<br>vary params: « "`x`" »    |
 
-The following inputs are all invalid and will cause the default URL search variance to be returned:
+The following inputs are all invalid and will cause the default URL variation config to be returned:
 
 {:compact}
   * `No-Vary-Search: key-order="not a boolean"`
@@ -305,7 +305,7 @@ The parse a key algorithm allows encoding non-ASCII key strings in the ASCII str
 No-Vary-Search: params=("%C3%A9+%E6%B0%97")
 ~~~~
 
-will result in a URL search variance whose vary params are « "`é 気`" ». As explained in a later example, the canonicalization process during equivalence testing means this will treat as equivalent URIs such as:
+will result in a URL variation config whose vary params are « "`é 気`" ». As explained in a later example, the canonicalization process during equivalence testing means this will treat as equivalent URIs such as:
 
 <!-- link "a later example" and "equivalence testing" -->
 
@@ -318,12 +318,12 @@ and so on, since they all are [parsed](https://url.spec.whatwg.org/#concept-urle
 
 # Comparing {#comparing}
 
-(((!equivalent modulo search variance)))
-Two [URLs](https://url.spec.whatwg.org/#concept-url) {{WHATWG-URL}} _urlA_ and _urlB_ are _equivalent modulo search variance_ given a URL search variance _searchVariance_ if the following algorithm returns true:
+(((!equivalent modulo variation config)))
+Two [URLs](https://url.spec.whatwg.org/#concept-url) {{WHATWG-URL}} _urlA_ and _urlB_ are _equivalent modulo variation config_ given a URL variation config _variationConfig_ if the following algorithm returns true:
 
 1. If the scheme, username, password, host, port, or path of _urlA_ and _urlB_ differ, then return false.
 
-1. If _searchVariance_ is equivalent to the default URL search variance, then:
+1. If _variationConfig_ is equivalent to the default URL variation config, then:
 
     1. If _urlA_'s query equals _urlB_'s query, then return true.
 
@@ -337,19 +337,19 @@ Two [URLs](https://url.spec.whatwg.org/#concept-url) {{WHATWG-URL}} _urlA_ and _
 
 1. If _urlB_'s query is not null, then set _searchParamsB_ to the result of running the [application/x-www-form-urlencoded parser](https://url.spec.whatwg.org/#concept-urlencoded-parser) {{WHATWG-URL}} given the [isomorphic encoding](https://infra.spec.whatwg.org/#isomorphic-encode) {{WHATWG-INFRA}} of _urlB_'s query.
 
-1. If _searchVariance_'s no-vary params is a list, then:
+1. If _variationConfig_'s no-vary params is a list, then:
 
-    1. Set _searchParamsA_ to a list containing those items _pair_ in _searchParamsA_ where _searchVariance_'s no-vary params does not contain _pair_\[0].
+    1. Set _searchParamsA_ to a list containing those items _pair_ in _searchParamsA_ where _variationConfig_'s no-vary params does not contain _pair_\[0].
 
-    1. Set _searchParamsB_ to a list containing those items _pair_ in _searchParamsB_ where _searchVariance_'s no-vary params does not contain _pair_\[0].
+    1. Set _searchParamsB_ to a list containing those items _pair_ in _searchParamsB_ where _variationConfig_'s no-vary params does not contain _pair_\[0].
 
-1. Otherwise, if _searchVariance_'s vary params is a list, then:
+1. Otherwise, if _variationConfig_'s vary params is a list, then:
 
-    1. Set _searchParamsA_ to a list containing those items _pair_ in _searchParamsA_ where _searchVariance_'s vary params contains _pair_\[0].
+    1. Set _searchParamsA_ to a list containing those items _pair_ in _searchParamsA_ where _variationConfig_'s vary params contains _pair_\[0].
 
-    1. Set _searchParamsB_ to a list containing those items _pair_ in _searchParamsB_ where _searchVariance_'s vary params contains _pair_\[0].
+    1. Set _searchParamsB_ to a list containing those items _pair_ in _searchParamsB_ where _variationConfig_'s vary params contains _pair_\[0].
 
-1. If _searchVariance_'s vary on key order is false, then:
+1. If _variationConfig_'s vary on key order is false, then:
 
     1. Let _keyLessThan_ be an algorithm taking as inputs two pairs (_keyA_, _valueA_) and (_keyB_, _valueB_), which returns whether _keyA_ is [code unit less than](https://infra.spec.whatwg.org/#code-unit-less-than) {{WHATWG-INFRA}} _keyB_.
 
@@ -397,10 +397,10 @@ If a cache {{HTTP-CACHING}} implements this specification, the presented target 
 
 is replaced with:
 
-> the presented target URI (Section 7.1 of [HTTP]) and that of the stored response match or are equivalent modulo search variance, and
+> the presented target URI (Section 7.1 of [HTTP]) and that of the stored response match or are equivalent modulo URL variation config, and
 {:quote}
 
-Cache implementations MAY fail to reuse a stored response whose target URI matches _only_ modulo URL search variance, if the cache has more recently stored a response which:
+Cache implementations MAY fail to reuse a stored response whose target URI matches _only_ modulo URL variation config, if the cache has more recently stored a response which:
 
 * has a target URI which is equal to the presented target URI, excluding the query, and
 * has a non-empty value for the `No-Vary-Search` field, and
@@ -416,8 +416,8 @@ Cache implementations MAY fail to reuse a stored response whose target URI match
 > 1. Let lastNVS be mostRecentNVS\[targetPath\]. If it does not exist, return null.
 > 1. Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order is to be be ignored).
 > 1. Let nvsMatch be cache\[simplifiedURL\]. If it does not exist, return null. (It is assumed that this was written when storing in the cache, in addition to the exact URL.)
-> 1. Let searchVariance be obtained ({{obtain-a-url-search-variance}}) from nvsMatch.
-> 1. If nvsMatch's target URI and presentedTargetURI are not equivalent modulo search variance ({{comparing}}) given searchVariance, then return null.
+> 1. Let variationConfig be obtained ({{obtain-a-url-variation-config}}) from nvsMatch.
+> 1. If nvsMatch's target URI and presentedTargetURI are not equivalent modulo URL variation config ({{comparing}}) given variationConfig, then return null.
 > 1. If nvsMatch is a stored response that can be reused, return it. Otherwise, return null.
 
 To aid cache implementation efficiency, servers SHOULD NOT send different non-empty values for the `No-Vary-Search` field in response to requests for a given pathname over time, unless there is a need to update how they handle the query component. Doing so would cause cache implementations that use a strategy like the above to miss some stored responses that could otherwise have been reused.
