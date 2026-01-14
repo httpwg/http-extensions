@@ -5,7 +5,7 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                              Google LLC
-Expires: 16 July 2026                                    12 January 2026
+Expires: 18 July 2026                                    14 January 2026
 
 
              The No-Vary-Search HTTP Response Header Field
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 July 2026.
+   This Internet-Draft will expire on 18 July 2026.
 
 Copyright Notice
 
@@ -524,34 +524,35 @@ Table of Contents
    as No-Vary-Search: key-order, we will have the following
    equivalences:
 
-   https://example.com
-   https://example.com/?
-      A null query is parsed the same as an empty string
+      +===========+===================+============================+
+      | Query A   | Query B           | Explanation                |
+      +===========+===================+============================+
+      | null      | ?                 | A null query is parsed the |
+      |           |                   | same as an empty string    |
+      +-----------+-------------------+----------------------------+
+      | ?a=x      | ?%61=%78          | Parsing performs percent-  |
+      |           |                   | decoding                   |
+      +-----------+-------------------+----------------------------+
+      | ?a=é      | ?a=%C3%A9         | Parsing performs percent-  |
+      |           |                   | decoding                   |
+      +-----------+-------------------+----------------------------+
+      | ?a=%f6    | ?a=%ef%bf%bd      | Both values are parsed as  |
+      |           |                   | U+FFFD (�)                 |
+      +-----------+-------------------+----------------------------+
+      | ?a=x&&&&  | ?a=x              | Parsing splits on & and    |
+      |           |                   | discards empty strings     |
+      +-----------+-------------------+----------------------------+
+      | ?a=       | ?a                | Both parse as having an    |
+      |           |                   | empty string value for a   |
+      +-----------+-------------------+----------------------------+
+      | ?a=%20    | ?a= &             | %20 is parsed as U+0020    |
+      |           |                   | SPACE                      |
+      +-----------+-------------------+----------------------------+
+      | ?a=+      | ?a= &             | + is parsed as U+0020      |
+      |           |                   | SPACE                      |
+      +-----------+-------------------+----------------------------+
 
-   https://example.com/?a=x
-   https://example.com/?%61=%78
-      Parsing performs percent-decoding
-
-   https://example.com/?a=é
-   https://example.com/?a=%C3%A9
-      Parsing performs percent-decoding
-
-   https://example.com/?a=%f6
-   https://example.com/?a=%ef%bf%bd
-      Both values are parsed as U+FFFD (�)
-
-   https://example.com/?a=x&&&&
-   https://example.com/?a=x
-      Parsing splits on & and discards empty strings
-
-   https://example.com/?a=
-   https://example.com/?a
-      Both parse as having an empty string value for a
-
-   https://example.com/?a=%20
-   https://example.com/?a=+
-   https://example.com/?a= &
-      + and %20 are both parsed as U+0020 SPACE
+                                 Table 3
 
 7.  Caching
 
