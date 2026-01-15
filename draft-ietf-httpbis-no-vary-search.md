@@ -377,7 +377,7 @@ Due to how the application/x-www-form-urlencoded parser canonicalizes query stri
 
 So, for example, given any non-default value for `No-Vary-Search`, such as `No-Vary-Search: key-order`, we will have the following equivalences:
 
-| Query A &nbsp; | Query B &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Explanation |
+| First Query | Second Query    | Explanation                                         |
 |-------------+-----------------+-----------------------------------------------------|
 | null        | `?`             | A null query is parsed the same as an empty string  |
 | `?a=x`      | `?%61=%78`      | Parsing performs percent-decoding                   |
