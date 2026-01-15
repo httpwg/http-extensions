@@ -165,7 +165,7 @@ It has the following authoring conformance requirements:
 The dictionary MAY contain entries whose keys are not one of `key-order`, `params`, and `except`, but their meaning is not defined by this specification. Implementations of this specification will ignore such entries (but future documents might assign meaning to such entries).
 
 {:aside}
-> As always, the authoring conformance requirements are not binding on implementations. Implementations instead need to implement the processing model given by the obtain a URL variation config algorithm ({{obtain-a-url-variation-config}}).
+> As always, the authoring conformance requirements are not binding on implementations. Implementations instead need to implement the processing model for URL variation configurations (configs) given by the obtain a URL variation config algorithm ({{obtain-a-url-variation-config}}).
 
 # Data model {#data-model}
 
