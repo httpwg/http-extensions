@@ -33,6 +33,11 @@ author:
     fullname: Jeremy Roman
     organization: Google LLC
     email: jbroman@chromium.org
+ -
+    fullname: Nidhi Jaju
+    role: editor
+    organization: Google LLC
+    email: nidhijaju@chromium.org
 
 normative:
   URI: RFC3986
