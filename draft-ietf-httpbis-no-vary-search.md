@@ -26,6 +26,10 @@ github-issue-label: no-vary-search
 
 author:
  -
+    fullname: Domenic Denicola
+    organization: Google LLC
+    email: d@domenic.me
+ -
     fullname: Jeremy Roman
     organization: Google LLC
     email: jbroman@chromium.org
@@ -460,8 +464,6 @@ Comments:
 
 # Acknowledgments
 {:numbered="false"}
-
-The authors would like to extend a special thanks to Domenic Denicola, who was a key contributor to this work from its inception and one of the original authors of this document.
 
 This document benefited from valuable reviews and suggestions by:
 
