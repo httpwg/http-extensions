@@ -1,5 +1,5 @@
 ---
-title: The No-Vary-Search HTTP Response Header Field
+title: The No-Vary-Search HTTP Caching Extension
 abbrev: No-Vary-Search
 category: std
 
@@ -111,16 +111,16 @@ informative:
 
 --- abstract
 
-This specification defines a proposed HTTP response header field for changing how URI query parameters impact caching.
+This specification defines an extension to HTTP Caching, changing how URI query parameters impact caching.
 
 --- middle
 
 # Introduction
 
-HTTP caching {{HTTP-CACHING}} is based on reusing resources which match across a number of cache keys. One of the most prominent is the presented target URI ({{Section 7.1 of HTTP}}). However, sometimes multiple URIs can represent the same resource. This leads to caches not always being as helpful as they could be: if the cache contains a response under one URI, but the response is then requested under another, the cached version will be ignored.
+HTTP caching {{HTTP-CACHING}} is based on reusing resources which match across a number of cache keys, with the most important one being the presented target URI ({{Section 7.1 of HTTP}}). However, sometimes multiple URIs can represent the same resource. This leads to caches not always being as helpful as they could be: if the cache contains a response under one URI, but the response is then requested under another, the cached version will be ignored.
 
-The `No-Vary-Search` HTTP header field tackles a specific subset of this general problem, for when different URIs that only differ in
-certain query parameters identify the same resource. It allows resources to declare that some or all parts of the query component do not semantically affect the served resource, and thus can be ignored for cache matching purposes. For example, if the order of the query parameters do not affect which resource is identified, this is indicated using
+The "No-Vary-Search" Caching Extension tackles a specific subset of this general problem, for when different URIs that only differ in
+certain query parameters identify the same resource. It allows resources to declare that some or all parts of the query component do not semantically affect the served response, and thus can be ignored for cache matching purposes. For example, if the order of the query parameters do not affect which resource is identified, this is indicated using
 
 ~~~~http-message
 No-Vary-Search: key-order
@@ -132,7 +132,7 @@ If the specific query parameters (e.g., ones indicating something for analytics)
 No-Vary-Search: params=("utm_source" "utm_medium" "utm_campaign")
 ~~~~
 
-And if the resource instead wants to take an allowlist-based approach, where only certain known query parameters semantically affect the served resource, they can use
+And if the resource instead wants to take an allowlist-based approach, where only certain known query parameters semantically affect the served response, they can use
 
 ~~~~http-message
 No-Vary-Search: params, except=("productId")
@@ -140,7 +140,7 @@ No-Vary-Search: params, except=("productId")
 
 Note that "cache busting" by sending unique query parameters to avoid retrieving a cached response can be made ineffective by the `No-Vary-Search` header field.
 
-{{header-definition}} defines the header field, using the {{STRUCTURED-FIELDS}} framework. {{data-model}} and {{parsing}} illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. {{comparing}} gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format specified in {{WHATWG-URL}}. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, {{caching}} explains how to extend {{Section 4 of HTTP-CACHING}} to take this new equivalence into account.
+{{header-definition}} defines the new response header field `No-Vary-Search`, using the {{STRUCTURED-FIELDS}} framework. {{data-model}} and {{parsing}} illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. {{comparing}} gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format specified in {{WHATWG-URL}}. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, {{caching}} explains how to extend {{Section 4 of HTTP-CACHING}} to take this new equivalence into account.
 
 # Conventions and Definitions
 
