@@ -5,8 +5,8 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                            N. Jaju, Ed.
-Expires: 20 July 2026                                         Google LLC
-                                                         16 January 2026
+Expires: 22 July 2026                                         Google LLC
+                                                         18 January 2026
 
 
              The No-Vary-Search HTTP Response Header Field
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 July 2026.
+   This Internet-Draft will expire on 22 July 2026.
 
 Copyright Notice
 
@@ -100,6 +100,9 @@ Table of Contents
    not always being as helpful as they could be: if the cache contains a
    response under one URI, but the response is then requested under
    another, the cached version will be ignored.
+
+   This specification defines an extension to HTTP caching, as permitted
+   in Section 4 of [HTTP-CACHING].
 
    The No-Vary-Search HTTP header field tackles a specific subset of
    this general problem, for when different URIs that only differ in
