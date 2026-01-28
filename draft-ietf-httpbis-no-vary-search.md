@@ -119,7 +119,7 @@ This specification defines an extension to HTTP Caching, changing how URI query 
 
 HTTP caching {{HTTP-CACHING}} is based on reusing resources which match across a number of cache keys, with the most important one being the presented target URI ({{Section 7.1 of HTTP}}). However, sometimes multiple URIs can represent the same resource. This leads to caches not always being as helpful as they could be: if the cache contains a response under one URI, but the response is then requested under another, the cached version will be ignored.
 
-The "No-Vary-Search" Caching Extension tackles a specific subset of this general problem, for when different URIs that only differ in
+The "No-Vary-Search" response header field defines a caching extension, as described in {{Section 4 of HTTP-CACHING}}, that tackles a specific subset of this general problem, for when different URIs that only differ in
 certain query parameters identify the same resource. It allows resources to declare that some or all parts of the query component do not semantically affect the served response, and thus can be ignored for cache matching purposes. For example, if the order of the query parameters do not affect which resource is identified, this is indicated using
 
 ~~~~http-message
