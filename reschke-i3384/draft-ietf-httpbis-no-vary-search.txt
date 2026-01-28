@@ -5,8 +5,8 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                            N. Jaju, Ed.
-Expires: 22 July 2026                                         Google LLC
-                                                         18 January 2026
+Expires: 1 August 2026                                        Google LLC
+                                                         28 January 2026
 
 
                The No-Vary-Search HTTP Caching Extension
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 July 2026.
+   This Internet-Draft will expire on 1 August 2026.
 
 Copyright Notice
 
@@ -101,14 +101,15 @@ Table of Contents
    response under one URI, but the response is then requested under
    another, the cached version will be ignored.
 
-   The "No-Vary-Search" Caching Extension tackles a specific subset of
-   this general problem, for when different URIs that only differ in
-   certain query parameters identify the same resource.  It allows
-   resources to declare that some or all parts of the query component do
-   not semantically affect the served response, and thus can be ignored
-   for cache matching purposes.  For example, if the order of the query
-   parameters do not affect which resource is identified, this is
-   indicated using
+   The "No-Vary-Search" response header field defines a caching
+   extension, as described in Section 4 of [HTTP-CACHING], that tackles
+   a specific subset of this general problem, for when different URIs
+   that only differ in certain query parameters identify the same
+   resource.  It allows resources to declare that some or all parts of
+   the query component do not semantically affect the served response,
+   and thus can be ignored for cache matching purposes.  For example, if
+   the order of the query parameters do not affect which resource is
+   identified, this is indicated using
 
    No-Vary-Search: key-order
 
