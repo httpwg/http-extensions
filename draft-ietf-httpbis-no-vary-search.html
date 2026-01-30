@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta content="Common,Han,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>The No-Vary-Search HTTP Response Header Field</title>
+<title>The No-Vary-Search HTTP Caching Extension</title>
 <meta content="Domenic Denicola" name="author">
 <meta content="Jeremy Roman" name="author">
 <meta content="Nidhi Jaju" name="author">
 <meta content="
-       This specification defines a proposed HTTP response header field for changing how URI query parameters impact caching. 
+       This specification defines an extension to HTTP Caching, changing how URI query parameters impact caching. 
     " name="description">
 <meta content="xml2rfc 3.31.0" name="generator">
 <meta content="http" name="keyword">
@@ -27,7 +27,7 @@
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.32.5
-    wcwidth 0.2.14
+    wcwidth 0.3.0
 -->
 <link href="draft-ietf-httpbis-no-vary-search.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -568,6 +568,7 @@ aside, blockquote {
 }
 blockquote {
   margin: 1em 0;
+  border-left: 2px var(--pilcrow-strong) solid;
 }
 cite {
   display: block;
@@ -638,7 +639,7 @@ a.pilcrow {
   }
 }
 @media not print {
-  :hover > a.pilcrow {
+  :hover > a.pilcrow, a.pilcrow:focus {
     opacity: 1;
   }
   a.pilcrow[href]:hover {
@@ -1050,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Denicola, et al.</td>
-<td class="center">Expires 22 July 2026</td>
+<td class="center">Expires 3 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-no-vary-search-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-01-18" class="published">18 January 2026</time>
+<time datetime="2026-01-30" class="published">30 January 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-07-22">22 July 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-03">3 August 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1087,10 +1088,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </dd>
 </dl>
 </div>
-<h1 id="title">The No-Vary-Search HTTP Response Header Field</h1>
+<h1 id="title">The No-Vary-Search HTTP Caching Extension</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This specification defines a proposed HTTP response header field for changing how URI query parameters impact caching.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This specification defines an extension to HTTP Caching, changing how URI query parameters impact caching.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1127,7 +1128,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 22 July 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1246,29 +1247,28 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">HTTP caching <span>[<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span> is based on reusing resources which match across a number of cache keys. One of the most prominent is the presented target URI (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.1" class="relref">Section 7.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). However, sometimes multiple URIs can represent the same resource. This leads to caches not always being as helpful as they could be: if the cache contains a response under one URI, but the response is then requested under another, the cached version will be ignored.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">This specification defines an extension to HTTP caching, as permitted in <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">The <code>No-Vary-Search</code> HTTP header field tackles a specific subset of this general problem, for when different URIs that only differ in
-certain query parameters identify the same resource. It allows resources to declare that some or all parts of the query component do not semantically affect the served resource, and thus can be ignored for cache matching purposes. For example, if the order of the query parameters do not affect which resource is identified, this is indicated using<a href="#section-1-3" class="pilcrow">¶</a></p>
-<div class="lang-http-message sourcecode" id="section-1-4">
+<p id="section-1-1">HTTP caching <span>[<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span> is based on reusing resources which match across a number of cache keys, with the most important one being the presented target URI (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.1" class="relref">Section 7.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). However, sometimes multiple URIs can represent the same resource. This leads to caches not always being as helpful as they could be: if the cache contains a response under one URI, but the response is then requested under another, the cached version will be ignored.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">The "No-Vary-Search" response header field defines a caching extension, as described in <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>, that tackles a specific subset of this general problem, for when different URIs that only differ in
+certain query parameters identify the same resource. It allows resources to declare that some or all parts of the query component do not semantically affect the served response, and thus can be ignored for cache matching purposes. For example, if the order of the query parameters do not affect which resource is identified, this is indicated using<a href="#section-1-2" class="pilcrow">¶</a></p>
+<div class="lang-http-message sourcecode" id="section-1-3">
 <pre>
 No-Vary-Search: key-order
-</pre><a href="#section-1-4" class="pilcrow">¶</a>
+</pre><a href="#section-1-3" class="pilcrow">¶</a>
 </div>
-<p id="section-1-5">If the specific query parameters (e.g., ones indicating something for analytics) do not semantically affect the served resource, this is indicated using<a href="#section-1-5" class="pilcrow">¶</a></p>
-<div class="lang-http-message sourcecode" id="section-1-6">
+<p id="section-1-4">If the specific query parameters (e.g., ones indicating something for analytics) do not semantically affect the served resource, this is indicated using<a href="#section-1-4" class="pilcrow">¶</a></p>
+<div class="lang-http-message sourcecode" id="section-1-5">
 <pre>
 No-Vary-Search: params=("utm_source" "utm_medium" "utm_campaign")
-</pre><a href="#section-1-6" class="pilcrow">¶</a>
+</pre><a href="#section-1-5" class="pilcrow">¶</a>
 </div>
-<p id="section-1-7">And if the resource instead wants to take an allowlist-based approach, where only certain known query parameters semantically affect the served resource, they can use<a href="#section-1-7" class="pilcrow">¶</a></p>
-<div class="lang-http-message sourcecode" id="section-1-8">
+<p id="section-1-6">And if the resource instead wants to take an allowlist-based approach, where only certain known query parameters semantically affect the served response, they can use<a href="#section-1-6" class="pilcrow">¶</a></p>
+<div class="lang-http-message sourcecode" id="section-1-7">
 <pre>
 No-Vary-Search: params, except=("productId")
-</pre><a href="#section-1-8" class="pilcrow">¶</a>
+</pre><a href="#section-1-7" class="pilcrow">¶</a>
 </div>
-<p id="section-1-9">Note that "cache busting" by sending unique query parameters to avoid retrieving a cached response can be made ineffective by the <code>No-Vary-Search</code> header field.<a href="#section-1-9" class="pilcrow">¶</a></p>
-<p id="section-1-10"><a href="#header-definition" class="auto internal xref">Section 3</a> defines the header field, using the <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> framework. <a href="#data-model" class="auto internal xref">Section 4</a> and <a href="#parsing" class="auto internal xref">Section 5</a> illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. <a href="#comparing" class="auto internal xref">Section 6</a> gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format specified in <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, <a href="#caching" class="auto internal xref">Section 7</a> explains how to extend <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span> to take this new equivalence into account.<a href="#section-1-10" class="pilcrow">¶</a></p>
+<p id="section-1-8">Note that "cache busting" by sending unique query parameters to avoid retrieving a cached response can be made ineffective by the <code>No-Vary-Search</code> header field.<a href="#section-1-8" class="pilcrow">¶</a></p>
+<p id="section-1-9"><a href="#header-definition" class="auto internal xref">Section 3</a> defines the new response header field <code>No-Vary-Search</code>, using the <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> framework. <a href="#data-model" class="auto internal xref">Section 4</a> and <a href="#parsing" class="auto internal xref">Section 5</a> illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. <a href="#comparing" class="auto internal xref">Section 6</a> gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format specified in <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, <a href="#caching" class="auto internal xref">Section 7</a> explains how to extend <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span> to take this new equivalence into account.<a href="#section-1-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">

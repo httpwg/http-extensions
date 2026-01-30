@@ -4,8 +4,8 @@
 
 HTTP                                                       M. Nottingham
 Internet-Draft                                                Cloudflare
-Intended status: Standards Track                         18 January 2026
-Expires: 22 July 2026
+Intended status: Standards Track                         30 January 2026
+Expires: 3 August 2026
 
 
                            HTTP Cache Groups
@@ -47,7 +47,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 July 2026.
+   This Internet-Draft will expire on 3 August 2026.
 
 Copyright Notice
 
