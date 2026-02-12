@@ -1,5 +1,5 @@
 ---
-title: "Incremental HTTP Messages"
+title: "Incremental Forwarding of HTTP Messages"
 docname: draft-ietf-httpbis-incremental-latest
 category: std
 wg: httpbis
@@ -24,10 +24,11 @@ author:
     email: mt@lowentropy.net
 
 normative:
-
-informative:
   EXTRA-STATUS: RFC6585
   PROXY-STATUS: RFC9209
+  STRUCTURED-FIELDS: RFC9651
+
+informative:
   SSE:
     target: https://html.spec.whatwg.org/multipage/server-sent-events.html
     title: Server-Sent Events
@@ -81,8 +82,13 @@ an intermediary that tries to buffer entire messages --
 either request or response -- prevents any data from being delivered.
 
 To help avoid such behavior, this document specifies the "Incremental" HTTP header
-field, which instructs HTTP intermediaries to begin forwarding the HTTP message
+field, which requests that HTTP intermediaries begin forwarding the HTTP message
 downstream before receiving the complete message.
+
+This indication is advisory.
+Intermediaries that are unaware of this field will not change their behavior.
+intermediaries that support the field might choose instead to reject a request;
+see {{security}}.
 
 
 # Conventions and Definitions
@@ -90,7 +96,7 @@ downstream before receiving the complete message.
 {::boilerplate bcp14-tagged}
 
 This document relies on structured field definitions
-of Item and Boolean {{!STRUCTURED-FIELDS=RFC8941}}.
+of Item and Boolean {{STRUCTURED-FIELDS}}.
 
 
 # The Incremental Header Field
@@ -105,43 +111,53 @@ Only Boolean values ({{Section 3.3.6 of STRUCTURED-FIELDS}}) are valid;
 a recipient ignores the field if it contains any other type.
 
 ~~~
-Incremental = sf-boolean
+Incremental: ?1
 ~~~
 
 A true value ("?1") indicates that the sender requests intermediaries to forward
 the message incrementally, as described below.
 
+~~~
+Incremental: ?0
+~~~
+
 A false value ("?0") indicates the default behavior defined in {{HTTP}}, where
-intermediaries might buffer the entire message before forwarding it.
-
-Upon receiving a header section that includes an Incremental header field with a
-true value, HTTP intermediaries SHOULD NOT buffer the entire message before
-forwarding it.  Instead, intermediaries SHOULD transmit the header section
-downstream and continuously forward the bytes of the message body as they
-arrive. As the Incremental header field indicates only how the message content is
-to be forwarded, intermediaries can still buffer the entire header and trailer
-sections of the message before forwarding them downstream.
-
-The request to use incremental forwarding also applies to HTTP implementations.
-Though most HTTP APIs provide the ability to incrementally transfer message content,
-those that do not for any reason, SHOULD use the presence of the Incremental
-header field to reduce or disable buffering.
+intermediaries might buffer the entire message before forwarding it. However,
+this explicit signal might increase intermediaries' confidence in doing so.
 
 The Incremental HTTP header field applies to each HTTP message. Therefore, if
 both the HTTP request and response need to be forwarded incrementally, the
 Incremental HTTP header field MUST be set for both the HTTP request and the
 response.
 
-The Incremental field is advisory. Intermediaries that are unaware of the field
-or that do not support the field might buffer messages, even when explicitly
-requested otherwise.  Clients and servers therefore cannot expect all
+Upon receiving a header section that includes an Incremental header field with a
+true value, HTTP intermediaries SHOULD NOT buffer the entire message before
+forwarding it.  Instead, intermediaries SHOULD transmit the header section
+downstream and continuously forward the bytes of the message content as they
+arrive. As the Incremental header field indicates only how the message content is
+to be forwarded, intermediaries can still buffer the entire header and trailer
+sections of the message before forwarding them downstream.
+
+If an intermediary decides outright to refuse forwarding the message body
+incrementally, the intermediary MUST generate an error response rather than
+buffering an entire message before forwarding. Typical scenarios under which an
+intermediary might refuse are discussed in {{security}}.
+
+The request to use incremental forwarding also applies to HTTP implementations.
+Though most HTTP APIs provide the ability to incrementally transfer message content,
+those that do not for any reason, SHOULD use the presence of the Incremental
+header field to reduce or disable buffering.
+
+The Incremental field is advisory, as intermediaries that are unaware of the
+field or that do not support the field might buffer messages, even when
+explicitly requested otherwise.  Clients and servers therefore cannot expect all
 intermediaries to understand and respect a request to deliver messages
 incrementally. Clients can rely on prior knowledge or probe for support on
 individual resources.
 
 The Incremental header field facilitates the establishment of a bidirectional
-byte channel over HTTP, as its presence in both requests and responses instructs
-intermediaries to forward early responses ({{Section 7.5 of HTTP}}) and to
+byte channel over HTTP, as its presence in both requests and responses requests that
+intermediaries forward early responses ({{Section 7.5 of HTTP}}) and to
 transmit message contents incrementally in both directions.  However, when developing
 bidirectional protocols over HTTP, Extended CONNECT {{?RFC8441}}{{?RFC9220}} is
 generally more consistent with HTTP's architecture.
@@ -151,24 +167,27 @@ value, but future documents might define parameters. Receivers MUST ignore
 unknown parameters.
 
 
-# Security Considerations
+# Security Considerations {#security}
 
-When receiving an incremental request, intermediaries might reject the request
-due to security concerns. The following subsections explore typical scenarios
+When receiving a request or response that asks for incremental forwarding,
+intermediaries might reject the HTTP request due to security concerns.
+The following subsections explore typical scenarios
 under which the intermediaries might reject requests.
+
+Note that rejecting requests based on the value of the Incremental field
+only occurs when an intermediary understands the field.
 
 
 ## Permanent Rejection
 
-Some intermediaries inspect the payload of HTTP messages and forward them only
+Some intermediaries inspect the content of HTTP messages and forward them only
 if their content is deemed safe. Any feature that depends on seeing the
-entirety of the message in this way is incompatible with incremental delivery,
-so these intermediaries need to reject requests unless the entire message is
-received.
+entirety of the message in this way is incompatible with incremental delivery.
 
-When an intermediary rejects an incremental message -- either a request or a
-response -- due to security concerns with regard to the payload that the message
-might convey, the intermediary SHOULD respond with a 501 (Not Implemented) error
+When an intermediary is asked to incrementally forward message and cannot --
+whether that message is a request or a response --
+due to security concerns about the message content,
+the intermediary SHOULD respond with a 501 (Not Implemented) error
 with an incremental_refused Proxy-Status response header field
 ({{iana-considerations}}).
 
@@ -187,7 +206,7 @@ is reached. This approach helps balance the processing of different types of
 requests and maintains service availability across all requests.
 
 When rejecting incremental requests due to reaching the concurrency limit,
-intermediaries SHOULD respond with a 429 Too Many Requests error
+intermediaries SHOULD respond with a 429 (Too Many Requests) error
 ({{Section 4 of EXTRA-STATUS}}),
 accompanied by a connection_limit_reached Proxy-Status response header field
 ({{Section 2.3.12 of PROXY-STATUS}}).
@@ -227,7 +246,7 @@ Reference:
 
 Comments:
 : None
-{: spacing="compact"}
+{:compact}
 
 An HTTP Proxy Error Type is registered in the HTTP Proxy Error Types registry as
 shown below:
@@ -250,10 +269,16 @@ Response Only Generated By Intermediaries:
 
 Reference:
 : This document
+{:compact}
 
 --- back
 
 # Acknowledgments
 {:numbered="false"}
 
-TODO acknowledge.
+The authors would like to thank many members of the IETF HTTP working group for
+their discussions and feedback on this specification. In particular, the authors
+would like to thank {{{Mark Thomas}}}, {{{Piotr Sikora}}},
+{{{Thibault Meunier}}}, {{{Marius Kleidl}}}, {{{Ben Schwartz}}},
+{{{Willy Tarreau}}}, {{{Will Hawkins}}}, {{{Mark Nottingham}}}, and
+{{{Lucas Pardue}}} for close review and sugggested changes.

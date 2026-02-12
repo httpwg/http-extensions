@@ -168,10 +168,13 @@ When closing connections, endpoints are subject to the following requirements:
 * When a TCP connection reaches the TIME-WAIT or CLOSED state, the associated endpoint MUST close its send stream.
   - If the connection closed gracefully, the endpoint MUST close the send stream gracefully.
   - Otherwise, the endpoint SHOULD close the send stream abruptly, using a mechanism appropriate to the HTTP version:
-    - HTTP/3: RESET_STREAM with H3_CONNECT_ERROR
-    - HTTP/2: RST_STREAM with CONNECT_ERROR
-    - HTTP/1.1 over TLS: a TLS Error Alert
-    - HTTP/1.1 (insecure): TCP RST.
+    - HTTP/3: reset the stream with H3_CONNECT_ERROR;
+      see {{!RFC9000, Section 19.4}} and {{?RFC9114, Section 8.1}}
+    - HTTP/2: reset the stream with CONNECT_ERROR;
+      see {{!RFC9113}}, Sections 6.4 and 7
+    - HTTP/1.1 over TLS: TCP shutdown without a TLS closure alert;
+      see {{!RFC8446, Section 6.1}}.
+    - HTTP/1.1 without TLS: TCP RST
 * When the receive stream is closed abruptly or without a FINAL_DATA capsule received, the endpoint SHOULD send a TCP RST if the TCP subsystem permits it.
 
 The mandatory behaviors above enable endpoints to detect any truncation of incoming TCP data.  The recommended behaviors propagate any TCP errors through the proxy connection.
@@ -204,7 +207,7 @@ The mandatory behaviors above enable endpoints to detect any truncation of incom
 +-+-----+    +-+----------+    +----------+-+    +-----+-+
   +---"abc"--->+-------DATA{"abc"}------->+---"abc"--->|
   |            |  (... timeout @ A ...)   |            |
-  |            +--------TLS Alert-------->+----RST---->|
+  |            +--FIN (no close_notify)-->+----RST---->|
   |            |                          |            |
 ~~~
 {: title="Timeout example (HTTP/1.1)"}
@@ -237,7 +240,7 @@ Servers that host a proxy under this specification MAY offer support for TLS ear
 
 This specification supports the "Expect: 100-continue" request header ({{?RFC9110, Section 10.1.1}}) in any HTTP version.  The "100 (Continue)" status code confirms receipt of a request at the proxy without waiting for the proxy-destination TCP handshake to succeed or fail.  This might be particularly helpful when the destination host is not responding, as TCP handshakes can hang for several minutes before failing.  Clients MAY send "Expect: 100-continue", and proxies MUST respect it by returning "100 (Continue)" if the request is not immediately rejected.
 
-Proxies implementing this specification SHOULD include a "Proxy-Status" response header {{!RFC9209}} in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  In HTTP/2 or HTTP/3, proxies MAY additionally send a "Proxy-Status" trailer in the event of an unclean shutdown.
+Proxies implementing this specification SHOULD include a "Proxy-Status" response header {{!RFC9209}} in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  In HTTP/2 or HTTP/3, proxies MAY additionally send a "Proxy-Status" trailer in the event of an abrupt stream closure.
 
 # Applicability
 
@@ -277,11 +280,11 @@ A small additional risk is posed by the use of a URI Template parser on the clie
 
 A malicious client can achieve cause highly asymmetric resource usage at the proxy by colluding with a destination server and violating the ordinary rules of TCP or HTTP.  Some example attacks, and mitigations that proxies can apply:
 
-* **Connection Pileup**: A malicious client can attempt to open a large number of proxy<->destination connections to exhaust the proxy's memory, port, or file descriptor limits. When using HTTP/2 or HTTP/3, each incremental TCP connection imposes a much higher cost on the proxy than on the attacker.
+* **Connection Pileup**: A malicious client can attempt to open a large number of connections to exhaust the proxy's memory, port, or file descriptor limits. When using HTTP/2 or HTTP/3, each incremental TCP connection imposes a much higher cost on the proxy than on the attacker.
   - Mitigation: Limit the number of concurrent connections per client.
 * **Window Bloat**: An attacker can grow the receive window size by simulating a "long, fat network" {{?RFC7323}}, then fill the window (from the sender) and stop acknowledging it (at the receiver).  This leaves the proxy buffering up to 1 GiB of TCP data until some timeout, while the attacker does not have to retain a large buffer.
   - Mitigation: Limit the maximum receive window for TCP and HTTP connections, and the size of userspace buffers used for proxying.  Alternatively, monitor the connections' send queues and limit the total buffered data per client.
-* **WAIT Abuse**: An attacker can force the proxy into a TIME-WAIT, CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a proxy<->destination 4-tuple for up to four minutes after the client's connection is closed.
+* **WAIT Abuse**: An attacker can force the proxy into a TIME-WAIT, CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a proxy-to-destination 4-tuple for up to four minutes after the client's connection is closed.
   - Mitigation: Limit the number of connections for each client to each destination, even if those connections are in a waiting state and the corresponding CONNECT stream is closed.  Alternatively, allocate a large range of IP addresses for TCP connections (especially in IPv6).
 
 # Operational Considerations
@@ -291,11 +294,13 @@ A malicious client can achieve cause highly asymmetric resource usage at the pro
 While this specification is fully functional under HTTP/1.1, performance-sensitive deployments SHOULD use HTTP/2 or HTTP/3 instead.  When using HTTP/1.1:
 
 * Each CONNECT request requires a new TCP and TLS connection, imposing a higher cost in setup latency, congestion control convergence, CPU time, and data transfer.
-* It may be difficult to implement the recommended unclean shutdown signals ({{closing-connections}}), as many TLS libraries do not support injecting TLS Alerts.
+* The graceful and abrupt closure signals ({{closing-connections}}) are more likely to be missing or corrupted:
+  - Some implementations may be unable to emit the recommended abrupt closure signals, due to limitations in their TCP and TLS subsystems.
+  - Faulty implementations may fail to send a TLS closure alert during graceful shutdown, or fail to report an error when the expected closure alert is not received.  These misbehaviors are not compliant with {{RFC8446}}, but they are common nonetheless among HTTP/1.1 implementations today.
 * The number of active connections through each client may be limited by the number of available TCP client ports, especially if:
   - The client only has one IP address that can be used to reach the proxy.
   - The client is shared between many parties, such as when acting as a gateway or concentrator.
-  - The proxied connections are often closed by the destination. This causes the client to initiate closure of the client<->proxy connection, leaving the client in a TIME-WAIT state for up to four minutes.
+  - The proxied connections are often closed by the destination. This causes the client to initiate closure of the client-to-proxy connection, leaving the client in a TIME-WAIT state for up to four minutes.
 
 ## Gateway Compatibility
 
