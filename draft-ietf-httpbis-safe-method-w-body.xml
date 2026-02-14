@@ -63,7 +63,7 @@
       <t>
         This specification defines the QUERY method for HTTP.
         A QUERY requests that the request target process the enclosed
-        content in a safe/idempotent manner and then respond with the
+        content in a safe and idempotent manner and then respond with the
         result of that processing. This is similar to POST requests but
         can be automatically repeated or restarted without concern for
         partial state changes.
@@ -82,7 +82,7 @@
         <eref target="https://github.com/httpwg/http-extensions/labels/query-method"/>.
       </t>
       <t>
-        The changes in this draft are summarized in <xref target="changes.since.12"/>.
+        The changes in this draft are summarized in <xref target="changes.since.13"/>.
       </t>
     </note>
 
@@ -93,12 +93,11 @@
   <section title="Introduction" anchor="introduction">
     <t>
       This specification defines the HTTP QUERY request method as a means of
-      making a safe, idempotent request (<xref target="HTTP" section="9.2"/>) containing
-      content that describes how the request is to be processed by the target resource.
+      making a safe, idempotent request (<xref target="HTTP" section="9.2"/>) that
+      encloses a representation describing how the request is to be processed by the target resource.
     </t>
     <t>
-      Most often, this is desirable when the data conveyed in a request is
-      too voluminous to be encoded into the request's URI. A common query pattern is:
+      A common query pattern is:
     </t>
 <artwork type="http-message">
 GET /feed?q=foo&amp;limit=10&amp;sort=-published HTTP/1.1
@@ -134,8 +133,7 @@ Content-Type: application/x-www-form-urlencoded
 q=foo&amp;limit=10&amp;sort=-published
 </artwork>
     <t>
-      This variation, however, suffers from the fact
-      that it is not readily apparent -- absent specific knowledge of the
+      In this variation, however, it is not readily apparent -- absent specific knowledge of the
       resource and server to which the request is being sent -- that a safe,
       idempotent query is being performed.
     </t>
@@ -243,11 +241,12 @@ q=foo&amp;limit=10&amp;sort=-published
       (as defined by <xref target="HTTP" section="7.1"/>), the QUERY
       method is used to ask the target resource to perform a query operation
       within the scope of that target resource.
-      The query operation is described by the request content.
-      The origin server determines the scope of the operation based on the target resource.
     </t>
     <t>
       The content of the request and its media type define the query.
+      The origin server determines the scope of the operation based on the target resource.
+    </t>
+    <t>
       Servers <bcp14>MUST</bcp14> fail the request if the Content-Type
       request field (<xref target="HTTP" sectionFormat="comma" section="8.3"/>)
       is missing or is inconsistent with the request content.
@@ -291,7 +290,7 @@ q=foo&amp;limit=10&amp;sort=-published
         rejected with a 4xx (Client Error) response (<xref target="HTTP" sectionFormat="comma" section="15.5"/>).
       </t>
       <t>
-        The list below describe various cases of failures and recommends specific status codes:
+        The list below describes various cases of failures and recommends specific status codes:
       </t>
       <ul>
         <li>
@@ -313,7 +312,7 @@ q=foo&amp;limit=10&amp;sort=-published
         </li>
         <li>
           If the media type is specified, is understood, and the content is indeed consistent with the
-          type, but the query can not be processed due to the actual contents of the query,
+          type, but the query cannot be processed due to the actual contents of the query,
           the status 422 (Unprocessable Content) can be used. An example would be a syntactically
           correct SQL query that identifies a non-existent table.
         </li>
@@ -384,13 +383,13 @@ q=foo&amp;limit=10&amp;sort=-published
         <xref target="HTTP" section="15.4"/>).
       </t>
       <t>
-        A response with either of the status codes
+        A response with either status codes
         301 (Moved Permanently, <xref target="HTTP" sectionFormat="comma" section="15.4.2"/>) or
         308 (Permanent Redirect, <xref target="HTTP" sectionFormat="comma" section="15.4.9"/>)
         indicates that the target resource has permanently moved to a different URI referenced by the
         Location response field (<xref target="HTTP" sectionFormat="comma" section="10.2.2"/>).
-        Likewise, a response with either
-        302 (Found, <xref target="HTTP" sectionFormat="comma" section="15.4.3"/> or
+        Likewise, a response with either status codes
+        302 (Found, <xref target="HTTP" sectionFormat="comma" section="15.4.3"/>) or
         307 (Temporary Redirect, <xref target="HTTP" sectionFormat="comma" section="15.4.8"/>)
         indicates that the target resource has temporarily moved. In all four cases, the server is
         suggesting that the user agent can accomplish its original QUERY request by sending a
@@ -430,7 +429,7 @@ q=foo&amp;limit=10&amp;sort=-published
     <section title="Caching" anchor="caching">
       <t>
         The response to a QUERY method is cacheable; a cache &MAY; use it to satisfy subsequent
-        QUERY requests as per <xref target="HTTP-CACHING" section="4"/>).
+        QUERY requests as per <xref target="HTTP-CACHING" section="4"/>.
       </t>
       <t>
         The cache key for a QUERY request (see <xref target="HTTP-CACHING" section="2"/>) &MUST;
@@ -438,11 +437,8 @@ q=foo&amp;limit=10&amp;sort=-published
         metadata (<xref target="HTTP-CACHING" section="8"/>).
       </t>
       <t>
-        Caches <bcp14>MAY</bcp14> remove semantically insignificant differences first, thereby
-        improving cache efficiency.
-      </t>
-      <t>
-        For instance, by
+        To improve cache efficiency, caches <bcp14>MAY</bcp14> remove semantically
+        insignificant differences first. For instance, by:
       </t>
       <ul>
         <li>removing content encoding(s) (<xref target="HTTP" section="8.4"/>).</li>
@@ -551,9 +547,9 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     </t>
     <t>
       If a server creates a temporary resource to represent the results of a QUERY
-      request (e.g., for use in the Location or Content-Location field) and the request
-      contains sensitive information that cannot be logged, then the URI of this
-      resource &SHOULD; be chosen such that it does not include any sensitive
+      request (e.g., for use in the Location or Content-Location field), assigns a URI
+      to that resource, and the request contains sensitive information that cannot be logged,
+      then that URI &SHOULD; be chosen such that it does not include any sensitive
       portions of the original request content.
     </t>
     <t>
@@ -668,17 +664,6 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       </front>
       <seriesInfo name="RFC" value="9651"/>
     </reference>
-  </references>
-  <references title="Informative References">
-    <reference anchor="FETCH" target="https://fetch.spec.whatwg.org">
-      <front>
-        <title>FETCH</title>
-        <author><organization>WHATWG</organization></author>
-      </front>
-    </reference>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6838.xml"/>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8259.xml"/>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9535.xml"/>
     <reference anchor="URI">
       <front>
         <title abbrev="URI Generic Syntax">Uniform Resource Identifier (URI): Generic Syntax</title>
@@ -690,6 +675,20 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       <seriesInfo name="STD" value="66"/>
       <seriesInfo name="RFC" value="3986"/>
     </reference>
+  </references>
+  <references title="Informative References">
+    <reference anchor="FETCH" target="https://fetch.spec.whatwg.org">
+      <front>
+        <title>FETCH</title>
+        <author><organization>WHATWG</organization></author>
+      </front>
+    </reference>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3253.xml"/>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4918.xml"/>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.5323.xml"/>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6838.xml"/>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8259.xml"/>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9535.xml"/>
     <reference anchor="URL" target="https://url.spec.whatwg.org">
       <front>
         <title>URL</title>
@@ -960,7 +959,7 @@ See stored query at "/contacts/stored-queries/42".
       <t>
         Consider a resource implementing QUERY that supports "application/sql" and
         "application/xslt+xml" (<xref target="XSLT"/>) as request media types, and
-        which can generate responses as "text/csv" . The data set being queried contains RFC document
+        which can generate responses as "text/csv". The data set being queried contains RFC document
         information, and the query returns information grouped by decade:
       </t>
 <artwork type="http-message">
@@ -1359,6 +1358,29 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
     </section>
 </section>
 
+<section title="Selection of the Method Name 'QUERY'" anchor="selection.method.name">
+<t>
+  The HTTP Method Registry (<eref target="http://www.iana.org/assignments/http-methods"/>)
+  already contains three other methods with the properties "safe" and "idempotent":
+  "PROPFIND" (<xref target="RFC4918"/>), REPORT" (<xref target="RFC3253"/>), and
+  "SEARCH" (<xref target="RFC5323"/>).
+</t>
+<t>
+  It would have been possible to re-use any of these, updating it in a way that it matches
+  what this specification defines as the new method "QUERY". Indeed, the early stages
+  of this specification used "SEARCH".
+</t>
+<t>
+  The method name "QUERY" ultimately was chosen because:
+</t>
+<ul>
+  <li>The alternatives use a generic media type for the request content ("application/xml"); the
+  semantics of the request depends solely on the request content.</li>
+  <li>Furthermore, they all originate from the WebDAV activity, about which many have mixed feelings.</li>
+  <li>"QUERY" captures the relation with the URI's query component well.</li>
+</ul>
+</section>
+
 <section title="Change Log" anchor="change.log" removeInRFC="true">
 <section title="Since draft-ietf-httpbis-safe-method-w-body-00" anchor="changes.since.00">
 <ul>
@@ -1467,9 +1489,18 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 </ul>
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-12" anchor="changes.since.12">
-<t>
-  None yet.
-</t>
+<ul>
+  <li>Ack Asbjørn Ulsberg (<eref target="https://github.com/httpwg/http-extensions/issues/3299"/>)</li>
+  <li>LC feedback from Rahul Gupta (<eref target="https://github.com/httpwg/http-extensions/issues/3315"/>)</li>
+</ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-13" anchor="changes.since.13">
+<ul>
+  <li>URI reference is normative (<eref target="https://github.com/httpwg/http-extensions/issues/3331"/>)</li>
+  <li>inconsistency between Sections 2.4 and 4 wrt URI assignments (<eref target="https://github.com/httpwg/http-extensions/issues/3332"/>)</li>
+  <li>IESG review nits (<eref target="https://github.com/httpwg/http-extensions/issues/3333"/>)</li>
+  <li>Explain relation to SEARCH etc (<eref target="https://github.com/httpwg/http-extensions/issues/3337"/>)</li>
+</ul>
 </section>
 </section>
 
@@ -1488,7 +1519,6 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   Will Hawkins.
 </t>
 </section>
-
 <section title="Contributors" anchor="contributors" numbered="false">
 <t>
   Ashok Malhotra participated in early discussions leading to this
@@ -1497,6 +1527,16 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <contact initials="A." surname="Malhotra" fullname="Ashok Malhotra">
   <address>
     <email>malhotrasahib@gmail.com</email>
+  </address>
+</contact>
+<t>
+  Discussion on the this HTTP method was reopened by Asbjørn Ulsberg during
+  the HTTP Workshop in 2019:
+</t>
+<contact initials="A." surname="Ulsberg" fullname="Asbjørn Ulsberg">
+  <address>
+    <email>asbjorn@ulsberg.no</email>
+    <uri>https://asbjor.nu/</uri>
   </address>
 </contact>
 </section>

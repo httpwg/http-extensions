@@ -402,7 +402,7 @@ If the `Upload-Complete` request header field is set to true, the client intends
 
 If the `Upload-Complete` header field is set to false, the client intends to transfer the representation over multiple requests. If the request content was fully received, the server MUST include the `Location` response header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits if existing. Servers are RECOMMENDED to use the `201 (Created)` status code.
 
-The server MUST record the length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete` header fields are included in the request.
+The server MUST record the length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete: ?1` header fields are included in the request.
 
 While the request content is being received, the server MAY send multiple interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress.
 
@@ -412,44 +412,44 @@ The server might not receive the entire request content when the upload is inter
 
 ### Examples {#upload-creation-example}
 
-A) The following example shows an upload creation, where the entire 100000000 bytes are transferred in the initial request. The server sends multiple interim responses and one final response from processing the uploaded representation.
+A) The following example shows an upload creation, where the entire 123456789 bytes are transferred in the initial request. The server sends multiple interim responses and one final response from processing the uploaded representation.
 
 ~~~ http-message
 POST /project/123/files HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Content-Length: 100000000
-Upload-Length: 100000000
+Content-Length: 123456789
+Upload-Length: 123456789
 
-[content (100000000 bytes)]
+[content (123456789 bytes)]
 ~~~
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
 Location: https://example.com/upload/b530ce8ff
-Upload-Limit: max-size=1000000000
+Upload-Limit: max-size=1234567890
 
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Offset: 50000000
+Upload-Offset: 23456789
 
 HTTP/1.1 200 OK
 Location: https://example.com/upload/b530ce8ff
-Upload-Limit: max-size=1000000000
+Upload-Limit: max-size=1234567890
 Content-Type: application/json
 
 {"attachmentId": "b530ce8ff"}
 ~~~
 
-B) The following example shows an upload creation, where only the first 25000000 bytes of a 100000000 bytes upload are transferred. The server acknowledges the received representation data and that the upload is not complete yet. The client can continue appending data.
+B) The following example shows an upload creation, where only the first 23456789 bytes of a 123456789 bytes upload are transferred. The server acknowledges the received representation data and that the upload is not complete yet. The client can continue appending data.
 
 ~~~ http-message
 POST /upload HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
-Content-Length: 25000000
-Upload-Length: 100000000
+Content-Length: 23456789
+Upload-Length: 123456789
 
-[partial content (25000000 bytes)]
+[partial content (23456789 bytes)]
 ~~~
 
 ~~~ http-message
@@ -458,7 +458,7 @@ Location: https://example.com/upload/3fd4994ad
 
 HTTP/1.1 201 Created
 Location: https://example.com/upload/3fd4994ad
-Upload-Limit: max-size=1000000000
+Upload-Limit: max-size=1234567890
 ~~~
 
 C) The following example shows an upload creation, where the server responds with a 5xx status code. Thanks to the interim response containing the upload resource URI, the client can resume the upload.
@@ -467,10 +467,10 @@ C) The following example shows an upload creation, where the server responds wit
 POST /upload HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Content-Length: 100000000
-Upload-Length: 100000000
+Content-Length: 123456789
+Upload-Length: 123456789
 
-[content (100000000 bytes)]
+[content (123456789 bytes)]
 ~~~
 
 ~~~ http-message
@@ -486,10 +486,10 @@ D) The following example shows an upload creation being rejected by the server b
 POST /upload-not-allowed HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Content-Length: 100000000
-Upload-Length: 100000000
+Content-Length: 123456789
+Upload-Length: 123456789
 
-[content (100000000 bytes)]
+[content (123456789 bytes)]
 ~~~
 
 ~~~ http-message
@@ -607,38 +607,38 @@ While the request content is being received, the server SHOULD send interim resp
 
 ### Examples {#upload-appending-example}
 
-A) The following example shows an upload append request. The client transfers the next 25000000 bytes at an offset of 25000000 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:
+A) The following example shows an upload append request. The client transfers the next 23456789 bytes at an offset of 23456789 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:
 
 ~~~ http-message
 PATCH /upload/37a504d87 HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
-Upload-Offset: 25000000
-Content-Length: 25000000
+Upload-Offset: 23456789
+Content-Length: 23456789
 Content-Type: application/partial-upload
 
-[content (25000000 bytes)]
+[content (23456789 bytes)]
 ~~~
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Offset: 12500000
+Upload-Offset: 35185184
 
 HTTP/1.1 204 No Content
 Upload-Complete: ?0
 ~~~
 
-B) The next example shows an upload append, where the client transfers the remaining 25000000 bytes and completes the upload. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:
+B) The next example shows an upload append, where the client transfers the remaining 4567890 bytes and completes the upload with a length of 1234567890 bytes. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:
 
 ~~~ http-message
 PATCH /upload/d38d6ffe8 HTTP/1.1
 Host: example.com
 Upload-Complete: ?1
-Upload-Offset: 25000000
-Content-Length: 25000000
+Upload-Offset: 1230000000
+Content-Length: 4567890
 Content-Type: application/partial-upload
 
-[content (25000000 bytes)]
+[content (4567890 bytes)]
 ~~~
 
 ~~~ http-message
@@ -696,6 +696,8 @@ The `104 (Upload Resumption Supported)` status code is can be used for two purpo
 
 - When responding to requests to create uploads, an interim response with the `104 (Upload Resumption Supported)` status code can be sent to indicate the server's support for resumable uploads, as well as the URI and limits of the corresponding upload resource in the `Location` and `Upload-Limit` header fields, respectively (see {{upload-creation}}). This notifies the client early about the ability to resume the upload in case of network interruptions.
 - While processing the content of a request to append representation data or create an upload, the server can regularly send interim responses with the `104 (Upload Resumption Supported)` status code to indicate the current upload progress in the `Upload-Offset` header field (see {{upload-creation}} and {{upload-appending}}). This allows the client to show more accurate progress information about the amount of data received by the server. In addition, clients can use this information to release representation data that was buffered, knowing that it doesn't have to be re-transmitted.
+
+When creating or appending resumable uploads, the client can generate a 100-continue expectation because it wants an indication that the server is willing to accept the upload. The client MAY treat an interim response with the `104 (Upload Resumption Supported)` status code as fulfilling the 100-continue expectation and start sending the request content. However, the server MUST NOT omit the `100 (Continue)` response because it has sent an interim response with the `104 (Upload Resumption Supported)` status code.
 
 # Media Type `application/partial-upload` {#media-type-partial-upload}
 
@@ -843,6 +845,8 @@ Uploaded representation data and its metadata are untrusted input. Server operat
 
 Some servers or intermediaries provide scanning of content uploaded by clients. Any scanning mechanism that relies on receiving a complete representation in a single request message can be defeated by resumable uploads because content can be split across multiple messages. Servers or intermediaries wishing to perform content scanning SHOULD consider how resumable uploads can circumvent scanning and take appropriate measures. Possible strategies include waiting for the upload to complete before scanning the entire representation, or disabling resumable uploads.
 
+There can be a significant delay between the creation of an upload resource and its completion. Policy decisions or authorization checks performed on the initial request might become outdated or invalid by the time the upload completes. To mitigate vulnerabilities arising from time-of-check to time-of-use (TOCTOU) conditions, the server SHOULD validate that the user is still allowed to perform the requested action before finalizing the upload. This includes, for example, validating access privileges and quota policies associated with the upload resource.
+
 Resumable uploads are vulnerable to Slowloris-style attacks {{SLOWLORIS}}. A malicious client may create upload resources and keep them alive by regularly sending `PATCH` requests with no or small content to the upload resources. This could be abused to exhaust server resources by creating and holding open uploads indefinitely with minimal work. Servers SHOULD provide mitigations for Slowloris attacks, such as increasing the maximum number of clients the server will allow, limiting the number of uploads a single client is allowed to make, imposing restrictions on the minimum transfer speed an upload is allowed to have, and restricting the length of time an upload resource can exist.
 
 Uploads performed as a series of appends can be used to upload data up to the `max-size` limit, which could be a larger size than a server or intermediary might normally permit in conventional single upload request message content. Servers or intermediaries need to consider that relying solely on message content limits to constrain resources allocated to uploads might not be an effective strategy when using resumable uploads.
@@ -985,10 +989,20 @@ Reference:
 # Changes
 {:removeinrfc="true"}
 
+## Since draft-ietf-httpbis-resumable-upload-10
+{:numbered="false"}
+
+None yet.
+
 ## Since draft-ietf-httpbis-resumable-upload-09
 {:numbered="false"}
 
-* Requires Accept-Patch in OPTIONS
+* Requires Accept-Patch in OPTIONS.
+* Add security consideration regarding time-of-check to time-of-use.
+* Lift requirement on Upload-Complete for all final responses.
+* Relax requirements on limit changes.
+* Describe the interaction between 100 and 104 responses.
+* Numerous editorial improvements.
 
 ## Since draft-ietf-httpbis-resumable-upload-08
 {:numbered="false"}
@@ -1108,8 +1122,14 @@ The reason both the client and the server are sending and checking the draft ver
 # Acknowledgments
 {:numbered="false"}
 
-This document is based on an Internet-Draft specification written by {{{Jiten Mehta}}}, {{{Stefan Matsson}}}, and the authors of this document.
+This document is based on an Internet-Draft specification written by Jiten Mehta, Stefan Matsson, and the authors of this document.
 
 The [tus v1 protocol](https://tus.io/) is a specification for a resumable file upload protocol over HTTP. It inspired the early design of this protocol. Members of the tus community helped significantly in the process of bringing this work to the IETF.
 
-The authors would like to thank {{{Mark Nottingham}}} for substantive contributions to the text, and {{{Roy T. Fielding}}} and {{{Julian Reschke}}} for their thorough reviews of the document.
+The authors would like to thank Mark Nottingham for substantive contributions to the text, along with the following in alphabetical order for their thorough reviews of the document:
+
+* Mike Bishop
+* Roy T. Fielding
+* Julian Reschke
+* Glenn Strauss
+* Willy Tarreau
