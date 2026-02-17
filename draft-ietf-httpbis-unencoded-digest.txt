@@ -6,7 +6,7 @@ HTTP                                                           L. Pardue
 Internet-Draft                                                Cloudflare
 Updates: 9530 (if approved)                                      M. West
 Intended status: Standards Track                                  Google
-Expires: 3 August 2026                                   30 January 2026
+Expires: 21 August 2026                                 17 February 2026
 
 
                          HTTP Unencoded Digest
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 August 2026.
+   This Internet-Draft will expire on 21 August 2026.
 
 Copyright Notice
 

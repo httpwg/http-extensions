@@ -168,7 +168,7 @@
   font-weight: 400;
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
   font-family: 'Oxygen Mono';
@@ -176,7 +176,8 @@
   font-weight: 400;
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 }
 
 @font-face {
@@ -1047,11 +1048,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">No-Vary-Search</td>
-<td class="right">January 2026</td>
+<td class="right">February 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Denicola, et al.</td>
-<td class="center">Expires 3 August 2026</td>
+<td class="center">Expires 21 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-no-vary-search-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-01-30" class="published">30 January 2026</time>
+<time datetime="2026-02-17" class="published">17 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-03">3 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-21">21 August 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1128,7 +1129,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 3 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1264,7 +1265,7 @@ No-Vary-Search: params=("utm_source" "utm_medium" "utm_campaign")
 <p id="section-1-6">And if the resource instead wants to take an allowlist-based approach, where only certain known query parameters semantically affect the served response, they can use<a href="#section-1-6" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-1-7">
 <pre>
-No-Vary-Search: params, except=("productId")
+No-Vary-Search: except=("productId")
 </pre><a href="#section-1-7" class="pilcrow">¶</a>
 </div>
 <p id="section-1-8">Note that "cache busting" by sending unique query parameters to avoid retrieving a cached response can be made ineffective by the <code>No-Vary-Search</code> header field.<a href="#section-1-8" class="pilcrow">¶</a></p>
@@ -1305,13 +1306,13 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <p id="section-3-3.1.1">If present, the <code>key-order</code> entry's value <span class="bcp14">MUST</span> be a boolean (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.3.6" class="relref">Section 3.3.6</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-3.2">
-          <p id="section-3-3.2.1">If present, the <code>params</code> entry's value <span class="bcp14">MUST</span> be either a boolean (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.3.6" class="relref">Section 3.3.6</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>) or an inner list (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.1.1" class="relref">Section 3.1.1</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
+          <p id="section-3-3.2.1">If present, the <code>params</code> entry's value <span class="bcp14">MUST</span> be an inner list of strings (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.1.1" class="relref">Section 3.1.1</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-3.3">
-          <p id="section-3-3.3.1">If present, the <code>except</code> entry's value <span class="bcp14">MUST</span> be an inner list (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.1.1" class="relref">Section 3.1.1</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-3.3.1" class="pilcrow">¶</a></p>
+          <p id="section-3-3.3.1">If present, the <code>except</code> entry's value <span class="bcp14">MUST</span> be an inner list of strings (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.1.1" class="relref">Section 3.1.1</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-3.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-3.4">
-          <p id="section-3-3.4.1">The <code>except</code> entry <span class="bcp14">MUST</span> only be present if the <code>params</code> entry is also present, and the <code>params</code> entry's value is the boolean value true.<a href="#section-3-3.4.1" class="pilcrow">¶</a></p>
+          <p id="section-3-3.4.1">The <code>except</code> entry <span class="bcp14">MUST NOT</span> be present if the <code>params</code> entry is also present.<a href="#section-3-3.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-3-4">The dictionary <span class="bcp14">MAY</span> contain entries whose keys are not one of <code>key-order</code>, <code>params</code>, and <code>except</code>, but their meaning is not defined by this specification. Implementations of this specification will ignore such entries (but future documents might assign meaning to such entries).<a href="#section-3-4" class="pilcrow">¶</a></p>
@@ -1390,77 +1391,54 @@ To <em><span id="iref-parse-a-url-variation-config" class="iref"></span><a href=
             </ol>
 </li>
           <li id="section-5.1-2.5">
-            <p id="section-5.1-2.5.1">If <em>value</em>["<code>params</code>"] exists:<a href="#section-5.1-2.5.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.1-2.5.2">
-<li id="section-5.1-2.5.2.1">
-                <p id="section-5.1-2.5.2.1.1">If <em>value</em>["<code>params</code>"] is a boolean:<a href="#section-5.1-2.5.2.1.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.1-2.5.2.1.2">
-<li id="section-5.1-2.5.2.1.2.1">
-                    <p id="section-5.1-2.5.2.1.2.1.1">If <em>value</em>["<code>params</code>"] is true, then:<a href="#section-5.1-2.5.2.1.2.1.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.1-2.5.2.1.2.1.2">
-<li id="section-5.1-2.5.2.1.2.1.2.1">
-                        <p id="section-5.1-2.5.2.1.2.1.2.1.1">Set <em>result</em>'s no-vary params to <strong>wildcard</strong>.<a href="#section-5.1-2.5.2.1.2.1.2.1.1" class="pilcrow">¶</a></p>
-</li>
-                      <li id="section-5.1-2.5.2.1.2.1.2.2">
-                        <p id="section-5.1-2.5.2.1.2.1.2.2.1">Set <em>result</em>'s vary params to the empty list.<a href="#section-5.1-2.5.2.1.2.1.2.2.1" class="pilcrow">¶</a></p>
-</li>
-                    </ol>
-</li>
-                  <li id="section-5.1-2.5.2.1.2.2">
-                    <p id="section-5.1-2.5.2.1.2.2.1">Otherwise:<a href="#section-5.1-2.5.2.1.2.2.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.1-2.5.2.1.2.2.2">
-<li id="section-5.1-2.5.2.1.2.2.2.1">
-                        <p id="section-5.1-2.5.2.1.2.2.2.1.1">Set <em>result</em>'s no-vary params to the empty list.<a href="#section-5.1-2.5.2.1.2.2.2.1.1" class="pilcrow">¶</a></p>
-</li>
-                      <li id="section-5.1-2.5.2.1.2.2.2.2">
-                        <p id="section-5.1-2.5.2.1.2.2.2.2.1">Set <em>result</em>'s vary params to <strong>wildcard</strong>.<a href="#section-5.1-2.5.2.1.2.2.2.2.1" class="pilcrow">¶</a></p>
-</li>
-                    </ol>
-</li>
-                </ol>
-</li>
-              <li id="section-5.1-2.5.2.2">
-                <p id="section-5.1-2.5.2.2.1">Otherwise, if <em>value</em>["<code>params</code>"] is an array:<a href="#section-5.1-2.5.2.2.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.1-2.5.2.2.2">
-<li id="section-5.1-2.5.2.2.2.1">
-                    <p id="section-5.1-2.5.2.2.2.1.1">If any item in <em>value</em>["<code>params</code>"] is not a string, then return the <span id="iref-default-url-variation-config-9" class="iref"></span>default URL variation config.<a href="#section-5.1-2.5.2.2.2.1.1" class="pilcrow">¶</a></p>
-</li>
-                  <li id="section-5.1-2.5.2.2.2.2">
-                    <p id="section-5.1-2.5.2.2.2.2.1">Set <em>result</em>'s no-vary params to the result of applying <span id="iref-parse-a-key-10" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> (<a href="#parse-a-key" class="auto internal xref">Section 5.3</a>) to each item in <em>value</em>["<code>params</code>"].<a href="#section-5.1-2.5.2.2.2.2.1" class="pilcrow">¶</a></p>
-</li>
-                  <li id="section-5.1-2.5.2.2.2.3">
-                    <p id="section-5.1-2.5.2.2.2.3.1">Set <em>result</em>'s vary params to <strong>wildcard</strong>.<a href="#section-5.1-2.5.2.2.2.3.1" class="pilcrow">¶</a></p>
-</li>
-                </ol>
-</li>
-              <li id="section-5.1-2.5.2.3">
-                <p id="section-5.1-2.5.2.3.1">Otherwise, return the <span id="iref-default-url-variation-config-1" class="iref"></span>default URL variation config.<a href="#section-5.1-2.5.2.3.1" class="pilcrow">¶</a></p>
-</li>
-            </ol>
+            <p id="section-5.1-2.5.1">If both <em>value</em>["<code>params</code>"] and <em>value</em>["<code>except</code>"] exist or neither exists, then return the <span id="iref-default-url-variation-config-9" class="iref"></span>default URL variation config.<a href="#section-5.1-2.5.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-2.6">
-            <p id="section-5.1-2.6.1">If <em>value</em>["<code>except</code>"] exists:<a href="#section-5.1-2.6.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.6.1">If <em>value</em>["<code>params</code>"] exists:<a href="#section-5.1-2.6.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-2.6.2">
 <li id="section-5.1-2.6.2.1">
-                <p id="section-5.1-2.6.2.1.1">If <em>value</em>["<code>params</code>"] is not true, then return the <span id="iref-default-url-variation-config-12" class="iref"></span>default URL variation config.<a href="#section-5.1-2.6.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.6.2.1.1">If <em>value</em>["<code>params</code>"] is not an array, then return the <span id="iref-default-url-variation-config-1" class="iref"></span>default URL variation config.<a href="#section-5.1-2.6.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.1-2.6.2.2">
-                <p id="section-5.1-2.6.2.2.1">If <em>value</em>["<code>except</code>"] is not an array, then return the <span id="iref-default-url-variation-config-13" class="iref"></span>default URL variation config.<a href="#section-5.1-2.6.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.6.2.2.1">If any item in <em>value</em>["<code>params</code>"] is not a string, then return the <span id="iref-default-url-variation-config-11" class="iref"></span>default URL variation config.<a href="#section-5.1-2.6.2.2.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.1-2.6.2.3">
-                <p id="section-5.1-2.6.2.3.1">If any item in <em>value</em>["<code>except</code>"] is not a string, then return the <span id="iref-default-url-variation-config-14" class="iref"></span>default URL variation config.<a href="#section-5.1-2.6.2.3.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.6.2.3.1">Set <em>result</em>'s no-vary params to the result of applying <span id="iref-parse-a-key-12" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> (<a href="#parse-a-key" class="auto internal xref">Section 5.3</a>) to each item in <em>value</em>["<code>params</code>"].<a href="#section-5.1-2.6.2.3.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.1-2.6.2.4">
-                <p id="section-5.1-2.6.2.4.1">Set <em>result</em>'s vary params to the result of applying <span id="iref-parse-a-key-15" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> (<a href="#parse-a-key" class="auto internal xref">Section 5.3</a>) to each item in <em>value</em>["<code>except</code>"].<a href="#section-5.1-2.6.2.4.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.6.2.4.1">If any item in <em>result</em>'s no-vary params is an error, then return the <span id="iref-default-url-variation-config-13" class="iref"></span>default URL variation config.<a href="#section-5.1-2.6.2.4.1" class="pilcrow">¶</a></p>
+</li>
+              <li id="section-5.1-2.6.2.5">
+                <p id="section-5.1-2.6.2.5.1">Set <em>result</em>'s vary params to <strong>wildcard</strong>.<a href="#section-5.1-2.6.2.5.1" class="pilcrow">¶</a></p>
 </li>
             </ol>
 </li>
           <li id="section-5.1-2.7">
-            <p id="section-5.1-2.7.1">Return <em>result</em>.<a href="#section-5.1-2.7.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.7.1">Otherwise, if <em>value</em>["<code>except</code>"] exists:<a href="#section-5.1-2.7.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.1-2.7.2">
+<li id="section-5.1-2.7.2.1">
+                <p id="section-5.1-2.7.2.1.1">If <em>value</em>["<code>except</code>"] is not an array, then return the <span id="iref-default-url-variation-config-14" class="iref"></span>default URL variation config.<a href="#section-5.1-2.7.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li id="section-5.1-2.7.2.2">
+                <p id="section-5.1-2.7.2.2.1">If any item in <em>value</em>["<code>except</code>"] is not a string, then return the <span id="iref-default-url-variation-config-15" class="iref"></span>default URL variation config.<a href="#section-5.1-2.7.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li id="section-5.1-2.7.2.3">
+                <p id="section-5.1-2.7.2.3.1">Set <em>result</em>'s vary params to the result of applying <span id="iref-parse-a-key-16" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> (<a href="#parse-a-key" class="auto internal xref">Section 5.3</a>) to each item in <em>value</em>["<code>except</code>"].<a href="#section-5.1-2.7.2.3.1" class="pilcrow">¶</a></p>
+</li>
+              <li id="section-5.1-2.7.2.4">
+                <p id="section-5.1-2.7.2.4.1">If any item in <em>result</em>'s vary params is an error, then return the <span id="iref-default-url-variation-config-17" class="iref"></span>default URL variation config.<a href="#section-5.1-2.7.2.4.1" class="pilcrow">¶</a></p>
+</li>
+              <li id="section-5.1-2.7.2.5">
+                <p id="section-5.1-2.7.2.5.1">Set <em>result</em>'s no-vary params to <strong>wildcard</strong>.<a href="#section-5.1-2.7.2.5.1" class="pilcrow">¶</a></p>
+</li>
+            </ol>
+</li>
+          <li id="section-5.1-2.8">
+            <p id="section-5.1-2.8.1">Return <em>result</em>.<a href="#section-5.1-2.8.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <aside id="section-5.1-3">
-          <p id="section-5.1-3.1">In general, this algorithm is strict and tends to return the <span id="iref-default-url-variation-config-16" class="iref"></span>default URL variation config whenever it sees something it doesn't recognize. This is because the <span id="iref-default-url-variation-config-17" class="iref"></span>default URL variation config behavior will just cause fewer cache hits, which is an acceptable fallback behavior.<a href="#section-5.1-3.1" class="pilcrow">¶</a></p>
+          <p id="section-5.1-3.1">In general, this algorithm is strict and tends to return the <span id="iref-default-url-variation-config-18" class="iref"></span>default URL variation config whenever it sees something it doesn't recognize. This is because the <span id="iref-default-url-variation-config-19" class="iref"></span>default URL variation config behavior will just cause fewer cache hits, which is an acceptable fallback behavior.<a href="#section-5.1-3.1" class="pilcrow">¶</a></p>
 <p id="section-5.1-3.2">However, unrecognized keys at the top level are ignored, to make it easier to extend this specification in the future. To avoid misbehavior with existing client software, such extensions will likely expand, rather than reduce, the set of requests that a cached response can match.<a href="#section-5.1-3.2" class="pilcrow">¶</a></p>
 </aside>
 <aside id="section-5.1-4">
@@ -1500,12 +1478,6 @@ To <em><span id="iref-obtain-a-url-variation-config-" class="iref"></span><a hre
             <tbody>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">
-                  <code>No-Vary-Search: params</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">no-vary params: <strong>wildcard</strong><br>vary params: (empty list)</td>
-              </tr>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">
                   <code>No-Vary-Search: params=("a")</code>
 </td>
                 <td class="text-left" rowspan="1" colspan="1">no-vary params: « "<code>a</code>" »<br>vary params: <strong>wildcard</strong>
@@ -1513,9 +1485,22 @@ To <em><span id="iref-obtain-a-url-variation-config-" class="iref"></span><a hre
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">
-                  <code>No-Vary-Search: params, except=("x")</code>
+                  <code>No-Vary-Search: except=("x")</code>
 </td>
                 <td class="text-left" rowspan="1" colspan="1">no-vary params: <strong>wildcard</strong><br>vary params: « "<code>x</code>" »</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: params=()</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">no-vary params: (empty list)<br>vary params: <strong>wildcard</strong>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: except=()</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">no-vary params: <strong>wildcard</strong><br>vary params: (empty list)</td>
               </tr>
             </tbody>
           </table>
@@ -1525,34 +1510,31 @@ To <em><span id="iref-obtain-a-url-variation-config-" class="iref"></span><a hre
               <p id="section-5.2.1-4.1.1"><code>No-Vary-Search: key-order="not a boolean"</code><a href="#section-5.2.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.2">
-              <p id="section-5.2.1-4.2.1"><code>No-Vary-Search: params="not a boolean or inner list"</code><a href="#section-5.2.1-4.2.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.2.1"><code>No-Vary-Search: params="not an inner list"</code><a href="#section-5.2.1-4.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.3">
               <p id="section-5.2.1-4.3.1"><code>No-Vary-Search: params=(not-a-string)</code><a href="#section-5.2.1-4.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.4">
-              <p id="section-5.2.1-4.4.1"><code>No-Vary-Search: params=("a"), except=("x")</code><a href="#section-5.2.1-4.4.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.4.1"><code>No-Vary-Search: params=?1</code><a href="#section-5.2.1-4.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.5">
-              <p id="section-5.2.1-4.5.1"><code>No-Vary-Search: params=(), except=()</code><a href="#section-5.2.1-4.5.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.5.1"><code>No-Vary-Search: params=?1, except=("x")</code><a href="#section-5.2.1-4.5.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.6">
-              <p id="section-5.2.1-4.6.1"><code>No-Vary-Search: params=?0, except=("x")</code><a href="#section-5.2.1-4.6.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.6.1"><code>No-Vary-Search: params=("a"), except=("x")</code><a href="#section-5.2.1-4.6.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.7">
-              <p id="section-5.2.1-4.7.1"><code>No-Vary-Search: params, except=(not-a-string)</code><a href="#section-5.2.1-4.7.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.7.1"><code>No-Vary-Search: params=(), except=()</code><a href="#section-5.2.1-4.7.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.8">
-              <p id="section-5.2.1-4.8.1"><code>No-Vary-Search: params, except="not an inner list"</code><a href="#section-5.2.1-4.8.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.8.1"><code>No-Vary-Search: except="not an inner list"</code><a href="#section-5.2.1-4.8.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.9">
-              <p id="section-5.2.1-4.9.1"><code>No-Vary-Search: params, except=?1</code><a href="#section-5.2.1-4.9.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.9.1"><code>No-Vary-Search: except=(not-a-string)</code><a href="#section-5.2.1-4.9.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.10">
-              <p id="section-5.2.1-4.10.1"><code>No-Vary-Search: except=("x")</code><a href="#section-5.2.1-4.10.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="compact" id="section-5.2.1-4.11">
-              <p id="section-5.2.1-4.11.1"><code>No-Vary-Search: except=()</code><a href="#section-5.2.1-4.11.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.10.1"><code>No-Vary-Search: except=?1</code><a href="#section-5.2.1-4.10.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-5.2.1-5">The following inputs are valid, but somewhat unconventional. They are shown alongside their more conventional form.<a href="#section-5.2.1-5" class="pilcrow">¶</a></p>
@@ -1567,14 +1549,6 @@ To <em><span id="iref-obtain-a-url-variation-config-" class="iref"></span><a hre
             <tbody>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">
-                  <code>No-Vary-Search: params=?1</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>No-Vary-Search: params</code>
-</td>
-              </tr>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">
                   <code>No-Vary-Search: key-order=?1</code>
 </td>
                 <td class="text-left" rowspan="1" colspan="1">
@@ -1583,17 +1557,10 @@ To <em><span id="iref-obtain-a-url-variation-config-" class="iref"></span><a hre
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">
-                  <code>No-Vary-Search: params, key-order, except=("x")</code>
-</td>
+                  <code>No-Vary-Search: except=("x")</code>, key-order</td>
                 <td class="text-left" rowspan="1" colspan="1">
-                  <code>No-Vary-Search: key-order, params, except=("x")</code>
+                  <code>No-Vary-Search: key-order, except=("x")</code>
 </td>
-              </tr>
-              <tr>
-                <td class="text-left" rowspan="1" colspan="1">
-                  <code>No-Vary-Search: params=?0</code>
-</td>
-                <td class="text-left" rowspan="1" colspan="1">(omit the header field)</td>
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">
@@ -1618,8 +1585,8 @@ To <em><span id="iref-obtain-a-url-variation-config-" class="iref"></span><a hre
         <h3 id="name-parse-a-key">
 <a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-parse-a-key" class="section-name selfRef">Parse a key</a>
         </h3>
-<p id="section-5.3-1"><span id="iref-parse-a-key-22" class="iref"></span>
-To <em><span id="iref-parse-a-key-23" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a></em> given an ASCII string <em>keyString</em>:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-1"><span id="iref-parse-a-key-24" class="iref"></span>
+To <em><span id="iref-parse-a-key-25" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a></em> given an ASCII string <em>keyString</em>:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.3-2">
 <li id="section-5.3-2.1">
             <p id="section-5.3-2.1.1">Let <em>keyBytes</em> be the <a href="https://infra.spec.whatwg.org/#isomorphic-encode">isomorphic encoding</a> <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span> of <em>keyString</em>.<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
@@ -1642,7 +1609,7 @@ To <em><span id="iref-parse-a-key-23" class="iref"></span><a href="#parse-a-key"
           <h4 id="name-examples-2">
 <a href="#section-5.3.1" class="section-number selfRef">5.3.1. </a><a href="#name-examples-2" class="section-name selfRef">Examples</a>
           </h4>
-<p id="section-5.3.1-1">The <span id="iref-parse-a-key-24" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> allows encoding an entire entry list of keys and values in a URI (which is restricted to ASCII characters). For example,<a href="#section-5.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.1-1">The <span id="iref-parse-a-key-26" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> allows encoding an entire entry list of keys and values in a URI (which is restricted to ASCII characters). For example,<a href="#section-5.3.1-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-5.3.1-2">
 <pre>
 No-Vary-Search: params=("%C3%A9+%E6%B0%97")
@@ -1682,7 +1649,7 @@ Two <a href="https://url.spec.whatwg.org/#concept-url">URLs</a> <span>[<a href="
           <p id="section-6-2.1.1">If the scheme, username, password, host, port, or path of <em>urlA</em> and <em>urlB</em> differ, then return false.<a href="#section-6-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.2">
-          <p id="section-6-2.2.1">If <em>variationConfig</em> is equivalent to the <span id="iref-default-url-variation-config-26" class="iref"></span>default URL variation config, then:<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-6-2.2.1">If <em>variationConfig</em> is equivalent to the <span id="iref-default-url-variation-config-28" class="iref"></span>default URL variation config, then:<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-6-2.2.2">
 <li id="section-6-2.2.2.1">
               <p id="section-6-2.2.2.1.1">If <em>urlA</em>'s query equals <em>urlB</em>'s query, then return true.<a href="#section-6-2.2.2.1.1" class="pilcrow">¶</a></p>
@@ -2112,11 +2079,13 @@ In this case, even URL pairs that might appear the same after running the <a hre
                     <strong><em><a href="#section-4-3" class="auto internal xref">Section 4, Paragraph 3</a></em></strong>; 
 <a href="#section-5.1-2.1.1" class="auto internal xref">Section 5.1, Paragraph 2.1.1</a>; 
 <a href="#section-5.1-2.4.2.1.1" class="auto internal xref">Section 5.1, Paragraph 2.4.2.1.1</a>; 
-<a href="#section-5.1-2.5.2.2.2.1.1" class="auto internal xref">Section 5.1, Paragraph 2.5.2.2.2.1.1</a>; 
-<a href="#section-5.1-2.5.2.3.1" class="auto internal xref">Section 5.1, Paragraph 2.5.2.3.1</a>; 
+<a href="#section-5.1-2.5.1" class="auto internal xref">Section 5.1, Paragraph 2.5.1</a>; 
 <a href="#section-5.1-2.6.2.1.1" class="auto internal xref">Section 5.1, Paragraph 2.6.2.1.1</a>; 
 <a href="#section-5.1-2.6.2.2.1" class="auto internal xref">Section 5.1, Paragraph 2.6.2.2.1</a>; 
-<a href="#section-5.1-2.6.2.3.1" class="auto internal xref">Section 5.1, Paragraph 2.6.2.3.1</a>; 
+<a href="#section-5.1-2.6.2.4.1" class="auto internal xref">Section 5.1, Paragraph 2.6.2.4.1</a>; 
+<a href="#section-5.1-2.7.2.1.1" class="auto internal xref">Section 5.1, Paragraph 2.7.2.1.1</a>; 
+<a href="#section-5.1-2.7.2.2.1" class="auto internal xref">Section 5.1, Paragraph 2.7.2.2.1</a>; 
+<a href="#section-5.1-2.7.2.4.1" class="auto internal xref">Section 5.1, Paragraph 2.7.2.4.1</a>; 
 <a href="#section-5.1-3.1" class="auto internal xref">Section 5.1, Paragraph 3.1</a>; 
 <a href="#section-5.2.1-3" class="auto internal xref">Section 5.2.1, Paragraph 3</a>; 
 <a href="#section-6-2.2.1" class="auto internal xref">Section 6, Paragraph 2.2.1</a><a href="#appendix-B-2.1.2.1.1.2.1" class="pilcrow">¶</a></p>
@@ -2175,8 +2144,8 @@ In this case, even URL pairs that might appear the same after running the <a hre
                 <dt id="appendix-B-2.4.2.1.1.1">parse a key</dt>
                 <dd style="margin-left: 1.5em" id="appendix-B-2.4.2.1.1.2">
                   <p id="appendix-B-2.4.2.1.1.2.1">
-                    <a href="#section-5.1-2.5.2.2.2.2.1" class="auto internal xref">Section 5.1, Paragraph 2.5.2.2.2.2.1</a>; 
-<a href="#section-5.1-2.6.2.4.1" class="auto internal xref">Section 5.1, Paragraph 2.6.2.4.1</a>; 
+                    <a href="#section-5.1-2.6.2.3.1" class="auto internal xref">Section 5.1, Paragraph 2.6.2.3.1</a>; 
+<a href="#section-5.1-2.7.2.3.1" class="auto internal xref">Section 5.1, Paragraph 2.7.2.3.1</a>; 
 <strong><em><a href="#section-5.3-1" class="auto internal xref">Section 5.3, Paragraph 1</a></em></strong>; 
 <a href="#section-5.3.1-1" class="auto internal xref">Section 5.3.1, Paragraph 1</a><a href="#appendix-B-2.4.2.1.1.2.1" class="pilcrow">¶</a></p>
 </dd>

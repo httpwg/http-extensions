@@ -5,8 +5,8 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                            N. Jaju, Ed.
-Expires: 3 August 2026                                        Google LLC
-                                                         30 January 2026
+Expires: 21 August 2026                                       Google LLC
+                                                        17 February 2026
 
 
                The No-Vary-Search HTTP Caching Extension
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 August 2026.
+   This Internet-Draft will expire on 21 August 2026.
 
 Copyright Notice
 
@@ -123,7 +123,7 @@ Table of Contents
    approach, where only certain known query parameters semantically
    affect the served response, they can use
 
-   No-Vary-Search: params, except=("productId")
+   No-Vary-Search: except=("productId")
 
    Note that "cache busting" by sending unique query parameters to avoid
    retrieving a cached response can be made ineffective by the No-Vary-
@@ -179,15 +179,14 @@ Table of Contents
    *  If present, the key-order entry's value MUST be a boolean
       (Section 3.3.6 of [STRUCTURED-FIELDS]).
 
-   *  If present, the params entry's value MUST be either a boolean
-      (Section 3.3.6 of [STRUCTURED-FIELDS]) or an inner list
-      (Section 3.1.1 of [STRUCTURED-FIELDS]).
+   *  If present, the params entry's value MUST be an inner list of
+      strings (Section 3.1.1 of [STRUCTURED-FIELDS]).
 
-   *  If present, the except entry's value MUST be an inner list
-      (Section 3.1.1 of [STRUCTURED-FIELDS]).
+   *  If present, the except entry's value MUST be an inner list of
+      strings (Section 3.1.1 of [STRUCTURED-FIELDS]).
 
-   *  The except entry MUST only be present if the params entry is also
-      present, and the params entry's value is the boolean value true.
+   *  The except entry MUST NOT be present if the params entry is also
+      present.
 
    The dictionary MAY contain entries whose keys are not one of key-
    order, params, and except, but their meaning is not defined by this
@@ -247,50 +246,42 @@ Table of Contents
        2.  Set _result_'s vary on key order to the boolean negation of
            _value_["key-order"].
 
-   5.  If _value_["params"] exists:
+   5.  If both _value_["params"] and _value_["except"] exist or neither
+       exists, then return the default URL variation config.
 
-       1.  If _value_["params"] is a boolean:
+   6.  If _value_["params"] exists:
 
-           1.  If _value_["params"] is true, then:
-
-               1.  Set _result_'s no-vary params to *wildcard*.
-
-               2.  Set _result_'s vary params to the empty list.
-
-           2.  Otherwise:
-
-               1.  Set _result_'s no-vary params to the empty list.
-
-               2.  Set _result_'s vary params to *wildcard*.
-
-       2.  Otherwise, if _value_["params"] is an array:
-
-           1.  If any item in _value_["params"] is not a string, then
-               return the default URL variation config.
-
-           2.  Set _result_'s no-vary params to the result of applying
-               parse a key (Section 5.3) to each item in
-               _value_["params"].
-
-           3.  Set _result_'s vary params to *wildcard*.
-
-       3.  Otherwise, return the default URL variation config.
-
-   6.  If _value_["except"] exists:
-
-       1.  If _value_["params"] is not true, then return the default URL
-           variation config.
-
-       2.  If _value_["except"] is not an array, then return the default
+       1.  If _value_["params"] is not an array, then return the default
            URL variation config.
 
-       3.  If any item in _value_["except"] is not a string, then return
+       2.  If any item in _value_["params"] is not a string, then return
            the default URL variation config.
 
-       4.  Set _result_'s vary params to the result of applying parse a
+       3.  Set _result_'s no-vary params to the result of applying parse
+           a key (Section 5.3) to each item in _value_["params"].
+
+       4.  If any item in _result_'s no-vary params is an error, then
+           return the default URL variation config.
+
+       5.  Set _result_'s vary params to *wildcard*.
+
+   7.  Otherwise, if _value_["except"] exists:
+
+       1.  If _value_["except"] is not an array, then return the default
+           URL variation config.
+
+       2.  If any item in _value_["except"] is not a string, then return
+           the default URL variation config.
+
+       3.  Set _result_'s vary params to the result of applying parse a
            key (Section 5.3) to each item in _value_["except"].
 
-   7.  Return _result_.
+       4.  If any item in _result_'s vary params is an error, then
+           return the default URL variation config.
+
+       5.  Set _result_'s no-vary params to *wildcard*.
+
+   8.  Return _result_.
 
       |  In general, this algorithm is strict and tends to return the
       |  default URL variation config whenever it sees something it
@@ -326,18 +317,21 @@ Table of Contents
    The following illustrates how various inputs are parsed, in terms of
    their impact on the resulting no-vary params and vary params:
 
-          +========================+============================+
-          | Input                  | Result                     |
-          +========================+============================+
-          | No-Vary-Search: params | no-vary params: *wildcard* |
-          |                        | vary params: (empty list)  |
-          +------------------------+----------------------------+
-          | No-Vary-Search:        | no-vary params: « "a" »    |
-          | params=("a")           | vary params: *wildcard*    |
-          +------------------------+----------------------------+
-          | No-Vary-Search:        | no-vary params: *wildcard* |
-          | params, except=("x")   | vary params: « "x" »       |
-          +------------------------+----------------------------+
+      +==============================+==============================+
+      | Input                        | Result                       |
+      +==============================+==============================+
+      | No-Vary-Search: params=("a") | no-vary params: « "a" »      |
+      |                              | vary params: *wildcard*      |
+      +------------------------------+------------------------------+
+      | No-Vary-Search: except=("x") | no-vary params: *wildcard*   |
+      |                              | vary params: « "x" »         |
+      +------------------------------+------------------------------+
+      | No-Vary-Search: params=()    | no-vary params: (empty list) |
+      |                              | vary params: *wildcard*      |
+      +------------------------------+------------------------------+
+      | No-Vary-Search: except=()    | no-vary params: *wildcard*   |
+      |                              | vary params: (empty list)    |
+      +------------------------------+------------------------------+
 
                                   Table 1
 
@@ -345,38 +339,33 @@ Table of Contents
    variation config to be returned:
 
    *  No-Vary-Search: key-order="not a boolean"
-   *  No-Vary-Search: params="not a boolean or inner list"
+   *  No-Vary-Search: params="not an inner list"
    *  No-Vary-Search: params=(not-a-string)
+   *  No-Vary-Search: params=?1
+   *  No-Vary-Search: params=?1, except=("x")
    *  No-Vary-Search: params=("a"), except=("x")
    *  No-Vary-Search: params=(), except=()
-   *  No-Vary-Search: params=?0, except=("x")
-   *  No-Vary-Search: params, except=(not-a-string)
-   *  No-Vary-Search: params, except="not an inner list"
-   *  No-Vary-Search: params, except=?1
-   *  No-Vary-Search: except=("x")
-   *  No-Vary-Search: except=()
+   *  No-Vary-Search: except="not an inner list"
+   *  No-Vary-Search: except=(not-a-string)
+   *  No-Vary-Search: except=?1
 
    The following inputs are valid, but somewhat unconventional.  They
    are shown alongside their more conventional form.
 
-       +==============================+============================+
-       | Input                        | Conventional form          |
-       +==============================+============================+
-       | No-Vary-Search: params=?1    | No-Vary-Search: params     |
-       +------------------------------+----------------------------+
-       | No-Vary-Search: key-order=?1 | No-Vary-Search: key-order  |
-       +------------------------------+----------------------------+
-       | No-Vary-Search: params, key- | No-Vary-Search: key-order, |
-       | order, except=("x")          | params, except=("x")       |
-       +------------------------------+----------------------------+
-       | No-Vary-Search: params=?0    | (omit the header field)    |
-       +------------------------------+----------------------------+
-       | No-Vary-Search: params=()    | (omit the header field)    |
-       +------------------------------+----------------------------+
-       | No-Vary-Search: key-order=?0 | (omit the header field)    |
-       +------------------------------+----------------------------+
+       +==============================+===========================+
+       | Input                        | Conventional form         |
+       +==============================+===========================+
+       | No-Vary-Search: key-order=?1 | No-Vary-Search: key-order |
+       +------------------------------+---------------------------+
+       | No-Vary-Search:              | No-Vary-Search: key-      |
+       | except=("x"), key-order      | order, except=("x")       |
+       +------------------------------+---------------------------+
+       | No-Vary-Search: params=()    | (omit the header field)   |
+       +------------------------------+---------------------------+
+       | No-Vary-Search: key-order=?0 | (omit the header field)   |
+       +------------------------------+---------------------------+
 
-                                  Table 2
+                                 Table 2
 
 5.3.  Parse a key
 
@@ -772,10 +761,11 @@ Index
 
          default URL variation config  *_Section 4, Paragraph 3_*;
             Section 5.1, Paragraph 2.1.1; Section 5.1, Paragraph
-            2.4.2.1.1; Section 5.1, Paragraph 2.5.2.2.2.1.1;
-            Section 5.1, Paragraph 2.5.2.3.1; Section 5.1, Paragraph
-            2.6.2.1.1; Section 5.1, Paragraph 2.6.2.2.1; Section 5.1,
-            Paragraph 2.6.2.3.1; Section 5.1, Paragraph 3.1;
+            2.4.2.1.1; Section 5.1, Paragraph 2.5.1; Section 5.1,
+            Paragraph 2.6.2.1.1; Section 5.1, Paragraph 2.6.2.2.1;
+            Section 5.1, Paragraph 2.6.2.4.1; Section 5.1, Paragraph
+            2.7.2.1.1; Section 5.1, Paragraph 2.7.2.2.1; Section 5.1,
+            Paragraph 2.7.2.4.1; Section 5.1, Paragraph 3.1;
             Section 5.2.1, Paragraph 3; Section 6, Paragraph 2.2.1
 
       E
@@ -789,8 +779,8 @@ Index
 
       P
 
-         parse a key  Section 5.1, Paragraph 2.5.2.2.2.2.1; Section 5.1,
-            Paragraph 2.6.2.4.1; *_Section 5.3, Paragraph 1_*;
+         parse a key  Section 5.1, Paragraph 2.6.2.3.1; Section 5.1,
+            Paragraph 2.7.2.3.1; *_Section 5.3, Paragraph 1_*;
             Section 5.3.1, Paragraph 1
          parse a URL variation config  *_Section 5.1, Paragraph 1_*;
             Section 5.2, Paragraph 2.2.1
