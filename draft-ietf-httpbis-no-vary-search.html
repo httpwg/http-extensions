@@ -1052,7 +1052,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Denicola, et al.</td>
-<td class="center">Expires 21 August 2026</td>
+<td class="center">Expires 31 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-no-vary-search-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-17" class="published">17 February 2026</time>
+<time datetime="2026-02-27" class="published">27 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-21">21 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-31">31 August 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1129,7 +1129,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 21 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 31 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1516,25 +1516,28 @@ To <em><span id="iref-obtain-a-url-variation-config-" class="iref"></span><a hre
               <p id="section-5.2.1-4.3.1"><code>No-Vary-Search: params=(not-a-string)</code><a href="#section-5.2.1-4.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.4">
-              <p id="section-5.2.1-4.4.1"><code>No-Vary-Search: params=?1</code><a href="#section-5.2.1-4.4.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.4.1"><code>No-Vary-Search: params=?0</code><a href="#section-5.2.1-4.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.5">
-              <p id="section-5.2.1-4.5.1"><code>No-Vary-Search: params=?1, except=("x")</code><a href="#section-5.2.1-4.5.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.5.1"><code>No-Vary-Search: params=?1</code><a href="#section-5.2.1-4.5.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.6">
-              <p id="section-5.2.1-4.6.1"><code>No-Vary-Search: params=("a"), except=("x")</code><a href="#section-5.2.1-4.6.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.6.1"><code>No-Vary-Search: params=?1, except=("x")</code><a href="#section-5.2.1-4.6.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.7">
-              <p id="section-5.2.1-4.7.1"><code>No-Vary-Search: params=(), except=()</code><a href="#section-5.2.1-4.7.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.7.1"><code>No-Vary-Search: params=("a"), except=("x")</code><a href="#section-5.2.1-4.7.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.8">
-              <p id="section-5.2.1-4.8.1"><code>No-Vary-Search: except="not an inner list"</code><a href="#section-5.2.1-4.8.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.8.1"><code>No-Vary-Search: params=(), except=()</code><a href="#section-5.2.1-4.8.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.9">
-              <p id="section-5.2.1-4.9.1"><code>No-Vary-Search: except=(not-a-string)</code><a href="#section-5.2.1-4.9.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.9.1"><code>No-Vary-Search: except="not an inner list"</code><a href="#section-5.2.1-4.9.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-5.2.1-4.10">
-              <p id="section-5.2.1-4.10.1"><code>No-Vary-Search: except=?1</code><a href="#section-5.2.1-4.10.1" class="pilcrow">¶</a></p>
+              <p id="section-5.2.1-4.10.1"><code>No-Vary-Search: except=(not-a-string)</code><a href="#section-5.2.1-4.10.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="compact" id="section-5.2.1-4.11">
+              <p id="section-5.2.1-4.11.1"><code>No-Vary-Search: except=?1</code><a href="#section-5.2.1-4.11.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-5.2.1-5">The following inputs are valid, but somewhat unconventional. They are shown alongside their more conventional form.<a href="#section-5.2.1-5" class="pilcrow">¶</a></p>

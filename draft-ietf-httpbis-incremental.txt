@@ -5,10 +5,10 @@
 httpbis                                                 奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                T. Pauly
-Expires: 21 August 2026                                            Apple
+Expires: 31 August 2026                                            Apple
                                                               M. Thomson
                                                                  Mozilla
-                                                        17 February 2026
+                                                        27 February 2026
 
 
                 Incremental Forwarding of HTTP Messages
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 August 2026.
+   This Internet-Draft will expire on 31 August 2026.
 
 Copyright Notice
 
@@ -313,9 +313,9 @@ Table of Contents
    [CHUNKED-OHTTP]
               Pauly, T. and M. Thomson, "Chunked Oblivious HTTP
               Messages", Work in Progress, Internet-Draft, draft-ietf-
-              ohai-chunked-ohttp-07, 22 January 2026,
+              ohai-chunked-ohttp-08, 18 February 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ohai-
-              chunked-ohttp-07>.
+              chunked-ohttp-08>.
 
    [RFC8441]  McManus, P., "Bootstrapping WebSockets with HTTP/2",
               RFC 8441, DOI 10.17487/RFC8441, September 2018,
