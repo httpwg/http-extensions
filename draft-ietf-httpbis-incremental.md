@@ -85,7 +85,7 @@ To help avoid such behavior, this document specifies the "Incremental" HTTP head
 field, which requests that HTTP intermediaries begin forwarding the HTTP message
 downstream before receiving the complete message.
 
-This indication might not be supported.
+This indication might not be supported by intermediaries.
 Intermediaries that are unaware of this field will not change their behavior.
 intermediaries that support the field might choose instead to reject a request;
 see {{security}}.
