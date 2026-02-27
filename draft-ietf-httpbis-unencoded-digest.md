@@ -350,7 +350,11 @@ describe relevant considerations and mitigations.
 A content coding may provide encryption capabilities, for example "aes128gcm"
 ({{?RFC8188}}). Using Unencoded-Digest with such content codings can leak
 information about the original data because header fields are visible to anyone
-who can read the HTTP message. This could be used as a side channel.
+who can read the HTTP message. This could be used as a side channel. For
+instance, an attacker that can access Unencoded-Digest values could infer
+details about the unencrypted content without decrypting it if, for example, the
+unencrypted content has a predictable pattern. When the "aes128gcm" content
+coding is used, the security considerations is {{Section 4 of ?RFC8188}} apply.
 
 
 # IANA Considerations
