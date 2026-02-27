@@ -379,4 +379,4 @@ of the previous design in the HTTP WG. The motivating use cases still mostly
 apply identically.
 
 The following people provided detailed feedback on the document: Mike Bishop,
-Roberto Polli, and Martin Thomson.
+Mallory Knodel, Roberto Polli, Rifaat Shekh-Yusef, and Martin Thomson.
