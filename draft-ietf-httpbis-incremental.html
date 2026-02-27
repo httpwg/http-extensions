@@ -1223,7 +1223,7 @@ either request or response -- prevents any data from being delivered.<a href="#s
 <p id="section-1-9">To help avoid such behavior, this document specifies the "Incremental" HTTP header
 field, which requests that HTTP intermediaries begin forwarding the HTTP message
 downstream before receiving the complete message.<a href="#section-1-9" class="pilcrow">¶</a></p>
-<p id="section-1-10">This indication is advisory.
+<p id="section-1-10">This indication might not be supported by intermediaries.
 Intermediaries that are unaware of this field will not change their behavior.
 intermediaries that support the field might choose instead to reject a request;
 see <a href="#security" class="auto internal xref">Section 4</a>.<a href="#section-1-10" class="pilcrow">¶</a></p>
@@ -1288,12 +1288,14 @@ intermediary might refuse are discussed in <a href="#security" class="auto inter
 Though most HTTP APIs provide the ability to incrementally transfer message content,
 those that do not for any reason, <span class="bcp14">SHOULD</span> use the presence of the Incremental
 header field to reduce or disable buffering.<a href="#section-3-10" class="pilcrow">¶</a></p>
-<p id="section-3-11">The Incremental field is advisory, as intermediaries that are unaware of the
-field or that do not support the field might buffer messages, even when
-explicitly requested otherwise.  Clients and servers therefore cannot expect all
-intermediaries to understand and respect a request to deliver messages
-incrementally. Clients can rely on prior knowledge or probe for support on
-individual resources.<a href="#section-3-11" class="pilcrow">¶</a></p>
+<p id="section-3-11">The Incremental field might not be supported by intermediaries.
+Intermediaries that are unaware of the field
+or that do not support the field might buffer messages,
+even when explicitly requested otherwise.
+Clients and servers therefore cannot expect all intermediaries to understand
+and respect a request to deliver messages incrementally.
+Clients that depend on support for incremental forwarding can rely on prior knowledge
+or probe for support on individual resources.<a href="#section-3-11" class="pilcrow">¶</a></p>
 <p id="section-3-12">The Incremental header field facilitates the establishment of a bidirectional
 byte channel over HTTP, as its presence in both requests and responses requests that
 intermediaries forward early responses (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.5" class="relref">Section 7.5</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) and to
