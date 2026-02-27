@@ -471,7 +471,7 @@ Acknowledgments
    The motivating use cases still mostly apply identically.
 
    The following people provided detailed feedback on the document: Mike
-   Bishop, Mallory Knodel, Rifaat Shekh-Yusef, Roberto Polli, and Martin
+   Bishop, Mallory Knodel, Roberto Polli, Rifaat Shekh-Yusef, and Martin
    Thomson.
 
 Authors' Addresses
