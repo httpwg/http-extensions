@@ -177,9 +177,12 @@ Table of Contents
    codings applied (Section 8.4.1 of [HTTP]).
 
    Apart from the content coding concerns, Unencoded-Digest behaves
-   similarly to Repr-Digest (Section 3 of [DIGEST-FIELDS]).  In the
-   absence of content codings, Unencoded-Digest is identical to Repr-
-   Digest.
+   similarly to Repr-Digest (Section 3 of [DIGEST-FIELDS]).
+
+   Unencoded-Digest can be sent in messages with and without content
+   codings.  When there is no content coding, Unencoded-Digest acts
+   identically to Repr-Digest; for the same hashing algorithm the
+   computed value would be the same.
 
    Unencoded-Digest is a Dictionary (see Section 3.2 of
    [STRUCTURED-FIELDS]) where each:
@@ -334,7 +337,7 @@ Table of Contents
 
               Figure 2: GET response with GZIP content coding
 
-   The second example demonstrates a range request with content
+   The second example demonstrates a range request that uses content
    negotiation.
 
    GET /boringstring HTTP/1.1
