@@ -5,10 +5,10 @@
 httpbis                                                 奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
 Intended status: Standards Track                                T. Pauly
-Expires: 16 August 2026                                            Apple
+Expires: 2 September 2026                                          Apple
                                                               M. Thomson
                                                                  Mozilla
-                                                        12 February 2026
+                                                            1 March 2026
 
 
                 Incremental Forwarding of HTTP Messages
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 August 2026.
+   This Internet-Draft will expire on 2 September 2026.
 
 Copyright Notice
 
@@ -110,9 +110,10 @@ Table of Contents
    intermediaries begin forwarding the HTTP message downstream before
    receiving the complete message.
 
-   This indication is advisory.  Intermediaries that are unaware of this
-   field will not change their behavior. intermediaries that support the
-   field might choose instead to reject a request; see Section 4.
+   This indication might not be supported by intermediaries.
+   Intermediaries that are unaware of this field will not change their
+   behavior. intermediaries that support the field might choose instead
+   to reject a request; see Section 4.
 
 2.  Conventions and Definitions
 
@@ -174,12 +175,14 @@ Table of Contents
    reason, SHOULD use the presence of the Incremental header field to
    reduce or disable buffering.
 
-   The Incremental field is advisory, as intermediaries that are unaware
-   of the field or that do not support the field might buffer messages,
-   even when explicitly requested otherwise.  Clients and servers
-   therefore cannot expect all intermediaries to understand and respect
-   a request to deliver messages incrementally.  Clients can rely on
-   prior knowledge or probe for support on individual resources.
+   The Incremental field might not be supported by intermediaries.
+   Intermediaries that are unaware of the field or that do not support
+   the field might buffer messages, even when explicitly requested
+   otherwise.  Clients and servers therefore cannot expect all
+   intermediaries to understand and respect a request to deliver
+   messages incrementally.  Clients that depend on support for
+   incremental forwarding can rely on prior knowledge or probe for
+   support on individual resources.
 
    The Incremental header field facilitates the establishment of a
    bidirectional byte channel over HTTP, as its presence in both
@@ -313,9 +316,9 @@ Table of Contents
    [CHUNKED-OHTTP]
               Pauly, T. and M. Thomson, "Chunked Oblivious HTTP
               Messages", Work in Progress, Internet-Draft, draft-ietf-
-              ohai-chunked-ohttp-07, 22 January 2026,
+              ohai-chunked-ohttp-08, 18 February 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ohai-
-              chunked-ohttp-07>.
+              chunked-ohttp-08>.
 
    [RFC8441]  McManus, P., "Bootstrapping WebSockets with HTTP/2",
               RFC 8441, DOI 10.17487/RFC8441, September 2018,

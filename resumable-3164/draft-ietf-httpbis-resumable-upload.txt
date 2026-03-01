@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 16 August 2026                                       Apple Inc.
+Expires: 2 September 2026                                     Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                        12 February 2026
+                                                            1 March 2026
 
 
                        Resumable Uploads for HTTP
@@ -18,12 +18,12 @@ Abstract
 
    HTTP data transfers can encounter interruption due to reasons such as
    canceled requests or dropped connections.  If the intended recipient
-   can indicate how much of the data was received prior to interruption,
-   a sender can resume data transfer at that point instead of attempting
-   to transfer all of the data again.  HTTP range requests support this
-   concept of resumable downloads from server to client.  This document
-   describes a mechanism that supports resumable uploads from client to
-   server using HTTP.
+   can indicate how much of the data was processed prior to
+   interruption, a sender can resume data transfer at that point instead
+   of attempting to transfer all of the data again.  HTTP range requests
+   support this concept of resumable downloads from server to client.
+   This document describes a mechanism that supports resumable uploads
+   from client to server using HTTP.
 
 About This Document
 
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 August 2026.
+   This Internet-Draft will expire on 2 September 2026.
 
 Copyright Notice
 
@@ -151,10 +151,10 @@ Table of Contents
 
    HTTP data transfers can encounter interruption due to reasons such as
    canceled requests or dropped connections.  If the intended recipient
-   can indicate how much of the data was received prior to interruption,
-   a sender can resume data transfer at that point instead of attempting
-   to transfer all of the data again.  HTTP range requests (see
-   Section 14 of [HTTP]) support this concept of resumable data
+   can indicate how much of the data was processed prior to
+   interruption, a sender can resume data transfer at that point instead
+   of attempting to transfer all of the data again.  HTTP range requests
+   (see Section 14 of [HTTP]) support this concept of resumable data
    transfers for downloads from server to client.  While partial PUT is
    one method for uploading a partial representation (via Content-Range
    in the request), there are caveats that affect its deployability; see
@@ -285,7 +285,7 @@ Table of Contents
    2) If the connection to the server is interrupted, the client might
    want to resume the upload.  However, before this is possible the
    client needs to know the amount of representation data that the
-   server received before the interruption.  It does so by retrieving
+   server processed before the interruption.  It does so by retrieving
    the offset (Section 4.3) from the upload resource.
 
    Client                                       Server
@@ -399,7 +399,7 @@ Table of Contents
    3) If the connection was interrupted, the client might want to resume
    the upload, similar to the previous example (Section 3.1).  The
    client retrieves the offset (Section 4.3) to learn the amount of
-   representation data received by the server and then continues
+   representation data processed by the server and then continues
    appending the remaining parts to the upload as in the previous step.
 
    Client                                       Server
@@ -430,7 +430,7 @@ Table of Contents
    transfer.  Once the remaining representation data is transferred, the
    server processes the entire representation and responds with whatever
    the initial request to /project/123/files would have produced if it
-   had received the entire representation, e.g. a 200 (OK) response.
+   had processed the entire representation, e.g. a 200 (OK) response.
 
    Client                                       Server
    |                                                 |
@@ -486,17 +486,21 @@ Table of Contents
 4.1.1.  Offset
 
    The offset is the number of bytes from the representation data that
-   have been received, either during the creation of the upload resource
-   (Section 4.2) and by appending to it (Section 4.4).  The offset can
-   be retrieved from the upload resource (Section 4.3) and is required
-   when appending representation data (Section 4.4) to synchronize the
-   client and resource regarding the amount of transferred
-   representation data.
+   have been processed, either during the creation of the upload
+   resource (Section 4.2) and by appending to it (Section 4.4).  The
+   offset can be retrieved from the upload resource (Section 4.3) and is
+   required when appending representation data (Section 4.4) to
+   synchronize the client and resource regarding the amount of
+   transferred representation data.
 
-   Representation data received by the upload resource cannot be removed
-   again and, therefore, the offset MUST NOT decrease.  If the server
-   loses any part of the state, it MUST deactivate the upload resource
-   and reject further interaction with it.
+   The offset reflects application-level processing for the upload.
+   Data may have been delivered and acknowledged at the transport layer
+   without yet being reflected in the offset.
+
+   Representation data processed by the upload resource cannot be
+   removed again and, therefore, the offset MUST NOT decrease.  If the
+   server loses any part of the state, it MUST deactivate the upload
+   resource and reject further interaction with it.
 
    The Upload-Offset request and response header field conveys the
    offset.  Upload-Offset is an Item Structured Header Field
@@ -506,7 +510,7 @@ Table of Contents
    entire header field to be ignored.
 
    The Upload-Offset header field in responses serves as an
-   acknowledgement of the received representation data and as a
+   acknowledgement of the processed representation data and as a
    guarantee that no retransmission of it will be necessary.  Clients
    can use this guarantee to free resources associated to transferred
    representation data.
@@ -527,7 +531,7 @@ Table of Contents
    An upload is marked as completed if a request for creating the upload
    resource (Section 4.2) or appending to it (Section 4.4) included the
    Upload-Complete header field with a true value and the request
-   content was fully received.
+   content was fully processed.
 
 4.1.3.  Length
 
@@ -775,13 +779,13 @@ Table of Contents
 
    If the Upload-Complete request header field is set to true, the
    client intends to transfer the entire representation data in one
-   request.  If the request content was fully received, no resumable
+   request.  If the request content was fully processed, no resumable
    upload is needed and the server proceeds to process the request and
    generate a response.
 
    If the Upload-Complete header field is set to false, the client
    intends to transfer the representation over multiple requests.  If
-   the request content was fully received, the server MUST include the
+   the request content was fully processed, the server MUST include the
    Location response header field pointing to the upload resource and
    MUST include the Upload-Limit header field with the corresponding
    limits if existing.  Servers are RECOMMENDED to use the 201 (Created)
@@ -791,7 +795,7 @@ Table of Contents
    Upload-Length or Upload-Complete: ?1 header fields are included in
    the request.
 
-   While the request content is being received, the server MAY send
+   While the request content is being processed, the server MAY send
    multiple interim responses with a 104 (Upload Resumption Supported)
    status code and the Upload-Offset header field set to the current
    offset to inform the client about the upload progress.
@@ -807,7 +811,7 @@ Table of Contents
    verification fails, clients SHOULD abort the current request and
    cancel the upload (Section 4.5).
 
-   The server might not receive the entire request content when the
+   The server might not process the entire request content when the
    upload is interrupted, for example because of dropped connection or
    canceled request.  In this case, the server SHOULD append as much of
    the request content as possible to the upload resource, allowing the
@@ -845,8 +849,9 @@ Table of Contents
 
    B) The following example shows an upload creation, where only the
    first 23456789 bytes of a 123456789 bytes upload are transferred.
-   The server acknowledges the received representation data and that the
-   upload is not complete yet.  The client can continue appending data.
+   The server acknowledges the processed representation data and that
+   the upload is not complete yet.  The client can continue appending
+   data.
 
    POST /upload HTTP/1.1
    Host: example.com
@@ -899,7 +904,7 @@ Table of Contents
 4.3.1.  Client Behavior
 
    If the client wants to resume the upload after an interruption, it
-   has to know the amount of representation data received by the upload
+   has to know the amount of representation data processed by the upload
    resource so far.  It can fetch the offset by sending a HEAD request
    to the upload resource.  Upon a successful response, the client can
    continue the upload by appending representation data (Section 4.4)
@@ -1010,12 +1015,12 @@ Table of Contents
    is true in two cases:
 
    *  the request has content that is the end of the representation
-      data.  Once the content is fully received by the server, the
+      data.  Once the content is fully processed by the server, the
       upload is complete.
 
    *  the request has no content.  Once the request is processed by the
       server, the upload is complete.  This usage requires the full
-      representation data to have been received via prior requests.
+      representation data to have been processed via prior requests.
 
    If the client received a final response with the Upload-Complete: ?1
    header field, the upload is complete and the corresponding response
@@ -1055,14 +1060,14 @@ Table of Contents
    partial-upload media type (Section 6) by appending the patch document
    in the request content to the upload resource.
 
-   The server might not receive the entire patch document when the
+   The server might not process the entire patch document when the
    upload is interrupted, for example because of a dropped connection or
    canceled request.  In this case, the server SHOULD append as much of
    the patch document as possible to the upload resource, starting at
    its beginning and without discontinuities.  Appending a continuous
    section starting at the patch document's beginning constitutes a
    successful PATCH as defined in Section 2 of [PATCH].  Saving the
-   received data allows the client to resume the upload from where it
+   processed data allows the client to resume the upload from where it
    was interrupted.  In addition, the upload resource MUST NOT be
    considered complete then.
 
@@ -1098,10 +1103,10 @@ Table of Contents
 
    If the Upload-Complete request header field is set to true, the
    client intends to transfer the remaining representation data in one
-   request.  If the request content was fully received, the upload is
+   request.  If the request content was fully processed, the upload is
    marked as complete and the server SHOULD generate the response that
    matches what the resource, that was targeted by the initial upload
-   creation (Section 4.2), would have generated if it had received the
+   creation (Section 4.2), would have generated if it had processed the
    entire representation in the initial request.  However, the response
    MUST include the Upload-Complete header field with a true value,
    allowing clients to identify whether a response, in particular error
@@ -1110,7 +1115,7 @@ Table of Contents
 
    If the Upload-Complete request header field is set to false, the
    client intends to transfer the remaining representation over multiple
-   requests.  If the request content was fully received, the server
+   requests.  If the request content was fully processed, the server
    acknowledges the appended data by sending a 2xx (Successful) response
    with the Upload-Complete header field set to false.
 
@@ -1123,7 +1128,7 @@ Table of Contents
    rely on the Content-Length header field for enforcement because the
    header field might not be present.
 
-   While the request content is being received, the server SHOULD send
+   While the request content is being processed, the server SHOULD send
    interim responses with a 104 (Upload Resumption Supported) status
    code and the Upload-Offset header field set to the current offset to
    inform the client about the upload progress.  These interim responses
@@ -1281,8 +1286,8 @@ Table of Contents
       to indicate the current upload progress in the Upload-Offset
       header field (see Section 4.2 and Section 4.4).  This allows the
       client to show more accurate progress information about the amount
-      of data received by the server.  In addition, clients can use this
-      information to release representation data that was buffered,
+      of data processed by the server.  In addition, clients can use
+      this information to release representation data that was buffered,
       knowing that it doesn't have to be re-transmitted.
 
    When creating or appending resumable uploads, the client can generate
@@ -1418,7 +1423,7 @@ Table of Contents
    data before creating an upload resource, it can include the Repr-
    Digest header field when creating an upload (Section 4.2).  Once the
    upload is completed, the server can compute the integrity digest of
-   the received representation data and compare it to the provided
+   the processed representation data and compare it to the provided
    digest.  If the digests don't match, the server SHOULD consider the
    upload failed, not process the representation further, and signal the
    failure to the client.  This way, the integrity of the entire
@@ -1449,8 +1454,8 @@ Table of Contents
    If the client knows the integrity digest of the content from an
    upload creation (Section 4.2) or upload appending (Section 4.4)
    request, it can include the Content-Digest header field in the
-   request.  Once the content has been received, the server can compute
-   the integrity digest of the received content and compare it to the
+   request.  Once the content has been processed, the server can compute
+   the integrity digest of the processed content and compare it to the
    provided digest.  If the digests don't match the server SHOULD
    consider the transfer failed, not append the content to the upload
    resource, and signal the failure to the client.  This way, the
@@ -1468,7 +1473,7 @@ Table of Contents
    Section 4.4.
 
    However, due to network interruptions, the upload resource might
-   receive the remaining representation data, complete the upload, and
+   process the remaining representation data, complete the upload, and
    send a response to the client, which then does not receive the
    response.  The client can learn that the upload is complete by
    retrieving its state (Section 4.3), but resumable uploads as defined
