@@ -135,8 +135,12 @@ entire selected representation data with no content codings applied ({{Section
 8.4.1 of HTTP}}).
 
 Apart from the content coding concerns, `Unencoded-Digest` behaves similarly
-to `Repr-Digest` ({{Section 3 of DIGEST-FIELDS}}). In the absence of content
-codings, `Unencoded-Digest` is identical to `Repr-Digest`.
+to `Repr-Digest` ({{Section 3 of DIGEST-FIELDS}}).
+
+`Unencoded-Digest` can be sent in messages with and without content codings.
+When there is no content coding, `Unencoded-Digest` acts identically to
+`Repr-Digest`; for the same hashing algorithm the computed value would be the
+same.
 
 `Unencoded-Digest` is a `Dictionary` (see {{Section 3.2 of STRUCTURED-FIELDS}})
 where each:
@@ -290,7 +294,7 @@ ca cc 4b e7 02 00 7e af 07 44
 ~~~
 {: title="GET response with GZIP content coding"}
 
-The second example demonstrates a range request with content negotiation.
+The second example demonstrates a range request that uses content negotiation.
 
 ~~~ http-message
 GET /boringstring HTTP/1.1
@@ -375,4 +379,4 @@ of the previous design in the HTTP WG. The motivating use cases still mostly
 apply identically.
 
 The following people provided detailed feedback on the document: Mike Bishop,
-Roberto Polli, and Martin Thomson.
+Mallory Knodel, Roberto Polli, Rifaat Shekh-Yusef, and Martin Thomson.
