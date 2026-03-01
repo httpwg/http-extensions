@@ -383,7 +383,7 @@ The client SHOULD respect any limits ({{upload-limit}}) announced in the `Upload
 
 The request content can be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty representation. An `Upload-Complete` header field set to false is also valid. This can be used to retrieve the upload resource's URI before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URI, at the cost of an additional round-trip before data upload can commence.
 
-Representation metadata included in the initial request (see {{Section 8.3 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field ({{Section 8.3 of HTTP}}) indicates the media type of the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. The `Content-Encoding` header field ({{Section 8.4 of HTTP}}) names the content codings applied to the representation.
+Representation metadata included in the initial request (see {{Section 8.3 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field ({{Section 8.3 of HTTP}}) indicates the media type of the representation. The `Content-Encoding` header field ({{Section 8.4 of HTTP}}) names the content codings applied to the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. For this purpose, the `inline` disposition value is RECOMMENDED.
 
 If the client received a final response with a
 
@@ -417,9 +417,10 @@ A) The following example shows an upload creation, where the entire 123456789 by
 ~~~ http-message
 POST /project/123/files HTTP/1.1
 Host: example.com
-Upload-Complete: ?1
+Content-Disposition: inline; filename="file name.jpg"; filename*=UTF-8''file%20name.jpg
 Content-Length: 123456789
 Upload-Length: 123456789
+Upload-Complete: ?1
 
 [content (123456789 bytes)]
 ~~~
@@ -992,7 +993,7 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
 
-None yet.
+* Add recommended disposition value for file name indication.
 
 ## Since draft-ietf-httpbis-resumable-upload-09
 {:numbered="false"}
