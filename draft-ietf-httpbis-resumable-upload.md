@@ -69,13 +69,13 @@ informative:
 
 --- abstract
 
-HTTP data transfers can encounter interruption due to reasons such as canceled requests or dropped connections. If the intended recipient can indicate how much of the data was received prior to interruption, a sender can resume data transfer at that point instead of attempting to transfer all of the data again. HTTP range requests support this concept of resumable downloads from server to client. This document describes a mechanism that supports resumable uploads from client to server using HTTP.
+HTTP data transfers can encounter interruption due to reasons such as canceled requests or dropped connections. If the intended recipient can indicate how much of the data was processed prior to interruption, a sender can resume data transfer at that point instead of attempting to transfer all of the data again. HTTP range requests support this concept of resumable downloads from server to client. This document describes a mechanism that supports resumable uploads from client to server using HTTP.
 
 --- middle
 
 # Introduction
 
-HTTP data transfers can encounter interruption due to reasons such as canceled requests or dropped connections. If the intended recipient can indicate how much of the data was received prior to interruption, a sender can resume data transfer at that point instead of attempting to transfer all of the data again. HTTP range requests (see {{Section 14 of HTTP}}) support this concept of resumable data transfers for downloads from server to client. While partial PUT is one method for uploading a partial representation (via Content-Range in the request), there are caveats that affect its deployability; see {{Section 14.5 of HTTP}}.
+HTTP data transfers can encounter interruption due to reasons such as canceled requests or dropped connections. If the intended recipient can indicate how much of the data was processed prior to interruption, a sender can resume data transfer at that point instead of attempting to transfer all of the data again. HTTP range requests (see {{Section 14 of HTTP}}) support this concept of resumable data transfers for downloads from server to client. While partial PUT is one method for uploading a partial representation (via Content-Range in the request), there are caveats that affect its deployability; see {{Section 14.5 of HTTP}}.
 
 Canceled upload request can be triggered for various reasons, including but not limited to:
 
@@ -97,7 +97,7 @@ This specification defines a new mechanism for resumable uploads from client to 
 
 Utilizing resumable uploads, applications can recover from unintended interruptions, but also interrupt an upload on purpose to later resume it, for example, when a user wants to pause an upload, the device's network connectivity changes, or bandwidth should be saved for higher priority tasks.
 
-The document introduces the concept of an upload resource to facilitate resumable uploads ({{upload-resource}}) and defines new header fields to communicate the state of the upload ({{state}}), the status code `104 (Upload Resumption Supported)` to indicate the server's support for resumable uploads ({{status-code-104}}), and the `application/partial-upload` media type to label partial representation data when resuming an upload ({{media-type-partial-upload}}).
+The document introduces the concept of an upload resource to facilitate resumable uploads ({{upload-resource}}) and defines new header fields to communicate the state of the upload ({{state}}), the status code `104 (Upload Resumption Supported)` to indicate the resource's support for resumable uploads ({{status-code-104}}), and the `application/partial-upload` media type to label partial representation data when resuming an upload ({{media-type-partial-upload}}).
 
 # Conventions and Definitions
 
@@ -125,7 +125,7 @@ The remainder of this section uses examples to illustrate different interactions
 
 In this example, the client first attempts to upload representation data with a known size in a single HTTP request to the resource at `/project/123/files`. An interruption occurs and the client then attempts to resume the upload using subsequent HTTP requests to the upload resource at `/uploads/abc`.
 
-1) The client notifies the server that it wants to begin an upload ({{upload-creation}}). The server reserves the required resources to accept the upload from the client and then sends an interim response to the client, which signals the server's support of resumable upload as well as the upload resource's URI via the Location header field ({{Section 10.2.2 of HTTP}}). The client can start sending the representation data in the request content immediately after the request header. Alternatively, it could also await the acknowledgement in form of the interim response.
+1) The client notifies the server that it wants to begin an upload ({{upload-creation}}). The server reserves the required resources to accept the upload from the client and then sends an interim response to the client, signaling support for resumable uploads and the upload resource's URI via the Location header field ({{Section 10.2.2 of HTTP}}). The client can start sending the representation data in the request content immediately after the request header. Alternatively, it could also await the acknowledgement in form of the interim response.
 
 ~~~ aasvg
 Client                                  Server
@@ -150,7 +150,7 @@ X--------------Flow Interrupted--------------X
 ~~~
 {: #fig-upload-creation title="Upload Creation"}
 
-2) If the connection to the server is interrupted, the client might want to resume the upload. However, before this is possible the client needs to know the amount of representation data that the server received before the interruption. It does so by retrieving the offset ({{offset-retrieving}}) from the upload resource.
+2) If the connection to the server is interrupted, the client might want to resume the upload. However, before this is possible the client needs to know the amount of representation data that the server processed before the interruption. It does so by retrieving the offset ({{offset-retrieving}}) from the upload resource.
 
 ~~~ aasvg
 Client                                       Server
@@ -184,7 +184,7 @@ Client                                       Server
 ~~~
 {: #fig-upload-appending title="Upload Append"}
 
-4) If the client is not interested in completing the upload, it can instruct the upload resource to delete the upload and free all related resources ({{upload-cancellation}}).
+4) If the client is not interested in completing the upload, it can instruct the server to delete the upload resource and all associated representation data ({{upload-cancellation}}).
 
 ~~~ aasvg
 Client                                       Server
@@ -202,9 +202,9 @@ Client                                       Server
 
 In some cases, clients might prefer to upload a representation as a series of parts sent serially across multiple HTTP messages. One use case is to overcome server limits on HTTP message content size. Another use case is where the client does not know the final size of the representation data, such as when the data originates from a streaming source.
 
-This example shows how the client, communicating to a server known to support resumable upload, can upload parts of a representation incrementally.
+This example shows how the client, communicating with a resource known to support resumable upload, can upload parts of a representation incrementally.
 
-1) If the client is aware that the server supports resumable upload, it can start an upload with the `Upload-Complete` field value set to false and the first part of the representation.
+1) The client is aware that the targetted resource supports resumable uploads and therefore starts the upload with the `Upload-Complete` field value set to false and the first part of the representation.
 
 ~~~ aasvg
 Client                                       Server
@@ -241,7 +241,7 @@ Client                                       Server
 ~~~
 {: #fig-upload-appending-incomplete title="Appending partial representation data to upload"}
 
-3) If the connection was interrupted, the client might want to resume the upload, similar to the previous example ({{example-1}}). The client retrieves the offset ({{offset-retrieving}}) to learn the amount of representation data received by the server and then continues appending the remaining parts to the upload as in the previous step.
+3) If the connection was interrupted, the client might want to resume the upload, similar to the previous example ({{example-1}}). The client retrieves the offset ({{offset-retrieving}}) to learn the amount of representation data processed by the server and then continues appending the remaining parts to the upload as in the previous step.
 
 ~~~ aasvg
 Client                                       Server
@@ -267,7 +267,7 @@ Client                                       Server
 ~~~
 {: #fig-upload-resume-incomplete title="Resuming an interrupted upload"}
 
-4) The request to append the last part of the representation data has a `Upload-Complete` field value set to true to indicate the complete transfer. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if it had received the entire representation, e.g. a `200 (OK)` response.
+4) The request to append the last part of the representation data has a `Upload-Complete` field value set to true to indicate the complete transfer. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if the request had transferred the entire representation, e.g. a `200 (OK)` response.
 
 
 ~~~ aasvg
@@ -289,7 +289,7 @@ Client                                       Server
 
 # Upload Resource {#upload-resource}
 
-A resumable upload is enabled through interaction with an upload resource. When a resumable upload begins, the server is asked to create an upload resource through a request to another resource ({{upload-creation}}). This upload resource is responsible for handling the upload of a representation. Using the upload resource, the client can query the upload progress ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}).
+A resumable upload is enabled through interaction with an upload resource. When a resumable upload begins, the server is asked to create an upload resource through a request to another resource ({{upload-creation}}). Using this upload resource, the client can query the upload progress ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}). The server is responsible for persisting the state of the upload resource ({{state}}) and updating it as the upload progresses.
 
 An upload resource is specific to the upload of one representation. For uploading multiple representations, multiple upload resources have to be used.
 
@@ -299,17 +299,19 @@ An upload resource SHOULD be unique. Reuse of a URI for a different upload resou
 
 ## State
 
-The state of an upload consists of the following properties that are tracked by the upload resource.
+The state of an upload consists of the following properties that are tracked by the server.
 
 ### Offset {#upload-offset}
 
-The offset is the number of bytes from the representation data that have been received, either during the creation of the upload resource ({{upload-creation}}) and by appending to it ({{upload-appending}}). The offset can be retrieved from the upload resource ({{offset-retrieving}}) and is required when appending representation data ({{upload-appending}}) to synchronize the client and resource regarding the amount of transferred representation data.
+The offset is the number of bytes from the representation data that have been processed, either during the creation of the upload resource ({{upload-creation}}) and by appending to it ({{upload-appending}}). The offset can be retrieved from the upload resource ({{offset-retrieving}}) and is required when appending representation data ({{upload-appending}}) to synchronize the client and resource regarding the amount of transferred representation data.
 
-Representation data received by the upload resource cannot be removed again and, therefore, the offset MUST NOT decrease. If the server loses any part of the state, it MUST deactivate the upload resource and reject further interaction with it.
+The offset reflects application-level processing for the upload. Data may have been delivered and acknowledged at the transport layer without yet being reflected in the offset.
+
+Representation data processed by the upload resource cannot be removed again and, therefore, the offset MUST NOT decrease. If the server loses any part of the state, it MUST deactivate the upload resource and reject further interaction with it.
 
 The `Upload-Offset` request and response header field conveys the offset. `Upload-Offset` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the current offset as viewed by the message sender. Other values MUST cause the entire header field to be ignored.
 
-The `Upload-Offset` header field in responses serves as an acknowledgement of the received representation data and as a guarantee that no retransmission of it will be necessary. Clients can use this guarantee to free resources associated to transferred representation data.
+The `Upload-Offset` header field in responses serves as an acknowledgement of the processed representation data and as a guarantee that no retransmission of it will be necessary. Clients can use this guarantee to free resources associated to transferred representation data.
 
 ### Completeness {#upload-complete}
 
@@ -317,13 +319,13 @@ An upload is incomplete until it is explicitly marked as completed by the client
 
 The `Upload-Complete` request and response header field conveys the completeness state. `Upload-Complete` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) and indicates whether the upload is complete or not. Other values MUST cause the entire header field to be ignored.
 
-An upload is marked as completed if a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) included the `Upload-Complete` header field with a true value and the request content was fully received.
+An upload is marked as completed if a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) included the `Upload-Complete` header field with a true value and the request content was fully processed.
 
 ### Length {#upload-length}
 
 The length of an upload is the number of bytes of representation data that the client intends to upload.
 
-Even the client might not know the total length of the representation data when starting the transfer, for example, because the representation is taken from a streaming source. However, a client SHOULD communicate the length to the upload resource as soon as it becomes known. There are two different ways for the client to indicate and the upload resource to discover the length from requests for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}):
+Even the client might not know the total length of the representation data when starting the transfer, for example, because the representation is taken from a streaming source. However, a client SHOULD communicate the length to the server as soon as it becomes known. There are two different ways for the client to indicate and the server to discover the length from requests for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}):
 
 1. If the request includes the `Upload-Complete` field value set to true and a valid `Content-Length` header field, the request content is the remaining representation data. The length is then the sum of the current offset ({{upload-offset}}) and the `Content-Length` header field value.
 2. The request can include the `Upload-Length` header field defined below.
@@ -334,13 +336,13 @@ If indicators (1) and (2) are both present in the same request, their indicated 
 
 The `Upload-Length` field can be used in response to an offset retrieval; see {{offset-retrieving-server}}.
 
-The upload resource might not know the length until the upload is complete.
+The server might not know the length until the upload is complete.
 
 Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` ({{upload-complete}}) header field to indicate that a request completes the upload. The offset could match the length, but the upload can still be incomplete.
 
 ### Limits {#upload-limit}
 
-An upload resource MAY enforce one or multiple limits, which are communicated to the client via the `Upload-Limit` response header field. `Upload-Limit` is a Dictionary Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
+A server MAY enforce one or multiple limits, which are communicated to the client via the `Upload-Limit` response header field. `Upload-Limit` is a Dictionary Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
 The following key-value pairs are defined:
 
@@ -363,11 +365,11 @@ Clients usually discover limits through the `Upload-Limit` header field when the
 
 Receivers of `Upload-Limit` parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
 
-A server that supports the creation of a resumable upload resource ({{upload-creation}}) for a target URI MUST include the `Accept-Patch` ({{Section 3.1 of PATCH}}) header field in response to an `OPTIONS` request for the target URI. If a server supports the creation of upload resources for any target URI, it SHOULD include the `Accept-Patch` header field in response to an `OPTIONS` request for the target `*` (if this target is supported). The value of the `Accept-Patch` header field MUST include the full `application/partial-upload` media type, even if it already contains `*/*` or `application/*`. The `Upload-Limit` header field SHOULD be included in the response to an `OPTIONS` request if limits apply.
+When responding to an `OPTIONS` request, if the resource that is the target of the request supports the creation of a resumable upload resource ({{upload-creation}}), the server MUST include the `Accept-Patch` ({{Section 3.1 of PATCH}}) header field in the response. If a server is configured such that all of its resources support the creation of upload resources with identical limits, it SHOULD include the `Accept-Patch` header field in response to an `OPTIONS` request for the target `*` (if this target is supported). The value of the `Accept-Patch` header field MUST include the full `application/partial-upload` media type, even if it already contains `*/*` or `application/*`. The `Upload-Limit` header field SHOULD be included in the response to an `OPTIONS` request if limits apply.
 
-A client can use an `OPTIONS` request to discover support for resumable uploads and potential limits before creating an upload resource. While the values `*/*` and `application/*` in the `Accept-Patch` response header field indicate the acceptance of the `application/partial-upload` in PATCH requests, it does not necessarily indicate support for all aspects of resumable uploads as defined in this document. To reduce the likelihood of failing requests, the limits announced in an `OPTIONS` response SHOULD NOT be less restrictive than the limits applied to an upload once the upload resource has been created, unless the request to create an upload resource included additional information that warrants different limits. For example, a server might announce a general maximum size limit of 1GB, but reduce it to 100MB when the media type indicates an image.
+A client can use an `OPTIONS` request to discover whether the resource supports resumable uploads and to learn potential limits before creating an upload resource. While the values `*/*` and `application/*` in the `Accept-Patch` response header field indicate the acceptance of the `application/partial-upload` in PATCH requests, it does not necessarily indicate support for all aspects of resumable uploads as defined in this document. To reduce the likelihood of failing requests, the limits announced in an `OPTIONS` response SHOULD NOT be less restrictive than the limits applied to an upload once the upload resource has been created, unless the request to create an upload resource included additional information that warrants different limits. For example, a server might announce a general maximum size limit of 1GB, but reduce it to 100MB when the media type indicates an image.
 
-Servers, including intermediaries, can (and often do) apply restrictions on the size of individual request message content. There is no standard mechanism to communicate such existing size restriction. A server that implements one can respond with a 413 Content Too Large status code; see {{Section 15.5.14 of HTTP}}. Appending to an upload resource, as a series of appends, can be used to upload data up to the `max-size` limit without encountering per-message limits. The `min-append-size` and `max-append-size` limits apply to the upload resource. Servers might apply restrictions that are smaller than the append limits, which would also result in a failed request. Clients could deal with such situations by retrying an upload append using a smaller size, as long as the new size resides between `min-append-size` and `max-append-size`. Cases where an append uses `min-append-size` yet fails with a 413 Content Too Large response might indicate a deployment mismatch that cannot be recovered from.
+Servers, including intermediaries, can (and often do) apply restrictions on the size of individual request message content. There is no standard mechanism to communicate such existing size restriction. A server that implements one can respond with a `413 (Content Too Large)` status code; see {{Section 15.5.14 of HTTP}}. Appending to an upload resource, as a series of appends, can be used to upload data up to the `max-size` limit without encountering per-message limits. The `min-append-size` and `max-append-size` limits apply to the upload resource. Servers might apply restrictions that are smaller than the append limits, which would also result in a failed request. Clients could deal with such situations by retrying an upload append using a smaller size, as long as the new size resides between `min-append-size` and `max-append-size`. Cases where an append uses `min-append-size` yet fails with a `413 (Content Too Large)` response might indicate a deployment mismatch that cannot be recovered from.
 
 ## Upload Creation {#upload-creation}
 
@@ -387,28 +389,28 @@ Representation metadata included in the initial request (see {{Section 8.3 of HT
 
 If the client received a final response with a
 
-- `2xx (Successful)` status code and the entire representation data was transferred in the request content, the upload is complete and the response comes from the targeted resource processing the representation.
-- `2xx (Successful)` status code and the entire representation data was not transferred in the request content, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
+- `2xx (Successful)` status code and the request content contained the entire representation data, the upload is complete and the response comes from the resource targeted by the initial request processing the representation.
+- `2xx (Successful)` status code and the request content did not contain the entire representation data, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
 - `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
 - `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}) if it received the URI of the upload resource in a `104 (Upload Resumption Supported)` interim response.
 
 ### Server Behavior
 
-Upon receiving a request with the `Upload-Complete` header field, the server can choose to offer resumption support by creating an upload resource. If so, it SHOULD announce the upload resource by sending an interim response with the `104 (Upload Resumption Supported)` status code unless the server is not capable of sending interim responses. The interim response allows the client to resume the upload even if the message exchange gets later interrupted. When sent, it MUST include `Location` header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits ({{upload-limit}}) if existing.
+Upon receiving a request with the `Upload-Complete` header field, the server can choose to offer resumption support for this request by creating an upload resource. If so, the server SHOULD announce the upload resource by sending an interim response with the `104 (Upload Resumption Supported)` status code unless the server is not capable of sending interim responses. The interim response allows the client to resume the upload even if the message exchange gets later interrupted. When sent, it MUST include `Location` header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits ({{upload-limit}}) if existing.
 
-The resource targeted by this initial request is responsible for processing the representation data transferred in the resumable upload according to the method and header fields in the initial request, while the upload resource enables resuming the transfer.
+The resource targeted by this initial request is responsible for processing the representation data transferred in the resumable upload according to the method and header fields in the initial request. The upload resource, on the other hand, enables resuming the transfer.
 
-If the `Upload-Complete` request header field is set to true, the client intends to transfer the entire representation data in one request. If the request content was fully received, no resumable upload is needed and the resource proceeds to process the request and generate a response.
+If the `Upload-Complete` request header field is set to true, the client intends to transfer the entire representation data in one request. If the request content was fully processed, no resumable upload is needed and the server proceeds to process the request and generate a response.
 
-If the `Upload-Complete` header field is set to false, the client intends to transfer the representation over multiple requests. If the request content was fully received, the server MUST include the `Location` response header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits if existing. Servers are RECOMMENDED to use the `201 (Created)` status code.
+If the `Upload-Complete` header field is set to false, the client intends to transfer the representation over multiple requests. If the request content was fully processed, the server MUST include the `Location` response header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits if existing. Servers are RECOMMENDED to use the `201 (Created)` status code.
 
 The server MUST record the length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete: ?1` header fields are included in the request.
 
-While the request content is being received, the server MAY send multiple interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress.
+While the request content is being processed, the server MAY send multiple interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress.
 
 Where a response requires a `Location` header field to be included, all interim and final response messages for the same request MUST contain an identical `Location` value. However, final responses including the `Upload-Complete: ?1` header field are exempt from this requirement because they are the result of processing the transferred representation and the `Location` value does not necessarily represent the upload location. Where the `Location` value is expected to be identical across multiple messages, clients SHOULD verify this. If verification fails, clients SHOULD abort the current request and cancel the upload ({{upload-cancellation}}).
 
-The server might not receive the entire request content when the upload is interrupted, for example because of dropped connection or canceled request. In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
+The server might not process the entire request content when the upload is interrupted, for example because of dropped connection or canceled request. In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
 
 ### Examples {#upload-creation-example}
 
@@ -440,7 +442,7 @@ Content-Type: application/json
 {"attachmentId": "b530ce8ff"}
 ~~~
 
-B) The following example shows an upload creation, where only the first 23456789 bytes of a 123456789 bytes upload are transferred. The server acknowledges the received representation data and that the upload is not complete yet. The client can continue appending data.
+B) The following example shows an upload creation, where only the first 23456789 bytes of a 123456789 bytes upload are transferred. The server acknowledges the processed representation data and that the upload is not complete yet. The client can continue appending data.
 
 ~~~ http-message
 POST /upload HTTP/1.1
@@ -480,7 +482,7 @@ Location: https://example.com/upload/0587fa44b
 HTTP/1.1 500 Internal Server Error
 ~~~
 
-D) The following example shows an upload creation being rejected by the server because uploads to the target resource are not allowed. The client cannot continue the upload.
+D) The following example shows an upload creation being rejected by the server because uploads to the targetted resource are not allowed. The client cannot continue the upload.
 
 ~~~ http-message
 POST /upload-not-allowed HTTP/1.1
@@ -500,7 +502,7 @@ HTTP/1.1 405 Method Not Allowed
 
 ### Client Behavior
 
-If the client wants to resume the upload after an interruption, it has to know the amount of representation data received by the upload resource so far. It can fetch the offset by sending a `HEAD` request to the upload resource. Upon a successful response, the client can continue the upload by appending representation data ({{upload-appending}}) starting at the offset indicated by the `Upload-Offset` response header field.
+If the client wants to resume the upload after an interruption, it has to know the amount of representation data processed by the upload resource so far. It can fetch the offset by sending a `HEAD` request to the upload resource. Upon a successful response, the client can continue the upload by appending representation data ({{upload-appending}}) starting at the offset indicated by the `Upload-Offset` response header field.
 
 The offset can be less than or equal to the number of bytes of representation data that the client has already sent. The client MAY reject an offset which is greater than the number of bytes it has already sent during this upload by not continuing the upload and canceling the upload resource ({{upload-cancellation}}). The client is expected to handle backtracking of a reasonable length. If the offset is invalid for this upload, or if the client cannot backtrack to the offset and reproduce the same representation data it has already sent, the upload MUST be considered a failure. The client then MUST NOT continue the upload and SHOULD cancel the upload ({{upload-cancellation}}).
 
@@ -564,12 +566,12 @@ Cache-Control: no-store
 
 A client can continue the upload and append representation data by sending a `PATCH` request with the `application/partial-upload` media type ({{media-type-partial-upload}}) to the upload resource. The request content is the representation data to append.
 
-The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` request header field. To ensure that the upload resource will accept the request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ({{offset-retrieving}}) or appending representation data ({{upload-appending}}).
+The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` header field. To ensure that the upload resource will accept the request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ({{offset-retrieving}}) or appending representation data ({{upload-appending}}).
 
 The request MUST include the `Upload-Complete` header field. Its value is true in two cases:
 
-- the request has content that is the end of the representation data. Once the content is fully received by the server, the upload is complete.
-- the request has no content. Once the request is processed by the server, the upload is complete. This usage requires the full representation data to have been received via prior requests.
+- the request has content that is the end of the representation data. Once the content is fully processed by the server, the upload is complete.
+- the request has no content. Once the request is processed by the server, the upload is complete. This usage requires the full representation data to have been processed by prior requests.
 
 If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request (see {{upload-creation}}). Note that the status code does not necessary indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case that the representation was fully transmitted, but an error occurred while processing it. Resuming the upload would not resolve this error.
 
@@ -584,11 +586,11 @@ If no final response was received at all due to connectivity issues, the client 
 
 ### Server Behavior
 
-An upload resource applies a `PATCH` request with the `application/partial-upload` media type ({{media-type-partial-upload}}) by appending the patch document in the request content to the upload resource.
+A server applies a `PATCH` request with the `application/partial-upload` media type ({{media-type-partial-upload}}) to an upload resource by appending the patch document in the request content.
 
-The server might not receive the entire patch document when the upload is interrupted, for example because of a dropped connection or canceled request. In this case, the server SHOULD append as much of the patch document as possible to the upload resource, starting at its beginning and without discontinuities. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of PATCH}}. Saving the received data allows the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
+The server might not process the entire patch document when the upload is interrupted, for example because of a dropped connection or canceled request. In this case, the server SHOULD append as much of the patch document as possible to the upload resource, starting at its beginning and without discontinuities. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of PATCH}}. Saving the processed data allows the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
 
-If the `Upload-Offset` request header field value does not match the current offset ({{upload-offset}}), the upload resource MUST reject the request with a `409 (Conflict)` status code. The response MUST include the correct offset in the `Upload-Offset` header field. The response can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" ({{mismatching-offset}}).
+If the `Upload-Offset` request header field value does not match the current offset ({{upload-offset}}), the server MUST reject the request with a `409 (Conflict)` status code. The response MUST include the correct offset in the `Upload-Offset` header field. The response can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" ({{mismatching-offset}}).
 
 If the upload is already complete ({{upload-complete}}), the server MUST NOT modify the upload resource and MUST reject the request. The choice of response depends on the nature of the upload request and server state, including but not limited to:
 
@@ -597,13 +599,13 @@ If the upload is already complete ({{upload-complete}}), the server MUST NOT mod
   - If the server retains knowledge of the upload resource but it is not available, the `410 (Gone)` status code can be used; the response could also contain a `Location` header field to indicate the location of the completed upload. The server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#completed-upload" ({{completed-upload}}) in the response.
   - If the server has not retained knowledge of the upload resource, a `404 (Not Found)` status code can be used.
 
-If the `Upload-Complete` request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully received, the upload is marked as complete and the upload resource SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had received the entire representation in the initial request. However, the response MUST include the `Upload-Complete` header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the upload representation.
+If the `Upload-Complete` request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully processed, the upload is marked as complete and the server SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had processed the entire representation in the initial request. However, the response MUST include the `Upload-Complete` header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the uploaded representation.
 
-If the `Upload-Complete` request header field is set to false, the client intends to transfer the remaining representation over multiple requests. If the request content was fully received, the upload resource acknowledges the appended data by sending a `2xx (Successful)` response with the `Upload-Complete` header field set to false.
+If the `Upload-Complete` request header field is set to false, the client intends to transfer the remaining representation data over multiple requests. If the request content was fully processed, the server acknowledges the appended data by sending a `2xx (Successful)` response with the `Upload-Complete` header field set to false.
 
-The server MUST record the length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete` header fields are included in the request. If the length is known, the server MUST prevent the offset from exceeding the upload length by rejecting the request once the offset exceeds the length, marking the upload resource invalid and rejecting any further interaction with it. It is not sufficient to rely on the `Content-Length` header field for enforcement because the header field might not be present.
+The server MUST record the length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete` header fields are included in the request. If the length is known, the server MUST prevent the offset from exceeding the upload length by rejecting the request once the offset exceeds the length, marking the upload resource invalid and rejecting any further interaction with it. It is not sufficient to rely on the `Content-Length` header field for enforcement because this header field might not be present.
 
-While the request content is being received, the server SHOULD send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
+While the request content is being processed, the server SHOULD send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
 
 ### Examples {#upload-appending-example}
 
@@ -628,7 +630,7 @@ HTTP/1.1 204 No Content
 Upload-Complete: ?0
 ~~~
 
-B) The next example shows an upload append, where the client transfers the remaining 4567890 bytes and completes the upload with a length of 1234567890 bytes. The server processes the uploaded representation and generates the responding response, in this example containing extracted meta data:
+B) The next example shows an upload append, where the client transfers the remaining 4567890 bytes and completes the upload with a length of 1234567890 bytes. The server processes the uploaded representation and generates the corresponding response, in this example containing extracted meta data:
 
 ~~~ http-message
 PATCH /upload/d38d6ffe8 HTTP/1.1
@@ -665,7 +667,7 @@ Upon receiving a `DELETE` request, the server SHOULD deactivate the upload resou
 
 The server SHOULD terminate any in-flight requests to the upload resource before sending the response by abruptly terminating their HTTP connection(s) or stream(s) as described in {{concurrency}}.
 
-The resource SHOULD NOT generate a response with the `301 (Moved Permanently)` and `302 (Found)` status codes because clients might follow the redirect without preserving the `DELETE` method.
+The server SHOULD NOT generate a response with the `301 (Moved Permanently)` and `302 (Found)` status codes because clients might follow the redirect without preserving the `DELETE` method.
 
 ### Example {#upload-cancellation-example}
 
@@ -686,7 +688,7 @@ Resumable uploads, as defined in this document, do not permit uploading represen
 
 Even if the client is well-behaved and doesn't send concurrent requests, network interruptions can occur in such a way that the client considers a request as failed while the server is unaware of the problem and considers the request still ongoing. The client might then try to resume the upload with the best intentions, resulting in concurrent requests from the server's perspective. Therefore, the server MUST take measures to prevent race conditions, data loss and corruption from concurrent requests to append representation data ({{upload-appending}}) and/or cancellation ({{upload-cancellation}}) to the same upload resource. In addition, the server MUST NOT send outdated information in responses when retrieving the offset ({{offset-retrieving}}). This means that the offset sent by the server MUST be accepted in a subsequent request to append representation data if no other request to append representation data or cancel was received in the meantime. In other words, clients have to be able to use received offsets.
 
-The RECOMMENDED approach is as follows: If an upload resource receives a new request to retrieve the offset ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}) while a previous request for creating the upload ({{upload-creation}}) or appending representation data ({{upload-appending}}) is still ongoing, the resource SHOULD prevent race conditions, data loss, and corruption by terminating the previous request before processing the new request. Due to network delay and reordering, the resource might still be receiving representation data from an ongoing transfer for the same upload resource, which in the client's perspective has failed. Since the client is not allowed to perform multiple transfers in parallel, the upload resource can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
+The RECOMMENDED approach is as follows: If a server receives a new request to retrieve the offset ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}) while a previous request for creating the upload ({{upload-creation}}) or appending representation data ({{upload-appending}}) to the same upload resource is still ongoing, the server SHOULD prevent race conditions, data loss, and corruption by terminating the previous request before processing the new request. Due to network delay and reordering, the server might still be receiving representation data from an ongoing transfer for the same upload resource, which in the client's perspective has failed. Since the client is not allowed to perform multiple transfers for the same upload resource in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
 
 Since implementing this approach is not always technically possible or feasible, other measures can be considered as well. A simpler approach is that the server only processes a new request to retrieve the offset ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancellation ({{upload-cancellation}}) once all previous requests have been processed. This effectively implements exclusive access to the upload resource through an access lock. However, since network interruptions can occur in ways that cause the request to hang from the server's perspective, it might take the server significant time to realize the interruption and time out the request. During this period, the client will be unable to access the resource and resume the upload, causing friction for the end users. Therefore, the recommended approach is to terminate previous requests to enable quick resumption of uploads.
 
@@ -694,10 +696,10 @@ Since implementing this approach is not always technically possible or feasible,
 
 The `104 (Upload Resumption Supported)` status code is can be used for two purposes:
 
-- When responding to requests to create uploads, an interim response with the `104 (Upload Resumption Supported)` status code can be sent to indicate the server's support for resumable uploads, as well as the URI and limits of the corresponding upload resource in the `Location` and `Upload-Limit` header fields, respectively (see {{upload-creation}}). This notifies the client early about the ability to resume the upload in case of network interruptions.
-- While processing the content of a request to append representation data or create an upload, the server can regularly send interim responses with the `104 (Upload Resumption Supported)` status code to indicate the current upload progress in the `Upload-Offset` header field (see {{upload-creation}} and {{upload-appending}}). This allows the client to show more accurate progress information about the amount of data received by the server. In addition, clients can use this information to release representation data that was buffered, knowing that it doesn't have to be re-transmitted.
+- When responding to requests to create uploads, an interim response with the `104 (Upload Resumption Supported)` status code can be sent to indicate the resource's support for resumable uploads, as well as the URI and limits of the corresponding upload resource in the `Location` and `Upload-Limit` header fields, respectively (see {{upload-creation}}). This notifies the client early about the ability to resume the upload in case of network interruptions.
+- While processing the content of a request to append representation data or create an upload, the server can regularly send interim responses with the `104 (Upload Resumption Supported)` status code to indicate the current upload progress in the `Upload-Offset` header field (see {{upload-creation}} and {{upload-appending}}). This allows the client to show more accurate progress information about the amount of data processed by the server. In addition, clients can use this information to release representation data that was buffered, knowing that it doesn't have to be re-transmitted.
 
-When creating or appending resumable uploads, the client can generate a 100-continue expectation because it wants an indication that the server is willing to accept the upload. The client MAY treat an interim response with the `104 (Upload Resumption Supported)` status code as fulfilling the 100-continue expectation and start sending the request content. However, the server MUST NOT omit the `100 (Continue)` response because it has sent an interim response with the `104 (Upload Resumption Supported)` status code.
+When creating or appending resumable uploads, the client can generate a 100-continue expectation because it wants an indication that the resource is willing to accept the upload. The client MAY treat an interim response with the `104 (Upload Resumption Supported)` status code as fulfilling the 100-continue expectation and start sending the request content. However, the server MUST NOT omit the `100 (Continue)` response because it has sent an interim response with the `104 (Upload Resumption Supported)` status code.
 
 # Media Type `application/partial-upload` {#media-type-partial-upload}
 
@@ -782,7 +784,7 @@ The integrity of an entire upload or individual upload requests can be verifying
 
 Representation digests help verify the integrity of the entire representation data that has been uploaded so far, which might stretch across multiple requests.
 
-If the client knows the integrity digest of the entire representation data before creating an upload resource, it can include the `Repr-Digest` header field when creating an upload ({{upload-creation}}). Once the upload is completed, the server can compute the integrity digest of the received representation data and compare it to the provided digest. If the digests don't match, the server SHOULD consider the upload failed, not process the representation further, and signal the failure to the client. This way, the integrity of the entire representation data can be protected.
+If the client knows the integrity digest of the entire representation data before creating an upload resource, it can include the `Repr-Digest` header field when creating an upload ({{upload-creation}}). Once the upload is completed, the server can compute the integrity digest of the representation data and compare it to the provided digest. If the digests don't match, the server SHOULD consider the upload failed, not process the representation further, and signal the failure to the client. This way, the integrity of the entire representation data can be protected.
 
 Alternatively, when creating an upload ({{upload-creation}}), the client can ask the server to compute and return the integrity digests using a `Want-Repr-Digest` field conveying the preferred algorithms.
 The response SHOULD include at least one of the requested digests, but might not include it.
@@ -795,29 +797,29 @@ If an upload is spread across multiple requests, data integrity issues can be fo
 
 Content digests help verify the integrity of the content in an individual request.
 
-If the client knows the integrity digest of the content from an upload creation ({{upload-creation}}) or upload appending ({{upload-appending}}) request, it can include the `Content-Digest` header field in the request. Once the content has been received, the server can compute the integrity digest of the received content and compare it to the provided digest. If the digests don't match the server SHOULD consider the transfer failed, not append the content to the upload resource, and signal the failure to the client. This way, the integrity of an individual request can be protected.
+If the client knows the integrity digest of the content from an upload creation ({{upload-creation}}) or upload appending ({{upload-appending}}) request, it can include the `Content-Digest` header field in the request. Once the request is complete, the server can compute the integrity digest of the content and compare it to the provided digest. If the digests don't match the server SHOULD consider the transfer failed, not append the content to the upload resource, and signal the failure to the client. This way, the integrity of an individual request can be protected.
 
 # Responses to Uploads
 
 HTTP uploads often not only transfer a representation to the server but also send back information to the client. For resumable uploads, this works similarly to conventional HTTP uploads. The server can include information in the response to the request that transferred the remaining representation data and included the `Upload-Complete: ?1` header field. Clients can regard this response as the final response for the entire upload, as detailed in {{upload-creation}} and {{upload-appending}}.
 
-However, due to network interruptions, the upload resource might receive the remaining representation data, complete the upload, and send a response to the client, which then does not receive the response. The client can learn that the upload is complete by retrieving its state ({{offset-retrieving}}), but resumable uploads as defined in this document do not offer functionality to recover the missed response.
+However, due to network interruptions, the server might process the remaining representation data, complete the upload, and send a response to the client, which then does not receive the response. The client can learn that the upload is complete by retrieving its state ({{offset-retrieving}}), but resumable uploads as defined in this document do not offer functionality to recover the missed response.
 
 To address this issue, the server can send the desired information in header fields, which are included in both the final response and responses when the client fetches the upload state via a HEAD request ({{offset-retrieving}}). This way, the client can retrieve the information from the header even if it failed to receive the final response. If the piece of information is too large for header fields, the server could make it available as a separate resource for retrieval and point the client to its URI in an appropriate header field.
 
 # Upload Strategies
 
-The definition of the upload creation request ({{upload-creation}}) provides the client with flexibility to choose whether the representation data is fully or partially transferred in the first request, or if no representation data is included at all. Which behavior is best largely depends on the client's capabilities, its intention to avoid data re-transmission, and its knowledge about the server's support for resumable uploads.
+The definition of the upload creation request ({{upload-creation}}) provides the client with flexibility to choose whether the representation data is fully or partially transferred in the first request, or if no representation data is included at all. Which behavior is best largely depends on the client's capabilities, its desire to avoid data re-transmission, and its knowledge about the resource's support for resumable uploads.
 
 The following subsections describe two typical upload strategies that are suited for common environments. Note that these modes are never explicitly communicated to the server and clients are not required to stick to one strategy, but can mix and adapt them to their needs.
 
 ## Optimistic Upload Creation
 
-An "optimistic upload creation" can be used independent of the client's knowledge about the server's support for resumable uploads. However, the client must be capable of handling and processing interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.
+An "optimistic upload creation" can be used independent of the client's knowledge about the resource's support for resumable uploads. However, the client must be capable of handling and processing interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.
 
 The benefit of this method is that if the upload creation request succeeded, the representation data was transferred in a single request without additional round trips.
 
-A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client receives a `104 (Upload Resumption Supported)` interim response with the upload resource's URI, the client cannot resume that upload due to the missing URI. The interim response might not be received if the interruption happens too early in the message exchange, the server does not support resumable uploads at all, the server does not support sending the `104 (Upload Resumption Supported)` interim response, or an intermediary dropped the interim response. Without a 104 response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.
+A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client receives a `104 (Upload Resumption Supported)` interim response with the upload resource's URI, the client cannot resume that upload due to the missing URI. The interim response might not be received if the interruption happens too early in the message exchange, the resource targeted in the initial request does not support resumable uploads, the server is not capable of sending the `104 (Upload Resumption Supported)` interim response, or an intermediary dropped the interim response. Without a 104 response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.
 
 A client might wait for a limited duration to receive a 104 (Upload Resumption Supported) interim response before starting to transmit the request content. This way, the client can learn about the resource's support for resumable uploads and/or the upload resource's URI. This is conceptually similar to how a client might wait for a 100 (Continue) interim response (see {{Section 10.1.1 of HTTP}}) before committing to work.
 
@@ -825,13 +827,13 @@ A client might wait for a limited duration to receive a 104 (Upload Resumption S
 
 Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the representation is transferred in a single request, usually `POST` or `PUT`, without any ability to resume from interruptions. The client can invite the server to upgrade such a request to a resumable upload by adding the `Upload-Complete: ?1` header field to the original request. The `Upload-Length` header field SHOULD be added if the representation data's length is known upfront. The request is not changed otherwise.
 
-A server that supports resumable uploads at the target URI can create an upload resource and send its URI in a `104 (Upload Resumption Supported)` interim response for the client to resume the upload after interruptions. A server that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the `Upload-Complete: ?1` header. The transfer then falls back to a non-resumable upload without additional cost.
+If the resource targeted in the initial request supports resumable uploads, the server can create an upload resource and send its URI in a `104 (Upload Resumption Supported)` interim response for the client to resume the upload after interruptions. A resource that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the `Upload-Complete: ?1` header. The transfer then falls back to a non-resumable upload without additional cost.
 
 This upgrade can also be performed transparently by a library or program that acts as a HTTP client by sending requests on behalf of a user. When the user instructs the client to send a non-resumable request, the client can perform the upgrade transparently and handle potential interruptions and resumptions under the hood without involving the user. The last response received by the client is considered the response for the entire upload and should be provided to the user.
 
 ## Careful Upload Creation
 
-For a "careful upload creation" the client knows that the server supports resumable uploads and sends an empty upload creation request without including any representation data. Upon successful response reception, the client can use the included upload resource URI to transmit the representation data ({{upload-appending}}) and resume the upload at any stage if an interruption occurs. The client should inspect the response for the `Upload-Limit` header field, which would indicate limits applying to the remaining upload procedure.
+For a "careful upload creation" the client knows that the resource targeted in the initial request supports resumable uploads and sends an empty upload creation request without including any representation data. Upon successful response reception, the client can use the included upload resource URI to transmit the representation data ({{upload-appending}}) and resume the upload at any stage if an interruption occurs. The client should inspect the response for the `Upload-Limit` header field, which would indicate limits applying to the remaining upload procedure.
 
 The retransmission of representation data or the ultimate upload failure that can happen with an "optimistic upload creation" is therefore avoided at the expense of an additional request that does not carry representation data.
 
