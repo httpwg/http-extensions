@@ -390,7 +390,7 @@ If the client received a final response with a
 - `2xx (Successful)` status code and the entire representation data was transferred in the request content, the upload is complete and the response comes from the targeted resource processing the representation.
 - `2xx (Successful)` status code and the entire representation data was not transferred in the request content, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
 - `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
-- `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}) if it received the URI of the upload resource in a `104 (Upload Resumption Supported)` interim response.
+- `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client SHOULD automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}) if it received the URI of the upload resource in a `104 (Upload Resumption Supported)` interim response.
 
 ### Server Behavior
 
@@ -504,14 +504,14 @@ If the client wants to resume the upload after an interruption, it has to know t
 
 The offset can be less than or equal to the number of bytes of representation data that the client has already sent. The client MAY reject an offset which is greater than the number of bytes it has already sent during this upload by not continuing the upload and canceling the upload resource ({{upload-cancellation}}). The client is expected to handle backtracking of a reasonable length. If the offset is invalid for this upload, or if the client cannot backtrack to the offset and reproduce the same representation data it has already sent, the upload MUST be considered a failure. The client then MUST NOT continue the upload and SHOULD cancel the upload ({{upload-cancellation}}).
 
-The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or appending ({{upload-appending}}) is in progress as this can cause the previous request to be terminated by the server as described in {{concurrency}}.
+The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or appending ({{upload-appending}}) is in progress as this may cause the previous request to be terminated by the server as described in {{concurrency}}.
 
 If the client received a response with a
 
 - `2xx (Successful)` status code, the client can continue appending representation data to it ({{upload-appending}}) if the upload is not complete yet.
 - `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry retrieving the offset from the new URI.
 - `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
-- `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY retry retrieving the offset.
+- `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client SHOULD retry retrieving the offset.
 
 ### Server Behavior {#offset-retrieving-server}
 
@@ -522,6 +522,8 @@ A successful response to a `HEAD` request against an upload resource
 - MUST include the length in the `Upload-Length` header field, unless the client has not supplied one, by providing the corresponding headers as described in ({{upload-length}}),
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
+
+Upon receiving a `HEAD` request, a server MAY treat it as a hint to abort a previous, possibly stalled, upload creation or append request for the same resource. See {{concurrency}} for more details on handling concurrency.
 
 The resource SHOULD NOT generate a response with the `301 (Moved Permanently)` and `302 (Found)` status codes because clients might follow the redirect without preserving the `HEAD` method.
 
@@ -577,10 +579,9 @@ If the client received a final response with the `Upload-Complete: ?0` header fi
 
 - A `2xx (Successful)` status code indicates that representation data was appended but the upload is not complete. The client can continue appending representation data.
 - For a `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry appending to the new URI.
-- For a `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
-- For a `5xx (Server Error)` status code, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
-
-If no final response was received at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
+- For a `409 (Conflict)` status code, the client SHOULD attempt to resume the upload by either retrieving the current offset ({{offset-retrieving}}) or using the value from the response's `Upload-Offset` header field.
+- For other `4xx (Client Error)` status codes, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
+- For a `5xx (Server Error)` status code or if no final response was received at all due to connectivity issues, the client SHOULD automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
 
 ### Server Behavior
 
@@ -686,9 +687,15 @@ Resumable uploads, as defined in this document, do not permit uploading represen
 
 Even if the client is well-behaved and doesn't send concurrent requests, network interruptions can occur in such a way that the client considers a request as failed while the server is unaware of the problem and considers the request still ongoing. The client might then try to resume the upload with the best intentions, resulting in concurrent requests from the server's perspective. Therefore, the server MUST take measures to prevent race conditions, data loss and corruption from concurrent requests to append representation data ({{upload-appending}}) and/or cancellation ({{upload-cancellation}}) to the same upload resource. In addition, the server MUST NOT send outdated information in responses when retrieving the offset ({{offset-retrieving}}). This means that the offset sent by the server MUST be accepted in a subsequent request to append representation data if no other request to append representation data or cancel was received in the meantime. In other words, clients have to be able to use received offsets.
 
-The RECOMMENDED approach is as follows: If an upload resource receives a new request to retrieve the offset ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}) while a previous request for creating the upload ({{upload-creation}}) or appending representation data ({{upload-appending}}) is still ongoing, the resource SHOULD prevent race conditions, data loss, and corruption by terminating the previous request before processing the new request. Due to network delay and reordering, the resource might still be receiving representation data from an ongoing transfer for the same upload resource, which in the client's perspective has failed. Since the client is not allowed to perform multiple transfers in parallel, the upload resource can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
+To meet these requirements, a server can use various strategies. Three common approaches are:
 
-Since implementing this approach is not always technically possible or feasible, other measures can be considered as well. A simpler approach is that the server only processes a new request to retrieve the offset ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancellation ({{upload-cancellation}}) once all previous requests have been processed. This effectively implements exclusive access to the upload resource through an access lock. However, since network interruptions can occur in ways that cause the request to hang from the server's perspective, it might take the server significant time to realize the interruption and time out the request. During this period, the client will be unable to access the resource and resume the upload, causing friction for the end users. Therefore, the recommended approach is to terminate previous requests to enable quick resumption of uploads.
+1.  **Preemptive Cancellation**: If the server receives a new request for an upload resource while a previous request for the same resource is in-flight, it abruptly terminates the previous HTTP connection or stream before processing the new request.
+
+2.  **Pessimistic Locking**: The server processes requests for a given upload resource sequentially, effectively creating an exclusive lock on that resource. A new request is only processed after the previous one completes. This can be simpler to implement but may lead to delays if a request hangs from the server's perspective.
+
+3.  **Optimistic Concurrency Control**: The server detects concurrent modifications by atomically checking the resource's state before applying changes. If a conflict is detected, the server rejects the request with a 409 (Conflict) status code, ensuring that only one of multiple parallel requests can succeed.
+
+Servers SHOULD choose a strategy that best fits their architecture while fulfilling the requirements of this section. Regardless of the chosen strategy, clients SHOULD be prepared to handle a `409 (Conflict)` response as a recoverable error, as described in {{upload-appending}}.
 
 # Status Code `104 (Upload Resumption Supported)` {#status-code-104}
 
@@ -992,7 +999,10 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
 
-None yet.
+* Clarify client and server handling of `409 (Conflict)` responses, strongly recommending clients to treat them as recoverable.
+* Refine the "Concurrency" section to outline different server strategies.
+* Strengthen the recommendation for retrying `5xx` errors and connection issues to `SHOULD`.
+* Clarify that a `HEAD` request in the "Offset Retrieval" section can serve as a hint for servers to abort prior in-flight requests.
 
 ## Since draft-ietf-httpbis-resumable-upload-09
 {:numbered="false"}
