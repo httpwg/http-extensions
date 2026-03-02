@@ -6,7 +6,7 @@ HTTP                                                           L. Pardue
 Internet-Draft                                                Cloudflare
 Updates: 9530 (if approved)                                      M. West
 Intended status: Standards Track                                  Google
-Expires: 31 August 2026                                 27 February 2026
+Expires: 3 September 2026                                   2 March 2026
 
 
                          HTTP Unencoded Digest
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 August 2026.
+   This Internet-Draft will expire on 3 September 2026.
 
 Copyright Notice
 
@@ -397,7 +397,7 @@ Table of Contents
    access Unencoded-Digest values could infer details about the
    unencrypted content without decrypting it if, for example, the
    unencrypted content has a predictable pattern.  When the "aes128gcm"
-   content coding is used, the security considerations is Section 4 of
+   content coding is used, the security considerations in Section 4 of
    [RFC8188] apply.
 
 8.  IANA Considerations
