@@ -607,22 +607,22 @@ While the request content is being received, the server SHOULD send interim resp
 
 ### Examples {#upload-appending-example}
 
-A) The following example shows an upload append request. The client transfers the next 23456789 bytes at an offset of 23456789 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:
+A) The following example shows an upload append request. The client transfers the next 3456789 bytes at an offset of 20000000 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:
 
 ~~~ http-message
 PATCH /upload/37a504d87 HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
-Upload-Offset: 23456789
-Content-Length: 23456789
+Upload-Offset: 20000000
+Content-Length: 3456789
 Content-Type: application/partial-upload
 
-[content (23456789 bytes)]
+[content (3456789 bytes)]
 ~~~
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Offset: 35185184
+Upload-Offset: 23456789
 
 HTTP/1.1 204 No Content
 Upload-Complete: ?0
