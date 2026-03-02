@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 2 September 2026                                     Apple Inc.
+Expires: 3 September 2026                                     Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                            1 March 2026
+                                                            2 March 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 September 2026.
+   This Internet-Draft will expire on 3 September 2026.
 
 Copyright Notice
 
@@ -1023,7 +1023,7 @@ Table of Contents
 
    *  the request has no content.  Once the request is processed by the
       server, the upload is complete.  This usage requires the full
-      representation data to have been processed by prior requests.
+      representation data to have been processed during prior requests.
 
    If the client received a final response with the Upload-Complete: ?1
    header field, the upload is complete and the corresponding response
