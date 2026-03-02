@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 2 September 2026                                     Apple Inc.
+Expires: 3 September 2026                                     Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                            1 March 2026
+                                                            2 March 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 September 2026.
+   This Internet-Draft will expire on 3 September 2026.
 
 Copyright Notice
 
@@ -730,7 +730,7 @@ Table of Contents
    Encoding header field (Section 8.4 of [HTTP]) names the content
    codings applied to the representation.  The Content-Disposition
    header field ([CONTENT-DISPOSITION]) can be used to transmit a
-   filename.  For this purpose, the inline disposition value is
+   filename.  For this purpose, the inline disposition type is
    RECOMMENDED.
 
    If the client received a final response with a
@@ -1844,7 +1844,7 @@ Appendix A.  Changes
 
 Since draft-ietf-httpbis-resumable-upload-10
 
-   *  Add recommended disposition value for file name indication.
+   *  Add recommended disposition type for file name indication.
 
 Since draft-ietf-httpbis-resumable-upload-09
 
