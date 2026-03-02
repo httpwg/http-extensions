@@ -354,7 +354,7 @@ who can read the HTTP message. This could be used as a side channel. For
 instance, an attacker that can access Unencoded-Digest values could infer
 details about the unencrypted content without decrypting it if, for example, the
 unencrypted content has a predictable pattern. When the "aes128gcm" content
-coding is used, the security considerations is {{Section 4 of ?RFC8188}} apply.
+coding is used, the security considerations in {{Section 4 of ?RFC8188}} apply.
 
 
 # IANA Considerations
