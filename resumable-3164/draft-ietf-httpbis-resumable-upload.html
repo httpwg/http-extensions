@@ -1742,7 +1742,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#name-resuming-an-interrupted-upl" class="selfRef">Resuming an interrupted upload</a>
           </figcaption></figure>
 </div>
-<p id="section-3.2-9">4) The request to append the last part of the representation data has a <code>Upload-Complete</code> field value set to true to indicate the complete transfer. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to <code>/project/123/files</code> would have produced if the request had transferred the entire representation, e.g. a <code>200 (OK)</code> response.<a href="#section-3.2-9" class="pilcrow">¶</a></p>
+<p id="section-3.2-9">4) The request to append the last part of the representation data has a <code>Upload-Complete</code> field value set to true to indicate the complete transfer. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to <code>/project/123/files</code> would have produced if its representation had been fully transferred and processed, e.g. a <code>200 (OK)</code> response.<a href="#section-3.2-9" class="pilcrow">¶</a></p>
 <span id="name-appending-remaining-represe"></span><div id="fig-upload-appending-last-chunk">
 <figure id="figure-8">
           <div id="section-3.2-10.1">

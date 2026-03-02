@@ -429,9 +429,9 @@ Table of Contents
    a Upload-Complete field value set to true to indicate the complete
    transfer.  Once the remaining representation data is transferred, the
    server processes the entire representation and responds with whatever
-   the initial request to /project/123/files would have produced if the
-   request had transferred the entire representation, e.g. a 200 (OK)
-   response.
+   the initial request to /project/123/files would have produced if its
+   representation had been fully transferred and processed, e.g. a 200
+   (OK) response.
 
    Client                                       Server
    |                                                 |
