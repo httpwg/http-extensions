@@ -85,7 +85,7 @@ To help avoid such behavior, this document specifies the "Incremental" HTTP head
 field, which requests that HTTP intermediaries begin forwarding the HTTP message
 downstream before receiving the complete message.
 
-This indication is advisory.
+This indication might not be supported by intermediaries.
 Intermediaries that are unaware of this field will not change their behavior.
 intermediaries that support the field might choose instead to reject a request;
 see {{security}}.
@@ -148,12 +148,14 @@ Though most HTTP APIs provide the ability to incrementally transfer message cont
 those that do not for any reason, SHOULD use the presence of the Incremental
 header field to reduce or disable buffering.
 
-The Incremental field is advisory, as intermediaries that are unaware of the
-field or that do not support the field might buffer messages, even when
-explicitly requested otherwise.  Clients and servers therefore cannot expect all
-intermediaries to understand and respect a request to deliver messages
-incrementally. Clients can rely on prior knowledge or probe for support on
-individual resources.
+The Incremental field might not be supported by intermediaries.
+Intermediaries that are unaware of the field
+or that do not support the field might buffer messages,
+even when explicitly requested otherwise.
+Clients and servers therefore cannot expect all intermediaries to understand
+and respect a request to deliver messages incrementally.
+Clients that depend on support for incremental forwarding can rely on prior knowledge
+or probe for support on individual resources.
 
 The Incremental header field facilitates the establishment of a bidirectional
 byte channel over HTTP, as its presence in both requests and responses requests that

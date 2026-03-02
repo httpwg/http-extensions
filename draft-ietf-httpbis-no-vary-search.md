@@ -261,6 +261,7 @@ The following inputs are all invalid and will cause the default URL variation co
   * `No-Vary-Search: key-order="not a boolean"`
   * `No-Vary-Search: params="not an inner list"`
   * `No-Vary-Search: params=(not-a-string)`
+  * `No-Vary-Search: params=?0`
   * `No-Vary-Search: params=?1`
   * `No-Vary-Search: params=?1, except=("x")`
   * `No-Vary-Search: params=("a"), except=("x")`
