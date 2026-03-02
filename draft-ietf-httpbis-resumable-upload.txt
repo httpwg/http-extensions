@@ -727,9 +727,11 @@ Table of Contents
    Section 8.3 of [HTTP]) can affect how servers act on the uploaded
    representation data.  The Content-Type header field (Section 8.3 of
    [HTTP]) indicates the media type of the representation.  The Content-
-   Disposition header field ([CONTENT-DISPOSITION]) can be used to
-   transmit a filename.  The Content-Encoding header field (Section 8.4
-   of [HTTP]) names the content codings applied to the representation.
+   Encoding header field (Section 8.4 of [HTTP]) names the content
+   codings applied to the representation.  The Content-Disposition
+   header field ([CONTENT-DISPOSITION]) can be used to transmit a
+   filename.  For this purpose, the inline disposition type is
+   RECOMMENDED.
 
    If the client received a final response with a
 
@@ -822,9 +824,10 @@ Table of Contents
 
    POST /project/123/files HTTP/1.1
    Host: example.com
-   Upload-Complete: ?1
+   Content-Disposition: inline; filename="file name.jpg"; filename*=UTF-8''file%20name.jpg
    Content-Length: 123456789
    Upload-Length: 123456789
+   Upload-Complete: ?1
 
    [content (123456789 bytes)]
 
@@ -1841,7 +1844,7 @@ Appendix A.  Changes
 
 Since draft-ietf-httpbis-resumable-upload-10
 
-   None yet.
+   *  Add recommended disposition type for file name indication.
 
 Since draft-ietf-httpbis-resumable-upload-09
 
