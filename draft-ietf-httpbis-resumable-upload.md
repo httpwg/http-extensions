@@ -571,7 +571,7 @@ The client MUST indicate the offset of the request content inside the representa
 The request MUST include the `Upload-Complete` header field. Its value is true in two cases:
 
 - the request has content that is the end of the representation data. Once the content is fully processed by the server, the upload is complete.
-- the request has no content. Once the request is processed by the server, the upload is complete. This usage requires the full representation data to have been processed by prior requests.
+- the request has no content. Once the request is processed by the server, the upload is complete. This usage requires the full representation data to have been processed during prior requests.
 
 If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request (see {{upload-creation}}). Note that the status code does not necessary indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case that the representation was fully transmitted, but an error occurred while processing it. Resuming the upload would not resolve this error.
 
