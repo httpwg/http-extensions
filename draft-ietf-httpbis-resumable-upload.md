@@ -303,7 +303,7 @@ The state of an upload consists of the following properties that are tracked by 
 
 ### Offset {#upload-offset}
 
-The offset is the number of bytes from the representation data that have been processed, either during the creation of the upload resource ({{upload-creation}}) and by appending to it ({{upload-appending}}). The offset can be retrieved from the upload resource ({{offset-retrieving}}) and is required when appending representation data ({{upload-appending}}) to synchronize the client and resource regarding the amount of transferred representation data.
+The offset is the number of bytes from the representation data that have been processed, either during the creation of the upload resource ({{upload-creation}}) or by appending to it ({{upload-appending}}). The offset can be retrieved from the upload resource ({{offset-retrieving}}) and is required when appending representation data ({{upload-appending}}) to synchronize the client and resource regarding the amount of transferred representation data.
 
 The offset reflects application-level processing for the upload. Data may have been delivered and acknowledged at the transport layer without yet being reflected in the offset.
 
