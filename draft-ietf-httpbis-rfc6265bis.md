@@ -64,18 +64,49 @@ normative:
   DOM-DOCUMENT-COOKIE:
     target: https://html.spec.whatwg.org/#dom-document-cookie
     title: HTML - Living Standard
-    date: 2021-05-18
     author:
     -
-      org: WHATWG
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+    -
+      ins: D. Denicola
+      name: Domenic Denicola
+    -
+      ins: D. Farolino
+      name: Dominic Farolino
+    -
+      ins: I. Hickson
+      name: Ian Hickson
+    -
+      ins: P. Jägenstedt
+      name: Philip Jägenstedt
+    -
+      ins: S. Pieters
+      name: Simon Pieters
+    ann: WHATWG
   SAMESITE:
     target: https://html.spec.whatwg.org/#same-site
-    title: HTML - Living Standard
-    date: 2021-01-26
+    title: HTML Living Standard
     author:
     -
-      org: WHATWG
-
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+    -
+      ins: D. Denicola
+      name: Domenic Denicola
+    -
+      ins: D. Farolino
+      name: Dominic Farolino
+    -
+      ins: I. Hickson
+      name: Ian Hickson
+    -
+      ins: P. Jägenstedt
+      name: Philip Jägenstedt
+    -
+      ins: S. Pieters
+      name: Simon Pieters
+    ann: WHATWG
 informative:
   RFC3986:
   RFC4648:
@@ -194,10 +225,9 @@ informative:
 This document defines the HTTP Cookie and Set-Cookie header fields. These
 header fields can be used by HTTP servers to store state (called cookies) at
 HTTP user agents, letting the servers maintain a stateful session over the
-mostly stateless HTTP protocol. Although cookies have many historical
-infelicities that degrade their security and privacy, the Cookie and Set-Cookie
-header fields are widely used on the Internet. This document obsoletes RFC
-6265.
+mostly stateless HTTP protocol. Although cookies have many historical flaws
+that degrade their security and privacy, the Cookie and Set-Cookie header
+fields are widely used on the Internet. This document obsoletes RFC 6265.
 
 --- middle
 
@@ -216,12 +246,12 @@ user agent. The scope indicates the maximum amount of time in which the user
 agent should return the cookie, the servers to which the user agent should
 return the cookie, and the connection types for which the cookie is applicable.
 
-For historical reasons, cookies contain a number of security and privacy
-infelicities. For example, a server can indicate that a given cookie is
-intended for "secure" connections, but the Secure attribute does not provide
-integrity in the presence of an active network attacker. Similarly, cookies
-for a given host are shared across all the ports on that host, even though the
-usual "same-origin policy" used by web browsers isolates content retrieved via
+For historical reasons, cookies contain a number of security and privacy flaws.
+For example, a server can indicate that a given cookie is intended for "secure"
+connections, but the Secure attribute does not provide integrity in the
+presence of an active network attacker. Similarly, cookies for a given host
+are shared across all the ports on that host, even though the usual
+"same-origin policy" used by web browsers isolates content retrieved via
 different ports.
 
 This specification applies to developers of both cookie-producing servers and
@@ -320,9 +350,8 @@ A domain's "public suffix" is the portion of a domain that is controlled by a
 public registry, such as "com", "co.uk", and "pvt.k12.wy.us". A domain's
 "registrable domain" is the domain's public suffix plus the label to its left.
 That is, for `https://www.site.example`, the public suffix is `example`, and the
-registrable domain is `site.example`. Whenever possible, user agents SHOULD
-use an up-to-date public suffix list, such as the one maintained by the Mozilla
-project at {{PSL}}.
+registrable domain is `site.example`. See {{public-suffix-list-security}} for security
+considerations.
 
 The term "request", as well as a request's "client", "current url", "method",
 "target browsing context", and "url list", are defined in {{FETCH}}.
@@ -332,6 +361,17 @@ cookies, such as a web browser API that exposes cookies to scripts.
 
 The term "top-level navigation" refers to a navigation of a top-level
 traversable.
+
+## Name Resolution System
+
+While this document does not strictly prescribe any specific name resolution
+system for use with cookies it does require that the system uses only
+{{USASCII}} characters or uses an ASCII-compatible encoding (ACE). As the Domain
+Name System (DNS) is a typical and conventional example this document will
+reference name resolution in terms of DNS.
+
+Name resolution systems that directly expose non-ASCII characters, such as
+Unicode, are out of scope of this document.
 
 # Overview
 
@@ -450,7 +490,7 @@ exceeds its quota or if the user manually deletes the server's cookie.
 ~~~ example
 == Server -> User Agent ==
 
-Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT
+Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2026 10:18:14 GMT
 
 == User Agent -> Server ==
 
@@ -550,7 +590,7 @@ inadvertently create cookies that cannot be read by other servers.
 This section describes the syntax and semantics of a well-behaved profile of the
 Cookie and Set-Cookie header fields.
 
-## Set-Cookie {#sane-set-cookie}
+## Set-Cookie Header {#sane-set-cookie}
 
 The Set-Cookie HTTP response header field is used to send cookies from the server to
 the user agent.
@@ -580,9 +620,7 @@ cookie-av         = expires-av / max-age-av / domain-av /
 expires-av        = "Expires" BWS "=" BWS sane-cookie-date
 sane-cookie-date  =
     <IMF-fixdate, defined in [HTTP], Section 5.6.7>
-max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
-non-zero-digit    = %x31-39
-                      ; digits 1 through 9
+max-age-av        = "Max-Age" BWS "=" BWS 1*DIGIT
 domain-av         = "Domain" BWS "=" BWS domain-value
 domain-value      = <subdomain>
                       ; see details below
@@ -706,11 +744,10 @@ user agent).
 
 The Domain attribute specifies those hosts to which the cookie will be sent.
 For example, if the value of the Domain attribute is "site.example", the user
-agent will include the cookie in the Cookie header field when making HTTP requests to
-site.example, www.site.example, and www.corp.site.example. (Note that a
-leading %x2E ("."), if present, is ignored even though that character is not
-permitted.)  If the server omits the Domain attribute, the user agent
-will return the cookie only to the origin server.
+agent will include the cookie in the Cookie header field when making HTTP
+requests to site.example, www.site.example, and www.corp.site.example. If the
+server omits the Domain attribute, the user agent will return the cookie only
+to the origin server.
 
 WARNING: Some existing user agents treat an absent Domain attribute as if the
 Domain attribute were present and contained the current host name. For
@@ -855,7 +892,7 @@ While the following would be accepted if set from a secure origin (e.g.
 Set-Cookie: __Host-SID=12345; Secure; Path=/
 ~~~
 
-## Cookie {#sane-cookie}
+## Cookie Header {#sane-cookie}
 
 ### Syntax {#server-syntax}
 
@@ -1020,12 +1057,20 @@ A canonicalized host name is the string generated by the following algorithm:
 
 1.  Convert the host name to a sequence of individual domain name labels.
 
-2.  Convert each label that is not a Non-Reserved LDH (NR-LDH) label, to an
-    A-label (see {{Section 2.3.2.1 of RFC5890}} for the former and latter).
+2. All labels must be one of U-label, A-label, or Non-Reserved LDH (NR-LDH)
+   label (see {{Section 2.3.1 of RFC5890}}). If any label is not one of these
+   then abort this algorithm and fail to canonicalize the host name.
 
-3.  Concatenate the resulting labels, separated by a %x2E (".") character.
+3.  Convert each U-label to an A-label (see {{Section 2.3.2.1 of RFC5890}}).
 
-### Domain Matching
+4. If any label is a Fake A-label then abort this algorithm and fail to
+   canonicalize the host name.
+
+5.  Concatenate the resulting labels, separated by a %x2E (".") character.
+
+### Domain Matching {#domain-matching}
+
+Note: This algorithm expects that both inputs are canonicalized.
 
 A string domain-matches a given domain string if at least one of the following
 conditions hold:
@@ -1102,14 +1147,14 @@ The URI displayed in a user agent's address bar is the only security context
 directly exposed to users, and therefore the only signal users can reasonably
 rely upon to determine whether or not they trust a particular website. The
 origin of that URI represents the context in which a user most likely believes
-themselves to be interacting. We'll define this origin, the top-level
-traversable's active document's origin, as the "top-level origin".
+themselves to be interacting. This origin, the top-level traversable's active
+document's origin, is defined as the "top-level origin".
 
-For a document displayed in a top-level traversable, we can stop here: the
-document's "site for cookies" is the top-level origin.
+For a document displayed in a top-level traversable, the document's "site for
+cookies" is the top-level origin.
 
-For container documents, we need to audit the origins of each of a document's
-ancestor navigables' active documents in order to account for the
+For container documents, the origins of each of a document's ancestor
+navigables' active documents must be audited in order to account for the
 "multiple-nested scenarios" described in {{Section 4 of RFC7034}}. A document's
 "site for cookies" is the top-level origin if and only if the top-level origin
 is same-site with the document's origin, and with each of the document's
@@ -1657,8 +1702,12 @@ user agent MUST process the cookie as follows:
 9.  If the user agent is configured to reject "public suffixes" and the
     domain-attribute is a public suffix:
 
-    1.  If the domain-attribute is identical to the canonicalized
-        request-host:
+    1. Let request-host-canonical be the canonicalized request-host.
+
+    2. If request-host fails to be canonicalized then abort this algorithm and
+       ignore the cookie entirely.
+
+    3.  If the domain-attribute is identical to the request-host-canonical:
 
         1.  Let the domain-attribute be the empty string.
 
@@ -1671,8 +1720,8 @@ user agent MUST process the cookie as follows:
 
 10. If the domain-attribute is non-empty:
 
-    1.  If the canonicalized request-host does not domain-match the
-        domain-attribute:
+    1.  If request-host-canonical does not domain-match
+        (see {{domain-matching}}) the domain-attribute:
 
         1.  Abort this algorithm and ignore the cookie entirely.
 
@@ -1686,7 +1735,7 @@ user agent MUST process the cookie as follows:
 
     1.  Set the cookie's host-only-flag to true.
 
-    2.  Set the cookie's domain to the canonicalized request-host.
+    2.  Set the cookie's domain to request-host-canonical.
 
 11. If the cookie-attribute-list contains an attribute with an
     attribute-name of "Path", set the cookie's path to attribute-value of
@@ -1720,8 +1769,8 @@ user agent MUST process the cookie as follows:
 
     2.  Their secure-only-flag is true.
 
-    3.  Their domain domain-matches the domain of the newly-created cookie, or
-        vice-versa.
+    3.  Their domain domain-matches (see {{domain-matching}}) the domain of the
+        newly-created cookie, or vice-versa.
 
     4.  The path of the newly-created cookie path-matches the path of the
         existing cookie.
@@ -1895,18 +1944,23 @@ is "non-HTTP".
 Given a cookie store and a retrieval, the following algorithm returns a
 cookie-string from a given cookie store.
 
-1. Let cookie-list be the set of cookies from the cookie store that meets all
+1. Let retrieval-host-canonical be the canonicalized host of the retrieval's URI.
+
+2. If the host of the retrieval's URI fails to be canonicalized then abort this
+   algorithm.
+
+3. Let cookie-list be the set of cookies from the cookie store that meets all
    of the following requirements:
 
    * Either:
 
-     *   The cookie's host-only-flag is true and the canonicalized
-         host of the retrieval's URI is identical to the cookie's domain.
+     *   The cookie's host-only-flag is true and retrieval-host-canonical is
+         identical to the cookie's domain.
 
      Or:
 
-     *   The cookie's host-only-flag is false and the canonicalized
-         host of the retrieval's URI domain-matches the cookie's domain.
+     *   The cookie's host-only-flag is false and retrieval-host-canonical
+         domain-matches (see {{domain-matching}}) the cookie's domain.
 
      *  The cookie's domain is not a public suffix, for user agents configured
         to reject "public suffixes".
@@ -1940,7 +1994,7 @@ cookie-string from a given cookie store.
      * The target browsing context of the HTTP request associated with the
        retrieval is the active browsing context or a top-level traversable.
 
-2. The user agent SHOULD sort the cookie-list in the following order:
+4. The user agent SHOULD sort the cookie-list in the following order:
 
    *  Cookies with longer paths are listed before cookies with shorter
       paths.
@@ -1952,10 +2006,10 @@ cookie-string from a given cookie store.
    reflects common practice when this document was written, and, historically,
    there have been servers that (erroneously) depended on this order.
 
-3. Update the last-access-time of each cookie in the cookie-list to the
+5. Update the last-access-time of each cookie in the cookie-list to the
    current date and time.
 
-4. Serialize the cookie-list into a cookie-string by processing each cookie
+6. Serialize the cookie-list into a cookie-string by processing each cookie
    in the cookie-list in order:
 
    1.  If the cookies' name is not empty, output the cookie's name followed by
@@ -2439,6 +2493,17 @@ As a more permissive variant of "Lax" mode, "Lax-allowing-unsafe" mode
 necessarily provides fewer protections against CSRF. Ultimately, the provision
 of such an enforcement mode should be seen as a temporary, transitional measure
 to ease adoption of "Lax" enforcement by default.
+
+## Public Suffix List {#public-suffix-list-security}
+
+The boundaries of cookies depend on a site's "registrable domain" which in turn
+depends on the public suffix of the domain.
+
+Whenever possible, user agents SHOULD use an up-to-date public suffix list,
+such as the one maintained by the Mozilla project at {{PSL}}.
+
+Failure to do so could allow malicious or sensitive cookies to leak between
+registrable domains.
 
 # IANA Considerations
 

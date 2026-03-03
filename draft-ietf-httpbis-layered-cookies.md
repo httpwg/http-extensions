@@ -415,9 +415,7 @@ cookie-av         = expires-av / max-age-av / domain-av /
 expires-av        = "Expires" BWS "=" BWS sane-cookie-date
 sane-cookie-date  =
     <IMF-fixdate, defined in [HTTP], Section 5.6.7>
-max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
-non-zero-digit    = %x31-39
-                      ; digits 1 through 9
+max-age-av        = "Max-Age" BWS "=" BWS 1*DIGIT
 domain-av         = "Domain" BWS "=" BWS domain-value
 domain-value      = <subdomain>
                       ; see details below
@@ -1898,4 +1896,4 @@ Revamped the document to allow for more detailed requirements on browsers in dow
 
 Many thanks to Adam Barth for laying the groundwork for a modern cookie specification with RFC 6265.
 
-And thanks to John Wilander, Lily Chen, Mike West, Steven Bingler, and Steven Englehardt for improving upon that work in subsequent drafts.
+And many thanks to Steven Bingler, Lily Chen, Dylan Cutler, Steven Englehardt, Yoav Weiss, Mike West, and John Wilander for improving upon that work.
