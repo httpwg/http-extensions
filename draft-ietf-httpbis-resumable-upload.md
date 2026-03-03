@@ -992,6 +992,12 @@ Reference:
 # Changes
 {:removeinrfc="true"}
 
+## Since draft-ietf-httpbis-resumable-upload-11
+{:numbered="false"}
+
+* Clear up different responsibilities of server and upload resource.
+* Relax recommendations on client handling greater offsets.
+
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
 
