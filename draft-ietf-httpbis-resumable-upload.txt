@@ -489,7 +489,7 @@ Table of Contents
 
    The offset is the number of bytes from the representation data that
    have been processed, either during the creation of the upload
-   resource (Section 4.2) and by appending to it (Section 4.4).  The
+   resource (Section 4.2) or by appending to it (Section 4.4).  The
    offset can be retrieved from the upload resource (Section 4.3) and is
    required when appending representation data (Section 4.4) to
    synchronize the client and resource regarding the amount of
