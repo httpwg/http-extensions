@@ -129,6 +129,7 @@ Table of Contents
      15.1.  Normative References
      15.2.  Informative References
    Appendix A.  Changes
+     Since draft-ietf-httpbis-resumable-upload-11
      Since draft-ietf-httpbis-resumable-upload-10
      Since draft-ietf-httpbis-resumable-upload-09
      Since draft-ietf-httpbis-resumable-upload-08
@@ -918,15 +919,14 @@ Table of Contents
    field.
 
    The offset can be less than or equal to the number of bytes of
-   representation data that the client has already sent.  The client MAY
-   reject an offset which is greater than the number of bytes it has
-   already sent during this upload by not continuing the upload and
-   canceling the upload resource (Section 4.5).  The client is expected
-   to handle backtracking of a reasonable length.  If the offset is
-   invalid for this upload, or if the client cannot backtrack to the
-   offset and reproduce the same representation data it has already
-   sent, the upload MUST be considered a failure.  The client then MUST
-   NOT continue the upload and SHOULD cancel the upload (Section 4.5).
+   representation data that the client has already sent.  The client is
+   expected to handle backtracking of a reasonable length.  On the other
+   hand, the offset can be greater than the amount of sent
+   representation data if the upload resource obtained additional
+   representation data on behalf of the client.  If the client is not
+   able to provide the representation data at the given offset, the
+   upload MUST be considered a failure.  The client then MUST NOT
+   continue the upload and SHOULD cancel the upload (Section 4.5).
 
    The client MUST NOT perform offset retrieval while creation
    (Section 4.2) or appending (Section 4.4) is in progress as this can
@@ -1852,6 +1852,12 @@ Table of Contents
 Appendix A.  Changes
 
    This section is to be removed before publishing as an RFC.
+
+Since draft-ietf-httpbis-resumable-upload-11
+
+   *  Clear up different responsibilities of server and upload resource.
+
+   *  Relax recommendations on client handling greater offsets.
 
 Since draft-ietf-httpbis-resumable-upload-10
 
