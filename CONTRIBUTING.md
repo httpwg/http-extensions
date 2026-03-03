@@ -109,7 +109,7 @@ There are other places inside and outside the IETF that are doing HTTP-related w
 
 ### Bringing Work to the IETF
 
-There are a few things that are important to know when you bring work to the IETF. 
+There are a few things that are important to know when you bring work to the IETF.
 
 First, when your draft is adopted by the Working Group _change control_ -- that is, who determines what's in the specification -- passes from you to the IETF. That means that some things that you don't agree with might happen to it, and it might be published with things that you wouldn't have included (or without things that you would have kept).
 
@@ -127,25 +127,17 @@ The [IETF Guidelines for Conduct](https://www.rfc-editor.org/rfc/rfc7154.html) a
 
 ## NOTE WELL
 
-This is a reminder of IETF policies in effect on various topics such as patents or code of conduct. It is only meant to point you in the right direction. Exceptions may apply. The IETF's patent policy and the definition of an IETF "contribution" and "participation" are set forth in BCP 79; please read it carefully.
+By participating in the IETF you agree to follow [IETF processes and policies](https://www.ietf.org/policies/). This Note Well is a reminder of some of those policies.
 
-As a reminder:
+* IETF participants are expected to behave in a professional manner and extend respect and courtesy to their colleagues at all times (see [RFC 7154: IETF Guidelines for Conduct](https://www.rfc-editor.org/rfc/rfc7154.html) and [IETF Anti-Harassment Policy](https://datatracker.ietf.org/doc/statement-iesg-ietf-anti-harassment-policy-20131103/)). If you have any concerns about behavior, please contact the [Ombudsteam](https://www.ietf.org/contact/ombudsteam/) who have a duty of confidentiality and extensive powers to act, as set out in [RFC 7776: IETF Anti-Harassment Procedures](https://www.rfc-editor.org/rfc/rfc7776.html).
 
-- By participating in the IETF, you agree to follow IETF processes and policies.
-- If you are aware that any IETF contribution is covered by patents or patent applications that are owned or controlled by you or your sponsor, you must disclose that fact, or not participate in the discussion.
-- As a participant in or attendee to any IETF activity you acknowledge that written, audio, video, and photographic records of meetings may be made public.
-- Personal information that you provide to IETF will be handled in accordance with the IETF Privacy Statement.
-- As a participant or attendee, you agree to work respectfully with other participants; please contact the [ombudsteam](https://www.ietf.org/contact/ombudsteam/) if you have questions or concerns about this.
+* If you are aware that any IETF contribution (as defined in [RFC 5378: Rights Contributors Provide to the IETF Trust](https://www.rfc-editor.org/rfc/rfc5378.html)) is covered by patents or patent applications that are owned or controlled by you, your employer or your sponsor, you must disclose that fact, or not participate in the discussion (see [RFC 8179: Intellectual Property Rights in IETF Technology](https://www.rfc-editor.org/rfc/rfc8179.html)).
 
-Definitive information is in the documents listed below and other IETF BCPs. For advice, please talk to WG chairs or ADs:
+* For detailed process information consult [RFC 2026: Internet Standards Process](https://www.rfc-editor.org/rfc/rfc2026.html) and [RFC 2418: IETF Working Group Guidelines and Procedures](https://www.rfc-editor.org/rfc/rfc2418.html) and updates to those.
 
-- [BCP 9](https://www.rfc-editor.org/info/bcp9) (Internet Standards Process)
-- [BCP 25](https://www.rfc-editor.org/info/bcp25) (Working Group processes)
-- [BCP 25](https://www.rfc-editor.org/info/bcp25) (Anti-Harassment Procedures)
-- [BCP 54](https://www.rfc-editor.org/info/bcp54) (Code of Conduct)
-- [BCP 78](https://www.rfc-editor.org/info/bcp78) (Copyright)
-- [BCP 79](https://www.rfc-editor.org/info/bcp79) (Patents, Participation)
-- [https://www.ietf.org/privacy-policy/](https://www.ietf.org/privacy-policy/) (Privacy Policy)
+* The IETF routinely makes public written, audio, video, and photographic records of IETF activities, including your personal information as set out in the [IETF Privacy Statement](https://www.ietf.org/privacy-statement/).
+
+For advice, please talk to Working Group chairs or Area Directors.
 
 ## Working Group Information
 

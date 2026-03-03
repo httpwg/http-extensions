@@ -383,7 +383,7 @@ The client SHOULD respect any limits ({{upload-limit}}) announced in the `Upload
 
 The request content can be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty representation. An `Upload-Complete` header field set to false is also valid. This can be used to retrieve the upload resource's URI before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URI, at the cost of an additional round-trip before data upload can commence.
 
-Representation metadata included in the initial request (see {{Section 8.3 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field ({{Section 8.3 of HTTP}}) indicates the media type of the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. The `Content-Encoding` header field ({{Section 8.4 of HTTP}}) names the content codings applied to the representation.
+Representation metadata included in the initial request (see {{Section 8.3 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field ({{Section 8.3 of HTTP}}) indicates the media type of the representation. The `Content-Encoding` header field ({{Section 8.4 of HTTP}}) names the content codings applied to the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. For this purpose, the `inline` disposition type is RECOMMENDED.
 
 If the client received a final response with a
 
@@ -417,9 +417,10 @@ A) The following example shows an upload creation, where the entire 123456789 by
 ~~~ http-message
 POST /project/123/files HTTP/1.1
 Host: example.com
-Upload-Complete: ?1
+Content-Disposition: inline; filename="file name.jpg"; filename*=UTF-8''file%20name.jpg
 Content-Length: 123456789
 Upload-Length: 123456789
+Upload-Complete: ?1
 
 [content (123456789 bytes)]
 ~~~
@@ -608,22 +609,22 @@ While the request content is being received, the server SHOULD send interim resp
 
 ### Examples {#upload-appending-example}
 
-A) The following example shows an upload append request. The client transfers the next 23456789 bytes at an offset of 23456789 and does not indicate that the upload is then completed. The server generates one interim response and finally acknowledges the new offset:
+A) The following example shows an upload append request. The client transfers the next 3456789 bytes at an offset of 20000000 and does not indicate that the upload is then completed. The server generates one interim response, when the offset reached 21728394 bytes, and finally acknowledges the new offset:
 
 ~~~ http-message
 PATCH /upload/37a504d87 HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
-Upload-Offset: 23456789
-Content-Length: 23456789
+Upload-Offset: 20000000
+Content-Length: 3456789
 Content-Type: application/partial-upload
 
-[content (23456789 bytes)]
+[content (3456789 bytes)]
 ~~~
 
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
-Upload-Offset: 35185184
+Upload-Offset: 21728394
 
 HTTP/1.1 204 No Content
 Upload-Complete: ?0
@@ -999,10 +1000,14 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
 
+<<<<<<< patch-1
 * Clarify client and server handling of `409 (Conflict)` responses, strongly recommending clients to treat them as recoverable.
 * Refine the "Concurrency" section to outline different server strategies.
 * Strengthen the recommendation for retrying `5xx` errors and connection issues to `SHOULD`.
 * Clarify that a `HEAD` request in the "Offset Retrieval" section can serve as a hint for servers to abort prior in-flight requests.
+=======
+* Add recommended disposition type for file name indication.
+>>>>>>> main
 
 ## Since draft-ietf-httpbis-resumable-upload-09
 {:numbered="false"}
