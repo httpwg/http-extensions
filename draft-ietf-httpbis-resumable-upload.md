@@ -999,6 +999,7 @@ Reference:
 
 * Clear up different responsibilities of server and upload resource.
 * Relax recommendations on client handling greater offsets.
+* Clarify client behavior for 413 responses.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
