@@ -9,21 +9,21 @@
 <meta content="
        TCP proxying using HTTP CONNECT has long been part of the core HTTP specification.  However, this proxying functionality has several important deficiencies in modern HTTP environments.  This specification defines an alternative HTTP proxy service configuration for TCP connections.  This configuration is described by a URI Template, similar to the CONNECT-UDP and CONNECT-IP protocols. 
     " name="description">
-<meta content="xml2rfc 3.31.0" name="generator">
+<meta content="xml2rfc 3.32.0" name="generator">
 <meta content="draft-ietf-httpbis-connect-tcp-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.31.0
+  xml2rfc 3.32.0
     Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.0.2
-    platformdirs 4.5.1
+    platformdirs 4.9.4
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.32.5
-    wcwidth 0.3.0
+    wcwidth 0.6.0
 -->
 <link href="draft-ietf-httpbis-connect-tcp.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1048,7 +1048,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Schwartz</td>
-<td class="center">Expires 5 September 2026</td>
+<td class="center">Expires 21 September 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1061,12 +1061,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-connect-tcp-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-03-04" class="published">4 March 2026</time>
+<time datetime="2026-03-20" class="published">20 March 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-09-05">5 September 2026</time></dd>
+<dd class="expires"><time datetime="2026-09-21">21 September 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1100,7 +1100,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1805,7 +1805,7 @@ see <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>], <a href="https://r
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-conveying-metadata" class="section-name selfRef">Conveying metadata</a>
         </h3>
 <p id="section-4.2-1">This specification supports the "Expect: 100-continue" request header (<span>[<a href="#RFC9110" class="cite xref">RFC9110</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-10.1.1" class="relref">Section 10.1.1</a></span>) in any HTTP version.  The "100 (Continue)" status code confirms receipt of a request at the proxy without waiting for the proxy-destination TCP handshake to succeed or fail.  This might be particularly helpful when the destination host is not responding, as TCP handshakes can hang for several minutes before failing.  Clients <span class="bcp14">MAY</span> send "Expect: 100-continue", and proxies <span class="bcp14">MUST</span> respect it by returning "100 (Continue)" if the request is not immediately rejected.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2-2">Proxies implementing this specification <span class="bcp14">SHOULD</span> include a "Proxy-Status" response header <span>[<a href="#RFC9209" class="cite xref">RFC9209</a>]</span> in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  In HTTP/2 or HTTP/3, proxies <span class="bcp14">MAY</span> additionally send a "Proxy-Status" trailer in the event of an abrupt stream closure.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">Proxies implementing this specification <span class="bcp14">SHOULD</span> include a "Proxy-Status" response header field <span>[<a href="#RFC9209" class="cite xref">RFC9209</a>]</span> in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  Clients and proxies <span class="bcp14">MUST NOT</span> send trailer fields on "connect-tcp" streams.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
