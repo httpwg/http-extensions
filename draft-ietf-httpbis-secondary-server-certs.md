@@ -269,8 +269,7 @@ the certificate chain and extensions used to create the message.
 A SERVER_CERTIFICATE frame in HTTP/2 (type=0xTBD) carrries a TLS Exported authenticator
 that clients can use to authenticate secondary origins from a sending server.
 
-The SERVER_CERTIFICATE frame MUST be sent on stream 0. A SERVER_CERTIFICATE frame received on
-any other stream MUST not be used for server authentication.
+The SERVER_CERTIFICATE frame MUST be sent on stream 0.
 
 ~~~~~~~~~~ ascii-art
 SERVER_CERTIFICATE Frame {
@@ -304,8 +303,7 @@ endpoint MUST treat a SERVER_CERTIFICATE frame with a stream identifier other th
 A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carrries a TLS Exported authenticator
 that clients can use to authenticate secondary origins from a sending server.
 
-The SERVER_CERTIFICATE frame MUST be sent on the control stream. A SERVER_CERTIFICATE frame
-received on any other stream MUST not be used for server authentication.
+The SERVER_CERTIFICATE frame MUST be sent on the control stream.
 
 ~~~~~~~~~~ ascii-art
 SERVER_CERTIFICATE Frame {
