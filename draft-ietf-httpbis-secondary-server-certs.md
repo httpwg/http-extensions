@@ -178,13 +178,13 @@ Authenticator that the server sends.
 
 ## Making Certificates Available {#cert-available}
 
-When both peers have advertised support for HTTP-layer certificates in a given
-direction as in {{settings-usage}}, the indicated endpoint can supply
-additional certificates into the connection at any time. That is, if both
-endpoints have sent `SETTINGS_HTTP_SERVER_CERT_AUTH` and validated the value
-received from the peer, the server may send certificates spontaneously, at any
-time, as described by the `Spontaneous Server Authentication` message sequence
-in {{Section 3 of EXPORTED-AUTH}}.
+When both peers have advertised support for HTTP-layer server certificates as
+in {{settings-usage}}, the server can supply additional certificates into the
+connection at any time. That is, if both endpoints have sent
+`SETTINGS_HTTP_SERVER_CERT_AUTH` and validated the value received from the
+peer, the server may send certificates spontaneously, at any time, as described
+by the `Spontaneous Server Authentication` message sequence in {{Section 3 of
+EXPORTED-AUTH}}.
 
 This does mean that if a server knows it supports secondary certificate
 authentication, and it receives `SETTINGS_HTTP_SERVER_CERT_AUTH` from the
@@ -197,7 +197,7 @@ origins which it is prepared to service on the current connection, and SHOULD
 NOT send them if the client has not indicated support with
 `SETTINGS_HTTP_SERVER_CERT_AUTH`.
 
-A client MUST NOT send certificates to the server. The server SHOULD close the
+A client MUST NOT send certificates to the server. The server MUST close the
 connection upon receipt of a SERVER_CERTIFICATE frame from a client.
 
 ~~~ drawing
@@ -221,7 +221,7 @@ those origins for the remainder of the connection lifetime.
 Client                                                 Server
    -- (stream N) CONNECT /to-new-origin ----------------->
    <---- (stream 0 / control stream) SERVER_CERTIFICATE --
-   <---- (stream 0 / control stream) 200 OK --------------
+   <-------------------------------- (stream N) 200 OK ---
    ...
    -- (stream M) GET /to-new-origin --------------------->
    <------------ (stream M, direct from server) 200 OK ---
@@ -256,10 +256,8 @@ TLS layer that provides a chain of certificates and associated extensions,
 proving possession of the private key corresponding to the end-entity
 certificate.
 
-A server sends a SERVER_CERTIFICATE frame on stream 0 for HTTP/2 and on the control
-stream for HTTP/3. The client is permitted to make subsequent requests for
-resources upon receipt of a SERVER_CERTIFICATE frame without further action from the
-server.
+The client is permitted to make subsequent requests for resources upon receipt
+of a SERVER_CERTIFICATE frame without further action from the server.
 
 Upon receiving a complete series of SERVER_CERTIFICATE frames, the receiver may
 validate the Exported Authenticator value by using the exported authenticator
@@ -350,7 +348,7 @@ the token it contains:
   regard to the generated request, if any.
 
 If the authenticator cannot be validated, this SHOULD be treated as a connection
-error.
+error of type SERVER_CERTIFICATE_UNREADABLE ({{errors}}).
 
 Once the authenticator is accepted, the endpoint can perform any other checks
 for the acceptability of the certificate itself.
@@ -382,11 +380,11 @@ the server unacceptable.
 
 # Security Considerations {#security}
 
-This mechanism defines an alternate way to obtain server and client certificates
-other than in the initial TLS handshake. While the signature of exported
-authenticator values is expected to be equally secure, it is important to
-recognize that a vulnerability in this code path is at least equal to a
-vulnerability in the TLS handshake.
+This mechanism defines an alternate way to obtain server certificates other than
+in the initial TLS handshake. While the signature of exported authenticator
+values is expected to be equally secure, it is important to recognize that a
+vulnerability in this code path is at least equal to a vulnerability in the TLS
+handshake.
 
 ## Impersonation
 
@@ -450,8 +448,9 @@ define formal mechanisms to facilitate that intention.
 
 # IANA Considerations
 
-This document registers the `SERVER_CERTIFICATE` frame type and
-`SETTINGS_HTTP_SERVER_CERT_AUTH` setting for both {{H2}} and {{H3}}.
+This document registers the `SERVER_CERTIFICATE` frame type,
+`SETTINGS_HTTP_SERVER_CERT_AUTH` setting, and `SERVER_CERTIFICATE_UNREADABLE`
+error code for both {{H2}} and {{H3}}.
 
 ## Frame Types
 
@@ -502,6 +501,37 @@ Code: : TBD
 Name: : SETTINGS_HTTP_SERVER_CERT_AUTH
 
 Default: : 0
+
+Reference: : This document
+
+Change Controller: : IETF
+
+Contact: : ietf-http-wg@w3.org
+
+## Error Codes
+
+This specification registers the following entry in the "HTTP/2 Error Code"
+registry defined in {{H2}}:
+
+Code: : TBD
+
+Name: : SERVER_CERTIFICATE_UNREADABLE
+
+Description: : An exported authenticator could not be validated.
+
+Reference: : This document
+
+
+This specification registers the following entry in the "HTTP/3 Error Codes"
+registry established by {{H3}}:
+
+Value: : TBD
+
+Name: : SERVER_CERTIFICATE_UNREADABLE
+
+Description: : An exported authenticator could not be validated.
+
+Status: : permanent
 
 Reference: : This document
 
