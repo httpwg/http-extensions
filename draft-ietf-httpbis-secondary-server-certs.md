@@ -259,7 +259,7 @@ certificate.
 The client is permitted to make subsequent requests for resources upon receipt
 of a SERVER_CERTIFICATE frame without further action from the server.
 
-Upon receiving a complete series of SERVER_CERTIFICATE frames, the receiver may
+Upon receiving a SERVER_CERTIFICATE frame, the receiver may
 validate the Exported Authenticator value by using the exported authenticator
 API. This returns either an error indicating that the message was invalid or
 the certificate chain and extensions used to create the message.
@@ -347,7 +347,7 @@ the token it contains:
 - Use the `validate` API to confirm the validity of the authenticator with
   regard to the generated request, if any.
 
-If the authenticator cannot be validated, this SHOULD be treated as a connection
+If the authenticator cannot be validated, this MUST be treated as a connection
 error of type SERVER_CERTIFICATE_UNREADABLE ({{errors}}).
 
 Once the authenticator is accepted, the endpoint can perform any other checks
