@@ -200,12 +200,20 @@ NOT send them if the client has not indicated support with
 A client MUST NOT send certificates to the server. The server MUST close the
 connection upon receipt of a SERVER_CERTIFICATE frame from a client.
 
-~~~ drawing
-Client                                               Server
-   <-- (stream 0 / control stream) SERVER_CERTIFICATE --
-   ...
-   -- (stream N) GET /from-new-origin ----------------->
-   <------------------------------ (stream N) 200 OK ---
+~~~ aasvg
+Client                                                    Server
+|                                                              |
+|          (stream 0 / control stream) SERVER_CERTIFICATE      |
+|<-------------------------------------------------------------|
+|                                                              |
+|  ...                                                         |
+|                                                              |
+| (stream N) GET /from-new-origin                              |
+|------------------------------------------------------------->|
+|                                                              |
+|                                      (stream N) 200 OK       |
+|<-------------------------------------------------------------|
+|                                                              |
 ~~~
 {: #ex-http-server-unprompted-basic title="Simple unprompted server authentication"}
 
@@ -217,14 +225,26 @@ certificates for those origins to allow for TLS-terminated reverse proxying to
 those origins for the remainder of the connection lifetime.
 {{ex-http-server-unprompted-reverse}} illustrates this behavior.
 
-~~~ drawing
-Client                                                 Server
-   -- (stream N) CONNECT /to-new-origin ----------------->
-   <---- (stream 0 / control stream) SERVER_CERTIFICATE --
-   <-------------------------------- (stream N) 200 OK ---
-   ...
-   -- (stream M) GET /to-new-origin --------------------->
-   <------------ (stream M, direct from server) 200 OK ---
+~~~ aasvg
+Client                                                    Server
+|                                                              |
+| (stream N) CONNECT /to-new-origin                            |
+|------------------------------------------------------------->|
+|                                                              |
+|          (stream 0 / control stream) SERVER_CERTIFICATE      |
+|<-------------------------------------------------------------|
+|                                                              |
+|                                      (stream N) 200 OK       |
+|<-------------------------------------------------------------|
+|                                                              |
+|  ...                                                         |
+|                                                              |
+| (stream M) GET /to-new-origin                                |
+|------------------------------------------------------------->|
+|                                                              |
+|                  (stream M, direct from server) 200 OK       |
+|<-------------------------------------------------------------|
+|                                                              |
 ~~~
 {: #ex-http-server-unprompted-reverse title="Reverse proxy server authentication"}
 
