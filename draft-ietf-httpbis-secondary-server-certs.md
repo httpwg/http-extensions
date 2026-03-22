@@ -156,17 +156,17 @@ frames (see {{http2-cert}}, {{http3-cert}}) to the client. Once the holder of a
 certificate has sent the chain and proof, this certificate chain is cached by
 the recipient and available for future use.
 
-## Indicating Support for HTTP-Layer Certificate Authentication {#settings-usage}
+## Indicating Support for HTTP-Layer Server Certificate Authentication {#settings-usage}
 
 The `SETTINGS_HTTP_SERVER_CERT_AUTH` parameters for HTTP/2 and HTTP/3 are
 defined in {{settings}} so that clients and servers can indicate support for
-secondary certificate authentication of servers.
+secondary server certificate authentication.
 
 HTTP/2 and HTTP/3 endpoints that wish to indicate support for HTTP-Layer
 certificate authentication MUST send a `SETTINGS_HTTP_SERVER_CERT_AUTH`
 parameter set to "1" in their SETTINGS frame. Endpoints MUST NOT use any of the
-authentication functionality described in this document unless the parameter
-has been negotiated by both sides.
+authentication functionality described in this document unless they have
+both sent and received `SETTINGS_HTTP_SERVER_CERT_AUTH` with a value of 1.
 
 Endpoints MUST NOT send a `SETTINGS_HTTP_SERVER_CERT_AUTH` parameter with a
 value of 0 after previously sending a value of 1.
@@ -335,7 +335,7 @@ request, a set of certificates, and supporting information about the
 certificate (OCSP, SCT, etc.). The result is an opaque token which is used
 when generating the `SERVER_CERTIFICATE` frame.
 
-Upon receipt of a `SERVER_CERTIFICATE` frame, an endpoint which has negotiated
+Upon receipt of a `SERVER_CERTIFICATE` frame, a client which has negotiated
 support for secondary certificates MUST perform the following steps to validate
 the token it contains:
 
@@ -348,7 +348,7 @@ the token it contains:
   regard to the generated request, if any.
 
 If the authenticator cannot be validated, this MUST be treated as a connection
-error of type SERVER_CERTIFICATE_UNREADABLE ({{errors}}).
+error of type SERVER_CERTIFICATE_INVALID ({{errors}}).
 
 Once the authenticator is accepted, the endpoint can perform any other checks
 for the acceptability of the certificate itself.
@@ -368,7 +368,7 @@ This category of errors could indicate a peer failing to follow requirements in
 this document or might indicate that the connection is not fully secure. These
 errors are fatal to stream or connection, as appropriate.
 
-SERVER_CERTIFICATE_UNREADABLE (0xERROR-TBD):
+SERVER_CERTIFICATE_INVALID (0xERROR-TBD):
 : An exported authenticator could not be validated.
 
 ## Invalid Certificates
@@ -449,7 +449,7 @@ define formal mechanisms to facilitate that intention.
 # IANA Considerations
 
 This document registers the `SERVER_CERTIFICATE` frame type,
-`SETTINGS_HTTP_SERVER_CERT_AUTH` setting, and `SERVER_CERTIFICATE_UNREADABLE`
+`SETTINGS_HTTP_SERVER_CERT_AUTH` setting, and `SERVER_CERTIFICATE_INVALID`
 error code for both {{H2}} and {{H3}}.
 
 ## Frame Types
@@ -515,9 +515,9 @@ registry defined in {{H2}}:
 
 Code: : TBD
 
-Name: : SERVER_CERTIFICATE_UNREADABLE
+Name: : SERVER_CERTIFICATE_INVALID
 
-Description: : An exported authenticator could not be validated.
+Description: : There was an issue processing the SERVER_CERTIFICATE frame.
 
 Reference: : This document
 
@@ -527,9 +527,9 @@ registry established by {{H3}}:
 
 Value: : TBD
 
-Name: : SERVER_CERTIFICATE_UNREADABLE
+Name: : SERVER_CERTIFICATE_INVALID
 
-Description: : An exported authenticator could not be validated.
+Description: : There was an issue processing the SERVER_CERTIFICATE frame.
 
 Status: : permanent
 
