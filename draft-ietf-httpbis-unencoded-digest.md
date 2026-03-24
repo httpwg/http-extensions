@@ -155,7 +155,9 @@ where each:
   STRUCTURED-FIELDS}}). This specification does not define any Parameters;
   future extensions may do so. Unknown Parameters MUST be ignored.
 
-For example:
+In the following examples of `Unencoded-Digest` fields, the representation data
+with no content codings applied is: "An unexceptional string" following by an
+LF.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
