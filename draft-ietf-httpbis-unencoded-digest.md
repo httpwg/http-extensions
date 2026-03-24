@@ -161,8 +161,8 @@ For example:
 NOTE: '\' line wrapping per RFC 8792
 
 Unencoded-Digest: \
-  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
-  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
+  sha-512=:WjyMuMD9EI/v0RoJchcevbo6lF498VyE9564OgXf+98iJptoSvb1Czo9\
+  uVJu2bVU/tOv90huiMG3+YaMX1kipw==:
 ~~~
 
 The `Dictionary` type can be used, for example, to attach multiple digests
@@ -175,9 +175,9 @@ support transitions away from weaker algorithms (see
 NOTE: '\' line wrapping per RFC 8792
 
 Unencoded-Digest: \
-  sha-256=:d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=:,\
-  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
-  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
+  sha-256=:5Bv3NIx05BPnh0jMph6v1RJ5Q7kl9LKMtQxmvc9+Z7Y=:,\
+  sha-512=:WjyMuMD9EI/v0RoJchcevbo6lF498VyE9564OgXf+98iJptoSvb1Czo9\
+  uVJu2bVU/tOv90huiMG3+YaMX1kipw==:
 ~~~
 
 A recipient MAY ignore any or all digests. Application-specific behavior or
@@ -281,7 +281,7 @@ HTTP/1.1 200 OK
 Content-Type: text/plain
 Content-Encoding: gzip
 Repr-Digest: \
-  sha-256=:XyjvEuFb1P5rqc2le3vQm7M96DwZhvmOwqHLu2xVpY4=:
+  sha-256=:kwcdt3RBGcsLaj7QSz9AW8MuwJaLjOJqUU/jKixF2oU=:
 Unencoded-Digest: \
   sha-256=:5Bv3NIx05BPnh0jMph6v1RJ5Q7kl9LKMtQxmvc9+Z7Y=:
 
@@ -323,7 +323,7 @@ Content-Range: bytes 0-9/44
 Content-Digest: \
   sha-256=:SotB7Pa5A7iHSBdh9mg1Ev/ktAzrxU4Z8ldcCIUyfI4=:
 Repr-Digest: \
-  sha-256=:XyjvEuFb1P5rqc2le3vQm7M96DwZhvmOwqHLu2xVpY4=:
+  sha-256=:kwcdt3RBGcsLaj7QSz9AW8MuwJaLjOJqUU/jKixF2oU=:
 Unencoded-Digest: \
   sha-256=:5Bv3NIx05BPnh0jMph6v1RJ5Q7kl9LKMtQxmvc9+Z7Y=:
 
