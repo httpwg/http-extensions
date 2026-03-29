@@ -356,7 +356,7 @@ The following key-value pairs are defined:
 : Specifies a maximum size counted in bytes for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append or upload creation requests. The value is an Integer.
 
 `min-append-size`:
-: Specifies a minimum size counted in bytes for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append or upload creation requests. The value is an Integer. Requests completing the upload by including the `Upload-Complete: ?1` header field are exempt from this limit.
+: Specifies a minimum size counted in bytes for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append or upload creation requests. The value is an Integer. This limit does not apply to upload creation requests with no content, or to requests completing the upload by including the `Upload-Complete: ?1` header field.
 
 `max-age`:
 : Specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource as these requests will likely fail. The value is an Integer.
@@ -1000,6 +1000,7 @@ Reference:
 * Clear up different responsibilities of server and upload resource.
 * Relax recommendations on client handling greater offsets.
 * Clarify client behavior for 413 responses.
+* Allow upload creation requests with no content regardless of the `min-append-size` limit.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
