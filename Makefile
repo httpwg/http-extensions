@@ -4,7 +4,7 @@ GHPAGES_COMMIT_TTL = 7
 GHPAGES_BRANCH_TTL = 2
 
 
-include $(LIBDIR)/main.mk
+-include $(LIBDIR)/main.mk
 
 $(LIBDIR)/main.mk:
 ifneq (,$(shell grep "path *= *$(LIBDIR)" .gitmodules 2>/dev/null))
