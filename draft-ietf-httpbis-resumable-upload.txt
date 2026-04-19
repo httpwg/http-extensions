@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 5 October 2026                                       Apple Inc.
+Expires: 21 October 2026                                      Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                            3 April 2026
+                                                           19 April 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 October 2026.
+   This Internet-Draft will expire on 21 October 2026.
 
 Copyright Notice
 
@@ -1304,7 +1304,7 @@ Table of Contents
       client to show more accurate progress information about the amount
       of data processed by the server.  In addition, clients can use
       this information to release representation data that was buffered,
-      knowing that it doesn't have to be re-transmitted.
+      knowing that it doesn't have to be retransmitted.
 
    When creating or appending resumable uploads, the client can generate
    a 100-continue expectation because it wants an indication that the
@@ -1511,7 +1511,7 @@ Table of Contents
    is fully or partially transferred in the first request, or if no
    representation data is included at all.  Which behavior is best
    largely depends on the client's capabilities, its desire to avoid
-   data re-transmission, and its knowledge about the resource's support
+   data retransmission, and its knowledge about the resource's support
    for resumable uploads.
 
    The following subsections describe two typical upload strategies that
