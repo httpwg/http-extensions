@@ -434,6 +434,13 @@ Table of Contents
    of the target_host when a request arrives in early data, but delay
    the TCP connection until the TLS handshake completes.
 
+   When DNS resolution of target_host produces multiple IP addresses,
+   proxies SHOULD use a racing procedure such as Happy Eyeballs
+   [RFC8305] to accelerate connection establishment.  Proxies that race
+   multiple connection attempts MUST buffer any optimistic content until
+   a connection is selected and MUST NOT transmit any payload data on
+   the other connections.
+
 4.2.  Conveying metadata
 
    This specification supports the "Expect: 100-continue" request header
@@ -791,6 +798,11 @@ Table of Contents
    [RFC7838]  Nottingham, M., McManus, P., and J. Reschke, "HTTP
               Alternative Services", RFC 7838, DOI 10.17487/RFC7838,
               April 2016, <https://www.rfc-editor.org/rfc/rfc7838>.
+
+   [RFC8305]  Schinazi, D. and T. Pauly, "Happy Eyeballs Version 2:
+              Better Connectivity Using Concurrency", RFC 8305,
+              DOI 10.17487/RFC8305, December 2017,
+              <https://www.rfc-editor.org/rfc/rfc8305>.
 
    [RFC8942]  Grigorik, I. and Y. Weiss, "HTTP Client Hints", RFC 8942,
               DOI 10.17487/RFC8942, February 2021,
