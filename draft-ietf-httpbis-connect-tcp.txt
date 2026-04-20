@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                           19 April 2026
-Expires: 21 October 2026
+Intended status: Standards Track                           20 April 2026
+Expires: 22 October 2026
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 October 2026.
+   This Internet-Draft will expire on 22 October 2026.
 
 Copyright Notice
 
@@ -78,8 +78,10 @@ Table of Contents
      7.2.  Gateway Compatibility
    8.  IANA Considerations
      8.1.  New Upgrade Token
+       8.1.1.  Interop testing
      8.2.  New MASQUE Default Template
      8.3.  New Capsule Type
+       8.3.1.  Interop testing
    9.  References
      9.1.  Normative References
      9.2.  Informative References
@@ -629,8 +631,12 @@ Table of Contents
 
                                  Table 1
 
+8.1.1.  Interop testing
+
+   This section is to be removed before publishing as an RFC.
+
    For interoperability testing of this draft version, implementations
-   SHALL use the value "connect-tcp-07".
+   SHALL use the value "connect-tcp-12".
 
 8.2.  New MASQUE Default Template
 
@@ -665,9 +671,13 @@ Table of Contents
 
                                  Table 3
 
+8.3.1.  Interop testing
+
+   This section is to be removed before publishing as an RFC.
+
    For this draft version of the protocol, the Capsule Type values
-   0x2028d7f0 and 0x2028d7f1 shall be used provisionally for testing,
-   under the names "DATA-08" and "FINAL_DATA-08".
+   0x2028d7f2 and 0x2028d7f3 shall be used provisionally for testing,
+   under the names "DATA-12" and "FINAL_DATA-12".
 
 9.  References
 
