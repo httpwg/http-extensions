@@ -315,8 +315,6 @@ Table of Contents
 
    *  "Strict-Transport-Security" [RFC6797]
 
-   *  "Public-Key-Pins" [RFC7469]
-
    *  "Accept-CH" [RFC8942]
 
    *  "Set-Cookie" [RFC6265], which has configurable scope.
@@ -807,10 +805,6 @@ Table of Contents
               Scheffenegger, Ed., "TCP Extensions for High Performance",
               RFC 7323, DOI 10.17487/RFC7323, September 2014,
               <https://www.rfc-editor.org/rfc/rfc7323>.
-
-   [RFC7469]  Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
-              Extension for HTTP", RFC 7469, DOI 10.17487/RFC7469, April
-              2015, <https://www.rfc-editor.org/rfc/rfc7469>.
 
    [RFC7838]  Nottingham, M., McManus, P., and J. Reschke, "HTTP
               Alternative Services", RFC 7838, DOI 10.17487/RFC7838,
