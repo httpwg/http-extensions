@@ -323,7 +323,10 @@ IF APPROVED, IANA is requested to add the following entry to the HTTP Upgrade To
 | ----- | ----------- | --------- |
 | "connect-tcp" | Proxying of TCP payloads | (This document) |
 
-For interoperability testing of this draft version, implementations SHALL use the value "connect-tcp-07".
+### Interop testing
+{:removeInRFC="true"}
+
+For interoperability testing of this draft version, implementations SHALL use the value "connect-tcp-12".
 
 ## New MASQUE Default Template {#iana-template}
 
@@ -342,7 +345,10 @@ IF APPROVED, IANA is requested to add the following entry to the "HTTP Capsule T
 | (TBD) | DATA         | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
 | (TBD) | FINAL_DATA   | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
 
-For this draft version of the protocol, the Capsule Type values `0x2028d7f0` and `0x2028d7f1` shall be used provisionally for testing, under the names "DATA-08" and "FINAL_DATA-08".
+### Interop testing
+{:removeInRFC="true"}
+
+For this draft version of the protocol, the Capsule Type values `0x2028d7f2` and `0x2028d7f3` shall be used provisionally for testing, under the names "DATA-12" and "FINAL_DATA-12".
 
 --- back
 
