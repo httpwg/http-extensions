@@ -342,6 +342,9 @@ Table of Contents
    client to avoid waiting for a "401 (Unauthorized)" response before
    each new connection through the proxy.
 
+   TLS Client Certificate authentication can also be used (see
+   Section 7.2).
+
 3.4.  Closing Connections
 
    Connection termination is essentially symmetrical for proxies and
@@ -647,6 +650,11 @@ Table of Contents
 
    *  allow any "Proxy-Status" headers to traverse the gateway.
 
+   If the proxy relies on TLS Client Certificates for client
+   authentication, the gateway must perform this authentication itself
+   or pass the relevant information to the origin (e.g., using a
+   "Client-Cert" request header field [RFC9440]).
+
 8.  IANA Considerations
 
 8.1.  New Upgrade Token
@@ -823,6 +831,10 @@ Table of Contents
    [RFC8942]  Grigorik, I. and Y. Weiss, "HTTP Client Hints", RFC 8942,
               DOI 10.17487/RFC8942, February 2021,
               <https://www.rfc-editor.org/rfc/rfc8942>.
+
+   [RFC9440]  Campbell, B. and M. Bishop, "Client-Cert HTTP Header
+              Field", RFC 9440, DOI 10.17487/RFC9440, July 2023,
+              <https://www.rfc-editor.org/rfc/rfc9440>.
 
 Acknowledgments
 
