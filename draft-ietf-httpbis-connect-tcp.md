@@ -51,7 +51,7 @@ HTTP clients can be configured to use proxies by selecting a proxy hostname, a p
 
 The absence of an explicit origin for the proxy also rules out the usual defenses against server port misdirection attacks (see {{Section 7.4 of ?RFC9110}}) and creates ambiguity about the use of origin-scoped response header fields (e.g., "Alt-Svc" {{?RFC7838}}, "Strict-Transport-Security" {{?RFC6797}}).
 
-Classic HTTP CONNECT requests cannot carry in-stream metadata. For example, the WRAP_UP capsule {{?I-D.schinazi-httpbis-wrap-up}} cannot be used with Classic HTTP CONNECT.
+Classic HTTP CONNECT requests are not extensible to carry in-stream metadata. For example, the WRAP_UP capsule {{?I-D.ietf-httpbis-wrap-up}} cannot be used with Classic HTTP CONNECT.
 
 ## Overview
 
@@ -72,6 +72,8 @@ An intermediary MAY merge and split successive DATA and FINAL_DATA capsules, sub
 * There are no intervening capsules of other types.
 * The order of payload content is preserved.
 * The final emitted capsule uses the same capsule type (DATA or FINAL_DATA) as the final input capsule, and all others use the DATA capsule type.
+
+This protocol can be extended by defining additional relevant Capsule Types.  According to the Capsule Protocol ({{?RFC9297, Section 3.2}}), new Capsule Types should be ignored by pre-existing proxies and intermediaries.  If a new Capsule Type cannot safely be ignored, the endpoints can confirm support using a new HTTP header field.
 
 ## In HTTP/1.1
 
