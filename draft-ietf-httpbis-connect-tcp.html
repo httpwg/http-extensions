@@ -1278,7 +1278,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         </h3>
 <p id="section-1.2-1">HTTP clients can be configured to use proxies by selecting a proxy hostname, a port, and whether to use a security protocol. However, Classic HTTP CONNECT requests using the proxy do not carry this configuration information. Instead, they only indicate the hostname and port of the target. This prevents any HTTP server from hosting multiple distinct proxy services, as the server cannot distinguish them by path (as with distinct resources) or by origin (as in "virtual hosting").<a href="#section-1.2-1" class="pilcrow">¶</a></p>
 <p id="section-1.2-2">The absence of an explicit origin for the proxy also rules out the usual defenses against server port misdirection attacks (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.4" class="relref">Section 7.4</a> of [<a href="#RFC9110" class="cite xref">RFC9110</a>]</span>) and creates ambiguity about the use of origin-scoped response header fields (e.g., "Alt-Svc" <span>[<a href="#RFC7838" class="cite xref">RFC7838</a>]</span>, "Strict-Transport-Security" <span>[<a href="#RFC6797" class="cite xref">RFC6797</a>]</span>).<a href="#section-1.2-2" class="pilcrow">¶</a></p>
-<p id="section-1.2-3">Classic HTTP CONNECT requests cannot carry in-stream metadata. For example, the WRAP_UP capsule <span>[<a href="#I-D.schinazi-httpbis-wrap-up" class="cite xref">I-D.schinazi-httpbis-wrap-up</a>]</span> cannot be used with Classic HTTP CONNECT.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
+<p id="section-1.2-3">Classic HTTP CONNECT requests are not extensible to carry in-stream metadata. For example, the WRAP_UP capsule <span>[<a href="#I-D.ietf-httpbis-wrap-up" class="cite xref">I-D.ietf-httpbis-wrap-up</a>]</span> cannot be used with Classic HTTP CONNECT.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="overview">
@@ -1321,6 +1321,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <p id="section-3-4.3.1">The final emitted capsule uses the same capsule type (DATA or FINAL_DATA) as the final input capsule, and all others use the DATA capsule type.<a href="#section-3-4.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
+<p id="section-3-5">This protocol can be extended by defining additional relevant Capsule Types.  According to the Capsule Protocol (<span>[<a href="#RFC9297" class="cite xref">RFC9297</a>], <a href="https://rfc-editor.org/rfc/rfc9297#section-3.2" class="relref">Section 3.2</a></span>), new Capsule Types should be ignored by pre-existing proxies and intermediaries.  If a new Capsule Type cannot safely be ignored, the endpoints can confirm support using a new HTTP header field.<a href="#section-3-5" class="pilcrow">¶</a></p>
 <div id="in-http11">
 <section id="section-3.1">
         <h3 id="name-in-http-11">
@@ -2193,9 +2194,9 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
         <dd>
 <span class="refAuthor">Pauly, T., Ed.</span>, <span class="refAuthor">Schinazi, D.</span>, <span class="refAuthor">Chernyakhovsky, A.</span>, <span class="refAuthor">Kühlewind, M.</span>, and <span class="refAuthor">M. Westerlund</span>, <span class="refTitle">"Proxying IP in HTTP"</span>, <span class="seriesInfo">RFC 9484</span>, <span class="seriesInfo">DOI 10.17487/RFC9484</span>, <time datetime="2023-10" class="refDate">October 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9484">https://www.rfc-editor.org/rfc/rfc9484</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.schinazi-httpbis-wrap-up">[I-D.schinazi-httpbis-wrap-up]</dt>
+<dt id="I-D.ietf-httpbis-wrap-up">[I-D.ietf-httpbis-wrap-up]</dt>
         <dd>
-<span class="refAuthor">Schinazi, D.</span> and <span class="refAuthor">L. Pardue</span>, <span class="refTitle">"The HTTP Wrap Up Capsule"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-schinazi-httpbis-wrap-up-01</span>, <time datetime="2024-10-16" class="refDate">16 October 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-schinazi-httpbis-wrap-up-01">https://datatracker.ietf.org/doc/html/draft-schinazi-httpbis-wrap-up-01</a>&gt;</span>. </dd>
+<span class="refAuthor">Schinazi, D.</span> and <span class="refAuthor">L. Pardue</span>, <span class="refTitle">"The HTTP Wrap Up Capsule"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-wrap-up-01</span>, <time datetime="2025-07-07" class="refDate">7 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-wrap-up-01">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-wrap-up-01</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6265">[RFC6265]</dt>
         <dd>

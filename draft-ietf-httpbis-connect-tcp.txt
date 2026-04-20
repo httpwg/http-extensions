@@ -125,9 +125,9 @@ Table of Contents
    origin-scoped response header fields (e.g., "Alt-Svc" [RFC7838],
    "Strict-Transport-Security" [RFC6797]).
 
-   Classic HTTP CONNECT requests cannot carry in-stream metadata.  For
-   example, the WRAP_UP capsule [I-D.schinazi-httpbis-wrap-up] cannot be
-   used with Classic HTTP CONNECT.
+   Classic HTTP CONNECT requests are not extensible to carry in-stream
+   metadata.  For example, the WRAP_UP capsule
+   [I-D.ietf-httpbis-wrap-up] cannot be used with Classic HTTP CONNECT.
 
 1.3.  Overview
 
@@ -176,6 +176,12 @@ Table of Contents
    *  The final emitted capsule uses the same capsule type (DATA or
       FINAL_DATA) as the final input capsule, and all others use the
       DATA capsule type.
+
+   This protocol can be extended by defining additional relevant Capsule
+   Types.  According to the Capsule Protocol ([RFC9297], Section 3.2),
+   new Capsule Types should be ignored by pre-existing proxies and
+   intermediaries.  If a new Capsule Type cannot safely be ignored, the
+   endpoints can confirm support using a new HTTP header field.
 
 3.1.  In HTTP/1.1
 
@@ -766,12 +772,12 @@ Table of Contents
               RFC 9484, DOI 10.17487/RFC9484, October 2023,
               <https://www.rfc-editor.org/rfc/rfc9484>.
 
-   [I-D.schinazi-httpbis-wrap-up]
+   [I-D.ietf-httpbis-wrap-up]
               Schinazi, D. and L. Pardue, "The HTTP Wrap Up Capsule",
-              Work in Progress, Internet-Draft, draft-schinazi-httpbis-
-              wrap-up-01, 16 October 2024,
-              <https://datatracker.ietf.org/doc/html/draft-schinazi-
-              httpbis-wrap-up-01>.
+              Work in Progress, Internet-Draft, draft-ietf-httpbis-wrap-
+              up-01, 7 July 2025,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
+              wrap-up-01>.
 
    [RFC6265]  Barth, A., "HTTP State Management Mechanism", RFC 6265,
               DOI 10.17487/RFC6265, April 2011,
