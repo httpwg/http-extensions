@@ -163,7 +163,6 @@ Unlike classic HTTP CONNECT proxies, a templated TCP proxy has an unambiguous or
 
 * "Alt-Svc" {{?RFC7838}}
 * "Strict-Transport-Security" {{?RFC6797}}
-* "Public-Key-Pins" {{?RFC7469}}
 * "Accept-CH" {{?RFC8942}}
 * "Set-Cookie" {{?RFC6265}}, which has configurable scope.
 * "Clear-Site-Data" {{CLEAR-SITE-DATA}}
