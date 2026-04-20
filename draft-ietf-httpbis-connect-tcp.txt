@@ -158,13 +158,28 @@ Table of Contents
    "connect-tcp" (see registration in Section 8.1).
 
    When using "connect-tcp", TCP payload data is sent in the payload of
-   new Capsule Types named DATA and FINAL_DATA (see registrations in
-   Section 8.3).  The ordered concatenation of these capsule payloads
-   represents the TCP payload data.  A FINAL_DATA capsule additionally
-   indicates that the sender has closed this stream, semantically
-   equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an
-   endpoint MUST NOT send any more DATA or FINAL_DATA capsules on this
-   data stream.  (See Section 3.4 for related requirements.)
+   new Capsule Types named DATA and FINAL_DATA (see Figure 1 and
+   registrations in Section 8.3).  The ordered concatenation of these
+   capsule payloads, which MAY be empty, represents the TCP payload
+   data.  A FINAL_DATA capsule additionally indicates that the sender
+   has closed this stream, semantically equivalent to TCP FIN.  After
+   sending a FINAL_DATA capsule, an endpoint MUST NOT send any more DATA
+   or FINAL_DATA capsules on this data stream.  (See Section 3.4 for
+   related requirements.)
+
+   DATA Capsule {
+     Type (i) = $TBD1,
+     Length (i),  # MAY be zero
+     TCP Payload (..),
+   }
+
+   FINAL_DATA Capsule {
+     Type (i) = $TBD2,
+     Length (i),  # MAY be zero
+     TCP Payload (..),
+   }
+
+               Figure 1: DATA and FINAL_DATA Capsule Formats
 
    An intermediary MAY merge and split successive DATA and FINAL_DATA
    capsules, subject to the following requirements:
@@ -242,7 +257,7 @@ Table of Contents
                                Upgrade: connect-tcp
                                Capsule-Protocol: ?1
 
-             Figure 1: Templated TCP proxy example in HTTP/1.1
+             Figure 2: Templated TCP proxy example in HTTP/1.1
 
 3.2.  In HTTP/2 and HTTP/3
 
@@ -279,7 +294,7 @@ Table of Contents
    capsule-protocol = ?1
    ...
 
-              Figure 2: Templated TCP proxy example in HTTP/2
+              Figure 3: Templated TCP proxy example in HTTP/2
 
 3.3.  Use of Other Relevant Headers
 
@@ -377,7 +392,7 @@ Table of Contents
      +---FINACK-->+-----QUIC.STREAM{FIN}---->|            |
      |            |                          |            |
 
-           Figure 3: Simple graceful termination example (HTTP/3)
+           Figure 4: Simple graceful termination example (HTTP/3)
 
    +-------+    +------------+    +------------+    +-------+
    | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
@@ -385,7 +400,7 @@ Table of Contents
      +----RST---->+---RST_STREAM{CON_ERR}--->+----RST---->|
      |            |                          |            |
 
-           Figure 4: Simple TCP RST termination example (HTTP/2)
+           Figure 5: Simple TCP RST termination example (HTTP/2)
 
    +-------+    +------------+    +------------+    +-------+
    | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
@@ -395,7 +410,7 @@ Table of Contents
      |            +--FIN (no close_notify)-->+----RST---->|
      |            |                          |            |
 
-                    Figure 5: Timeout example (HTTP/1.1)
+                    Figure 6: Timeout example (HTTP/1.1)
 
    +-------+    +------------+    +------------+    +-------+
    | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
@@ -408,7 +423,7 @@ Table of Contents
      +-----RST--->+-----H3_CONNECT_ERROR---->+-----RST--->|
      |            |                          |            |
 
-                  Figure 6: RST after FIN example (HTTP/3)
+                  Figure 7: RST after FIN example (HTTP/3)
 
 4.  Additional Connection Setup Behaviors
 
@@ -509,7 +524,7 @@ Table of Contents
    https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
                     /tcp/{target_host}/{target_port}/
 
-                   Figure 7: Registered default template
+                   Figure 8: Registered default template
 
    If this request succeeds, the client SHOULD record a preference for
    "connect-tcp" to avoid further retry delays.
@@ -669,20 +684,20 @@ Table of Contents
    IF APPROVED, IANA is requested to add the following entry to the
    "HTTP Capsule Types" registry:
 
-   +=====+============+===========+============+============+=========+
-   |Value| Capsule    | Status    | Reference  | Change     | Contact |
-   |     | Type       |           |            | Controller |         |
-   +=====+============+===========+============+============+=========+
-   |(TBD)| DATA       | permanent | (This      | IETF       | HTTPBIS |
-   |     |            |           | document), |            |         |
-   |     |            |           | Section 3  |            |         |
-   +-----+------------+-----------+------------+------------+---------+
-   |(TBD)| FINAL_DATA | permanent | (This      | IETF       | HTTPBIS |
-   |     |            |           | document), |            |         |
-   |     |            |           | Section 3  |            |         |
-   +-----+------------+-----------+------------+------------+---------+
+    +======+============+===========+============+============+=======+
+    |Value | Capsule    | Status    | Reference  | Change     |Contact|
+    |      | Type       |           |            | Controller |       |
+    +======+============+===========+============+============+=======+
+    |(TBD1)| DATA       | permanent | (This      | IETF       |HTTPBIS|
+    |      |            |           | document), |            |       |
+    |      |            |           | Section 3  |            |       |
+    +------+------------+-----------+------------+------------+-------+
+    |(TBD2)| FINAL_DATA | permanent | (This      | IETF       |HTTPBIS|
+    |      |            |           | document), |            |       |
+    |      |            |           | Section 3  |            |       |
+    +------+------------+-----------+------------+------------+-------+
 
-                                 Table 3
+                                  Table 3
 
 8.3.1.  Interop testing
 
