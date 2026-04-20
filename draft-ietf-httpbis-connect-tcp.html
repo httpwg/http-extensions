@@ -1307,7 +1307,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-specification">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-specification" class="section-name selfRef">Specification</a>
       </h2>
-<p id="section-3-1">A template-driven TCP transport proxy for HTTP is identified by a URI Template <span>[<a href="#RFC6570" class="cite xref">RFC6570</a>]</span> containing variables named "target_host" and "target_port".  This URI Template and its variable values <span class="bcp14">MUST</span> meet all the same requirements as for UDP proxying (<span>[<a href="#RFC9298" class="cite xref">RFC9298</a>], <a href="https://rfc-editor.org/rfc/rfc9298#section-2" class="relref">Section 2</a></span>), and are subject to the same validation rules.  The client <span class="bcp14">MUST</span> substitute the destination host and port number into this template to produce the request URI.  The derived URI serves as the destination of a Capsule Protocol connection using the Upgrade Token "connect-tcp" (see registration in <a href="#new-upgrade-token" class="auto internal xref">Section 8.1</a>).<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">A template-driven TCP transport proxy for HTTP is identified by a URI Template <span>[<a href="#RFC6570" class="cite xref">RFC6570</a>]</span> containing variables named "target_host" and "target_port".  This URI Template and its variable values <span class="bcp14">MUST</span> meet all the same requirements as for UDP proxying (<span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>], <a href="https://rfc-editor.org/rfc/rfc9298#section-2" class="relref">Section 2</a></span>), and are subject to the same validation rules.  The client <span class="bcp14">MUST</span> substitute the destination host and port number into this template to produce the request URI.  The derived URI serves as the destination of a Capsule Protocol connection using the Upgrade Token "connect-tcp" (see registration in <a href="#new-upgrade-token" class="auto internal xref">Section 8.1</a>).<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">When using "connect-tcp", TCP payload data is sent in the payload of new Capsule Types named DATA and FINAL_DATA (see registrations in <a href="#data-capsule" class="auto internal xref">Section 8.3</a>).  The ordered concatenation of these capsule payloads represents the TCP payload data.  A FINAL_DATA capsule additionally indicates that the sender has closed this stream, semantically equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint <span class="bcp14">MUST NOT</span> send any more DATA or FINAL_DATA capsules on this data stream. (See <a href="#closing-connections" class="auto internal xref">Section 3.4</a> for related requirements.)<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">An intermediary <span class="bcp14">MAY</span> merge and split successive DATA and FINAL_DATA capsules, subject to the following requirements:<a href="#section-3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -2116,6 +2116,10 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 <a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
+<dt id="CONNECT-UDP">[CONNECT-UDP]</dt>
+        <dd>
+<span class="refAuthor">Schinazi, D.</span>, <span class="refTitle">"Proxying UDP in HTTP"</span>, <span class="seriesInfo">RFC 9298</span>, <span class="seriesInfo">DOI 10.17487/RFC9298</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9298">https://www.rfc-editor.org/rfc/rfc9298</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
@@ -2165,12 +2169,8 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 <span class="refAuthor">Hamilton, R.</span>, <span class="refTitle">"Bootstrapping WebSockets with HTTP/3"</span>, <span class="seriesInfo">RFC 9220</span>, <span class="seriesInfo">DOI 10.17487/RFC9220</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9220">https://www.rfc-editor.org/rfc/rfc9220</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9297">[RFC9297]</dt>
-        <dd>
-<span class="refAuthor">Schinazi, D.</span> and <span class="refAuthor">L. Pardue</span>, <span class="refTitle">"HTTP Datagrams and the Capsule Protocol"</span>, <span class="seriesInfo">RFC 9297</span>, <span class="seriesInfo">DOI 10.17487/RFC9297</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9297">https://www.rfc-editor.org/rfc/rfc9297</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC9298">[RFC9298]</dt>
       <dd>
-<span class="refAuthor">Schinazi, D.</span>, <span class="refTitle">"Proxying UDP in HTTP"</span>, <span class="seriesInfo">RFC 9298</span>, <span class="seriesInfo">DOI 10.17487/RFC9298</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9298">https://www.rfc-editor.org/rfc/rfc9298</a>&gt;</span>. </dd>
+<span class="refAuthor">Schinazi, D.</span> and <span class="refAuthor">L. Pardue</span>, <span class="refTitle">"HTTP Datagrams and the Capsule Protocol"</span>, <span class="seriesInfo">RFC 9297</span>, <span class="seriesInfo">DOI 10.17487/RFC9297</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9297">https://www.rfc-editor.org/rfc/rfc9297</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -2192,10 +2192,6 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 <dt id="CONNECT-IP">[CONNECT-IP]</dt>
         <dd>
 <span class="refAuthor">Pauly, T., Ed.</span>, <span class="refAuthor">Schinazi, D.</span>, <span class="refAuthor">Chernyakhovsky, A.</span>, <span class="refAuthor">Kühlewind, M.</span>, and <span class="refAuthor">M. Westerlund</span>, <span class="refTitle">"Proxying IP in HTTP"</span>, <span class="seriesInfo">RFC 9484</span>, <span class="seriesInfo">DOI 10.17487/RFC9484</span>, <time datetime="2023-10" class="refDate">October 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9484">https://www.rfc-editor.org/rfc/rfc9484</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="CONNECT-UDP">[CONNECT-UDP]</dt>
-        <dd>
-<span class="refAuthor">Schinazi, D.</span>, <span class="refTitle">"Proxying UDP in HTTP"</span>, <span class="seriesInfo">RFC 9298</span>, <span class="seriesInfo">DOI 10.17487/RFC9298</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9298">https://www.rfc-editor.org/rfc/rfc9298</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.schinazi-httpbis-wrap-up">[I-D.schinazi-httpbis-wrap-up]</dt>
         <dd>
