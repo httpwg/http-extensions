@@ -65,7 +65,22 @@ This specification describes an alternative mechanism for proxying TCP in HTTP. 
 
 A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "target_port".  This URI Template and its variable values MUST meet all the same requirements as for UDP proxying ({{!CONNECT-UDP, Section 2}}), and are subject to the same validation rules.  The client MUST substitute the destination host and port number into this template to produce the request URI.  The derived URI serves as the destination of a Capsule Protocol connection using the Upgrade Token "connect-tcp" (see registration in {{new-upgrade-token}}).
 
-When using "connect-tcp", TCP payload data is sent in the payload of new Capsule Types named DATA and FINAL_DATA (see registrations in {{data-capsule}}).  The ordered concatenation of these capsule payloads represents the TCP payload data.  A FINAL_DATA capsule additionally indicates that the sender has closed this stream, semantically equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint MUST NOT send any more DATA or FINAL_DATA capsules on this data stream. (See {{closing-connections}} for related requirements.)
+When using "connect-tcp", TCP payload data is sent in the payload of new Capsule Types named DATA and FINAL_DATA (see {{fig-capsules}} and registrations in {{data-capsule}}).  The ordered concatenation of these capsule payloads, which MAY be empty, represents the TCP payload data.  A FINAL_DATA capsule additionally indicates that the sender has closed this stream, semantically equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint MUST NOT send any more DATA or FINAL_DATA capsules on this data stream. (See {{closing-connections}} for related requirements.)
+
+~~~
+DATA Capsule {
+  Type (i) = $TBD1,
+  Length (i),  # MAY be zero
+  TCP Payload (..),
+}
+
+FINAL_DATA Capsule {
+  Type (i) = $TBD2,
+  Length (i),  # MAY be zero
+  TCP Payload (..),
+}
+~~~
+{: #fig-capsules title="DATA and FINAL_DATA Capsule Formats"}
 
 An intermediary MAY merge and split successive DATA and FINAL_DATA capsules, subject to the following requirements:
 
@@ -344,10 +359,10 @@ IF APPROVED, IANA is requested to add the following entry to the "MASQUE URI Suf
 
 IF APPROVED, IANA is requested to add the following entry to the "HTTP Capsule Types" registry:
 
-| ----- | ------------ | --------- | ---------------------------------- | ----------------- | ------- |
-| Value | Capsule Type | Status    | Reference                          | Change Controller | Contact |
-| (TBD) | DATA         | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
-| (TBD) | FINAL_DATA   | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
+| ------ | ------------ | --------- | ---------------------------------- | ----------------- | ------- |
+| Value  | Capsule Type | Status    | Reference                          | Change Controller | Contact |
+| (TBD1) | DATA         | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
+| (TBD2) | FINAL_DATA   | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
 
 ### Interop testing
 {:removeInRFC="true"}
