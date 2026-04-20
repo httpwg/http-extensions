@@ -272,7 +272,11 @@ The URI template can also be structured to generate high-entropy Capability URLs
 
 ## Clients
 
-Clients that support both classic HTTP CONNECT proxies and template-driven TCP proxies MAY accept both types via a single configuration string.  If the configuration string can be parsed as a URI Template containing the required variables, it is a template-driven TCP proxy.  Otherwise, it is presumed to represent a classic HTTP CONNECT proxy.
+Clients that support both classic HTTP CONNECT proxies and template-driven TCP proxies MAY accept both types via a single configuration string:
+
+* If the configuration string is a valid URI Template containing the required variables, it represents a template-driven TCP proxy.
+* Otherwise the client attempts to parse it as representing a classic HTTP CONNECT proxy.
+* Additionally, both types of proxies can be discovered using proxy provisioning domains {{?I-D.ietf-intarea-proxy-config}} if the input is a URI or represents a proxy of the other type.
 
 In some cases, it is valuable to allow "connect-tcp" clients to reach "connect-tcp"-only proxies when using a legacy configuration method that cannot convey a URI Template.  To support this arrangement, clients SHOULD treat certain errors during classic HTTP CONNECT as indications that the proxy might only support "connect-tcp":
 
