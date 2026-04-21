@@ -269,8 +269,9 @@ the certificate chain and extensions used to create the message.
 A SERVER_CERTIFICATE frame in HTTP/2 (type=0xTBD) carrries a TLS Exported authenticator
 that clients can use to authenticate secondary origins from a sending server.
 
-The SERVER_CERTIFICATE frame MUST be sent on stream 0. A SERVER_CERTIFICATE frame received on
-any other stream MUST not be used for server authentication.
+The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
+MUST be sent on stream 0. An endpoint MUST treat a SERVER_CERTIFICATE frame with a
+stream identifier other than 0x00 as a connection error.
 
 ~~~~~~~~~~ ascii-art
 SERVER_CERTIFICATE Frame {
@@ -296,16 +297,13 @@ The authenticator field is a portion of the opaque data returned from the TLS
 connection exported authenticator authenticate API. See {{exp-auth}} for more
 details on the input to this API.
 
-The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. An
-endpoint MUST treat a SERVER_CERTIFICATE frame with a stream identifier other than
-0x00 as a connection error.
-
 ## HTTP/3 SERVER_CERTIFICATE frame {#http3-cert}
 A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carrries a TLS Exported authenticator
 that clients can use to authenticate secondary origins from a sending server.
 
-The SERVER_CERTIFICATE frame MUST be sent on the control stream. A SERVER_CERTIFICATE frame
-received on any other stream MUST not be used for server authentication.
+The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
+MUST be sent on the control stream. An endpoint MUST treat a SERVER_CERTIFICATE
+frame received on any stream other than the control stream as a connection error.
 
 ~~~~~~~~~~ ascii-art
 SERVER_CERTIFICATE Frame {
@@ -321,10 +319,6 @@ The Type and Length fields are described in {{Section 7.1 of H3}}.
 The authenticator field is a portion of the opaque data returned from the TLS
 connection exported authenticator authenticate API. See {{exp-auth}} for more
 details on the input to this API.
-
-The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. An
-endpoint MUST treat a SERVER_CERTIFICATE frame received on any stream other than the
-control stream as a connection error.
 
 ## Exported Authenticator Characteristics {#exp-auth}
 
