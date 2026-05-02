@@ -321,7 +321,7 @@ The `Upload-Complete` request header field conveys the completeness state. `Uplo
 
 An upload is marked as completed if a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) included the `Upload-Complete` header field with a true value and the request content was fully processed.
 
-The `Upload-Complete` response header field distinguishes the response from the initial targeted resource or the temporary upload resource. The value of true means the response is from the the initial targeted resource, and the value of false means the response is from the temporary upload resource. It is worth noting that `Upload-Complete` can be true even if the upload is not complete if the targeted resource decides to generate an early response.
+The `Upload-Complete` response header field distinguishes the response from the initial targeted resource or the temporary upload resource. The value of true means the response is from the initial targeted resource, and the value of false means the response is from the temporary upload resource. It is worth noting that `Upload-Complete` can be true even when the full representation data was not received if the targeted resource decides to generate an early response.
 
 ### Length {#upload-length}
 
