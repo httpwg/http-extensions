@@ -204,7 +204,7 @@ In some cases, clients might prefer to upload a representation as a series of pa
 
 This example shows how the client, communicating with a resource known to support resumable upload, can upload parts of a representation incrementally.
 
-1) The client is aware that the targetted resource supports resumable uploads and therefore starts the upload with the `Upload-Complete` field value set to false and the first part of the representation.
+1) The client is aware that the targeted resource supports resumable uploads and therefore starts the upload with the `Upload-Complete` field value set to false and the first part of the representation.
 
 ~~~ aasvg
 Client                                       Server
@@ -317,9 +317,11 @@ The `Upload-Offset` header field in responses serves as an acknowledgement of th
 
 An upload is incomplete until it is explicitly marked as completed by the client. After this point, no representation data can be appended anymore.
 
-The `Upload-Complete` request and response header field conveys the completeness state. `Upload-Complete` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) and indicates whether the upload is complete or not. Other values MUST cause the entire header field to be ignored.
+The `Upload-Complete` request header field conveys the completeness state. `Upload-Complete` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) and indicates whether the upload is complete or not. Other values MUST cause the entire header field to be ignored.
 
 An upload is marked as completed if a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) included the `Upload-Complete` header field with a true value and the request content was fully processed.
+
+The `Upload-Complete` response header field distinguishes the response from the initial targeted resource or the temporary upload resource. The value of true means the response is from the initial targeted resource, and the value of false means the response is from the temporary upload resource. It is worth noting that `Upload-Complete` can be true even when the full representation data was not received if the targeted resource decides to generate an early response.
 
 ### Length {#upload-length}
 
@@ -485,20 +487,21 @@ Location: https://example.com/upload/0587fa44b
 HTTP/1.1 500 Internal Server Error
 ~~~
 
-D) The following example shows an upload creation being rejected by the server because uploads to the targetted resource are not allowed. The client cannot continue the upload.
+D) The following example shows an upload creation being rejected by the server because uploads to the targeted resource are not allowed. The Upload-Complete header in the response is set to true since the server is uninterested in receiving the full representation and the upload is complete in its perspective. The client cannot continue the upload.
 
 ~~~ http-message
 POST /upload-not-allowed HTTP/1.1
 Host: example.com
-Upload-Complete: ?1
-Content-Length: 123456789
+Upload-Complete: ?0
+Content-Length: 23456789
 Upload-Length: 123456789
 
-[content (123456789 bytes)]
+[content (23456789 bytes)]
 ~~~
 
 ~~~ http-message
 HTTP/1.1 405 Method Not Allowed
+Upload-Complete: ?1
 ~~~
 
 ## Offset Retrieval {#offset-retrieving}
@@ -523,7 +526,7 @@ If the client received a response with a
 A successful response to a `HEAD` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset}}),
-- MUST include the completeness state in the `Upload-Complete` header field ({{upload-complete}}),
+- MUST include the `Upload-Complete` header field ({{upload-complete}}),
 - MUST include the length in the `Upload-Length` header field, unless the client has not supplied one, by providing the corresponding headers as described in ({{upload-length}}),
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
@@ -1000,6 +1003,7 @@ Reference:
 * Clear up different responsibilities of server and upload resource.
 * Relax recommendations on client handling greater offsets.
 * Clarify client behavior for 413 responses.
+* Redefine Upload-Complete on the server side
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
