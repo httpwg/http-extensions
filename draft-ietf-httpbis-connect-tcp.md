@@ -268,7 +268,10 @@ Proxies implementing this specification SHOULD include a "Proxy-Status" response
 
 For server operators, template-driven TCP proxies are particularly valuable in situations where virtual-hosting is needed, or where multiple proxies must share an origin.  For example, the proxy might benefit from sharing an HTTP gateway that provides DDoS defense, performs request sanitization, or enforces user authorization.
 
-The URI template can also be structured to generate high-entropy Capability URLs {{CAPABILITY}}, so that only authorized users can discover the proxy service.
+Template-driven TCP proxies can also be made invisible to probes from unauthorized clients:
+
+* The URI template can include a high-entropy path, similar to Capability URLs {{CAPABILITY}}.
+* The proxy can require HTTP Concealed Authentication {{?CONCEALED=RFC9729, Section 6.4}}.
 
 ## Clients
 
