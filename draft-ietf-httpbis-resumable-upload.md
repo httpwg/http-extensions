@@ -1000,6 +1000,7 @@ Reference:
 * Clear up different responsibilities of server and upload resource.
 * Relax recommendations on client handling greater offsets.
 * Clarify client behavior for 413 responses.
+* Remove Accept-Patch from OPTIONS responses. 
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
@@ -1009,6 +1010,7 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-09
 {:numbered="false"}
 
+* Requires Accept-Patch in OPTIONS.
 * Add security consideration regarding time-of-check to time-of-use.
 * Lift requirement on Upload-Complete for all final responses.
 * Relax requirements on limit changes.
