@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                           20 April 2026
-Expires: 22 October 2026
+Intended status: Standards Track                              5 May 2026
+Expires: 6 November 2026
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 October 2026.
+   This Internet-Draft will expire on 6 November 2026.
 
 Copyright Notice
 
@@ -502,24 +502,38 @@ Table of Contents
 
 5.2.  Clients
 
-   Clients that support both classic HTTP CONNECT proxies and template-
-   driven TCP proxies MAY accept both types via a single configuration
-   string:
+   Clients for this specification MAY accept various configuration
+   inputs, including:
 
-   *  If the configuration string is a valid URI Template containing the
-      required variables, it represents a template-driven TCP proxy.
+   *  A URI Template string, as described in Section 3.
 
-   *  Otherwise the client attempts to parse it as representing a
-      classic HTTP CONNECT proxy.
+   *  An IP address or hostname, with optional or required port and
+      scheme (as often used to describe classic HTTP CONNECT proxies).
+      A corresponding template-driven TCP proxy might be found in two
+      ways:
 
-   *  Additionally, both types of proxies can be discovered using proxy
-      provisioning domains [I-D.ietf-intarea-proxy-config] if the input
-      is a URI or represents a proxy of the other type.
+      -  At the default template for "connect-tcp" (Figure 8).
 
-   In some cases, it is valuable to allow "connect-tcp" clients to reach
-   "connect-tcp"-only proxies when using a legacy configuration method
-   that cannot convey a URI Template.  To support this arrangement,
-   clients SHOULD treat certain errors during classic HTTP CONNECT as
+      -  In the "proxy" dictionary of a provisioning domain resource at
+         the corresponding .well-known URI
+         ([I-D.ietf-intarea-proxy-config], Section 2).
+
+   *  The full URI, including path, of a provisioning domain resource
+      containing one or more "connect-tcp" proxy sub-dictionaries
+      ([I-D.ietf-intarea-proxy-config], Section 3).
+
+   https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
+                    /tcp/{target_host}/{target_port}/
+
+                   Figure 8: Registered default template
+
+   All of these input types MAY share a single input string, as they can
+   be disambiguated reliably by parsing and probing.  However, it may be
+   preferable to indicate the configuration input type explicitly, to
+   reduce probing delays while supporting clients with differing
+   capabilities.
+
+   Clients SHOULD treat certain errors during classic HTTP CONNECT as
    indications that the proxy might only support "connect-tcp":
 
    *  In HTTP/1.1: the response status code is "426 (Upgrade Required)",
@@ -533,15 +547,9 @@ Table of Contents
 
    If the client infers that classic HTTP CONNECT is not supported, it
    SHOULD retry the request using the registered default template for
-   "connect-tcp":
-
-   https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
-                    /tcp/{target_host}/{target_port}/
-
-                   Figure 8: Registered default template
-
-   If this request succeeds, the client SHOULD record a preference for
-   "connect-tcp" to avoid further retry delays.
+   "connect-tcp" (Figure 8).  If this request succeeds, the client
+   SHOULD record a preference for "connect-tcp" to avoid further retry
+   delays.
 
 6.  Security Considerations
 
