@@ -272,27 +272,29 @@ The URI template can also be structured to generate high-entropy Capability URLs
 
 ## Clients
 
-Clients that support both classic HTTP CONNECT proxies and template-driven TCP proxies MAY accept both types via a single configuration string:
+Clients for this specification MAY accept various configuration inputs, including:
 
-* If the configuration string is a valid URI Template containing the required variables, it represents a template-driven TCP proxy.
-* Otherwise the client attempts to parse it as representing a classic HTTP CONNECT proxy.
-* Additionally, both types of proxies can be discovered using proxy provisioning domains {{?I-D.ietf-intarea-proxy-config}} if the input is a URI or represents a proxy of the other type.
-
-In some cases, it is valuable to allow "connect-tcp" clients to reach "connect-tcp"-only proxies when using a legacy configuration method that cannot convey a URI Template.  To support this arrangement, clients SHOULD treat certain errors during classic HTTP CONNECT as indications that the proxy might only support "connect-tcp":
-
-* In HTTP/1.1: the response status code is "426 (Upgrade Required)", with an "Upgrade: connect-tcp" response header.
-* In any HTTP version: the response status code is "501 (Not Implemented)".
-  - Requires SETTINGS_ENABLE_CONNECT_PROTOCOL to have been negotiated in HTTP/2 or HTTP/3.
-
-If the client infers that classic HTTP CONNECT is not supported, it SHOULD retry the request using the registered default template for "connect-tcp":
+* A URI Template string, as described in {{specification}}.
+* An IP address or hostname, with optional or required port and scheme (as often used to describe classic HTTP CONNECT proxies).  A corresponding template-driven TCP proxy might be found in two ways:
+  - At the default template for "connect-tcp" ({{fig-default}}).
+  - In the "proxy" dictionary of a provisioning domain resource at the corresponding .well-known URI ({{?I-D.ietf-intarea-proxy-config, Section 2}}).
+* The full URI, including path, of a provisioning domain resource containing one or more "connect-tcp" proxy sub-dictionaries ({{?I-D.ietf-intarea-proxy-config, Section 3}}).
 
 ~~~
 https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
                  /tcp/{target_host}/{target_port}/
 ~~~
-{: title="Registered default template"}
+{: #fig-default title="Registered default template"}
 
-If this request succeeds, the client SHOULD record a preference for "connect-tcp" to avoid further retry delays.
+All of these input types MAY share a single input string, as they can be disambiguated reliably by parsing and probing.  However, it may be preferable to indicate the configuration input type explicitly, to reduce probing delays while supporting clients with differing capabilities.
+
+Clients SHOULD treat certain errors during classic HTTP CONNECT as indications that the proxy might only support "connect-tcp":
+
+* In HTTP/1.1: the response status code is "426 (Upgrade Required)", with an "Upgrade: connect-tcp" response header.
+* In any HTTP version: the response status code is "501 (Not Implemented)".
+  - Requires SETTINGS_ENABLE_CONNECT_PROTOCOL to have been negotiated in HTTP/2 or HTTP/3.
+
+If the client infers that classic HTTP CONNECT is not supported, it SHOULD retry the request using the registered default template for "connect-tcp" ({{fig-default}}).  If this request succeeds, the client SHOULD record a preference for "connect-tcp" to avoid further retry delays.
 
 # Security Considerations
 
