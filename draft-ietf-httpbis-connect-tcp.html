@@ -1835,8 +1835,19 @@ see <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>], <a href="https://r
         <h3 id="name-conveying-metadata">
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-conveying-metadata" class="section-name selfRef">Conveying metadata</a>
         </h3>
-<p id="section-4.2-1">This specification supports the "Expect: 100-continue" request header (<span>[<a href="#RFC9110" class="cite xref">RFC9110</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-10.1.1" class="relref">Section 10.1.1</a></span>) in any HTTP version.  The "100 (Continue)" status code confirms receipt of a request at the proxy without waiting for the proxy-destination TCP handshake to succeed or fail.  This might be particularly helpful when the destination host is not responding, as TCP handshakes can hang for several minutes before failing.  Clients <span class="bcp14">MAY</span> send "Expect: 100-continue", and proxies <span class="bcp14">MUST</span> respect it by returning "100 (Continue)" if the request is not immediately rejected.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2-2">Proxies implementing this specification <span class="bcp14">SHOULD</span> include a "Proxy-Status" response header field <span>[<a href="#RFC9209" class="cite xref">RFC9209</a>]</span> in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  Clients and proxies <span class="bcp14">MUST NOT</span> send trailer fields on "connect-tcp" streams.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-1">This specification supports the "Expect: 100-continue" request header (<span>[<a href="#RFC9110" class="cite xref">RFC9110</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-10.1.1" class="relref">Section 10.1.1</a></span>) in any HTTP version.  The "100 (Continue)" status code confirms receipt of a request at the proxy without waiting for the proxy-destination TCP handshake to succeed or fail.  Clients <span class="bcp14">MAY</span> send "Expect: 100-continue", and proxies <span class="bcp14">MUST</span> respect it by returning "100 (Continue)" if the request is not immediately rejected.  This allows for a few useful improvements:<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.2-2.1">
+            <p id="section-4.2-2.1.1">Clients can provide a clearer status indication while waiting for the destination host to respond.  (TCP handshakes can hang for several minutes before failing.)<a href="#section-4.2-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.2-2.2">
+            <p id="section-4.2-2.2.1">Clients can apply separate timeouts to the proxying request and connection establishment.<a href="#section-4.2-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.2-2.3">
+            <p id="section-4.2-2.3.1">In HTTP/2 and HTTP/3, clients have the option to delay some or all of the optimistic payload data until after confirming that the request is permissible.  This strategy reduces wasted effort when the request is rejected.<a href="#section-4.2-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-4.2-3">Proxies implementing this specification <span class="bcp14">SHOULD</span> include a "Proxy-Status" response header field <span>[<a href="#RFC9209" class="cite xref">RFC9209</a>]</span> in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  Clients and proxies <span class="bcp14">MUST NOT</span> send trailer fields on "connect-tcp" streams.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
