@@ -1879,24 +1879,29 @@ see <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>], <a href="https://r
         <h3 id="name-clients">
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-clients" class="section-name selfRef">Clients</a>
         </h3>
-<p id="section-5.2-1">Clients that support both classic HTTP CONNECT proxies and template-driven TCP proxies <span class="bcp14">MAY</span> accept both types via a single configuration string.  If the configuration string can be parsed as a URI Template containing the required variables, it is a template-driven TCP proxy.  Otherwise, it is presumed to represent a classic HTTP CONNECT proxy.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2-2">In some cases, it is valuable to allow "connect-tcp" clients to reach "connect-tcp"-only proxies when using a legacy configuration method that cannot convey a URI Template.  To support this arrangement, clients <span class="bcp14">SHOULD</span> treat certain errors during classic HTTP CONNECT as indications that the proxy might only support "connect-tcp":<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2-1">Clients for this specification <span class="bcp14">MAY</span> accept various configuration inputs, including:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.2-3.1">
-            <p id="section-5.2-3.1.1">In HTTP/1.1: the response status code is "426 (Upgrade Required)", with an "Upgrade: connect-tcp" response header.<a href="#section-5.2-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.2-2.1">
+            <p id="section-5.2-2.1.1">A URI Template string, as described in <a href="#specification" class="auto internal xref">Section 3</a>.<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.2-3.2">
-            <p id="section-5.2-3.2.1">In any HTTP version: the response status code is "501 (Not Implemented)".<a href="#section-5.2-3.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.2-2.2">
+            <p id="section-5.2-2.2.1">An IP address or hostname, with optional or required port and scheme (as often used to describe classic HTTP CONNECT proxies).  A corresponding template-driven TCP proxy might be found in two ways:<a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.2-3.2.2.1">
-                <p id="section-5.2-3.2.2.1.1">Requires SETTINGS_ENABLE_CONNECT_PROTOCOL to have been negotiated in HTTP/2 or HTTP/3.<a href="#section-5.2-3.2.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.2-2.2.2.1">
+                <p id="section-5.2-2.2.2.1.1">At the default template for "connect-tcp" (<a href="#fig-default" class="auto internal xref">Figure 8</a>).<a href="#section-5.2-2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.2-2.2.2.2">
+                <p id="section-5.2-2.2.2.2.1">In the "proxy" dictionary of a provisioning domain resource at the corresponding .well-known URI (<span>[<a href="#I-D.ietf-intarea-proxy-config" class="cite xref">I-D.ietf-intarea-proxy-config</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-intarea-proxy-config-13#section-2" class="relref">Section 2</a></span>).<a href="#section-5.2-2.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
+          <li class="normal" id="section-5.2-2.3">
+            <p id="section-5.2-2.3.1">The full URI, including path, of a provisioning domain resource containing one or more "connect-tcp" proxy sub-dictionaries (<span>[<a href="#I-D.ietf-intarea-proxy-config" class="cite xref">I-D.ietf-intarea-proxy-config</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-intarea-proxy-config-13#section-3" class="relref">Section 3</a></span>).<a href="#section-5.2-2.3.1" class="pilcrow">¶</a></p>
+</li>
         </ul>
-<p id="section-5.2-4">If the client infers that classic HTTP CONNECT is not supported, it <span class="bcp14">SHOULD</span> retry the request using the registered default template for "connect-tcp":<a href="#section-5.2-4" class="pilcrow">¶</a></p>
-<span id="name-registered-default-template"></span><figure id="figure-8">
-          <div class="alignLeft art-text artwork" id="section-5.2-5.1">
+<span id="name-registered-default-template"></span><div id="fig-default">
+<figure id="figure-8">
+          <div class="alignLeft art-text artwork" id="section-5.2-3.1">
 <pre>
 https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
                  /tcp/{target_host}/{target_port}/
@@ -1905,7 +1910,23 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 <figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
 <a href="#name-registered-default-template" class="selfRef">Registered default template</a>
           </figcaption></figure>
-<p id="section-5.2-6">If this request succeeds, the client <span class="bcp14">SHOULD</span> record a preference for "connect-tcp" to avoid further retry delays.<a href="#section-5.2-6" class="pilcrow">¶</a></p>
+</div>
+<p id="section-5.2-4">All of these input types <span class="bcp14">MAY</span> share a single input string, as they can be disambiguated reliably by parsing and probing.  However, it may be preferable to indicate the configuration input type explicitly, to reduce probing delays while supporting clients with differing capabilities.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
+<p id="section-5.2-5">Clients <span class="bcp14">SHOULD</span> treat certain errors during classic HTTP CONNECT as indications that the proxy might only support "connect-tcp":<a href="#section-5.2-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-6.1">
+            <p id="section-5.2-6.1.1">In HTTP/1.1: the response status code is "426 (Upgrade Required)", with an "Upgrade: connect-tcp" response header.<a href="#section-5.2-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-6.2">
+            <p id="section-5.2-6.2.1">In any HTTP version: the response status code is "501 (Not Implemented)".<a href="#section-5.2-6.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-6.2.2.1">
+                <p id="section-5.2-6.2.2.1.1">Requires SETTINGS_ENABLE_CONNECT_PROTOCOL to have been negotiated in HTTP/2 or HTTP/3.<a href="#section-5.2-6.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+        </ul>
+<p id="section-5.2-7">If the client infers that classic HTTP CONNECT is not supported, it <span class="bcp14">SHOULD</span> retry the request using the registered default template for "connect-tcp" (<a href="#fig-default" class="auto internal xref">Figure 8</a>).  If this request succeeds, the client <span class="bcp14">SHOULD</span> record a preference for "connect-tcp" to avoid further retry delays.<a href="#section-5.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2240,6 +2261,10 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 <dt id="I-D.ietf-httpbis-wrap-up">[I-D.ietf-httpbis-wrap-up]</dt>
         <dd>
 <span class="refAuthor">Schinazi, D.</span> and <span class="refAuthor">L. Pardue</span>, <span class="refTitle">"The HTTP Wrap Up Capsule"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-wrap-up-01</span>, <time datetime="2025-07-07" class="refDate">7 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-wrap-up-01">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-wrap-up-01</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-intarea-proxy-config">[I-D.ietf-intarea-proxy-config]</dt>
+        <dd>
+<span class="refAuthor">Pauly, T.</span>, <span class="refAuthor">Damjanovic, D.</span>, and <span class="refAuthor">Y. Rosomakho</span>, <span class="refTitle">"Communicating Proxy Configurations in Provisioning Domains"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-intarea-proxy-config-13</span>, <time datetime="2026-04-14" class="refDate">14 April 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-intarea-proxy-config-13">https://datatracker.ietf.org/doc/html/draft-ietf-intarea-proxy-config-13</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6265">[RFC6265]</dt>
         <dd>
