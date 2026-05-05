@@ -496,9 +496,14 @@ Table of Contents
    benefit from sharing an HTTP gateway that provides DDoS defense,
    performs request sanitization, or enforces user authorization.
 
-   The URI template can also be structured to generate high-entropy
-   Capability URLs [CAPABILITY], so that only authorized users can
-   discover the proxy service.
+   Template-driven TCP proxies can also be made invisible to probes from
+   unauthorized clients:
+
+   *  The URI template can include a high-entropy path, similar to
+      Capability URLs [CAPABILITY].
+
+   *  The proxy can require HTTP Concealed Authentication [CONCEALED],
+      Section 6.4.
 
 5.2.  Clients
 
@@ -791,6 +796,12 @@ Table of Contents
    [CLEAR-SITE-DATA]
               "Clear Site Data", November 2017,
               <https://www.w3.org/TR/clear-site-data/>.
+
+   [CONCEALED]
+              Schinazi, D., Oliver, D., and J. Hoyland, "The Concealed
+              HTTP Authentication Scheme", RFC 9729,
+              DOI 10.17487/RFC9729, February 2025,
+              <https://www.rfc-editor.org/rfc/rfc9729>.
 
    [CONNECT-IP]
               Pauly, T., Ed., Schinazi, D., Chernyakhovsky, A.,

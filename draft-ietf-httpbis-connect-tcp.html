@@ -1852,7 +1852,15 @@ see <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>], <a href="https://r
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-servers" class="section-name selfRef">Servers</a>
         </h3>
 <p id="section-5.1-1">For server operators, template-driven TCP proxies are particularly valuable in situations where virtual-hosting is needed, or where multiple proxies must share an origin.  For example, the proxy might benefit from sharing an HTTP gateway that provides DDoS defense, performs request sanitization, or enforces user authorization.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.1-2">The URI template can also be structured to generate high-entropy Capability URLs <span>[<a href="#CAPABILITY" class="cite xref">CAPABILITY</a>]</span>, so that only authorized users can discover the proxy service.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.1-2">Template-driven TCP proxies can also be made invisible to probes from unauthorized clients:<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-3.1">
+            <p id="section-5.1-3.1.1">The URI template can include a high-entropy path, similar to Capability URLs <span>[<a href="#CAPABILITY" class="cite xref">CAPABILITY</a>]</span>.<a href="#section-5.1-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-3.2">
+            <p id="section-5.1-3.2.1">The proxy can require HTTP Concealed Authentication <span>[<a href="#CONCEALED" class="cite xref">CONCEALED</a>], <a href="https://rfc-editor.org/rfc/rfc9729#section-6.4" class="relref">Section 6.4</a></span>.<a href="#section-5.1-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 </section>
 </div>
 <div id="clients">
@@ -2209,6 +2217,10 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 <dt id="CLEAR-SITE-DATA">[CLEAR-SITE-DATA]</dt>
         <dd>
 <span class="refTitle">"Clear Site Data"</span>, <time datetime="2017-11" class="refDate">November 2017</time>, <span>&lt;<a href="https://www.w3.org/TR/clear-site-data/">https://www.w3.org/TR/clear-site-data/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="CONCEALED">[CONCEALED]</dt>
+        <dd>
+<span class="refAuthor">Schinazi, D.</span>, <span class="refAuthor">Oliver, D.</span>, and <span class="refAuthor">J. Hoyland</span>, <span class="refTitle">"The Concealed HTTP Authentication Scheme"</span>, <span class="seriesInfo">RFC 9729</span>, <span class="seriesInfo">DOI 10.17487/RFC9729</span>, <time datetime="2025-02" class="refDate">February 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9729">https://www.rfc-editor.org/rfc/rfc9729</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="CONNECT-IP">[CONNECT-IP]</dt>
         <dd>
