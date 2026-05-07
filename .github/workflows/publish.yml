@@ -17,7 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: "Checkout"
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
+      with:
+        # Needed for tracing file history for replacement status
+        fetch-depth: 0
+        fetch-tags: true
 
     # See https://github.com/actions/checkout/issues/290
     - name: "Get Tag Annotations"
@@ -28,7 +32,7 @@ jobs:
       run: date -u "+date=%FT%T" >>"$GITHUB_OUTPUT"
 
     - name: "Caching"
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           .refcache
@@ -40,8 +44,10 @@ jobs:
         restore-keys: i-d-
 
     - name: "Build Drafts"
+      id: build
       uses: martinthomson/i-d-template@v1
       with:
+        make: releases
         token: ${{ github.token }}
 
     - name: "Upload to Datatracker"
@@ -50,8 +56,11 @@ jobs:
         make: upload
       env:
         UPLOAD_EMAIL: ${{ inputs.email }}
+        GITHUB_STEP: upload
 
     - name: "Archive Submitted Drafts"
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
+      if: always() && steps.build.outcome == 'success'
       with:
+        name: published
         path: "versioned/draft-*-[0-9][0-9].*"
