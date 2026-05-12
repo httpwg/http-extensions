@@ -1052,7 +1052,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Denicola, et al.</td>
-<td class="center">Expires 6 November 2026</td>
+<td class="center">Expires 13 November 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-no-vary-search-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-05-05" class="published">5 May 2026</time>
+<time datetime="2026-05-12" class="published">12 May 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-11-06">6 November 2026</time></dd>
+<dd class="expires"><time datetime="2026-11-13">13 November 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1129,7 +1129,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 13 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1702,10 +1702,10 @@ In this case, even URL pairs that might appear the same after running the <a hre
               <p id="section-6-2.8.2.1.1">Let <em>keyLessThan</em> be an algorithm taking as inputs two pairs (<em>keyA</em>, <em>valueA</em>) and (<em>keyB</em>, <em>valueB</em>), which returns whether <em>keyA</em> is <a href="https://infra.spec.whatwg.org/#code-unit-less-than">code unit less than</a> <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span> <em>keyB</em>.<a href="#section-6-2.8.2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-6-2.8.2.2">
-              <p id="section-6-2.8.2.2.1">Set <em>searchParamsA</em> to the result of sorting <em>searchParamsA</em> in ascending order with <em>keyLessThan</em>.<a href="#section-6-2.8.2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-6-2.8.2.2.1">Set <em>searchParamsA</em> to the result of <a href="https://infra.spec.whatwg.org/#list-sort-in-ascending-order">sorting</a> <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span> <em>searchParamsA</em> in ascending order with <em>keyLessThan</em>.<a href="#section-6-2.8.2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-6-2.8.2.3">
-              <p id="section-6-2.8.2.3.1">Set <em>searchParamsB</em> to the result of sorting <em>searchParamsB</em> in ascending order with <em>keyLessThan</em>.<a href="#section-6-2.8.2.3.1" class="pilcrow">¶</a></p>
+              <p id="section-6-2.8.2.3.1">Set <em>searchParamsB</em> to the result of <a href="https://infra.spec.whatwg.org/#list-sort-in-ascending-order">sorting</a> <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span> <em>searchParamsB</em> in ascending order with <em>keyLessThan</em>.<a href="#section-6-2.8.2.3.1" class="pilcrow">¶</a></p>
 </li>
           </ol>
 </li>
@@ -1868,7 +1868,7 @@ In this case, even URL pairs that might appear the same after running the <a hre
             <p id="section-7-7.3.3.1">Let lastNVS be mostRecentNVS[targetPath]. If it does not exist, return null.<a href="#section-7-7.3.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-7-7.3.4">
-            <p id="section-7-7.3.4.1">Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order is to be be ignored).<a href="#section-7-7.3.4.1" class="pilcrow">¶</a></p>
+            <p id="section-7-7.3.4.1">Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and <a href="https://infra.spec.whatwg.org/#list-sort-in-ascending-order">sorting</a> <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span> parameters in ascending order by key, if key order is to be ignored).<a href="#section-7-7.3.4.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-7-7.3.5">
             <p id="section-7-7.3.5.1">Let nvsMatch be cache[simplifiedURL]. If it does not exist, return null. (It is assumed that this was written when storing in the cache, in addition to the exact URL.)<a href="#section-7-7.3.5.1" class="pilcrow">¶</a></p>

@@ -5,8 +5,8 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                            N. Jaju, Ed.
-Expires: 6 November 2026                                      Google LLC
-                                                              5 May 2026
+Expires: 13 November 2026                                     Google LLC
+                                                             12 May 2026
 
 
                The No-Vary-Search HTTP Caching Extension
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 November 2026.
+   This Internet-Draft will expire on 13 November 2026.
 
 Copyright Notice
 
@@ -484,11 +484,15 @@ Table of Contents
             (https://infra.spec.whatwg.org/#code-unit-less-than)
             [WHATWG-INFRA] _keyB_.
 
-        2.  Set _searchParamsA_ to the result of sorting _searchParamsA_
-            in ascending order with _keyLessThan_.
+        2.  Set _searchParamsA_ to the result of sorting
+            (https://infra.spec.whatwg.org/#list-sort-in-ascending-
+            order) [WHATWG-INFRA] _searchParamsA_ in ascending order
+            with _keyLessThan_.
 
-        3.  Set _searchParamsB_ to the result of sorting _searchParamsB_
-            in ascending order with _keyLessThan_.
+        3.  Set _searchParamsB_ to the result of sorting
+            (https://infra.spec.whatwg.org/#list-sort-in-ascending-
+            order) [WHATWG-INFRA] _searchParamsB_ in ascending order
+            with _keyLessThan_.
 
    9.   If _searchParamsA_'s size is not equal to _searchParamsB_'s
         size, then return false.
@@ -597,9 +601,10 @@ Table of Contents
       |  
       |     4.  Let simplifiedURL be the result of simplifying
       |         presentedTargetURI according to lastNVS (by removing
-      |         query parameters which are not significant, and stable
-      |         sorting parameters by key, if key order is to be be
-      |         ignored).
+      |         query parameters which are not significant, and sorting
+      |         (https://infra.spec.whatwg.org/#list-sort-in-ascending-
+      |         order) [WHATWG-INFRA] parameters in ascending order by
+      |         key, if key order is to be ignored).
       |  
       |     5.  Let nvsMatch be cache[simplifiedURL].  If it does not
       |         exist, return null.  (It is assumed that this was
