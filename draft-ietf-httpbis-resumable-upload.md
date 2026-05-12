@@ -365,7 +365,7 @@ Clients usually discover limits through the `Upload-Limit` header field when the
 
 * Although the values for `max-size` and `max-append-size` can increase without harm, they SHOULD NOT decrease as that can cause ongoing uploads to fail.
 * The value for `min-append-size` SHOULD NOT increase.
-* The value for `max-age` SHOULD NOT decrease enough to cause the upload resource's lifetime to end sooner.
+* Between subsequent responses, the end of the upload resource's lifetime as implied by `max-age` SHOULD NOT decrease.
 
 Receivers of `Upload-Limit` parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
 
