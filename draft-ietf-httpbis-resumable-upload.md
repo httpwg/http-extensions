@@ -363,7 +363,7 @@ The following key-value pairs are defined:
 
 Clients usually discover limits through the `Upload-Limit` header field when the upload resource is created ({{upload-creation}}). Throughout the lifetime of the upload resource, these limits SHOULD NOT change in a way that causes failures for clients adhering to the initially discovered limits. If the client discovers that it cannot continue the upload while adhering to the limits, it SHOULD stop the current request immediately and cancel the upload ({{upload-cancellation}}).
 
-* The values for `max-size` and `max-append-size` can increase without harm, they SHOULD NOT decrease as they can cause ongoing uploads to fail.
+* Although the values for `max-size` and `max-append-size` can increase without harm, they SHOULD NOT decrease as that can cause ongoing uploads to fail.
 * The value for `min-append-size` SHOULD NOT increase.
 * The value for `max-age` SHOULD NOT decrease enough to cause the upload resource's lifetime to end sooner.
 
