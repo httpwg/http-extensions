@@ -82,11 +82,15 @@ FINAL_DATA Capsule {
 ~~~
 {: #fig-capsules title="DATA and FINAL_DATA Capsule Formats"}
 
-The boundaries between DATA and FINAL_DATA capsules are not significant, and are not expected to match TCP segments, TLS records, HTTP DATA frames, QUIC STREAM frames, etc.  Recipients SHOULD begin forwarding payload from a DATA or FINAL_DATA capsule without waiting to receive the entire capsule.  An intermediary MAY merge and split successive DATA and FINAL_DATA capsules, subject to the following requirements:
+The boundaries between DATA and FINAL_DATA capsules are not significant, and are not expected to match TCP segments, TLS records, HTTP DATA frames, QUIC STREAM frames, etc.  Recipients SHOULD begin forwarding payload from a DATA or FINAL_DATA capsule without waiting to receive the entire capsule.
+
+An intermediary MAY merge and split successive DATA and FINAL_DATA capsules, subject to the following requirements:
 
 * There are no intervening capsules of other types.
 * The order of payload content is preserved.
 * The final emitted capsule uses the same capsule type (DATA or FINAL_DATA) as the final input capsule, and all others use the DATA capsule type.
+
+For example, an intermediary holding two successive DATA capsules in its transmission buffer could merge them, saving at least 2 bytes of encapsulation overhead when they are forwarded.
 
 This protocol can be extended by defining additional relevant Capsule Types.  According to the Capsule Protocol ({{?RFC9297, Section 3.2}}), new Capsule Types should be ignored by pre-existing proxies and intermediaries.  If a new Capsule Type cannot safely be ignored, the endpoints can confirm support using a new HTTP header field.
 
