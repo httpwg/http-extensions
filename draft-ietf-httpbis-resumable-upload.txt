@@ -648,27 +648,27 @@ Table of Contents
    or alternatively the complete HTTP message MUST be treated as
    malformed.
 
-   When responding to an OPTIONS request, if the resource that is the
-   target of the request supports the creation of a resumable upload
-   resource (Section 4.2), the server MUST include the Upload-Limit
-   header field with the corresponding limits in the response.  If a
-   server is configured such that all of its resources support the
-   creation of upload resources with identical limits, it SHOULD include
-   the Upload-Limit header field in response to an OPTIONS request for
-   the target * (if this target is supported).  If the server does not
-   apply any limits, it MUST use min-size=0 instead of an empty header
-   value.
+   When responding to an OPTIONS request without the Upload-Complete
+   header field, if the resource that is the target of the request
+   supports the creation of a resumable upload resource (Section 4.2),
+   the server MUST include the Upload-Limit header field with the
+   corresponding limits in the response.  If a server is configured such
+   that all of its resources support the creation of upload resources
+   with identical limits, it SHOULD include the Upload-Limit header
+   field in response to an OPTIONS request for the target * (if this
+   target is supported).  If the server does not apply any limits, it
+   MUST use min-size=0 instead of an empty header value.
 
-   A client can use an OPTIONS request to discover whether the resource
-   supports resumable uploads and to learn potential limits before
-   creating an upload resource.  To reduce the likelihood of failing
-   requests, the limits announced in an OPTIONS response SHOULD NOT be
-   less restrictive than the limits applied to an upload once the upload
-   resource has been created, unless the request to create an upload
-   resource included additional information that warrants different
-   limits.  For example, a server might announce a general maximum size
-   limit of 1GB, but reduce it to 100MB when the media type indicates an
-   image.
+   A client can use an OPTIONS request without the Upload-Complete
+   header field to discover whether the resource supports resumable
+   uploads and to learn potential limits before creating an upload
+   resource.  To reduce the likelihood of failing requests, the limits
+   announced in an OPTIONS response SHOULD NOT be less restrictive than
+   the limits applied to an upload once the upload resource has been
+   created, unless the request to create an upload resource included
+   additional information that warrants different limits.  For example,
+   a server might announce a general maximum size limit of 1GB, but
+   reduce it to 100MB when the media type indicates an image.
 
    Servers, including intermediaries, can (and often do) apply
    restrictions on the size of individual request message content.
