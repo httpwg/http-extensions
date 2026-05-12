@@ -293,6 +293,8 @@ A resumable upload is enabled through interaction with an upload resource. When 
 
 An upload resource is specific to the upload of one representation. For uploading multiple representations, multiple upload resources have to be used.
 
+The server can clean up an upload resource and make it inaccessible immediately after the upload is complete. However, keeping the upload resource available for a reasonable amount of time after completion allows the client to verify the state of the upload if it did not receive the last response acknowledging the completion.
+
 An upload resource SHOULD be unique. Reuse of a URI for a different upload resource SHOULD be avoided in order to reduce the chance of misdirected or corrupted upload resources, as well as the potential security issues described in {{security-considerations}}.
 
 ## State
@@ -511,7 +513,7 @@ The client MUST NOT perform offset retrieval while creation ({{upload-creation}}
 
 If the client received a response with a
 
-- `2xx (Successful)` status code, the client can continue appending representation data to it ({{upload-appending}}) if the upload is not complete yet.
+- `2xx (Successful)` status code, the client can continue appending representation data to it and/or mark the upload as complete ({{upload-appending}}).
 - `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry retrieving the offset from the new URI.
 - `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
 - `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY retry retrieving the offset.
@@ -578,9 +580,9 @@ The server might not process the entire patch document when the upload is interr
 
 If the `Upload-Offset` request header field value does not match the current offset ({{upload-offset}}), the server MUST reject the request with a `409 (Conflict)` status code. The response MUST include the correct offset in the `Upload-Offset` header field. The response can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" ({{mismatching-offset}}).
 
-Even if the upload is complete ({{upload-complete}}) in the server's perspective and the final response from the targeted resource has already been sent, the client might still perform an upload append {#upload-appending} after an offset retrieval {#offset-retrieving} due to the response being lost during transmission. The server can choose to replay the final response to the client if the request to append to the completed upload is valid.
-
 If the `Upload-Complete` request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully processed, the upload is marked as complete and the server SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had processed the entire representation in the initial request. However, the response MUST include the `Upload-Complete` header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the uploaded representation.
+
+Even if the upload is complete ({{upload-complete}}) in the server's perspective and the final response from the targeted resource has already been sent, the client might still perform an upload append {#upload-appending} after an offset retrieval {#offset-retrieving} due to the response being lost during transmission. The server can choose to replay the final response to the client if the request to append to the completed upload is valid.
 
 If the `Upload-Complete` request header field is set to false, the client intends to transfer the remaining representation data over multiple requests. If the request content was fully processed, the server acknowledges the appended data by sending a `2xx (Successful)` response with the `Upload-Complete` header field set to false.
 
