@@ -20,16 +20,17 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
     steps:
     - name: "Checkout"
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: "Setup"
       id: setup
       run: date -u "+date=%FT%T" >>"$GITHUB_OUTPUT"
 
     - name: "Caching"
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           .refcache
@@ -41,7 +42,25 @@ jobs:
         restore-keys: i-d-
 
     - name: "Build Drafts"
+      id: build
       uses: martinthomson/i-d-template@v1
+      with:
+        token: ${{ github.token }}
+
+    - name: "Fix Lints"
+      id: fix-lint
+      if: always() && steps.build.outcome == 'failure'
+      uses: martinthomson/i-d-template@v1
+      with:
+        make: fix-lint
+
+    - name: "Propose Linting Fixes"
+      if: >
+        always() &&
+        steps.fix-lint.outcome != 'skipped' &&
+        github.event.pull_request &&
+        github.event.pull_request.head.repo.full_name == github.repository
+      uses: parkerbxyz/suggest-changes@v3
       with:
         token: ${{ github.token }}
 
@@ -53,8 +72,9 @@ jobs:
         token: ${{ github.token }}
 
     - name: "Archive Built Drafts"
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
+        name: drafts
         path: |
           draft-*.html
           draft-*.txt

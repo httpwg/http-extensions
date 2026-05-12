@@ -22,9 +22,11 @@ jobs:
   build:
     name: "Update Files"
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - name: "Checkout"
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: "Update Generated Files"
       uses: martinthomson/i-d-template@v1
