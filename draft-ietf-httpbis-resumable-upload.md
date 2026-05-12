@@ -1003,9 +1003,9 @@ Reference:
 
 * Clear up different responsibilities of server and upload resource.
 * Relax recommendations on client handling greater offsets.
-* Clarify client behavior for 413 responses
+* Clarify client behavior for 413 responses.
 * Remove Accept-Patch from OPTIONS responses.
-* Allow upload creation requests with no content regardless of the `min-append-size` limit..
+* Allow upload creation requests with no content regardless of the `min-append-size` limit.
 * Allow `max-age` limit to decrease as expected.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
