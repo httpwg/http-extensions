@@ -352,9 +352,9 @@ Two [URLs](https://url.spec.whatwg.org/#concept-url) {{WHATWG-URL}} _urlA_ and _
 
     1. Let _keyLessThan_ be an algorithm taking as inputs two pairs (_keyA_, _valueA_) and (_keyB_, _valueB_), which returns whether _keyA_ is [code unit less than](https://infra.spec.whatwg.org/#code-unit-less-than) {{WHATWG-INFRA}} _keyB_.
 
-    1. Set _searchParamsA_ to the result of sorting _searchParamsA_ in ascending order with _keyLessThan_.
+    1. Set _searchParamsA_ to the result of [sorting](https://infra.spec.whatwg.org/#list-sort-in-ascending-order) {{WHATWG-INFRA}} _searchParamsA_ in ascending order with _keyLessThan_.
 
-    1. Set _searchParamsB_ to the result of sorting _searchParamsB_ in ascending order with _keyLessThan_.
+    1. Set _searchParamsB_ to the result of [sorting](https://infra.spec.whatwg.org/#list-sort-in-ascending-order) {{WHATWG-INFRA}} _searchParamsB_ in ascending order with _keyLessThan_.
 
 1. If _searchParamsA_'s size is not equal to _searchParamsB_'s size, then return false.
 
