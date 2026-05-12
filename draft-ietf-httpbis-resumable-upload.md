@@ -315,7 +315,7 @@ The `Upload-Offset` header field in responses serves as an acknowledgement of th
 
 ### Completeness {#upload-complete}
 
-An upload is incomplete until it is explicitly marked as completed by the client. After this point, no representation data can be appended anymore.
+An upload is incomplete until it is explicitly marked as completed by the client or the server. After this point, no representation data can be appended anymore.
 
 The `Upload-Complete` request header field conveys the completeness state. `Upload-Complete` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) and indicates whether the upload is complete or not. Other values MUST cause the entire header field to be ignored.
 
@@ -414,6 +414,8 @@ While the request content is being processed, the server MAY send multiple inter
 
 Where a response requires a `Location` header field to be included, all interim and final response messages for the same request MUST contain an identical `Location` value. However, final responses including the `Upload-Complete: ?1` header field are exempt from this requirement because they are the result of processing the transferred representation and the `Location` value does not necessarily represent the upload location. Where the `Location` value is expected to be identical across multiple messages, clients SHOULD verify this. If verification fails, clients SHOULD abort the current request and cancel the upload ({{upload-cancellation}}).
 
+The server SHOULD include the `Upload-Complete` ({{upload-complete}}) header field in the response to indicate whether it is the result of processing the uploaded representation.
+
 The server might not process the entire request content when the upload is interrupted, for example because of dropped connection or canceled request. In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
 
 ### Examples {#upload-creation-example}
@@ -441,6 +443,7 @@ Upload-Offset: 23456789
 
 HTTP/1.1 200 OK
 Location: https://example.com/upload/b530ce8ff
+Upload-Complete: ?1
 Upload-Limit: max-size=1234567890
 Content-Type: application/json
 
@@ -465,6 +468,7 @@ Location: https://example.com/upload/3fd4994ad
 
 HTTP/1.1 201 Created
 Location: https://example.com/upload/3fd4994ad
+Upload-Complete: ?0
 Upload-Limit: max-size=1234567890
 ~~~
 
@@ -526,7 +530,7 @@ If the client received a response with a
 A successful response to a `HEAD` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset}}),
-- MUST include the `Upload-Complete` header field ({{upload-complete}}),
+- MUST include the `Upload-Complete` header field ({{upload-complete}}) indicating whether a final response was produced from processing the uploaded representation,
 - MUST include the length in the `Upload-Length` header field, unless the client has not supplied one, by providing the corresponding headers as described in ({{upload-length}}),
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
@@ -612,6 +616,8 @@ If the `Upload-Complete` request header field is set to false, the client intend
 The server MUST record the length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete` header fields are included in the request. If the length is known, the server MUST prevent the offset from exceeding the upload length by rejecting the request once the offset exceeds the length, marking the upload resource invalid and rejecting any further interaction with it. It is not sufficient to rely on the `Content-Length` header field for enforcement because this header field might not be present.
 
 While the request content is being processed, the server SHOULD send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
+
+The server SHOULD include the `Upload-Complete` ({{upload-complete}}) header field in the response to indicate whether it is the result of processing the uploaded representation.
 
 ### Examples {#upload-appending-example}
 
