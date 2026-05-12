@@ -659,16 +659,16 @@ Table of Contents
    target is supported).  If the server does not apply any limits, it
    MUST use min-size=0 instead of an empty header value.
 
-   A client can use an OPTIONS request with the Upload-Complete header
-   field to discover whether the resource supports resumable uploads and
-   to learn potential limits before creating an upload resource.  To
-   reduce the likelihood of failing requests, the limits announced in an
-   OPTIONS response SHOULD NOT be less restrictive than the limits
-   applied to an upload once the upload resource has been created,
-   unless the request to create an upload resource included additional
-   information that warrants different limits.  For example, a server
-   might announce a general maximum size limit of 1GB, but reduce it to
-   100MB when the media type indicates an image.
+   A client can use an OPTIONS request without the Upload-Complete
+   header field to discover whether the resource supports resumable
+   uploads and to learn potential limits before creating an upload
+   resource.  To reduce the likelihood of failing requests, the limits
+   announced in an OPTIONS response SHOULD NOT be less restrictive than
+   the limits applied to an upload once the upload resource has been
+   created, unless the request to create an upload resource included
+   additional information that warrants different limits.  For example,
+   a server might announce a general maximum size limit of 1GB, but
+   reduce it to 100MB when the media type indicates an image.
 
    Servers, including intermediaries, can (and often do) apply
    restrictions on the size of individual request message content.
