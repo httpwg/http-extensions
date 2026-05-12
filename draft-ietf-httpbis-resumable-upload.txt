@@ -616,8 +616,9 @@ Table of Contents
       creation (Section 4.2) request.  The server might reject requests
       below this limit.  A client that is aware of this limit MUST NOT
       send smaller upload append or upload creation requests.  The value
-      is an Integer.  Requests completing the upload by including the
-      Upload-Complete: ?1 header field are exempt from this limit.
+      is an Integer.  This limit does not apply to upload creation
+      requests with no content, or to requests completing the upload by
+      including the Upload-Complete: ?1 header field.
 
    max-age:  Specifies the remaining lifetime of the upload resource in
       seconds counted from the generation of the response.  After the
@@ -1865,6 +1866,9 @@ Since draft-ietf-httpbis-resumable-upload-11
    *  Clarify client behavior for 413 responses.
 
    *  Remove Accept-Patch from OPTIONS responses.
+
+   *  Allow upload creation requests with no content regardless of the
+      min-append-size limit.
 
 Since draft-ietf-httpbis-resumable-upload-10
 
