@@ -317,11 +317,11 @@ The `Upload-Offset` header field in responses serves as an acknowledgement of th
 
 An upload is incomplete until it is explicitly marked as completed by the client or the server. After this point, no more representation data can be appended.
 
-The `Upload-Complete` request header field conveys the completeness state. `Upload-Complete` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) and indicates whether the upload is complete or not. Other values MUST cause the entire header field to be ignored.
+The `Upload-Complete` request and response header field conveys the completeness state. `Upload-Complete` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) and indicates whether the upload is complete or not. Other values MUST cause the entire header field to be ignored.
 
-An upload is marked as completed if a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) included the `Upload-Complete` header field with a true value and the request content was fully processed.
+An upload is marked as completed either when a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) included the `Upload-Complete` header field with a true value and the request content was fully processed, or when the server sends a response included the `Upload-Complete` header field with a true value, whichever happens first.
 
-The `Upload-Complete` response header field signals whether the response comes from the initial targeted resource. The value of true means that the semantics of the targeted resource apply, and the value of false means that the semantics of the resumable upload protocol apply. It is worth noting that `Upload-Complete` can be true even when the full representation data was not transmitted in the case that the server decides to generate an early response when processing the targeted resource. The client SHOULD NOT perform upload resumption to the upload resource after receiving a response with the `Upload-Complete` field value set to true.
+When used in a response, `Upload-Complete` signals whether the response comes from the initial targeted resource. The value of true means that the semantics of the targeted resource apply, and the value of false means that the semantics of the resumable upload protocol apply. It is worth noting that `Upload-Complete` can be true even when the full representation data was not transmitted in the case that the server decides to generate an early response when processing the targeted resource. The client SHOULD NOT perform upload resumption to the upload resource after receiving a response with the `Upload-Complete` field value set to true.
 
 ### Length {#upload-length}
 
