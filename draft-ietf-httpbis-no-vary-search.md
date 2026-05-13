@@ -352,9 +352,9 @@ Two [URLs](https://url.spec.whatwg.org/#concept-url) {{WHATWG-URL}} _urlA_ and _
 
     1. Let _keyLessThan_ be an algorithm taking as inputs two pairs (_keyA_, _valueA_) and (_keyB_, _valueB_), which returns whether _keyA_ is [code unit less than](https://infra.spec.whatwg.org/#code-unit-less-than) {{WHATWG-INFRA}} _keyB_.
 
-    1. Set _searchParamsA_ to the result of sorting _searchParamsA_ in ascending order with _keyLessThan_.
+    1. Set _searchParamsA_ to the result of [sorting](https://infra.spec.whatwg.org/#list-sort-in-ascending-order) {{WHATWG-INFRA}} _searchParamsA_ in ascending order with _keyLessThan_.
 
-    1. Set _searchParamsB_ to the result of sorting _searchParamsB_ in ascending order with _keyLessThan_.
+    1. Set _searchParamsB_ to the result of [sorting](https://infra.spec.whatwg.org/#list-sort-in-ascending-order) {{WHATWG-INFRA}} _searchParamsB_ in ascending order with _keyLessThan_.
 
 1. If _searchParamsA_'s size is not equal to _searchParamsB_'s size, then return false.
 
@@ -413,7 +413,7 @@ Cache implementations MAY fail to reuse a stored response whose target URI match
 > 1. Let exactMatch be cache\[presentedTargetURI\]. If it is a stored response that can be reused, return it.
 > 1. Let targetPath be presentedTargetURI, with query parameters removed.
 > 1. Let lastNVS be mostRecentNVS\[targetPath\]. If it does not exist, return null.
-> 1. Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and stable sorting parameters by key, if key order is to be be ignored).
+> 1. Let simplifiedURL be the result of simplifying presentedTargetURI according to lastNVS (by removing query parameters which are not significant, and [sorting](https://infra.spec.whatwg.org/#list-sort-in-ascending-order) {{WHATWG-INFRA}} parameters in ascending order by key, if key order is to be ignored).
 > 1. Let nvsMatch be cache\[simplifiedURL\]. If it does not exist, return null. (It is assumed that this was written when storing in the cache, in addition to the exact URL.)
 > 1. Let variationConfig be obtained ({{obtain-a-url-variation-config}}) from nvsMatch.
 > 1. If nvsMatch's target URI and presentedTargetURI are not equivalent modulo URL variation config ({{comparing}}) given variationConfig, then return null.

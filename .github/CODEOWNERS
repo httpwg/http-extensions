@@ -4,11 +4,13 @@ draft-ietf-httpbis-cache-groups.md mnot@mnot.net
 draft-ietf-httpbis-compression-dictionary.md pmeenan@google.com yoav.weiss@shopify.com
 draft-ietf-httpbis-connect-tcp.md ietf@bemasc.net
 draft-ietf-httpbis-incremental.md kazuhooku@gmail.com tpauly@apple.com mt@lowentropy.net
+draft-ietf-httpbis-layered-cookies.md annevk@annevk.nl johannhof@google.com
 draft-ietf-httpbis-no-vary-search.md d@domenic.me jbroman@chromium.org nidhijaju@chromium.org
 draft-ietf-httpbis-optimistic-upgrade.md ietf@bemasc.net
 draft-ietf-httpbis-resumable-upload.md marius@transloadit.com guoye_zhang@apple.com lucas@lucaspardue.com
 draft-ietf-httpbis-retrofit.md mnot@mnot.net
-draft-ietf-httpbis-rfc6265bis.md bingler@google.com mkwst@google.com wilander@apple.com
-draft-ietf-httpbis-safe-method-w-body.xml julian.reschke@greenbytes.de malhotrasahib@gmail.com jasnell@gmail.com mbishop@evequefou.be
+draft-ietf-httpbis-rfc6265bis.md bingler@chromium.org mkwst@google.com wilander@apple.com
+draft-ietf-httpbis-safe-method-w-body.xml julian.reschke@greenbytes.de jasnell@gmail.com mbishop@evequefou.be
 draft-ietf-httpbis-secondary-server-certs.md e_gorbaty@apple.com mbishop@evequefou.be
+draft-ietf-httpbis-unencoded-digest.md lucas@lucaspardue.com mkwst@google.com
 draft-ietf-httpbis-wrap-up.md dschinazi.ietf@gmail.com lucas@lucaspardue.com
