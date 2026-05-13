@@ -491,20 +491,21 @@ Location: https://example.com/upload/0587fa44b
 HTTP/1.1 500 Internal Server Error
 ~~~
 
-D) The following example shows an upload creation being rejected by the server because uploads to the targeted resource are not allowed. The Upload-Complete header in the response is set to true since the server is uninterested in receiving the full representation and the upload is complete in its perspective. The client cannot continue the upload.
+D) The following example shows an upload creation being rejected by the server because the request content cannot be decoded. The Upload-Complete header in the response is set to true since the server is uninterested in receiving the full representation after the decoding failure and the upload is complete in its perspective. The client cannot continue the upload.
 
 ~~~ http-message
-POST /upload-not-allowed HTTP/1.1
+POST /upload-gzip HTTP/1.1
 Host: example.com
 Upload-Complete: ?0
 Content-Length: 23456789
 Upload-Length: 123456789
+Content-Encoding: gzip
 
-[content (23456789 bytes)]
+[corrupted gzip content]
 ~~~
 
 ~~~ http-message
-HTTP/1.1 405 Method Not Allowed
+HTTP/1.1 400 Bad Request
 Upload-Complete: ?1
 ~~~
 
