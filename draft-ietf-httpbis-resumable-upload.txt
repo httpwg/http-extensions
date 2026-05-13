@@ -628,13 +628,19 @@ Table of Contents
    when the upload resource is created (Section 4.2).  Throughout the
    lifetime of the upload resource, these limits SHOULD NOT change in a
    way that causes failures for clients adhering to the initially
-   discovered limits.  In particular, whereas the values for max-size,
-   max-append-size, and max-age can increase without harm, they SHOULD
-   NOT decrease as they can cause ongoing uploads to fail.  Similarly,
-   the value for min-append-size SHOULD NOT increase.  If the client
-   discovers that it cannot continue the upload while adhering to the
-   limits, it SHOULD stop the current request immediately and cancel the
-   upload (Section 4.5).
+   discovered limits.  If the client discovers that it cannot continue
+   the upload while adhering to the limits, it SHOULD stop the current
+   request immediately and cancel the upload (Section 4.5).
+
+   The following recommendations for limit changes can minimize the risk
+   of causing upload failures:
+
+   *  max-size and max-append-size SHOULD NOT decrease.
+
+   *  min-size and min-append-size SHOULD NOT increase.
+
+   *  Between subsequent responses, the end of the upload resource's
+      lifetime as implied by max-age SHOULD NOT decrease.
 
    Receivers of Upload-Limit parse the Dictionary as described in
    Section 4.2 of [STRUCTURED-FIELDS].  Where the Dictionary is
@@ -1781,6 +1787,8 @@ Since draft-ietf-httpbis-resumable-upload-11
       min-append-size limit.
 
    *  Remove nominative languages addressing the lost final response
+
+   *  Allow max-age limit to decrease as expected.
 
 Since draft-ietf-httpbis-resumable-upload-10
 
