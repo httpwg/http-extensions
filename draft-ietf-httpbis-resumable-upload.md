@@ -362,8 +362,9 @@ The following key-value pairs are defined:
 : Specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource as these requests will likely fail. The value is an Integer.
 
 Clients usually discover limits through the `Upload-Limit` header field when the upload resource is created ({{upload-creation}}). Throughout the lifetime of the upload resource, these limits SHOULD NOT change in a way that causes failures for clients adhering to the initially discovered limits. If the client discovers that it cannot continue the upload while adhering to the limits, it SHOULD stop the current request immediately and cancel the upload ({{upload-cancellation}}).
+The following recommendations for limit changes can minimize the risk of causing upload failures:
 
-* Although the values for `max-size` and `max-append-size` can increase without harm, they SHOULD NOT decrease as that can cause ongoing uploads to fail.
+* `max-size` and `max-append-size` SHOULD NOT decrease.
 * The value for `min-append-size` SHOULD NOT increase.
 * Between subsequent responses, the end of the upload resource's lifetime as implied by `max-age` SHOULD NOT decrease.
 
