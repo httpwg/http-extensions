@@ -315,7 +315,7 @@ The `Upload-Offset` header field in responses serves as an acknowledgement of th
 
 ### Completeness {#upload-complete}
 
-An upload is incomplete until it is explicitly marked as completed by the client or the server. After this point, no representation data can be appended anymore.
+An upload is incomplete until it is explicitly marked as completed by the client or the server. After this point, no more representation data can be appended.
 
 The `Upload-Complete` request header field conveys the completeness state. `Upload-Complete` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) and indicates whether the upload is complete or not. Other values MUST cause the entire header field to be ignored.
 
