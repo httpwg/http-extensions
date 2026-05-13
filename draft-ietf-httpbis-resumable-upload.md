@@ -505,6 +505,9 @@ Content-Encoding: gzip
 ~~~
 
 ~~~ http-message
+HTTP/1.1 104 Upload Resumption Supported
+Location: https://example.com/upload/6723cdf37
+
 HTTP/1.1 400 Bad Request
 Upload-Complete: ?1
 ~~~
