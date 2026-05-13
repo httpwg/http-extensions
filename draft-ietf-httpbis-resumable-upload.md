@@ -941,6 +941,7 @@ Reference:
 * Clarify client behavior for 413 responses.
 * Remove Accept-Patch from OPTIONS responses.
 * Allow upload creation requests with no content regardless of the `min-append-size` limit.
+* Remove nominative languages addressing the lost final response
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
