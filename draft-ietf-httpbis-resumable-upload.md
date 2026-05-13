@@ -361,7 +361,13 @@ The following key-value pairs are defined:
 `max-age`:
 : Specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource as these requests will likely fail. The value is an Integer.
 
-Clients usually discover limits through the `Upload-Limit` header field when the upload resource is created ({{upload-creation}}). Throughout the lifetime of the upload resource, these limits SHOULD NOT change in a way that causes failures for clients adhering to the initially discovered limits. In particular, whereas the values for `max-size`, `max-append-size`, and `max-age` can increase without harm, they SHOULD NOT decrease as they can cause ongoing uploads to fail. Similarly, the value for `min-append-size` SHOULD NOT increase. If the client discovers that it cannot continue the upload while adhering to the limits, it SHOULD stop the current request immediately and cancel the upload ({{upload-cancellation}}).
+Clients usually discover limits through the `Upload-Limit` header field when the upload resource is created ({{upload-creation}}). Throughout the lifetime of the upload resource, these limits SHOULD NOT change in a way that causes failures for clients adhering to the initially discovered limits. If the client discovers that it cannot continue the upload while adhering to the limits, it SHOULD stop the current request immediately and cancel the upload ({{upload-cancellation}}).
+
+The following recommendations for limit changes can minimize the risk of causing upload failures:
+
+* `max-size` and `max-append-size` SHOULD NOT decrease.
+* `min-size` and `min-append-size` SHOULD NOT increase.
+* Between subsequent responses, the end of the upload resource's lifetime as implied by `max-age` SHOULD NOT decrease.
 
 Receivers of `Upload-Limit` parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
 
@@ -942,6 +948,7 @@ Reference:
 * Remove Accept-Patch from OPTIONS responses.
 * Allow upload creation requests with no content regardless of the `min-append-size` limit.
 * Remove nominative languages addressing the lost final response
+* Allow `max-age` limit to decrease as expected.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
