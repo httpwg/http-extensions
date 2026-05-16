@@ -68,9 +68,9 @@ server provided that the secondary origin is also in the certificate provided
 during the TLS handshake. In many cases, servers choose to maintain separate
 certificates for different origins but still desire the benefits of a shared
 HTTP connection. This document defines a capability for servers to use and
-to authenticate with those seperate certificates over a shared connection.
+to authenticate with those separate certificates over a shared connection.
 
-The ability to maintain seperate certificates for different origins can also
+The ability to maintain separate certificates for different origins can also
 allow proxies that cache content from secondary origins to communicate to
 clients that they can service some of those origins directly, allowing the
 proxy to behave as a TLS-terminating reverse proxy for those origins instead of
@@ -130,15 +130,15 @@ certificates can also be supplied into these collections.
 
 ## HTTP-Layer Certificate Authentication
 
-This document defines HTTP/2 and HTTP/3 `SERVER_CERTIFICATE` frames ({{certs-http}})
-to carry the relevant certificate messages, enabling certificate-based
-authentication of servers independent of TLS version. This mechanism can be
-implemented at the HTTP layer without breaking the existing interface between
-HTTP and applications above it.
+This document defines HTTP/2 and HTTP/3 `SERVER_CERTIFICATE` frames
+({{certs-http}}) to carry the relevant certificate messages, enabling
+certificate-based authentication of servers independent of TLS version. This
+mechanism can be implemented at the HTTP layer without breaking the existing
+interface between HTTP and applications above it.
 
-TLS Exported Authenticators {{EXPORTED-AUTH}} allow the opportunity for an
-HTTP/2 and HTTP/3 servers to send certificate frames which can be used to prove
-the servers authenticity for multiple origins.
+TLS Exported Authenticators {{EXPORTED-AUTH}} allow HTTP/2 and HTTP/3 servers to
+send certificate frames which can be used to prove the server's authenticity for
+multiple origins.
 
 This document additionally defines SETTINGS parameters for HTTP/2 and HTTP/3
 ({{settings}}) that allow the client and server to indicate support for
@@ -151,22 +151,22 @@ HTTP-Layer certificate authentication.
 # Discovering Additional Certificates at the HTTP Layer {#discovery}
 
 A certificate chain with proof of possession of the private key corresponding to
-the end-entity certificate is sent as a sequence of `SERVER_CERTIFICATE` frames (see
-{{http2-cert}}, {{http3-cert}}) to the client. Once the holder of a certificate
-has sent the chain and proof, this certificate chain is cached by the recipient
-and available for future use.
+the end-entity certificate is sent as a sequence of `SERVER_CERTIFICATE`
+frames (see {{http2-cert}}, {{http3-cert}}) to the client. Once the holder of a
+certificate has sent the chain and proof, this certificate chain is cached by
+the recipient and available for future use.
 
-## Indicating Support for HTTP-Layer Certificate Authentication {#settings-usage}
+## Indicating Support for HTTP-Layer Server Certificate Authentication {#settings-usage}
 
 The `SETTINGS_HTTP_SERVER_CERT_AUTH` parameters for HTTP/2 and HTTP/3 are
 defined in {{settings}} so that clients and servers can indicate support for
-secondary certificate authentication of servers.
+secondary server certificate authentication.
 
-HTTP/2 and HTTP/3 endpoints who wish to indicate support for HTTP-Layer
+HTTP/2 and HTTP/3 endpoints that wish to indicate support for HTTP-Layer
 certificate authentication MUST send a `SETTINGS_HTTP_SERVER_CERT_AUTH`
 parameter set to "1" in their SETTINGS frame. Endpoints MUST NOT use any of the
-authentication functionality described in this document unless the parameter has
-been negotiated by both sides.
+authentication functionality described in this document unless they have
+both sent and received `SETTINGS_HTTP_SERVER_CERT_AUTH` with a value of 1.
 
 Endpoints MUST NOT send a `SETTINGS_HTTP_SERVER_CERT_AUTH` parameter with a
 value of 0 after previously sending a value of 1.
@@ -178,13 +178,13 @@ Authenticator that the server sends.
 
 ## Making Certificates Available {#cert-available}
 
-When both peers have advertised support for HTTP-layer certificates in a given
-direction as in {{settings-usage}}, the indicated endpoint can supply
-additional certificates into the connection at any time. That is, if both
-endpoints have sent `SETTINGS_HTTP_SERVER_CERT_AUTH` and validated the value
-received from the peer, the server may send certificates spontaneously, at any
-time, as described by the `Spontaneous Server Authentication` message sequence
-in {{Section 3 of EXPORTED-AUTH}}.
+When both peers have advertised support for HTTP-layer server certificates as
+in {{settings-usage}}, the server can supply additional certificates into the
+connection at any time. That is, if both endpoints have sent
+`SETTINGS_HTTP_SERVER_CERT_AUTH` and validated the value received from the
+peer, the server may send certificates spontaneously, at any time, as described
+by the `Spontaneous Server Authentication` message sequence in {{Section 3 of
+EXPORTED-AUTH}}.
 
 This does mean that if a server knows it supports secondary certificate
 authentication, and it receives `SETTINGS_HTTP_SERVER_CERT_AUTH` from the
@@ -197,15 +197,23 @@ origins which it is prepared to service on the current connection, and SHOULD
 NOT send them if the client has not indicated support with
 `SETTINGS_HTTP_SERVER_CERT_AUTH`.
 
-A client MUST NOT send certificates to the server. The server SHOULD close the
+A client MUST NOT send certificates to the server. The server MUST close the
 connection upon receipt of a SERVER_CERTIFICATE frame from a client.
 
-~~~ drawing
-Client                                               Server
-   <-- (stream 0 / control stream) SERVER_CERTIFICATE --
-   ...
-   -- (stream N) GET /from-new-origin ----------------->
-   <------------------------------ (stream N) 200 OK ---
+~~~ aasvg
+Client                                                    Server
+|                                                              |
+|          (stream 0 / control stream) SERVER_CERTIFICATE      |
+|<-------------------------------------------------------------|
+|                                                              |
+|  ...                                                         |
+|                                                              |
+| (stream N) GET /from-new-origin                              |
+|------------------------------------------------------------->|
+|                                                              |
+|                                      (stream N) 200 OK       |
+|<-------------------------------------------------------------|
+|                                                              |
 ~~~
 {: #ex-http-server-unprompted-basic title="Simple unprompted server authentication"}
 
@@ -217,19 +225,31 @@ certificates for those origins to allow for TLS-terminated reverse proxying to
 those origins for the remainder of the connection lifetime.
 {{ex-http-server-unprompted-reverse}} illustrates this behavior.
 
-~~~ drawing
-Client                                                 Server
-   -- (stream N) CONNECT /to-new-origin ----------------->
-   <---- (stream 0 / control stream) SERVER_CERTIFICATE --
-   <---- (stream 0 / control stream) 200 OK --------------
-   ...
-   -- (stream M) GET /to-new-origin --------------------->
-   <------------ (stream M, direct from server) 200 OK ---
+~~~ aasvg
+Client                                                    Server
+|                                                              |
+| (stream N) CONNECT /to-new-origin                            |
+|------------------------------------------------------------->|
+|                                                              |
+|          (stream 0 / control stream) SERVER_CERTIFICATE      |
+|<-------------------------------------------------------------|
+|                                                              |
+|                                      (stream N) 200 OK       |
+|<-------------------------------------------------------------|
+|                                                              |
+|  ...                                                         |
+|                                                              |
+| (stream M) GET /to-new-origin                                |
+|------------------------------------------------------------->|
+|                                                              |
+|                  (stream M, direct from server) 200 OK       |
+|<-------------------------------------------------------------|
+|                                                              |
 ~~~
 {: #ex-http-server-unprompted-reverse title="Reverse proxy server authentication"}
 
 # SETTINGS_HTTP_SERVER_CERT_AUTH {#settings}
-SETTINGS parameters for HTTP/2 and HTTP/3 seperately are defined below.
+SETTINGS parameters for HTTP/2 and HTTP/3 separately are defined below.
 
 ## The SETTINGS_HTTP_SERVER_CERT_AUTH HTTP/2 SETTINGS Parameter {#http2-setting}
 This document adds a new HTTP/2 SETTINGS(0xTBD) parameter to those defined by
@@ -251,26 +271,26 @@ The usage of this parameter is described in {{settings-usage}}.
 
 # SERVER_CERTIFICATE frame {#certs-http}
 
-The SERVER_CERTIFICATE frame contains an exported authenticator message from the TLS
-layer that provides a chain of certificates and associated extensions, proving
-possession of the private key corresponding to the end-entity certificate.
+The SERVER_CERTIFICATE frame contains an exported authenticator message from the
+TLS layer that provides a chain of certificates and associated extensions,
+proving possession of the private key corresponding to the end-entity
+certificate.
 
-A server sends a SERVER_CERTIFICATE frame on stream 0 for HTTP/2 and on the control
-stream for HTTP/3. The client is permitted to make subsequent requests for
-resources upon receipt of a SERVER_CERTIFICATE frame without further action from the
-server.
+The client is permitted to make subsequent requests for resources upon receipt
+of a SERVER_CERTIFICATE frame without further action from the server.
 
-Upon receiving a complete series of SERVER_CERTIFICATE frames, the receiver may
+Upon receiving a SERVER_CERTIFICATE frame, the receiver may
 validate the Exported Authenticator value by using the exported authenticator
 API. This returns either an error indicating that the message was invalid or
 the certificate chain and extensions used to create the message.
 
 ## HTTP/2 SERVER_CERTIFICATE frame {#http2-cert}
-A SERVER_CERTIFICATE frame in HTTP/2 (type=0xTBD) carrries a TLS Exported authenticator
-that clients can use to authenticate secondary origins from a sending server.
+A SERVER_CERTIFICATE frame in HTTP/2 (type=0xTBD) carries a TLS Exported
+authenticator that clients can use to authenticate secondary origins from a
+sending server.
 
-The SERVER_CERTIFICATE frame MUST be sent on stream 0. A SERVER_CERTIFICATE frame received on
-any other stream MUST not be used for server authentication.
+The SERVER_CERTIFICATE frame MUST be sent on stream 0. A SERVER_CERTIFICATE
+frame received on any other stream MUST not be used for server authentication.
 
 ~~~~~~~~~~ ascii-art
 SERVER_CERTIFICATE Frame {
@@ -296,16 +316,18 @@ The authenticator field is a portion of the opaque data returned from the TLS
 connection exported authenticator authenticate API. See {{exp-auth}} for more
 details on the input to this API.
 
-The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. An
-endpoint MUST treat a SERVER_CERTIFICATE frame with a stream identifier other than
-0x00 as a connection error.
+The SERVER_CERTIFICATE frame applies to the connection, not a specific stream.
+An endpoint MUST treat a SERVER_CERTIFICATE frame with a stream identifier
+other than 0x00 as a connection error.
 
 ## HTTP/3 SERVER_CERTIFICATE frame {#http3-cert}
-A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carrries a TLS Exported authenticator
-that clients can use to authenticate secondary origins from a sending server.
+A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carries a TLS Exported
+authenticator that clients can use to authenticate secondary origins from a
+sending server.
 
-The SERVER_CERTIFICATE frame MUST be sent on the control stream. A SERVER_CERTIFICATE frame
-received on any other stream MUST not be used for server authentication.
+The SERVER_CERTIFICATE frame MUST be sent on the control stream. A
+SERVER_CERTIFICATE frame received on any other stream MUST not be used for
+server authentication.
 
 ~~~~~~~~~~ ascii-art
 SERVER_CERTIFICATE Frame {
@@ -322,9 +344,9 @@ The authenticator field is a portion of the opaque data returned from the TLS
 connection exported authenticator authenticate API. See {{exp-auth}} for more
 details on the input to this API.
 
-The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. An
-endpoint MUST treat a SERVER_CERTIFICATE frame received on any stream other than the
-control stream as a connection error.
+The SERVER_CERTIFICATE frame applies to the connection, not a specific stream.
+An endpoint MUST treat a SERVER_CERTIFICATE frame received on any stream other
+than the control stream as a connection error.
 
 ## Exported Authenticator Characteristics {#exp-auth}
 
@@ -333,20 +355,20 @@ request, a set of certificates, and supporting information about the
 certificate (OCSP, SCT, etc.). The result is an opaque token which is used
 when generating the `SERVER_CERTIFICATE` frame.
 
-Upon receipt of a `SERVER_CERTIFICATE` frame, an endpoint which has negotiated support
-for secondary certfiicates MUST perform the following steps to validate the
-token it contains:
+Upon receipt of a `SERVER_CERTIFICATE` frame, a client which has negotiated
+support for secondary certificates MUST perform the following steps to validate
+the token it contains:
 
 - Using the `get context` API, retrieve the `certificate_request_context` used
-  to generate the authenticator, if any. Because the `certificate_request_context`
-  for spontaneous server certificates is chosen by the server, the usage of
-  the `certificate_request_context` is implementation-dependent. For details,
-  see {{Section 5 of EXPORTED-AUTH}}.
+  to generate the authenticator, if any. Because the
+  `certificate_request_context` for spontaneous server certificates is chosen
+  by the server, the usage of the `certificate_request_context` is
+  implementation-dependent. For details, see {{Section 5 of EXPORTED-AUTH}}.
 - Use the `validate` API to confirm the validity of the authenticator with
   regard to the generated request, if any.
 
-If the authenticator cannot be validated, this SHOULD be treated as a connection
-error.
+If the authenticator cannot be validated, this MUST be treated as a connection
+error of type SERVER_CERTIFICATE_INVALID ({{errors}}).
 
 Once the authenticator is accepted, the endpoint can perform any other checks
 for the acceptability of the certificate itself.
@@ -366,23 +388,23 @@ This category of errors could indicate a peer failing to follow requirements in
 this document or might indicate that the connection is not fully secure. These
 errors are fatal to stream or connection, as appropriate.
 
-SERVER_CERTIFICATE_UNREADABLE (0xERROR-TBD):
+SERVER_CERTIFICATE_INVALID (0xERROR-TBD):
 : An exported authenticator could not be validated.
 
 ## Invalid Certificates
 Unacceptable certificates (expired, revoked, or insufficient to satisfy the
 request) are not treated as stream or connection errors. This is typically not
 an indication of a protocol failure. Clients SHOULD establish a new connection
-in an attempt to reach an authoritative server if they deem a
-certificate from the server unacceptable.
+in an attempt to reach an authoritative server if they deem a certificate from
+the server unacceptable.
 
 # Security Considerations {#security}
 
-This mechanism defines an alternate way to obtain server and client certificates
-other than in the initial TLS handshake. While the signature of exported
-authenticator values is expected to be equally secure, it is important to
-recognize that a vulnerability in this code path is at least equal to a
-vulnerability in the TLS handshake.
+This mechanism defines an alternate way to obtain server certificates other than
+in the initial TLS handshake. While the signature of exported authenticator
+values is expected to be equally secure, it is important to recognize that a
+vulnerability in this code path is at least equal to a vulnerability in the TLS
+handshake.
 
 ## Impersonation
 
@@ -404,14 +426,14 @@ certificates, rather than individually authoritative on each certificate. As a
 result, clients MUST NOT assume that because one origin was previously
 colocated with another, those origins will be reachable via the same endpoints
 in the future. Clients MUST NOT consider previous secondary certificates to be
-validated after TLS session resumption. Servers MAY re-present certificates
-if a TLS Session is resumed.
+validated after TLS session resumption. Servers MAY re-present certificates if
+a TLS Session is resumed.
 
 ## Fingerprinting
 
-This document defines a mechanism which could be used to probe servers for origins
-they support, but it opens no new attack that was not already possible by
-making repeat TLS connections with different SNI values.
+This document defines a mechanism which could be used to probe servers for
+origins they support, but it opens no new attack that was not already possible
+by making repeat TLS connections with different SNI values.
 
 ## Persistence of Service
 
@@ -446,8 +468,9 @@ define formal mechanisms to facilitate that intention.
 
 # IANA Considerations
 
-This document registers the `SERVER_CERTIFICATE` frame type and
-`SETTINGS_HTTP_SERVER_CERT_AUTH` setting for both {{H2}} and {{H3}}.
+This document registers the `SERVER_CERTIFICATE` frame type,
+`SETTINGS_HTTP_SERVER_CERT_AUTH` setting, and `SERVER_CERTIFICATE_INVALID`
+error code for both {{H2}} and {{H3}}.
 
 ## Frame Types
 
@@ -498,6 +521,37 @@ Code: : TBD
 Name: : SETTINGS_HTTP_SERVER_CERT_AUTH
 
 Default: : 0
+
+Reference: : This document
+
+Change Controller: : IETF
+
+Contact: : ietf-http-wg@w3.org
+
+## Error Codes
+
+This specification registers the following entry in the "HTTP/2 Error Code"
+registry defined in {{H2}}:
+
+Code: : TBD
+
+Name: : SERVER_CERTIFICATE_INVALID
+
+Description: : There was an issue processing the SERVER_CERTIFICATE frame.
+
+Reference: : This document
+
+
+This specification registers the following entry in the "HTTP/3 Error Codes"
+registry established by {{H3}}:
+
+Value: : TBD
+
+Name: : SERVER_CERTIFICATE_INVALID
+
+Description: : There was an issue processing the SERVER_CERTIFICATE frame.
+
+Status: : permanent
 
 Reference: : This document
 
