@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Kleidl, et al.</td>
-<td class="center">Expires 16 November 2026</td>
+<td class="center">Expires 19 November 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-resumable-upload-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-05-15" class="published">15 May 2026</time>
+<time datetime="2026-05-18" class="published">18 May 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-11-16">16 November 2026</time></dd>
+<dd class="expires"><time datetime="2026-11-19">19 November 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1129,7 +1129,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 16 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 19 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1617,7 +1617,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         </h3>
 <p id="section-3.2-1">In some cases, clients might prefer to upload a representation as a series of parts sent serially across multiple HTTP messages. One use case is to overcome server limits on HTTP message content size. Another use case is where the client does not know the final size of the representation data, such as when the data originates from a streaming source.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2-2">This example shows how the client, communicating with a resource known to support resumable upload, can upload parts of a representation incrementally.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2-3">1) The client is aware that the targetted resource supports resumable uploads and therefore starts the upload with the <code>Upload-Complete</code> field value set to false and the first part of the representation.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">1) The client is aware that the targeted resource supports resumable uploads and therefore starts the upload with the <code>Upload-Complete</code> field value set to false and the first part of the representation.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 <span id="name-upload-creation-with-partia"></span><div id="fig-upload-creation-incomplete">
 <figure id="figure-5">
           <div id="section-3.2-4.1">
@@ -1813,9 +1813,10 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-completeness">
 <a href="#section-4.1.2" class="section-number selfRef">4.1.2. </a><a href="#name-completeness" class="section-name selfRef">Completeness</a>
           </h4>
-<p id="section-4.1.2-1">An upload is incomplete until it is explicitly marked as completed by the client. After this point, no representation data can be appended anymore.<a href="#section-4.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.1.2-1">An upload is incomplete until it is explicitly marked as completed by the client or the server. After this point, no more representation data can be appended.<a href="#section-4.1.2-1" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-2">The <code>Upload-Complete</code> request and response header field conveys the completeness state. <code>Upload-Complete</code> is an Item Structured Header Field (<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>). Its value is a Boolean (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.3.6" class="relref">Section 3.3.6</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>) and indicates whether the upload is complete or not. Other values <span class="bcp14">MUST</span> cause the entire header field to be ignored.<a href="#section-4.1.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.1.2-3">An upload is marked as completed if a request for creating the upload resource (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) or appending to it (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) included the <code>Upload-Complete</code> header field with a true value and the request content was fully processed.<a href="#section-4.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.1.2-3">An upload is marked as completed either when a request for creating the upload resource (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) or appending to it (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) includes the <code>Upload-Complete</code> header field with a true value and the request content was fully processed, or when a response includes the <code>Upload-Complete</code> header field with a true value.<a href="#section-4.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.1.2-4">When used in an upload creation response (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) or an upload append response (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>), <code>Upload-Complete</code> signals whether the response comes from the initial targeted resource. The value of true means that the semantics of the targeted resource apply, and the value of false means that the semantics of the resumable upload protocol apply. The client <span class="bcp14">SHOULD NOT</span> perform upload resumption to the upload resource after receiving a response with the <code>Upload-Complete</code> field value set to true. Note that <code>Upload-Complete</code> can be true even when the full representation data was not transmitted in the case that the server decides to generate an early response when processing the targeted resource. Also note that <code>Upload-Complete</code> can be false in response to an invalid operation performed on a completed upload.<a href="#section-4.1.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="upload-length">
@@ -1946,7 +1947,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-4.2.2-5">The server <span class="bcp14">MUST</span> record the length according to <a href="#upload-length" class="auto internal xref">Section 4.1.3</a> if the <code>Upload-Length</code> or <code>Upload-Complete: ?1</code> header fields are included in the request.<a href="#section-4.2.2-5" class="pilcrow">¶</a></p>
 <p id="section-4.2.2-6">While the request content is being processed, the server <span class="bcp14">MAY</span> send multiple interim responses with a <code>104 (Upload Resumption Supported)</code> status code and the <code>Upload-Offset</code> header field set to the current offset to inform the client about the upload progress.<a href="#section-4.2.2-6" class="pilcrow">¶</a></p>
 <p id="section-4.2.2-7">Where a response requires a <code>Location</code> header field to be included, all interim and final response messages for the same request <span class="bcp14">MUST</span> contain an identical <code>Location</code> value. However, final responses including the <code>Upload-Complete: ?1</code> header field are exempt from this requirement because they are the result of processing the transferred representation and the <code>Location</code> value does not necessarily represent the upload location. Where the <code>Location</code> value is expected to be identical across multiple messages, clients <span class="bcp14">SHOULD</span> verify this. If verification fails, clients <span class="bcp14">SHOULD</span> abort the current request and cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 4.5</a>).<a href="#section-4.2.2-7" class="pilcrow">¶</a></p>
-<p id="section-4.2.2-8">The server might not process the entire request content when the upload is interrupted, for example because of dropped connection or canceled request. In this case, the server <span class="bcp14">SHOULD</span> append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource <span class="bcp14">MUST NOT</span> be considered complete then.<a href="#section-4.2.2-8" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-8">The server <span class="bcp14">SHOULD</span> include the <code>Upload-Complete</code> (<a href="#upload-complete" class="auto internal xref">Section 4.1.2</a>) header field in the response to indicate whether it is the result of processing the uploaded representation.<a href="#section-4.2.2-8" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-9">The server might not process the entire request content when the upload is interrupted, for example because of dropped connection or canceled request. In this case, the server <span class="bcp14">SHOULD</span> append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource <span class="bcp14">MUST NOT</span> be considered complete then.<a href="#section-4.2.2-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="upload-creation-example">
@@ -1978,6 +1980,7 @@ Upload-Offset: 23456789
 
 HTTP/1.1 200 OK
 Location: https://example.com/upload/b530ce8ff
+Upload-Complete: ?1
 Upload-Limit: max-size=1234567890
 Content-Type: application/json
 
@@ -2003,6 +2006,7 @@ Location: https://example.com/upload/3fd4994ad
 
 HTTP/1.1 201 Created
 Location: https://example.com/upload/3fd4994ad
+Upload-Complete: ?0
 Upload-Limit: max-size=1234567890
 </pre><a href="#section-4.2.3-6" class="pilcrow">¶</a>
 </div>
@@ -2026,21 +2030,26 @@ Location: https://example.com/upload/0587fa44b
 HTTP/1.1 500 Internal Server Error
 </pre><a href="#section-4.2.3-9" class="pilcrow">¶</a>
 </div>
-<p id="section-4.2.3-10">D) The following example shows an upload creation being rejected by the server because uploads to the targetted resource are not allowed. The client cannot continue the upload.<a href="#section-4.2.3-10" class="pilcrow">¶</a></p>
+<p id="section-4.2.3-10">D) The following example shows an upload creation being rejected by the server because the request content cannot be decoded. The <code>Upload-Complete</code> header in the response is set to true since the server is uninterested in receiving the full representation after the decoding failure, and the upload is complete in its perspective. The client cannot continue the upload.<a href="#section-4.2.3-10" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.2.3-11">
 <pre>
-POST /upload-not-allowed HTTP/1.1
+POST /upload-gzip HTTP/1.1
 Host: example.com
-Upload-Complete: ?1
-Content-Length: 123456789
+Upload-Complete: ?0
+Content-Length: 23456789
 Upload-Length: 123456789
+Content-Encoding: gzip
 
-[content (123456789 bytes)]
+[corrupted gzip content]
 </pre><a href="#section-4.2.3-11" class="pilcrow">¶</a>
 </div>
 <div class="lang-http-message sourcecode" id="section-4.2.3-12">
 <pre>
-HTTP/1.1 405 Method Not Allowed
+HTTP/1.1 104 Upload Resumption Supported
+Location: https://example.com/upload/6723cdf37
+
+HTTP/1.1 400 Bad Request
+Upload-Complete: ?1
 </pre><a href="#section-4.2.3-12" class="pilcrow">¶</a>
 </div>
 </section>
@@ -2088,7 +2097,7 @@ HTTP/1.1 405 Method Not Allowed
               <p id="section-4.3.2-2.1.1"><span class="bcp14">MUST</span> include the offset in the <code>Upload-Offset</code> header field (<a href="#upload-offset" class="auto internal xref">Section 4.1.1</a>),<a href="#section-4.3.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.3.2-2.2">
-              <p id="section-4.3.2-2.2.1"><span class="bcp14">MUST</span> include the completeness state in the <code>Upload-Complete</code> header field (<a href="#upload-complete" class="auto internal xref">Section 4.1.2</a>),<a href="#section-4.3.2-2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-4.3.2-2.2.1"><span class="bcp14">MUST</span> include the <code>Upload-Complete</code> header field (<a href="#upload-complete" class="auto internal xref">Section 4.1.2</a>) indicating whether a final response was produced from processing the uploaded representation,<a href="#section-4.3.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.3.2-2.3">
               <p id="section-4.3.2-2.3.1"><span class="bcp14">MUST</span> include the length in the <code>Upload-Length</code> header field, unless the client has not supplied one, by providing the corresponding headers as described in (<a href="#upload-length" class="auto internal xref">Section 4.1.3</a>),<a href="#section-4.3.2-2.3.1" class="pilcrow">¶</a></p>
@@ -2176,12 +2185,13 @@ Cache-Control: no-store
           </h4>
 <p id="section-4.4.2-1">A server applies a <code>PATCH</code> request with the <code>application/partial-upload</code> media type (<a href="#media-type-partial-upload" class="auto internal xref">Section 6</a>) to an upload resource by appending the patch document in the request content.<a href="#section-4.4.2-1" class="pilcrow">¶</a></p>
 <p id="section-4.4.2-2">The server might not process the entire patch document when the upload is interrupted, for example because of a dropped connection or canceled request. In this case, the server <span class="bcp14">SHOULD</span> append as much of the patch document as possible to the upload resource, starting at its beginning and without discontinuities. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in <span><a href="https://rfc-editor.org/rfc/rfc5789#section-2" class="relref">Section 2</a> of [<a href="#PATCH" class="cite xref">PATCH</a>]</span>. Saving the processed data allows the client to resume the upload from where it was interrupted. In addition, the upload resource <span class="bcp14">MUST NOT</span> be considered complete then.<a href="#section-4.4.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.4.2-3">If the <code>Upload-Offset</code> request header field value does not match the current offset (<a href="#upload-offset" class="auto internal xref">Section 4.1.1</a>), the server <span class="bcp14">MUST</span> reject the request with a <code>409 (Conflict)</code> status code. The response <span class="bcp14">MUST</span> include the correct offset in the <code>Upload-Offset</code> header field. The response can use the problem type <span>[<a href="#PROBLEM" class="cite xref">PROBLEM</a>]</span> of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" (<a href="#mismatching-offset" class="auto internal xref">Section 7.1</a>).<a href="#section-4.4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-3">If the <code>Upload-Offset</code> request header field value does not match the current offset (<a href="#upload-offset" class="auto internal xref">Section 4.1.1</a>), the server <span class="bcp14">MUST</span> reject the request with a <code>409 (Conflict)</code> status code and the <code>Upload-Complete</code> header field set to false. The response <span class="bcp14">MUST</span> include the correct offset in the <code>Upload-Offset</code> header field. The response can use the problem type <span>[<a href="#PROBLEM" class="cite xref">PROBLEM</a>]</span> of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" (<a href="#mismatching-offset" class="auto internal xref">Section 7.1</a>).<a href="#section-4.4.2-3" class="pilcrow">¶</a></p>
 <p id="section-4.4.2-4">If the <code>Upload-Complete</code> request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully processed, the upload is marked as complete and the server <span class="bcp14">SHOULD</span> generate the response that matches what the resource, that was targeted by the initial upload creation (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>), would have generated if it had processed the entire representation in the initial request. However, the response <span class="bcp14">MUST</span> include the <code>Upload-Complete</code> header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the uploaded representation.<a href="#section-4.4.2-4" class="pilcrow">¶</a></p>
 <p id="section-4.4.2-5">If the <code>Upload-Complete</code> request header field is set to false, the client intends to transfer the remaining representation data over multiple requests. If the request content was fully processed, the server acknowledges the appended data by sending a <code>2xx (Successful)</code> response with the <code>Upload-Complete</code> header field set to false.<a href="#section-4.4.2-5" class="pilcrow">¶</a></p>
 <p id="section-4.4.2-6">Even if the upload is complete (<a href="#upload-complete" class="auto internal xref">Section 4.1.2</a>) in the server's perspective and the final response from the targeted resource has already been sent, the client might still perform an upload append (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) after an offset retrieval (<a href="#offset-retrieving" class="auto internal xref">Section 4.3</a>) due to the response being lost during transmission. The server can choose to replay the final response to the client if the request to append to the completed upload is valid.<a href="#section-4.4.2-6" class="pilcrow">¶</a></p>
 <p id="section-4.4.2-7">The server <span class="bcp14">MUST</span> record the length according to <a href="#upload-length" class="auto internal xref">Section 4.1.3</a> if the <code>Upload-Length</code> or <code>Upload-Complete</code> header fields are included in the request. If the length is known, the server <span class="bcp14">MUST</span> prevent the offset from exceeding the upload length by rejecting the request once the offset exceeds the length, marking the upload resource invalid and rejecting any further interaction with it. It is not sufficient to rely on the <code>Content-Length</code> header field for enforcement because this header field might not be present.<a href="#section-4.4.2-7" class="pilcrow">¶</a></p>
 <p id="section-4.4.2-8">While the request content is being processed, the server <span class="bcp14">SHOULD</span> send interim responses with a <code>104 (Upload Resumption Supported)</code> status code and the <code>Upload-Offset</code> header field set to the current offset to inform the client about the upload progress. These interim responses <span class="bcp14">MUST NOT</span> include the <code>Location</code> header field.<a href="#section-4.4.2-8" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-9">The server <span class="bcp14">SHOULD</span> include the <code>Upload-Complete</code> (<a href="#upload-complete" class="auto internal xref">Section 4.1.2</a>) header field in the response to indicate whether it is the result of processing the uploaded representation.<a href="#section-4.4.2-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="upload-appending-example">
@@ -2342,6 +2352,8 @@ HTTP/1.1 204 No Content
 
 HTTP/1.1 409 Conflict
 Content-Type: application/problem+json
+Upload-Offset: 12500000
+Upload-Complete: ?0
 
 {
   "type":"https://iana.org/assignments/http-problem-types#\
@@ -2367,6 +2379,7 @@ Content-Type: application/problem+json
 
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
+Upload-Complete: ?0
 
 {
   "type":"https://iana.org/assignments/http-problem-types#\
@@ -2820,10 +2833,13 @@ If an upload is spread across multiple requests, data integrity issues can be fo
             <p id="appendix-A.1-1.5.1">Allow upload creation requests with no content regardless of the <code>min-append-size</code> limit.<a href="#appendix-A.1-1.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-A.1-1.6">
-            <p id="appendix-A.1-1.6.1">Remove nominative languages addressing the lost final response<a href="#appendix-A.1-1.6.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.1-1.6.1">Remove nominative languages addressing the lost final response.<a href="#appendix-A.1-1.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-A.1-1.7">
             <p id="appendix-A.1-1.7.1">Allow <code>max-age</code> limit to decrease as expected.<a href="#appendix-A.1-1.7.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.8">
+            <p id="appendix-A.1-1.8.1">Redefine Upload-Complete on the server side.<a href="#appendix-A.1-1.8.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
