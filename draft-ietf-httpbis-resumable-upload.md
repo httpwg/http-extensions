@@ -497,7 +497,7 @@ Location: https://example.com/upload/0587fa44b
 HTTP/1.1 500 Internal Server Error
 ~~~
 
-D) The following example shows an upload creation being rejected by the server because the request content cannot be decoded. The `Upload-Complete` header in the response is set to true since the server is uninterested in receiving the full representation after the decoding failure and the upload is complete in its perspective. The client cannot continue the upload.
+D) The following example shows an upload creation being rejected by the server because the request content cannot be decoded. The `Upload-Complete` header in the response is set to true since the server is uninterested in receiving the full representation after the decoding failure, and the upload is complete in its perspective. The client cannot continue the upload.
 
 ~~~ http-message
 POST /upload-gzip HTTP/1.1
