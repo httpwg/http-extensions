@@ -204,7 +204,7 @@ In some cases, clients might prefer to upload a representation as a series of pa
 
 This example shows how the client, communicating with a resource known to support resumable upload, can upload parts of a representation incrementally.
 
-1) The client is aware that the targetted resource supports resumable uploads and therefore starts the upload with the `Upload-Complete` field value set to false and the first part of the representation.
+1) The client is aware that the targeted resource supports resumable uploads and therefore starts the upload with the `Upload-Complete` field value set to false and the first part of the representation.
 
 ~~~ aasvg
 Client                                       Server
@@ -315,11 +315,13 @@ The `Upload-Offset` header field in responses serves as an acknowledgement of th
 
 ### Completeness {#upload-complete}
 
-An upload is incomplete until it is explicitly marked as completed by the client. After this point, no representation data can be appended anymore.
+An upload is incomplete until it is explicitly marked as completed by the client or the server. After this point, no more representation data can be appended.
 
 The `Upload-Complete` request and response header field conveys the completeness state. `Upload-Complete` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) and indicates whether the upload is complete or not. Other values MUST cause the entire header field to be ignored.
 
-An upload is marked as completed if a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) included the `Upload-Complete` header field with a true value and the request content was fully processed.
+An upload is marked as completed either when a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) includes the `Upload-Complete` header field with a true value and the request content was fully processed, or when a response includes the `Upload-Complete` header field with a true value.
+
+When used in an upload creation response ({{upload-creation}}) or an upload append response ({{upload-appending}}), `Upload-Complete` signals whether the response comes from the initial targeted resource. The value of true means that the semantics of the targeted resource apply, and the value of false means that the semantics of the resumable upload protocol apply. The client SHOULD NOT perform upload resumption to the upload resource after receiving a response with the `Upload-Complete` field value set to true. Note that `Upload-Complete` can be true even when the full representation data was not transmitted in the case that the server decides to generate an early response when processing the targeted resource. Also note that `Upload-Complete` can be false in response to an invalid operation performed on a completed upload.
 
 ### Length {#upload-length}
 
@@ -418,6 +420,8 @@ While the request content is being processed, the server MAY send multiple inter
 
 Where a response requires a `Location` header field to be included, all interim and final response messages for the same request MUST contain an identical `Location` value. However, final responses including the `Upload-Complete: ?1` header field are exempt from this requirement because they are the result of processing the transferred representation and the `Location` value does not necessarily represent the upload location. Where the `Location` value is expected to be identical across multiple messages, clients SHOULD verify this. If verification fails, clients SHOULD abort the current request and cancel the upload ({{upload-cancellation}}).
 
+The server SHOULD include the `Upload-Complete` ({{upload-complete}}) header field in the response to indicate whether it is the result of processing the uploaded representation.
+
 The server might not process the entire request content when the upload is interrupted, for example because of dropped connection or canceled request. In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
 
 ### Examples {#upload-creation-example}
@@ -445,6 +449,7 @@ Upload-Offset: 23456789
 
 HTTP/1.1 200 OK
 Location: https://example.com/upload/b530ce8ff
+Upload-Complete: ?1
 Upload-Limit: max-size=1234567890
 Content-Type: application/json
 
@@ -469,6 +474,7 @@ Location: https://example.com/upload/3fd4994ad
 
 HTTP/1.1 201 Created
 Location: https://example.com/upload/3fd4994ad
+Upload-Complete: ?0
 Upload-Limit: max-size=1234567890
 ~~~
 
@@ -491,20 +497,25 @@ Location: https://example.com/upload/0587fa44b
 HTTP/1.1 500 Internal Server Error
 ~~~
 
-D) The following example shows an upload creation being rejected by the server because uploads to the targetted resource are not allowed. The client cannot continue the upload.
+D) The following example shows an upload creation being rejected by the server because the request content cannot be decoded. The `Upload-Complete` header in the response is set to true since the server is uninterested in receiving the full representation after the decoding failure, and the upload is complete in its perspective. The client cannot continue the upload.
 
 ~~~ http-message
-POST /upload-not-allowed HTTP/1.1
+POST /upload-gzip HTTP/1.1
 Host: example.com
-Upload-Complete: ?1
-Content-Length: 123456789
+Upload-Complete: ?0
+Content-Length: 23456789
 Upload-Length: 123456789
+Content-Encoding: gzip
 
-[content (123456789 bytes)]
+[corrupted gzip content]
 ~~~
 
 ~~~ http-message
-HTTP/1.1 405 Method Not Allowed
+HTTP/1.1 104 Upload Resumption Supported
+Location: https://example.com/upload/6723cdf37
+
+HTTP/1.1 400 Bad Request
+Upload-Complete: ?1
 ~~~
 
 ## Offset Retrieval {#offset-retrieving}
@@ -529,7 +540,7 @@ If the client received a response with a
 A successful response to a `HEAD` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset}}),
-- MUST include the completeness state in the `Upload-Complete` header field ({{upload-complete}}),
+- MUST include the `Upload-Complete` header field ({{upload-complete}}) indicating whether a final response was produced from processing the uploaded representation,
 - MUST include the length in the `Upload-Length` header field, unless the client has not supplied one, by providing the corresponding headers as described in ({{upload-length}}),
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
@@ -584,7 +595,7 @@ A server applies a `PATCH` request with the `application/partial-upload` media t
 
 The server might not process the entire patch document when the upload is interrupted, for example because of a dropped connection or canceled request. In this case, the server SHOULD append as much of the patch document as possible to the upload resource, starting at its beginning and without discontinuities. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of PATCH}}. Saving the processed data allows the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
 
-If the `Upload-Offset` request header field value does not match the current offset ({{upload-offset}}), the server MUST reject the request with a `409 (Conflict)` status code. The response MUST include the correct offset in the `Upload-Offset` header field. The response can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" ({{mismatching-offset}}).
+If the `Upload-Offset` request header field value does not match the current offset ({{upload-offset}}), the server MUST reject the request with a `409 (Conflict)` status code and the `Upload-Complete` header field set to false. The response MUST include the correct offset in the `Upload-Offset` header field. The response can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" ({{mismatching-offset}}).
 
 If the `Upload-Complete` request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully processed, the upload is marked as complete and the server SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had processed the entire representation in the initial request. However, the response MUST include the `Upload-Complete` header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the uploaded representation.
 
@@ -595,6 +606,8 @@ Even if the upload is complete ({{upload-complete}}) in the server's perspective
 The server MUST record the length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete` header fields are included in the request. If the length is known, the server MUST prevent the offset from exceeding the upload length by rejecting the request once the offset exceeds the length, marking the upload resource invalid and rejecting any further interaction with it. It is not sufficient to rely on the `Content-Length` header field for enforcement because this header field might not be present.
 
 While the request content is being processed, the server SHOULD send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
+
+The server SHOULD include the `Upload-Complete` ({{upload-complete}}) header field in the response to indicate whether it is the result of processing the uploaded representation.
 
 ### Examples {#upload-appending-example}
 
@@ -709,6 +722,8 @@ The following example shows an example response, where the resource's offset was
 
 HTTP/1.1 409 Conflict
 Content-Type: application/problem+json
+Upload-Offset: 12500000
+Upload-Complete: ?0
 
 {
   "type":"https://iana.org/assignments/http-problem-types#\
@@ -730,6 +745,7 @@ The following example shows an example response:
 
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
+Upload-Complete: ?0
 
 {
   "type":"https://iana.org/assignments/http-problem-types#\
@@ -947,8 +963,9 @@ Reference:
 * Clarify client behavior for 413 responses.
 * Remove Accept-Patch from OPTIONS responses.
 * Allow upload creation requests with no content regardless of the `min-append-size` limit.
-* Remove nominative languages addressing the lost final response
+* Remove nominative languages addressing the lost final response.
 * Allow `max-age` limit to decrease as expected.
+* Redefine Upload-Complete on the server side.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
