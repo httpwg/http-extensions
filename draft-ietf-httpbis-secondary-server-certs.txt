@@ -5,8 +5,8 @@
 HTTP                                                     E. Gorbaty, Ed.
 Internet-Draft                                                     Apple
 Intended status: Standards Track                          M. Bishop, Ed.
-Expires: 19 November 2026                                         Akamai
-                                                             18 May 2026
+Expires: 21 November 2026                                         Akamai
+                                                             20 May 2026
 
 
           Secondary Certificate Authentication of HTTP Servers
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 November 2026.
+   This Internet-Draft will expire on 21 November 2026.
 
 Copyright Notice
 
@@ -350,9 +350,10 @@ Table of Contents
    Exported authenticator that clients can use to authenticate secondary
    origins from a sending server.
 
-   The SERVER_CERTIFICATE frame MUST be sent on stream 0.  A
-   SERVER_CERTIFICATE frame received on any other stream MUST not be
-   used for server authentication.
+   The SERVER_CERTIFICATE frame applies to the connection, not a
+   specific stream.  It MUST be sent on stream 0.  An endpoint MUST
+   treat a SERVER_CERTIFICATE frame with a stream identifier other than
+   0x00 as a connection error.
 
    SERVER_CERTIFICATE Frame {
      Length (24),
@@ -377,19 +378,16 @@ Table of Contents
    the TLS connection exported authenticator authenticate API.  See
    Section 5.3 for more details on the input to this API.
 
-   The SERVER_CERTIFICATE frame applies to the connection, not a
-   specific stream.  An endpoint MUST treat a SERVER_CERTIFICATE frame
-   with a stream identifier other than 0x00 as a connection error.
-
 5.2.  HTTP/3 SERVER_CERTIFICATE frame
 
    A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carrries a TLS
    Exported authenticator that clients can use to authenticate secondary
    origins from a sending server.
 
-   The SERVER_CERTIFICATE frame MUST be sent on the control stream.  A
-   SERVER_CERTIFICATE frame received on any other stream MUST not be
-   used for server authentication.
+   The SERVER_CERTIFICATE frame applies to the connection, not a
+   specific stream.  It MUST be sent on the control stream.  An endpoint
+   MUST treat a SERVER_CERTIFICATE frame received on any stream other
+   than the control stream as a connection error.
 
    SERVER_CERTIFICATE Frame {
      Type (i) = 0xTBD,
@@ -404,11 +402,6 @@ Table of Contents
    The authenticator field is a portion of the opaque data returned from
    the TLS connection exported authenticator authenticate API.  See
    Section 5.3 for more details on the input to this API.
-
-   The SERVER_CERTIFICATE frame applies to the connection, not a
-   specific stream.  An endpoint MUST treat a SERVER_CERTIFICATE frame
-   received on any stream other than the control stream as a connection
-   error.
 
 5.3.  Exported Authenticator Characteristics
 

@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                             18 May 2026
-Expires: 19 November 2026
+Intended status: Standards Track                             20 May 2026
+Expires: 21 November 2026
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 November 2026.
+   This Internet-Draft will expire on 21 November 2026.
 
 Copyright Notice
 
@@ -851,9 +851,9 @@ Table of Contents
               Pauly, T., Damjanovic, D., and Y. Rosomakho,
               "Communicating Proxy Configurations in Provisioning
               Domains", Work in Progress, Internet-Draft, draft-ietf-
-              intarea-proxy-config-13, 14 April 2026,
+              intarea-proxy-config-14, 19 May 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-intarea-
-              proxy-config-13>.
+              proxy-config-14>.
 
    [RFC6265]  Barth, A., "HTTP State Management Mechanism", RFC 6265,
               DOI 10.17487/RFC6265, April 2011,
