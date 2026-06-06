@@ -90,7 +90,8 @@
 
   <middle>
 
-  <section title="Introduction" anchor="introduction">
+  <section anchor="introduction">
+    <name>Introduction</name>
     <t>
       This specification defines the HTTP QUERY request method as a means of
       making a safe, idempotent request (<xref target="HTTP" section="9.2"/>) that
@@ -209,7 +210,8 @@ q=foo&amp;limit=10&amp;sort=-published
       </tbody>
     </table>
 
-    <section title="Terminology" anchor="terminology">
+    <section anchor="terminology">
+      <name>Terminology</name>
       <t>
         This document uses terminology defined in <xref section="3" target="HTTP"/>.
       </t>
@@ -221,7 +223,8 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
     </section>
 
-    <section title="Notational Conventions" anchor="notational.conventions">
+    <section anchor="notational.conventions">
+      <name>Notational Conventions</name>
       <t>
         The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
         NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
@@ -233,7 +236,8 @@ q=foo&amp;limit=10&amp;sort=-published
 
   </section>
 
-  <section title="QUERY" anchor="query">
+  <section anchor="query">
+    <name>QUERY Method</name>
     <t>
       The QUERY method is used to initiate a server-side query. Unlike
       the GET method, which requests a
@@ -282,7 +286,8 @@ q=foo&amp;limit=10&amp;sort=-published
       enclosed as the response content.
     </t>
 
-    <section title="Media Types and Content Negotiation" anchor="media.types.and.conneg">
+    <section anchor="media.types.and.conneg">
+      <name>Media Types and Content Negotiation</name>
       <t>
         The semantics of a QUERY request depends both on the request content and the associated
         metadata, such as the Media Type (<xref target="HTTP" sectionFormat="comma" section="8.3.1"/>).
@@ -324,7 +329,8 @@ q=foo&amp;limit=10&amp;sort=-published
       </ul>
     </section>
 
-    <section title="Equivalent Resource" anchor="equivalent-resource">
+    <section anchor="equivalent-resource">
+      <name>Equivalent Resource</name>
       <t>
         The <em>equivalent resource</em> for any given QUERY request is a resource
         responding to GET requests, representing that QUERY request and its target, taking
@@ -345,7 +351,8 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
     </section>
 
-    <section title="Content-Location Response Field" anchor="content-location">
+    <section anchor="content-location">
+      <name>Content-Location Response Field</name>
       <t>
         A successful response (2xx, <xref target="HTTP" section="15.3"/>)
         can include a Content-Location
@@ -360,7 +367,8 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
     </section>
 
-    <section title="Location Response Field" anchor="location">
+    <section anchor="location">
+      <name>Location Response Field</name>
       <t>
         A server can assign a URI to the equivalent resource (<xref target="equivalent-resource"/>)
         of a QUERY request. If the server does so, the URI of that resource
@@ -376,7 +384,8 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
     </section>
 
-    <section title="Redirection" anchor="redirection">
+    <section anchor="redirection">
+      <name>Redirection</name>
       <t>
         In some cases, the server may choose to respond indirectly to the QUERY
         request by redirecting the user agent to a different URI (see
@@ -408,7 +417,8 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
     </section>
 
-    <section title="Conditional Requests" anchor="conditional">
+    <section anchor="conditional">
+      <name>Conditional Requests</name>
       <t>
         The selected representation (<xref target="HTTP" section="3.2"/>) of a QUERY
         request is the same as for a GET request to the equivalent resource
@@ -426,7 +436,8 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
     </section>
 
-    <section title="Caching" anchor="caching">
+    <section anchor="caching">
+      <name>Caching</name>
       <t>
         The response to a QUERY method is cacheable; a cache &MAY; use it to satisfy subsequent
         QUERY requests as per <xref target="HTTP-CACHING" section="4"/>.
@@ -466,7 +477,8 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
     </section>
 
-    <section title="Range Requests" anchor="range">
+    <section anchor="range">
+      <name>Range Requests</name>
       <t>
         The semantics of Range Requests for QUERY are identical to those for GET,
         as defined in <xref target="HTTP" section="14"/>.
@@ -482,7 +494,8 @@ q=foo&amp;limit=10&amp;sort=-published
 
   </section>
 
-  <section title="The &quot;Accept-Query&quot; Header Field" anchor="field.accept-query">
+  <section anchor="field.accept-query">
+    <name>The Accept-Query Header Field</name>
     <t>
       The "Accept-Query" response header field can be used by a resource to
       directly signal support for the QUERY method while identifying
@@ -531,7 +544,8 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     </t>
   </section>
 
-  <section title="Security Considerations">
+  <section>
+    <name>Security Considerations</name>
     <t>
       The QUERY method is subject to the same general security
       considerations as all HTTP methods as described in
@@ -566,9 +580,10 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     </t>
   </section>
 
-  <section title="IANA Considerations" anchor="iana.considerations">
-
-    <section title="Registration of QUERY method" anchor="method.registration">
+  <section anchor="iana.considerations">
+    <name>IANA Considerations</name>
+    <section anchor="method.registration">
+      <name>Registration of the QUERY Method</name>
       <t>
         IANA is requested to add the QUERY method to the HTTP
         Method Registry at <eref brackets="angle" target="http://www.iana.org/assignments/http-methods"/>
@@ -595,7 +610,8 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       </table>
     </section>
 
-    <section title="Registration of Accept-Query field" anchor="field.registration">
+    <section anchor="field.registration">
+      <name>Registration of the Accept-Query Field</name>
       <t>
         IANA is requested to add the Accept-Query field to the HTTP Field Name
         Registry at <eref brackets="angle" target="https://www.iana.org/assignments/http-fields"/>
@@ -626,7 +642,8 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
 </section>
 </middle>
 <back>
-  <references title="Normative References">
+  <references>
+    <name>Normative References</name>
     <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
     <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
     <reference anchor="HTTP">
@@ -676,7 +693,9 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       <seriesInfo name="RFC" value="3986"/>
     </reference>
   </references>
-  <references title="Informative References">
+  <references>
+    <name>Informative References</name>
+
     <reference anchor="FETCH" target="https://fetch.spec.whatwg.org">
       <front>
         <title>FETCH</title>
@@ -709,7 +728,8 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
     </reference>
   </references>
 
-  <section title="Examples" anchor="examples">
+  <section anchor="examples">
+    <name>Examples</name>
     <t>
       The examples below are for illustrative purposes only; if one needs to
       send queries that are actually this short, it is likely better to use GET.
@@ -722,7 +742,8 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
       The Content-Length fields have been omitted for brevity.
     </t>
 
-    <section title="Simple Query" anchor="example.simple">
+    <section anchor="example.simple">
+      <name>Simple Query</name>
       <t>A simple query with a direct response:</t>
 <artwork type="http-message">
 QUERY /contacts HTTP/1.1
@@ -751,8 +772,8 @@ Content-Type: application/json
 ]
 </artwork>
     </section>
-
-    <section title="Discovery of QUERY support" anchor="example.discovery.method">
+    <section anchor="example.discovery.method">
+      <name>Discovery of QUERY Support</name>
       <t>
         A simple way to discover support for QUERY is provided by the OPTIONS
         (<xref target="HTTP" section="9.3.7"/>) method:
@@ -779,7 +800,8 @@ Allow: GET, QUERY, OPTIONS, HEAD
       </t>
     </section>
 
-    <section title="Discovery of QUERY Formats" anchor="example.discovery.formats">
+    <section anchor="example.discovery.formats">
+      <name>Discovery of QUERY Formats</name>
       <t>
         Discovery of supported media types for QUERY is possible via the Accept-Query
         (<xref target="field.accept-query"/>) response field:
@@ -811,7 +833,8 @@ Accept: application/x-www-form-urlencoded, application/sql
 </artwork>
     </section>
 
-    <section title="Content-Location, Location, and Indirect Responses" anchor="example.content-location.location.indirect">
+    <section anchor="example.content-location.location.indirect">
+      <name>Content-Location, Location, and Indirect Responses</name>
       <t>
         As described in Sections <xref format="counter" target="content-location"/> and
         <xref format="counter" target="location"/>, the Content-Location and Location response fields in success responses
@@ -849,7 +872,8 @@ Date: Sun, 17 Nov 2024, 16:10:24 GMT
 ]
 </artwork>
 
-      <section title="Using Content-Location" anchor="example.content-location">
+      <section anchor="example.content-location">
+	<name>Using Content-Location</name>
         <t>
           The Content-Location response field received above identifies a resource holding
           the result for the QUERY response it appeared on:
@@ -885,7 +909,8 @@ Date: Sun, 17 Nov 2024, 16:10:25 GMT
         </t>
       </section>
 
-      <section title="Using Location" anchor="example.location">
+      <section anchor="example.location">
+	<name>Using Location</name>
         <t>
           The Location response field identifies a resource that will respond to GET
           with a current result for the same process and parameters as the original
@@ -929,7 +954,8 @@ If-None-Match: "42-1"
         </t>
       </section>
 
-      <section title="Indirect Responses" anchor="example.indirect">
+      <section anchor="example.indirect">
+	<name>Indirect Responses</name>
         <t>
           Servers can send "indirect" responses (<xref target="redirection"/>) using the status code 303 (See Other,
           <xref target="HTTP" section="15.4.4"/>).
@@ -955,7 +981,8 @@ See stored query at "/contacts/stored-queries/42".
       </section>
     </section>
 
-    <section title="Conditional Requests" anchor="example.conditional">
+    <section anchor="example.conditional">
+      <name>Conditional Requests</name>
       <t>
         Consider a resource implementing QUERY that supports "application/sql" and
         "application/xslt+xml" (<xref target="XSLT"/>) as request media types, and
@@ -1064,7 +1091,8 @@ decade, total, with errata, % with errata, average page count
         when a URI is assigned to the equivalent resource (and when the client is taking advantage
         of it). The fictitious field name "Validator" is used for demonstration purposes.
       </t>
-      <figure title="Data Flow with QUERY only">
+      <figure>
+	<name>Data Flow with QUERY Only</name>
         <artset>
           <artwork type="ascii-art" name="flow-query" align="center"><![CDATA[
 Client                             Resource
@@ -1138,7 +1166,8 @@ Client                             Resource
 <?ENDINC flow-query.svg ?>
 </artwork>
 </artset></figure>
-      <figure title="Data Flow with GET to Equivalent Resource">
+      <figure>
+	<name>Data Flow with GET to Equivalent Resource</name>
         <artset>
           <artwork type="ascii-art" name="flow-query-get" align="center"><![CDATA[
 Client                   Resource
@@ -1222,7 +1251,8 @@ Client                   Resource
 </figure>
     </section>
 
-    <section title="More Query Formats" anchor="example.more.query.formats">
+    <section anchor="example.more.query.formats">
+      <name>More Query Formats</name>
       <t>
         The following examples show requests on a JSON-shaped (<xref target="RFC8259"/>) database of
         RFC errata.
@@ -1358,7 +1388,8 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
     </section>
 </section>
 
-<section title="Selection of the Method Name 'QUERY'" anchor="selection.method.name">
+<section anchor="selection.method.name">
+  <name>Selection of the Method Name 'QUERY'</name>
 <t>
   The HTTP Method Registry (<eref target="http://www.iana.org/assignments/http-methods"/>)
   already contains three other methods with the properties "safe" and "idempotent":
@@ -1504,7 +1535,8 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 </section>
 </section>
 
-<section title="Acknowledgements" anchor="acknowledgements" numbered="false">
+<section anchor="acknowledgements" numbered="false">
+  <name>Acknowledgements</name>
 <t>
   We thank all members of the HTTP Working Group for ideas, reviews, and feedback.
 </t>
@@ -1518,8 +1550,8 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   Roy Fielding, and
   Will Hawkins.
 </t>
-</section>
-<section title="Contributors" anchor="contributors" numbered="false">
+<section anchor="contributors" numbered="false">
+  <name>Contributors</name>
 <t>
   Ashok Malhotra participated in early discussions leading to this
   specification:
