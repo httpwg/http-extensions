@@ -1106,8 +1106,11 @@ The [tus v1 protocol](https://tus.io/) is a specification for a resumable file u
 
 The authors would like to thank Mark Nottingham for substantive contributions to the text, along with the following in alphabetical order for their thorough reviews of the document:
 
+* Daniel Resnick
+* Glenn Strauss
+* Grant Gryczan
+* Julian Reschke
+* Mert Alev
 * Mike Bishop
 * Roy T. Fielding
-* Julian Reschke
-* Glenn Strauss
 * Willy Tarreau
