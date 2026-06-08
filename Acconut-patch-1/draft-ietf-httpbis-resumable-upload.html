@@ -293,16 +293,19 @@ h1, h2, h3, h4, h5, h6 {
   font-size-adjust: 0.5;
   color: var(--title-color);
 }
-h1#title {
-  font-size: 32px;
-  line-height: 40px;
-  clear: both;
-}
-h1#title, h1#rfcnum {
-  margin: 1.5em 0 0.2em;
-}
-h1#rfcnum + h1#title {
-  margin: 0.2em 0;
+h1 {
+  &#title {
+    font-size: 32px;
+    line-height: 40px;
+    clear: both;
+    margin: 1.5em 0 0.2em;
+  }
+  &#rfcnum {
+    margin: 1.5em 0 0.2em;
+    & + h1#title {
+      margin: 0.2em 0;
+    }
+  }
 }
 
 h1, h2, h3 {
@@ -322,10 +325,10 @@ h4, h5, h6 {
 #abstract+p {
   font-size: 18px;
   line-height: 24px;
-}
-#abstract+p code, #abstract+p samp, #abstract+p tt {
-  font-size: 16px;
-  line-height: 0;
+  & code, & samp, & tt {
+    font-size: 16px;
+    line-height: 0;
+  }
 }
 
 p {
@@ -336,59 +339,59 @@ p {
 div {
   margin: 0;
 }
-.alignRight.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignRight.art-text pre {
-  padding: 0;
-  width: auto;
-}
 .alignRight {
   margin: 1em 0;
-}
-.alignRight > *:first-child {
-  border: none;
-  margin: 0;
-  float: right;
-  clear: both;
-}
-.alignRight > *:nth-child(2) {
-  clear: both;
-  display: block;
-  border: none;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    margin: 0;
+    float: right;
+    clear: both;
+  }
+  & > *:nth-child(2) {
+    clear: both;
+    display: block;
+    border: none;
+  }
 }
 svg {
   display: block;
-}
-/* font-family isn't space-separated, but =~ will have to do */
-svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
-  font-family: var(--font-mono);
-}
-.alignCenter.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignCenter.art-text pre {
-  padding: 0;
-  width: auto;
+  /* font-family isn't space-separated, but =~ will have to do */
+  &[font-family~="monospace" i], & [font-family~="monospace" i] {
+    font-family: var(--font-mono);
+  }
 }
 .alignCenter {
   margin: 1em 0;
-}
-.alignCenter > *:first-child {
-  border: none;
-  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
-     support flexbox yet.
-  */
-  display: table;
-  margin: 0 auto;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+       support flexbox yet.
+    */
+    display: table;
+    margin: 0 auto;
+  }
 }
 
 /* lists */
@@ -426,26 +429,25 @@ dl {
     --indent: 5ch;
     & > dt {
       min-width: calc(var(--indent) - 2ch);
+      float: none;
     }
-  }
-  &.olPercent > dt {
-    float: none;
   }
 
   dl > dd > & {
     margin-top: 0.5em;
     margin-bottom: 0;
   }
-}
-dl:not(.dlNewline) > dt {
-  float: left;
-  margin-right: 2ch;
-  min-width: 8ch;
-}
-dl > dd {
-  margin-bottom: .8em;
-  margin-left: var(--indent) !important; /* stupid element overrides */
-  min-height: 2ex;
+
+  &:not(.dlNewline) > dt {
+    float: left;
+    margin-right: 2ch;
+    min-width: 8ch;
+  }
+  & > dd {
+    margin-bottom: .8em;
+    margin-left: var(--indent) !important; /* stupid element overrides */
+    min-height: 2ex;
+  }
 }
 :is(dl.compact, .dlCompact) > dd {
   margin-bottom: 0;
@@ -461,20 +463,22 @@ dl > dd {
 }
 
 /* links */
-a, a[href].selfRef:hover {
+a {
   text-decoration: none;
+  &[href] {
+    color: var(--link-color);
+    &:hover { text-decoration: underline; }
+    &.selfRef {
+      color: var(--text-color);
+      &:hover {
+        text-decoration: none;
+        background-color: var(--highlight-color);
+      }
+    }
+  }
 }
-a[href] {
-  color: var(--link-color);
-}
-a[href].selfRef, .iref + a[href].internal {
+.iref + a[href].internal {
   color: var(--text-color);
-}
-a[href]:hover {
-  text-decoration: underline;
-}
-a[href].selfRef:hover {
-  background-color: var(--highlight-color);
 }
 a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
   white-space: nowrap;
@@ -510,9 +514,9 @@ img {
 figure {
   margin: 0.5em 0;
   padding: 0;
-}
-figure blockquote {
-  margin: 0.8em 0.4em 0.4em;
+  & blockquote {
+    margin: 0.8em 0.4em 0.4em;
+  }
 }
 figcaption, caption {
   font-style: italic;
@@ -522,17 +526,19 @@ figcaption, caption {
 }
 @media screen {
   /* Auto-collapse boilerplate. */
-  :is(#status-of-memo, #copyright) p {
-    margin: -2px 0;
-    max-height: 0;
-    transition: max-height 2s ease, margin 0.5s ease 0.5s;
-    overflow: hidden;
-  }
-  :is(#status-of-memo, #copyright):hover p,
-  :is(#status-of-memo, #copyright) h2:target ~ p {
-    margin: 0.5em 0;
-    max-height: 500px;
-    overflow: auto;
+  :is(#status-of-memo, #copyright) {
+    & p {
+      margin: -2px 0;
+      max-height: 0;
+      transition: max-height 2s ease, margin 0.5s ease 0.5s;
+      overflow: hidden;
+    }
+    &:hover p,
+    & h2:target ~ p {
+      margin: 0.5em 0;
+      max-height: 500px;
+      overflow: auto;
+    }
   }
   pre, svg {
     display: inline-block;
@@ -582,25 +588,17 @@ table {
   max-width: 100%;
   margin: 0 0 1em;
   border-collapse: collapse;
-}
-table.right {
-  margin-left: auto;
-}
-table.center {
-  margin-left: auto;
-  margin-right: auto;
-}
-table.left {
-  margin-right: auto;
-}
-table .text-left {
-  text-align: left;
-}
-table .text-center {
-  text-align: center;
-}
-table .text-right {
-  text-align: right;
+  &.right { margin-left: auto; }
+  &.center { margin-left: auto; margin-right: auto; }
+  &.left { margin-right: auto; }
+  & .text-left { text-align: left; }
+  & .text-center { text-align: center; }
+  & .text-right { text-align: right; }
+  & caption {
+    margin: 0;
+    padding: 3px 0 3px 1em;
+  }
+  & p { margin: 0; }
 }
 
 thead, tbody {
@@ -620,13 +618,6 @@ th {
 :is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
   background-color: var(--highlight-color);
 }
-table caption {
-  margin: 0;
-  padding: 3px 0 3px 1em;
-}
-table p {
-  margin: 0;
-}
 
 /* pilcrow */
 a.pilcrow {
@@ -637,18 +628,16 @@ a.pilcrow {
     color: var(--pilcrow-weak);
     &:hover { text-decoration: none; }
   }
-}
-@media not print {
-  :hover > a.pilcrow, a.pilcrow:focus {
-    opacity: 1;
+  @media not print {
+    :hover > &, &:focus {
+      opacity: 1;
+    }
+    &[href]:hover {
+      color: var(--pilcrow-strong);
+      background-color: transparent;
+    }
   }
-  a.pilcrow[href]:hover {
-    color: var(--pilcrow-strong);
-    background-color: transparent;
-  }
-}
-@media print {
-  a.pilcrow {
+  @media print {
     display: none;
   }
 }
@@ -707,9 +696,9 @@ sub, sup {
   font-size: 0.9em;
   font-style: italic;
   margin-top: 2em;
-}
-.docInfo .prepared {
-  float: right;
+  & .prepared {
+    float: right;
+  }
 }
 
 /* table of contents */
@@ -799,23 +788,27 @@ hr.addr {
   max-width: calc(100% - 16px);
 }
 @media (min-width: 500px) {
-  #authors-addresses > section {
-    column-count: 2;
-    column-gap: 20px;
-  }
-  #authors-addresses > section > h2 {
-    column-span: all;
-  }
-  /* hack for break-inside: avoid-column */
-  #authors-addresses address {
-    display: inline-block;
-    break-inside: avoid-column;
+  #authors-addresses {
+    & > section {
+      column-count: 2;
+      column-gap: 20px;
+    }
+    & > section > h2 {
+      column-span: all;
+    }
+    /* hack for break-inside: avoid-column */
+    & address {
+      display: inline-block;
+      break-inside: avoid-column;
+    }
   }
 }
 
 /* Comments */
-.rfcEditorRemove p:first-of-type {
-  font-style: italic;
+.rfcEditorRemove {
+  & p:first-of-type {
+    font-style: italic;
+  }
 }
 .cref {
   background-color: rgba(249, 232, 105, 0.3);
@@ -826,19 +819,21 @@ hr.addr {
 }
 
 @media screen {
-  #toc nav {
-    font-family: var(--font-title);
-    font-weight: 360;
-    & > ul { margin-bottom: 2em; }
-    & ul {
-      margin: 0 0 0 4px;
-      & :is(p, li) {
-        margin: 2px 0;
+  #toc {
+    & nav {
+      font-family: var(--font-title);
+      font-weight: 360;
+      & > ul { margin-bottom: 2em; }
+      & ul {
+        margin: 0 0 0 4px;
+        & :is(p, li) {
+          margin: 2px 0;
+        }
       }
     }
-  }
-  #toc a.toplink {
-    float: right;
+    & a.toplink {
+      float: right;
+    }
   }
 }
 @media not screen {
@@ -859,54 +854,54 @@ hr.addr {
     margin: 0;
     border-bottom: 1px solid #ccc;
     opacity: 0.6;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 2px 0 2px 6px;
-    padding-right: 1em;
-    font-size: 18px;
-    line-height: 24px;
-    min-width: 190px;
-    text-align: right;
-    background-color: #444;
-    color: white;
-    cursor: pointer;
-    &::before { /* css hamburger */
-      float: right;
-      position: relative;
-      width: 1em;
-      height: 1px;
-      left: -164px;
-      margin: 8px 0 0 0;
-      background: white none repeat scroll 0 0;
-      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
-      content: "";
+    & h2 {
+      margin: 0;
+      padding: 2px 0 2px 6px;
+      padding-right: 1em;
+      font-size: 18px;
+      line-height: 24px;
+      min-width: 190px;
+      text-align: right;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      &::before { /* css hamburger */
+        float: right;
+        position: relative;
+        width: 1em;
+        height: 1px;
+        left: -164px;
+        margin: 8px 0 0 0;
+        background: white none repeat scroll 0 0;
+        box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+        content: "";
+      }
     }
-  }
-  #toc nav {
-    display: none;
-    background-color: var(--background-color);
-    padding: 0.5em 1em 1em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    height: calc(100vh - 48px);
-    border-left: 1px solid #ddd;
-  }
-  #toc.active {
-    opacity: 1;
-    & nav { display: block; }
-  }
-  /* Make the collapsed ToC header render white on gray also when it's a link */
-  #toc h2 a,
-  #toc h2 a:is(:link, :focus, :hover),
-  #toc a.toplink,
-  #toc a.toplink:hover {
-    color: white;
-    background-color: #444;
-    text-decoration: none;
-  }
-  #toc a.toplink {
-    margin: 2px 0.5em 0;
+    & nav {
+      display: none;
+      background-color: var(--background-color);
+      padding: 0.5em 1em 1em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      height: calc(100vh - 48px);
+      border-left: 1px solid #ddd;
+    }
+    &.active {
+      opacity: 1;
+      & nav { display: block; }
+    }
+    /* Make the collapsed ToC header render white on gray also when it's a link */
+    & h2 a,
+    & h2 a:is(:link, :focus, :hover),
+    & a.toplink,
+    & a.toplink:hover {
+      color: white;
+      background-color: #444;
+      text-decoration: none;
+    }
+    & a.toplink {
+      margin: 2px 0.5em 0;
+    }
   }
 }
 
@@ -925,26 +920,26 @@ hr.addr {
     margin: 0;
     padding: 0;
     z-index: 1;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 0.25em 1em 1em 0;
-  }
-  #toc nav {
-    display: block;
-    height: calc(90vh - 84px);
-    bottom: 0;
-    padding: 0.5em 0 2em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
+    & h2 {
+      margin: 0;
+      padding: 0.25em 1em 1em 0;
+    }
+    & nav {
+      display: block;
+      height: calc(90vh - 84px);
+      bottom: 0;
+      padding: 0.5em 0 2em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+    & a.toplink {
+      margin: 8px 0.5em 0;
+    }
   }
   img { /* future proofing */
     max-width: 100%;
     height: auto;
-  }
-  #toc a.toplink {
-    margin: 8px 0.5em 0;
   }
 }
 
@@ -960,12 +955,13 @@ hr.addr {
   #n-copyright-notice {
     border-bottom: none;
   }
-  #toc, #n-introduction {
-    page-break-before: always;
-  }
   #toc {
+    page-break-before: always;
     border-top: none;
     padding-top: 0;
+  }
+  #n-introduction {
+    page-break-before: always;
   }
   figure, pre, .vcard {
     page-break-inside: avoid;
@@ -1027,17 +1023,19 @@ hr.addr {
 }
 
 /* SVG Trick: a prefix match works because only black and white are allowed */
-svg :is([stroke="black"], [stroke^="#000"]) {
-  stroke: var(--text-color);
-}
-svg :is([stroke="white"], [stroke^="#fff"]) {
-  stroke: var(--background-color);
-}
-svg :is([fill="black"], [fill^="#000"], :not([fill])) {
-  fill: var(--text-color);
-}
-svg :is([fill="white"], [fill^="#fff"]) {
-  fill: var(--background-color);
+svg {
+  & :is([stroke="black"], [stroke^="#000"]) {
+    stroke: var(--text-color);
+  }
+  & :is([stroke="white"], [stroke^="#fff"]) {
+    stroke: var(--background-color);
+  }
+  & :is([fill="black"], [fill^="#000"], :not([fill])) {
+    fill: var(--text-color);
+  }
+  & :is([fill="white"], [fill^="#fff"]) {
+    fill: var(--background-color);
+  }
 }
 </style>
 
@@ -1047,11 +1045,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Resumable Uploads</td>
-<td class="right">May 2026</td>
+<td class="right">June 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Kleidl, et al.</td>
-<td class="center">Expires 13 November 2026</td>
+<td class="center">Expires 10 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1062,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-httpbis-resumable-upload-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-05-12" class="published">12 May 2026</time>
+<time datetime="2026-06-08" class="published">8 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-11-13">13 November 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-10">10 December 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1129,7 +1127,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 10 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1269,10 +1267,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-mismatching-offset" class="internal xref">Mismatching Offset</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
-                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-completed-upload" class="internal xref">Completed Upload</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
-                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-inconsistent-length" class="internal xref">Inconsistent Length</a></p>
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-inconsistent-length" class="internal xref">Inconsistent Length</a></p>
 </li>
             </ul>
 </li>
@@ -1294,113 +1289,110 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-responses-to-uploads" class="internal xref">Responses to Uploads</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-upload-strategies" class="internal xref">Upload Strategies</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-upload-strategies" class="internal xref">Upload Strategies</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
-                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-optimistic-upload-creation" class="internal xref">Optimistic Upload Creation</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-optimistic-upload-creation" class="internal xref">Optimistic Upload Creation</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1.2.1">
-                    <p id="section-toc.1-1.12.2.1.2.1.1"><a href="#section-12.1.1" class="auto internal xref">12.1.1</a>.  <a href="#name-upgrading-to-resumable-uplo" class="internal xref">Upgrading To Resumable Uploads</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1.2.1">
+                    <p id="section-toc.1-1.11.2.1.2.1.1"><a href="#section-11.1.1" class="auto internal xref">11.1.1</a>.  <a href="#name-upgrading-to-resumable-uplo" class="internal xref">Upgrading To Resumable Uploads</a></p>
 </li>
                 </ul>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
-                <p id="section-toc.1-1.12.2.2.1"><a href="#section-12.2" class="auto internal xref">12.2</a>.  <a href="#name-careful-upload-creation" class="internal xref">Careful Upload Creation</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-careful-upload-creation" class="internal xref">Careful Upload Creation</a></p>
 </li>
             </ul>
 </li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.1">
+                <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="auto internal xref">13.1</a>.  <a href="#name-http-fields" class="internal xref">HTTP Fields</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2">
+                <p id="section-toc.1-1.13.2.2.1"><a href="#section-13.2" class="auto internal xref">13.2</a>.  <a href="#name-http-status-code" class="internal xref">HTTP Status Code</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.3">
+                <p id="section-toc.1-1.13.2.3.1"><a href="#section-13.3" class="auto internal xref">13.3</a>.  <a href="#name-media-type" class="internal xref">Media Type</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.4">
+                <p id="section-toc.1-1.13.2.4.1"><a href="#section-13.4" class="auto internal xref">13.4</a>.  <a href="#name-http-problem-types" class="internal xref">HTTP Problem Types</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#section-14" class="auto internal xref">14</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.14.1"><a href="#section-14" class="auto internal xref">14</a>. <a href="#name-references" class="internal xref">References</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.1">
-                <p id="section-toc.1-1.14.2.1.1"><a href="#section-14.1" class="auto internal xref">14.1</a>.  <a href="#name-http-fields" class="internal xref">HTTP Fields</a></p>
+                <p id="section-toc.1-1.14.2.1.1"><a href="#section-14.1" class="auto internal xref">14.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.2">
-                <p id="section-toc.1-1.14.2.2.1"><a href="#section-14.2" class="auto internal xref">14.2</a>.  <a href="#name-http-status-code" class="internal xref">HTTP Status Code</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.3">
-                <p id="section-toc.1-1.14.2.3.1"><a href="#section-14.3" class="auto internal xref">14.3</a>.  <a href="#name-media-type" class="internal xref">Media Type</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.4">
-                <p id="section-toc.1-1.14.2.4.1"><a href="#section-14.4" class="auto internal xref">14.4</a>.  <a href="#name-http-problem-types" class="internal xref">HTTP Problem Types</a></p>
+                <p id="section-toc.1-1.14.2.2.1"><a href="#section-14.2" class="auto internal xref">14.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
-            <p id="section-toc.1-1.15.1"><a href="#section-15" class="auto internal xref">15</a>. <a href="#name-references" class="internal xref">References</a></p>
+            <p id="section-toc.1-1.15.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-changes" class="internal xref">Changes</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1">
-                <p id="section-toc.1-1.15.2.1.1"><a href="#section-15.1" class="auto internal xref">15.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+                <p id="section-toc.1-1.15.2.1.1"><a href="#appendix-A.1" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-re" class="internal xref">Since draft-ietf-httpbis-resumable-upload-11</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.2">
-                <p id="section-toc.1-1.15.2.2.1"><a href="#section-15.2" class="auto internal xref">15.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+                <p id="section-toc.1-1.15.2.2.1"><a href="#appendix-A.2" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-res" class="internal xref">Since draft-ietf-httpbis-resumable-upload-10</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.3">
+                <p id="section-toc.1-1.15.2.3.1"><a href="#appendix-A.3" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resu" class="internal xref">Since draft-ietf-httpbis-resumable-upload-09</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.4">
+                <p id="section-toc.1-1.15.2.4.1"><a href="#appendix-A.4" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resum" class="internal xref">Since draft-ietf-httpbis-resumable-upload-08</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.5">
+                <p id="section-toc.1-1.15.2.5.1"><a href="#appendix-A.5" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resuma" class="internal xref">Since draft-ietf-httpbis-resumable-upload-07</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.6">
+                <p id="section-toc.1-1.15.2.6.1"><a href="#appendix-A.6" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumab" class="internal xref">Since draft-ietf-httpbis-resumable-upload-06</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.7">
+                <p id="section-toc.1-1.15.2.7.1"><a href="#appendix-A.7" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumabl" class="internal xref">Since draft-ietf-httpbis-resumable-upload-05</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.8">
+                <p id="section-toc.1-1.15.2.8.1"><a href="#appendix-A.8" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumable" class="internal xref">Since draft-ietf-httpbis-resumable-upload-04</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.9">
+                <p id="section-toc.1-1.15.2.9.1"><a href="#appendix-A.9" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumable-" class="internal xref">Since draft-ietf-httpbis-resumable-upload-03</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.10">
+                <p id="section-toc.1-1.15.2.10.1"><a href="#appendix-A.10" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumable--2" class="internal xref">Since draft-ietf-httpbis-resumable-upload-02</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.11">
+                <p id="section-toc.1-1.15.2.11.1"><a href="#appendix-A.11" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumable--3" class="internal xref">Since draft-ietf-httpbis-resumable-upload-01</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.12">
+                <p id="section-toc.1-1.15.2.12.1"><a href="#appendix-A.12" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumable--4" class="internal xref">Since draft-ietf-httpbis-resumable-upload-00</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.13">
+                <p id="section-toc.1-1.15.2.13.1"><a href="#appendix-A.13" class="auto internal xref"></a><a href="#name-since-draft-tus-httpbis-res" class="internal xref">Since draft-tus-httpbis-resumable-uploads-protocol-02</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.14">
+                <p id="section-toc.1-1.15.2.14.1"><a href="#appendix-A.14" class="auto internal xref"></a><a href="#name-since-draft-tus-httpbis-resu" class="internal xref">Since draft-tus-httpbis-resumable-uploads-protocol-01</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.15">
+                <p id="section-toc.1-1.15.2.15.1"><a href="#appendix-A.15" class="auto internal xref"></a><a href="#name-since-draft-tus-httpbis-resum" class="internal xref">Since draft-tus-httpbis-resumable-uploads-protocol-00</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
-            <p id="section-toc.1-1.16.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-changes" class="internal xref">Changes</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.1">
-                <p id="section-toc.1-1.16.2.1.1"><a href="#appendix-A.1" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-re" class="internal xref">Since draft-ietf-httpbis-resumable-upload-11</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.2">
-                <p id="section-toc.1-1.16.2.2.1"><a href="#appendix-A.2" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-res" class="internal xref">Since draft-ietf-httpbis-resumable-upload-10</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.3">
-                <p id="section-toc.1-1.16.2.3.1"><a href="#appendix-A.3" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resu" class="internal xref">Since draft-ietf-httpbis-resumable-upload-09</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.4">
-                <p id="section-toc.1-1.16.2.4.1"><a href="#appendix-A.4" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resum" class="internal xref">Since draft-ietf-httpbis-resumable-upload-08</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.5">
-                <p id="section-toc.1-1.16.2.5.1"><a href="#appendix-A.5" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resuma" class="internal xref">Since draft-ietf-httpbis-resumable-upload-07</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.6">
-                <p id="section-toc.1-1.16.2.6.1"><a href="#appendix-A.6" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumab" class="internal xref">Since draft-ietf-httpbis-resumable-upload-06</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.7">
-                <p id="section-toc.1-1.16.2.7.1"><a href="#appendix-A.7" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumabl" class="internal xref">Since draft-ietf-httpbis-resumable-upload-05</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.8">
-                <p id="section-toc.1-1.16.2.8.1"><a href="#appendix-A.8" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumable" class="internal xref">Since draft-ietf-httpbis-resumable-upload-04</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.9">
-                <p id="section-toc.1-1.16.2.9.1"><a href="#appendix-A.9" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumable-" class="internal xref">Since draft-ietf-httpbis-resumable-upload-03</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.10">
-                <p id="section-toc.1-1.16.2.10.1"><a href="#appendix-A.10" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumable--2" class="internal xref">Since draft-ietf-httpbis-resumable-upload-02</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.11">
-                <p id="section-toc.1-1.16.2.11.1"><a href="#appendix-A.11" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumable--3" class="internal xref">Since draft-ietf-httpbis-resumable-upload-01</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.12">
-                <p id="section-toc.1-1.16.2.12.1"><a href="#appendix-A.12" class="auto internal xref"></a><a href="#name-since-draft-ietf-httpbis-resumable--4" class="internal xref">Since draft-ietf-httpbis-resumable-upload-00</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.13">
-                <p id="section-toc.1-1.16.2.13.1"><a href="#appendix-A.13" class="auto internal xref"></a><a href="#name-since-draft-tus-httpbis-res" class="internal xref">Since draft-tus-httpbis-resumable-uploads-protocol-02</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.14">
-                <p id="section-toc.1-1.16.2.14.1"><a href="#appendix-A.14" class="auto internal xref"></a><a href="#name-since-draft-tus-httpbis-resu" class="internal xref">Since draft-tus-httpbis-resumable-uploads-protocol-01</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.15">
-                <p id="section-toc.1-1.16.2.15.1"><a href="#appendix-A.15" class="auto internal xref"></a><a href="#name-since-draft-tus-httpbis-resum" class="internal xref">Since draft-tus-httpbis-resumable-uploads-protocol-00</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.16.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-draft-version-identificatio" class="internal xref">Draft Version Identification</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17">
-            <p id="section-toc.1-1.17.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-draft-version-identificatio" class="internal xref">Draft Version Identification</a></p>
+            <p id="section-toc.1-1.17.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18">
-            <p id="section-toc.1-1.18.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19">
-            <p id="section-toc.1-1.19.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.18.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1464,7 +1456,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-overview" class="section-name selfRef">Overview</a>
       </h2>
 <p id="section-3-1">Resumable uploads are supported in HTTP through use of a temporary resource, an <em>upload resource</em> (<a href="#upload-resource" class="auto internal xref">Section 4</a>), that is separate from the resource being uploaded to and specific to that upload. By interacting with the upload resource, a client can retrieve the current offset of the upload (<a href="#offset-retrieving" class="auto internal xref">Section 4.3</a>), append to the upload (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>), and cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 4.5</a>).<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">The remainder of this section uses examples to illustrate different interactions with the upload resource. HTTP message exchanges, and thereby resumable uploads, use representation data (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.1" class="relref">Section 8.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). This means that resumable uploads can be used with many forms of content, such as static files, in-memory buffers, data from streaming sources, or on-demand generated data. Examples are purely illustrative and non-normative. Implementations of this protocol are expected to follow normative requirements defined in other sections, together with applying security considerations presented in <a href="#security-considerations" class="auto internal xref">Section 13</a>.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-2">The remainder of this section uses examples to illustrate different interactions with the upload resource. HTTP message exchanges, and thereby resumable uploads, use representation data (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.1" class="relref">Section 8.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). This means that resumable uploads can be used with many forms of content, such as static files, in-memory buffers, data from streaming sources, or on-demand generated data. Examples are purely illustrative and non-normative. Implementations of this protocol are expected to follow normative requirements defined in other sections, together with applying security considerations presented in <a href="#security-considerations" class="auto internal xref">Section 12</a>.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <div id="example-1">
 <section id="section-3.1">
         <h3 id="name-example-1-complete-upload-o">
@@ -1623,7 +1615,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         </h3>
 <p id="section-3.2-1">In some cases, clients might prefer to upload a representation as a series of parts sent serially across multiple HTTP messages. One use case is to overcome server limits on HTTP message content size. Another use case is where the client does not know the final size of the representation data, such as when the data originates from a streaming source.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2-2">This example shows how the client, communicating with a resource known to support resumable upload, can upload parts of a representation incrementally.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2-3">1) The client is aware that the targetted resource supports resumable uploads and therefore starts the upload with the <code>Upload-Complete</code> field value set to false and the first part of the representation.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">1) The client is aware that the targeted resource supports resumable uploads and therefore starts the upload with the <code>Upload-Complete</code> field value set to false and the first part of the representation.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 <span id="name-upload-creation-with-partia"></span><div id="fig-upload-creation-incomplete">
 <figure id="figure-5">
           <div id="section-3.2-4.1">
@@ -1794,8 +1786,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       </h2>
 <p id="section-4-1">A resumable upload is enabled through interaction with an upload resource. When a resumable upload begins, the server is asked to create an upload resource through a request to another resource (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>). Using this upload resource, the client can query the upload progress (<a href="#offset-retrieving" class="auto internal xref">Section 4.3</a>), append representation data (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>), or cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 4.5</a>). The server is responsible for persisting the state of the upload resource (<a href="#state" class="auto internal xref">Section 4.1</a>) and updating it as the upload progresses.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">An upload resource is specific to the upload of one representation. For uploading multiple representations, multiple upload resources have to be used.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">The server can clean up an upload resource and make it inaccessible immediately after the upload is complete. However, if a client didn't receive the last response acknowledging the upload's completion and the upload resource is not available anymore, the client cannot verify the upload's state with the server. Therefore, the server <span class="bcp14">SHOULD</span> keep the upload resource available for a reasonable amount of time after the upload is complete, or provide an alternate, application-specific way for the client to verify the completion of the upload.<a href="#section-4-3" class="pilcrow">¶</a></p>
-<p id="section-4-4">An upload resource <span class="bcp14">SHOULD</span> be unique. Reuse of a URI for a different upload resource <span class="bcp14">SHOULD</span> be avoided in order to reduce the chance of misdirected or corrupted upload resources, as well as the potential security issues described in <a href="#security-considerations" class="auto internal xref">Section 13</a>.<a href="#section-4-4" class="pilcrow">¶</a></p>
+<p id="section-4-3">The server can clean up an upload resource and make it inaccessible immediately after the upload is complete. However, keeping the upload resource available for a period of time after completion allows the client to verify the state of the upload if it did not receive the last response acknowledging the completion. Implementations are responsible for deciding if they retain the resource and for what duration; they will need to consider the resource costs required to do so.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-4">An upload resource <span class="bcp14">SHOULD</span> be unique. Reuse of a URI for a different upload resource <span class="bcp14">SHOULD</span> be avoided in order to reduce the chance of misdirected or corrupted upload resources, as well as the potential security issues described in <a href="#security-considerations" class="auto internal xref">Section 12</a>.<a href="#section-4-4" class="pilcrow">¶</a></p>
 <div id="state">
 <section id="section-4.1">
         <h3 id="name-state">
@@ -1819,9 +1811,10 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <h4 id="name-completeness">
 <a href="#section-4.1.2" class="section-number selfRef">4.1.2. </a><a href="#name-completeness" class="section-name selfRef">Completeness</a>
           </h4>
-<p id="section-4.1.2-1">An upload is incomplete until it is explicitly marked as completed by the client. After this point, no representation data can be appended anymore.<a href="#section-4.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.1.2-1">An upload is incomplete until it is explicitly marked as completed by the client or the server. After this point, no more representation data can be appended.<a href="#section-4.1.2-1" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-2">The <code>Upload-Complete</code> request and response header field conveys the completeness state. <code>Upload-Complete</code> is an Item Structured Header Field (<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>). Its value is a Boolean (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.3.6" class="relref">Section 3.3.6</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>) and indicates whether the upload is complete or not. Other values <span class="bcp14">MUST</span> cause the entire header field to be ignored.<a href="#section-4.1.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.1.2-3">An upload is marked as completed if a request for creating the upload resource (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) or appending to it (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) included the <code>Upload-Complete</code> header field with a true value and the request content was fully processed.<a href="#section-4.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.1.2-3">An upload is marked as completed either when a request for creating the upload resource (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) or appending to it (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) includes the <code>Upload-Complete</code> header field with a true value and the request content was fully processed, or when a response includes the <code>Upload-Complete</code> header field with a true value.<a href="#section-4.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.1.2-4">When used in an upload creation response (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) or an upload append response (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>), <code>Upload-Complete</code> signals whether the response comes from the initial targeted resource. The value of true means that the semantics of the targeted resource apply, and the value of false means that the semantics of the resumable upload protocol apply. The client <span class="bcp14">SHOULD NOT</span> perform upload resumption to the upload resource after receiving a response with the <code>Upload-Complete</code> field value set to true. Note that <code>Upload-Complete</code> can be true even when the full representation data was not transmitted in the case that the server decides to generate an early response when processing the targeted resource. Also note that <code>Upload-Complete</code> can be false in response to an invalid operation performed on a completed upload.<a href="#section-4.1.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="upload-length">
@@ -1840,7 +1833,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </li>
           </ol>
 <p id="section-4.1.3-4">The <code>Upload-Length</code> request and response header field is an Item Structured Header Field (<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>). Its value is a non-negative Integer (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.3.1" class="relref">Section 3.3.1</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>) and indicates the number of bytes of the entire representation data. Other values <span class="bcp14">MUST</span> cause the entire header field to be ignored.<a href="#section-4.1.3-4" class="pilcrow">¶</a></p>
-<p id="section-4.1.3-5">If indicators (1) and (2) are both present in the same request, their indicated lengths <span class="bcp14">MUST</span> match. If multiple requests include indicators, their indicated values <span class="bcp14">MUST</span> match. A server can use the problem type <span>[<a href="#PROBLEM" class="cite xref">PROBLEM</a>]</span> of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" (<a href="#inconsistent-length" class="auto internal xref">Section 7.3</a>) in responses to indicate inconsistent length values.<a href="#section-4.1.3-5" class="pilcrow">¶</a></p>
+<p id="section-4.1.3-5">If indicators (1) and (2) are both present in the same request, their indicated lengths <span class="bcp14">MUST</span> match. If multiple requests include indicators, their indicated values <span class="bcp14">MUST</span> match. A server can use the problem type <span>[<a href="#PROBLEM" class="cite xref">PROBLEM</a>]</span> of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" (<a href="#inconsistent-length" class="auto internal xref">Section 7.2</a>) in responses to indicate inconsistent length values.<a href="#section-4.1.3-5" class="pilcrow">¶</a></p>
 <p id="section-4.1.3-6">The <code>Upload-Length</code> field can be used in response to an offset retrieval; see <a href="#offset-retrieving-server" class="auto internal xref">Section 4.3.2</a>.<a href="#section-4.1.3-6" class="pilcrow">¶</a></p>
 <p id="section-4.1.3-7">The server might not know the length until the upload is complete.<a href="#section-4.1.3-7" class="pilcrow">¶</a></p>
 <p id="section-4.1.3-8">Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the <code>Upload-Complete</code> (<a href="#upload-complete" class="auto internal xref">Section 4.1.2</a>) header field to indicate that a request completes the upload. The offset could match the length, but the upload can still be incomplete.<a href="#section-4.1.3-8" class="pilcrow">¶</a></p>
@@ -1885,12 +1878,24 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dd>
           <dd class="break"></dd>
 </dl>
-<p id="section-4.1.4-4">Clients usually discover limits through the <code>Upload-Limit</code> header field when the upload resource is created (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>). Throughout the lifetime of the upload resource, these limits <span class="bcp14">SHOULD NOT</span> change in a way that causes failures for clients adhering to the initially discovered limits. In particular, whereas the values for <code>max-size</code>, <code>max-append-size</code>, and <code>max-age</code> can increase without harm, they <span class="bcp14">SHOULD NOT</span> decrease as they can cause ongoing uploads to fail. Similarly, the value for <code>min-append-size</code> <span class="bcp14">SHOULD NOT</span> increase. If the client discovers that it cannot continue the upload while adhering to the limits, it <span class="bcp14">SHOULD</span> stop the current request immediately and cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 4.5</a>).<a href="#section-4.1.4-4" class="pilcrow">¶</a></p>
-<p id="section-4.1.4-5">Receivers of <code>Upload-Limit</code> parse the Dictionary as described in <span><a href="https://rfc-editor.org/rfc/rfc9651#section-4.2" class="relref">Section 4.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key <span class="bcp14">MUST</span> be ignored. Second, a member with a known key but a value of unexpected type <span class="bcp14">MUST</span> cause the entire <code>Upload-Limit</code> header field to be ignored, or alternatively the complete HTTP message <span class="bcp14">MUST</span> be treated as malformed.<a href="#section-4.1.4-5" class="pilcrow">¶</a></p>
-<p id="section-4.1.4-6">When responding to an <code>OPTIONS</code> request without the <code>Upload-Complete</code> header field, if the resource that is the target of the request supports the creation of a resumable upload resource (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>), the server <span class="bcp14">MUST</span> include the <code>Upload-Limit</code> header field with the corresponding limits in the response. If a server is configured such that all of its resources support the creation of upload resources with identical limits, it <span class="bcp14">SHOULD</span> include the <code>Upload-Limit</code> header field in response to an <code>OPTIONS</code> request for the target <code>*</code> (if this target is supported). If the server does not apply any limits, it <span class="bcp14">MUST</span> use <code>min-size=0</code> instead of an empty header value.<a href="#section-4.1.4-6" class="pilcrow">¶</a></p>
-<p id="section-4.1.4-7">A client can use an <code>OPTIONS</code> request without the <code>Upload-Complete</code> header field to discover whether the resource supports resumable uploads and to learn potential limits before creating an upload resource. To reduce the likelihood of failing requests, the limits announced in an <code>OPTIONS</code> response <span class="bcp14">SHOULD NOT</span> be less restrictive than the limits applied to an upload once the upload resource has been created, unless the request to create an upload resource included additional information that warrants different limits. For example, a server might announce a general maximum size limit of 1GB, but reduce it to 100MB when the media type indicates an image.<a href="#section-4.1.4-7" class="pilcrow">¶</a></p>
-<p id="section-4.1.4-8">Servers, including intermediaries, can (and often do) apply restrictions on the size of individual request message content. There is no standard mechanism to communicate such existing size restriction. A server that implements one can respond with a <code>413 (Content Too Large)</code> status code; see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.5.14" class="relref">Section 15.5.14</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>. Appending to an upload resource, as a series of appends, can be used to upload data up to the <code>max-size</code> limit without encountering per-message limits. Servers might apply restrictions that are smaller than the append limits, which would also result in a failed request.<a href="#section-4.1.4-8" class="pilcrow">¶</a></p>
-<p id="section-4.1.4-9">A server responding with a <code>413 (Content Too Large)</code> status code as a result of its upload limits <span class="bcp14">SHOULD</span> include the <code>Upload-Limit</code> header field in this response if possible. This might not be possible if intermediaries enforce content size restrictions. When a client receives a response with a <code>413 (Content Too Large)</code> status code during upload creation (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) or append (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>), it <span class="bcp14">SHOULD</span> retry the request with a smaller size residing between <code>min-append-size</code> and <code>max-append-size</code>. If these limits are unknown at the time of receiving such a response, the client can attempt to discover them through an <code>OPTIONS</code> request. Retrying with the same request content size will likely yield the same error response. Cases where the request content size matches the <code>min-append-size</code> limit yet fails with a <code>413 (Content Too Large)</code> response might indicate a deployment mismatch that cannot be recovered from.<a href="#section-4.1.4-9" class="pilcrow">¶</a></p>
+<p id="section-4.1.4-4">Clients usually discover limits through the <code>Upload-Limit</code> header field when the upload resource is created (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>). Throughout the lifetime of the upload resource, these limits <span class="bcp14">SHOULD NOT</span> change in a way that causes failures for clients adhering to the initially discovered limits. If the client discovers that it cannot continue the upload while adhering to the limits, it <span class="bcp14">SHOULD</span> stop the current request immediately and cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 4.5</a>).<a href="#section-4.1.4-4" class="pilcrow">¶</a></p>
+<p id="section-4.1.4-5">The following recommendations for limit changes can minimize the risk of causing upload failures:<a href="#section-4.1.4-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1.4-6.1">
+              <p id="section-4.1.4-6.1.1"><code>max-size</code> and <code>max-append-size</code> <span class="bcp14">SHOULD NOT</span> decrease.<a href="#section-4.1.4-6.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.1.4-6.2">
+              <p id="section-4.1.4-6.2.1"><code>min-size</code> and <code>min-append-size</code> <span class="bcp14">SHOULD NOT</span> increase.<a href="#section-4.1.4-6.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.1.4-6.3">
+              <p id="section-4.1.4-6.3.1">Between subsequent responses, the end of the upload resource's lifetime as implied by <code>max-age</code> <span class="bcp14">SHOULD NOT</span> decrease.<a href="#section-4.1.4-6.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-4.1.4-7">Receivers of <code>Upload-Limit</code> parse the Dictionary as described in <span><a href="https://rfc-editor.org/rfc/rfc9651#section-4.2" class="relref">Section 4.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key <span class="bcp14">MUST</span> be ignored. Second, a member with a known key but a value of unexpected type <span class="bcp14">MUST</span> cause the entire <code>Upload-Limit</code> header field to be ignored, or alternatively the complete HTTP message <span class="bcp14">MUST</span> be treated as malformed.<a href="#section-4.1.4-7" class="pilcrow">¶</a></p>
+<p id="section-4.1.4-8">When responding to an <code>OPTIONS</code> request without the <code>Upload-Complete</code> header field, if the resource that is the target of the request supports the creation of a resumable upload resource (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>), the server <span class="bcp14">MUST</span> include the <code>Upload-Limit</code> header field with the corresponding limits in the response. If a server is configured such that all of its resources support the creation of upload resources with identical limits, it <span class="bcp14">SHOULD</span> include the <code>Upload-Limit</code> header field in response to an <code>OPTIONS</code> request for the target <code>*</code> (if this target is supported). If the server does not apply any limits, it <span class="bcp14">MUST</span> use <code>min-size=0</code> instead of an empty header value.<a href="#section-4.1.4-8" class="pilcrow">¶</a></p>
+<p id="section-4.1.4-9">A client can use an <code>OPTIONS</code> request without the <code>Upload-Complete</code> header field to discover whether the resource supports resumable uploads and to learn potential limits before creating an upload resource. To reduce the likelihood of failing requests, the limits announced in an <code>OPTIONS</code> response <span class="bcp14">SHOULD NOT</span> be less restrictive than the limits applied to an upload once the upload resource has been created, unless the request to create an upload resource included additional information that warrants different limits. For example, a server might announce a general maximum size limit of 1GB, but reduce it to 100MB when the media type indicates an image.<a href="#section-4.1.4-9" class="pilcrow">¶</a></p>
+<p id="section-4.1.4-10">Servers, including intermediaries, can (and often do) apply restrictions on the size of individual request message content. There is no standard mechanism to communicate such existing size restriction. A server that implements one can respond with a <code>413 (Content Too Large)</code> status code; see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.5.14" class="relref">Section 15.5.14</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>. Appending to an upload resource, as a series of appends, can be used to upload data up to the <code>max-size</code> limit without encountering per-message limits. Servers might apply restrictions that are smaller than the append limits, which would also result in a failed request.<a href="#section-4.1.4-10" class="pilcrow">¶</a></p>
+<p id="section-4.1.4-11">A server responding with a <code>413 (Content Too Large)</code> status code as a result of its upload limits <span class="bcp14">SHOULD</span> include the <code>Upload-Limit</code> header field in this response if possible. This might not be possible if intermediaries enforce content size restrictions. When a client receives a response with a <code>413 (Content Too Large)</code> status code during upload creation (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) or append (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>), it <span class="bcp14">SHOULD</span> retry the request with a smaller size residing between <code>min-append-size</code> and <code>max-append-size</code>. If these limits are unknown at the time of receiving such a response, the client can attempt to discover them through an <code>OPTIONS</code> request. Retrying with the same request content size will likely yield the same error response. Cases where the request content size matches the <code>min-append-size</code> limit yet fails with a <code>413 (Content Too Large)</code> response might indicate a deployment mismatch that cannot be recovered from.<a href="#section-4.1.4-11" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1906,7 +1911,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-client-behavior" class="section-name selfRef">Client Behavior</a>
           </h4>
 <p id="section-4.2.1-1">A client can start a resumable upload from any request that can carry content by including the <code>Upload-Complete</code> header field (<a href="#upload-complete" class="auto internal xref">Section 4.1.2</a>). As a consequence, all request methods that allow content are possible, such as <code>POST</code>, <code>PUT</code>, and <code>PATCH</code>.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.2.1-2">The <code>Upload-Complete</code> header field is set to true if the request content includes the entire representation data that the client intends to upload. This is also a requirement for transparently upgrading to resumable uploads from traditional uploads (<a href="#upgrading-uploads" class="auto internal xref">Section 12.1.1</a>).<a href="#section-4.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-2">The <code>Upload-Complete</code> header field is set to true if the request content includes the entire representation data that the client intends to upload. This is also a requirement for transparently upgrading to resumable uploads from traditional uploads (<a href="#upgrading-uploads" class="auto internal xref">Section 11.1.1</a>).<a href="#section-4.2.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.2.1-3">If the client knows the representation data's length, it <span class="bcp14">SHOULD</span> indicate the length in the request to help the server allocate necessary resources for the upload and provide early feedback if the representation violates a limit (<a href="#upload-limit" class="auto internal xref">Section 4.1.4</a>). This indication can be done through the <code>Upload-Length</code> header field or the combination of the <code>Content-Length</code> and <code>Upload-Complete: ?1</code> header fields (see <a href="#upload-length" class="auto internal xref">Section 4.1.3</a>).<a href="#section-4.2.1-3" class="pilcrow">¶</a></p>
 <p id="section-4.2.1-4">The client <span class="bcp14">SHOULD</span> respect any limits (<a href="#upload-limit" class="auto internal xref">Section 4.1.4</a>) announced in the <code>Upload-Limit</code> header field in interim or final responses. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client <span class="bcp14">SHOULD</span> stop the current request immediately and cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 4.5</a>).<a href="#section-4.2.1-4" class="pilcrow">¶</a></p>
 <p id="section-4.2.1-5">The request content can be empty. If the <code>Upload-Complete</code> header field is then set to true, the client intends to upload an empty representation. An <code>Upload-Complete</code> header field set to false is also valid. This can be used to retrieve the upload resource's URI before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URI, at the cost of an additional round-trip before data upload can commence.<a href="#section-4.2.1-5" class="pilcrow">¶</a></p>
@@ -1940,7 +1945,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-4.2.2-5">The server <span class="bcp14">MUST</span> record the length according to <a href="#upload-length" class="auto internal xref">Section 4.1.3</a> if the <code>Upload-Length</code> or <code>Upload-Complete: ?1</code> header fields are included in the request.<a href="#section-4.2.2-5" class="pilcrow">¶</a></p>
 <p id="section-4.2.2-6">While the request content is being processed, the server <span class="bcp14">MAY</span> send multiple interim responses with a <code>104 (Upload Resumption Supported)</code> status code and the <code>Upload-Offset</code> header field set to the current offset to inform the client about the upload progress.<a href="#section-4.2.2-6" class="pilcrow">¶</a></p>
 <p id="section-4.2.2-7">Where a response requires a <code>Location</code> header field to be included, all interim and final response messages for the same request <span class="bcp14">MUST</span> contain an identical <code>Location</code> value. However, final responses including the <code>Upload-Complete: ?1</code> header field are exempt from this requirement because they are the result of processing the transferred representation and the <code>Location</code> value does not necessarily represent the upload location. Where the <code>Location</code> value is expected to be identical across multiple messages, clients <span class="bcp14">SHOULD</span> verify this. If verification fails, clients <span class="bcp14">SHOULD</span> abort the current request and cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 4.5</a>).<a href="#section-4.2.2-7" class="pilcrow">¶</a></p>
-<p id="section-4.2.2-8">The server might not process the entire request content when the upload is interrupted, for example because of dropped connection or canceled request. In this case, the server <span class="bcp14">SHOULD</span> append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource <span class="bcp14">MUST NOT</span> be considered complete then.<a href="#section-4.2.2-8" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-8">The server <span class="bcp14">SHOULD</span> include the <code>Upload-Complete</code> (<a href="#upload-complete" class="auto internal xref">Section 4.1.2</a>) header field in the response to indicate whether it is the result of processing the uploaded representation.<a href="#section-4.2.2-8" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-9">The server might not process the entire request content when the upload is interrupted, for example because of dropped connection or canceled request. In this case, the server <span class="bcp14">SHOULD</span> append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource <span class="bcp14">MUST NOT</span> be considered complete then.<a href="#section-4.2.2-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="upload-creation-example">
@@ -1972,6 +1978,7 @@ Upload-Offset: 23456789
 
 HTTP/1.1 200 OK
 Location: https://example.com/upload/b530ce8ff
+Upload-Complete: ?1
 Upload-Limit: max-size=1234567890
 Content-Type: application/json
 
@@ -1997,6 +2004,7 @@ Location: https://example.com/upload/3fd4994ad
 
 HTTP/1.1 201 Created
 Location: https://example.com/upload/3fd4994ad
+Upload-Complete: ?0
 Upload-Limit: max-size=1234567890
 </pre><a href="#section-4.2.3-6" class="pilcrow">¶</a>
 </div>
@@ -2020,21 +2028,26 @@ Location: https://example.com/upload/0587fa44b
 HTTP/1.1 500 Internal Server Error
 </pre><a href="#section-4.2.3-9" class="pilcrow">¶</a>
 </div>
-<p id="section-4.2.3-10">D) The following example shows an upload creation being rejected by the server because uploads to the targetted resource are not allowed. The client cannot continue the upload.<a href="#section-4.2.3-10" class="pilcrow">¶</a></p>
+<p id="section-4.2.3-10">D) The following example shows an upload creation being rejected by the server because the request content cannot be decoded. The <code>Upload-Complete</code> header in the response is set to true since the server is uninterested in receiving the full representation after the decoding failure, and the upload is complete in its perspective. The client cannot continue the upload.<a href="#section-4.2.3-10" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.2.3-11">
 <pre>
-POST /upload-not-allowed HTTP/1.1
+POST /upload-gzip HTTP/1.1
 Host: example.com
-Upload-Complete: ?1
-Content-Length: 123456789
+Upload-Complete: ?0
+Content-Length: 23456789
 Upload-Length: 123456789
+Content-Encoding: gzip
 
-[content (123456789 bytes)]
+[corrupted gzip content]
 </pre><a href="#section-4.2.3-11" class="pilcrow">¶</a>
 </div>
 <div class="lang-http-message sourcecode" id="section-4.2.3-12">
 <pre>
-HTTP/1.1 405 Method Not Allowed
+HTTP/1.1 104 Upload Resumption Supported
+Location: https://example.com/upload/6723cdf37
+
+HTTP/1.1 400 Bad Request
+Upload-Complete: ?1
 </pre><a href="#section-4.2.3-12" class="pilcrow">¶</a>
 </div>
 </section>
@@ -2057,7 +2070,7 @@ HTTP/1.1 405 Method Not Allowed
 <p id="section-4.3.1-4">If the client received a response with a<a href="#section-4.3.1-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3.1-5.1">
-              <p id="section-4.3.1-5.1.1"><code>2xx (Successful)</code> status code, the client can continue appending representation data to it (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) if the upload is not complete yet.<a href="#section-4.3.1-5.1.1" class="pilcrow">¶</a></p>
+              <p id="section-4.3.1-5.1.1"><code>2xx (Successful)</code> status code, the client can continue appending representation data to it and/or mark the upload as complete (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>).<a href="#section-4.3.1-5.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.3.1-5.2">
               <p id="section-4.3.1-5.2.1"><code>307 (Temporary Redirect)</code> or <code>308 (Permanent Redirect)</code> status code, the client <span class="bcp14">MAY</span> retry retrieving the offset from the new URI.<a href="#section-4.3.1-5.2.1" class="pilcrow">¶</a></p>
@@ -2082,7 +2095,7 @@ HTTP/1.1 405 Method Not Allowed
               <p id="section-4.3.2-2.1.1"><span class="bcp14">MUST</span> include the offset in the <code>Upload-Offset</code> header field (<a href="#upload-offset" class="auto internal xref">Section 4.1.1</a>),<a href="#section-4.3.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.3.2-2.2">
-              <p id="section-4.3.2-2.2.1"><span class="bcp14">MUST</span> include the completeness state in the <code>Upload-Complete</code> header field (<a href="#upload-complete" class="auto internal xref">Section 4.1.2</a>),<a href="#section-4.3.2-2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-4.3.2-2.2.1"><span class="bcp14">MUST</span> include the <code>Upload-Complete</code> header field (<a href="#upload-complete" class="auto internal xref">Section 4.1.2</a>) indicating whether a final response was produced from processing the uploaded representation,<a href="#section-4.3.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.3.2-2.3">
               <p id="section-4.3.2-2.3.1"><span class="bcp14">MUST</span> include the length in the <code>Upload-Length</code> header field, unless the client has not supplied one, by providing the corresponding headers as described in (<a href="#upload-length" class="auto internal xref">Section 4.1.3</a>),<a href="#section-4.3.2-2.3.1" class="pilcrow">¶</a></p>
@@ -2102,7 +2115,7 @@ HTTP/1.1 405 Method Not Allowed
           <h4 id="name-examples-2">
 <a href="#section-4.3.3" class="section-number selfRef">4.3.3. </a><a href="#name-examples-2" class="section-name selfRef">Examples</a>
           </h4>
-<p id="section-4.3.3-1">A) The following example shows an offset retrieval request. The server indicates the current offset and that the upload is not complete yet. The client can continue to append representation data.<a href="#section-4.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3.3-1">The following example shows an offset retrieval request. The server indicates the current offset and that the upload is not complete yet. The client can continue to append representation data.<a href="#section-4.3.3-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-4.3.3-2">
 <pre>
 HEAD /upload/c35e2cd29 HTTP/1.1
@@ -2118,22 +2131,6 @@ Upload-Length: 100000000
 Upload-Limit: max-age=3600
 Cache-Control: no-store
 </pre><a href="#section-4.3.3-3" class="pilcrow">¶</a>
-</div>
-<p id="section-4.3.3-4">B) The following example shows an offset retrieval request for a completed upload. The client does not need to continue the upload.<a href="#section-4.3.3-4" class="pilcrow">¶</a></p>
-<div class="lang-http-message sourcecode" id="section-4.3.3-5">
-<pre>
-HEAD /upload/a9edb781b HTTP/1.1
-Host: example.com
-</pre><a href="#section-4.3.3-5" class="pilcrow">¶</a>
-</div>
-<div class="lang-http-message sourcecode" id="section-4.3.3-6">
-<pre>
-HTTP/1.1 204 No Content
-Upload-Complete: ?1
-Upload-Offset: 100000000
-Upload-Length: 100000000
-Cache-Control: no-store
-</pre><a href="#section-4.3.3-6" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2186,28 +2183,13 @@ Cache-Control: no-store
           </h4>
 <p id="section-4.4.2-1">A server applies a <code>PATCH</code> request with the <code>application/partial-upload</code> media type (<a href="#media-type-partial-upload" class="auto internal xref">Section 6</a>) to an upload resource by appending the patch document in the request content.<a href="#section-4.4.2-1" class="pilcrow">¶</a></p>
 <p id="section-4.4.2-2">The server might not process the entire patch document when the upload is interrupted, for example because of a dropped connection or canceled request. In this case, the server <span class="bcp14">SHOULD</span> append as much of the patch document as possible to the upload resource, starting at its beginning and without discontinuities. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in <span><a href="https://rfc-editor.org/rfc/rfc5789#section-2" class="relref">Section 2</a> of [<a href="#PATCH" class="cite xref">PATCH</a>]</span>. Saving the processed data allows the client to resume the upload from where it was interrupted. In addition, the upload resource <span class="bcp14">MUST NOT</span> be considered complete then.<a href="#section-4.4.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.4.2-3">If the <code>Upload-Offset</code> request header field value does not match the current offset (<a href="#upload-offset" class="auto internal xref">Section 4.1.1</a>), the server <span class="bcp14">MUST</span> reject the request with a <code>409 (Conflict)</code> status code. The response <span class="bcp14">MUST</span> include the correct offset in the <code>Upload-Offset</code> header field. The response can use the problem type <span>[<a href="#PROBLEM" class="cite xref">PROBLEM</a>]</span> of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" (<a href="#mismatching-offset" class="auto internal xref">Section 7.1</a>).<a href="#section-4.4.2-3" class="pilcrow">¶</a></p>
-<p id="section-4.4.2-4">If the upload is already complete (<a href="#upload-complete" class="auto internal xref">Section 4.1.2</a>), the server <span class="bcp14">MUST NOT</span> modify the upload resource and <span class="bcp14">MUST</span> reject the request. The choice of response depends on the nature of the upload request and server state, including but not limited to:<a href="#section-4.4.2-4" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-4.4.2-5.1">
-              <p id="section-4.4.2-5.1.1">If the client attempted to append a non-zero length document, the server <span class="bcp14">MUST</span> treat this as an inconsistent length failure. The server can use the problem type <span>[<a href="#PROBLEM" class="cite xref">PROBLEM</a>]</span> of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" (<a href="#inconsistent-length" class="auto internal xref">Section 7.3</a>) in the response.<a href="#section-4.4.2-5.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-4.4.2-5.2">
-              <p id="section-4.4.2-5.2.1">If the client attempted to append a zero-length document:<a href="#section-4.4.2-5.2.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-4.4.2-5.2.2.1">
-                  <p id="section-4.4.2-5.2.2.1.1">If the server retains knowledge of the upload resource but it is not available, the <code>410 (Gone)</code> status code can be used; the response could also contain a <code>Location</code> header field to indicate the location of the completed upload. The server can use the problem type <span>[<a href="#PROBLEM" class="cite xref">PROBLEM</a>]</span> of "https://iana.org/assignments/http-problem-types#completed-upload" (<a href="#completed-upload" class="auto internal xref">Section 7.2</a>) in the response.<a href="#section-4.4.2-5.2.2.1.1" class="pilcrow">¶</a></p>
-</li>
-                <li class="normal" id="section-4.4.2-5.2.2.2">
-                  <p id="section-4.4.2-5.2.2.2.1">If the server has not retained knowledge of the upload resource, a <code>404 (Not Found)</code> status code can be used.<a href="#section-4.4.2-5.2.2.2.1" class="pilcrow">¶</a></p>
-</li>
-              </ul>
-</li>
-          </ul>
-<p id="section-4.4.2-6">If the <code>Upload-Complete</code> request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully processed, the upload is marked as complete and the server <span class="bcp14">SHOULD</span> generate the response that matches what the resource, that was targeted by the initial upload creation (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>), would have generated if it had processed the entire representation in the initial request. However, the response <span class="bcp14">MUST</span> include the <code>Upload-Complete</code> header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the uploaded representation.<a href="#section-4.4.2-6" class="pilcrow">¶</a></p>
-<p id="section-4.4.2-7">If the <code>Upload-Complete</code> request header field is set to false, the client intends to transfer the remaining representation data over multiple requests. If the request content was fully processed, the server acknowledges the appended data by sending a <code>2xx (Successful)</code> response with the <code>Upload-Complete</code> header field set to false.<a href="#section-4.4.2-7" class="pilcrow">¶</a></p>
-<p id="section-4.4.2-8">The server <span class="bcp14">MUST</span> record the length according to <a href="#upload-length" class="auto internal xref">Section 4.1.3</a> if the <code>Upload-Length</code> or <code>Upload-Complete</code> header fields are included in the request. If the length is known, the server <span class="bcp14">MUST</span> prevent the offset from exceeding the upload length by rejecting the request once the offset exceeds the length, marking the upload resource invalid and rejecting any further interaction with it. It is not sufficient to rely on the <code>Content-Length</code> header field for enforcement because this header field might not be present.<a href="#section-4.4.2-8" class="pilcrow">¶</a></p>
-<p id="section-4.4.2-9">While the request content is being processed, the server <span class="bcp14">SHOULD</span> send interim responses with a <code>104 (Upload Resumption Supported)</code> status code and the <code>Upload-Offset</code> header field set to the current offset to inform the client about the upload progress. These interim responses <span class="bcp14">MUST NOT</span> include the <code>Location</code> header field.<a href="#section-4.4.2-9" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-3">If the <code>Upload-Offset</code> request header field value does not match the current offset (<a href="#upload-offset" class="auto internal xref">Section 4.1.1</a>), the server <span class="bcp14">MUST</span> reject the request with a <code>409 (Conflict)</code> status code and the <code>Upload-Complete</code> header field set to false. The response <span class="bcp14">MUST</span> include the correct offset in the <code>Upload-Offset</code> header field. The response can use the problem type <span>[<a href="#PROBLEM" class="cite xref">PROBLEM</a>]</span> of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" (<a href="#mismatching-offset" class="auto internal xref">Section 7.1</a>).<a href="#section-4.4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-4">If the <code>Upload-Complete</code> request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully processed, the upload is marked as complete and the server <span class="bcp14">SHOULD</span> generate the response that matches what the resource, that was targeted by the initial upload creation (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>), would have generated if it had processed the entire representation in the initial request. However, the response <span class="bcp14">MUST</span> include the <code>Upload-Complete</code> header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the uploaded representation.<a href="#section-4.4.2-4" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-5">If the <code>Upload-Complete</code> request header field is set to false, the client intends to transfer the remaining representation data over multiple requests. If the request content was fully processed, the server acknowledges the appended data by sending a <code>2xx (Successful)</code> response with the <code>Upload-Complete</code> header field set to false.<a href="#section-4.4.2-5" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-6">Even if the upload is complete (<a href="#upload-complete" class="auto internal xref">Section 4.1.2</a>) in the server's perspective and the final response from the targeted resource has already been sent, the client might still perform an upload append (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) after an offset retrieval (<a href="#offset-retrieving" class="auto internal xref">Section 4.3</a>) due to the response being lost during transmission. The server can choose to replay the final response to the client if the request to append to the completed upload is valid.<a href="#section-4.4.2-6" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-7">The server <span class="bcp14">MUST</span> record the length according to <a href="#upload-length" class="auto internal xref">Section 4.1.3</a> if the <code>Upload-Length</code> or <code>Upload-Complete</code> header fields are included in the request. If the length is known, the server <span class="bcp14">MUST</span> prevent the offset from exceeding the upload length by rejecting the request once the offset exceeds the length, marking the upload resource invalid and rejecting any further interaction with it. It is not sufficient to rely on the <code>Content-Length</code> header field for enforcement because this header field might not be present.<a href="#section-4.4.2-7" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-8">While the request content is being processed, the server <span class="bcp14">SHOULD</span> send interim responses with a <code>104 (Upload Resumption Supported)</code> status code and the <code>Upload-Offset</code> header field set to the current offset to inform the client about the upload progress. These interim responses <span class="bcp14">MUST NOT</span> include the <code>Location</code> header field.<a href="#section-4.4.2-8" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-9">The server <span class="bcp14">SHOULD</span> include the <code>Upload-Complete</code> (<a href="#upload-complete" class="auto internal xref">Section 4.1.2</a>) header field in the response to indicate whether it is the result of processing the uploaded representation.<a href="#section-4.4.2-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="upload-appending-example">
@@ -2368,6 +2350,8 @@ HTTP/1.1 204 No Content
 
 HTTP/1.1 409 Conflict
 Content-Type: application/problem+json
+Upload-Offset: 12500000
+Upload-Complete: ?0
 
 {
   "type":"https://iana.org/assignments/http-problem-types#\
@@ -2380,12 +2364,12 @@ Content-Type: application/problem+json
 </div>
 </section>
 </div>
-<div id="completed-upload">
+<div id="inconsistent-length">
 <section id="section-7.2">
-        <h3 id="name-completed-upload">
-<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-completed-upload" class="section-name selfRef">Completed Upload</a>
+        <h3 id="name-inconsistent-length">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-inconsistent-length" class="section-name selfRef">Inconsistent Length</a>
         </h3>
-<p id="section-7.2-1">This section defines the "https://iana.org/assignments/http-problem-types#completed-upload" problem type <span>[<a href="#PROBLEM" class="cite xref">PROBLEM</a>]</span>. A server can use this problem type when responding to an upload append request (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) to indicate that the upload has already been completed and cannot be modified.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-1">This section defines the "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" problem type <span>[<a href="#PROBLEM" class="cite xref">PROBLEM</a>]</span>. A server can use this problem type when responding to an upload creation (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) or upload append request (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) to indicate that the request includes inconsistent upload length values, as described in <a href="#upload-length" class="auto internal xref">Section 4.1.3</a>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <p id="section-7.2-2">The following example shows an example response:<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-7.2-3">
 <pre>
@@ -2393,36 +2377,14 @@ Content-Type: application/problem+json
 
 HTTP/1.1 400 Bad Request
 Content-Type: application/problem+json
-
-{
-  "type":"https://iana.org/assignments/http-problem-types#\
-    completed-upload",
-  "title": "upload is already completed"
-}
-</pre><a href="#section-7.2-3" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="inconsistent-length">
-<section id="section-7.3">
-        <h3 id="name-inconsistent-length">
-<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-inconsistent-length" class="section-name selfRef">Inconsistent Length</a>
-        </h3>
-<p id="section-7.3-1">This section defines the "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" problem type <span>[<a href="#PROBLEM" class="cite xref">PROBLEM</a>]</span>. A server can use this problem type when responding to an upload creation (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) or upload append request (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) to indicate that the request includes inconsistent upload length values, as described in <a href="#upload-length" class="auto internal xref">Section 4.1.3</a>.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
-<p id="section-7.3-2">The following example shows an example response:<a href="#section-7.3-2" class="pilcrow">¶</a></p>
-<div class="lang-http-message sourcecode" id="section-7.3-3">
-<pre>
-# NOTE: '\' line wrapping per RFC 8792
-
-HTTP/1.1 400 Bad Request
-Content-Type: application/problem+json
+Upload-Complete: ?0
 
 {
   "type":"https://iana.org/assignments/http-problem-types#\
     inconsistent-upload-length",
   "title": "inconsistent length values for upload"
 }
-</pre><a href="#section-7.3-3" class="pilcrow">¶</a>
+</pre><a href="#section-7.2-3" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2476,80 +2438,70 @@ If an upload is spread across multiple requests, data integrity issues can be fo
 </div>
 </section>
 </div>
-<div id="responses-to-uploads">
-<section id="section-11">
-      <h2 id="name-responses-to-uploads">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-responses-to-uploads" class="section-name selfRef">Responses to Uploads</a>
-      </h2>
-<p id="section-11-1">HTTP uploads often not only transfer a representation to the server but also send back information to the client. For resumable uploads, this works similarly to conventional HTTP uploads. The server can include information in the response to the request that transferred the remaining representation data and included the <code>Upload-Complete: ?1</code> header field. Clients can regard this response as the final response for the entire upload, as detailed in <a href="#upload-creation" class="auto internal xref">Section 4.2</a> and <a href="#upload-appending" class="auto internal xref">Section 4.4</a>.<a href="#section-11-1" class="pilcrow">¶</a></p>
-<p id="section-11-2">However, due to network interruptions, the server might process the remaining representation data, complete the upload, and send a response to the client, which then does not receive the response. The client can learn that the upload is complete by retrieving its state (<a href="#offset-retrieving" class="auto internal xref">Section 4.3</a>), but resumable uploads as defined in this document do not offer functionality to recover the missed response.<a href="#section-11-2" class="pilcrow">¶</a></p>
-<p id="section-11-3">To address this issue, the server can send the desired information in header fields, which are included in both the final response and responses when the client fetches the upload state via a HEAD request (<a href="#offset-retrieving" class="auto internal xref">Section 4.3</a>). This way, the client can retrieve the information from the header even if it failed to receive the final response. If the piece of information is too large for header fields, the server could make it available as a separate resource for retrieval and point the client to its URI in an appropriate header field.<a href="#section-11-3" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="upload-strategies">
-<section id="section-12">
+<section id="section-11">
       <h2 id="name-upload-strategies">
-<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-upload-strategies" class="section-name selfRef">Upload Strategies</a>
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-upload-strategies" class="section-name selfRef">Upload Strategies</a>
       </h2>
-<p id="section-12-1">The definition of the upload creation request (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) provides the client with flexibility to choose whether the representation data is fully or partially transferred in the first request, or if no representation data is included at all. Which behavior is best largely depends on the client's capabilities, its desire to avoid data retransmission, and its knowledge about the resource's support for resumable uploads.<a href="#section-12-1" class="pilcrow">¶</a></p>
-<p id="section-12-2">The following subsections describe two typical upload strategies that are suited for common environments. Note that these modes are never explicitly communicated to the server and clients are not required to stick to one strategy, but can mix and adapt them to their needs.<a href="#section-12-2" class="pilcrow">¶</a></p>
+<p id="section-11-1">The definition of the upload creation request (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) provides the client with flexibility to choose whether the representation data is fully or partially transferred in the first request, or if no representation data is included at all. Which behavior is best largely depends on the client's capabilities, its desire to avoid data retransmission, and its knowledge about the resource's support for resumable uploads.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<p id="section-11-2">The following subsections describe two typical upload strategies that are suited for common environments. Note that these modes are never explicitly communicated to the server and clients are not required to stick to one strategy, but can mix and adapt them to their needs.<a href="#section-11-2" class="pilcrow">¶</a></p>
 <div id="optimistic-upload-creation">
-<section id="section-12.1">
+<section id="section-11.1">
         <h3 id="name-optimistic-upload-creation">
-<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-optimistic-upload-creation" class="section-name selfRef">Optimistic Upload Creation</a>
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-optimistic-upload-creation" class="section-name selfRef">Optimistic Upload Creation</a>
         </h3>
-<p id="section-12.1-1">An "optimistic upload creation" can be used independent of the client's knowledge about the resource's support for resumable uploads. However, the client must be capable of handling and processing interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.<a href="#section-12.1-1" class="pilcrow">¶</a></p>
-<p id="section-12.1-2">The benefit of this method is that if the upload creation request succeeded, the representation data was transferred in a single request without additional round trips.<a href="#section-12.1-2" class="pilcrow">¶</a></p>
-<p id="section-12.1-3">A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client receives a <code>104 (Upload Resumption Supported)</code> interim response with the upload resource's URI, the client cannot resume that upload due to the missing URI. The interim response might not be received if the interruption happens too early in the message exchange, the resource targeted in the initial request does not support resumable uploads, the server is not capable of sending the <code>104 (Upload Resumption Supported)</code> interim response, or an intermediary dropped the interim response. Without a 104 response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.<a href="#section-12.1-3" class="pilcrow">¶</a></p>
-<p id="section-12.1-4">A client might wait for a limited duration to receive a 104 (Upload Resumption Supported) interim response before starting to transmit the request content. This way, the client can learn about the resource's support for resumable uploads and/or the upload resource's URI. This is conceptually similar to how a client might wait for a 100 (Continue) interim response (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.1.1" class="relref">Section 10.1.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) before committing to work.<a href="#section-12.1-4" class="pilcrow">¶</a></p>
+<p id="section-11.1-1">An "optimistic upload creation" can be used independent of the client's knowledge about the resource's support for resumable uploads. However, the client must be capable of handling and processing interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.<a href="#section-11.1-1" class="pilcrow">¶</a></p>
+<p id="section-11.1-2">The benefit of this method is that if the upload creation request succeeded, the representation data was transferred in a single request without additional round trips.<a href="#section-11.1-2" class="pilcrow">¶</a></p>
+<p id="section-11.1-3">A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client receives a <code>104 (Upload Resumption Supported)</code> interim response with the upload resource's URI, the client cannot resume that upload due to the missing URI. The interim response might not be received if the interruption happens too early in the message exchange, the resource targeted in the initial request does not support resumable uploads, the server is not capable of sending the <code>104 (Upload Resumption Supported)</code> interim response, or an intermediary dropped the interim response. Without a 104 response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.<a href="#section-11.1-3" class="pilcrow">¶</a></p>
+<p id="section-11.1-4">A client might wait for a limited duration to receive a 104 (Upload Resumption Supported) interim response before starting to transmit the request content. This way, the client can learn about the resource's support for resumable uploads and/or the upload resource's URI. This is conceptually similar to how a client might wait for a 100 (Continue) interim response (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.1.1" class="relref">Section 10.1.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) before committing to work.<a href="#section-11.1-4" class="pilcrow">¶</a></p>
 <div id="upgrading-uploads">
-<section id="section-12.1.1">
+<section id="section-11.1.1">
           <h4 id="name-upgrading-to-resumable-uplo">
-<a href="#section-12.1.1" class="section-number selfRef">12.1.1. </a><a href="#name-upgrading-to-resumable-uplo" class="section-name selfRef">Upgrading To Resumable Uploads</a>
+<a href="#section-11.1.1" class="section-number selfRef">11.1.1. </a><a href="#name-upgrading-to-resumable-uplo" class="section-name selfRef">Upgrading To Resumable Uploads</a>
           </h4>
-<p id="section-12.1.1-1">Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the representation is transferred in a single request, usually <code>POST</code> or <code>PUT</code>, without any ability to resume from interruptions. The client can invite the server to upgrade such a request to a resumable upload by adding the <code>Upload-Complete: ?1</code> header field to the original request. The <code>Upload-Length</code> header field <span class="bcp14">SHOULD</span> be added if the representation data's length is known upfront. The request is not changed otherwise.<a href="#section-12.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-12.1.1-2">If the resource targeted in the initial request supports resumable uploads, the server can create an upload resource and send its URI in a <code>104 (Upload Resumption Supported)</code> interim response for the client to resume the upload after interruptions. A resource that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the <code>Upload-Complete: ?1</code> header. The transfer then falls back to a non-resumable upload without additional cost.<a href="#section-12.1.1-2" class="pilcrow">¶</a></p>
-<p id="section-12.1.1-3">This upgrade can also be performed transparently by a library or program that acts as a HTTP client by sending requests on behalf of a user. When the user instructs the client to send a non-resumable request, the client can perform the upgrade transparently and handle potential interruptions and resumptions under the hood without involving the user. The last response received by the client is considered the response for the entire upload and should be provided to the user.<a href="#section-12.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-11.1.1-1">Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the representation is transferred in a single request, usually <code>POST</code> or <code>PUT</code>, without any ability to resume from interruptions. The client can invite the server to upgrade such a request to a resumable upload by adding the <code>Upload-Complete: ?1</code> header field to the original request. The <code>Upload-Length</code> header field <span class="bcp14">SHOULD</span> be added if the representation data's length is known upfront. The request is not changed otherwise.<a href="#section-11.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-11.1.1-2">If the resource targeted in the initial request supports resumable uploads, the server can create an upload resource and send its URI in a <code>104 (Upload Resumption Supported)</code> interim response for the client to resume the upload after interruptions. A resource that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the <code>Upload-Complete: ?1</code> header. The transfer then falls back to a non-resumable upload without additional cost.<a href="#section-11.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-11.1.1-3">This upgrade can also be performed transparently by a library or program that acts as a HTTP client by sending requests on behalf of a user. When the user instructs the client to send a non-resumable request, the client can perform the upgrade transparently and handle potential interruptions and resumptions under the hood without involving the user. The last response received by the client is considered the response for the entire upload and should be provided to the user.<a href="#section-11.1.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="careful-upload-creation">
-<section id="section-12.2">
+<section id="section-11.2">
         <h3 id="name-careful-upload-creation">
-<a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-careful-upload-creation" class="section-name selfRef">Careful Upload Creation</a>
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-careful-upload-creation" class="section-name selfRef">Careful Upload Creation</a>
         </h3>
-<p id="section-12.2-1">For a "careful upload creation" the client knows that the resource targeted in the initial request supports resumable uploads and sends an empty upload creation request without including any representation data. Upon successful response reception, the client can use the included upload resource URI to transmit the representation data (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) and resume the upload at any stage if an interruption occurs. The client should inspect the response for the <code>Upload-Limit</code> header field, which would indicate limits applying to the remaining upload procedure.<a href="#section-12.2-1" class="pilcrow">¶</a></p>
-<p id="section-12.2-2">The retransmission of representation data or the ultimate upload failure that can happen with an "optimistic upload creation" is therefore avoided at the expense of an additional request that does not carry representation data.<a href="#section-12.2-2" class="pilcrow">¶</a></p>
-<p id="section-12.2-3">This approach is best suited if the client cannot receive interim responses, e.g. due to a limitation in the provided HTTP interface, or if large representations are transferred where the cost of the additional request is minuscule compared to the effort of transferring the representation itself.<a href="#section-12.2-3" class="pilcrow">¶</a></p>
+<p id="section-11.2-1">For a "careful upload creation" the client knows that the resource targeted in the initial request supports resumable uploads and sends an empty upload creation request without including any representation data. Upon successful response reception, the client can use the included upload resource URI to transmit the representation data (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) and resume the upload at any stage if an interruption occurs. The client should inspect the response for the <code>Upload-Limit</code> header field, which would indicate limits applying to the remaining upload procedure.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
+<p id="section-11.2-2">The retransmission of representation data or the ultimate upload failure that can happen with an "optimistic upload creation" is therefore avoided at the expense of an additional request that does not carry representation data.<a href="#section-11.2-2" class="pilcrow">¶</a></p>
+<p id="section-11.2-3">This approach is best suited if the client cannot receive interim responses, e.g. due to a limitation in the provided HTTP interface, or if large representations are transferred where the cost of the additional request is minuscule compared to the effort of transferring the representation itself.<a href="#section-11.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-13">
+<section id="section-12">
       <h2 id="name-security-considerations">
-<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-13-1">The upload resource URI is the identifier used for modifying the upload. Without further protection of this URI, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server <span class="bcp14">SHOULD</span> ensure that only authorized clients can access the upload resource. To reduce the risk of unauthorized access, it is <span class="bcp14">RECOMMENDED</span> to generate upload resource URIs in such a way that makes it hard to be guessed by unauthorized clients. In addition, servers may embed information about the storage or processing location of the uploaded representation in the upload resource URI to make routing requests more efficient. If so, they <span class="bcp14">MUST</span> ensure that no internal information is leaked in the URI that is not intended to be exposed.<a href="#section-13-1" class="pilcrow">¶</a></p>
-<p id="section-13-2">Uploaded representation data and its metadata are untrusted input. Server operators have to be careful of where uploaded data is written and subsequently accessed, especially if the operations cause the representation to be processed or executed by the server. In addition, metadata <span class="bcp14">MUST</span> be validated and/or sanitized if the server takes its values into consideration for processing or storing the representation.<a href="#section-13-2" class="pilcrow">¶</a></p>
-<p id="section-13-3">Some servers or intermediaries provide scanning of content uploaded by clients. Any scanning mechanism that relies on receiving a complete representation in a single request message can be defeated by resumable uploads because content can be split across multiple messages. Servers or intermediaries wishing to perform content scanning <span class="bcp14">SHOULD</span> consider how resumable uploads can circumvent scanning and take appropriate measures. Possible strategies include waiting for the upload to complete before scanning the entire representation, or disabling resumable uploads.<a href="#section-13-3" class="pilcrow">¶</a></p>
-<p id="section-13-4">There can be a significant delay between the creation of an upload resource and its completion. Policy decisions or authorization checks performed on the initial request might become outdated or invalid by the time the upload completes. To mitigate vulnerabilities arising from time-of-check to time-of-use (TOCTOU) conditions, the server <span class="bcp14">SHOULD</span> validate that the user is still allowed to perform the requested action before finalizing the upload. This includes, for example, validating access privileges and quota policies associated with the upload resource.<a href="#section-13-4" class="pilcrow">¶</a></p>
-<p id="section-13-5">Resumable uploads are vulnerable to Slowloris-style attacks <span>[<a href="#SLOWLORIS" class="cite xref">SLOWLORIS</a>]</span>. A malicious client may create upload resources and keep them alive by regularly sending <code>PATCH</code> requests with no or small content to the upload resources. This could be abused to exhaust server resources by creating and holding open uploads indefinitely with minimal work. Servers <span class="bcp14">SHOULD</span> provide mitigations for Slowloris attacks, such as increasing the maximum number of clients the server will allow, limiting the number of uploads a single client is allowed to make, imposing restrictions on the minimum transfer speed an upload is allowed to have, and restricting the length of time an upload resource can exist.<a href="#section-13-5" class="pilcrow">¶</a></p>
-<p id="section-13-6">Uploads performed as a series of appends can be used to upload data up to the <code>max-size</code> limit, which could be a larger size than a server or intermediary might normally permit in conventional single upload request message content. Servers or intermediaries need to consider that relying solely on message content limits to constrain resources allocated to uploads might not be an effective strategy when using resumable uploads.<a href="#section-13-6" class="pilcrow">¶</a></p>
+<p id="section-12-1">The upload resource URI is the identifier used for modifying the upload. Without further protection of this URI, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server <span class="bcp14">SHOULD</span> ensure that only authorized clients can access the upload resource. To reduce the risk of unauthorized access, it is <span class="bcp14">RECOMMENDED</span> to generate upload resource URIs in such a way that makes it hard to be guessed by unauthorized clients. In addition, servers may embed information about the storage or processing location of the uploaded representation in the upload resource URI to make routing requests more efficient. If so, they <span class="bcp14">MUST</span> ensure that no internal information is leaked in the URI that is not intended to be exposed.<a href="#section-12-1" class="pilcrow">¶</a></p>
+<p id="section-12-2">Uploaded representation data and its metadata are untrusted input. Server operators have to be careful of where uploaded data is written and subsequently accessed, especially if the operations cause the representation to be processed or executed by the server. In addition, metadata <span class="bcp14">MUST</span> be validated and/or sanitized if the server takes its values into consideration for processing or storing the representation.<a href="#section-12-2" class="pilcrow">¶</a></p>
+<p id="section-12-3">Some servers or intermediaries provide scanning of content uploaded by clients. Any scanning mechanism that relies on receiving a complete representation in a single request message can be defeated by resumable uploads because content can be split across multiple messages. Servers or intermediaries wishing to perform content scanning <span class="bcp14">SHOULD</span> consider how resumable uploads can circumvent scanning and take appropriate measures. Possible strategies include waiting for the upload to complete before scanning the entire representation, or disabling resumable uploads.<a href="#section-12-3" class="pilcrow">¶</a></p>
+<p id="section-12-4">There can be a significant delay between the creation of an upload resource and its completion. Policy decisions or authorization checks performed on the initial request might become outdated or invalid by the time the upload completes. To mitigate vulnerabilities arising from time-of-check to time-of-use (TOCTOU) conditions, the server <span class="bcp14">SHOULD</span> validate that the user is still allowed to perform the requested action before finalizing the upload. This includes, for example, validating access privileges and quota policies associated with the upload resource.<a href="#section-12-4" class="pilcrow">¶</a></p>
+<p id="section-12-5">Resumable uploads are vulnerable to Slowloris-style attacks <span>[<a href="#SLOWLORIS" class="cite xref">SLOWLORIS</a>]</span>. A malicious client may create upload resources and keep them alive by regularly sending <code>PATCH</code> requests with no or small content to the upload resources. This could be abused to exhaust server resources by creating and holding open uploads indefinitely with minimal work. Servers <span class="bcp14">SHOULD</span> provide mitigations for Slowloris attacks, such as increasing the maximum number of clients the server will allow, limiting the number of uploads a single client is allowed to make, imposing restrictions on the minimum transfer speed an upload is allowed to have, and restricting the length of time an upload resource can exist.<a href="#section-12-5" class="pilcrow">¶</a></p>
+<p id="section-12-6">Uploads performed as a series of appends can be used to upload data up to the <code>max-size</code> limit, which could be a larger size than a server or intermediary might normally permit in conventional single upload request message content. Servers or intermediaries need to consider that relying solely on message content limits to constrain resources allocated to uploads might not be an effective strategy when using resumable uploads.<a href="#section-12-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-14">
+<section id="section-13">
       <h2 id="name-iana-considerations">
-<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
 <div id="http-fields">
-<section id="section-14.1">
+<section id="section-13.1">
         <h3 id="name-http-fields">
-<a href="#section-14.1" class="section-number selfRef">14.1. </a><a href="#name-http-fields" class="section-name selfRef">HTTP Fields</a>
+<a href="#section-13.1" class="section-number selfRef">13.1. </a><a href="#name-http-fields" class="section-name selfRef">HTTP Fields</a>
         </h3>
-<p id="section-14.1-1">IANA is asked to register the following entries in the "Hypertext Transfer Protocol (HTTP) Field Name Registry":<a href="#section-14.1-1" class="pilcrow">¶</a></p>
+<p id="section-13.1-1">IANA is asked to register the following entries in the "Hypertext Transfer Protocol (HTTP) Field Name Registry":<a href="#section-13.1-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
           <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
 <thead>
@@ -2594,206 +2546,183 @@ If an upload is spread across multiple requests, data integrity issues can be fo
 </section>
 </div>
 <div id="http-status-code">
-<section id="section-14.2">
+<section id="section-13.2">
         <h3 id="name-http-status-code">
-<a href="#section-14.2" class="section-number selfRef">14.2. </a><a href="#name-http-status-code" class="section-name selfRef">HTTP Status Code</a>
+<a href="#section-13.2" class="section-number selfRef">13.2. </a><a href="#name-http-status-code" class="section-name selfRef">HTTP Status Code</a>
         </h3>
-<p id="section-14.2-1">IANA is asked to register the following entry in the "HTTP Status Codes" registry:<a href="#section-14.2-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-14.2-2">
-          <dt id="section-14.2-2.1">Value:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.2-2.2">
-            <p id="section-14.2-2.2.1">104 (suggested value)<a href="#section-14.2-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-13.2-1">IANA is asked to register the following entry in the "HTTP Status Codes" registry:<a href="#section-13.2-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-13.2-2">
+          <dt id="section-13.2-2.1">Value:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.2-2.2">
+            <p id="section-13.2-2.2.1">104 (suggested value)<a href="#section-13.2-2.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.2-2.3">Description:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.2-2.4">
-            <p id="section-14.2-2.4.1">Upload Resumption Supported<a href="#section-14.2-2.4.1" class="pilcrow">¶</a></p>
+<dt id="section-13.2-2.3">Description:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.2-2.4">
+            <p id="section-13.2-2.4.1">Upload Resumption Supported<a href="#section-13.2-2.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.2-2.5">Specification:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.2-2.6">
-            <p id="section-14.2-2.6.1"><a href="#status-code-104" class="auto internal xref">Section 5</a> of this document<a href="#section-14.2-2.6.1" class="pilcrow">¶</a></p>
+<dt id="section-13.2-2.5">Specification:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.2-2.6">
+            <p id="section-13.2-2.6.1"><a href="#status-code-104" class="auto internal xref">Section 5</a> of this document<a href="#section-13.2-2.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
 </section>
 </div>
 <div id="media-type">
-<section id="section-14.3">
+<section id="section-13.3">
         <h3 id="name-media-type">
-<a href="#section-14.3" class="section-number selfRef">14.3. </a><a href="#name-media-type" class="section-name selfRef">Media Type</a>
+<a href="#section-13.3" class="section-number selfRef">13.3. </a><a href="#name-media-type" class="section-name selfRef">Media Type</a>
         </h3>
-<p id="section-14.3-1">IANA is asked to register the following entry in the "Media Types" registry:<a href="#section-14.3-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-14.3-2">
-          <dt id="section-14.3-2.1">Type name:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-2.2">
-            <p id="section-14.3-2.2.1">application<a href="#section-14.3-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-13.3-1">IANA is asked to register the following entry in the "Media Types" registry:<a href="#section-13.3-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-13.3-2">
+          <dt id="section-13.3-2.1">Type name:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-2.2">
+            <p id="section-13.3-2.2.1">application<a href="#section-13.3-2.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.3-2.3">Subtype name:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-2.4">
-            <p id="section-14.3-2.4.1">partial-upload<a href="#section-14.3-2.4.1" class="pilcrow">¶</a></p>
+<dt id="section-13.3-2.3">Subtype name:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-2.4">
+            <p id="section-13.3-2.4.1">partial-upload<a href="#section-13.3-2.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.3-2.5">Required parameters:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-2.6">
-            <p id="section-14.3-2.6.1">N/A<a href="#section-14.3-2.6.1" class="pilcrow">¶</a></p>
+<dt id="section-13.3-2.5">Required parameters:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-2.6">
+            <p id="section-13.3-2.6.1">N/A<a href="#section-13.3-2.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.3-2.7">Optional parameters:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-2.8">
-            <p id="section-14.3-2.8.1">N/A<a href="#section-14.3-2.8.1" class="pilcrow">¶</a></p>
+<dt id="section-13.3-2.7">Optional parameters:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-2.8">
+            <p id="section-13.3-2.8.1">N/A<a href="#section-13.3-2.8.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.3-2.9">Encoding considerations:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-2.10">
-            <p id="section-14.3-2.10.1">binary<a href="#section-14.3-2.10.1" class="pilcrow">¶</a></p>
+<dt id="section-13.3-2.9">Encoding considerations:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-2.10">
+            <p id="section-13.3-2.10.1">binary<a href="#section-13.3-2.10.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.3-2.11">Security considerations:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-2.12">
-            <p id="section-14.3-2.12.1">see <a href="#security-considerations" class="auto internal xref">Section 13</a> of this document<a href="#section-14.3-2.12.1" class="pilcrow">¶</a></p>
+<dt id="section-13.3-2.11">Security considerations:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-2.12">
+            <p id="section-13.3-2.12.1">see <a href="#security-considerations" class="auto internal xref">Section 12</a> of this document<a href="#section-13.3-2.12.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.3-2.13">Interoperability considerations:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-2.14">
-            <p id="section-14.3-2.14.1">N/A<a href="#section-14.3-2.14.1" class="pilcrow">¶</a></p>
+<dt id="section-13.3-2.13">Interoperability considerations:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-2.14">
+            <p id="section-13.3-2.14.1">N/A<a href="#section-13.3-2.14.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.3-2.15">Published specification:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-2.16">
-            <p id="section-14.3-2.16.1"><a href="#media-type-partial-upload" class="auto internal xref">Section 6</a> of this document<a href="#section-14.3-2.16.1" class="pilcrow">¶</a></p>
+<dt id="section-13.3-2.15">Published specification:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-2.16">
+            <p id="section-13.3-2.16.1"><a href="#media-type-partial-upload" class="auto internal xref">Section 6</a> of this document<a href="#section-13.3-2.16.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.3-2.17">Applications that use this media type:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-2.18">
-            <p id="section-14.3-2.18.1">Applications that transfer files over unreliable networks or want pause- and resumable uploads.<a href="#section-14.3-2.18.1" class="pilcrow">¶</a></p>
+<dt id="section-13.3-2.17">Applications that use this media type:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-2.18">
+            <p id="section-13.3-2.18.1">Applications that transfer files over unreliable networks or want pause- and resumable uploads.<a href="#section-13.3-2.18.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.3-2.19">Fragment identifier considerations:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-2.20">
-            <p id="section-14.3-2.20.1">N/A<a href="#section-14.3-2.20.1" class="pilcrow">¶</a></p>
+<dt id="section-13.3-2.19">Fragment identifier considerations:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-2.20">
+            <p id="section-13.3-2.20.1">N/A<a href="#section-13.3-2.20.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-14.3-3">Additional information:<a href="#section-14.3-3" class="pilcrow">¶</a></p>
+<p id="section-13.3-3">Additional information:<a href="#section-13.3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-14.3-4.1">
-            <p id="section-14.3-4.1.1">Deprecated alias names for this type: N/A<a href="#section-14.3-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-13.3-4.1">
+            <p id="section-13.3-4.1.1">Deprecated alias names for this type: N/A<a href="#section-13.3-4.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-14.3-4.2">
-            <p id="section-14.3-4.2.1">Magic number(s): N/A<a href="#section-14.3-4.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-13.3-4.2">
+            <p id="section-13.3-4.2.1">Magic number(s): N/A<a href="#section-13.3-4.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-14.3-4.3">
-            <p id="section-14.3-4.3.1">File extension(s): N/A<a href="#section-14.3-4.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-13.3-4.3">
+            <p id="section-13.3-4.3.1">File extension(s): N/A<a href="#section-13.3-4.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-14.3-4.4">
-            <p id="section-14.3-4.4.1">Macintosh file type code(s): N/A<a href="#section-14.3-4.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-13.3-4.4">
+            <p id="section-13.3-4.4.1">Macintosh file type code(s): N/A<a href="#section-13.3-4.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-14.3-4.5">
-            <p id="section-14.3-4.5.1">Windows Clipboard Name: N/A<a href="#section-14.3-4.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-13.3-4.5">
+            <p id="section-13.3-4.5.1">Windows Clipboard Name: N/A<a href="#section-13.3-4.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<span class="break"></span><dl class="dlParallel" id="section-14.3-5">
-          <dt id="section-14.3-5.1">Person and email address to contact for further information:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-5.2">
-            <p id="section-14.3-5.2.1">See the Authors' Addresses section of this document.<a href="#section-14.3-5.2.1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-13.3-5">
+          <dt id="section-13.3-5.1">Person and email address to contact for further information:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-5.2">
+            <p id="section-13.3-5.2.1">See the Authors' Addresses section of this document.<a href="#section-13.3-5.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.3-5.3">Intended usage:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-5.4">
-            <p id="section-14.3-5.4.1">COMMON<a href="#section-14.3-5.4.1" class="pilcrow">¶</a></p>
+<dt id="section-13.3-5.3">Intended usage:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-5.4">
+            <p id="section-13.3-5.4.1">COMMON<a href="#section-13.3-5.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.3-5.5">Restrictions on usage:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-5.6">
-            <p id="section-14.3-5.6.1">N/A<a href="#section-14.3-5.6.1" class="pilcrow">¶</a></p>
+<dt id="section-13.3-5.5">Restrictions on usage:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-5.6">
+            <p id="section-13.3-5.6.1">N/A<a href="#section-13.3-5.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.3-5.7">Author:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-5.8">
-            <p id="section-14.3-5.8.1">See the Authors' Addresses section of this document.<a href="#section-14.3-5.8.1" class="pilcrow">¶</a></p>
+<dt id="section-13.3-5.7">Author:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-5.8">
+            <p id="section-13.3-5.8.1">See the Authors' Addresses section of this document.<a href="#section-13.3-5.8.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.3-5.9">Change controller:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.3-5.10">
-            <p id="section-14.3-5.10.1">IETF<a href="#section-14.3-5.10.1" class="pilcrow">¶</a></p>
+<dt id="section-13.3-5.9">Change controller:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.3-5.10">
+            <p id="section-13.3-5.10.1">IETF<a href="#section-13.3-5.10.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
 </section>
 </div>
 <div id="http-problem-types">
-<section id="section-14.4">
+<section id="section-13.4">
         <h3 id="name-http-problem-types">
-<a href="#section-14.4" class="section-number selfRef">14.4. </a><a href="#name-http-problem-types" class="section-name selfRef">HTTP Problem Types</a>
+<a href="#section-13.4" class="section-number selfRef">13.4. </a><a href="#name-http-problem-types" class="section-name selfRef">HTTP Problem Types</a>
         </h3>
-<p id="section-14.4-1">IANA is asked to register the following entry in the "HTTP Problem Types" registry:<a href="#section-14.4-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-14.4-2">
-          <dt id="section-14.4-2.1">Type URI:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.4-2.2">
-            <p id="section-14.4-2.2.1">https://iana.org/assignments/http-problem-types#mismatching-upload-offset<a href="#section-14.4-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-13.4-1">IANA is asked to register the following entry in the "HTTP Problem Types" registry:<a href="#section-13.4-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-13.4-2">
+          <dt id="section-13.4-2.1">Type URI:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.4-2.2">
+            <p id="section-13.4-2.2.1">https://iana.org/assignments/http-problem-types#mismatching-upload-offset<a href="#section-13.4-2.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.4-2.3">Title:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.4-2.4">
-            <p id="section-14.4-2.4.1">Mismatching Upload Offset<a href="#section-14.4-2.4.1" class="pilcrow">¶</a></p>
+<dt id="section-13.4-2.3">Title:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.4-2.4">
+            <p id="section-13.4-2.4.1">Mismatching Upload Offset<a href="#section-13.4-2.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.4-2.5">Recommended HTTP status code:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.4-2.6">
-            <p id="section-14.4-2.6.1">409<a href="#section-14.4-2.6.1" class="pilcrow">¶</a></p>
+<dt id="section-13.4-2.5">Recommended HTTP status code:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.4-2.6">
+            <p id="section-13.4-2.6.1">409<a href="#section-13.4-2.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.4-2.7">Reference:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.4-2.8">
-            <p id="section-14.4-2.8.1"><a href="#mismatching-offset" class="auto internal xref">Section 7.1</a> of this document<a href="#section-14.4-2.8.1" class="pilcrow">¶</a></p>
+<dt id="section-13.4-2.7">Reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.4-2.8">
+            <p id="section-13.4-2.8.1"><a href="#mismatching-offset" class="auto internal xref">Section 7.1</a> of this document<a href="#section-13.4-2.8.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-14.4-3">IANA is asked to register the following entry in the "HTTP Problem Types" registry:<a href="#section-14.4-3" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-14.4-4">
-          <dt id="section-14.4-4.1">Type URI:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.4-4.2">
-            <p id="section-14.4-4.2.1">https://iana.org/assignments/http-problem-types#completed-upload<a href="#section-14.4-4.2.1" class="pilcrow">¶</a></p>
+<p id="section-13.4-3">IANA is asked to register the following entry in the "HTTP Problem Types" registry:<a href="#section-13.4-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-13.4-4">
+          <dt id="section-13.4-4.1">Type URI:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.4-4.2">
+            <p id="section-13.4-4.2.1">https://iana.org/assignments/http-problem-types#inconsistent-upload-length<a href="#section-13.4-4.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.4-4.3">Title:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.4-4.4">
-            <p id="section-14.4-4.4.1">Upload Is Completed<a href="#section-14.4-4.4.1" class="pilcrow">¶</a></p>
+<dt id="section-13.4-4.3">Title:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.4-4.4">
+            <p id="section-13.4-4.4.1">Inconsistent Upload Length Values<a href="#section-13.4-4.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.4-4.5">Recommended HTTP status code:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.4-4.6">
-            <p id="section-14.4-4.6.1">400<a href="#section-14.4-4.6.1" class="pilcrow">¶</a></p>
+<dt id="section-13.4-4.5">Recommended HTTP status code:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.4-4.6">
+            <p id="section-13.4-4.6.1">400<a href="#section-13.4-4.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-14.4-4.7">Reference:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.4-4.8">
-            <p id="section-14.4-4.8.1"><a href="#completed-upload" class="auto internal xref">Section 7.2</a> of this document<a href="#section-14.4-4.8.1" class="pilcrow">¶</a></p>
-</dd>
-        <dd class="break"></dd>
-</dl>
-<p id="section-14.4-5">IANA is asked to register the following entry in the "HTTP Problem Types" registry:<a href="#section-14.4-5" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-14.4-6">
-          <dt id="section-14.4-6.1">Type URI:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.4-6.2">
-            <p id="section-14.4-6.2.1">https://iana.org/assignments/http-problem-types#inconsistent-upload-length<a href="#section-14.4-6.2.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-14.4-6.3">Title:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.4-6.4">
-            <p id="section-14.4-6.4.1">Inconsistent Upload Length Values<a href="#section-14.4-6.4.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-14.4-6.5">Recommended HTTP status code:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.4-6.6">
-            <p id="section-14.4-6.6.1">400<a href="#section-14.4-6.6.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-14.4-6.7">Reference:</dt>
-          <dd style="margin-left: 1.5em" id="section-14.4-6.8">
-            <p id="section-14.4-6.8.1"><a href="#inconsistent-length" class="auto internal xref">Section 7.3</a> of this document<a href="#section-14.4-6.8.1" class="pilcrow">¶</a></p>
+<dt id="section-13.4-4.7">Reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-13.4-4.8">
+            <p id="section-13.4-4.8.1"><a href="#inconsistent-length" class="auto internal xref">Section 7.2</a> of this document<a href="#section-13.4-4.8.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
@@ -2802,14 +2731,14 @@ If an upload is spread across multiple requests, data integrity issues can be fo
 </section>
 </div>
 <div id="sec-combined-references">
-<section id="section-15">
+<section id="section-14">
       <h2 id="name-references">
-<a href="#section-15" class="section-number selfRef">15. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-15.1">
+<section id="section-14.1">
         <h3 id="name-normative-references">
-<a href="#section-15.1" class="section-number selfRef">15.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-14.1" class="section-number selfRef">14.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="CACHING">[CACHING]</dt>
@@ -2856,9 +2785,9 @@ If an upload is spread across multiple requests, data integrity issues can be fo
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-15.2">
+<section id="section-14.2">
         <h3 id="name-informative-references">
-<a href="#section-15.2" class="section-number selfRef">15.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-14.2" class="section-number selfRef">14.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="RFC8792">[RFC8792]</dt>
@@ -2900,6 +2829,15 @@ If an upload is spread across multiple requests, data integrity issues can be fo
 </li>
           <li class="normal" id="appendix-A.1-1.5">
             <p id="appendix-A.1-1.5.1">Allow upload creation requests with no content regardless of the <code>min-append-size</code> limit.<a href="#appendix-A.1-1.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.6">
+            <p id="appendix-A.1-1.6.1">Remove nominative languages addressing the lost final response.<a href="#appendix-A.1-1.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.7">
+            <p id="appendix-A.1-1.7.1">Allow <code>max-age</code> limit to decrease as expected.<a href="#appendix-A.1-1.7.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.8">
+            <p id="appendix-A.1-1.8.1">Redefine Upload-Complete on the server side.<a href="#appendix-A.1-1.8.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -3224,19 +3162,28 @@ If an upload is spread across multiple requests, data integrity issues can be fo
 <p id="appendix-C-3">The authors would like to thank Mark Nottingham for substantive contributions to the text, along with the following in alphabetical order for their thorough reviews of the document:<a href="#appendix-C-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-C-4.1">
-          <p id="appendix-C-4.1.1">Mike Bishop<a href="#appendix-C-4.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-C-4.1.1">Daniel Resnick<a href="#appendix-C-4.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-C-4.2">
-          <p id="appendix-C-4.2.1">Roy T. Fielding<a href="#appendix-C-4.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-C-4.2.1">Glenn Strauss<a href="#appendix-C-4.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-C-4.3">
-          <p id="appendix-C-4.3.1">Julian Reschke<a href="#appendix-C-4.3.1" class="pilcrow">¶</a></p>
+          <p id="appendix-C-4.3.1">Grant Gryczan<a href="#appendix-C-4.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-C-4.4">
-          <p id="appendix-C-4.4.1">Glenn Strauss<a href="#appendix-C-4.4.1" class="pilcrow">¶</a></p>
+          <p id="appendix-C-4.4.1">Julian Reschke<a href="#appendix-C-4.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-C-4.5">
-          <p id="appendix-C-4.5.1">Willy Tarreau<a href="#appendix-C-4.5.1" class="pilcrow">¶</a></p>
+          <p id="appendix-C-4.5.1">Mert Alev<a href="#appendix-C-4.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-4.6">
+          <p id="appendix-C-4.6.1">Mike Bishop<a href="#appendix-C-4.6.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-4.7">
+          <p id="appendix-C-4.7.1">Roy T. Fielding<a href="#appendix-C-4.7.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-4.8">
+          <p id="appendix-C-4.8.1">Willy Tarreau<a href="#appendix-C-4.8.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>

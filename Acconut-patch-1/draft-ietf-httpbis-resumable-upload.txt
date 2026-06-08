@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 13 November 2026                                     Apple Inc.
+Expires: 10 December 2026                                     Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                             12 May 2026
+                                                             8 June 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 November 2026.
+   This Internet-Draft will expire on 10 December 2026.
 
 Copyright Notice
 
@@ -107,27 +107,25 @@ Table of Contents
    6.  Media Type application/partial-upload
    7.  Problem Types
      7.1.  Mismatching Offset
-     7.2.  Completed Upload
-     7.3.  Inconsistent Length
+     7.2.  Inconsistent Length
    8.  Content Codings
    9.  Transfer Codings
    10. Integrity Digests
      10.1.  Representation Digests
      10.2.  Content Digests
-   11. Responses to Uploads
-   12. Upload Strategies
-     12.1.  Optimistic Upload Creation
-       12.1.1.  Upgrading To Resumable Uploads
-     12.2.  Careful Upload Creation
-   13. Security Considerations
-   14. IANA Considerations
-     14.1.  HTTP Fields
-     14.2.  HTTP Status Code
-     14.3.  Media Type
-     14.4.  HTTP Problem Types
-   15. References
-     15.1.  Normative References
-     15.2.  Informative References
+   11. Upload Strategies
+     11.1.  Optimistic Upload Creation
+       11.1.1.  Upgrading To Resumable Uploads
+     11.2.  Careful Upload Creation
+   12. Security Considerations
+   13. IANA Considerations
+     13.1.  HTTP Fields
+     13.2.  HTTP Status Code
+     13.3.  Media Type
+     13.4.  HTTP Problem Types
+   14. References
+     14.1.  Normative References
+     14.2.  Informative References
    Appendix A.  Changes
      Since draft-ietf-httpbis-resumable-upload-11
      Since draft-ietf-httpbis-resumable-upload-10
@@ -241,7 +239,7 @@ Table of Contents
    illustrative and non-normative.  Implementations of this protocol are
    expected to follow normative requirements defined in other sections,
    together with applying security considerations presented in
-   Section 13.
+   Section 12.
 
 3.1.  Example 1: Complete upload of representation data with known size
 
@@ -356,7 +354,7 @@ Table of Contents
    known to support resumable upload, can upload parts of a
    representation incrementally.
 
-   1) The client is aware that the targetted resource supports resumable
+   1) The client is aware that the targeted resource supports resumable
    uploads and therefore starts the upload with the Upload-Complete
    field value set to false and the first part of the representation.
 
@@ -466,19 +464,18 @@ Table of Contents
    have to be used.
 
    The server can clean up an upload resource and make it inaccessible
-   immediately after the upload is complete.  However, if a client
-   didn't receive the last response acknowledging the upload's
-   completion and the upload resource is not available anymore, the
-   client cannot verify the upload's state with the server.  Therefore,
-   the server SHOULD keep the upload resource available for a reasonable
-   amount of time after the upload is complete, or provide an alternate,
-   application-specific way for the client to verify the completion of
-   the upload.
+   immediately after the upload is complete.  However, keeping the
+   upload resource available for a period of time after completion
+   allows the client to verify the state of the upload if it did not
+   receive the last response acknowledging the completion.
+   Implementations are responsible for deciding if they retain the
+   resource and for what duration; they will need to consider the
+   resource costs required to do so.
 
    An upload resource SHOULD be unique.  Reuse of a URI for a different
    upload resource SHOULD be avoided in order to reduce the chance of
    misdirected or corrupted upload resources, as well as the potential
-   security issues described in Section 13.
+   security issues described in Section 12.
 
 4.1.  State
 
@@ -520,8 +517,8 @@ Table of Contents
 4.1.2.  Completeness
 
    An upload is incomplete until it is explicitly marked as completed by
-   the client.  After this point, no representation data can be appended
-   anymore.
+   the client or the server.  After this point, no more representation
+   data can be appended.
 
    The Upload-Complete request and response header field conveys the
    completeness state.  Upload-Complete is an Item Structured Header
@@ -530,10 +527,25 @@ Table of Contents
    or not.  Other values MUST cause the entire header field to be
    ignored.
 
-   An upload is marked as completed if a request for creating the upload
-   resource (Section 4.2) or appending to it (Section 4.4) included the
-   Upload-Complete header field with a true value and the request
-   content was fully processed.
+   An upload is marked as completed either when a request for creating
+   the upload resource (Section 4.2) or appending to it (Section 4.4)
+   includes the Upload-Complete header field with a true value and the
+   request content was fully processed, or when a response includes the
+   Upload-Complete header field with a true value.
+
+   When used in an upload creation response (Section 4.2) or an upload
+   append response (Section 4.4), Upload-Complete signals whether the
+   response comes from the initial targeted resource.  The value of true
+   means that the semantics of the targeted resource apply, and the
+   value of false means that the semantics of the resumable upload
+   protocol apply.  The client SHOULD NOT perform upload resumption to
+   the upload resource after receiving a response with the Upload-
+   Complete field value set to true.  Note that Upload-Complete can be
+   true even when the full representation data was not transmitted in
+   the case that the server decides to generate an early response when
+   processing the targeted resource.  Also note that Upload-Complete can
+   be false in response to an invalid operation performed on a completed
+   upload.
 
 4.1.3.  Length
 
@@ -567,7 +579,7 @@ Table of Contents
    indicated lengths MUST match.  If multiple requests include
    indicators, their indicated values MUST match.  A server can use the
    problem type [PROBLEM] of "https://iana.org/assignments/http-problem-
-   types#inconsistent-upload-length" (Section 7.3) in responses to
+   types#inconsistent-upload-length" (Section 7.2) in responses to
    indicate inconsistent length values.
 
    The Upload-Length field can be used in response to an offset
@@ -631,13 +643,19 @@ Table of Contents
    when the upload resource is created (Section 4.2).  Throughout the
    lifetime of the upload resource, these limits SHOULD NOT change in a
    way that causes failures for clients adhering to the initially
-   discovered limits.  In particular, whereas the values for max-size,
-   max-append-size, and max-age can increase without harm, they SHOULD
-   NOT decrease as they can cause ongoing uploads to fail.  Similarly,
-   the value for min-append-size SHOULD NOT increase.  If the client
-   discovers that it cannot continue the upload while adhering to the
-   limits, it SHOULD stop the current request immediately and cancel the
-   upload (Section 4.5).
+   discovered limits.  If the client discovers that it cannot continue
+   the upload while adhering to the limits, it SHOULD stop the current
+   request immediately and cancel the upload (Section 4.5).
+
+   The following recommendations for limit changes can minimize the risk
+   of causing upload failures:
+
+   *  max-size and max-append-size SHOULD NOT decrease.
+
+   *  min-size and min-append-size SHOULD NOT increase.
+
+   *  Between subsequent responses, the end of the upload resource's
+      lifetime as implied by max-age SHOULD NOT decrease.
 
    Receivers of Upload-Limit parse the Dictionary as described in
    Section 4.2 of [STRUCTURED-FIELDS].  Where the Dictionary is
@@ -708,7 +726,7 @@ Table of Contents
    content includes the entire representation data that the client
    intends to upload.  This is also a requirement for transparently
    upgrading to resumable uploads from traditional uploads
-   (Section 12.1.1).
+   (Section 11.1.1).
 
    If the client knows the representation data's length, it SHOULD
    indicate the length in the request to help the server allocate
@@ -821,6 +839,10 @@ Table of Contents
    verification fails, clients SHOULD abort the current request and
    cancel the upload (Section 4.5).
 
+   The server SHOULD include the Upload-Complete (Section 4.1.2) header
+   field in the response to indicate whether it is the result of
+   processing the uploaded representation.
+
    The server might not process the entire request content when the
    upload is interrupted, for example because of dropped connection or
    canceled request.  In this case, the server SHOULD append as much of
@@ -853,6 +875,7 @@ Table of Contents
 
    HTTP/1.1 200 OK
    Location: https://example.com/upload/b530ce8ff
+   Upload-Complete: ?1
    Upload-Limit: max-size=1234567890
    Content-Type: application/json
 
@@ -877,6 +900,7 @@ Table of Contents
 
    HTTP/1.1 201 Created
    Location: https://example.com/upload/3fd4994ad
+   Upload-Complete: ?0
    Upload-Limit: max-size=1234567890
 
    C) The following example shows an upload creation, where the server
@@ -897,18 +921,26 @@ Table of Contents
    HTTP/1.1 500 Internal Server Error
 
    D) The following example shows an upload creation being rejected by
-   the server because uploads to the targetted resource are not allowed.
-   The client cannot continue the upload.
+   the server because the request content cannot be decoded.  The
+   Upload-Complete header in the response is set to true since the
+   server is uninterested in receiving the full representation after the
+   decoding failure, and the upload is complete in its perspective.  The
+   client cannot continue the upload.
 
-   POST /upload-not-allowed HTTP/1.1
+   POST /upload-gzip HTTP/1.1
    Host: example.com
-   Upload-Complete: ?1
-   Content-Length: 123456789
+   Upload-Complete: ?0
+   Content-Length: 23456789
    Upload-Length: 123456789
+   Content-Encoding: gzip
 
-   [content (123456789 bytes)]
+   [corrupted gzip content]
 
-   HTTP/1.1 405 Method Not Allowed
+   HTTP/1.1 104 Upload Resumption Supported
+   Location: https://example.com/upload/6723cdf37
+
+   HTTP/1.1 400 Bad Request
+   Upload-Complete: ?1
 
 4.3.  Offset Retrieval
 
@@ -940,8 +972,8 @@ Table of Contents
    If the client received a response with a
 
    *  2xx (Successful) status code, the client can continue appending
-      representation data to it (Section 4.4) if the upload is not
-      complete yet.
+      representation data to it and/or mark the upload as complete
+      (Section 4.4).
 
    *  307 (Temporary Redirect) or 308 (Permanent Redirect) status code,
       the client MAY retry retrieving the offset from the new URI.
@@ -960,8 +992,9 @@ Table of Contents
    *  MUST include the offset in the Upload-Offset header field
       (Section 4.1.1),
 
-   *  MUST include the completeness state in the Upload-Complete header
-      field (Section 4.1.2),
+   *  MUST include the Upload-Complete header field (Section 4.1.2)
+      indicating whether a final response was produced from processing
+      the uploaded representation,
 
    *  MUST include the length in the Upload-Length header field, unless
       the client has not supplied one, by providing the corresponding
@@ -979,9 +1012,9 @@ Table of Contents
 
 4.3.3.  Examples
 
-   A) The following example shows an offset retrieval request.  The
-   server indicates the current offset and that the upload is not
-   complete yet.  The client can continue to append representation data.
+   The following example shows an offset retrieval request.  The server
+   indicates the current offset and that the upload is not complete yet.
+   The client can continue to append representation data.
 
    HEAD /upload/c35e2cd29 HTTP/1.1
    Host: example.com
@@ -991,18 +1024,6 @@ Table of Contents
    Upload-Offset: 25000000
    Upload-Length: 100000000
    Upload-Limit: max-age=3600
-   Cache-Control: no-store
-
-   B) The following example shows an offset retrieval request for a
-   completed upload.  The client does not need to continue the upload.
-
-   HEAD /upload/a9edb781b HTTP/1.1
-   Host: example.com
-
-   HTTP/1.1 204 No Content
-   Upload-Complete: ?1
-   Upload-Offset: 100000000
-   Upload-Length: 100000000
    Cache-Control: no-store
 
 4.4.  Upload Append
@@ -1083,33 +1104,11 @@ Table of Contents
 
    If the Upload-Offset request header field value does not match the
    current offset (Section 4.1.1), the server MUST reject the request
-   with a 409 (Conflict) status code.  The response MUST include the
-   correct offset in the Upload-Offset header field.  The response can
-   use the problem type [PROBLEM] of "https://iana.org/assignments/http-
-   problem-types#mismatching-upload-offset" (Section 7.1).
-
-   If the upload is already complete (Section 4.1.2), the server MUST
-   NOT modify the upload resource and MUST reject the request.  The
-   choice of response depends on the nature of the upload request and
-   server state, including but not limited to:
-
-   *  If the client attempted to append a non-zero length document, the
-      server MUST treat this as an inconsistent length failure.  The
-      server can use the problem type [PROBLEM] of
-      "https://iana.org/assignments/http-problem-types#inconsistent-
-      upload-length" (Section 7.3) in the response.
-
-   *  If the client attempted to append a zero-length document:
-
-      -  If the server retains knowledge of the upload resource but it
-         is not available, the 410 (Gone) status code can be used; the
-         response could also contain a Location header field to indicate
-         the location of the completed upload.  The server can use the
-         problem type [PROBLEM] of "https://iana.org/assignments/http-
-         problem-types#completed-upload" (Section 7.2) in the response.
-
-      -  If the server has not retained knowledge of the upload
-         resource, a 404 (Not Found) status code can be used.
+   with a 409 (Conflict) status code and the Upload-Complete header
+   field set to false.  The response MUST include the correct offset in
+   the Upload-Offset header field.  The response can use the problem
+   type [PROBLEM] of "https://iana.org/assignments/http-problem-
+   types#mismatching-upload-offset" (Section 7.1).
 
    If the Upload-Complete request header field is set to true, the
    client intends to transfer the remaining representation data in one
@@ -1129,6 +1128,14 @@ Table of Contents
    server acknowledges the appended data by sending a 2xx (Successful)
    response with the Upload-Complete header field set to false.
 
+   Even if the upload is complete (Section 4.1.2) in the server's
+   perspective and the final response from the targeted resource has
+   already been sent, the client might still perform an upload append
+   (Section 4.4) after an offset retrieval (Section 4.3) due to the
+   response being lost during transmission.  The server can choose to
+   replay the final response to the client if the request to append to
+   the completed upload is valid.
+
    The server MUST record the length according to Section 4.1.3 if the
    Upload-Length or Upload-Complete header fields are included in the
    request.  If the length is known, the server MUST prevent the offset
@@ -1143,6 +1150,10 @@ Table of Contents
    code and the Upload-Offset header field set to the current offset to
    inform the client about the upload progress.  These interim responses
    MUST NOT include the Location header field.
+
+   The server SHOULD include the Upload-Complete (Section 4.1.2) header
+   field in the response to indicate whether it is the result of
+   processing the uploaded representation.
 
 4.4.3.  Examples
 
@@ -1343,6 +1354,8 @@ Table of Contents
 
    HTTP/1.1 409 Conflict
    Content-Type: application/problem+json
+   Upload-Offset: 12500000
+   Upload-Complete: ?0
 
    {
      "type":"https://iana.org/assignments/http-problem-types#\
@@ -1352,28 +1365,7 @@ Table of Contents
      "provided-offset": 25000000
    }
 
-7.2.  Completed Upload
-
-   This section defines the "https://iana.org/assignments/http-problem-
-   types#completed-upload" problem type [PROBLEM].  A server can use
-   this problem type when responding to an upload append request
-   (Section 4.4) to indicate that the upload has already been completed
-   and cannot be modified.
-
-   The following example shows an example response:
-
-   # NOTE: '\' line wrapping per RFC 8792
-
-   HTTP/1.1 400 Bad Request
-   Content-Type: application/problem+json
-
-   {
-     "type":"https://iana.org/assignments/http-problem-types#\
-       completed-upload",
-     "title": "upload is already completed"
-   }
-
-7.3.  Inconsistent Length
+7.2.  Inconsistent Length
 
    This section defines the "https://iana.org/assignments/http-problem-
    types#inconsistent-upload-length" problem type [PROBLEM].  A server
@@ -1388,6 +1380,7 @@ Table of Contents
 
    HTTP/1.1 400 Bad Request
    Content-Type: application/problem+json
+   Upload-Complete: ?0
 
    {
      "type":"https://iana.org/assignments/http-problem-types#\
@@ -1472,34 +1465,7 @@ Table of Contents
    signal the failure to the client.  This way, the integrity of an
    individual request can be protected.
 
-11.  Responses to Uploads
-
-   HTTP uploads often not only transfer a representation to the server
-   but also send back information to the client.  For resumable uploads,
-   this works similarly to conventional HTTP uploads.  The server can
-   include information in the response to the request that transferred
-   the remaining representation data and included the Upload-Complete:
-   ?1 header field.  Clients can regard this response as the final
-   response for the entire upload, as detailed in Section 4.2 and
-   Section 4.4.
-
-   However, due to network interruptions, the server might process the
-   remaining representation data, complete the upload, and send a
-   response to the client, which then does not receive the response.
-   The client can learn that the upload is complete by retrieving its
-   state (Section 4.3), but resumable uploads as defined in this
-   document do not offer functionality to recover the missed response.
-
-   To address this issue, the server can send the desired information in
-   header fields, which are included in both the final response and
-   responses when the client fetches the upload state via a HEAD request
-   (Section 4.3).  This way, the client can retrieve the information
-   from the header even if it failed to receive the final response.  If
-   the piece of information is too large for header fields, the server
-   could make it available as a separate resource for retrieval and
-   point the client to its URI in an appropriate header field.
-
-12.  Upload Strategies
+11.  Upload Strategies
 
    The definition of the upload creation request (Section 4.2) provides
    the client with flexibility to choose whether the representation data
@@ -1514,7 +1480,7 @@ Table of Contents
    explicitly communicated to the server and clients are not required to
    stick to one strategy, but can mix and adapt them to their needs.
 
-12.1.  Optimistic Upload Creation
+11.1.  Optimistic Upload Creation
 
    An "optimistic upload creation" can be used independent of the
    client's knowledge about the resource's support for resumable
@@ -1549,7 +1515,7 @@ Table of Contents
    100 (Continue) interim response (see Section 10.1.1 of [HTTP]) before
    committing to work.
 
-12.1.1.  Upgrading To Resumable Uploads
+11.1.1.  Upgrading To Resumable Uploads
 
    Optimistic upload creation allows clients and servers to
    automatically upgrade non-resumable uploads to resumable ones.  In a
@@ -1579,7 +1545,7 @@ Table of Contents
    considered the response for the entire upload and should be provided
    to the user.
 
-12.2.  Careful Upload Creation
+11.2.  Careful Upload Creation
 
    For a "careful upload creation" the client knows that the resource
    targeted in the initial request supports resumable uploads and sends
@@ -1602,7 +1568,7 @@ Table of Contents
    additional request is minuscule compared to the effort of
    transferring the representation itself.
 
-13.  Security Considerations
+12.  Security Considerations
 
    The upload resource URI is the identifier used for modifying the
    upload.  Without further protection of this URI, an attacker may
@@ -1665,9 +1631,9 @@ Table of Contents
    allocated to uploads might not be an effective strategy when using
    resumable uploads.
 
-14.  IANA Considerations
+13.  IANA Considerations
 
-14.1.  HTTP Fields
+13.1.  HTTP Fields
 
    IANA is asked to register the following entries in the "Hypertext
    Transfer Protocol (HTTP) Field Name Registry":
@@ -1690,7 +1656,7 @@ Table of Contents
 
                                  Table 1
 
-14.2.  HTTP Status Code
+13.2.  HTTP Status Code
 
    IANA is asked to register the following entry in the "HTTP Status
    Codes" registry:
@@ -1701,7 +1667,7 @@ Table of Contents
 
    Specification:  Section 5 of this document
 
-14.3.  Media Type
+13.3.  Media Type
 
    IANA is asked to register the following entry in the "Media Types"
    registry:
@@ -1716,7 +1682,7 @@ Table of Contents
 
    Encoding considerations:  binary
 
-   Security considerations:  see Section 13 of this document
+   Security considerations:  see Section 12 of this document
 
    Interoperability considerations:  N/A
 
@@ -1751,7 +1717,7 @@ Table of Contents
 
    Change controller:  IETF
 
-14.4.  HTTP Problem Types
+13.4.  HTTP Problem Types
 
    IANA is asked to register the following entry in the "HTTP Problem
    Types" registry:
@@ -1768,18 +1734,6 @@ Table of Contents
    IANA is asked to register the following entry in the "HTTP Problem
    Types" registry:
 
-   Type URI:  https://iana.org/assignments/http-problem-types#completed-
-      upload
-
-   Title:  Upload Is Completed
-
-   Recommended HTTP status code:  400
-
-   Reference:  Section 7.2 of this document
-
-   IANA is asked to register the following entry in the "HTTP Problem
-   Types" registry:
-
    Type URI:  https://iana.org/assignments/http-problem-
       types#inconsistent-upload-length
 
@@ -1787,11 +1741,11 @@ Table of Contents
 
    Recommended HTTP status code:  400
 
-   Reference:  Section 7.3 of this document
+   Reference:  Section 7.2 of this document
 
-15.  References
+14.  References
 
-15.1.  Normative References
+14.1.  Normative References
 
    [CACHING]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Caching", STD 98, RFC 9111,
@@ -1840,7 +1794,7 @@ Table of Contents
               HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
               <https://www.rfc-editor.org/rfc/rfc9651>.
 
-15.2.  Informative References
+14.2.  Informative References
 
    [RFC8792]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,
               "Handling Long Lines in Content of Internet-Drafts and
@@ -1869,6 +1823,12 @@ Since draft-ietf-httpbis-resumable-upload-11
 
    *  Allow upload creation requests with no content regardless of the
       min-append-size limit.
+
+   *  Remove nominative languages addressing the lost final response.
+
+   *  Allow max-age limit to decrease as expected.
+
+   *  Redefine Upload-Complete on the server side.
 
 Since draft-ietf-httpbis-resumable-upload-10
 
@@ -2074,13 +2034,19 @@ Acknowledgments
    contributions to the text, along with the following in alphabetical
    order for their thorough reviews of the document:
 
-   *  Mike Bishop
+   *  Daniel Resnick
 
-   *  Roy T.  Fielding
+   *  Glenn Strauss
+
+   *  Grant Gryczan
 
    *  Julian Reschke
 
-   *  Glenn Strauss
+   *  Mert Alev
+
+   *  Mike Bishop
+
+   *  Roy T.  Fielding
 
    *  Willy Tarreau
 
