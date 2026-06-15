@@ -412,7 +412,7 @@ The resource targeted by this initial request is responsible for processing the 
 
 If the `Upload-Complete` request header field is set to true, the client intends to transfer the entire representation data in one request. If the request content was fully processed, no resumable upload is needed and the server proceeds to process the request and generate a response.
 
-If the `Upload-Complete` header field is set to false, the client intends to transfer the representation over multiple requests. If the request content was fully processed, the server MUST include the `Location` response header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits if existing. Servers are RECOMMENDED to use the `201 (Created)` status code.
+If the `Upload-Complete` request header field is set to false, the client intends to transfer the representation over multiple requests. If the request content was fully processed, the server MUST include the `Location` response header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits if existing. Servers are RECOMMENDED to use the `201 (Created)` status code.
 
 The server MUST record the length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete: ?1` header fields are included in the request.
 
