@@ -685,8 +685,8 @@ Table of Contents
    the limits applied to an upload once the upload resource has been
    created, unless the request to create an upload resource included
    additional information that warrants different limits.  For example,
-   a server might announce a general maximum size limit of 1GB, but
-   reduce it to 100MB when the media type indicates an image.
+   a server might announce a general maximum size limit of 1 GB, but
+   reduce it to 100 MB when the media type indicates an image.
 
    Servers, including intermediaries, can (and often do) apply
    restrictions on the size of individual request message content.
