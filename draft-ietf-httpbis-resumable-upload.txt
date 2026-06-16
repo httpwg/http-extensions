@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 11 December 2026                                     Apple Inc.
+Expires: 18 December 2026                                     Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                             9 June 2026
+                                                            16 June 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 December 2026.
+   This Internet-Draft will expire on 18 December 2026.
 
 Copyright Notice
 
@@ -811,11 +811,11 @@ Table of Contents
    upload is needed and the server proceeds to process the request and
    generate a response.
 
-   If the Upload-Complete header field is set to false, the client
-   intends to transfer the representation over multiple requests.  If
-   the request content was fully processed, the server MUST include the
-   Location response header field pointing to the upload resource and
-   MUST include the Upload-Limit header field with the corresponding
+   If the Upload-Complete request header field is set to false, the
+   client intends to transfer the representation over multiple requests.
+   If the request content was fully processed, the server MUST include
+   the Location response header field pointing to the upload resource
+   and MUST include the Upload-Limit header field with the corresponding
    limits if existing.  Servers are RECOMMENDED to use the 201 (Created)
    status code.
 
