@@ -1051,7 +1051,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Gorbaty &amp; Bishop</td>
-<td class="center">Expires 18 December 2026</td>
+<td class="center">Expires 19 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg {
 <dd class="internet-draft">draft-ietf-httpbis-secondary-server-certs-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-16" class="published">16 June 2026</time>
+<time datetime="2026-06-17" class="published">17 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-12-18">18 December 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-19">19 December 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1126,7 +1126,7 @@ on TLS Exported Authenticators.<a href="#section-abstract-1" class="pilcrow">¶<
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 18 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 19 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1176,7 +1176,7 @@ on TLS Exported Authenticators.<a href="#section-abstract-1" class="pilcrow">¶<
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-discovering-additional-cert" class="internal xref">Discovering Additional Certificates at the HTTP Layer</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
-                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-indicating-support-for-http" class="internal xref">Indicating Support for HTTP-Layer Certificate Authentication</a></p>
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-indicating-support-for-http" class="internal xref">Indicating Support for HTTP-Layer Server Certificate Authentication</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
                 <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-making-certificates-availab" class="internal xref">Making Certificates Available</a></p>
@@ -1245,6 +1245,9 @@ on TLS Exported Authenticators.<a href="#section-abstract-1" class="pilcrow">¶<
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
                 <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-settings-parameters" class="internal xref">Settings Parameters</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.3">
+                <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="auto internal xref">8.3</a>.  <a href="#name-error-codes" class="internal xref">Error Codes</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
@@ -1286,8 +1289,8 @@ server provided that the secondary origin is also in the certificate provided
 during the TLS handshake. In many cases, servers choose to maintain separate
 certificates for different origins but still desire the benefits of a shared
 HTTP connection. This document defines a capability for servers to use and
-to authenticate with those seperate certificates over a shared connection.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">The ability to maintain seperate certificates for different origins can also
+to authenticate with those separate certificates over a shared connection.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">The ability to maintain separate certificates for different origins can also
 allow proxies that cache content from secondary origins to communicate to
 clients that they can service some of those origins directly, allowing the
 proxy to behave as a TLS-terminating reverse proxy for those origins instead of
@@ -1351,14 +1354,14 @@ certificates can also be supplied into these collections.<a href="#section-1.2-3
         <h3 id="name-http-layer-certificate-auth">
 <a href="#section-1.3" class="section-number selfRef">1.3. </a><a href="#name-http-layer-certificate-auth" class="section-name selfRef">HTTP-Layer Certificate Authentication</a>
         </h3>
-<p id="section-1.3-1">This document defines HTTP/2 and HTTP/3 <code>SERVER_CERTIFICATE</code> frames (<a href="#certs-http" class="auto internal xref">Section 5</a>)
-to carry the relevant certificate messages, enabling certificate-based
-authentication of servers independent of TLS version. This mechanism can be
-implemented at the HTTP layer without breaking the existing interface between
-HTTP and applications above it.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
-<p id="section-1.3-2">TLS Exported Authenticators <span>[<a href="#EXPORTED-AUTH" class="cite xref">EXPORTED-AUTH</a>]</span> allow the opportunity for an
-HTTP/2 and HTTP/3 servers to send certificate frames which can be used to prove
-the servers authenticity for multiple origins.<a href="#section-1.3-2" class="pilcrow">¶</a></p>
+<p id="section-1.3-1">This document defines HTTP/2 and HTTP/3 <code>SERVER_CERTIFICATE</code> frames
+(<a href="#certs-http" class="auto internal xref">Section 5</a>) to carry the relevant certificate messages, enabling
+certificate-based authentication of servers independent of TLS version. This
+mechanism can be implemented at the HTTP layer without breaking the existing
+interface between HTTP and applications above it.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
+<p id="section-1.3-2">TLS Exported Authenticators <span>[<a href="#EXPORTED-AUTH" class="cite xref">EXPORTED-AUTH</a>]</span> allow HTTP/2 and HTTP/3 servers to
+send certificate frames which can be used to prove the server's authenticity for
+multiple origins.<a href="#section-1.3-2" class="pilcrow">¶</a></p>
 <p id="section-1.3-3">This document additionally defines SETTINGS parameters for HTTP/2 and HTTP/3
 (<a href="#settings" class="auto internal xref">Section 4</a>) that allow the client and server to indicate support for
 HTTP-Layer certificate authentication.<a href="#section-1.3-3" class="pilcrow">¶</a></p>
@@ -1383,23 +1386,23 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-discovering-additional-cert" class="section-name selfRef">Discovering Additional Certificates at the HTTP Layer</a>
       </h2>
 <p id="section-3-1">A certificate chain with proof of possession of the private key corresponding to
-the end-entity certificate is sent as a sequence of <code>SERVER_CERTIFICATE</code> frames (see
-<a href="#http2-cert" class="auto internal xref">Section 5.1</a>, <a href="#http3-cert" class="auto internal xref">Section 5.2</a>) to the client. Once the holder of a certificate
-has sent the chain and proof, this certificate chain is cached by the recipient
-and available for future use.<a href="#section-3-1" class="pilcrow">¶</a></p>
+the end-entity certificate is sent as a sequence of <code>SERVER_CERTIFICATE</code>
+frames (see <a href="#http2-cert" class="auto internal xref">Section 5.1</a>, <a href="#http3-cert" class="auto internal xref">Section 5.2</a>) to the client. Once the holder of a
+certificate has sent the chain and proof, this certificate chain is cached by
+the recipient and available for future use.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <div id="settings-usage">
 <section id="section-3.1">
         <h3 id="name-indicating-support-for-http">
-<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-indicating-support-for-http" class="section-name selfRef">Indicating Support for HTTP-Layer Certificate Authentication</a>
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-indicating-support-for-http" class="section-name selfRef">Indicating Support for HTTP-Layer Server Certificate Authentication</a>
         </h3>
 <p id="section-3.1-1">The <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> parameters for HTTP/2 and HTTP/3 are
 defined in <a href="#settings" class="auto internal xref">Section 4</a> so that clients and servers can indicate support for
-secondary certificate authentication of servers.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">HTTP/2 and HTTP/3 endpoints who wish to indicate support for HTTP-Layer
+secondary server certificate authentication.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">HTTP/2 and HTTP/3 endpoints that wish to indicate support for HTTP-Layer
 certificate authentication <span class="bcp14">MUST</span> send a <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code>
 parameter set to "1" in their SETTINGS frame. Endpoints <span class="bcp14">MUST NOT</span> use any of the
-authentication functionality described in this document unless the parameter has
-been negotiated by both sides.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+authentication functionality described in this document unless they have
+both sent and received <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> with a value of 1.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.1-3">Endpoints <span class="bcp14">MUST NOT</span> send a <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> parameter with a
 value of 0 after previously sending a value of 1.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <p id="section-3.1-4"><code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> indicates that servers are able to offer
@@ -1413,13 +1416,12 @@ Authenticator that the server sends.<a href="#section-3.1-4" class="pilcrow">¶<
         <h3 id="name-making-certificates-availab">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-making-certificates-availab" class="section-name selfRef">Making Certificates Available</a>
         </h3>
-<p id="section-3.2-1">When both peers have advertised support for HTTP-layer certificates in a given
-direction as in <a href="#settings-usage" class="auto internal xref">Section 3.1</a>, the indicated endpoint can supply
-additional certificates into the connection at any time. That is, if both
-endpoints have sent <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> and validated the value
-received from the peer, the server may send certificates spontaneously, at any
-time, as described by the <code>Spontaneous Server Authentication</code> message sequence
-in <span><a href="https://rfc-editor.org/rfc/rfc9261#section-3" class="relref">Section 3</a> of [<a href="#EXPORTED-AUTH" class="cite xref">EXPORTED-AUTH</a>]</span>.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-1">When both peers have advertised support for HTTP-layer server certificates as
+in <a href="#settings-usage" class="auto internal xref">Section 3.1</a>, the server can supply additional certificates into the
+connection at any time. That is, if both endpoints have sent
+<code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> and validated the value received from the
+peer, the server may send certificates spontaneously, at any time, as described
+by the <code>Spontaneous Server Authentication</code> message sequence in <span><a href="https://rfc-editor.org/rfc/rfc9261#section-3" class="relref">Section 3</a> of [<a href="#EXPORTED-AUTH" class="cite xref">EXPORTED-AUTH</a>]</span>.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.2-2">This does mean that if a server knows it supports secondary certificate
 authentication, and it receives <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> from the
 client, that it can enqueue certificates immediately following the received
@@ -1428,18 +1430,42 @@ SETTINGS frame.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 action by the server. A server <span class="bcp14">SHOULD NOT</span> send certificates which do not cover
 origins which it is prepared to service on the current connection, and <span class="bcp14">SHOULD NOT</span> send them if the client has not indicated support with
 <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code>.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.2-4">A client <span class="bcp14">MUST NOT</span> send certificates to the server. The server <span class="bcp14">SHOULD</span> close the
+<p id="section-3.2-4">A client <span class="bcp14">MUST NOT</span> send certificates to the server. The server <span class="bcp14">MUST</span> close the
 connection upon receipt of a SERVER_CERTIFICATE frame from a client.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
 <span id="name-simple-unprompted-server-au"></span><div id="ex-http-server-unprompted-basic">
 <figure id="figure-1">
-          <div class="lang-drawing sourcecode" id="section-3.2-5.1">
-<pre>
-Client                                               Server
-   &lt;-- (stream 0 / control stream) SERVER_CERTIFICATE --
-   ...
-   -- (stream N) GET /from-new-origin -----------------&gt;
-   &lt;------------------------------ (stream N) 200 OK ---
-</pre>
+          <div id="section-3.2-5.1">
+            <div class="alignLeft art-svg artwork" id="section-3.2-5.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="520" viewBox="0 0 520 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,224" fill="none" stroke="black"></path>
+                <path d="M 512,48 L 512,224" fill="none" stroke="black"></path>
+                <path d="M 16,80 L 504,80" fill="none" stroke="black"></path>
+                <path d="M 16,160 L 504,160" fill="none" stroke="black"></path>
+                <path d="M 16,208 L 504,208" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="512,160 500,154.4 500,165.6" fill="black" transform="rotate(0,504,160)"></polygon>
+                <polygon class="arrowhead" points="24,208 12,202.4 12,213.6" fill="black" transform="rotate(180,16,208)"></polygon>
+                <polygon class="arrowhead" points="24,80 12,74.4 12,85.6" fill="black" transform="rotate(180,16,80)"></polygon>
+                <g class="text">
+                  <text x="28" y="36">Client</text>
+                  <text x="492" y="36">Server</text>
+                  <text x="120" y="68">(stream</text>
+                  <text x="160" y="68">0</text>
+                  <text x="176" y="68">/</text>
+                  <text x="216" y="68">control</text>
+                  <text x="280" y="68">stream)</text>
+                  <text x="388" y="68">SERVER_CERTIFICATE</text>
+                  <text x="40" y="116">...</text>
+                  <text x="48" y="148">(stream</text>
+                  <text x="92" y="148">N)</text>
+                  <text x="120" y="148">GET</text>
+                  <text x="204" y="148">/from-new-origin</text>
+                  <text x="344" y="196">(stream</text>
+                  <text x="388" y="196">N)</text>
+                  <text x="416" y="196">200</text>
+                  <text x="444" y="196">OK</text>
+                </g>
+              </svg><a href="#section-3.2-5.1.1" class="pilcrow">¶</a>
+</div>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
 <a href="#name-simple-unprompted-server-au" class="selfRef">Simple unprompted server authentication</a>
@@ -1454,16 +1480,53 @@ those origins for the remainder of the connection lifetime.
 <a href="#ex-http-server-unprompted-reverse" class="auto internal xref">Figure 2</a> illustrates this behavior.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
 <span id="name-reverse-proxy-server-authen"></span><div id="ex-http-server-unprompted-reverse">
 <figure id="figure-2">
-          <div class="lang-drawing sourcecode" id="section-3.2-7.1">
-<pre>
-Client                                                 Server
-   -- (stream N) CONNECT /to-new-origin -----------------&gt;
-   &lt;---- (stream 0 / control stream) SERVER_CERTIFICATE --
-   &lt;---- (stream 0 / control stream) 200 OK --------------
-   ...
-   -- (stream M) GET /to-new-origin ---------------------&gt;
-   &lt;------------ (stream M, direct from server) 200 OK ---
-</pre>
+          <div id="section-3.2-7.1">
+            <div class="alignLeft art-svg artwork" id="section-3.2-7.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="336" width="520" viewBox="0 0 520 336" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,320" fill="none" stroke="black"></path>
+                <path d="M 512,48 L 512,320" fill="none" stroke="black"></path>
+                <path d="M 16,80 L 504,80" fill="none" stroke="black"></path>
+                <path d="M 16,128 L 504,128" fill="none" stroke="black"></path>
+                <path d="M 16,176 L 504,176" fill="none" stroke="black"></path>
+                <path d="M 16,256 L 504,256" fill="none" stroke="black"></path>
+                <path d="M 16,304 L 504,304" fill="none" stroke="black"></path>
+                <polygon class="arrowhead" points="512,256 500,250.4 500,261.6" fill="black" transform="rotate(0,504,256)"></polygon>
+                <polygon class="arrowhead" points="512,80 500,74.4 500,85.6" fill="black" transform="rotate(0,504,80)"></polygon>
+                <polygon class="arrowhead" points="24,304 12,298.4 12,309.6" fill="black" transform="rotate(180,16,304)"></polygon>
+                <polygon class="arrowhead" points="24,176 12,170.4 12,181.6" fill="black" transform="rotate(180,16,176)"></polygon>
+                <polygon class="arrowhead" points="24,128 12,122.4 12,133.6" fill="black" transform="rotate(180,16,128)"></polygon>
+                <g class="text">
+                  <text x="28" y="36">Client</text>
+                  <text x="492" y="36">Server</text>
+                  <text x="48" y="68">(stream</text>
+                  <text x="92" y="68">N)</text>
+                  <text x="136" y="68">CONNECT</text>
+                  <text x="228" y="68">/to-new-origin</text>
+                  <text x="120" y="116">(stream</text>
+                  <text x="160" y="116">0</text>
+                  <text x="176" y="116">/</text>
+                  <text x="216" y="116">control</text>
+                  <text x="280" y="116">stream)</text>
+                  <text x="388" y="116">SERVER_CERTIFICATE</text>
+                  <text x="344" y="164">(stream</text>
+                  <text x="388" y="164">N)</text>
+                  <text x="416" y="164">200</text>
+                  <text x="444" y="164">OK</text>
+                  <text x="40" y="212">...</text>
+                  <text x="48" y="244">(stream</text>
+                  <text x="92" y="244">M)</text>
+                  <text x="120" y="244">GET</text>
+                  <text x="196" y="244">/to-new-origin</text>
+                  <text x="184" y="292">(stream</text>
+                  <text x="228" y="292">M,</text>
+                  <text x="268" y="292">direct</text>
+                  <text x="316" y="292">from</text>
+                  <text x="368" y="292">server)</text>
+                  <text x="416" y="292">200</text>
+                  <text x="444" y="292">OK</text>
+                </g>
+              </svg><a href="#section-3.2-7.1.1" class="pilcrow">¶</a>
+</div>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
 <a href="#name-reverse-proxy-server-authen" class="selfRef">Reverse proxy server authentication</a>
@@ -1478,7 +1541,7 @@ Client                                                 Server
       <h2 id="name-settings_http_server_cert_a">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-settings_http_server_cert_a" class="section-name selfRef">SETTINGS_HTTP_SERVER_CERT_AUTH</a>
       </h2>
-<p id="section-4-1">SETTINGS parameters for HTTP/2 and HTTP/3 seperately are defined below.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">SETTINGS parameters for HTTP/2 and HTTP/3 separately are defined below.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <div id="http2-setting">
 <section id="section-4.1">
         <h3 id="name-the-settings_http_server_ce">
@@ -1510,14 +1573,13 @@ parameter <span class="bcp14">MUST</span> be 0 or 1.<a href="#section-4.2-2" cla
       <h2 id="name-server_certificate-frame">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-server_certificate-frame" class="section-name selfRef">SERVER_CERTIFICATE frame</a>
       </h2>
-<p id="section-5-1">The SERVER_CERTIFICATE frame contains an exported authenticator message from the TLS
-layer that provides a chain of certificates and associated extensions, proving
-possession of the private key corresponding to the end-entity certificate.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">A server sends a SERVER_CERTIFICATE frame on stream 0 for HTTP/2 and on the control
-stream for HTTP/3. The client is permitted to make subsequent requests for
-resources upon receipt of a SERVER_CERTIFICATE frame without further action from the
-server.<a href="#section-5-2" class="pilcrow">¶</a></p>
-<p id="section-5-3">Upon receiving a complete series of SERVER_CERTIFICATE frames, the receiver may
+<p id="section-5-1">The SERVER_CERTIFICATE frame contains an exported authenticator message from the
+TLS layer that provides a chain of certificates and associated extensions,
+proving possession of the private key corresponding to the end-entity
+certificate.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">The client is permitted to make subsequent requests for resources upon receipt
+of a SERVER_CERTIFICATE frame without further action from the server.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">Upon receiving a SERVER_CERTIFICATE frame, the receiver may
 validate the Exported Authenticator value by using the exported authenticator
 API. This returns either an error indicating that the message was invalid or
 the certificate chain and extensions used to create the message.<a href="#section-5-3" class="pilcrow">¶</a></p>
@@ -1526,8 +1588,9 @@ the certificate chain and extensions used to create the message.<a href="#sectio
         <h3 id="name-http-2-server_certificate-f">
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-http-2-server_certificate-f" class="section-name selfRef">HTTP/2 SERVER_CERTIFICATE frame</a>
         </h3>
-<p id="section-5.1-1">A SERVER_CERTIFICATE frame in HTTP/2 (type=0xTBD) carrries a TLS Exported authenticator
-that clients can use to authenticate secondary origins from a sending server.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-1">A SERVER_CERTIFICATE frame in HTTP/2 (type=0xTBD) carries a TLS Exported
+authenticator that clients can use to authenticate secondary origins from a
+sending server.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2">The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
 <span class="bcp14">MUST</span> be sent on stream 0. An endpoint <span class="bcp14">MUST</span> treat a SERVER_CERTIFICATE frame with a
 stream identifier other than 0x00 as a connection error.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
@@ -1563,8 +1626,9 @@ details on the input to this API.<a href="#section-5.1-6" class="pilcrow">¶</a>
         <h3 id="name-http-3-server_certificate-f">
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-http-3-server_certificate-f" class="section-name selfRef">HTTP/3 SERVER_CERTIFICATE frame</a>
         </h3>
-<p id="section-5.2-1">A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carrries a TLS Exported authenticator
-that clients can use to authenticate secondary origins from a sending server.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-1">A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carries a TLS Exported
+authenticator that clients can use to authenticate secondary origins from a
+sending server.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <p id="section-5.2-2">The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
 <span class="bcp14">MUST</span> be sent on the control stream. An endpoint <span class="bcp14">MUST</span> treat a SERVER_CERTIFICATE
 frame received on any stream other than the control stream as a connection error.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
@@ -1596,24 +1660,24 @@ details on the input to this API.<a href="#section-5.2-5" class="pilcrow">¶</a>
 request, a set of certificates, and supporting information about the
 certificate (OCSP, SCT, etc.). The result is an opaque token which is used
 when generating the <code>SERVER_CERTIFICATE</code> frame.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
-<p id="section-5.3-2">Upon receipt of a <code>SERVER_CERTIFICATE</code> frame, an endpoint which has negotiated support
-for secondary certfiicates <span class="bcp14">MUST</span> perform the following steps to validate the
-token it contains:<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+<p id="section-5.3-2">Upon receipt of a <code>SERVER_CERTIFICATE</code> frame, a client which has negotiated
+support for secondary certificates <span class="bcp14">MUST</span> perform the following steps to validate
+the token it contains:<a href="#section-5.3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.3-3.1">
             <p id="section-5.3-3.1.1">Using the <code>get context</code> API, retrieve the <code>certificate_request_context</code> used
-to generate the authenticator, if any. Because the <code>certificate_request_context</code>
-for spontaneous server certificates is chosen by the server, the usage of
-the <code>certificate_request_context</code> is implementation-dependent. For details,
-see <span><a href="https://rfc-editor.org/rfc/rfc9261#section-5" class="relref">Section 5</a> of [<a href="#EXPORTED-AUTH" class="cite xref">EXPORTED-AUTH</a>]</span>.<a href="#section-5.3-3.1.1" class="pilcrow">¶</a></p>
+to generate the authenticator, if any. Because the
+<code>certificate_request_context</code> for spontaneous server certificates is chosen
+by the server, the usage of the <code>certificate_request_context</code> is
+implementation-dependent. For details, see <span><a href="https://rfc-editor.org/rfc/rfc9261#section-5" class="relref">Section 5</a> of [<a href="#EXPORTED-AUTH" class="cite xref">EXPORTED-AUTH</a>]</span>.<a href="#section-5.3-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.3-3.2">
             <p id="section-5.3-3.2.1">Use the <code>validate</code> API to confirm the validity of the authenticator with
 regard to the generated request, if any.<a href="#section-5.3-3.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-5.3-4">If the authenticator cannot be validated, this <span class="bcp14">SHOULD</span> be treated as a connection
-error.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
+<p id="section-5.3-4">If the authenticator cannot be validated, this <span class="bcp14">MUST</span> be treated as a connection
+error of type SERVER_CERTIFICATE_INVALID (<a href="#errors" class="auto internal xref">Section 6</a>).<a href="#section-5.3-4" class="pilcrow">¶</a></p>
 <p id="section-5.3-5">Once the authenticator is accepted, the endpoint can perform any other checks
 for the acceptability of the certificate itself.<a href="#section-5.3-5" class="pilcrow">¶</a></p>
 </section>
@@ -1639,7 +1703,7 @@ differently.<a href="#section-6-2" class="pilcrow">¶</a></p>
 this document or might indicate that the connection is not fully secure. These
 errors are fatal to stream or connection, as appropriate.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-6.1-2">
-          <dt id="section-6.1-2.1">SERVER_CERTIFICATE_UNREADABLE (0xERROR-TBD):</dt>
+          <dt id="section-6.1-2.1">SERVER_CERTIFICATE_INVALID (0xERROR-TBD):</dt>
           <dd style="margin-left: 1.5em" id="section-6.1-2.2">
             <p id="section-6.1-2.2.1">An exported authenticator could not be validated.<a href="#section-6.1-2.2.1" class="pilcrow">¶</a></p>
 </dd>
@@ -1655,8 +1719,8 @@ errors are fatal to stream or connection, as appropriate.<a href="#section-6.1-1
 <p id="section-6.2-1">Unacceptable certificates (expired, revoked, or insufficient to satisfy the
 request) are not treated as stream or connection errors. This is typically not
 an indication of a protocol failure. Clients <span class="bcp14">SHOULD</span> establish a new connection
-in an attempt to reach an authoritative server if they deem a
-certificate from the server unacceptable.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+in an attempt to reach an authoritative server if they deem a certificate from
+the server unacceptable.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1666,11 +1730,11 @@ certificate from the server unacceptable.<a href="#section-6.2-1" class="pilcrow
       <h2 id="name-security-considerations">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-7-1">This mechanism defines an alternate way to obtain server and client certificates
-other than in the initial TLS handshake. While the signature of exported
-authenticator values is expected to be equally secure, it is important to
-recognize that a vulnerability in this code path is at least equal to a
-vulnerability in the TLS handshake.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-1">This mechanism defines an alternate way to obtain server certificates other than
+in the initial TLS handshake. While the signature of exported authenticator
+values is expected to be equally secure, it is important to recognize that a
+vulnerability in this code path is at least equal to a vulnerability in the TLS
+handshake.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <div id="impersonation">
 <section id="section-7.1">
         <h3 id="name-impersonation">
@@ -1692,8 +1756,8 @@ certificates, rather than individually authoritative on each certificate. As a
 result, clients <span class="bcp14">MUST NOT</span> assume that because one origin was previously
 colocated with another, those origins will be reachable via the same endpoints
 in the future. Clients <span class="bcp14">MUST NOT</span> consider previous secondary certificates to be
-validated after TLS session resumption. Servers <span class="bcp14">MAY</span> re-present certificates
-if a TLS Session is resumed.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
+validated after TLS session resumption. Servers <span class="bcp14">MAY</span> re-present certificates if
+a TLS Session is resumed.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="fingerprinting">
@@ -1701,9 +1765,9 @@ if a TLS Session is resumed.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
         <h3 id="name-fingerprinting">
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-fingerprinting" class="section-name selfRef">Fingerprinting</a>
         </h3>
-<p id="section-7.2-1">This document defines a mechanism which could be used to probe servers for origins
-they support, but it opens no new attack that was not already possible by
-making repeat TLS connections with different SNI values.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-1">This document defines a mechanism which could be used to probe servers for
+origins they support, but it opens no new attack that was not already possible
+by making repeat TLS connections with different SNI values.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="persistence-of-service">
@@ -1750,8 +1814,9 @@ define formal mechanisms to facilitate that intention.<a href="#section-7.4-2" c
       <h2 id="name-iana-considerations">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-8-1">This document registers the <code>SERVER_CERTIFICATE</code> frame type and
-<code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> setting for both <span>[<a href="#H2" class="cite xref">H2</a>]</span> and <span>[<a href="#H3" class="cite xref">H3</a>]</span>.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-1">This document registers the <code>SERVER_CERTIFICATE</code> frame type,
+<code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> setting, and <code>SERVER_CERTIFICATE_INVALID</code>
+error code for both <span>[<a href="#H2" class="cite xref">H2</a>]</span> and <span>[<a href="#H3" class="cite xref">H3</a>]</span>.<a href="#section-8-1" class="pilcrow">¶</a></p>
 <div id="frame-types">
 <section id="section-8.1">
         <h3 id="name-frame-types">
@@ -1791,6 +1856,28 @@ registry defined in <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a hre
 <p id="section-8.2-10">Reference: : This document<a href="#section-8.2-10" class="pilcrow">¶</a></p>
 <p id="section-8.2-11">Change Controller: : IETF<a href="#section-8.2-11" class="pilcrow">¶</a></p>
 <p id="section-8.2-12">Contact: : ietf-http-wg@w3.org<a href="#section-8.2-12" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="error-codes">
+<section id="section-8.3">
+        <h3 id="name-error-codes">
+<a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-error-codes" class="section-name selfRef">Error Codes</a>
+        </h3>
+<p id="section-8.3-1">This specification registers the following entry in the "HTTP/2 Error Code"
+registry defined in <span>[<a href="#H2" class="cite xref">H2</a>]</span>:<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+<p id="section-8.3-2">Code: : TBD<a href="#section-8.3-2" class="pilcrow">¶</a></p>
+<p id="section-8.3-3">Name: : SERVER_CERTIFICATE_INVALID<a href="#section-8.3-3" class="pilcrow">¶</a></p>
+<p id="section-8.3-4">Description: : There was an issue processing the SERVER_CERTIFICATE frame.<a href="#section-8.3-4" class="pilcrow">¶</a></p>
+<p id="section-8.3-5">Reference: : This document<a href="#section-8.3-5" class="pilcrow">¶</a></p>
+<p id="section-8.3-6">This specification registers the following entry in the "HTTP/3 Error Codes"
+registry established by <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a href="#section-8.3-6" class="pilcrow">¶</a></p>
+<p id="section-8.3-7">Value: : TBD<a href="#section-8.3-7" class="pilcrow">¶</a></p>
+<p id="section-8.3-8">Name: : SERVER_CERTIFICATE_INVALID<a href="#section-8.3-8" class="pilcrow">¶</a></p>
+<p id="section-8.3-9">Description: : There was an issue processing the SERVER_CERTIFICATE frame.<a href="#section-8.3-9" class="pilcrow">¶</a></p>
+<p id="section-8.3-10">Status: : permanent<a href="#section-8.3-10" class="pilcrow">¶</a></p>
+<p id="section-8.3-11">Reference: : This document<a href="#section-8.3-11" class="pilcrow">¶</a></p>
+<p id="section-8.3-12">Change Controller: : IETF<a href="#section-8.3-12" class="pilcrow">¶</a></p>
+<p id="section-8.3-13">Contact: : ietf-http-wg@w3.org<a href="#section-8.3-13" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
