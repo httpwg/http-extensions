@@ -37,7 +37,7 @@ About This Document
    information can be found at https://httpwg.org/.
 
    Source for this draft and an issue tracker can be found at
-   https://github.com/httpwg/http-extensions/labels/unecoded-digest.
+   https://github.com/httpwg/http-extensions/labels/unencoded-digest.
 
 Status of This Memo
 
@@ -168,6 +168,12 @@ Table of Contents
 
    The term "digest" is to be interpreted as described in
    [DIGEST-FIELDS].
+
+   "Integrity fields" is the collective term for Content-Digest, Repr-
+   Digest, and Unencoded-Digest.
+
+   "Integrity preference fields" is the collective term for Want-Repr-
+   Digest, Want-Content-Digest, and Want-Unencoded-Digest.
 
 3.  The Unencoded-Digest Field
 
@@ -431,11 +437,6 @@ Table of Contents
               DOI 10.17487/RFC9530, February 2024,
               <https://www.rfc-editor.org/rfc/rfc9530>.
 
-   [FOLDING]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,
-              "Handling Long Lines in Content of Internet-Drafts and
-              RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
-              <https://www.rfc-editor.org/rfc/rfc8792>.
-
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
               DOI 10.17487/RFC9110, June 2022,
@@ -465,6 +466,11 @@ Table of Contents
               <https://www.rfc-editor.org/rfc/rfc9651>.
 
 9.2.  Informative References
+
+   [FOLDING]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,
+              "Handling Long Lines in Content of Internet-Drafts and
+              RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
+              <https://www.rfc-editor.org/rfc/rfc8792>.
 
    [RFC8188]  Thomson, M., "Encrypted Content-Encoding for HTTP",
               RFC 8188, DOI 10.17487/RFC8188, June 2017,
