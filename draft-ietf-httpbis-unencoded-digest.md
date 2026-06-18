@@ -48,8 +48,8 @@ unambiguous exchange of integrity digests of unencoded representation. The
 Unencoded-Digest and Want-Unencoded-Digest fields complement existing integrity
 fields for this purpose.
 
-This document updates the definitions of terms "Integrity fields" and "Integrity preference
-fields" defined in RFC 9530.
+This document updates the definitions of the terms "Integrity fields" and "Integrity preference
+fields" originally defined in RFC 9530.
 
 
 --- middle
@@ -77,7 +77,7 @@ via the use of additional libraries it would create work in JavaScript that
 could contend with other activities. Even on the server side, the re-encoding of
 received data might not be acceptable; some coding algorithms are optimized
 towards efficient decoding at the cost of complex encoding. A Content-Encoding
-field value that indicates  series of encodings adds further complexity.
+field value that indicates a series of encodings adds further complexity.
 
 A more complex example involves HTTP Range Requests ({{Section 14 of
 HTTP}}), where a client issues multiple requests to obtain partial representations
@@ -102,10 +102,9 @@ Unencoded-Digest and Want-Unencoded-Digest fields to support a simpler validatio
 workflow in some scenarios where content coding is applied. These fields
 complement the other integrity fields defined in {{DIGEST-FIELDS}}.
 
-This document updates the definition of term "Integrity fields" defined in {{DIGEST-FIELDS}}
-to also include the Unencoded-Digest field, and the term "Integrity preference
-fields" defined in {{DIGEST-FIELDS}} to also include the Want-Unencoded-Digest
-field.
+This document updates the definition of terms originally defined in {{DIGEST-FIELDS}}.
+"Integrity fields" is updated to also include the Unencoded-Digest field ({{unencoded-digest}}.
+"Integrity preference fields" is updated Want-Unencoded-Digest field ({{want-unencoded-digest}}).
 
 # Conventions and Definitions
 
@@ -225,7 +224,7 @@ preferences are an application-specific concern.
   STRUCTURED-FIELDS}}). This specification does not define any Parameters;
   future extensions may do so. Unknown Parameters MUST be ignored.
 
-Examples of valid Want-Unencoded-Digest values are:
+Examples:
 
 ~~~ http-message
 Want-Unencoded-Digest: sha-256=1
