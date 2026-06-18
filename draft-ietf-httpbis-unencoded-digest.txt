@@ -6,7 +6,7 @@ HTTP                                                           L. Pardue
 Internet-Draft                                                Cloudflare
 Updates: 9530 (if approved)                                      M. West
 Intended status: Standards Track                                  Google
-Expires: 19 December 2026                                   17 June 2026
+Expires: 20 December 2026                                   18 June 2026
 
 
                          HTTP Unencoded Digest
@@ -20,8 +20,8 @@ Abstract
    unencoded representation.  The Unencoded-Digest and Want-Unencoded-
    Digest fields complement existing integrity fields for this purpose.
 
-   This document updates the terms "Integrity fields" and "Integrity
-   preference fields" defined in RFC 9530.
+   This document updates the definitions of the terms "Integrity fields"
+   and "Integrity preference fields" originally defined in RFC 9530.
 
 About This Document
 
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 December 2026.
+   This Internet-Draft will expire on 20 December 2026.
 
 Copyright Notice
 
@@ -117,7 +117,7 @@ Table of Contents
    [HTTP]), where a client issues multiple requests to obtain partial
    representations and "stitches" them back into a whole.
    Unfortunately, if the responses have different content codings, the
-   Repr-Digest field will vary by the server's selected encoding (i.e.
+   Repr-Digest field will vary by the server's selected encoding (i.e.,
    the Content-Encoding header field, Section 8.4 of [HTTP]).  This
    provides a challenge for a client - in order to verify the integrity
    of the pieced-together whole it would need to remove the encoding of
@@ -127,10 +127,10 @@ Table of Contents
    The Accept-Encoding header field (Section 12.5.3 of [HTTP]) provides
    the means to indicate preferences for content codings.  It is
    possible for an endpoint to indicate a preference for no encoding,
-   for example by sending the "identity" token.  However, codings often
+   for example, by sending the "identity" token.  However, codings often
    provide data compression that is advantageous.  Disabling content
-   coding in order to simplify integrity checking is possibly an
-   unacceptable trade-off.
+   coding in order to simplify integrity checking might not be an
+   acceptable trade-off.
 
    For a variety of reasons, decoding and re-encoding content in order
    to benefit from HTTP integrity fields is not preferable.  This
@@ -139,10 +139,10 @@ Table of Contents
    where content coding is applied.  These fields complement the other
    integrity fields defined in [DIGEST-FIELDS].
 
-   This document updates the term "Integrity fields" defined in
-   [DIGEST-FIELDS] to also include the Unencoded-Digest field, and the
-   term "Integrity preference fields" defined in [DIGEST-FIELDS] to also
-   include the Want-Unencoded-Digest field.
+   This document updates the definition of terms originally defined in
+   [DIGEST-FIELDS].  "Integrity fields" is updated to also include the
+   Unencoded-Digest field (Section 3.  "Integrity preference fields" is
+   updated Want-Unencoded-Digest field (Section 4).
 
 2.  Conventions and Definitions
 
@@ -153,7 +153,7 @@ Table of Contents
    capitals, as shown here.
 
    This document uses the Augmented BNF defined in [RFC5234] and updated
-   by [RFC7405].  This includes the rules: LF (line feed)
+   by [RFC7405].  This includes the rules: LF (line feed).
 
    This document uses the following terminology from Section 3 of
    [STRUCTURED-FIELDS] to specify syntax and parsing: Byte Sequence,
@@ -388,7 +388,7 @@ Table of Contents
    Digest or Repr-Digest in the message, allowing for validation of the
    received bytes before further processing.  An attacker that can
    substitute various parts of an HTTP message presents several risks;
-   Sections 6.1, 6.2 and 6.3 of [DIGEST-FIELDS] describe relevant
+   Sections 6.1, 6.2, and 6.3 of [DIGEST-FIELDS] describe relevant
    considerations and mitigations.
 
    A content coding may provide encryption capabilities, for example
