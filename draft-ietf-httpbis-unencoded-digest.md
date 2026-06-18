@@ -21,7 +21,7 @@ venue:
   home: https://httpwg.org/
   mail: ietf-http-wg@w3.org
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
-  repo: https://github.com/httpwg/http-extensions/labels/unecoded-digest
+  repo: https://github.com/httpwg/http-extensions/labels/unencoded-digest
 github-issue-label: unencoded-digest
 updates: 9530
 
@@ -121,9 +121,15 @@ The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "content" in this document are to be
 interpreted as described in {{!HTTP=RFC9110}}.
 
-This document uses the line folding strategies described in {{!FOLDING=RFC8792}}.
+This document uses the line folding strategies described in {{?FOLDING=RFC8792}}.
 
 The term "digest" is to be interpreted as described in {{DIGEST-FIELDS}}.
+
+"Integrity fields" is the collective term for `Content-Digest`, `Repr-Digest`,
+and `Unencoded-Digest`.
+
+"Integrity preference fields" is the collective term for `Want-Repr-Digest`,
+`Want-Content-Digest`, and `Want-Unencoded-Digest`.
 
 
 # The Unencoded-Digest Field {#unencoded-digest}
