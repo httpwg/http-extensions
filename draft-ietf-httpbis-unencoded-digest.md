@@ -48,8 +48,8 @@ unambiguous exchange of integrity digests of unencoded representation. The
 Unencoded-Digest and Want-Unencoded-Digest fields complement existing integrity
 fields for this purpose.
 
-This document updates the terms "Integrity fields" and "Integrity preference
-fields" defined in RFC 9530.
+This document updates the definitions of the terms "Integrity fields" and "Integrity preference
+fields" originally defined in RFC 9530.
 
 
 --- middle
@@ -83,7 +83,7 @@ A more complex example involves HTTP Range Requests ({{Section 14 of
 HTTP}}), where a client issues multiple requests to obtain partial representations
 and "stitches" them back into a whole. Unfortunately, if the responses have
 different content codings, the `Repr-Digest` field will vary by the
-server's selected encoding (i.e. the Content-Encoding header field, {{Section
+server's selected encoding (i.e., the Content-Encoding header field, {{Section
 8.4 of HTTP}}). This provides a challenge for a client - in order to verify the
 integrity of the pieced-together whole it would need to remove the encoding of
 each part, combine them, and then encode the result in order to compare against
@@ -91,10 +91,10 @@ one or more `Repr-Digest`s.
 
 The Accept-Encoding header field ({{Section 12.5.3 of HTTP}}) provides the means
 to indicate preferences for content codings. It is possible for an endpoint to
-indicate a preference for no encoding, for example by sending the "identity"
+indicate a preference for no encoding, for example, by sending the "identity"
 token. However, codings often provide data compression that is advantageous.
-Disabling content coding in order to simplify integrity checking is possibly an
-unacceptable trade-off.
+Disabling content coding in order to simplify integrity checking might not be
+an acceptable trade-off.
 
 For a variety of reasons, decoding and re-encoding content in order to benefit
 from HTTP integrity fields is not preferable. This specification defines the
@@ -102,17 +102,16 @@ Unencoded-Digest and Want-Unencoded-Digest fields to support a simpler validatio
 workflow in some scenarios where content coding is applied. These fields
 complement the other integrity fields defined in {{DIGEST-FIELDS}}.
 
-This document updates the term "Integrity fields" defined in {{DIGEST-FIELDS}}
-to also include the Unencoded-Digest field, and the term "Integrity preference
-fields" defined in {{DIGEST-FIELDS}} to also include the Want-Unencoded-Digest
-field.
+This document updates the definition of terms originally defined in {{DIGEST-FIELDS}}.
+"Integrity fields" is updated to also include the Unencoded-Digest field ({{unencoded-digest}}.
+"Integrity preference fields" is updated Want-Unencoded-Digest field ({{want-unencoded-digest}}).
 
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
 
 This document uses the Augmented BNF defined in {{!RFC5234}} and updated by
-{{!RFC7405}}. This includes the rules: LF (line feed)
+{{!RFC7405}}. This includes the rules: LF (line feed).
 
 This document uses the following terminology from {{Section 3 of
 !STRUCTURED-FIELDS=RFC9651}} to specify syntax and parsing: Byte Sequence,
@@ -346,7 +345,7 @@ opportunity for an attacker to direct malicious data into a decoder. One
 possible mitigation would be to also provide a Content-Digest or Repr-Digest in
 the message, allowing for validation of the received bytes before further
 processing. An attacker that can substitute various parts of an HTTP message
-presents several risks; {{Sections 6.1, 6.2 and 6.3 of DIGEST-FIELDS}}
+presents several risks; {{Sections 6.1, 6.2, and 6.3 of DIGEST-FIELDS}}
 describe relevant considerations and mitigations.
 
 A content coding may provide encryption capabilities, for example "aes128gcm"
@@ -362,7 +361,7 @@ coding is used, the security considerations in {{Section 4 of ?RFC8188}} apply.
 # IANA Considerations
 
 IANA is asked to update the "Hypertext Transfer Protocol (HTTP) Field Name
-Registry" {{?HTTP=RFC9110}} as shown in the table below:
+Registry" {{!HTTP=RFC9110}} as shown in the table below:
 
 |-----------------------|-----------|-----------------|--------------------------------------------|
 | Field Name            | Status    | Structured Type | Reference                                  |
