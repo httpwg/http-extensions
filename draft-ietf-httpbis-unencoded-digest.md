@@ -103,7 +103,7 @@ workflow in some scenarios where content coding is applied. These fields
 complement the other integrity fields defined in {{DIGEST-FIELDS}}.
 
 This document updates the definition of terms originally defined in {{DIGEST-FIELDS}}.
-"Integrity fields" is updated to also include the Unencoded-Digest field ({{unencoded-digest}}.
+"Integrity fields" is updated to also include the Unencoded-Digest field ({{unencoded-digest}}).
 "Integrity preference fields" is updated Want-Unencoded-Digest field ({{want-unencoded-digest}}).
 
 # Conventions and Definitions
@@ -192,7 +192,7 @@ digests or validating multiple digests are presented in {{Sections 6.6 and
 
 A sender MAY send a digest without knowing whether the recipient supports a
 given hashing algorithm. A sender MAY send a digest if it knows the recipient
-will ignore it.
+will ignore it. An example is depicted in {{Appendix C.2 of DIGEST-FIELDS}}.
 
 `Unencoded-Digest` can be sent in a trailer section. In this case,
 `Unencoded-Digest` MAY be merged into the header section; see {{Section 6.5.1 of
