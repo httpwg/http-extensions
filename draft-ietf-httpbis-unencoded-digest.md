@@ -110,9 +110,6 @@ This document updates the definition of terms originally defined in {{DIGEST-FIE
 
 {::boilerplate bcp14-tagged}
 
-This document uses the Augmented BNF defined in {{!RFC5234}} and updated by
-{{!RFC7405}}. This includes the rules: LF (line feed).
-
 This document uses the following terminology from {{Section 3 of
 !STRUCTURED-FIELDS=RFC9651}} to specify syntax and parsing: Byte Sequence,
 Dictionary, and Integer.
@@ -155,8 +152,8 @@ where each:
   future extensions may do so. Unknown Parameters MUST be ignored.
 
 In the following examples of `Unencoded-Digest` fields, the representation data
-with no content codings applied is: "An unexceptional string" following by an
-LF.
+with no content codings applied is: "An unexceptional string" followed by a
+line feed character (0xA).
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -258,9 +255,9 @@ Integrity fields can be used in combination to address different and
 complementary needs, particularly the cases described in {{introduction}}.
 
 In the following examples, the selected representation data with no content
-codings applied is: "An unexceptional string" following by an LF. For
-presentation purposes, the response content is displayed as a sequence of
-hex-encoded bytes because it contains non-printable characters.
+codings applied is: "An unexceptional string" followed by a line feed character
+(0xA). For presentation purposes, the response content is displayed as a
+sequence of hex-encoded bytes because it contains non-printable characters.
 
 The first example demonstrates a request that uses content negotiation.
 
@@ -348,7 +345,7 @@ processing. An attacker that can substitute various parts of an HTTP message
 presents several risks; {{Sections 6.1, 6.2, and 6.3 of DIGEST-FIELDS}}
 describe relevant considerations and mitigations.
 
-A content coding may provide encryption capabilities, for example "aes128gcm"
+A content coding might provide encryption capabilities, for example "aes128gcm"
 ({{?RFC8188}}). Using Unencoded-Digest with such content codings can leak
 information about the original data because header fields are visible to anyone
 who can read the HTTP message. This could be used as a side channel. For
