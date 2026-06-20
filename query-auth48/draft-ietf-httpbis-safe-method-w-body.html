@@ -1681,11 +1681,11 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
         </h3>
 <p id="section-2.7-1">
         The response to a QUERY method is cacheable; a cache <span class="bcp14">MAY</span> use it to satisfy subsequent
-        QUERY requests as per <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>.<a href="#section-2.7-1" class="pilcrow">¶</a></p>
+        QUERY requests as per <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#RFC9111" class="cite xref">HTTP-CACHING</a>]</span>.<a href="#section-2.7-1" class="pilcrow">¶</a></p>
 <p id="section-2.7-2">
-        The cache key for a QUERY request (see <span><a href="https://rfc-editor.org/rfc/rfc9111#section-2" class="relref">Section 2</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>) <span class="bcp14">MUST</span>
-        incorporate the request content (<span><a href="https://rfc-editor.org/rfc/rfc9111#section-6" class="relref">Section 6</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>) and related
-        metadata (<span><a href="https://rfc-editor.org/rfc/rfc9111#section-8" class="relref">Section 8</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>).<a href="#section-2.7-2" class="pilcrow">¶</a></p>
+        The cache key for a QUERY request (see <span><a href="https://rfc-editor.org/rfc/rfc9111#section-2" class="relref">Section 2</a> of [<a href="#RFC9111" class="cite xref">HTTP-CACHING</a>]</span>) <span class="bcp14">MUST</span>
+        incorporate the request content (<span><a href="https://rfc-editor.org/rfc/rfc9111#section-6" class="relref">Section 6</a> of [<a href="#RFC9111" class="cite xref">HTTP-CACHING</a>]</span>) and related
+        metadata (<span><a href="https://rfc-editor.org/rfc/rfc9111#section-8" class="relref">Section 8</a> of [<a href="#RFC9111" class="cite xref">HTTP-CACHING</a>]</span>).<a href="#section-2.7-2" class="pilcrow">¶</a></p>
 <p id="section-2.7-3">
         To improve cache efficiency, caches <span class="bcp14">MAY</span> remove semantically
         insignificant differences from request content and related metadata first. For instance, by:<a href="#section-2.7-3" class="pilcrow">¶</a></p>
@@ -1704,7 +1704,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
         Note that any such transformation is performed solely for the purpose of generating a cache key; it
         does not change the request itself.<a href="#section-2.7-5" class="pilcrow">¶</a></p>
 <p id="section-2.7-6">
-        Clients can indicate, using the "no-transform" cache directive (<span><a href="https://rfc-editor.org/rfc/rfc9111#section-5.2.1.6" class="relref">Section 5.2.1.6</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>),
+        Clients can indicate, using the "no-transform" cache directive (<span><a href="https://rfc-editor.org/rfc/rfc9111#section-5.2.1.6" class="relref">Section 5.2.1.6</a> of [<a href="#RFC9111" class="cite xref">HTTP-CACHING</a>]</span>),
         that they wish that no such transformation happens (but note that this directive is just
         advisory).<a href="#section-2.7-6" class="pilcrow">¶</a></p>
 <p id="section-2.7-7">
@@ -1765,7 +1765,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
       The value of the Accept-Query field applies to every URI on the server that shares the same path; in
       other words, the query component is ignored. If requests to the same resource return
       different Accept-Query values, the most recently received fresh value (per
-      <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4.2" class="relref">Section 4.2</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>) is used.<a href="#section-3-7" class="pilcrow">¶</a></p>
+      <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC9111" class="cite xref">HTTP-CACHING</a>]</span>) is used.<a href="#section-3-7" class="pilcrow">¶</a></p>
 <p id="section-3-8">
       For example:<a href="#section-3-8" class="pilcrow">¶</a></p>
 <div class="sourcecode" id="section-3-9">
@@ -1906,9 +1906,9 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
       <dd>
 <span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI 10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9110">https://www.rfc-editor.org/info/rfc9110</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="HTTP-CACHING">[HTTP-CACHING]</dt>
+<dt id="RFC9111">[HTTP-CACHING]</dt>
       <dd>
-<span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Caching"</span>, <span class="seriesInfo">STD 98</span>, <span class="seriesInfo">RFC 9111</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9111">https://www.rfc-editor.org/rfc/rfc9111</a>&gt;</span>. </dd>
+<span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Caching"</span>, <span class="seriesInfo">STD 98</span>, <span class="seriesInfo">RFC 9111</span>, <span class="seriesInfo">DOI 10.17487/RFC9111</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9111">https://www.rfc-editor.org/info/rfc9111</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="STRUCTURED-FIELDS">[STRUCTURED-FIELDS]</dt>
       <dd>
