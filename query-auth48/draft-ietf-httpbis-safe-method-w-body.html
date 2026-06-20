@@ -2135,16 +2135,14 @@ Date: Sun, 17 Nov 2024, 16:10:24 GMT
 <p id="appendix-A.4.1-1">
           The Content-Location response field received above identifies a resource holding
           the result for the QUERY response it appeared on:<a href="#appendix-A.4.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.4.1-2">
+<div class="lang-http-message sourcecode" id="appendix-A.4.1-2">
 <pre>
 GET /contacts/stored-results/17 HTTP/1.1
 Host: example.org
-Accept: application/json
-
-</pre><a href="#appendix-A.4.1-2" class="pilcrow">¶</a>
+Accept: application/json</pre><a href="#appendix-A.4.1-2" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.4.1-3">Response:<a href="#appendix-A.4.1-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.4.1-4">
+<div class="lang-http-message sourcecode" id="appendix-A.4.1-4">
 <pre>
 HTTP/1.1 200 OK
 Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
@@ -2160,8 +2158,7 @@ Date: Sun, 17 Nov 2024, 16:10:25 GMT
   { "surname": "Dubois",
     "givenname": "Camille",
     "email": "camille.dubois@example.net" }
-]
-</pre><a href="#appendix-A.4.1-4" class="pilcrow">¶</a>
+]</pre><a href="#appendix-A.4.1-4" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.4.1-5">
           Note that there's no guarantee that the server will implement this resource
@@ -2178,18 +2175,16 @@ Date: Sun, 17 Nov 2024, 16:10:25 GMT
           The Location response field identifies a resource that will respond to GET
           with a current result for the same process and parameters as the original
           QUERY request.<a href="#appendix-A.4.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.4.2-2">
+<div class="lang-http-message sourcecode" id="appendix-A.4.2-2">
 <pre>
 GET /contacts/stored-queries/42 HTTP/1.1
 Host: example.org
-Accept: application/json
-
-</pre><a href="#appendix-A.4.2-2" class="pilcrow">¶</a>
+Accept: application/json</pre><a href="#appendix-A.4.2-2" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.4.2-3">
           In this example, one entry was removed at 2024-11-17T16:12:01Z (as indicated in
           the Last-Modified field), so the response only contains two entries:<a href="#appendix-A.4.2-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.4.2-4">
+<div class="lang-http-message sourcecode" id="appendix-A.4.2-4">
 <pre>
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -2204,16 +2199,14 @@ Date: Sun, 17 Nov 2024, 16:13:17 GMT
   { "surname": "Dubois",
     "givenname": "Camille",
     "email": "camille.dubois@example.net" }
-]
-</pre><a href="#appendix-A.4.2-4" class="pilcrow">¶</a>
+]</pre><a href="#appendix-A.4.2-4" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.4.2-5">
           Assuming that the server still exposes the resource and that there was no change
           in the query result, a subsequent conditional GET request with<a href="#appendix-A.4.2-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.4.2-6">
+<div class="lang-http-message sourcecode" id="appendix-A.4.2-6">
 <pre>
-If-None-Match: "42-1"
-</pre><a href="#appendix-A.4.2-6" class="pilcrow">¶</a>
+If-None-Match: "42-1"</pre><a href="#appendix-A.4.2-6" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.4.2-7">
           would result in a 304 response (Not Modified, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.5" class="relref">Section 15.4.5</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#appendix-A.4.2-7" class="pilcrow">¶</a></p>
