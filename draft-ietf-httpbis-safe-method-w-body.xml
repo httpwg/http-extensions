@@ -876,14 +876,13 @@ Date: Sun, 17 Nov 2024, 16:10:24 GMT
           The Content-Location response field received above identifies a resource holding
           the result for the QUERY response it appeared on:
         </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 GET /contacts/stored-results/17 HTTP/1.1
 Host: example.org
-Accept: application/json
+Accept: application/json]]></sourcecode>
 
-</artwork>
         <t>Response:</t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 HTTP/1.1 200 OK
 Last-Modified: Sat, 25 Aug 2012 23:34:45 GMT
 Date: Sun, 17 Nov 2024, 16:10:25 GMT
@@ -898,8 +897,7 @@ Date: Sun, 17 Nov 2024, 16:10:25 GMT
   { "surname": "Dubois",
     "givenname": "Camille",
     "email": "camille.dubois@example.net" }
-]
-</artwork>
+]]]></sourcecode>
         <t>
           Note that there's no guarantee that the server will implement this resource
           indefinitely, so, after an error response, the client would need to redo
@@ -914,17 +912,15 @@ Date: Sun, 17 Nov 2024, 16:10:25 GMT
           with a current result for the same process and parameters as the original
           QUERY request.
         </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 GET /contacts/stored-queries/42 HTTP/1.1
 Host: example.org
-Accept: application/json
-
-</artwork>
+Accept: application/json]]></sourcecode>
         <t>
           In this example, one entry was removed at 2024-11-17T16:12:01Z (as indicated in
           the Last-Modified field), so the response only contains two entries:
         </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/json
 Last-Modified: Sun, 17 November 2024, 16:12:01 GMT
@@ -938,15 +934,13 @@ Date: Sun, 17 Nov 2024, 16:13:17 GMT
   { "surname": "Dubois",
     "givenname": "Camille",
     "email": "camille.dubois@example.net" }
-]
-</artwork>
+]]]></sourcecode>
         <t>
           Assuming that the server still exposes the resource and that there was no change
           in the query result, a subsequent conditional GET request with
         </t>
-<artwork type="http-message">
-If-None-Match: "42-1"
-</artwork>
+<sourcecode type="http-message"><![CDATA[
+If-None-Match: "42-1"]]></sourcecode>
         <t>
           would result in a 304 response (Not Modified, <xref target="HTTP" section="15.4.5"/>).
         </t>
