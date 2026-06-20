@@ -582,9 +582,9 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
         <tbody>
           <tr>
             <td>QUERY</td>
-            <td>Yes</td>
-            <td>Yes</td>
-            <td><xref target="query"/></td>
+            <td>yes</td>
+            <td>yes</td>
+            <td><xref target="query"/> of RFC 10008</td>
           </tr>
         </tbody>
       </table>
@@ -1324,7 +1324,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <section anchor="selection.method.name">
   <name>Selection of the Method Name 'QUERY'</name>
 <t>
-  The HTTP Method Registry (<eref target="http://www.iana.org/assignments/http-methods"/>)
+  The "Hypertext Transfer Protocol (HTTP) Method Registry" (<eref brackets="angle" target="http://www.iana.org/assignments/http-methods"/>)
   already contains three other methods with the properties "safe" and "idempotent":
   "PROPFIND" <xref target="RFC4918"/>, "REPORT" <xref target="RFC3253"/>, and
   "SEARCH" <xref target="RFC5323"/>.
