@@ -2,7 +2,7 @@
 
 
 
-HTTP                                                          J. Reschke
+httpbis                                                       J. Reschke
 Internet-Draft                                                greenbytes
 Intended status: Standards Track                              J.M. Snell
 Expires: 22 December 2026                                     Cloudflare
