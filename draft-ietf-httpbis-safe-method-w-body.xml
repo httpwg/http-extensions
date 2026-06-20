@@ -335,7 +335,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
         The term <em>equivalent resource</em> is used as a means to define
         behavior for other HTTP aspects, such as selected representations. Servers can
         but do not have to assign URIs to these resources (see
-        <xref target="URI" section="1.1"/>). If they do so, these resources will become accessible
+        <xref target="RFC3986" section="1.1"/>). If they do so, these resources will become accessible
         for GET requests.
       </t>
     </section>
@@ -633,6 +633,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
 <back>
   <displayreference target="RFC9110" to="HTTP"/>
   <displayreference target="RFC9111" to="HTTP-CACHING"/>
+  <displayreference target="RFC3986" to="URI"/>
   <references>
     <name>Normative References</name>
     <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
@@ -652,7 +653,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
       </front>
       <seriesInfo name="RFC" value="9651"/>
     </reference>
-    <reference anchor="URI">
+    <reference anchor="RFC3986">
       <front>
         <title abbrev="URI Generic Syntax">Uniform Resource Identifier (URI): Generic Syntax</title>
         <author initials="T." surname="Berners-Lee" fullname="Tim Berners-Lee"/>
