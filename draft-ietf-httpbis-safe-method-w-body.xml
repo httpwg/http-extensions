@@ -281,7 +281,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
       <t>
         The semantics of a QUERY request depends both on the request content and the associated
         metadata, such as the Media Type (<xref target="RFC9110" sectionFormat="comma" section="8.3.1"/>).
-        In general, any problem with requests where content and metadata are inconsistent &MUST; be
+        In general, any problem with requests where content and metadata are inconsistent <bcp14>MUST</bcp14> be
         rejected with a 4xx (Client Error) response (<xref target="RFC9110" sectionFormat="comma" section="15.5"/>).
       </t>
       <t>
@@ -432,7 +432,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
         QUERY requests as per <xref target="RFC9111" section="4"/>.
       </t>
       <t>
-        The cache key for a QUERY request (see <xref target="RFC9111" section="2"/>) &MUST;
+        The cache key for a QUERY request (see <xref target="RFC9111" section="2"/>) <bcp14>MUST</bcp14>
         incorporate the request content (<xref target="RFC9111" section="6"/>) and related
         metadata (<xref target="RFC9111" section="8"/>).
       </t>
@@ -528,7 +528,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
     <t>
       Although the syntax for this field appears to be similar to other
       fields, such as "Accept" (<xref target="RFC9110" section="12.5.1"/>),
-      it is a Structured Field and thus &MUST; be processed as specified in
+      it is a Structured Field and thus <bcp14>MUST</bcp14> be processed as specified in
       <xref target="RFC9651" section="4"/>.
     </t>
   </section>
