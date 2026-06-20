@@ -492,7 +492,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
     </t>
     <t>
       Accept-Query contains a list of media ranges (<xref target="RFC9110" section="12.5.1"/>)
-      using "Structured Fields" syntax (<xref target="STRUCTURED-FIELDS"/>).
+      using "Structured Fields" syntax (<xref target="RFC9651"/>).
       Media ranges are represented by a List Structured Header Field of either Tokens or
       Strings, containing the media range value without parameters.
     </t>
@@ -529,7 +529,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
       Although the syntax for this field appears to be similar to other
       fields, such as "Accept" (<xref target="RFC9110" section="12.5.1"/>),
       it is a Structured Field and thus &MUST; be processed as specified in
-      <xref target="STRUCTURED-FIELDS" section="4"/>.
+      <xref target="RFC9651" section="4"/>.
     </t>
   </section>
 
@@ -633,6 +633,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
 <back>
   <displayreference target="RFC9110" to="HTTP"/>
   <displayreference target="RFC9111" to="HTTP-CACHING"/>
+  <displayreference target="RFC9651" to="STRUCTURED-FIELDS"/>
   <displayreference target="RFC3986" to="URI"/>
   <references>
     <name>Normative References</name>
@@ -640,30 +641,9 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
     <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
     <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9110.xml"/>
     <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9111.xml"/>
-    <reference anchor="STRUCTURED-FIELDS">
-      <front>
-        <title>Structured Field Values for HTTP</title>
-        <author initials="M." surname="Nottingham" fullname="Mark Nottingham">
-          <organization>Cloudflare</organization>
-        </author>
-        <author initials="P-H." surname="Kamp" fullname="Poul-Henning Kamp">
-          <organization>The Varnish Cache Project</organization>
-        </author>
-        <date year="2024" month="September"/>
-      </front>
-      <seriesInfo name="RFC" value="9651"/>
-    </reference>
-    <reference anchor="RFC3986">
-      <front>
-        <title abbrev="URI Generic Syntax">Uniform Resource Identifier (URI): Generic Syntax</title>
-        <author initials="T." surname="Berners-Lee" fullname="Tim Berners-Lee"/>
-        <author initials="R." surname="Fielding" fullname="Roy T. Fielding"/>
-        <author initials="L." surname="Masinter" fullname="Larry Masinter"/>
-        <date month="January" year="2005"/>
-      </front>
-      <seriesInfo name="STD" value="66"/>
-      <seriesInfo name="RFC" value="3986"/>
-    </reference>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9651.xml"/>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.3986.xml"/>
+
   </references>
   <references>
     <name>Informative References</name>
