@@ -567,14 +567,14 @@ Table of Contents
               <https://www.rfc-editor.org/info/rfc9111>.
 
    [STRUCTURED-FIELDS]
-              Nottingham, M. and P-H. Kamp, "Structured Field Values for
-              HTTP", RFC 9651, September 2024,
-              <https://www.rfc-editor.org/rfc/rfc9651>.
+              Nottingham, M. and P. Kamp, "Structured Field Values for
+              HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
+              <https://www.rfc-editor.org/info/rfc9651>.
 
    [URI]      Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
               Resource Identifier (URI): Generic Syntax", STD 66,
-              RFC 3986, January 2005,
-              <https://www.rfc-editor.org/rfc/rfc3986>.
+              RFC 3986, DOI 10.17487/RFC3986, January 2005,
+              <https://www.rfc-editor.org/info/rfc3986>.
 
 7.  Informative References
 
