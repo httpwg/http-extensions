@@ -1999,7 +1999,7 @@ select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22
 </pre><a href="#appendix-A.1-2" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.1-3">Response:<a href="#appendix-A.1-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.1-4">
+<div class="lang-http-message sourcecode" id="appendix-A.1-4">
 <pre>
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -2014,8 +2014,7 @@ Content-Type: application/json
   { "surname": "Dubois",
     "givenname": "Camille",
     "email": "camille.dubois@example.net" }
-]
-</pre><a href="#appendix-A.1-4" class="pilcrow">¶</a>
+]</pre><a href="#appendix-A.1-4" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2027,19 +2026,16 @@ Content-Type: application/json
 <p id="appendix-A.2-1">
         A simple way to discover support for QUERY is provided by the OPTIONS
         (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.7" class="relref">Section 9.3.7</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) method:<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.2-2">
+<div class="lang-http-message sourcecode" id="appendix-A.2-2">
 <pre>
 OPTIONS /contacts HTTP/1.1
-Host: example.org
-
-</pre><a href="#appendix-A.2-2" class="pilcrow">¶</a>
+Host: example.org</pre><a href="#appendix-A.2-2" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.2-3">Response:<a href="#appendix-A.2-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.2-4">
+<div class="lang-http-message sourcecode" id="appendix-A.2-4">
 <pre>
 HTTP/1.1 200 OK
-Allow: GET, QUERY, OPTIONS, HEAD
-</pre><a href="#appendix-A.2-4" class="pilcrow">¶</a>
+Allow: GET, QUERY, OPTIONS, HEAD</pre><a href="#appendix-A.2-4" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.2-5">
         The Allow response field (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.1" class="relref">Section 10.2.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) denotes the set of
@@ -2059,20 +2055,17 @@ Allow: GET, QUERY, OPTIONS, HEAD
 <p id="appendix-A.3-1">
         Discovery of supported media types for QUERY is possible via the Accept-Query
         (<a href="#field.accept-query" class="auto internal xref">Section 3</a>) response field:<a href="#appendix-A.3-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.3-2">
+<div class="lang-http-message sourcecode" id="appendix-A.3-2">
 <pre>
 HEAD /contacts HTTP/1.1
-Host: example.org
-
-</pre><a href="#appendix-A.3-2" class="pilcrow">¶</a>
+Host: example.org</pre><a href="#appendix-A.3-2" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.3-3">Response:<a href="#appendix-A.3-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.3-4">
+<div class="lang-http-message sourcecode" id="appendix-A.3-4">
 <pre>
 HTTP/1.1 200 OK
 Content-Type: application/xhtml
-Accept-Query: application/x-www-form-urlencoded, application/sql
-</pre><a href="#appendix-A.3-4" class="pilcrow">¶</a>
+Accept-Query: application/x-www-form-urlencoded, application/sql</pre><a href="#appendix-A.3-4" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.3-5">
         Responses to which request methods will contain Accept-Query will depend on
@@ -2237,15 +2230,14 @@ If-None-Match: "42-1"
 <p id="appendix-A.4.3-2">
           Given the request at the beginning of <a href="#example.content-location.location.indirect" class="auto internal xref">Appendix A.4</a>,
           a server might respond with:<a href="#appendix-A.4.3-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.4.3-3">
+<div class="lang-http-message sourcecode" id="appendix-A.4.3-3">
 <pre>
 HTTP/1.1 303 See Other
 Content-Type: text/plain
 Date: Sun, 17 Nov 2024, 16:13:17 GMT
 Location: /contacts/stored-queries/42
 
-See stored query at "/contacts/stored-queries/42".
-</pre><a href="#appendix-A.4.3-3" class="pilcrow">¶</a>
+See stored query at "/contacts/stored-queries/42".</pre><a href="#appendix-A.4.3-3" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.4.3-4">
           This is similar to including Location on a direct response, except that no result
@@ -2266,7 +2258,7 @@ See stored query at "/contacts/stored-queries/42".
         "application/xslt+xml" (<span>[<a href="#XSLT" class="cite xref">XSLT</a>]</span>) as request media types, and
         which can generate responses as "text/csv". The data set being queried contains RFC document
         information, and the query returns information grouped by decade:<a href="#appendix-A.5-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-2">
+<div class="lang-http-message sourcecode" id="appendix-A.5-2">
 <pre>
 QUERY /rfc-index.xml HTTP/1.1
 Host: example.org
@@ -2274,8 +2266,7 @@ Date: Sun, 7 Sep 2025, 00:00:00 GMT
 Content-Type: application/xslt+xml
 Accept: text/csv
 
-...Query content using XSLT...
-</pre><a href="#appendix-A.5-2" class="pilcrow">¶</a>
+...Query content using XSLT...</pre><a href="#appendix-A.5-2" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.5-3">
         Response:<a href="#appendix-A.5-3" class="pilcrow">¶</a></p>
