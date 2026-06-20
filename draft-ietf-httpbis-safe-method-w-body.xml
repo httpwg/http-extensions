@@ -1465,19 +1465,19 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 </t>
 <t>
   The following individuals deserve special recognition:
-  Carsten Bormann,
-  Mark Nottingham,
-  Martin Thomson,
-  Michael Thornburgh,
-  Roberto Polli,
-  Roy Fielding, and
-  Will Hawkins.
+  <contact fullname="Carsten Bormann"/>,
+  <contact fullname="Mark Nottingham"/>,
+  <contact fullname="Martin Thomson"/>,
+  <contact fullname="Michael Thornburgh"/>,
+  <contact fullname="Roberto Polli"/>,
+  <contact fullname="Roy Fielding"/>, and
+  <contact fullname="Will Hawkins"/>.
 </t>
 </section>
 <section anchor="contributors" numbered="false">
   <name>Contributors</name>
 <t>
-  Ashok Malhotra participated in early discussions leading to this
+  <contact fullname="Ashok Malhotra"/> participated in early discussions leading to this
   specification:
 </t>
 <contact initials="A." surname="Malhotra" fullname="Ashok Malhotra">
