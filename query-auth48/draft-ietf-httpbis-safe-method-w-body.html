@@ -13,7 +13,7 @@
         This specification defines the QUERY method for HTTP.
         A QUERY requests that the request target process the enclosed
         content in a safe and idempotent manner and then respond with the
-        result of that processing. This is similar to POST requests but
+        result of that processing. This is similar to POST requests, but QUERY requests
         can be automatically repeated or restarted without concern for
         partial state changes.
        
@@ -1100,7 +1100,7 @@ svg {
         This specification defines the QUERY method for HTTP.
         A QUERY requests that the request target process the enclosed
         content in a safe and idempotent manner and then respond with the
-        result of that processing. This is similar to POST requests but
+        result of that processing. This is similar to POST requests, but QUERY requests
         can be automatically repeated or restarted without concern for
         partial state changes.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
@@ -1348,12 +1348,12 @@ Host: example.org</pre><a href="#section-1-3" class="pilcrow">¶</a>
       However, when the data conveyed is too voluminous to be encoded in the request's URI,
       this pattern becomes problematic:<a href="#section-1-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1-5.1">often size limits are not known ahead of time because a request can pass through many uncoordinated
+<li class="normal" id="section-1-5.1">size limits often are not known ahead of time because a request can pass through many uncoordinated
       systems (but note that <span><a href="https://rfc-editor.org/rfc/rfc9110#section-4.1" class="relref">Section 4.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span> recommends senders and recipients to support at least 8000 octets),<a href="#section-1-5.1" class="pilcrow">¶</a>
 </li>
         <li class="normal" id="section-1-5.2">expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI,<a href="#section-1-5.2" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-1-5.3">request URIs are more likely to be logged than request content, and may also turn up in bookmarks,<a href="#section-1-5.3" class="pilcrow">¶</a>
+        <li class="normal" id="section-1-5.3">request URIs are more likely to be logged than request content and may also turn up in bookmarks,<a href="#section-1-5.3" class="pilcrow">¶</a>
 </li>
         <li class="normal" id="section-1-5.4">encoding queries directly into the request URI effectively casts every possible combination of query inputs as distinct
           resources.<a href="#section-1-5.4" class="pilcrow">¶</a>
@@ -1376,7 +1376,7 @@ Content-Type: application/x-www-form-urlencoded
 q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-8" class="pilcrow">¶</a>
 </div>
 <p id="section-1-9">
-      In this variation, however, it is not readily apparent -- absent specific knowledge of the
+      In this variation, however, it is not readily apparent -- without specific knowledge of the
       resource and server to which the request is being sent -- that a safe,
       idempotent query is being performed.<a href="#section-1-9" class="pilcrow">¶</a></p>
 <p id="section-1-10">
@@ -1397,12 +1397,12 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
 <p id="section-1-13">
       Recognizing the design principle that any important resource ought to be
       identified by a URI, this specification describes how a server can assign URIs to both
-      the query itself or a specific query result, for later use in a GET request.<a href="#section-1-13" class="pilcrow">¶</a></p>
+      the query itself or to a specific query result, for later use in a GET request.<a href="#section-1-13" class="pilcrow">¶</a></p>
 <p id="section-1-14">Summarizing:<a href="#section-1-14" class="pilcrow">¶</a></p>
 <span id="name-summary-of-relevant-method-"></span><table class="center" id="table-1">
         <caption>
 <a href="#table-1" class="selfRef">Table 1</a>:
-<a href="#name-summary-of-relevant-method-" class="selfRef">Summary of relevant method properties</a>
+<a href="#name-summary-of-relevant-method-" class="selfRef">Summary of Relevant Method Properties</a>
         </caption>
 <thead>
           <tr>
@@ -1503,7 +1503,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
       As for all HTTP methods, the target URI's query part
       takes part in identifying the resource being queried. Whether and how it
       directly affects the result of the query is specific to the resource
-      and out of scope for this specification.<a href="#section-2-4" class="pilcrow">¶</a></p>
+      and is out of scope for this specification.<a href="#section-2-4" class="pilcrow">¶</a></p>
 <p id="section-2-5">
       QUERY requests are safe with regard to the target resource
       (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.2.1" class="relref">Section 9.2.1</a></span>) --
@@ -1538,31 +1538,30 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
         The list below describes various cases of failures and recommends specific status codes:<a href="#section-2.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.1-3.1">
-          A request lacking media type information by definition is incorrect and needs to fail
-          with a 4xx status code such as 400 (Client Error).<a href="#section-2.1-3.1" class="pilcrow">¶</a>
+          If a request lacks media type information, it is incorrect by definition and needs to fail with a 4xx status code such as 400 (Client Error).<a href="#section-2.1-3.1" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-2.1-3.2">
-          If a media type is specified, but not supported by the resource, a 415 (Unsupported Media Type)
+          If a media type is specified but is not supported by the resource, a 415 (Unsupported Media Type)
           is appropriate. This specifically includes the case where the media type is
-          known in principle, but lacks semantics specific to a QUERY to the target resource. In both cases,
+          known in principle, but it lacks semantics specific to a QUERY to the target resource. In both cases,
           the Accept-Query response field (<a href="#field.accept-query" class="auto internal xref">Section 3</a>) can be used to inform
-          the client of media types which are supported.<a href="#section-2.1-3.2" class="pilcrow">¶</a>
+          the client of the media types that are supported.<a href="#section-2.1-3.2" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-2.1-3.3">
-          If a media type is specified, but is inconsistent with the actual request content,
+          If a media type is specified but is inconsistent with the actual request content,
           a 400 (Bad Request) can be returned. That is, a server is not allowed to infer
           a media type from the request content and then override a missing or "erroneous" value
-          ("content sniffing").<a href="#section-2.1-3.3" class="pilcrow">¶</a>
+          (i.e., "content sniffing").<a href="#section-2.1-3.3" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-2.1-3.4">
-          If the media type is specified, is understood, and the content is indeed consistent with the
+          If the media type is specified and understood, and the content is indeed consistent with the
           type, but the query cannot be processed due to the actual contents of the query,
           the status 422 (Unprocessable Content) can be used. An example would be a syntactically
           correct SQL query that identifies a non-existent table.<a href="#section-2.1-3.4" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-2.1-3.5">
-          Finally, if the client requests a specific response media type using the Accept
-          field (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a></span>) which is not supported
+          If the client requests a specific response media type using the Accept
+          field (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a></span>) that is not supported
           by the resource, a status code of 406 (Not Acceptable) is appropriate.<a href="#section-2.1-3.5" class="pilcrow">¶</a>
 </li>
         </ul>
@@ -1575,7 +1574,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
         </h3>
 <p id="section-2.2-1">
         The <em>equivalent resource</em> for any given QUERY request is a resource
-        responding to GET requests, representing that QUERY request and its target, taking
+        that responds to GET requests, represents that QUERY request and its target, and takes
         both message content and metadata into account (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-6" class="relref">Section 6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).
         In particular, this includes representation metadata (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8" class="relref">Section 8</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>),
         such as the content's media type.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
@@ -1644,7 +1643,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
         307 (Temporary Redirect, <span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.8" class="relref">Section 15.4.8</a></span>)
         indicates that the target resource has temporarily moved. In all four cases, the server is
         suggesting that the user agent can accomplish its original QUERY request by sending a
-        similar QUERY request to the new target URI referenced by Location.<a href="#section-2.5-2" class="pilcrow">¶</a></p>
+        similar QUERY request to the new target URI referenced by the Location.<a href="#section-2.5-2" class="pilcrow">¶</a></p>
 <p id="section-2.5-3">
         Note that the exceptions for redirecting a POST as a GET request after a 301 or 302 response
         do not apply to QUERY requests.<a href="#section-2.5-3" class="pilcrow">¶</a></p>
@@ -1666,8 +1665,8 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
         request is the same as for a GET request to the equivalent resource
         (<a href="#equivalent-resource" class="auto internal xref">Section 2.2</a>) of that QUERY request.<a href="#section-2.6-1" class="pilcrow">¶</a></p>
 <p id="section-2.6-2">
-        A conditional QUERY requests that that selected representation
-        (i.e., the query results, after any content negotiation) be
+        A conditional QUERY requests that the selected representation
+        (i.e., the query results after any content negotiation) be
         returned in the response only under the circumstances described by the
         conditional header field(s), as defined in
         <span><a href="https://rfc-editor.org/rfc/rfc9110#section-13" class="relref">Section 13</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2.6-2" class="pilcrow">¶</a></p>
@@ -1689,12 +1688,12 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
         metadata (<span><a href="https://rfc-editor.org/rfc/rfc9111#section-8" class="relref">Section 8</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>).<a href="#section-2.7-2" class="pilcrow">¶</a></p>
 <p id="section-2.7-3">
         To improve cache efficiency, caches <span class="bcp14">MAY</span> remove semantically
-        insignificant differences first. For instance, by:<a href="#section-2.7-3" class="pilcrow">¶</a></p>
+        insignificant differences from request content and related metadata first. For instance, by:<a href="#section-2.7-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.7-4.1">removing content encoding(s) (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-2.7-4.1" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-2.7-4.2">normalizing based upon knowledge of format conventions, as indicated by any
-          media subtype suffix in the request's Content-Type field (e.g., "+json", see
+          media subtype suffix in the request's Content-Type field (e.g., "+json"; see
           <span><a href="https://rfc-editor.org/rfc/rfc6838#section-4.2.8" class="relref">Section 4.2.8</a> of [<a href="#RFC6838" class="cite xref">RFC6838</a>]</span>).<a href="#section-2.7-4.2" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-2.7-4.3">normalizing based upon knowledge of the semantics of the content itself, as indicated by
@@ -1724,10 +1723,10 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
 <p id="section-2.8-1">
         The semantics of Range Requests for QUERY are identical to those for GET,
         as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-14" class="relref">Section 14</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.
-        Byte Range requests (the only range unit defined at the time of writing),
+        Byte Range Requests (the only range unit defined at the time of writing),
         however, offer little value for the results of a QUERY request.<a href="#section-2.8-1" class="pilcrow">¶</a></p>
 <p id="section-2.8-2">
-        Query formats often define their own way for limiting or paging through result
+        Query formats often define their own way of limiting or paging through result
         sets, such as with "FETCH FIRST ... ROWS ONLY" in SQL. It is expected that these
         built-in features will be used instead of HTTP Range Requests.<a href="#section-2.8-2" class="pilcrow">¶</a></p>
 </section>
@@ -1754,7 +1753,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
       recipients <span class="bcp14">MAY</span> convert Tokens to Strings, but <span class="bcp14">MUST NOT</span> process them
       differently based on the received type.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <p id="section-3-4">
-      Media types do not exactly map to Tokens, for instance they
+      Media types do not exactly map to Tokens; for instance, they
       allow a leading digit. In cases like these, the String format needs to
       be used.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <p id="section-3-5">
@@ -1768,7 +1767,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
       different Accept-Query values, the most recently received fresh value (per
       <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4.2" class="relref">Section 4.2</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>) is used.<a href="#section-3-7" class="pilcrow">¶</a></p>
 <p id="section-3-8">
-      Example:<a href="#section-3-8" class="pilcrow">¶</a></p>
+      For example:<a href="#section-3-8" class="pilcrow">¶</a></p>
 <div class="sourcecode" id="section-3-9">
 <pre>
 Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a href="#section-3-9" class="pilcrow">¶</a>
@@ -1806,7 +1805,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
       significantly different from how the resource processes the content
       can return an incorrect response if normalization results in a false positive.<a href="#section-4-4" class="pilcrow">¶</a></p>
 <p id="section-4-5">
-      A QUERY request from user agents implementing CORS (Cross-Origin Resource Sharing)
+      A QUERY request from user agents implementing Cross-Origin Resource Sharing (CORS)
       will require a "preflight" request,
       as QUERY does not belong to the set of CORS-safelisted methods
       (see "<a href="https://fetch.spec.whatwg.org/#methods">Methods</a>" in
@@ -1987,7 +1986,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
         <h3 id="name-simple-query">
 <a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-simple-query" class="section-name selfRef">Simple Query</a>
         </h3>
-<p id="appendix-A.1-1">A simple query with a direct response:<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-1">Below is a simple query with a direct response:<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="appendix-A.1-2">
 <pre>
 QUERY /contacts HTTP/1.1
@@ -2042,7 +2041,7 @@ Allow: GET, QUERY, OPTIONS, HEAD</pre><a href="#appendix-A.2-4" class="pilcrow">
 <p id="appendix-A.2-6">
         There are alternatives to the use of OPTIONS. For instance, a QUERY request
         can be tried without prior knowledge of server support. The server would then
-        either process the request, or could respond with a 4xx status such as 405 (Method Not Allowed,
+        either process the request, or it could respond with a 4xx status such as 405 (Method Not Allowed,
         <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.5.6" class="relref">Section 15.5.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>), including the Allow response field.<a href="#appendix-A.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2052,8 +2051,8 @@ Allow: GET, QUERY, OPTIONS, HEAD</pre><a href="#appendix-A.2-4" class="pilcrow">
 <a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a href="#name-discovery-of-query-formats" class="section-name selfRef">Discovery of QUERY Formats</a>
         </h3>
 <p id="appendix-A.3-1">
-        Discovery of supported media types for QUERY is possible via the Accept-Query
-        (<a href="#field.accept-query" class="auto internal xref">Section 3</a>) response field:<a href="#appendix-A.3-1" class="pilcrow">¶</a></p>
+        The discovery of supported media types for QUERY is possible via the Accept-Query
+        response field (<a href="#field.accept-query" class="auto internal xref">Section 3</a>):<a href="#appendix-A.3-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="appendix-A.3-2">
 <pre>
 HEAD /contacts HTTP/1.1
@@ -2157,7 +2156,7 @@ Date: Sun, 17 Nov 2024, 16:10:25 GMT
 ]</pre><a href="#appendix-A.4.1-4" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.4.1-5">
-          Note that there's no guarantee that the server will implement this resource
+          Note that there is no guarantee that the server will implement this resource
           indefinitely, so, after an error response, the client would need to redo
           the original QUERY request in order to obtain a new alternative location.<a href="#appendix-A.4.1-5" class="pilcrow">¶</a></p>
 </section>
@@ -2199,7 +2198,7 @@ Date: Sun, 17 Nov 2024, 16:13:17 GMT
 </div>
 <p id="appendix-A.4.2-5">
           Assuming that the server still exposes the resource and that there was no change
-          in the query result, a subsequent conditional GET request with<a href="#appendix-A.4.2-5" class="pilcrow">¶</a></p>
+          in the query result, a subsequent conditional GET request with the following:<a href="#appendix-A.4.2-5" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="appendix-A.4.2-6">
 <pre>
 If-None-Match: "42-1"</pre><a href="#appendix-A.4.2-6" class="pilcrow">¶</a>
@@ -2310,7 +2309,7 @@ Vary: Accept-Query, Content-Type</pre><a href="#appendix-A.5-9" class="pilcrow">
 </div>
 <p id="appendix-A.5-10">
         As the server identified a URI for the equivalent resource, that resource can
-        be accessed with GET. In particular, this avoids re-sending the query request's
+        be accessed with GET. In particular, this avoids resending the query request's
         content:<a href="#appendix-A.5-10" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="appendix-A.5-11">
 <pre>
@@ -2452,7 +2451,7 @@ decade, total, with errata, % with errata, average page count
         The following examples show requests on a JSON-shaped (<span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span>) database of
         RFC errata.<a href="#appendix-A.6-1" class="pilcrow">¶</a></p>
 <p id="appendix-A.6-2">
-        The request below uses XSLT to extract errata information summarized per year and
+        The request below uses eXtensible Stylesheet Language Transformations (XSLT) to extract errata information summarized per year and
         the defined errata types.<a href="#appendix-A.6-2" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="appendix-A.6-3">
 <pre>
@@ -2542,8 +2541,8 @@ year, total, rejected, verified, hdu, reported
 9999, 1, 0, 0, 1, 0</pre><a href="#appendix-A.6-5" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.6-6">
-      Note the Accept-Query response field indicating that another query format -- JSONPath
-      (<span>[<a href="#RFC9535" class="cite xref">RFC9535</a>]</span>) -- is supported as well. The request below would report the
+      Note the Accept-Query response field indicating that another query format, JSONPath
+      <span>[<a href="#RFC9535" class="cite xref">RFC9535</a>]</span>, is supported as well. The request below would report the
       identifiers of all rejected errata submitted since 2024:<a href="#appendix-A.6-6" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="appendix-A.6-7">
 <pre>
@@ -2594,14 +2593,14 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   "PROPFIND" (<span>[<a href="#RFC4918" class="cite xref">RFC4918</a>]</span>), REPORT" (<span>[<a href="#RFC3253" class="cite xref">RFC3253</a>]</span>), and
   "SEARCH" (<span>[<a href="#RFC5323" class="cite xref">RFC5323</a>]</span>).<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 <p id="appendix-B-2">
-  It would have been possible to re-use any of these, updating it in a way that it matches
+  It would have been possible to reuse any of these, updating it in a way that it matches
   what this specification defines as the new method "QUERY". Indeed, the early stages
   of this specification used "SEARCH".<a href="#appendix-B-2" class="pilcrow">¶</a></p>
 <p id="appendix-B-3">
   The method name "QUERY" ultimately was chosen because:<a href="#appendix-B-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-B-4.1">The alternatives use a generic media type for the request content ("application/xml"); the
-  semantics of the request depends solely on the request content.<a href="#appendix-B-4.1" class="pilcrow">¶</a>
+  semantics of the request depend solely on the request content.<a href="#appendix-B-4.1" class="pilcrow">¶</a>
 </li>
         <li class="normal" id="appendix-B-4.2">Furthermore, they all originate from the WebDAV activity, about which many have mixed feelings.<a href="#appendix-B-4.2" class="pilcrow">¶</a>
 </li>
@@ -2878,7 +2877,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
       </h2>
 <p id="appendix-D-1">
-  We thank all members of the HTTP Working Group for ideas, reviews, and feedback.<a href="#appendix-D-1" class="pilcrow">¶</a></p>
+  We thank all members of the HTTP Working Group for their ideas, reviews, and feedback.<a href="#appendix-D-1" class="pilcrow">¶</a></p>
 <p id="appendix-D-2">
   The following individuals deserve special recognition:
   Carsten Bormann,
@@ -2906,7 +2905,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 </div>
 </address>
 <p id="appendix-E-2">
-  Discussion on the this HTTP method was reopened by Asbjørn Ulsberg during
+  Discussion on this HTTP method was reopened by <span class="contact-name">Asbjørn Ulsberg</span> during
   the HTTP Workshop in 2019:<a href="#appendix-E-2" class="pilcrow">¶</a></p>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Asbjørn Ulsberg</span></div>
