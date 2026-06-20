@@ -56,7 +56,7 @@
         This specification defines the QUERY method for HTTP.
         A QUERY requests that the request target process the enclosed
         content in a safe and idempotent manner and then respond with the
-        result of that processing. This is similar to POST requests but
+        result of that processing. This is similar to POST requests, but QUERY requests
         can be automatically repeated or restarted without concern for
         partial state changes.
       </t>
@@ -100,10 +100,10 @@ Host: example.org]]></sourcecode>
       this pattern becomes problematic:
     </t>
     <ul>
-      <li>often size limits are not known ahead of time because a request can pass through many uncoordinated
+      <li>size limits often are not known ahead of time because a request can pass through many uncoordinated
       systems (but note that <xref section="4.1" target="HTTP"/> recommends senders and recipients to support at least 8000 octets),</li>
       <li>expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI,</li>
-      <li>request URIs are more likely to be logged than request content, and may also turn up in bookmarks,</li>
+      <li>request URIs are more likely to be logged than request content and may also turn up in bookmarks,</li>
       <li>encoding queries directly into the request URI effectively casts every possible combination of query inputs as distinct
           resources.</li>
     </ul>
@@ -125,7 +125,7 @@ Content-Type: application/x-www-form-urlencoded
 q=foo&limit=10&sort=-published]]></sourcecode>
 
     <t>
-      In this variation, however, it is not readily apparent -- absent specific knowledge of the
+      In this variation, however, it is not readily apparent -- without specific knowledge of the
       resource and server to which the request is being sent -- that a safe,
       idempotent query is being performed.
     </t>
@@ -147,11 +147,11 @@ q=foo&limit=10&sort=-published]]></sourcecode>
     <t>
       Recognizing the design principle that any important resource ought to be
       identified by a URI, this specification describes how a server can assign URIs to both
-      the query itself or a specific query result, for later use in a GET request.
+      the query itself or to a specific query result, for later use in a GET request.
     </t>
     <t>Summarizing:</t>
-    <table>
-      <name>Summary of relevant method properties</name>
+    <table align="center">
+      <name>Summary of Relevant Method Properties</name>
       <thead>
         <tr>
           <th/>
@@ -249,7 +249,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
       As for all HTTP methods, the target URI's query part
       takes part in identifying the resource being queried. Whether and how it
       directly affects the result of the query is specific to the resource
-      and out of scope for this specification.
+      and is out of scope for this specification.
     </t>
     <t>
       QUERY requests are safe with regard to the target resource
@@ -289,31 +289,30 @@ q=foo&limit=10&sort=-published]]></sourcecode>
       </t>
       <ul>
         <li>
-          A request lacking media type information by definition is incorrect and needs to fail
-          with a 4xx status code such as 400 (Client Error).
+          If a request lacks media type information, it is incorrect by definition and needs to fail with a 4xx status code such as 400 (Client Error).
         </li>
         <li>
-          If a media type is specified, but not supported by the resource, a 415 (Unsupported Media Type)
+          If a media type is specified but is not supported by the resource, a 415 (Unsupported Media Type)
           is appropriate. This specifically includes the case where the media type is
-          known in principle, but lacks semantics specific to a QUERY to the target resource. In both cases,
+          known in principle, but it lacks semantics specific to a QUERY to the target resource. In both cases,
           the Accept-Query response field (<xref target="field.accept-query"/>) can be used to inform
-          the client of media types which are supported.
+          the client of the media types that are supported.
         </li>
         <li>
-          If a media type is specified, but is inconsistent with the actual request content,
+          If a media type is specified but is inconsistent with the actual request content,
           a 400 (Bad Request) can be returned. That is, a server is not allowed to infer
           a media type from the request content and then override a missing or "erroneous" value
-          ("content sniffing").
+          (i.e., "content sniffing").
         </li>
         <li>
-          If the media type is specified, is understood, and the content is indeed consistent with the
+          If the media type is specified and understood, and the content is indeed consistent with the
           type, but the query cannot be processed due to the actual contents of the query,
           the status 422 (Unprocessable Content) can be used. An example would be a syntactically
           correct SQL query that identifies a non-existent table.
         </li>
         <li>
-          Finally, if the client requests a specific response media type using the Accept
-          field (<xref target="HTTP" sectionFormat="comma" section="12.5.1"/>) which is not supported
+          If the client requests a specific response media type using the Accept
+          field (<xref target="HTTP" sectionFormat="comma" section="12.5.1"/>) that is not supported
           by the resource, a status code of 406 (Not Acceptable) is appropriate.
         </li>
       </ul>
@@ -323,7 +322,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
       <name>Equivalent Resource</name>
       <t>
         The <em>equivalent resource</em> for any given QUERY request is a resource
-        responding to GET requests, representing that QUERY request and its target, taking
+        that responds to GET requests, represents that QUERY request and its target, and takes
         both message content and metadata into account (<xref target="HTTP" section="6"/>).
         In particular, this includes representation metadata (<xref target="HTTP" section="8"/>),
         such as the content's media type.
@@ -392,7 +391,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
         307 (Temporary Redirect, <xref target="HTTP" sectionFormat="comma" section="15.4.8"/>)
         indicates that the target resource has temporarily moved. In all four cases, the server is
         suggesting that the user agent can accomplish its original QUERY request by sending a
-        similar QUERY request to the new target URI referenced by Location.
+        similar QUERY request to the new target URI referenced by the Location.
       </t>
       <t>
         Note that the exceptions for redirecting a POST as a GET request after a 301 or 302 response
@@ -415,8 +414,8 @@ q=foo&limit=10&sort=-published]]></sourcecode>
         (<xref target="equivalent-resource"/>) of that QUERY request.
       </t>
       <t>
-        A conditional QUERY requests that that selected representation
-        (i.e., the query results, after any content negotiation) be
+        A conditional QUERY requests that the selected representation
+        (i.e., the query results after any content negotiation) be
         returned in the response only under the circumstances described by the
         conditional header field(s), as defined in
         <xref target="HTTP" section="13"/>.
@@ -439,12 +438,12 @@ q=foo&limit=10&sort=-published]]></sourcecode>
       </t>
       <t>
         To improve cache efficiency, caches <bcp14>MAY</bcp14> remove semantically
-        insignificant differences first. For instance, by:
+        insignificant differences from request content and related metadata first. For instance, by:
       </t>
       <ul>
         <li>removing content encoding(s) (<xref target="HTTP" section="8.4"/>).</li>
         <li>normalizing based upon knowledge of format conventions, as indicated by any
-          media subtype suffix in the request's Content-Type field (e.g., "+json", see
+          media subtype suffix in the request's Content-Type field (e.g., "+json"; see
           <xref target="RFC6838" section="4.2.8"/>).</li>
         <li>normalizing based upon knowledge of the semantics of the content itself, as indicated by
           the request's Content-Type field.</li>
@@ -472,11 +471,11 @@ q=foo&limit=10&sort=-published]]></sourcecode>
       <t>
         The semantics of Range Requests for QUERY are identical to those for GET,
         as defined in <xref target="HTTP" section="14"/>.
-        Byte Range requests (the only range unit defined at the time of writing),
+        Byte Range Requests (the only range unit defined at the time of writing),
         however, offer little value for the results of a QUERY request.
       </t>
       <t>
-        Query formats often define their own way for limiting or paging through result
+        Query formats often define their own way of limiting or paging through result
         sets, such as with "FETCH FIRST ... ROWS ONLY" in SQL. It is expected that these
         built-in features will be used instead of HTTP Range Requests.
       </t>
@@ -504,7 +503,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
       differently based on the received type.
     </t>
     <t>
-      Media types do not exactly map to Tokens, for instance they
+      Media types do not exactly map to Tokens; for instance, they
       allow a leading digit. In cases like these, the String format needs to
       be used.
     </t>
@@ -522,7 +521,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
       <xref target="HTTP-CACHING" section="4.2"/>) is used.
     </t>
     <t>
-      Example:
+      For example:
     </t>
     <sourcecode><![CDATA[
 Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></sourcecode>
@@ -562,7 +561,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
       can return an incorrect response if normalization results in a false positive.
     </t>
     <t>
-      A QUERY request from user agents implementing CORS (Cross-Origin Resource Sharing)
+      A QUERY request from user agents implementing Cross-Origin Resource Sharing (CORS)
       will require a "preflight" request,
       as QUERY does not belong to the set of CORS-safelisted methods
       (see "<eref target="https://fetch.spec.whatwg.org/#methods">Methods</eref>" in
@@ -724,6 +723,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
       The examples below are for illustrative purposes only; if one needs to
       send queries that are actually this short, it is likely better to use GET.
     </t>
+
     <t>
       The media type used in most examples is "application/x-www-form-urlencoded"
       (as used in POST requests from browser user clients, defined in
@@ -734,7 +734,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
 
     <section anchor="example.simple">
       <name>Simple Query</name>
-      <t>A simple query with a direct response:</t>
+      <t>Below is a simple query with a direct response:</t>
 <sourcecode type="http-message"><![CDATA[
 QUERY /contacts HTTP/1.1
 Host: example.org
@@ -760,6 +760,7 @@ Content-Type: application/json
     "email": "camille.dubois@example.net" }
 ]]]></sourcecode>
     </section>
+
     <section anchor="example.discovery.method">
       <name>Discovery of QUERY Support</name>
       <t>
@@ -783,7 +784,7 @@ Allow: GET, QUERY, OPTIONS, HEAD]]></sourcecode>
       <t>
         There are alternatives to the use of OPTIONS. For instance, a QUERY request
         can be tried without prior knowledge of server support. The server would then
-        either process the request, or could respond with a 4xx status such as 405 (Method Not Allowed,
+        either process the request, or it could respond with a 4xx status such as 405 (Method Not Allowed,
         <xref target="HTTP" section="15.5.6"/>), including the Allow response field.
       </t>
     </section>
@@ -791,8 +792,8 @@ Allow: GET, QUERY, OPTIONS, HEAD]]></sourcecode>
     <section anchor="example.discovery.formats">
       <name>Discovery of QUERY Formats</name>
       <t>
-        Discovery of supported media types for QUERY is possible via the Accept-Query
-        (<xref target="field.accept-query"/>) response field:
+        The discovery of supported media types for QUERY is possible via the Accept-Query
+        response field (<xref target="field.accept-query"/>):
       </t>
 
 <sourcecode type="http-message"><![CDATA[
@@ -887,7 +888,7 @@ Date: Sun, 17 Nov 2024, 16:10:25 GMT
     "email": "camille.dubois@example.net" }
 ]]]></sourcecode>
         <t>
-          Note that there's no guarantee that the server will implement this resource
+          Note that there is no guarantee that the server will implement this resource
           indefinitely, so, after an error response, the client would need to redo
           the original QUERY request in order to obtain a new alternative location.
         </t>
@@ -925,7 +926,7 @@ Date: Sun, 17 Nov 2024, 16:13:17 GMT
 ]]]></sourcecode>
         <t>
           Assuming that the server still exposes the resource and that there was no change
-          in the query result, a subsequent conditional GET request with
+          in the query result, a subsequent conditional GET request with the following:
         </t>
 <sourcecode type="http-message"><![CDATA[
 If-None-Match: "42-1"]]></sourcecode>
@@ -1027,7 +1028,7 @@ Last-Modified: Sun, 31 Aug 2025, 08:44:00 GMT
 Vary: Accept-Query, Content-Type]]></sourcecode>
       <t>
         As the server identified a URI for the equivalent resource, that resource can
-        be accessed with GET. In particular, this avoids re-sending the query request's
+        be accessed with GET. In particular, this avoids resending the query request's
         content:
       </t>
 <sourcecode type="http-message"><![CDATA[
@@ -1229,7 +1230,7 @@ Client                   Resource
         RFC errata.
       </t>
       <t>
-        The request below uses XSLT to extract errata information summarized per year and
+        The request below uses eXtensible Stylesheet Language Transformations (XSLT) to extract errata information summarized per year and
         the defined errata types.
       </t>
 <sourcecode type="http-message"><![CDATA[
@@ -1317,8 +1318,8 @@ year, total, rejected, verified, hdu, reported
 2024, 322, 33, 125, 23, 141
 9999, 1, 0, 0, 1, 0]]></sourcecode>
     <t>
-      Note the Accept-Query response field indicating that another query format -- JSONPath
-      (<xref target="RFC9535"/>) -- is supported as well. The request below would report the
+      Note the Accept-Query response field indicating that another query format, JSONPath
+      <xref target="RFC9535"/>, is supported as well. The request below would report the
       identifiers of all rejected errata submitted since 2024:
     </t>
 <sourcecode type="http-message"><![CDATA[
@@ -1364,7 +1365,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   "SEARCH" (<xref target="RFC5323"/>).
 </t>
 <t>
-  It would have been possible to re-use any of these, updating it in a way that it matches
+  It would have been possible to reuse any of these, updating it in a way that it matches
   what this specification defines as the new method "QUERY". Indeed, the early stages
   of this specification used "SEARCH".
 </t>
@@ -1373,7 +1374,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 </t>
 <ul>
   <li>The alternatives use a generic media type for the request content ("application/xml"); the
-  semantics of the request depends solely on the request content.</li>
+  semantics of the request depend solely on the request content.</li>
   <li>Furthermore, they all originate from the WebDAV activity, about which many have mixed feelings.</li>
   <li>"QUERY" captures the relation with the URI's query component well.</li>
 </ul>
@@ -1505,7 +1506,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <section anchor="acknowledgements" numbered="false">
   <name>Acknowledgements</name>
 <t>
-  We thank all members of the HTTP Working Group for ideas, reviews, and feedback.
+  We thank all members of the HTTP Working Group for their ideas, reviews, and feedback.
 </t>
 <t>
   The following individuals deserve special recognition:
@@ -1530,7 +1531,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   </address>
 </contact>
 <t>
-  Discussion on the this HTTP method was reopened by Asbjørn Ulsberg during
+  Discussion on this HTTP method was reopened by <contact fullname="Asbjørn Ulsberg"/> during
   the HTTP Workshop in 2019:
 </t>
 <contact initials="A." surname="Ulsberg" fullname="Asbjørn Ulsberg">
