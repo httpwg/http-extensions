@@ -428,7 +428,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
     <section anchor="caching">
       <name>Caching</name>
       <t>
-        The response to a QUERY method is cacheable; a cache &MAY; use it to satisfy subsequent
+        The response to a QUERY method is cacheable; a cache <bcp14>MAY</bcp14> use it to satisfy subsequent
         QUERY requests as per <xref target="RFC9111" section="4"/>.
       </t>
       <t>
@@ -499,7 +499,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
     <t>
       Media type parameters, if any, are mapped to Structured Field Parameters of type
       String or Token. The choice of Token vs. String is semantically insignificant. That is,
-      recipients &MAY; convert Tokens to Strings, but &MUST-NOT; process them
+      recipients <bcp14>MAY</bcp14> convert Tokens to Strings, but &MUST-NOT; process them
       differently based on the received type.
     </t>
     <t>
