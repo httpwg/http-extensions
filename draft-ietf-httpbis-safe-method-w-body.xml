@@ -552,7 +552,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
       If a server creates a temporary resource to represent the results of a QUERY
       request (e.g., for use in the Location or Content-Location field), assigns a URI
       to that resource, and the request contains sensitive information that cannot be logged,
-      then that URI &SHOULD; be chosen such that it does not include any sensitive
+      then that URI <bcp14>SHOULD</bcp14> be chosen such that it does not include any sensitive
       portions of the original request content.
     </t>
     <t>
