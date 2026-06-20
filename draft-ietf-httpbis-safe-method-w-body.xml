@@ -556,8 +556,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
       A QUERY request from user agents implementing Cross-Origin Resource Sharing (CORS)
       will require a "preflight" request,
       as QUERY does not belong to the set of CORS-safelisted methods
-      (see "<eref target="https://fetch.spec.whatwg.org/#methods">Methods</eref>" in
-      <xref target="FETCH"/>).
+      (see <xref target="FETCH"/>).
     </t>
   </section>
 
@@ -628,9 +627,11 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
   <displayreference target="RFC9651" to="STRUCTURED-FIELDS"/>
   <displayreference target="RFC3986" to="URI"/>
   <references>
+    <name>References</name>  
+  <references>
     <name>Normative References</name>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
     <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9110.xml"/>
     <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9111.xml"/>
     <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9651.xml"/>
@@ -645,31 +646,40 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
         <title>FETCH</title>
         <author><organization>WHATWG</organization></author>
       </front>
+      <refcontent>WHATWG Living Standard</refcontent>
+      <annotation>Commit snapshot: <eref brackets="angle" target="https://fetch.spec.whatwg.org/commit-snapshots/3bab31a55154bda73f25b45a23df718616f2f64e/"/>.</annotation>
     </reference>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3253.xml"/>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.4918.xml"/>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.5323.xml"/>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6838.xml"/>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8259.xml"/>
-    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9535.xml"/>
+
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.3253.xml"/>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.4918.xml"/>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.5323.xml"/>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6838.xml"/>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8259.xml"/>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9535.xml"/>
+
     <reference anchor="URL" target="https://url.spec.whatwg.org">
       <front>
         <title>URL</title>
         <author><organization>WHATWG</organization></author>
       </front>
+      <refcontent>WHATWG Living Standard</refcontent>
+      <annotation>Commit snapshot: <eref brackets="angle" target="https://url.spec.whatwg.org/commit-snapshots/52526653e848c5a56598c84aa4bc8ac9025fb66b/"/>.</annotation>
     </reference>
+
     <reference anchor="XSLT" target='https://www.w3.org/TR/2017/REC-xslt-30-20170608/'>
       <front>
         <title>XSL Transformations (XSLT) Version 3.0</title>
-        <author fullname='Michael Kay' surname='Kay' initials='M.'/>
+        <author fullname='Michael Kay' surname='Kay' initials='M.' role="editor"/>
         <date year='2017' month='June' day='08'/>
       </front>
-      <seriesInfo name='W3C Recommendation' value='REC-xslt-30-20170608'/>
+      <refcontent>W3C Recommendation</refcontent>
       <annotation>
         Latest version available at
         <eref target='https://www.w3.org/TR/xslt-30/'/>.
       </annotation>
     </reference>
+
+  </references>
   </references>
 
   <section anchor="examples">
