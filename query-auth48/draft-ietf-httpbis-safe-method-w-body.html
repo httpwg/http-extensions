@@ -1988,15 +1988,14 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
 <a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-simple-query" class="section-name selfRef">Simple Query</a>
         </h3>
 <p id="appendix-A.1-1">A simple query with a direct response:<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.1-2">
+<div class="lang-http-message sourcecode" id="appendix-A.1-2">
 <pre>
 QUERY /contacts HTTP/1.1
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
 
-select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22
-</pre><a href="#appendix-A.1-2" class="pilcrow">¶</a>
+select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22</pre><a href="#appendix-A.1-2" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.1-3">Response:<a href="#appendix-A.1-3" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="appendix-A.1-4">
@@ -2074,12 +2073,11 @@ Accept-Query: application/x-www-form-urlencoded, application/sql</pre><a href="#
         An alternative to checking Accept-Query would be to make a QUERY request, and then
         -- in case of a 4xx status such as 415 (Unsupported Media Type, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.5.16" class="relref">Section 15.5.16</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) response --
         to inspect the Accept (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) response field:<a href="#appendix-A.3-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.3-7">
+<div class="lang-http-message sourcecode" id="appendix-A.3-7">
 <pre>
 HTTP/1.1 415 Unsupported Media Type
 Content-Type: application/xhtml
-Accept: application/x-www-form-urlencoded, application/sql
-</pre><a href="#appendix-A.3-7" class="pilcrow">¶</a>
+Accept: application/x-www-form-urlencoded, application/sql</pre><a href="#appendix-A.3-7" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2094,18 +2092,17 @@ Accept: application/x-www-form-urlencoded, application/sql
         (2xx, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">Section 15.3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) provide a way to identify alternate resources
         that will respond to GET requests, either for the received result of the request, or for future
         requests to perform the same operation. Going back to the example from <a href="#example.simple" class="auto internal xref">Appendix A.1</a>:<a href="#appendix-A.4-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.4-2">
+<div class="lang-http-message sourcecode" id="appendix-A.4-2">
 <pre>
 QUERY /contacts HTTP/1.1
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
 
-select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22
-</pre><a href="#appendix-A.4-2" class="pilcrow">¶</a>
+select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22</pre><a href="#appendix-A.4-2" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.4-3">Response:<a href="#appendix-A.4-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.4-4">
+<div class="lang-http-message sourcecode" id="appendix-A.4-4">
 <pre>
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -2124,8 +2121,7 @@ Date: Sun, 17 Nov 2024, 16:10:24 GMT
   { "surname": "Dubois",
     "givenname": "Camille",
     "email": "camille.dubois@example.net" }
-]
-</pre><a href="#appendix-A.4-4" class="pilcrow">¶</a>
+]</pre><a href="#appendix-A.4-4" class="pilcrow">¶</a>
 </div>
 <div id="example.content-location">
 <section id="appendix-A.4.1">
