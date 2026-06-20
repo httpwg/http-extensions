@@ -429,12 +429,12 @@ q=foo&limit=10&sort=-published]]></sourcecode>
       <name>Caching</name>
       <t>
         The response to a QUERY method is cacheable; a cache &MAY; use it to satisfy subsequent
-        QUERY requests as per <xref target="HTTP-CACHING" section="4"/>.
+        QUERY requests as per <xref target="RFC9111" section="4"/>.
       </t>
       <t>
-        The cache key for a QUERY request (see <xref target="HTTP-CACHING" section="2"/>) &MUST;
-        incorporate the request content (<xref target="HTTP-CACHING" section="6"/>) and related
-        metadata (<xref target="HTTP-CACHING" section="8"/>).
+        The cache key for a QUERY request (see <xref target="RFC9111" section="2"/>) &MUST;
+        incorporate the request content (<xref target="RFC9111" section="6"/>) and related
+        metadata (<xref target="RFC9111" section="8"/>).
       </t>
       <t>
         To improve cache efficiency, caches <bcp14>MAY</bcp14> remove semantically
@@ -453,7 +453,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
         does not change the request itself.
       </t>
       <t>
-        Clients can indicate, using the "no-transform" cache directive (<xref target="HTTP-CACHING" section="5.2.1.6"/>),
+        Clients can indicate, using the "no-transform" cache directive (<xref target="RFC9111" section="5.2.1.6"/>),
         that they wish that no such transformation happens (but note that this directive is just
         advisory).
       </t>
@@ -518,7 +518,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
       The value of the Accept-Query field applies to every URI on the server that shares the same path; in
       other words, the query component is ignored. If requests to the same resource return
       different Accept-Query values, the most recently received fresh value (per
-      <xref target="HTTP-CACHING" section="4.2"/>) is used.
+      <xref target="RFC9111" section="4.2"/>) is used.
     </t>
     <t>
       For example:
@@ -632,22 +632,13 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
 </middle>
 <back>
   <displayreference target="RFC9110" to="HTTP"/>
+  <displayreference target="RFC9111" to="HTTP-CACHING"/>
   <references>
     <name>Normative References</name>
     <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
     <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
     <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9110.xml"/>
-    <reference anchor="HTTP-CACHING">
-      <front>
-        <title>HTTP Caching</title>
-        <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
-        <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
-        <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
-        <date year="2022" month="June"/>
-      </front>
-      <seriesInfo name="STD" value="98"/>
-      <seriesInfo name="RFC" value="9111"/>
-    </reference>
+    <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9111.xml"/>
     <reference anchor="STRUCTURED-FIELDS">
       <front>
         <title>Structured Field Values for HTTP</title>
