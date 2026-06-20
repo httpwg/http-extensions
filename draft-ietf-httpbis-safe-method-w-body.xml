@@ -1,16 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
 <!DOCTYPE rfc [
-  <!ENTITY MAY "<bcp14>MAY</bcp14>">
-  <!ENTITY MUST "<bcp14>MUST</bcp14>">
-  <!ENTITY MUST-NOT "<bcp14>MUST NOT</bcp14>">
-  <!ENTITY OPTIONAL "<bcp14>OPTIONAL</bcp14>">
-  <!ENTITY RECOMMENDED "<bcp14>RECOMMENDED</bcp14>">
-  <!ENTITY REQUIRED "<bcp14>REQUIRED</bcp14>">
-  <!ENTITY SHALL "<bcp14>SHALL</bcp14>">
-  <!ENTITY SHALL-NOT "<bcp14>SHALL NOT</bcp14>">
-  <!ENTITY SHOULD "<bcp14>SHOULD</bcp14>">
-  <!ENTITY SHOULD-NOT "<bcp14>SHOULD NOT</bcp14>">
+ <!ENTITY nbsp    "&#160;">
 ]>
 <rfc category="std" ipr="trust200902" docName="draft-ietf-httpbis-safe-method-w-body-latest" submissionType="IETF" consensus="true" version="3" xmlns:xi="http://www.w3.org/2001/XInclude">
   <front>
@@ -215,13 +206,13 @@ q=foo&limit=10&sort=-published]]></sourcecode>
 
     <section anchor="notational.conventions">
       <name>Notational Conventions</name>
-      <t>
-        The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
-        NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
-        "MAY", and "OPTIONAL" in this document are to be interpreted as
-        described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they
-        appear in all capitals, as shown here.
-      </t>
+        <t>
+    The key words "<bcp14>MUST</bcp14>", "<bcp14>MUST NOT</bcp14>", "<bcp14>REQUIRED</bcp14>", "<bcp14>SHALL</bcp14>", "<bcp14>SHALL
+    NOT</bcp14>", "<bcp14>SHOULD</bcp14>", "<bcp14>SHOULD NOT</bcp14>", "<bcp14>RECOMMENDED</bcp14>", "<bcp14>NOT RECOMMENDED</bcp14>",
+    "<bcp14>MAY</bcp14>", and "<bcp14>OPTIONAL</bcp14>" in this document are to be interpreted as
+    described in BCP&nbsp;14 <xref target="RFC2119"/> <xref target="RFC8174"/> 
+    when, and only when, they appear in all capitals, as shown here.
+        </t>
     </section>
 
   </section>
@@ -499,7 +490,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
     <t>
       Media type parameters, if any, are mapped to Structured Field Parameters of type
       String or Token. The choice of Token vs. String is semantically insignificant. That is,
-      recipients <bcp14>MAY</bcp14> convert Tokens to Strings, but &MUST-NOT; process them
+      recipients <bcp14>MAY</bcp14> convert Tokens to Strings, but <bcp14>MUST NOT</bcp14> process them
       differently based on the received type.
     </t>
     <t>
