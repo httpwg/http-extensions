@@ -999,7 +999,7 @@ Accept: text/csv
       <t>
         Response:
       </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 HTTP/1.1 200 OK
 Date: Sun, 7 Sep 2025, 00:00:00 GMT
 Location: /stored-queries/4815162342
@@ -1015,8 +1015,7 @@ decade, total, with errata, % with errata, average page count
 1990, 1593, 269, 16.9, 25.5
 2000, 2888, 1048, 36.3, 27.3
 2010, 2954, 895, 30.3, 26.1
-2020, 1133, 230, 20.3, 26.2
-</artwork>
+2020, 1133, 230, 20.3, 26.2]]></sourcecode>
       <t>
         Here, the server has assigned the path "/stored-queries/4815162342" to the equivalent
         resource (<xref target="location"/>) for subsequent use with GET.
@@ -1025,7 +1024,7 @@ decade, total, with errata, % with errata, average page count
         Later on, the client repeats the query, but specifies that results should only
         be returned when changed:
       </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 QUERY /rfc-index.xml HTTP/1.1
 Host: example.org
 Date: Mon, 8, Sep 2025, 11:00:00 GMT
@@ -1034,38 +1033,33 @@ Accept: text/csv
 If-Modified-Since: Sun, 31 Aug 2025, 08:44:00 GMT
 Vary: Accept-Query, Content-Type
 
-...Same query, but using SQL...
-</artwork>
+...Same query, but using SQL...]]></sourcecode>
       <t>
         The data being queried did not change, therefore the server responds with:
       </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 HTTP/1.1 304 Not Modified
 Date: Mon, 8 Sep 2025, 11:00:00 GMT
 Content-Type: text/csv
 Location: /stored-queries/4815162342
 Accept-Query: "application/sql", "application/xslt+xml"
 Last-Modified: Sun, 31 Aug 2025, 08:44:00 GMT
-Vary: Accept-Query, Content-Type
-
-</artwork>
+Vary: Accept-Query, Content-Type]]></sourcecode>
       <t>
         As the server identified a URI for the equivalent resource, that resource can
         be accessed with GET. In particular, this avoids re-sending the query request's
         content:
       </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 GET /stored-queries/4815162342 HTTP/1.1
 Host: example.org
 Date: Sun, 21, Sep 2025, 12:08:00 GMT
 Accept: text/csv
-If-Modified-Since: Sun, 31 Aug 2025, 00:00:00 GMT
-
-</artwork>
+If-Modified-Since: Sun, 31 Aug 2025, 00:00:00 GMT]]></sourcecode>
       <t>
         Here, the state of the data set indeed changed, so new content is returned:
       </t>
-      <artwork type="http-message">
+      <sourcecode type="http-message"><![CDATA[
 HTTP/1.1 200 OK
 Date: Sun, 21, Sep 2025, 12:08:00 GMT
 Content-Type: text/csv
@@ -1079,8 +1073,7 @@ decade, total, with errata, % with errata, average page count
 1990, 1593, 269, 16.9, 25.5
 2000, 2888, 1048, 36.3, 27.3
 2010, 2954, 895, 30.3, 26.1
-2020, 1133, 230, 20.3, 26.2
-</artwork>
+2020, 1133, 230, 20.3, 26.2]]></sourcecode>
       <t>
         (Note the change in the row for this decade.)
       </t>
@@ -1259,11 +1252,11 @@ Client                   Resource
         The request below uses XSLT to extract errata information summarized per year and
         the defined errata types.
       </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 QUERY /errata.json HTTP/1.1
 Host: example.org
 Content-Type: application/xslt+xml
-Accept: application/xml, text/csv
+Accept: application/xml, text/csv]]>
 
 <![CDATA[<transform xmlns="http://www.w3.org/1999/XSL/Transform"
   xmlns:j="http://www.w3.org/2005/xpath-functions"
@@ -1306,12 +1299,11 @@ Accept: application/xml, text/csv
     </for-each-group>
   </template>
 
-</transform>]]>
-</artwork>
+</transform>]]></sourcecode>
     <t>
       Response:
     </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: text/csv
 Accept-Query: "application/jsonpath", "application/xslt+xml"
@@ -1343,14 +1335,13 @@ year, total, rejected, verified, hdu, reported
 2022, 358, 37, 198, 40, 83
 2023, 262, 38, 121, 33, 70
 2024, 322, 33, 125, 23, 141
-9999, 1, 0, 0, 1, 0
-</artwork>
+9999, 1, 0, 0, 1, 0]]></sourcecode>
     <t>
       Note the Accept-Query response field indicating that another query format -- JSONPath
       (<xref target="RFC9535"/>) -- is supported as well. The request below would report the
       identifiers of all rejected errata submitted since 2024:
     </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 QUERY /errata.json HTTP/1.1
 Host: example.org
 Content-Type: application/jsonpath
@@ -1358,14 +1349,13 @@ Accept: application/json
 
 $..[
      ?@.errata_status_code=="Rejected"
-     &amp;&amp; @.submit_date>"2024"
+     && @.submit_date>"2024"
    ]
-   ["doc-id"]
-</artwork>
+   ["doc-id"]]]></sourcecode>
       <t>
         Response:
       </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/json
 Accept-Query: "application/jsonpath", "application/xslt+xml"
@@ -1381,8 +1371,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   "RFC7239","RFC9083","RFC9537","RFC9537","RFC9420","RFC9000",
   "RFC9656","RFC9110","RFC2324","RFC2549","RFC6797","RFC2549",
   "RFC8894"
-]
-</artwork>
+]]]></sourcecode>
     </section>
 </section>
 
