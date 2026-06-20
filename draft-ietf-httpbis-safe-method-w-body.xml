@@ -753,7 +753,7 @@ select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22
 </artwork>
 
       <t>Response:</t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/json
 
@@ -767,8 +767,7 @@ Content-Type: application/json
   { "surname": "Dubois",
     "givenname": "Camille",
     "email": "camille.dubois@example.net" }
-]
-</artwork>
+]]]></sourcecode>
     </section>
     <section anchor="example.discovery.method">
       <name>Discovery of QUERY Support</name>
@@ -776,16 +775,16 @@ Content-Type: application/json
         A simple way to discover support for QUERY is provided by the OPTIONS
         (<xref target="HTTP" section="9.3.7"/>) method:
       </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 OPTIONS /contacts HTTP/1.1
-Host: example.org
+Host: example.org]]></sourcecode>
 
-</artwork>
       <t>Response:</t>
-<artwork type="http-message">
+
+<sourcecode type="http-message"><![CDATA[
 HTTP/1.1 200 OK
-Allow: GET, QUERY, OPTIONS, HEAD
-</artwork>
+Allow: GET, QUERY, OPTIONS, HEAD]]></sourcecode>
+
       <t>
         The Allow response field (<xref target="HTTP" section="10.2.1"/>) denotes the set of
         supported methods on the specified resource.
@@ -804,17 +803,18 @@ Allow: GET, QUERY, OPTIONS, HEAD
         Discovery of supported media types for QUERY is possible via the Accept-Query
         (<xref target="field.accept-query"/>) response field:
       </t>
-<artwork type="http-message">
-HEAD /contacts HTTP/1.1
-Host: example.org
 
-</artwork>
+<sourcecode type="http-message"><![CDATA[
+HEAD /contacts HTTP/1.1
+Host: example.org]]></sourcecode>
+
       <t>Response:</t>
-<artwork type="http-message">
+
+<sourcecode type="http-message"><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/xhtml
-Accept-Query: application/x-www-form-urlencoded, application/sql
-</artwork>
+Accept-Query: application/x-www-form-urlencoded, application/sql]]></sourcecode>
+
       <t>
         Responses to which request methods will contain Accept-Query will depend on
         the resource being accessed.
@@ -962,14 +962,13 @@ If-None-Match: "42-1"
           Given the request at the beginning of <xref target="example.content-location.location.indirect"/>,
           a server might respond with:
         </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 HTTP/1.1 303 See Other
 Content-Type: text/plain
 Date: Sun, 17 Nov 2024, 16:13:17 GMT
 Location: /contacts/stored-queries/42
 
-See stored query at "/contacts/stored-queries/42".
-</artwork>
+See stored query at "/contacts/stored-queries/42".]]></sourcecode>
         <t>
           This is similar to including Location on a direct response, except that no result
           for the query is returned. This allows the server to only generate or reuse an alternative
@@ -987,15 +986,14 @@ See stored query at "/contacts/stored-queries/42".
         which can generate responses as "text/csv". The data set being queried contains RFC document
         information, and the query returns information grouped by decade:
       </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 QUERY /rfc-index.xml HTTP/1.1
 Host: example.org
 Date: Sun, 7 Sep 2025, 00:00:00 GMT
 Content-Type: application/xslt+xml
 Accept: text/csv
 
-...Query content using XSLT...
-</artwork>
+...Query content using XSLT...]]></sourcecode>
       <t>
         Response:
       </t>
