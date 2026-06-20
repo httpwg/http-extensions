@@ -556,8 +556,9 @@ Table of Contents
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
-              Ed., "HTTP Semantics", STD 97, RFC 9110, June 2022,
-              <https://www.rfc-editor.org/rfc/rfc9110>.
+              Ed., "HTTP Semantics", STD 97, RFC 9110,
+              DOI 10.17487/RFC9110, June 2022,
+              <https://www.rfc-editor.org/info/rfc9110>.
 
    [HTTP-CACHING]
               Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,

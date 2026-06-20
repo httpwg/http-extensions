@@ -1335,7 +1335,7 @@ svg {
       </h2>
 <p id="section-1-1">
       This specification defines the HTTP QUERY request method as a means of
-      making a safe, idempotent request (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.2" class="relref">Section 9.2</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) that
+      making a safe, idempotent request (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.2" class="relref">Section 9.2</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) that
       encloses a representation describing how the request is to be processed by the target resource.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">
       A common query pattern is:<a href="#section-1-2" class="pilcrow">¶</a></p>
@@ -1349,7 +1349,7 @@ Host: example.org</pre><a href="#section-1-3" class="pilcrow">¶</a>
       this pattern becomes problematic:<a href="#section-1-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-5.1">size limits often are not known ahead of time because a request can pass through many uncoordinated
-      systems (but note that <span><a href="https://rfc-editor.org/rfc/rfc9110#section-4.1" class="relref">Section 4.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span> recommends senders and recipients to support at least 8000 octets),<a href="#section-1-5.1" class="pilcrow">¶</a>
+      systems (but note that <span><a href="https://rfc-editor.org/rfc/rfc9110#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span> recommends senders and recipients to support at least 8000 octets),<a href="#section-1-5.1" class="pilcrow">¶</a>
 </li>
         <li class="normal" id="section-1-5.2">expressing certain kinds of data in the target URI is inefficient because of the overhead of encoding that data into a valid URI,<a href="#section-1-5.2" class="pilcrow">¶</a>
 </li>
@@ -1457,11 +1457,11 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
 <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
         </h3>
 <p id="section-1.1-1">
-        This document uses terminology defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-3" class="relref">Section 3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+        This document uses terminology defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-3" class="relref">Section 3</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 <p id="section-1.1-2">
         Furthermore, it uses the terms <em>URI query parameter</em> for parameters
-        in the query component of a URI (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-4.2.2" class="relref">Section 4.2.2</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) and
-        <em>query content</em> for the request content (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-6.4" class="relref">Section 6.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
+        in the query component of a URI (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-4.2.2" class="relref">Section 4.2.2</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) and
+        <em>query content</em> for the request content (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-6.4" class="relref">Section 6.4</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>)
         of a QUERY request.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1489,7 +1489,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
       The QUERY method is used to initiate a server-side query. Unlike
       the GET method, which requests a
       representation of the resource identified by the target URI
-      (as defined by <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.1" class="relref">Section 7.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>), the QUERY
+      (as defined by <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.1" class="relref">Section 7.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>), the QUERY
       method is used to ask the target resource to perform a query operation
       within the scope of that target resource.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">
@@ -1497,7 +1497,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
       The origin server determines the scope of the operation based on the target resource.<a href="#section-2-2" class="pilcrow">¶</a></p>
 <p id="section-2-3">
       Servers <span class="bcp14">MUST</span> fail the request if the Content-Type
-      request field (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-8.3" class="relref">Section 8.3</a></span>)
+      request field (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-8.3" class="relref">Section 8.3</a></span>)
       is missing or is inconsistent with the request content.<a href="#section-2-3" class="pilcrow">¶</a></p>
 <p id="section-2-4">
       As for all HTTP methods, the target URI's query part
@@ -1506,7 +1506,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
       and is out of scope for this specification.<a href="#section-2-4" class="pilcrow">¶</a></p>
 <p id="section-2-5">
       QUERY requests are safe with regard to the target resource
-      (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.2.1" class="relref">Section 9.2.1</a></span>) --
+      (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.2.1" class="relref">Section 9.2.1</a></span>) --
       that is, the client does not request or expect any change to the
       state of the target resource. This does not prevent the server
       from creating additional HTTP resources through which additional
@@ -1514,11 +1514,11 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
       and <a href="#location" class="auto internal xref">2.4</a>).<a href="#section-2-5" class="pilcrow">¶</a></p>
 <p id="section-2-6">
       Furthermore, QUERY requests are idempotent
-      (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.2.2" class="relref">Section 9.2.2</a></span>) --
+      (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.2.2" class="relref">Section 9.2.2</a></span>) --
       they can be retried or repeated when needed, for instance after
       a connection failure.<a href="#section-2-6" class="pilcrow">¶</a></p>
 <p id="section-2-7">
-      As per <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">Section 15.3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>, a 2xx (Successful) response code signals that
+      As per <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">Section 15.3</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>, a 2xx (Successful) response code signals that
       the request was successfully received, understood, and accepted.<a href="#section-2-7" class="pilcrow">¶</a></p>
 <p id="section-2-8">
       In particular, a 200 (OK) response indicates that the query
@@ -1531,9 +1531,9 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
         </h3>
 <p id="section-2.1-1">
         The semantics of a QUERY request depends both on the request content and the associated
-        metadata, such as the Media Type (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-8.3.1" class="relref">Section 8.3.1</a></span>).
+        metadata, such as the Media Type (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-8.3.1" class="relref">Section 8.3.1</a></span>).
         In general, any problem with requests where content and metadata are inconsistent <span class="bcp14">MUST</span> be
-        rejected with a 4xx (Client Error) response (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.5" class="relref">Section 15.5</a></span>).<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+        rejected with a 4xx (Client Error) response (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.5" class="relref">Section 15.5</a></span>).<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 <p id="section-2.1-2">
         The list below describes various cases of failures and recommends specific status codes:<a href="#section-2.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -1561,7 +1561,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
 </li>
           <li class="normal" id="section-2.1-3.5">
           If the client requests a specific response media type using the Accept
-          field (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a></span>) that is not supported
+          field (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a></span>) that is not supported
           by the resource, a status code of 406 (Not Acceptable) is appropriate.<a href="#section-2.1-3.5" class="pilcrow">¶</a>
 </li>
         </ul>
@@ -1575,8 +1575,8 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
 <p id="section-2.2-1">
         The <em>equivalent resource</em> for any given QUERY request is a resource
         that responds to GET requests, represents that QUERY request and its target, and takes
-        both message content and metadata into account (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-6" class="relref">Section 6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).
-        In particular, this includes representation metadata (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8" class="relref">Section 8</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>),
+        both message content and metadata into account (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-6" class="relref">Section 6</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).
+        In particular, this includes representation metadata (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8" class="relref">Section 8</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>),
         such as the content's media type.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 <p id="section-2.2-2">
         In other words, the equivalent resource is derived from the resource
@@ -1595,11 +1595,11 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
 <a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-content-location-response-f" class="section-name selfRef">Content-Location Response Field</a>
         </h3>
 <p id="section-2.3-1">
-        A successful response (2xx, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">Section 15.3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
+        A successful response (2xx, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">Section 15.3</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>)
         can include a Content-Location
         header field containing an
         identifier for a resource corresponding to the results of the
-        operation; see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.7" class="relref">Section 8.7</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span> for details. This represents a claim from the server that a client can send
+        operation; see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.7" class="relref">Section 8.7</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span> for details. This represents a claim from the server that a client can send
         a GET request for the indicated URI to retrieve the results of the query
         operation just performed. The indicated resource might be temporary.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
 <p id="section-2.3-2">
@@ -1614,7 +1614,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
 <p id="section-2.4-1">
         A server can assign a URI to the equivalent resource (<a href="#equivalent-resource" class="auto internal xref">Section 2.2</a>)
         of a QUERY request. If the server does so, the URI of that resource
-        can be included in the Location header field of the 2xx response (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). This represents a claim that a client can
+        can be included in the Location header field of the 2xx response (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>). This represents a claim that a client can
         send a GET request to the indicated URI to repeat the query operation just
         performed without resending the query content. This resource's URI might be
         temporary; if a future request fails, the client can retry using the
@@ -1631,16 +1631,16 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
 <p id="section-2.5-1">
         In some cases, the server may choose to respond indirectly to the QUERY
         request by redirecting the user agent to a different URI (see
-        <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4" class="relref">Section 15.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-2.5-1" class="pilcrow">¶</a></p>
+        <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4" class="relref">Section 15.4</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#section-2.5-1" class="pilcrow">¶</a></p>
 <p id="section-2.5-2">
         A response with either status codes
-        301 (Moved Permanently, <span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.2" class="relref">Section 15.4.2</a></span>) or
-        308 (Permanent Redirect, <span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.9" class="relref">Section 15.4.9</a></span>)
+        301 (Moved Permanently, <span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.2" class="relref">Section 15.4.2</a></span>) or
+        308 (Permanent Redirect, <span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.9" class="relref">Section 15.4.9</a></span>)
         indicates that the target resource has permanently moved to a different URI referenced by the
-        Location response field (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a></span>).
+        Location response field (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a></span>).
         Likewise, a response with either status codes
-        302 (Found, <span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.3" class="relref">Section 15.4.3</a></span>) or
-        307 (Temporary Redirect, <span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.8" class="relref">Section 15.4.8</a></span>)
+        302 (Found, <span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.3" class="relref">Section 15.4.3</a></span>) or
+        307 (Temporary Redirect, <span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.8" class="relref">Section 15.4.8</a></span>)
         indicates that the target resource has temporarily moved. In all four cases, the server is
         suggesting that the user agent can accomplish its original QUERY request by sending a
         similar QUERY request to the new target URI referenced by the Location.<a href="#section-2.5-2" class="pilcrow">¶</a></p>
@@ -1648,9 +1648,9 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
         Note that the exceptions for redirecting a POST as a GET request after a 301 or 302 response
         do not apply to QUERY requests.<a href="#section-2.5-3" class="pilcrow">¶</a></p>
 <p id="section-2.5-4">
-        A response to QUERY with the status code 303 (See Other, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.4" class="relref">Section 15.4.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
+        A response to QUERY with the status code 303 (See Other, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.4" class="relref">Section 15.4.4</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>)
         indicates that the original query can be accomplished via a normal retrieval request on the URI referenced
-        by the Location response field (<span>[<a href="#HTTP" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a></span>).
+        by the Location response field (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a></span>).
         For HTTP, this means sending a GET request to the new target URI, as illustrated by the example
         in <a href="#example.indirect" class="auto internal xref">Appendix A.4.3</a>.<a href="#section-2.5-4" class="pilcrow">¶</a></p>
 </section>
@@ -1661,7 +1661,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
 <a href="#section-2.6" class="section-number selfRef">2.6. </a><a href="#name-conditional-requests" class="section-name selfRef">Conditional Requests</a>
         </h3>
 <p id="section-2.6-1">
-        The selected representation (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-3.2" class="relref">Section 3.2</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) of a QUERY
+        The selected representation (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-3.2" class="relref">Section 3.2</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) of a QUERY
         request is the same as for a GET request to the equivalent resource
         (<a href="#equivalent-resource" class="auto internal xref">Section 2.2</a>) of that QUERY request.<a href="#section-2.6-1" class="pilcrow">¶</a></p>
 <p id="section-2.6-2">
@@ -1669,7 +1669,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
         (i.e., the query results after any content negotiation) be
         returned in the response only under the circumstances described by the
         conditional header field(s), as defined in
-        <span><a href="https://rfc-editor.org/rfc/rfc9110#section-13" class="relref">Section 13</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2.6-2" class="pilcrow">¶</a></p>
+        <span><a href="https://rfc-editor.org/rfc/rfc9110#section-13" class="relref">Section 13</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>.<a href="#section-2.6-2" class="pilcrow">¶</a></p>
 <p id="section-2.6-3">
         See <a href="#example.conditional" class="auto internal xref">Appendix A.5</a> for examples.<a href="#section-2.6-3" class="pilcrow">¶</a></p>
 </section>
@@ -1690,7 +1690,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
         To improve cache efficiency, caches <span class="bcp14">MAY</span> remove semantically
         insignificant differences from request content and related metadata first. For instance, by:<a href="#section-2.7-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-2.7-4.1">removing content encoding(s) (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-2.7-4.1" class="pilcrow">¶</a>
+<li class="normal" id="section-2.7-4.1">removing content encoding(s) (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#section-2.7-4.1" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-2.7-4.2">normalizing based upon knowledge of format conventions, as indicated by any
           media subtype suffix in the request's Content-Type field (e.g., "+json"; see
@@ -1722,7 +1722,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
         </h3>
 <p id="section-2.8-1">
         The semantics of Range Requests for QUERY are identical to those for GET,
-        as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-14" class="relref">Section 14</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.
+        as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-14" class="relref">Section 14</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>.
         Byte Range Requests (the only range unit defined at the time of writing),
         however, offer little value for the results of a QUERY request.<a href="#section-2.8-1" class="pilcrow">¶</a></p>
 <p id="section-2.8-2">
@@ -1743,7 +1743,7 @@ q=foo&amp;limit=10&amp;sort=-published</pre><a href="#section-1-11" class="pilcr
       directly signal support for the QUERY method while identifying
       the specific query format media type(s) that may be used.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">
-      Accept-Query contains a list of media ranges (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>)
+      Accept-Query contains a list of media ranges (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>)
       using "Structured Fields" syntax (<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).
       Media ranges are represented by a List Structured Header Field of either Tokens or
       Strings, containing the media range value without parameters.<a href="#section-3-2" class="pilcrow">¶</a></p>
@@ -1774,7 +1774,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
 </div>
 <p id="section-3-10">
       Although the syntax for this field appears to be similar to other
-      fields, such as "Accept" (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>),
+      fields, such as "Accept" (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>),
       it is a Structured Field and thus <span class="bcp14">MUST</span> be processed as specified in
       <span><a href="https://rfc-editor.org/rfc/rfc9651#section-4" class="relref">Section 4</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.<a href="#section-3-10" class="pilcrow">¶</a></p>
 </section>
@@ -1786,7 +1786,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
 <p id="section-4-1">
       The QUERY method is subject to the same general security
       considerations as all HTTP methods as described in
-      <span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-4-1" class="pilcrow">¶</a></p>
+      <span>[<a href="#RFC9110" class="cite xref">HTTP</a>]</span>.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">
       It can be used as an alternative to passing request
       information in the URI (e.g., in the query component). This is preferred in some
@@ -1824,7 +1824,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
 <p id="section-5.1-1">
         IANA is requested to add the QUERY method to the HTTP
         Method Registry at <span>&lt;<a href="http://www.iana.org/assignments/http-methods">http://www.iana.org/assignments/http-methods</a>&gt;</span>
-        (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-16.3.1" class="relref">Section 16.3.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+        (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-16.3.1" class="relref">Section 16.3.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <span id="name-query-method-definition"></span><table class="center" id="table-2">
           <caption>
 <a href="#table-2" class="selfRef">Table 2</a>:
@@ -1859,7 +1859,7 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
 <p id="section-5.2-1">
         IANA is requested to add the Accept-Query field to the HTTP Field Name
         Registry at <span>&lt;<a href="https://www.iana.org/assignments/http-fields">https://www.iana.org/assignments/http-fields</a>&gt;</span>
-        (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-16.1.1" class="relref">Section 16.1.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+        (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-16.1.1" class="relref">Section 16.1.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <span id="name-accept-query-field-definiti"></span><table class="center" id="table-3">
           <caption>
 <a href="#table-3" class="selfRef">Table 3</a>:
@@ -1902,9 +1902,9 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</pre><a hr
       <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="HTTP">[HTTP]</dt>
+<dt id="RFC9110">[HTTP]</dt>
       <dd>
-<span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>&gt;</span>. </dd>
+<span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI 10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9110">https://www.rfc-editor.org/info/rfc9110</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="HTTP-CACHING">[HTTP-CACHING]</dt>
       <dd>
@@ -2023,7 +2023,7 @@ Content-Type: application/json
         </h3>
 <p id="appendix-A.2-1">
         A simple way to discover support for QUERY is provided by the OPTIONS
-        (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.7" class="relref">Section 9.3.7</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) method:<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
+        (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.7" class="relref">Section 9.3.7</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) method:<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="appendix-A.2-2">
 <pre>
 OPTIONS /contacts HTTP/1.1
@@ -2036,13 +2036,13 @@ HTTP/1.1 200 OK
 Allow: GET, QUERY, OPTIONS, HEAD</pre><a href="#appendix-A.2-4" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.2-5">
-        The Allow response field (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.1" class="relref">Section 10.2.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) denotes the set of
+        The Allow response field (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.1" class="relref">Section 10.2.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) denotes the set of
         supported methods on the specified resource.<a href="#appendix-A.2-5" class="pilcrow">¶</a></p>
 <p id="appendix-A.2-6">
         There are alternatives to the use of OPTIONS. For instance, a QUERY request
         can be tried without prior knowledge of server support. The server would then
         either process the request, or it could respond with a 4xx status such as 405 (Method Not Allowed,
-        <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.5.6" class="relref">Section 15.5.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>), including the Allow response field.<a href="#appendix-A.2-6" class="pilcrow">¶</a></p>
+        <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.5.6" class="relref">Section 15.5.6</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>), including the Allow response field.<a href="#appendix-A.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="example.discovery.formats">
@@ -2070,8 +2070,8 @@ Accept-Query: application/x-www-form-urlencoded, application/sql</pre><a href="#
         the resource being accessed.<a href="#appendix-A.3-5" class="pilcrow">¶</a></p>
 <p id="appendix-A.3-6">
         An alternative to checking Accept-Query would be to make a QUERY request, and then
-        -- in case of a 4xx status such as 415 (Unsupported Media Type, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.5.16" class="relref">Section 15.5.16</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) response --
-        to inspect the Accept (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) response field:<a href="#appendix-A.3-6" class="pilcrow">¶</a></p>
+        -- in case of a 4xx status such as 415 (Unsupported Media Type, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.5.16" class="relref">Section 15.5.16</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) response --
+        to inspect the Accept (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-12.5.1" class="relref">Section 12.5.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) response field:<a href="#appendix-A.3-6" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="appendix-A.3-7">
 <pre>
 HTTP/1.1 415 Unsupported Media Type
@@ -2088,7 +2088,7 @@ Accept: application/x-www-form-urlencoded, application/sql</pre><a href="#append
 <p id="appendix-A.4-1">
         As described in Sections <a href="#content-location" class="auto internal xref">2.3</a> and
         <a href="#location" class="auto internal xref">2.4</a>, the Content-Location and Location response fields in success responses
-        (2xx, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">Section 15.3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) provide a way to identify alternate resources
+        (2xx, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.3" class="relref">Section 15.3</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) provide a way to identify alternate resources
         that will respond to GET requests, either for the received result of the request, or for future
         requests to perform the same operation. Going back to the example from <a href="#example.simple" class="auto internal xref">Appendix A.1</a>:<a href="#appendix-A.4-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="appendix-A.4-2">
@@ -2204,7 +2204,7 @@ Date: Sun, 17 Nov 2024, 16:13:17 GMT
 If-None-Match: "42-1"</pre><a href="#appendix-A.4.2-6" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.4.2-7">
-          would result in a 304 response (Not Modified, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.5" class="relref">Section 15.4.5</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#appendix-A.4.2-7" class="pilcrow">¶</a></p>
+          would result in a 304 response (Not Modified, <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.5" class="relref">Section 15.4.5</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#appendix-A.4.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="example.indirect">
@@ -2214,7 +2214,7 @@ If-None-Match: "42-1"</pre><a href="#appendix-A.4.2-6" class="pilcrow">¶</a>
           </h4>
 <p id="appendix-A.4.3-1">
           Servers can send "indirect" responses (<a href="#redirection" class="auto internal xref">Section 2.5</a>) using the status code 303 (See Other,
-          <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.4" class="relref">Section 15.4.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>).<a href="#appendix-A.4.3-1" class="pilcrow">¶</a></p>
+          <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.4.4" class="relref">Section 15.4.4</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#appendix-A.4.3-1" class="pilcrow">¶</a></p>
 <p id="appendix-A.4.3-2">
           Given the request at the beginning of <a href="#example.content-location.location.indirect" class="auto internal xref">Appendix A.4</a>,
           a server might respond with:<a href="#appendix-A.4.3-2" class="pilcrow">¶</a></p>
