@@ -743,14 +743,13 @@ Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></source
     <section anchor="example.simple">
       <name>Simple Query</name>
       <t>A simple query with a direct response:</t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 QUERY /contacts HTTP/1.1
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
 
-select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22
-</artwork>
+select=surname,givenname,email&limit=10&match=%22email=*@example.*%22]]></sourcecode>
 
       <t>Response:</t>
 <sourcecode type="http-message"><![CDATA[
@@ -824,11 +823,10 @@ Accept-Query: application/x-www-form-urlencoded, application/sql]]></sourcecode>
         -- in case of a 4xx status such as 415 (Unsupported Media Type, <xref target="HTTP" section="15.5.16"/>) response --
         to inspect the Accept (<xref target="HTTP" section="12.5.1"/>) response field:
       </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 HTTP/1.1 415 Unsupported Media Type
 Content-Type: application/xhtml
-Accept: application/x-www-form-urlencoded, application/sql
-</artwork>
+Accept: application/x-www-form-urlencoded, application/sql]]></sourcecode>
     </section>
 
     <section anchor="example.content-location.location.indirect">
@@ -840,16 +838,15 @@ Accept: application/x-www-form-urlencoded, application/sql
         that will respond to GET requests, either for the received result of the request, or for future
         requests to perform the same operation. Going back to the example from <xref target="example.simple"/>:
       </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 QUERY /contacts HTTP/1.1
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
 
-select=surname,givenname,email&amp;limit=10&amp;match=%22email=*@example.*%22
-</artwork>
+select=surname,givenname,email&limit=10&match=%22email=*@example.*%22]]></sourcecode>
         <t>Response:</t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Location: /contacts/stored-results/17
@@ -867,8 +864,7 @@ Date: Sun, 17 Nov 2024, 16:10:24 GMT
   { "surname": "Dubois",
     "givenname": "Camille",
     "email": "camille.dubois@example.net" }
-]
-</artwork>
+]]]></sourcecode>
 
       <section anchor="example.content-location">
 	<name>Using Content-Location</name>
