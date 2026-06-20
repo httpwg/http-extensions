@@ -244,7 +244,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
     </t>
     <t>
       QUERY requests are safe with regard to the target resource
-      (<xref target="RFC9110" sectionFormat="comma" section="9.2.1"/>) --
+      (<xref target="RFC9110" sectionFormat="comma" section="9.2.1"/>);
       that is, the client does not request or expect any change to the
       state of the target resource. This does not prevent the server
       from creating additional HTTP resources through which additional
@@ -253,8 +253,8 @@ q=foo&limit=10&sort=-published]]></sourcecode>
     </t>
     <t>
       Furthermore, QUERY requests are idempotent
-      (<xref target="RFC9110" sectionFormat="comma" section="9.2.2"/>) --
-      they can be retried or repeated when needed, for instance after
+      (<xref target="RFC9110" sectionFormat="comma" section="9.2.2"/>);
+      they can be retried or repeated when needed, for instance, after
       a connection failure.
     </t>
     <t>
@@ -270,8 +270,8 @@ q=foo&limit=10&sort=-published]]></sourcecode>
     <section anchor="media.types.and.conneg">
       <name>Media Types and Content Negotiation</name>
       <t>
-        The semantics of a QUERY request depends both on the request content and the associated
-        metadata, such as the Media Type (<xref target="RFC9110" sectionFormat="comma" section="8.3.1"/>).
+        The semantics of a QUERY request depend both on the request content and the associated
+        metadata, such as the media type (<xref target="RFC9110" sectionFormat="comma" section="8.3.1"/>).
         In general, any problem with requests where content and metadata are inconsistent <bcp14>MUST</bcp14> be
         rejected with a 4xx (Client Error) response (<xref target="RFC9110" sectionFormat="comma" section="15.5"/>).
       </t>
@@ -315,7 +315,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
         The <em>equivalent resource</em> for any given QUERY request is a resource
         that responds to GET requests, represents that QUERY request and its target, and takes
         both message content and metadata into account (<xref target="RFC9110" section="6"/>).
-        In particular, this includes representation metadata (<xref target="RFC9110" section="8"/>),
+        In particular, this includes representation metadata (<xref target="RFC9110" section="8"/>)
         such as the content's media type.
       </t>
       <t>
@@ -423,9 +423,9 @@ q=foo&limit=10&sort=-published]]></sourcecode>
         QUERY requests as per <xref target="RFC9111" section="4"/>.
       </t>
       <t>
-        The cache key for a QUERY request (see <xref target="RFC9111" section="2"/>) <bcp14>MUST</bcp14>
+        The cache key for a QUERY request (<xref target="RFC9111" section="2"/>) <bcp14>MUST</bcp14>
         incorporate the request content (<xref target="RFC9111" section="6"/>) and related
-        metadata (<xref target="RFC9111" section="8"/>).
+        metadata (<xref target="RFC9110" section="8"/>).
       </t>
       <t>
         To improve cache efficiency, caches <bcp14>MAY</bcp14> remove semantically
@@ -444,7 +444,7 @@ q=foo&limit=10&sort=-published]]></sourcecode>
         does not change the request itself.
       </t>
       <t>
-        Clients can indicate, using the "no-transform" cache directive (<xref target="RFC9111" section="5.2.1.6"/>),
+        Clients can indicate, using the "no-transform" cache directive (<xref target="RFC9111" section="5.2.1.6"/>)
         that they wish that no such transformation happens (but note that this directive is just
         advisory).
       </t>
@@ -483,14 +483,15 @@ q=foo&limit=10&sort=-published]]></sourcecode>
     </t>
     <t>
       Accept-Query contains a list of media ranges (<xref target="RFC9110" section="12.5.1"/>)
-      using "Structured Fields" syntax (<xref target="RFC9651"/>).
+      using "Structured Fields" syntax <xref target="RFC9651"/>.
       Media ranges are represented by a List Structured Header Field of either Tokens or
       Strings, containing the media range value without parameters.
     </t>
     <t>
-      Media type parameters, if any, are mapped to Structured Field Parameters of type
-      String or Token. The choice of Token vs. String is semantically insignificant. That is,
-      recipients <bcp14>MAY</bcp14> convert Tokens to Strings, but <bcp14>MUST NOT</bcp14> process them
+      Media type parameters, if any, are mapped to Structured Field Parameters
+      with the String or Token type. The choice of Token versus String is
+      semantically insignificant. That is, recipients <bcp14>MAY</bcp14>
+      convert Tokens to Strings, but <bcp14>MUST NOT</bcp14> process them
       differently based on the received type.
     </t>
     <t>
@@ -767,8 +768,8 @@ Accept-Query: application/x-www-form-urlencoded, application/sql]]></sourcecode>
       </t>
       <t>
         An alternative to checking Accept-Query would be to make a QUERY request, and then
-        -- in case of a 4xx status such as 415 (Unsupported Media Type, <xref target="RFC9110" section="15.5.16"/>) response --
-        to inspect the Accept (<xref target="RFC9110" section="12.5.1"/>) response field:
+        -- in case of a 4xx status such as a 415 response (Unsupported Media Type, <xref target="RFC9110" section="15.5.16"/>) --
+        to inspect the Accept response field (<xref target="RFC9110" section="12.5.1"/>):
       </t>
 <sourcecode type="http-message"><![CDATA[
 HTTP/1.1 415 Unsupported Media Type
@@ -782,7 +783,7 @@ Accept: application/x-www-form-urlencoded, application/sql]]></sourcecode>
         As described in Sections <xref format="counter" target="content-location"/> and
         <xref format="counter" target="location"/>, the Content-Location and Location response fields in success responses
         (2xx, <xref target="RFC9110" section="15.3"/>) provide a way to identify alternate resources
-        that will respond to GET requests, either for the received result of the request, or for future
+        that will respond to GET requests, either for the received result of the request or for future
         requests to perform the same operation. Going back to the example from <xref target="example.simple"/>:
       </t>
 <sourcecode type="http-message"><![CDATA[
@@ -885,7 +886,7 @@ Date: Sun, 17 Nov 2024, 16:13:17 GMT
 <sourcecode type="http-message"><![CDATA[
 If-None-Match: "42-1"]]></sourcecode>
         <t>
-          would result in a 304 response (Not Modified, <xref target="RFC9110" section="15.4.5"/>).
+          would result in a 304 (Not Modified) response (<xref target="RFC9110" section="15.4.5"/>).
         </t>
       </section>
 
@@ -919,7 +920,7 @@ See stored query at "/contacts/stored-queries/42".]]></sourcecode>
       <name>Conditional Requests</name>
       <t>
         Consider a resource implementing QUERY that supports "application/sql" and
-        "application/xslt+xml" (<xref target="XSLT"/>) as request media types, and
+        "application/xslt+xml" <xref target="XSLT"/> as request media types, and
         which can generate responses as "text/csv". The data set being queried contains RFC document
         information, and the query returns information grouped by decade:
       </t>
@@ -1180,7 +1181,7 @@ Client                   Resource
     <section anchor="example.more.query.formats">
       <name>More Query Formats</name>
       <t>
-        The following examples show requests on a JSON-shaped (<xref target="RFC8259"/>) database of
+        The following examples show requests on a JSON-shaped <xref target="RFC8259"/> database of
         RFC errata.
       </t>
       <t>
@@ -1315,8 +1316,8 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
 <t>
   The HTTP Method Registry (<eref target="http://www.iana.org/assignments/http-methods"/>)
   already contains three other methods with the properties "safe" and "idempotent":
-  "PROPFIND" (<xref target="RFC4918"/>), REPORT" (<xref target="RFC3253"/>), and
-  "SEARCH" (<xref target="RFC5323"/>).
+  "PROPFIND" <xref target="RFC4918"/>, "REPORT" <xref target="RFC3253"/>, and
+  "SEARCH" <xref target="RFC5323"/>.
 </t>
 <t>
   It would have been possible to reuse any of these, updating it in a way that it matches
