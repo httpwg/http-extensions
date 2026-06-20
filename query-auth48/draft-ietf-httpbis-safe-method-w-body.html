@@ -2279,7 +2279,7 @@ Accept: text/csv
 </div>
 <p id="appendix-A.5-3">
         Response:<a href="#appendix-A.5-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-4">
+<div class="lang-http-message sourcecode" id="appendix-A.5-4">
 <pre>
 HTTP/1.1 200 OK
 Date: Sun, 7 Sep 2025, 00:00:00 GMT
@@ -2296,8 +2296,7 @@ decade, total, with errata, % with errata, average page count
 1990, 1593, 269, 16.9, 25.5
 2000, 2888, 1048, 36.3, 27.3
 2010, 2954, 895, 30.3, 26.1
-2020, 1133, 230, 20.3, 26.2
-</pre><a href="#appendix-A.5-4" class="pilcrow">¶</a>
+2020, 1133, 230, 20.3, 26.2</pre><a href="#appendix-A.5-4" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.5-5">
         Here, the server has assigned the path "/stored-queries/4815162342" to the equivalent
@@ -2305,7 +2304,7 @@ decade, total, with errata, % with errata, average page count
 <p id="appendix-A.5-6">
         Later on, the client repeats the query, but specifies that results should only
         be returned when changed:<a href="#appendix-A.5-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-7">
+<div class="lang-http-message sourcecode" id="appendix-A.5-7">
 <pre>
 QUERY /rfc-index.xml HTTP/1.1
 Host: example.org
@@ -2315,12 +2314,11 @@ Accept: text/csv
 If-Modified-Since: Sun, 31 Aug 2025, 08:44:00 GMT
 Vary: Accept-Query, Content-Type
 
-...Same query, but using SQL...
-</pre><a href="#appendix-A.5-7" class="pilcrow">¶</a>
+...Same query, but using SQL...</pre><a href="#appendix-A.5-7" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.5-8">
         The data being queried did not change, therefore the server responds with:<a href="#appendix-A.5-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-9">
+<div class="lang-http-message sourcecode" id="appendix-A.5-9">
 <pre>
 HTTP/1.1 304 Not Modified
 Date: Mon, 8 Sep 2025, 11:00:00 GMT
@@ -2328,27 +2326,23 @@ Content-Type: text/csv
 Location: /stored-queries/4815162342
 Accept-Query: "application/sql", "application/xslt+xml"
 Last-Modified: Sun, 31 Aug 2025, 08:44:00 GMT
-Vary: Accept-Query, Content-Type
-
-</pre><a href="#appendix-A.5-9" class="pilcrow">¶</a>
+Vary: Accept-Query, Content-Type</pre><a href="#appendix-A.5-9" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.5-10">
         As the server identified a URI for the equivalent resource, that resource can
         be accessed with GET. In particular, this avoids re-sending the query request's
         content:<a href="#appendix-A.5-10" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-11">
+<div class="lang-http-message sourcecode" id="appendix-A.5-11">
 <pre>
 GET /stored-queries/4815162342 HTTP/1.1
 Host: example.org
 Date: Sun, 21, Sep 2025, 12:08:00 GMT
 Accept: text/csv
-If-Modified-Since: Sun, 31 Aug 2025, 00:00:00 GMT
-
-</pre><a href="#appendix-A.5-11" class="pilcrow">¶</a>
+If-Modified-Since: Sun, 31 Aug 2025, 00:00:00 GMT</pre><a href="#appendix-A.5-11" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.5-12">
         Here, the state of the data set indeed changed, so new content is returned:<a href="#appendix-A.5-12" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.5-13">
+<div class="lang-http-message sourcecode" id="appendix-A.5-13">
 <pre>
 HTTP/1.1 200 OK
 Date: Sun, 21, Sep 2025, 12:08:00 GMT
@@ -2363,8 +2357,7 @@ decade, total, with errata, % with errata, average page count
 1990, 1593, 269, 16.9, 25.5
 2000, 2888, 1048, 36.3, 27.3
 2010, 2954, 895, 30.3, 26.1
-2020, 1133, 230, 20.3, 26.2
-</pre><a href="#appendix-A.5-13" class="pilcrow">¶</a>
+2020, 1133, 230, 20.3, 26.2</pre><a href="#appendix-A.5-13" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.5-14">
         (Note the change in the row for this decade.)<a href="#appendix-A.5-14" class="pilcrow">¶</a></p>
@@ -2481,7 +2474,7 @@ decade, total, with errata, % with errata, average page count
 <p id="appendix-A.6-2">
         The request below uses XSLT to extract errata information summarized per year and
         the defined errata types.<a href="#appendix-A.6-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.6-3">
+<div class="lang-http-message sourcecode" id="appendix-A.6-3">
 <pre>
 QUERY /errata.json HTTP/1.1
 Host: example.org
@@ -2529,12 +2522,11 @@ Accept: application/xml, text/csv
     &lt;/for-each-group&gt;
   &lt;/template&gt;
 
-&lt;/transform&gt;
-</pre><a href="#appendix-A.6-3" class="pilcrow">¶</a>
+&lt;/transform&gt;</pre><a href="#appendix-A.6-3" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.6-4">
       Response:<a href="#appendix-A.6-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.6-5">
+<div class="lang-http-message sourcecode" id="appendix-A.6-5">
 <pre>
 HTTP/1.1 200 OK
 Content-Type: text/csv
@@ -2567,14 +2559,13 @@ year, total, rejected, verified, hdu, reported
 2022, 358, 37, 198, 40, 83
 2023, 262, 38, 121, 33, 70
 2024, 322, 33, 125, 23, 141
-9999, 1, 0, 0, 1, 0
-</pre><a href="#appendix-A.6-5" class="pilcrow">¶</a>
+9999, 1, 0, 0, 1, 0</pre><a href="#appendix-A.6-5" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.6-6">
       Note the Accept-Query response field indicating that another query format -- JSONPath
       (<span>[<a href="#RFC9535" class="cite xref">RFC9535</a>]</span>) -- is supported as well. The request below would report the
       identifiers of all rejected errata submitted since 2024:<a href="#appendix-A.6-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.6-7">
+<div class="lang-http-message sourcecode" id="appendix-A.6-7">
 <pre>
 QUERY /errata.json HTTP/1.1
 Host: example.org
@@ -2585,12 +2576,11 @@ $..[
      ?@.errata_status_code=="Rejected"
      &amp;&amp; @.submit_date&gt;"2024"
    ]
-   ["doc-id"]
-</pre><a href="#appendix-A.6-7" class="pilcrow">¶</a>
+   ["doc-id"]</pre><a href="#appendix-A.6-7" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.6-8">
         Response:<a href="#appendix-A.6-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-http-message art-text artwork" id="appendix-A.6-9">
+<div class="lang-http-message sourcecode" id="appendix-A.6-9">
 <pre>
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -2607,8 +2597,7 @@ Last-Modified: Thu, 20 Feb 2025 06:10:01 GMT
   "RFC7239","RFC9083","RFC9537","RFC9537","RFC9420","RFC9000",
   "RFC9656","RFC9110","RFC2324","RFC2549","RFC6797","RFC2549",
   "RFC8894"
-]
-</pre><a href="#appendix-A.6-9" class="pilcrow">¶</a>
+]</pre><a href="#appendix-A.6-9" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
