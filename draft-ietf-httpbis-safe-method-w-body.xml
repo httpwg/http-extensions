@@ -1,13 +1,5 @@
-<?xml version="1.0"?>
-<?rfc toc="yes"?>
-<?rfc strict="yes"?>
-<?rfc symrefs="yes" ?>
-<?rfc sortrefs="yes"?>
-<?rfc compact="yes"?>
-<?rfc comments="yes"?>
-<?rfc inline="yes"?>
-<?rfc-ext xml2rfc-backend="202007"?>
-<?github-issue-label query-method?>
+<?xml version='1.0' encoding='UTF-8'?>
+
 <!DOCTYPE rfc [
   <!ENTITY MAY "<bcp14>MAY</bcp14>">
   <!ENTITY MUST "<bcp14>MUST</bcp14>">
@@ -52,9 +44,9 @@
     </author>
 
     <date/>
+    <area>WIT</area>
+    <workgroup>httpbis</workgroup>
 
-    <area>Web and Internet Transport</area>
-    <workgroup>HTTP</workgroup>
     <keyword>http</keyword>
     <keyword>query</keyword>
     <keyword>method</keyword>
