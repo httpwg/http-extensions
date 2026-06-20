@@ -100,10 +100,9 @@
     <t>
       A common query pattern is:
     </t>
-<artwork type="http-message">
-GET /feed?q=foo&amp;limit=10&amp;sort=-published HTTP/1.1
-Host: example.org
-</artwork>
+<sourcecode type="http-message"><![CDATA[
+GET /feed?q=foo&limit=10&sort=-published HTTP/1.1
+Host: example.org]]></sourcecode>
     <t>
       However, when the data conveyed is too voluminous to be encoded in the request's URI,
       this pattern becomes problematic:
@@ -126,13 +125,13 @@ Host: example.org
     <t>
       A typical use of HTTP POST for requesting a query is:
     </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 POST /feed HTTP/1.1
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 
-q=foo&amp;limit=10&amp;sort=-published
-</artwork>
+q=foo&limit=10&sort=-published]]></sourcecode>
+
     <t>
       In this variation, however, it is not readily apparent -- absent specific knowledge of the
       resource and server to which the request is being sent -- that a safe,
@@ -142,13 +141,12 @@ q=foo&amp;limit=10&amp;sort=-published
       The QUERY method provides a solution that spans the gap between the use of GET and POST, with
       the example above being expressed as:
     </t>
-<artwork type="http-message">
+<sourcecode type="http-message"><![CDATA[
 QUERY /feed HTTP/1.1
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 
-q=foo&amp;limit=10&amp;sort=-published
-</artwork>
+q=foo&limit=10&sort=-published]]></sourcecode>
     <t>
       As with POST, the input to the query operation is passed as the content of the request
       rather than as part of the request URI. Unlike POST, however, the method is explicitly safe
@@ -534,8 +532,8 @@ q=foo&amp;limit=10&amp;sort=-published
     <t>
       Example:
     </t>
-    <artwork type="example">
-Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"</artwork>
+    <sourcecode><![CDATA[
+Accept-Query: "application/jsonpath", application/sql;charset="UTF-8"]]></sourcecode>
     <t>
       Although the syntax for this field appears to be similar to other
       fields, such as "Accept" (<xref target="HTTP" section="12.5.1"/>),
