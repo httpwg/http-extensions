@@ -750,9 +750,8 @@ Table of Contents
    (Section 4.5).  If the client knows that the representation data is
    smaller than min-size, it cannot expect resumability to be offered.
    The client might still attempt to transfer the representation in a
-   single request, either through a request with the Upload-Complete
-   header field set to true (see Section 11.1.1) or via a conventional
-   upload.
+   single request, either in a request with the Upload-Complete header
+   field set to true (see Section 11.1.1) or via a conventional upload.
 
    The request content can be empty.  If the Upload-Complete header
    field is then set to true, the client intends to upload an empty
