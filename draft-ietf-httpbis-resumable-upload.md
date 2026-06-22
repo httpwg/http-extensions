@@ -54,6 +54,7 @@ normative:
   PROBLEM: RFC9457
   DIGEST-FIELDS: RFC9530
   CONTENT-DISPOSITION: RFC6266
+  INCREMENTAL: I-D.ietf-httpbis-incremental
 
 informative:
   SLOWLORIS:
@@ -397,6 +398,8 @@ The request content can be empty. If the `Upload-Complete` header field is then 
 
 Representation metadata included in the initial request (see {{Section 8.3 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field ({{Section 8.3 of HTTP}}) indicates the media type of the representation. The `Content-Encoding` header field ({{Section 8.4 of HTTP}}) names the content codings applied to the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. For this purpose, the `inline` disposition type is RECOMMENDED.
 
+Incremental delivery of the request content ({{INCREMENTAL}}) enables the server to process partially transferred representation data even when the message exchange is interrupted. Clients are therefore RECOMMENDED to send the request content incrementally. To signal this preference to intermediaries, client MAY include the `Incremental` header field set to true ({{Section 3 of INCREMENTAL}}).
+
 If the client received a final response with a
 
 - `2xx (Successful)` status code and the request content contained the entire representation data, the upload is complete and the response comes from the resource targeted by the initial request processing the representation.
@@ -572,6 +575,8 @@ Cache-Control: no-store
 A client can continue the upload and append representation data by sending a `PATCH` request with the `application/partial-upload` media type ({{media-type-partial-upload}}) to the upload resource. The request content is the representation data to append.
 
 The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` header field. To ensure that the upload resource will accept the request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ({{offset-retrieving}}) or appending representation data ({{upload-appending}}).
+
+Incremental delivery of the request content ({{INCREMENTAL}}) enables the server to process partially transferred representation data even when the message exchange is interrupted. Clients are therefore RECOMMENDED to send the request content incrementally. To signal this preference to intermediaries, clients MAY include the `Incremental` header field set to true ({{Section 3 of INCREMENTAL}}).
 
 The request MUST include the `Upload-Complete` header field. Its value is true in two cases:
 
@@ -966,6 +971,7 @@ Reference:
 * Remove nominative languages addressing the lost final response.
 * Allow `max-age` limit to decrease as expected.
 * Redefine Upload-Complete on the server side.
+* Recommend incremental delivery and the `Incremental` header field for upload creation and append requests.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
