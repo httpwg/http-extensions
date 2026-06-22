@@ -352,7 +352,7 @@ The following key-value pairs are defined:
 : Specifies a maximum size for the representation data, counted in bytes. The server might not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size. The value is an Integer.
 
 `min-size`:
-: Specifies a minimum size for the representation data, counted in bytes. The server might not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. The value is an Integer.
+: Specifies a minimum size for the representation data, counted in bytes, for the server to offer resumable uploads. The server might not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. Resumable uploads impose additional overhead on the server, which might not be acceptable for small representations. Requests with representation data below this value might still be accepted by the server, although without the ability to resume them. The value is an Integer.
 
 `max-append-size`:
 : Specifies a maximum size counted in bytes for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append or upload creation requests. The value is an Integer.
@@ -387,11 +387,11 @@ A server responding with a `413 (Content Too Large)` status code as a result of 
 
 A client can start a resumable upload from any request that can carry content by including the `Upload-Complete` header field ({{upload-complete}}). As a consequence, all request methods that allow content are possible, such as `POST`, `PUT`, and `PATCH`.
 
-The `Upload-Complete` header field is set to true if the request content includes the entire representation data that the client intends to upload. This is also a requirement for transparently upgrading to resumable uploads from traditional uploads ({{upgrading-uploads}}).
+The `Upload-Complete` header field is set to true if the request content includes the entire representation data that the client intends to upload. This is also a requirement for transparently upgrading to resumable uploads from conventional uploads ({{upgrading-uploads}}).
 
-If the client knows the representation data's length, it SHOULD indicate the length in the request to help the server allocate necessary resources for the upload and provide early feedback if the representation violates a limit ({{upload-limit}}). This indication can be done through the `Upload-Length` header field or the combination of the `Content-Length` and `Upload-Complete: ?1` header fields (see {{upload-length}}).
+If the client knows the representation data's length, it SHOULD indicate the length in the request to help the server allocate necessary resources for the upload and provide early feedback if the representation exceeds `max-size` ({{upload-limit}}). This indication can be done through the `Upload-Length` header field or the combination of the `Content-Length` and `Upload-Complete: ?1` header fields (see {{upload-length}}).
 
-The client SHOULD respect any limits ({{upload-limit}}) announced in the `Upload-Limit` header field in interim or final responses. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client SHOULD stop the current request immediately and cancel the upload ({{upload-cancellation}}).
+The client SHOULD respect any limits ({{upload-limit}}) announced in the `Upload-Limit` header field in interim or final responses. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client SHOULD stop the current request immediately and cancel the upload ({{upload-cancellation}}). If the client knows that the representation data is smaller than `min-size`, it cannot expect resumability to be offered. The client might still attempt to transfer the representation in a single request, either through a request with the `Upload-Complete` header field set to true (see {{upgrading-uploads}}) or via a conventional upload.
 
 The request content can be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty representation. An `Upload-Complete` header field set to false is also valid. This can be used to retrieve the upload resource's URI before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URI, at the cost of an additional round-trip before data upload can commence.
 
@@ -954,6 +954,12 @@ Reference:
 
 # Changes
 {:removeinrfc="true"}
+
+## Since draft-ietf-httpbis-resumable-upload-12
+{:numbered="false"}
+
+* Clarify that `min-size` indicates the threshold for offering resumable uploads, not a minimum allowed representation size.
+* Clarify client behavior when the representation is below `min-size`.
 
 ## Since draft-ietf-httpbis-resumable-upload-11
 {:numbered="false"}
