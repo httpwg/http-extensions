@@ -66,6 +66,7 @@ informative:
     target:
      "https://web.archive.org/web/20150315054838/http://ha.ckers.org/slowloris/"
   RFC8792:
+  INCREMENTAL: I-D.ietf-httpbis-incremental
 
 --- abstract
 
@@ -385,7 +386,7 @@ A server responding with a `413 (Content Too Large)` status code as a result of 
 
 ### Client Behavior
 
-A client can start a resumable upload from any request that can carry content by including the `Upload-Complete` header field ({{upload-complete}}). As a consequence, all request methods that allow content are possible, such as `POST`, `PUT`, and `PATCH`.
+A client can start a resumable upload from any request that can carry content by including the `Upload-Complete` header field ({{upload-complete}}). As a consequence, all request methods that allow content are possible, such as `POST`, `PUT`, and `PATCH`. The request can benefit from incremental delivery; see {{incremental}}.
 
 The `Upload-Complete` header field is set to true if the request content includes the entire representation data that the client intends to upload. This is also a requirement for transparently upgrading to resumable uploads from traditional uploads ({{upgrading-uploads}}).
 
@@ -569,7 +570,7 @@ Cache-Control: no-store
 
 ### Client Behavior
 
-A client can continue the upload and append representation data by sending a `PATCH` request with the `application/partial-upload` media type ({{media-type-partial-upload}}) to the upload resource. The request content is the representation data to append.
+A client can continue the upload and append representation data by sending a `PATCH` request with the `application/partial-upload` media type ({{media-type-partial-upload}}) to the upload resource. The request content is the representation data to append. The request can benefit from incremental delivery; see {{incremental}}.
 
 The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` header field. To ensure that the upload resource will accept the request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ({{offset-retrieving}}) or appending representation data ({{upload-appending}}).
 
@@ -816,6 +817,14 @@ For a "careful upload creation" the client knows that the resource targeted in t
 The retransmission of representation data or the ultimate upload failure that can happen with an "optimistic upload creation" is therefore avoided at the expense of an additional request that does not carry representation data.
 
 This approach is best suited if the client cannot receive interim responses, e.g. due to a limitation in the provided HTTP interface, or if large representations are transferred where the cost of the additional request is minuscule compared to the effort of transferring the representation itself.
+
+# Incremental Transfer, Processing and Forwarding {#incremental}
+
+The resumable upload design is most effective when a server processes request message portions as they arrive, which ensures the greatest chance that data is processed before a possible transfer interruption.
+
+To support incremental processing, it is RECOMMENDED that clients send request content incrementally and minimize buffering.
+
+As described in {{INCREMENTAL}}, intermediaries might interfere with the incremental delivery of data to a server. Clients can use the Incremental header field defined in {{Section 3 of INCREMENTAL}} to signal their preference for incremental forwarding by intermediaries.
 
 # Security Considerations
 
