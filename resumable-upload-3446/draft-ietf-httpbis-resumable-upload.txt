@@ -128,7 +128,6 @@ Table of Contents
      15.1.  Normative References
      15.2.  Informative References
    Appendix A.  Changes
-     Since draft-ietf-httpbis-resumable-upload-12
      Since draft-ietf-httpbis-resumable-upload-11
      Since draft-ietf-httpbis-resumable-upload-10
      Since draft-ietf-httpbis-resumable-upload-09
@@ -1846,13 +1845,6 @@ Appendix A.  Changes
 
    This section is to be removed before publishing as an RFC.
 
-Since draft-ietf-httpbis-resumable-upload-12
-
-   *  Clarify that min-size indicates the threshold for offering
-      resumable uploads, not a minimum allowed representation size.
-
-   *  Clarify client behavior when the representation is below min-size.
-
 Since draft-ietf-httpbis-resumable-upload-11
 
    *  Clear up different responsibilities of server and upload resource.
@@ -1873,6 +1865,8 @@ Since draft-ietf-httpbis-resumable-upload-11
    *  Redefine Upload-Complete on the server side.
 
    *  Recommend incremental delivery.
+
+   *  Clarify min-size limit and its client behavior.
 
 Since draft-ietf-httpbis-resumable-upload-10
 
