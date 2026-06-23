@@ -2489,7 +2489,7 @@ If an upload is spread across multiple requests, data integrity issues can be fo
       </h2>
 <p id="section-12-1">The resumable upload design is most effective when a server processes request message portions as they arrive, which ensures the greatest chance that data is processed before a possible transfer interruption.<a href="#section-12-1" class="pilcrow">¶</a></p>
 <p id="section-12-2">To support incremental processing, it is <span class="bcp14">RECOMMENDED</span> that clients send request content incrementally and minimize buffering.<a href="#section-12-2" class="pilcrow">¶</a></p>
-<p id="section-12-3">As described in <span>[<a href="#INCREMENTAL" class="cite xref">INCREMENTAL</a>]</span>, intermediaries might interfere with the incremental delivery of data to a server. Clients can use the Incremental header field defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-incremental-04#section-3" class="relref">Section 3</a> of [<a href="#INCREMENTAL" class="cite xref">INCREMENTAL</a>]</span> to signal their preference for incremental forwarding by intermediaries.<a href="#section-12-3" class="pilcrow">¶</a></p>
+<p id="section-12-3">As described in <span>[<a href="#INCREMENTAL" class="cite xref">INCREMENTAL</a>]</span>, intermediaries might interfere with the incremental delivery of data to a server. Clients can use the <code>Incremental</code> header field defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-incremental-04#section-3" class="relref">Section 3</a> of [<a href="#INCREMENTAL" class="cite xref">INCREMENTAL</a>]</span> to signal their preference for incremental forwarding by intermediaries.<a href="#section-12-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
@@ -2856,6 +2856,9 @@ If an upload is spread across multiple requests, data integrity issues can be fo
 </li>
           <li class="normal" id="appendix-A.1-1.8">
             <p id="appendix-A.1-1.8.1">Redefine Upload-Complete on the server side.<a href="#appendix-A.1-1.8.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.9">
+            <p id="appendix-A.1-1.9.1">Recommend incremental delivery.<a href="#appendix-A.1-1.9.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>

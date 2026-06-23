@@ -1855,6 +1855,8 @@ Since draft-ietf-httpbis-resumable-upload-11
 
    *  Redefine Upload-Complete on the server side.
 
+   *  Recommend incremental delivery.
+
 Since draft-ietf-httpbis-resumable-upload-10
 
    *  Add recommended disposition type for file name indication.
