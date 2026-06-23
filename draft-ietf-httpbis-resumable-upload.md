@@ -339,7 +339,7 @@ If indicators (1) and (2) are both present in the same request, their indicated 
 
 The `Upload-Length` field can be used in response to an offset retrieval; see {{offset-retrieving-server}}.
 
-The server might not know the length until the upload is complete.
+The server might not know the length until the upload is complete. Once the client attempts to complete the upload, the server MUST, after processing the request content, verify that the offset matches a previously recorded length value. If it does not, the server MUST reject the corresponding request, deactivate the upload resource, and reject further interaction with it.
 
 Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` ({{upload-complete}}) header field to indicate that a request completes the upload. The offset could match the length, but the upload can still be incomplete.
 
@@ -977,6 +977,7 @@ Reference:
 * Redefine Upload-Complete on the server side.
 * Recommend incremental delivery.
 * Clarify `min-size` limit and its client behavior.
+* Specify that offset and length must match upon completion.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
