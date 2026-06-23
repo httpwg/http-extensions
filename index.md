@@ -60,6 +60,26 @@ View [saved issues](issues.html), or the latest GitHub [issues](https://github.c
 | [The Preliminary Request Denied HTTP Status Code](resumable-upload-3446/draft-ietf-httpbis-pre-denied.html "The Preliminary Request Denied HTTP Status Code (HTML)") | [plain text](resumable-upload-3446/draft-ietf-httpbis-pre-denied.txt "The Preliminary Request Denied HTTP Status Code (Text)") | same as main |
 | [Compression Dictionary Transport](resumable-upload-3446/draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](resumable-upload-3446/draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | same as main |
 
+## Preview for branch [resumable-upload-3430](resumable-upload-3430)
+
+| Draft |     |     |     |
+| ----- | --- | --- | --- |
+| [Cookies: HTTP State Management Mechanism](resumable-upload-3430/draft-ietf-httpbis-rfc6265bis.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-rfc6265bis.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
+| [Resumable Uploads](resumable-upload-3430/draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-resumable-upload.txt&url_2=https://httpwg.github.io/http-extensions/resumable-upload-3430/draft-ietf-httpbis-resumable-upload.txt) |
+| [Incremental Forwarding of HTTP Messages](resumable-upload-3430/draft-ietf-httpbis-incremental.html "Incremental Forwarding of HTTP Messages (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-incremental.txt "Incremental Forwarding of HTTP Messages (Text)") | same as main |
+| [Cookies](resumable-upload-3430/draft-ietf-httpbis-layered-cookies.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-layered-cookies.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
+| [Retrofit Structured Fields](resumable-upload-3430/draft-ietf-httpbis-retrofit.html "Retrofit Structured Fields for HTTP (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-retrofit.txt "Retrofit Structured Fields for HTTP (Text)") | same as main |
+| [The HTTP QUERY Method](resumable-upload-3430/draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | same as main |
+| [Optimistic HTTP Upgrade Security](resumable-upload-3430/draft-ietf-httpbis-optimistic-upgrade.html "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-optimistic-upgrade.txt "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (Text)") | same as main |
+| [The HTTP Wrap Up Capsule](resumable-upload-3430/draft-ietf-httpbis-wrap-up.html "The HTTP Wrap Up Capsule (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-wrap-up.txt "The HTTP Wrap Up Capsule (Text)") | same as main |
+| [Templated CONNECT-TCP](resumable-upload-3430/draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | same as main |
+| [HTTP Server Secondary Cert Auth](resumable-upload-3430/draft-ietf-httpbis-secondary-server-certs.html "Secondary Certificate Authentication of HTTP Servers (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-secondary-server-certs.txt "Secondary Certificate Authentication of HTTP Servers (Text)") | same as main |
+| [HTTP Cache Groups](resumable-upload-3430/draft-ietf-httpbis-cache-groups.html "HTTP Cache Groups (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-cache-groups.txt "HTTP Cache Groups (Text)") | same as main |
+| [No-Vary-Search](resumable-upload-3430/draft-ietf-httpbis-no-vary-search.html "The No-Vary-Search HTTP Caching Extension (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-no-vary-search.txt "The No-Vary-Search HTTP Caching Extension (Text)") | same as main |
+| [HTTP Unencoded Digest](resumable-upload-3430/draft-ietf-httpbis-unencoded-digest.html "HTTP Unencoded Digest (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-unencoded-digest.txt "HTTP Unencoded Digest (Text)") | same as main |
+| [The Preliminary Request Denied HTTP Status Code](resumable-upload-3430/draft-ietf-httpbis-pre-denied.html "The Preliminary Request Denied HTTP Status Code (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-pre-denied.txt "The Preliminary Request Denied HTTP Status Code (Text)") | same as main |
+| [Compression Dictionary Transport](resumable-upload-3430/draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](resumable-upload-3430/draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | same as main |
+
 ## Preview for branch [resumable-incremental-alt](resumable-incremental-alt)
 
 | Draft |     |     |     |
