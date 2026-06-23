@@ -824,7 +824,7 @@ The resumable upload design is most effective when a server processes request me
 
 To support incremental processing, it is RECOMMENDED that clients send request content incrementally and minimize buffering.
 
-As described in {{INCREMENTAL}}, intermediaries might interfere with the incremental delivery of data to a server. Clients can use the Incremental header field defined in {{Section 3 of INCREMENTAL}} to signal their preference for incremental forwarding by intermediaries.
+As described in {{INCREMENTAL}}, intermediaries might interfere with the incremental delivery of data to a server. Clients can use the `Incremental` header field defined in {{Section 3 of INCREMENTAL}} to signal their preference for incremental forwarding by intermediaries.
 
 # Security Considerations
 
@@ -975,6 +975,7 @@ Reference:
 * Remove nominative languages addressing the lost final response.
 * Allow `max-age` limit to decrease as expected.
 * Redefine Upload-Complete on the server side.
+* Recommend incremental delivery.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
