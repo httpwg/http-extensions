@@ -955,12 +955,6 @@ Reference:
 # Changes
 {:removeinrfc="true"}
 
-## Since draft-ietf-httpbis-resumable-upload-12
-{:numbered="false"}
-
-* Clarify that `min-size` indicates the threshold for offering resumable uploads, not a minimum allowed representation size.
-* Clarify client behavior when the representation is below `min-size`.
-
 ## Since draft-ietf-httpbis-resumable-upload-11
 {:numbered="false"}
 
@@ -972,6 +966,7 @@ Reference:
 * Remove nominative languages addressing the lost final response.
 * Allow `max-age` limit to decrease as expected.
 * Redefine Upload-Complete on the server side.
+* Clarify `min-size` limit and its client behavior.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
