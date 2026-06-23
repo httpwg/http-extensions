@@ -612,10 +612,15 @@ Table of Contents
       exceeds the maximum size.  The value is an Integer.
 
    min-size:  Specifies a minimum size for the representation data,
-      counted in bytes.  The server might not create an upload resource
-      if the length (Section 4.1.3) deduced from the upload creation
-      request is smaller than the minimum size or no length can be
-      deduced at all.  The value is an Integer.
+      counted in bytes, for the server to offer resumable uploads.  The
+      server might not create an upload resource if the length
+      (Section 4.1.3) deduced from the upload creation request is
+      smaller than the minimum size or no length can be deduced at all.
+      Resumable uploads impose additional overhead on the server, which
+      might not be acceptable for small representations.  Requests with
+      representation data below this value might still be accepted by
+      the server, although without the ability to resume them.  The
+      value is an Integer.
 
    max-append-size:  Specifies a maximum size counted in bytes for the
       request content in a single upload append (Section 4.4) or upload
@@ -727,7 +732,7 @@ Table of Contents
    The Upload-Complete header field is set to true if the request
    content includes the entire representation data that the client
    intends to upload.  This is also a requirement for transparently
-   upgrading to resumable uploads from traditional uploads
+   upgrading to resumable uploads from conventional uploads
    (Section 11.1.1).
 
    If the client knows the representation data's length, it SHOULD
@@ -743,7 +748,11 @@ Table of Contents
    particular, if the allowed maximum size is less than the amount of
    representation data the client intends to upload, the client SHOULD
    stop the current request immediately and cancel the upload
-   (Section 4.5).
+   (Section 4.5).  If the client knows that the representation data is
+   smaller than min-size, it cannot expect resumability to be offered.
+   The client might still attempt to transfer the representation in a
+   single request, either in a request with the Upload-Complete header
+   field set to true (see Section 11.1.1) or via a conventional upload.
 
    The request content can be empty.  If the Upload-Complete header
    field is then set to true, the client intends to upload an empty
@@ -1856,6 +1865,8 @@ Since draft-ietf-httpbis-resumable-upload-11
    *  Redefine Upload-Complete on the server side.
 
    *  Recommend incremental delivery.
+
+   *  Clarify min-size limit and its client behavior.
 
 Since draft-ietf-httpbis-resumable-upload-10
 
