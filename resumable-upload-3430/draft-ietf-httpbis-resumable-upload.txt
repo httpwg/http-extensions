@@ -578,11 +578,11 @@ Table of Contents
    cause the entire header field to be ignored.
 
    If indicators (1) and (2) are both present in the same request, their
-   indicated lengths MUST match.  The representation's length MUST stay
-   consistent across subsequent requests.  A server can use the problem
-   type [PROBLEM] of "https://iana.org/assignments/http-problem-
-   types#inconsistent-representation-length" (Section 7.2) in responses
-   to indicate inconsistent length values.
+   indicated lengths MUST match.  The representation's length, if known,
+   MUST stay consistent across subsequent requests.  A server can use
+   the problem type [PROBLEM] of "https://iana.org/assignments/http-
+   problem-types#inconsistent-representation-length" (Section 7.2) in
+   responses to indicate inconsistent length values.
 
    The Upload-Length field can be used in response to an offset
    retrieval; see Section 4.3.2.
