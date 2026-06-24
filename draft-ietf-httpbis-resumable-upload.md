@@ -335,7 +335,7 @@ Despite this, a client SHOULD communicate the representation's length to the ser
 
 The `Upload-Length` request and response header field is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the representation's length as a number of bytes. Other values MUST cause the entire header field to be ignored.
 
-If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. The representation's length MUST stay consistent across subsequent requests. A server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-representation-length" ({{inconsistent-length}}) in responses to indicate inconsistent length values.
+If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. The representation's length, if known, MUST stay consistent across subsequent requests. A server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-representation-length" ({{inconsistent-length}}) in responses to indicate inconsistent length values.
 
 The `Upload-Length` field can be used in response to an offset retrieval; see {{offset-retrieving-server}}.
 
