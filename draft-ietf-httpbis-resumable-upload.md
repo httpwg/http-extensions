@@ -977,7 +977,7 @@ Reference:
 * Redefine Upload-Complete on the server side.
 * Recommend incremental delivery.
 * Clarify `min-size` limit and its client behavior.
-* Specify that offset and length must match upon completion.
+* Require offset and length to match upon completion.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
