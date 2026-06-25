@@ -540,7 +540,7 @@ A successful response to a `HEAD` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset}}),
 - MUST include the `Upload-Complete` header field ({{upload-complete}}) indicating whether a final response was produced from processing the uploaded representation,
-- MUST include the representation's length in the `Upload-Length` header field if the client has supplied one through corresponding headers as described in ({{upload-length}}),
+- MUST include the representation's length in the `Upload-Length` header field, unless the client has not supplied one, by providing the corresponding headers as described in ({{upload-length}}),
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
 
