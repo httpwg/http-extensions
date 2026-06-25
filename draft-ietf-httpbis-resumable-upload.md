@@ -374,6 +374,8 @@ The following recommendations for limit changes can minimize the risk of causing
 
 Receivers of `Upload-Limit` parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
 
+When a request is rejected because limits were violated, the response MUST include the `Upload-Limit` header field carrying all limits of the corresponding upload resource.
+
 When responding to an `OPTIONS` request without the `Upload-Complete` header field, if the resource that is the target of the request supports the creation of a resumable upload resource ({{upload-creation}}), the server MUST include the `Upload-Limit` header field with the corresponding limits in the response. If a server is configured such that all of its resources support the creation of upload resources with identical limits, it SHOULD include the `Upload-Limit` header field in response to an `OPTIONS` request for the target `*` (if this target is supported). If the server does not apply any limits, it MUST use `min-size=0` instead of an empty header value.
 
 A client can use an `OPTIONS` request without the `Upload-Complete` header field to discover whether the resource supports resumable uploads and to learn potential limits before creating an upload resource. To reduce the likelihood of failing requests, the limits announced in an `OPTIONS` response SHOULD NOT be less restrictive than the limits applied to an upload once the upload resource has been created, unless the request to create an upload resource included additional information that warrants different limits. For example, a server might announce a general maximum size limit of 1 GB, but reduce it to 100 MB when the media type indicates an image.
@@ -977,6 +979,7 @@ Reference:
 * Redefine Upload-Complete on the server side.
 * Recommend incremental delivery.
 * Clarify `min-size` limit and its client behavior.
+* Include `Upload-Limit` in response to limit violation.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
