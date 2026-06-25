@@ -328,9 +328,9 @@ When used in an upload creation response ({{upload-creation}}) or an upload appe
 
 The length of the representation data might not be known when starting the transfer, for example, because the representation is taken from a streaming source. The representation's length will, however, be known at the latest when the upload is complete.
 
-Despite this, a client SHOULD communicate the representation's length to the server as soon as it becomes known to aid with resource managament and facilitate early validation. There are two different ways for the client to indicate and for the server to discover the representation's length from requests for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}):
+Despite this, a client SHOULD communicate the representation's length to the server as soon as it becomes known to aid with resource management and facilitate early validation. There are two different ways for the client to indicate and for the server to discover the representation's length from requests for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}):
 
-1. If the request includes the `Upload-Complete` field value set to true, the request content is the remaining representation data. The representation's length is then the sum of the current offset ({{upload-offset}}) and request content's length, which might be announced in the `Content-Length` header field.
+1. If the request includes the `Upload-Complete` field value set to true, the request content is the remaining representation data. The representation's length is then the sum of the current offset ({{upload-offset}}) and the request content's length, which might be announced in the `Content-Length` header field.
 2. The request can include the `Upload-Length` header field defined below.
 
 The `Upload-Length` request and response header field is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the representation's length as a number of bytes. Other values MUST cause the entire header field to be ignored.
@@ -388,7 +388,7 @@ A client can start a resumable upload from any request that can carry content by
 
 The `Upload-Complete` header field is set to true if the request content includes the entire representation data that the client intends to upload. This is also a requirement for transparently upgrading to resumable uploads from conventional uploads ({{upgrading-uploads}}).
 
-If the client knows the representation data's length, it SHOULD indicate the length in the request to help the server allocate necessary resources for the upload and provide early feedback if the representation violates a limit ({{upload-limit}}), as described in {{upload-length}}.
+If the client knows the representation's length, it SHOULD indicate the length in the request to help the server allocate necessary resources for the upload and provide early feedback if the representation violates a limit ({{upload-limit}}), as described in {{upload-length}}.
 
 The client SHOULD respect any limits ({{upload-limit}}) announced in the `Upload-Limit` header field in interim or final responses. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client SHOULD stop the current request immediately and cancel the upload ({{upload-cancellation}}). If the client knows that the representation data is smaller than `min-size`, it cannot expect resumability to be offered. The client might still attempt to transfer the representation in a single request, either in a request with the `Upload-Complete` header field set to true (see {{upgrading-uploads}}) or via a conventional upload.
 
