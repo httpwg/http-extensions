@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 26 December 2026                                     Apple Inc.
+Expires: 27 December 2026                                     Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                            24 June 2026
+                                                            25 June 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 December 2026.
+   This Internet-Draft will expire on 27 December 2026.
 
 Copyright Notice
 
@@ -557,7 +557,7 @@ Table of Contents
 
    Despite this, a client SHOULD communicate the representation's length
    to the server as soon as it becomes known to aid with resource
-   managament and facilitate early validation.  There are two different
+   management and facilitate early validation.  There are two different
    ways for the client to indicate and for the server to discover the
    representation's length from requests for creating the upload
    resource (Section 4.2) or appending to it (Section 4.4):
@@ -565,7 +565,7 @@ Table of Contents
    1.  If the request includes the Upload-Complete field value set to
        true, the request content is the remaining representation data.
        The representation's length is then the sum of the current offset
-       (Section 4.1.1) and request content's length, which might be
+       (Section 4.1.1) and the request content's length, which might be
        announced in the Content-Length header field.
 
    2.  The request can include the Upload-Length header field defined
@@ -735,9 +735,9 @@ Table of Contents
    upgrading to resumable uploads from conventional uploads
    (Section 11.1.1).
 
-   If the client knows the representation data's length, it SHOULD
-   indicate the length in the request to help the server allocate
-   necessary resources for the upload and provide early feedback if the
+   If the client knows the representation's length, it SHOULD indicate
+   the length in the request to help the server allocate necessary
+   resources for the upload and provide early feedback if the
    representation violates a limit (Section 4.1.4), as described in
    Section 4.1.3.
 
