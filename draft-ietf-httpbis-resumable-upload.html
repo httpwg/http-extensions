@@ -1050,7 +1050,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Kleidl, et al.</td>
-<td class="center">Expires 25 December 2026</td>
+<td class="center">Expires 28 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1063,12 @@ svg {
 <dd class="internet-draft">draft-ietf-httpbis-resumable-upload-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-23" class="published">23 June 2026</time>
+<time datetime="2026-06-26" class="published">26 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-12-25">25 December 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-28">28 December 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1128,7 +1128,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 28 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2068,7 +2068,7 @@ Upload-Complete: ?1
           <h4 id="name-client-behavior-2">
 <a href="#section-4.3.1" class="section-number selfRef">4.3.1. </a><a href="#name-client-behavior-2" class="section-name selfRef">Client Behavior</a>
           </h4>
-<p id="section-4.3.1-1">If the client wants to resume the upload after an interruption, it has to know the amount of representation data processed by the upload resource so far. It can fetch the offset by sending a <code>HEAD</code> request to the upload resource. Upon a successful response, the client can continue the upload by appending representation data (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) starting at the offset indicated by the <code>Upload-Offset</code> response header field.<a href="#section-4.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.3.1-1">If the client wants to resume the upload after an interruption, it has to know the amount of representation data processed by the upload resource so far. It can fetch the offset by sending a <code>HEAD</code> or <code>GET</code> request to the upload resource. Using <code>HEAD</code> is <span class="bcp14">RECOMMENDED</span>, since response content is not required for resumption. Upon a successful response, the client can continue the upload by appending representation data (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) starting at the offset indicated by the <code>Upload-Offset</code> response header field.<a href="#section-4.3.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.3.1-2">The offset can be less than or equal to the number of bytes of representation data that the client has already sent. The client is expected to handle backtracking of a reasonable length. On the other hand, the offset can be greater than the amount of sent representation data if the upload resource obtained additional representation data on behalf of the client. If the client is not able to provide the representation data at the given offset, the upload <span class="bcp14">MUST</span> be considered a failure. The client then <span class="bcp14">MUST NOT</span> continue the upload and <span class="bcp14">SHOULD</span> cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 4.5</a>).<a href="#section-4.3.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.3.1-3">The client <span class="bcp14">MUST NOT</span> perform offset retrieval while creation (<a href="#upload-creation" class="auto internal xref">Section 4.2</a>) or appending (<a href="#upload-appending" class="auto internal xref">Section 4.4</a>) is in progress as this can cause the previous request to be terminated by the server as described in <a href="#concurrency" class="auto internal xref">Section 4.6</a>.<a href="#section-4.3.1-3" class="pilcrow">¶</a></p>
 <p id="section-4.3.1-4">If the client received a response with a<a href="#section-4.3.1-4" class="pilcrow">¶</a></p>
@@ -2093,7 +2093,7 @@ Upload-Complete: ?1
           <h4 id="name-server-behavior-2">
 <a href="#section-4.3.2" class="section-number selfRef">4.3.2. </a><a href="#name-server-behavior-2" class="section-name selfRef">Server Behavior</a>
           </h4>
-<p id="section-4.3.2-1">A successful response to a <code>HEAD</code> request against an upload resource<a href="#section-4.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-1">A successful response to a <code>HEAD</code> or <code>GET</code> request against an upload resource<a href="#section-4.3.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3.2-2.1">
               <p id="section-4.3.2-2.1.1"><span class="bcp14">MUST</span> include the offset in the <code>Upload-Offset</code> header field (<a href="#upload-offset" class="auto internal xref">Section 4.1.1</a>),<a href="#section-4.3.2-2.1.1" class="pilcrow">¶</a></p>
@@ -2112,6 +2112,7 @@ Upload-Complete: ?1
 </li>
           </ul>
 <p id="section-4.3.2-3">The resource <span class="bcp14">SHOULD NOT</span> generate a response with the <code>301 (Moved Permanently)</code> and <code>302 (Found)</code> status codes because clients might follow the redirect without preserving the <code>HEAD</code> method.<a href="#section-4.3.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-4">A client does not require response content for an offset retrieval request in order to successfully resume an upload. Therefore, serving response content for a <code>GET</code> request is unexpected. Its meaning is not defined by this protocol.<a href="#section-4.3.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="offset-retrieving-example">
@@ -2862,6 +2863,9 @@ If an upload is spread across multiple requests, data integrity issues can be fo
 </li>
           <li class="normal" id="appendix-A.1-1.10">
             <p id="appendix-A.1-1.10.1">Clarify <code>min-size</code> limit and its client behavior.<a href="#appendix-A.1-1.10.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.11">
+            <p id="appendix-A.1-1.11.1">Describe <code>GET</code> requests against upload resource.<a href="#appendix-A.1-1.11.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>

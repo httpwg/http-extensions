@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 25 December 2026                                     Apple Inc.
+Expires: 28 December 2026                                     Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                            23 June 2026
+                                                            26 June 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 December 2026.
+   This Internet-Draft will expire on 28 December 2026.
 
 Copyright Notice
 
@@ -959,11 +959,12 @@ Table of Contents
 
    If the client wants to resume the upload after an interruption, it
    has to know the amount of representation data processed by the upload
-   resource so far.  It can fetch the offset by sending a HEAD request
-   to the upload resource.  Upon a successful response, the client can
-   continue the upload by appending representation data (Section 4.4)
-   starting at the offset indicated by the Upload-Offset response header
-   field.
+   resource so far.  It can fetch the offset by sending a HEAD or GET
+   request to the upload resource.  Using HEAD is RECOMMENDED, since
+   response content is not required for resumption.  Upon a successful
+   response, the client can continue the upload by appending
+   representation data (Section 4.4) starting at the offset indicated by
+   the Upload-Offset response header field.
 
    The offset can be less than or equal to the number of bytes of
    representation data that the client has already sent.  The client is
@@ -998,7 +999,8 @@ Table of Contents
 
 4.3.2.  Server Behavior
 
-   A successful response to a HEAD request against an upload resource
+   A successful response to a HEAD or GET request against an upload
+   resource
 
    *  MUST include the offset in the Upload-Offset header field
       (Section 4.1.1),
@@ -1020,6 +1022,11 @@ Table of Contents
    The resource SHOULD NOT generate a response with the 301 (Moved
    Permanently) and 302 (Found) status codes because clients might
    follow the redirect without preserving the HEAD method.
+
+   A client does not require response content for an offset retrieval
+   request in order to successfully resume an upload.  Therefore,
+   serving response content for a GET request is unexpected.  Its
+   meaning is not defined by this protocol.
 
 4.3.3.  Examples
 
@@ -1867,6 +1874,8 @@ Since draft-ietf-httpbis-resumable-upload-11
    *  Recommend incremental delivery.
 
    *  Clarify min-size limit and its client behavior.
+
+   *  Describe GET requests against upload resource.
 
 Since draft-ietf-httpbis-resumable-upload-10
 
