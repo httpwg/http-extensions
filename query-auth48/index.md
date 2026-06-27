@@ -1,4 +1,4 @@
-# Editor's drafts for resumable-upload-3430 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/resumable-upload-3430)
+# Editor's drafts for query-auth48 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/query-auth48)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
@@ -7,7 +7,6 @@
 | [Incremental Forwarding of HTTP Messages](./draft-ietf-httpbis-incremental.html "Incremental Forwarding of HTTP Messages (HTML)") | [plain text](./draft-ietf-httpbis-incremental.txt "Incremental Forwarding of HTTP Messages (Text)") | same as main |
 | [Cookies](./draft-ietf-httpbis-layered-cookies.html "Cookies: HTTP State Management Mechanism (HTML)") | [plain text](./draft-ietf-httpbis-layered-cookies.txt "Cookies: HTTP State Management Mechanism (Text)") | same as main |
 | [Retrofit Structured Fields](./draft-ietf-httpbis-retrofit.html "Retrofit Structured Fields for HTTP (HTML)") | [plain text](./draft-ietf-httpbis-retrofit.txt "Retrofit Structured Fields for HTTP (Text)") | same as main |
-| [The HTTP QUERY Method](./draft-ietf-httpbis-safe-method-w-body.html "The HTTP QUERY Method (HTML)") | [plain text](./draft-ietf-httpbis-safe-method-w-body.txt "The HTTP QUERY Method (Text)") | same as main |
 | [Optimistic HTTP Upgrade Security](./draft-ietf-httpbis-optimistic-upgrade.html "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (HTML)") | [plain text](./draft-ietf-httpbis-optimistic-upgrade.txt "Security Considerations for Optimistic Protocol Transitions in HTTP/1.1 (Text)") | same as main |
 | [The HTTP Wrap Up Capsule](./draft-ietf-httpbis-wrap-up.html "The HTTP Wrap Up Capsule (HTML)") | [plain text](./draft-ietf-httpbis-wrap-up.txt "The HTTP Wrap Up Capsule (Text)") | same as main |
 | [Templated CONNECT-TCP](./draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](./draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | same as main |

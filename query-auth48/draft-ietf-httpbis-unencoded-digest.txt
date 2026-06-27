@@ -6,7 +6,7 @@ HTTP                                                           L. Pardue
 Internet-Draft                                                Cloudflare
 Updates: 9530 (if approved)                                      M. West
 Intended status: Standards Track                                  Google
-Expires: 27 December 2026                                   25 June 2026
+Expires: 29 December 2026                                   27 June 2026
 
 
                          HTTP Unencoded Digest
@@ -20,8 +20,8 @@ Abstract
    unencoded representation.  The Unencoded-Digest and Want-Unencoded-
    Digest fields complement existing integrity fields for this purpose.
 
-   This document updates the definitions of the terms "Integrity fields"
-   and "Integrity preference fields" originally defined in RFC 9530.
+   This document updates the terms "Integrity fields" and "Integrity
+   preference fields" defined in RFC 9530.
 
 About This Document
 
@@ -37,7 +37,7 @@ About This Document
    information can be found at https://httpwg.org/.
 
    Source for this draft and an issue tracker can be found at
-   https://github.com/httpwg/http-extensions/labels/unencoded-digest.
+   https://github.com/httpwg/http-extensions/labels/unecoded-digest.
 
 Status of This Memo
 
@@ -54,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 December 2026.
+   This Internet-Draft will expire on 29 December 2026.
 
 Copyright Notice
 
@@ -117,7 +117,7 @@ Table of Contents
    [HTTP]), where a client issues multiple requests to obtain partial
    representations and "stitches" them back into a whole.
    Unfortunately, if the responses have different content codings, the
-   Repr-Digest field will vary by the server's selected encoding (i.e.,
+   Repr-Digest field will vary by the server's selected encoding (i.e.
    the Content-Encoding header field, Section 8.4 of [HTTP]).  This
    provides a challenge for a client - in order to verify the integrity
    of the pieced-together whole it would need to remove the encoding of
@@ -127,10 +127,10 @@ Table of Contents
    The Accept-Encoding header field (Section 12.5.3 of [HTTP]) provides
    the means to indicate preferences for content codings.  It is
    possible for an endpoint to indicate a preference for no encoding,
-   for example, by sending the "identity" token.  However, codings often
+   for example by sending the "identity" token.  However, codings often
    provide data compression that is advantageous.  Disabling content
-   coding in order to simplify integrity checking might not be an
-   acceptable trade-off.
+   coding in order to simplify integrity checking is possibly an
+   unacceptable trade-off.
 
    For a variety of reasons, decoding and re-encoding content in order
    to benefit from HTTP integrity fields is not preferable.  This
@@ -139,10 +139,10 @@ Table of Contents
    where content coding is applied.  These fields complement the other
    integrity fields defined in [DIGEST-FIELDS].
 
-   This document updates the definition of terms originally defined in
-   [DIGEST-FIELDS].  "Integrity fields" is updated to also include the
-   Unencoded-Digest field (Section 3).  "Integrity preference fields" is
-   updated Want-Unencoded-Digest field (Section 4).
+   This document updates the term "Integrity fields" defined in
+   [DIGEST-FIELDS] to also include the Unencoded-Digest field, and the
+   term "Integrity preference fields" defined in [DIGEST-FIELDS] to also
+   include the Want-Unencoded-Digest field.
 
 2.  Conventions and Definitions
 
@@ -151,6 +151,9 @@ Table of Contents
    "OPTIONAL" in this document are to be interpreted as described in
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
+
+   This document uses the Augmented BNF defined in [RFC5234] and updated
+   by [RFC7405].  This includes the rules: LF (line feed)
 
    This document uses the following terminology from Section 3 of
    [STRUCTURED-FIELDS] to specify syntax and parsing: Byte Sequence,
@@ -165,12 +168,6 @@ Table of Contents
 
    The term "digest" is to be interpreted as described in
    [DIGEST-FIELDS].
-
-   "Integrity fields" is the collective term for Content-Digest, Repr-
-   Digest, and Unencoded-Digest.
-
-   "Integrity preference fields" is the collective term for Want-Repr-
-   Digest, Want-Content-Digest, and Want-Unencoded-Digest.
 
 3.  The Unencoded-Digest Field
 
@@ -204,7 +201,7 @@ Table of Contents
 
    In the following examples of Unencoded-Digest fields, the
    representation data with no content codings applied is: "An
-   unexceptional string" followed by a line feed character (0xA).
+   unexceptional string" following by an LF.
 
    NOTE: '\' line wrapping per RFC 8792
 
@@ -234,8 +231,7 @@ Table of Contents
 
    A sender MAY send a digest without knowing whether the recipient
    supports a given hashing algorithm.  A sender MAY send a digest if it
-   knows the recipient will ignore it.  An example is depicted in
-   Appendix C.2 of [DIGEST-FIELDS].
+   knows the recipient will ignore it.
 
    Unencoded-Digest can be sent in a trailer section.  In this case,
    Unencoded-Digest MAY be merged into the header section; see
@@ -308,10 +304,10 @@ Table of Contents
    complementary needs, particularly the cases described in Section 1.
 
    In the following examples, the selected representation data with no
-   content codings applied is: "An unexceptional string" followed by a
-   line feed character (0xA).  For presentation purposes, the response
-   content is displayed as a sequence of hex-encoded bytes because it
-   contains non-printable characters.
+   content codings applied is: "An unexceptional string" following by an
+   LF.  For presentation purposes, the response content is displayed as
+   a sequence of hex-encoded bytes because it contains non-printable
+   characters.
 
    The first example demonstrates a request that uses content
    negotiation.
@@ -392,20 +388,19 @@ Table of Contents
    Digest or Repr-Digest in the message, allowing for validation of the
    received bytes before further processing.  An attacker that can
    substitute various parts of an HTTP message presents several risks;
-   Sections 6.1, 6.2, and 6.3 of [DIGEST-FIELDS] describe relevant
+   Sections 6.1, 6.2 and 6.3 of [DIGEST-FIELDS] describe relevant
    considerations and mitigations.
 
-   A content coding might provide encryption capabilities, for example
+   A content coding may provide encryption capabilities, for example
    "aes128gcm" ([RFC8188]).  Using Unencoded-Digest with such content
    codings can leak information about the original data because header
-   fields are visible to anyone who can read the HTTP message.  For
-   instance, an attacker that can access Unencoded-Digest values could
-   infer details about the unencrypted content without decrypting it if,
-   for example, the unencrypted content has a predictable pattern.  When
-   the "aes128gcm" content coding is used, the security considerations
-   in Section 4 of [RFC8188] apply.  Namely, the Unencoded-Digest field
-   is considered sensitive information and SHOULD be omitted unless a
-   means of encrypting the Unencoded-Digest field is used.
+   fields are visible to anyone who can read the HTTP message.  This
+   could be used as a side channel.  For instance, an attacker that can
+   access Unencoded-Digest values could infer details about the
+   unencrypted content without decrypting it if, for example, the
+   unencrypted content has a predictable pattern.  When the "aes128gcm"
+   content coding is used, the security considerations in Section 4 of
+   [RFC8188] apply.
 
 8.  IANA Considerations
 
@@ -435,6 +430,11 @@ Table of Contents
               DOI 10.17487/RFC9530, February 2024,
               <https://www.rfc-editor.org/rfc/rfc9530>.
 
+   [FOLDING]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,
+              "Handling Long Lines in Content of Internet-Drafts and
+              RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
+              <https://www.rfc-editor.org/rfc/rfc8792>.
+
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
               DOI 10.17487/RFC9110, June 2022,
@@ -444,6 +444,15 @@ Table of Contents
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC5234]  Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax
+              Specifications: ABNF", STD 68, RFC 5234,
+              DOI 10.17487/RFC5234, January 2008,
+              <https://www.rfc-editor.org/rfc/rfc5234>.
+
+   [RFC7405]  Kyzivat, P., "Case-Sensitive String Support in ABNF",
+              RFC 7405, DOI 10.17487/RFC7405, December 2014,
+              <https://www.rfc-editor.org/rfc/rfc7405>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -455,11 +464,6 @@ Table of Contents
               <https://www.rfc-editor.org/rfc/rfc9651>.
 
 9.2.  Informative References
-
-   [FOLDING]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,
-              "Handling Long Lines in Content of Internet-Drafts and
-              RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
-              <https://www.rfc-editor.org/rfc/rfc8792>.
 
    [RFC8188]  Thomson, M., "Encrypted Content-Encoding for HTTP",
               RFC 8188, DOI 10.17487/RFC8188, June 2017,
