@@ -4,8 +4,8 @@
 
 Network Working Group                                      M. Nottingham
 Internet-Draft                                                Cloudflare
-Intended status: Standards Track                            26 June 2026
-Expires: 28 December 2026
+Intended status: Standards Track                            27 June 2026
+Expires: 29 December 2026
 
 
             The Preliminary Request Denied HTTP Status Code
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 December 2026.
+   This Internet-Draft will expire on 29 December 2026.
 
 Copyright Notice
 
