@@ -335,7 +335,7 @@ Despite this, a client SHOULD communicate the representation's length to the ser
 
 The `Upload-Length` request and response header field is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the representation's length as a number of bytes. Other values MUST cause the entire header field to be ignored.
 
-If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. The representation's length, if known, MUST stay consistent across subsequent requests. A server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-representation-length" ({{inconsistent-length}}) in responses to indicate inconsistent length indicators.
+If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. The representation's length, if known, MUST stay consistent across subsequent requests. A server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) in responses to indicate inconsistent length indicators.
 
 The `Upload-Length` field can be used in response to an offset retrieval; see {{offset-retrieving-server}}.
 
@@ -737,7 +737,7 @@ Upload-Complete: ?0
 
 ## Inconsistent Length
 
-This section defines the "https://iana.org/assignments/http-problem-types#inconsistent-representation-length" problem type {{PROBLEM}}. A server can use this problem type when responding to an upload creation ({{upload-creation}}) or upload append request ({{upload-appending}}) to indicate that the request includes inconsistent length values, as described in {{upload-length}}.
+This section defines the "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" problem type {{PROBLEM}}. A server can use this problem type when responding to an upload creation ({{upload-creation}}) or upload append request ({{upload-appending}}) to indicate that the request includes inconsistent length values, as described in {{upload-length}}.
 
 The following example shows an example response:
 
@@ -750,8 +750,8 @@ Upload-Complete: ?0
 
 {
   "type":"https://iana.org/assignments/http-problem-types#\
-    inconsistent-representation-length",
-  "title": "inconsistent length values for representation"
+    inconsistent-upload-length",
+  "title": "inconsistent length values for upload"
 }
 ~~~
 
@@ -948,10 +948,10 @@ Reference:
 IANA is asked to register the following entry in the "HTTP Problem Types" registry:
 
 Type URI:
-: https://iana.org/assignments/http-problem-types#inconsistent-representation-length
+: https://iana.org/assignments/http-problem-types#inconsistent-upload-length
 
 Title:
-: Inconsistent Representation Length Values
+: Inconsistent Upload Length Values
 
 Recommended HTTP status code:
 : 400
