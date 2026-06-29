@@ -582,8 +582,8 @@ Table of Contents
    indicated lengths MUST match.  The representation's length, if known,
    MUST stay consistent across subsequent requests.  A server can use
    the problem type [PROBLEM] of "https://iana.org/assignments/http-
-   problem-types#inconsistent-representation-length" (Section 7.2) in
-   responses to indicate inconsistent length indicators.
+   problem-types#inconsistent-upload-length" (Section 7.2) in responses
+   to indicate inconsistent length indicators.
 
    The Upload-Length field can be used in response to an offset
    retrieval; see Section 4.3.2.
@@ -1387,11 +1387,11 @@ Table of Contents
 7.2.  Inconsistent Length
 
    This section defines the "https://iana.org/assignments/http-problem-
-   types#inconsistent-representation-length" problem type [PROBLEM].  A
-   server can use this problem type when responding to an upload
-   creation (Section 4.2) or upload append request (Section 4.4) to
-   indicate that the request includes inconsistent length values, as
-   described in Section 4.1.3.
+   types#inconsistent-upload-length" problem type [PROBLEM].  A server
+   can use this problem type when responding to an upload creation
+   (Section 4.2) or upload append request (Section 4.4) to indicate that
+   the request includes inconsistent length values, as described in
+   Section 4.1.3.
 
    The following example shows an example response:
 
@@ -1403,8 +1403,8 @@ Table of Contents
 
    {
      "type":"https://iana.org/assignments/http-problem-types#\
-       inconsistent-representation-length",
-     "title": "inconsistent length values for representation"
+       inconsistent-upload-length",
+     "title": "inconsistent length values for upload"
    }
 
 8.  Content Codings
@@ -1769,9 +1769,9 @@ Table of Contents
    Types" registry:
 
    Type URI:  https://iana.org/assignments/http-problem-
-      types#inconsistent-representation-length
+      types#inconsistent-upload-length
 
-   Title:  Inconsistent Representation Length Values
+   Title:  Inconsistent Upload Length Values
 
    Recommended HTTP status code:  400
 
