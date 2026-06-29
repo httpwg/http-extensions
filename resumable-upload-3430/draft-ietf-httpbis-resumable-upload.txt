@@ -1009,8 +1009,8 @@ Table of Contents
       the uploaded representation,
 
    *  MUST include the representation's length in the Upload-Length
-      header field, unless the client has not supplied one, by providing
-      the corresponding headers as described in (Section 4.1.3),
+      header field, unless the client has not supplied the
+      representation's length as described in (Section 4.1.3),
 
    *  MUST indicate the limits in the Upload-Limit header field
       (Section 4.1.4), and
