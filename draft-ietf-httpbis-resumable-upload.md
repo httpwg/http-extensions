@@ -326,7 +326,7 @@ When used in an upload creation response ({{upload-creation}}) or an upload appe
 
 ### Length {#upload-length}
 
-The length of the representation data might not be known when starting the transfer, for example, because the representation is taken from a streaming source. The representation's length will, however, be known at the latest when the upload is complete.
+The length of the representation data might not be known when starting the transfer, for example, because the representation is taken from a streaming source. The representation's length will, however, be known at the latest when the client completes the upload ({{upload-complete}}).
 
 Despite this, a client SHOULD communicate the representation's length to the server as soon as it becomes known to aid with resource managament and facilitate early validation. There are two different ways for the client to indicate and for the server to discover the representation's length from requests for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}):
 
