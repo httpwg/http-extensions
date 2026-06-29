@@ -378,9 +378,11 @@ When responding to an `OPTIONS` request without the `Upload-Complete` header fie
 
 A client can use an `OPTIONS` request without the `Upload-Complete` header field to discover whether the resource supports resumable uploads and to learn potential limits before creating an upload resource. To reduce the likelihood of failing requests, the limits announced in an `OPTIONS` response SHOULD NOT be less restrictive than the limits applied to an upload once the upload resource has been created, unless the request to create an upload resource included additional information that warrants different limits. For example, a server might announce a general maximum size limit of 1 GB, but reduce it to 100 MB when the media type indicates an image.
 
+When a request is rejected because limits were violated, the response SHOULD include the `Upload-Limit` header field carrying all limits of the corresponding upload resource if possible. This might not be possible if intermediaries enforce restrictions.
+
 Servers, including intermediaries, can (and often do) apply restrictions on the size of individual request message content. There is no standard mechanism to communicate such existing size restriction. A server that implements one can respond with a `413 (Content Too Large)` status code; see {{Section 15.5.14 of HTTP}}. Appending to an upload resource, as a series of appends, can be used to upload data up to the `max-size` limit without encountering per-message limits. Servers might apply restrictions that are smaller than the append limits, which would also result in a failed request.
 
-A server responding with a `413 (Content Too Large)` status code as a result of its upload limits SHOULD include the `Upload-Limit` header field in this response if possible. This might not be possible if intermediaries enforce content size restrictions. When a client receives a response with a `413 (Content Too Large)` status code during upload creation ({{upload-creation}}) or append ({{upload-appending}}), it SHOULD retry the request with a smaller size residing between `min-append-size` and `max-append-size`. If these limits are unknown at the time of receiving such a response, the client can attempt to discover them through an `OPTIONS` request. Retrying with the same request content size will likely yield the same error response. Cases where the request content size matches the `min-append-size` limit yet fails with a `413 (Content Too Large)` response might indicate a deployment mismatch that cannot be recovered from.
+When a client receives a response with a `413 (Content Too Large)` status code during upload creation ({{upload-creation}}) or append ({{upload-appending}}), it SHOULD retry the request with a smaller size residing between `min-append-size` and `max-append-size`. If these limits are unknown at the time of receiving such a response, the client can attempt to discover them through an `OPTIONS` request. Retrying with the same request content size will likely yield the same error response. Cases where the request content size matches the `min-append-size` limit yet fails with a `413 (Content Too Large)` response might indicate a deployment mismatch that cannot be recovered from.
 
 ## Upload Creation {#upload-creation}
 
@@ -980,6 +982,7 @@ Reference:
 * Recommend incremental delivery.
 * Clarify `min-size` limit and its client behavior.
 * Describe `GET` requests against upload resource.
+* Include `Upload-Limit` in response to limit violation.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
