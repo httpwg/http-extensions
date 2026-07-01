@@ -382,17 +382,6 @@ Servers, including intermediaries, can (and often do) apply restrictions on the 
 
 A server responding with a `413 (Content Too Large)` status code as a result of its upload limits SHOULD include the `Upload-Limit` header field in this response if possible. This might not be possible if intermediaries enforce content size restrictions. When a client receives a response with a `413 (Content Too Large)` status code during upload creation ({{upload-creation}}) or append ({{upload-appending}}), it SHOULD retry the request with a smaller size residing between `min-append-size` and `max-append-size`. If these limits are unknown at the time of receiving such a response, the client can attempt to discover them through an `OPTIONS` request. Retrying with the same request content size will likely yield the same error response. Cases where the request content size matches the `min-append-size` limit yet fails with a `413 (Content Too Large)` response might indicate a deployment mismatch that cannot be recovered from.
 
-### Retry {#retry}
-
-If the client unexpectedly received a non-successful response with the `Upload-Complete` header field value of false or missing when creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}), it can apply heristics described below to retry or resume the upload.
-
-- `409 (Conflict)` with the `Upload-Complete` header field value of false can be resumed with the correct offset.
-- `413 (Content Too Large)` can be resumed after applying appropriate limits.
-- `429 (Too Many Request)` can be retried after appropriate delays.
-- `5xx (Server Error)` status codes can be retried.
-
-The client should limit the number of retries it performs before considering the upload a failure.
-
 ## Upload Creation {#upload-creation}
 
 ### Client Behavior
@@ -411,9 +400,9 @@ Representation metadata included in the initial request (see {{Section 8.3 of HT
 
 If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete}}). Note that the status code does not necessary indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, therefore resuming the upload would not resolve this error.
 
-If the client receives a 2xx successful response that is not from the initial targeted resource, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
+If the client receives a 2xx successful final response with the `Upload-Complete: ?0` header field or the header field missing, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
 
-If the client receives a non-successful response that is not from the initial targeted resource, it can apply heristics described in {{retry}} to retry or resume the upload.
+If the client receives a non-successful final response with the `Upload-Complete: ?0` header field or the header field missing, or if it did not receive a final response, it can apply the heuristics described in {{retry}} to retry or resume the upload.
 
 ### Server Behavior
 
@@ -593,9 +582,7 @@ The request MUST include the `Upload-Complete` header field. Its value is true i
 
 If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete}}). Note that the status code does not necessary indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, therefore resuming the upload would not resolve this error.
 
-If the client received a non-successful final response with the `Upload-Complete: ?0` header field or the header field missing, it can apply heristics described in {{retry}} to retry or resume the upload.
-
-If no final response was received at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
+If the client received a non-successful final response with the `Upload-Complete: ?0` header field or the header field missing, or if it did not receive a final response, it can apply the heuristics described in {{retry}} to retry or resume the upload.
 
 ### Server Behavior
 
@@ -714,6 +701,19 @@ When creating or appending resumable uploads, the client can generate a 100-cont
 # Media Type `application/partial-upload` {#media-type-partial-upload}
 
 The `application/partial-upload` media type describes a contiguous block from the representation data that should be uploaded to a resource. There is no minimum block size and the block might be empty. The block can be a subset of the representation data, where the start and/or end of the block don't line up with the start and/or end of the representation data respectively.
+
+### Retry {#retry}
+
+If the client unexpectedly received a non-successful response with the `Upload-Complete` header field value of false or missing when creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}), it can apply the heuristics described below to retry or resume the upload.
+
+- `409 (Conflict)` with the `Upload-Complete` header field value of false can be resumed with the correct offset. If no `Upload-Offset` header field is provided, it SHOULD retrieve the offset ({{offset-retrieval}}).
+- `413 (Content Too Large)` can be resumed after applying appropriate limits.
+- `429 (Too Many Requests)` can be retried after appropriate delays.
+- `5xx (Server Error)` status codes can be retried.
+
+If no final response was received at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
+
+The client should limit the number of retries it performs before considering the upload a failure.
 
 # Problem Types
 
