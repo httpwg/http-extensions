@@ -422,6 +422,8 @@ Where a response requires a `Location` header field to be included, all interim 
 
 The server SHOULD include the `Upload-Complete` ({{upload-complete}}) header field in the response to indicate whether it is the result of processing the uploaded representation.
 
+The server SHOULD NOT use `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes when sending a response with the `Upload-Complete: ?0` header field, since they might cause the redirected request to be changed to a GET request.
+
 The server might not process the entire request content when the upload is interrupted, for example because of dropped connection or canceled request. In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
 
 ### Examples {#upload-creation-example}
@@ -531,7 +533,6 @@ The client MUST NOT perform offset retrieval while creation ({{upload-creation}}
 If the client received a response with a
 
 - `2xx (Successful)` status code, the client can continue appending representation data to it and/or mark the upload as complete ({{upload-appending}}).
-- `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry retrieving the offset from the new URI.
 - `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
 - `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY retry retrieving the offset.
 
@@ -603,6 +604,8 @@ The server MUST record the length according to {{upload-length}} if the `Upload-
 While the request content is being processed, the server SHOULD send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
 
 The server SHOULD include the `Upload-Complete` ({{upload-complete}}) header field in the response to indicate whether it is the result of processing the uploaded representation.
+
+The server SHOULD NOT use `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes when sending a response with the `Upload-Complete: ?0` header field, since they might cause the redirected request to be changed to a GET request.
 
 ### Examples {#upload-appending-example}
 
