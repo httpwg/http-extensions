@@ -709,7 +709,7 @@ The `application/partial-upload` media type describes a contiguous block from th
 
 If the client unexpectedly received a non-successful response with the `Upload-Complete` header field value of false or missing when creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}), it can apply the heuristics described below to retry or resume the upload.
 
-- `409 (Conflict)` with the `Upload-Complete` header field value of false can be resumed with the correct offset. If no `Upload-Offset` header field is provided, it SHOULD retrieve the offset ({{offset-retrieval}}).
+- `409 (Conflict)` with the `Upload-Complete` header field value of false can be resumed with the correct offset. If no `Upload-Offset` header field is provided, it SHOULD retrieve the offset ({{offset-retrieving}}).
 - `413 (Content Too Large)` can be resumed after applying appropriate limits.
 - `429 (Too Many Requests)` can be retried after appropriate delays.
 - `5xx (Server Error)` status codes can be retried.
