@@ -382,6 +382,17 @@ Servers, including intermediaries, can (and often do) apply restrictions on the 
 
 A server responding with a `413 (Content Too Large)` status code as a result of its upload limits SHOULD include the `Upload-Limit` header field in this response if possible. This might not be possible if intermediaries enforce content size restrictions. When a client receives a response with a `413 (Content Too Large)` status code during upload creation ({{upload-creation}}) or append ({{upload-appending}}), it SHOULD retry the request with a smaller size residing between `min-append-size` and `max-append-size`. If these limits are unknown at the time of receiving such a response, the client can attempt to discover them through an `OPTIONS` request. Retrying with the same request content size will likely yield the same error response. Cases where the request content size matches the `min-append-size` limit yet fails with a `413 (Content Too Large)` response might indicate a deployment mismatch that cannot be recovered from.
 
+### Retry {#retry}
+
+If the client unexpectedly received a non-successful response with the `Upload-Complete` header field value of false or missing when creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}), it can apply heristics described below to retry or resume the upload.
+
+- `409 (Conflict)` with the `Upload-Complete` header field value of false can be resumed with the correct offset.
+- `413 (Content Too Large)` can be resumed after applying appropriate limits.
+- `429 (Too Many Request)` can be retried after appropriate delays.
+- `5xx (Server Error)` status codes can be retried.
+
+The client should limit the number of retries it performs before considering the upload a failure.
+
 ## Upload Creation {#upload-creation}
 
 ### Client Behavior
@@ -398,12 +409,11 @@ The request content can be empty. If the `Upload-Complete` header field is then 
 
 Representation metadata included in the initial request (see {{Section 8.3 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field ({{Section 8.3 of HTTP}}) indicates the media type of the representation. The `Content-Encoding` header field ({{Section 8.4 of HTTP}}) names the content codings applied to the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. For this purpose, the `inline` disposition type is RECOMMENDED.
 
-If the client received a final response with a
+If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete}}). Note that the status code does not necessary indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, therefore resuming the upload would not resolve this error.
 
-- `2xx (Successful)` status code and the request content contained the entire representation data, the upload is complete and the response comes from the resource targeted by the initial request processing the representation.
-- `2xx (Successful)` status code and the request content did not contain the entire representation data, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
-- `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
-- `5xx (Server Error)` status code or no final response at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}) if it received the URI of the upload resource in a `104 (Upload Resumption Supported)` interim response.
+If the client receives a 2xx successful response that is not from the initial targeted resource, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
+
+If the client receives a non-successful response that is not from the initial targeted resource, it can apply heristics described in {{retry}} to retry or resume the upload.
 
 ### Server Behavior
 
@@ -581,14 +591,9 @@ The request MUST include the `Upload-Complete` header field. Its value is true i
 - the request has content that is the end of the representation data. Once the content is fully processed by the server, the upload is complete.
 - the request has no content. Once the request is processed by the server, the upload is complete. This usage requires the full representation data to have been processed during prior requests.
 
-If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request (see {{upload-creation}}). Note that the status code does not necessary indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case that the representation was fully transmitted, but an error occurred while processing it. Resuming the upload would not resolve this error.
+If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete}}). Note that the status code does not necessary indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, therefore resuming the upload would not resolve this error.
 
-If the client received a final response with the `Upload-Complete: ?0` header field or the header field missing, the next step depends on the status code:
-
-- A `2xx (Successful)` status code indicates that representation data was appended but the upload is not complete. The client can continue appending representation data.
-- For a `307 (Temporary Redirect)` or `308 (Permanent Redirect)` status code, the client MAY retry appending to the new URI.
-- For a `4xx (Client Error)` status code, the client SHOULD NOT attempt to retry or resume the upload, unless the semantics of the response allow or recommend the client to retry the request.
-- For a `5xx (Server Error)` status code, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
+If the client received a non-successful final response with the `Upload-Complete: ?0` header field or the header field missing, it can apply heristics described in {{retry}} to retry or resume the upload.
 
 If no final response was received at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
 
