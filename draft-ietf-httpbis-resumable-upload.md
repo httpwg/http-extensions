@@ -988,6 +988,7 @@ Reference:
 * Recommend incremental delivery.
 * Clarify `min-size` limit and its client behavior.
 * Describe `GET` requests against upload resource.
+* Clarify client retry strategies.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
