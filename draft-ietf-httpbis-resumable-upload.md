@@ -422,7 +422,7 @@ Where a response requires a `Location` header field to be included, all interim 
 
 The server SHOULD include the `Upload-Complete` ({{upload-complete}}) header field in the response to indicate whether it is the result of processing the uploaded representation.
 
-The server SHOULD NOT use `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes when sending a response with the `Upload-Complete: ?0` header field, since they might cause the redirected request to be changed to a GET request.
+The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes and the `Upload-Complete: ?0` header field because clients might follow the redirect without preserving the original method.
 
 The server might not process the entire request content when the upload is interrupted, for example because of dropped connection or canceled request. In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
 
@@ -546,7 +546,7 @@ A successful response to a `HEAD` or `GET` request against an upload resource
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
 
-The resource SHOULD NOT generate a response with the `301 (Moved Permanently)` and `302 (Found)` status codes because clients might follow the redirect without preserving the `HEAD` method.
+The resource SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, and `303 (See Other)` status codes because clients might follow the redirect without preserving the `HEAD` method.
 
 A client does not require response content for an offset retrieval request in order to successfully resume an upload. Therefore, serving response content for a `GET` request is unexpected. Its meaning is not defined by this protocol.
 
@@ -605,7 +605,7 @@ While the request content is being processed, the server SHOULD send interim res
 
 The server SHOULD include the `Upload-Complete` ({{upload-complete}}) header field in the response to indicate whether it is the result of processing the uploaded representation.
 
-The server SHOULD NOT use `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes when sending a response with the `Upload-Complete: ?0` header field, since they might cause the redirected request to be changed to a GET request.
+The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes and the `Upload-Complete: ?0` header field because clients might follow the redirect without preserving the `PATCH` method.
 
 ### Examples {#upload-appending-example}
 
@@ -667,7 +667,7 @@ Upon receiving a `DELETE` request, the server SHOULD deactivate the upload resou
 
 The server SHOULD terminate any in-flight requests to the upload resource before sending the response by abruptly terminating their HTTP connection(s) or stream(s) as described in {{concurrency}}.
 
-The server SHOULD NOT generate a response with the `301 (Moved Permanently)` and `302 (Found)` status codes because clients might follow the redirect without preserving the `DELETE` method.
+The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, and `303 (See Other)` status codes because clients might follow the redirect without preserving the `DELETE` method.
 
 ### Example {#upload-cancellation-example}
 
