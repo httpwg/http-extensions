@@ -398,7 +398,7 @@ The request content can be empty. If the `Upload-Complete` header field is then 
 
 Representation metadata included in the initial request (see {{Section 8.3 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field ({{Section 8.3 of HTTP}}) indicates the media type of the representation. The `Content-Encoding` header field ({{Section 8.4 of HTTP}}) names the content codings applied to the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. For this purpose, the `inline` disposition type is RECOMMENDED.
 
-If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete}}). Note that the status code does not necessary indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, therefore resuming the upload would not resolve this error.
+If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete}}). Note that this does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, therefore resuming the upload would not resolve this error.
 
 If the client receives a 2xx successful final response with the `Upload-Complete: ?0` header field or the header field missing, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
 
@@ -546,7 +546,7 @@ A successful response to a `HEAD` or `GET` request against an upload resource
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
 
-The resource SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, and `303 (See Other)` status codes because clients might follow the redirect without preserving the `HEAD` method.
+The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes because clients might follow the redirect without preserving the `HEAD` method.
 
 A client does not require response content for an offset retrieval request in order to successfully resume an upload. Therefore, serving response content for a `GET` request is unexpected. Its meaning is not defined by this protocol.
 
@@ -581,7 +581,7 @@ The request MUST include the `Upload-Complete` header field. Its value is true i
 - the request has content that is the end of the representation data. Once the content is fully processed by the server, the upload is complete.
 - the request has no content. Once the request is processed by the server, the upload is complete. This usage requires the full representation data to have been processed during prior requests.
 
-If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete}}). Note that the status code does not necessary indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, therefore resuming the upload would not resolve this error.
+If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete}}). Note that this does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, therefore resuming the upload would not resolve this error.
 
 If the client received a non-successful final response with the `Upload-Complete: ?0` header field or the header field missing, or if it did not receive a final response, it can apply the heuristics described in {{retry}} to retry or resume the upload.
 
@@ -667,7 +667,7 @@ Upon receiving a `DELETE` request, the server SHOULD deactivate the upload resou
 
 The server SHOULD terminate any in-flight requests to the upload resource before sending the response by abruptly terminating their HTTP connection(s) or stream(s) as described in {{concurrency}}.
 
-The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, and `303 (See Other)` status codes because clients might follow the redirect without preserving the `DELETE` method.
+The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes because clients might follow the redirect without preserving the `DELETE` method.
 
 ### Example {#upload-cancellation-example}
 
@@ -716,7 +716,7 @@ If the client unexpectedly received a non-successful response with the `Upload-C
 
 If no final response was received at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
 
-The client should limit the number of retries it performs before considering the upload a failure.
+The client SHOULD limit the number of retries it performs before considering the upload a failure.
 
 # Problem Types
 
