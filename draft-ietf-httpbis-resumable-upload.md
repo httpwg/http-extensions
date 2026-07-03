@@ -838,13 +838,13 @@ As described in {{INCREMENTAL}}, intermediaries might interfere with the increme
 A client or server might want to interrupt an in-flight message transfer intentionally for various reasons (see {{introduction}}). The mechanism to do so depend on the used HTTP version:
 
 HTTP/1.1:
-: close the underlying transport connection ({{Section 9.5 of HTTP/1.1}})
+: close the underlying transport connection ({{Section 9.5 of RFC9112}})
 
 HTTP/2:
-: send a `RST_STREAM` frame ({{Section 6.4 of HTTP/3}}) with the `CANCEL` error code ({{Section 7 of HTTP/2}})
+: send a `RST_STREAM` frame ({{Section 6.4 of RFC9113}}) with the `CANCEL` error code ({{Section 7 of RFC9113}})
 
 HTTP/3:
-: send a `RESET_STREAM` ({{Section 19.4 of QUIC}}) or `STOP_SENDING` frame ({{Section 19.5 of QUIC}}) with the `H3_REQUEST_CANCELLED` error code ({{Section 9 of HTTP/3}})
+: send a `RESET_STREAM` ({{Section 19.4 of QUIC}}) or `STOP_SENDING` frame ({{Section 19.5 of QUIC}}) with the `H3_REQUEST_CANCELLED` error code ({{Section 9 of RFC9114}})
 
 Thanks to the upload resource, received representation data isn't lost and the upload can continue after the interruption.
 
