@@ -49,6 +49,11 @@ normative:
   CACHING: RFC9111
   RFC9112:
     display: HTTP/1.1
+  RFC9113:
+    display: HTTP/2
+  RFC9114:
+    display: HTTP/3
+  QUIC: RFC9000
   STRUCTURED-FIELDS: RFC9651
   PATCH: RFC5789
   PROBLEM: RFC9457
@@ -74,7 +79,7 @@ HTTP data transfers can encounter interruption due to reasons such as canceled r
 
 --- middle
 
-# Introduction
+# Introduction {#introduction}
 
 HTTP data transfers can encounter interruption due to reasons such as canceled requests or dropped connections. If the intended recipient can indicate how much of the data was processed prior to interruption, a sender can resume data transfer at that point instead of attempting to transfer all of the data again. HTTP range requests (see {{Section 14 of HTTP}}) support this concept of resumable data transfers for downloads from server to client. While partial PUT is one method for uploading a partial representation (via Content-Range in the request), there are caveats that affect its deployability; see {{Section 14.5 of HTTP}}.
 
@@ -828,6 +833,21 @@ To support incremental processing, it is RECOMMENDED that clients send request c
 
 As described in {{INCREMENTAL}}, intermediaries might interfere with the incremental delivery of data to a server. Clients can use the `Incremental` header field defined in {{Section 3 of INCREMENTAL}} to signal their preference for incremental forwarding by intermediaries.
 
+# Request Cancellation
+
+A client or server might want to interrupt an in-flight message transfer intentionally for various reasons (see {{introduction}}). The mechanism to do so depend on the used HTTP version:
+
+HTTP/1.1:
+: close the underlying transport connection ({{Section 9.5 of HTTP/1.1}})
+
+HTTP/2:
+: send a `RST_STREAM` frame ({{Section 6.4 of HTTP/3}}) with the `CANCEL` error code ({{Section 7 of HTTP/2}})
+
+HTTP/3:
+: send a `RESET_STREAM` ({{Section 19.4 of QUIC}}) or `STOP_SENDING` frame ({{Section 19.5 of QUIC}}) with the `H3_REQUEST_CANCELLED` error code ({{Section 9 of HTTP/3}})
+
+Thanks to the upload resource, received representation data isn't lost and the upload can continue after the interruption.
+
 # Security Considerations
 
 The upload resource URI is the identifier used for modifying the upload. Without further protection of this URI, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can access the upload resource. To reduce the risk of unauthorized access, it is RECOMMENDED to generate upload resource URIs in such a way that makes it hard to be guessed by unauthorized clients. In addition, servers may embed information about the storage or processing location of the uploaded representation in the upload resource URI to make routing requests more efficient. If so, they MUST ensure that no internal information is leaked in the URI that is not intended to be exposed.
@@ -980,6 +1000,7 @@ Reference:
 * Recommend incremental delivery.
 * Clarify `min-size` limit and its client behavior.
 * Describe `GET` requests against upload resource.
+* Add version-specific details on cancelling in-flight transfers.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
