@@ -650,7 +650,7 @@ Table of Contents
    way that causes failures for clients adhering to the initially
    discovered limits.  If the client discovers that it cannot continue
    the upload while adhering to the limits, it SHOULD stop the current
-   request immediately and cancel the upload (Section 4.5).
+   request immediately (Section 12) and cancel the upload (Section 4.5).
 
    The following recommendations for limit changes can minimize the risk
    of causing upload failures:
@@ -749,12 +749,13 @@ Table of Contents
    Upload-Limit header field in interim or final responses.  In
    particular, if the allowed maximum size is less than the amount of
    representation data the client intends to upload, the client SHOULD
-   stop the current request immediately and cancel the upload
-   (Section 4.5).  If the client knows that the representation data is
-   smaller than min-size, it cannot expect resumability to be offered.
-   The client might still attempt to transfer the representation in a
-   single request, either in a request with the Upload-Complete header
-   field set to true (see Section 10.1.1) or via a conventional upload.
+   stop the current request immediately (Section 12) and cancel the
+   upload (Section 4.5).  If the client knows that the representation
+   data is smaller than min-size, it cannot expect resumability to be
+   offered.  The client might still attempt to transfer the
+   representation in a single request, either in a request with the
+   Upload-Complete header field set to true (see Section 10.1.1) or via
+   a conventional upload.
 
    The request content can be empty.  If the Upload-Complete header
    field is then set to true, the client intends to upload an empty
@@ -1561,15 +1562,16 @@ Table of Contents
    HTTP/1.1:  close the underlying transport connection (Section 9.5 of
       [HTTP/1.1])
 
-   HTTP/2:  send a RST_STREAM frame (Section 6.4 of [HTTP/2]) with the
-      CANCEL error code (Section 7 of [HTTP/2])
+   HTTP/2:  send a RST_STREAM frame (Section 6.4 of [HTTP/2])
 
    HTTP/3:  send a RESET_STREAM (Section 19.4 of [QUIC]) or STOP_SENDING
-      frame (Section 19.5 of [QUIC]) with the H3_REQUEST_CANCELLED error
-      code (Section 9 of [HTTP/3])
+      frame (Section 19.5 of [QUIC])
 
-   Thanks to the upload resource, received representation data isn't
-   lost and the upload can continue after the interruption.
+   Version-specific mechanisms place requirements on clients or servers
+   for actioning the cancellation.  However, for all versions of HTTP
+   resumable uploads allows the server to process received
+   representation data and expose the upload offset via the upload
+   resource, enabling continuation of the upload after interruption.
 
 13.  Security Considerations
 
@@ -1778,9 +1780,6 @@ Table of Contents
    [HTTP/2]   Thomson, M., Ed. and C. Benfield, Ed., "HTTP/2", RFC 9113,
               DOI 10.17487/RFC9113, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9113>.
-
-   [HTTP/3]   Bishop, M., Ed., "HTTP/3", RFC 9114, DOI 10.17487/RFC9114,
-              June 2022, <https://www.rfc-editor.org/rfc/rfc9114>.
 
    [PATCH]    Dusseault, L. and J. Snell, "PATCH Method for HTTP",
               RFC 5789, DOI 10.17487/RFC5789, March 2010,
