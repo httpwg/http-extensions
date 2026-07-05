@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-02T02:32:25.672013+00:00",
+  "timestamp": "2026-07-05T02:21:33.153576+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -72734,7 +72734,7 @@
       ],
       "body": "During WGLC review, @MikeBishop raised the following issue on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0123.html\n\n> In 4.2.1, stopping a request in mid-transfer has some version-specific complexities. See in particular this recent thread on the HTTP mailing list: https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0088.html. A reference to specific mechanisms for doing so might be useful to an implementer, even if not formally a requirement for this spec.",
       "createdAt": "2025-08-23T20:34:37Z",
-      "updatedAt": "2026-06-19T21:30:58Z",
+      "updatedAt": "2026-07-03T07:27:30Z",
       "closedAt": null,
       "comments": [
         {
@@ -72743,6 +72743,20 @@
           "body": "@MikeBishop I'm wondering if it might make sense to address the issuing of stopping a request more generally (rather than just his section) alongside text I've proposed in https://github.com/httpwg/http-extensions/pull/3232 (which is in the intro)",
           "createdAt": "2025-08-25T21:07:30Z",
           "updatedAt": "2025-08-25T21:07:30Z"
+        },
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "Are the additions from https://github.com/httpwg/http-extensions/pull/3232 sufficient to close this issue? Or should the document mention more explicit mechanism and refer to [HTTP/2's RST_STREAM](https://datatracker.ietf.org/doc/html/rfc9113#name-rst_stream), [QUIC's RESET_STREAM for HTTP/3](https://datatracker.ietf.org/doc/html/rfc9000#name-reset_stream-frames) and the [connection termination section in HTTP/1.1](https://datatracker.ietf.org/doc/html/rfc9112#section-9.5-3)?",
+          "createdAt": "2026-07-02T16:38:48Z",
+          "updatedAt": "2026-07-02T16:51:36Z"
+        },
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "I've proposed text for this in https://github.com/httpwg/http-extensions/pull/3475. But I'm unsure on my own whether this addition is necessary. Please let me know what you think.",
+          "createdAt": "2026-07-03T07:27:29Z",
+          "updatedAt": "2026-07-03T07:27:29Z"
         }
       ]
     },
@@ -76856,7 +76870,7 @@
       "id": "I_kwDOAUA-v88AAAABEln9jw",
       "title": "query: ensure permanence of whatwg spec pointers",
       "url": "https://github.com/httpwg/http-extensions/issues/3448",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "reschke",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -76867,8 +76881,8 @@
       ],
       "body": "@annevk , could you please confirm the permanence of\n\nhttps://fetch.spec.whatwg.org/#methods\n\nand \n\nhttps://url.spec.whatwg.org/#application/x-www-form-urlencoded\n\n(or make that happen...?)",
       "createdAt": "2026-06-06T09:50:23Z",
-      "updatedAt": "2026-06-08T07:42:17Z",
-      "closedAt": null,
+      "updatedAt": "2026-07-02T05:26:29Z",
+      "closedAt": "2026-07-02T05:26:29Z",
       "comments": []
     },
     {
@@ -77258,7 +77272,7 @@
       "labels": [],
       "body": "Disclaimer: I don't intend this issue as a suggestion or any other call to action. I just kind of want to express my perspective and get a feel for what others think about this. I don't anticipate that this issue is actionable; trust me when I say I completely understand why `Upload-Limit` is defined this way, and why its current requirements are important as-is. I'm able to fully justify the reason behind every one of the problems I bring up here, mostly to do with future-proofing.\n\nIn my generalized client implementation, I started work on the handling for the `Upload-Limit` response header. After reading examples from the current draft, I was under the impression it'd be very simple: maybe just a few string splits and trims, then collecting the data into a map structure, converting string values to numbers, and validating that they're unsigned integers. But now that I'm actually looking at the structured field specification, it doesn't look simple at all. There's a lot of mental overhead from just trying to understand the concepts of the structured field specification. Here are some examples of sources of significant complexity:\n\n- It seems that, because all limits must be ignored if the structured dictionary itself is invalid--even if the invalidity comes from unspecified keys like `unknown=(1 2 3 4 5` (unclosed parenthesis)--the client has to implement parsing for most of the entire structured field specification, even though almost all of that is unused by resumable uploads. `Upload-Limit` only includes values with unsigned integers, and yet, the client has to be prepared to parse lists, dates, byte sequences, tokens, and so on.\n- Maybe it's just me, but it seems I'd have to put significant time into understanding this spec and many of its seemingly obscure features and edge cases in order to implement dictionary parsing, even though none of those features are directly used by `Upload-Limit`. For instance, I have no idea what a \"parameter\" is just by a quick glance at the structured field spec and some examples. This example from the spec is completely unintelligible to me at first: `Example-Dict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid`.\n\nYeah, I could just use a library someone else already wrote to worry about all this for me. But I was really hoping to write my library with zero dependencies, because side-channel attacks are quite rampant nowadays, and at first, it seemed to me that it would be really simple to make a lightweight client library for resumable uploads. Everything else _has_ been fairly simple in my experience, except for this. I also didn't want to add unnecessary bloat from a bunch of interfaces of that dependency which are unused by my library.\n\nFurthermore, the only library I could find for structured field parsing in my language of choice (TypeScript) appears to have been unmaintained for about a year despite being incomplete. Structured fields don't yet seem to be widespread enough for depending on a parsing library to be a trivial choice.\n\nWhat are other people's general sentiments about this?",
       "createdAt": "2026-07-01T02:41:27Z",
-      "updatedAt": "2026-07-01T22:00:25Z",
+      "updatedAt": "2026-07-02T05:29:02Z",
       "closedAt": "2026-07-01T04:37:40Z",
       "comments": [
         {
@@ -77316,6 +77330,13 @@
           "body": "@reschke agree. I have already opened issues in the appropriate github repo to track fixups to IANA registries for everything I spotted. \n\nThe issue is already out of scope for the contribution guidelines and continuing the discussion on a closed issue is not appropriate. Please take it to the mailing list. Locking the conversation herein",
           "createdAt": "2026-07-01T22:00:19Z",
           "updatedAt": "2026-07-01T22:00:19Z"
+        },
+        {
+          "author": "reschke",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Ok, I'm not arguing for the spec to recommend writing a hand-rolled parser. You are right that such a parser could not handle changes to the field format in the future. It would also fail on non-conformant input in different ways.\n\nNitpicking: technically, that's not a change of the format; it's just a valid use of an extension point.",
+          "createdAt": "2026-07-02T05:29:02Z",
+          "updatedAt": "2026-07-02T05:29:02Z"
         }
       ]
     },
@@ -206897,7 +206918,7 @@
       ],
       "body": "See #3275 for discussion.",
       "createdAt": "2025-10-29T02:21:57Z",
-      "updatedAt": "2026-07-01T02:10:36Z",
+      "updatedAt": "2026-07-03T08:13:50Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "42707821ef8fd8edf072a1a4b482975d69237cd0",
@@ -207211,7 +207232,7 @@
               "originalPosition": 43,
               "body": "See my concern here: https://github.com/httpwg/http-extensions/issues/3275#issuecomment-3990724220\n\nBut I think that's an underlying design concern rather than a concern with your specific change towards that design, so feel free to resolve this as off-topic.",
               "createdAt": "2026-03-03T12:45:19Z",
-              "updatedAt": "2026-05-24T07:09:55Z"
+              "updatedAt": "2026-07-03T08:04:39Z"
             }
           ]
         },
@@ -207272,6 +207293,26 @@
               "body": "I think it's sufficient to tie the retries to the presence of `Upload-Complete: ?0` in this case. It would indicate that the 409 comes from the resumable upload layer.\n\n```suggestion\n- For a `409 (Conflict)` status code with the `Upload-Complete: ?0` header field, the client SHOULD attempt to resume the upload by either retrieving the current offset ({{offset-retrieving}}) or using the value from the response's `Upload-Offset` header field.\n```",
               "createdAt": "2026-03-04T20:30:39Z",
               "updatedAt": "2026-03-04T20:30:40Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABE54Stg",
+          "commit": {
+            "abbreviatedOid": "b0d4749"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2026-07-03T08:13:39Z",
+          "updatedAt": "2026-07-03T08:13:50Z",
+          "comments": [
+            {
+              "originalPosition": 60,
+              "body": "I personally don't see the point in approach 3 at all. It seems like a bad idea to prioritize an older request over a newer one by rejecting the newer one, considering the client may no longer know about the older one, and this restricts the client from controlling it.",
+              "createdAt": "2026-07-03T08:13:39Z",
+              "updatedAt": "2026-07-03T08:14:19Z"
             }
           ]
         }
@@ -214959,13 +215000,13 @@
       ],
       "body": "Resolves #3275",
       "createdAt": "2026-07-01T02:08:53Z",
-      "updatedAt": "2026-07-02T01:43:12Z",
+      "updatedAt": "2026-07-03T16:19:03Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "a770a72b0502b5c8e8e7b4ea94f366df5da7cccd",
+      "baseRefOid": "b1b1c72fd2ec81cead3349cd11f5c953efa940b1",
       "headRepository": "guoye-zhang/http-extensions",
       "headRefName": "retry",
-      "headRefOid": "37af34196ab1a72f45c427c67b75b08d05556073",
+      "headRefOid": "a8a78235c267de83570399f57c19e22c1e64d9b5",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -214977,6 +215018,27 @@
           "body": "I think merging this PR will also allow us to close https://github.com/httpwg/http-extensions/issues/3193, which is just waiting on the 409 handling.",
           "createdAt": "2026-07-01T17:02:15Z",
           "updatedAt": "2026-07-01T17:02:15Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Servers implementing chunk granularity (#3193) will need to return a 4xx error that signals the upload can be resumed when the client submits a chunk that isn't a multiple of the granularity. What status code can they rely on for clients to interpret it that way?\r\n\r\n- The semantically correct answer would be 400, but 400 isn't a retry condition documented here, so it can't be relied on.\r\n- It seems that, functionally, the best status code would be 409. But semantically, that doesn't make sense and technically violates RFC 9110's definition of status 409. There isn't a \"conflict\" when a client sends content with an unexpected length.\r\n- I also don't think 413 would be appropriate either, since if the client sent _more_ data, it could reach the next multiple and still work. This may cause clients to make incorrect assumptions and misbehave.\r\n\r\nFurthermore, even if there hypothetically were a nice status code that indicates incorrect content length, I'm sure there are other situations where a server may want to signal interoperable clients to resume with other 4xx status codes. It seems semantically incorrect to me to only define these few specific status codes to be reliably retriable.\r\n\r\nI talked about this in http://github.com/httpwg/http-extensions/issues/3454#issuecomment-4745876577 and the subsequent comments, but there isn't a great solution to this that I'm totally confident in. My suggestion there was to use `Upload-Offset` in 4xx responses as a signal that the upload can be resumed at that particular offset, so that the server can use any 4xx status code that complies with HTTP semantics. (Of course, the client could just check for the presence of that header and perform offset retrieval anyway if that's simpler.) This would also remove the need for clients to check for 409, since offset mismatch responses are [required](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#section-4.4.2-3) to include `Upload-Offset` anyway. Then, servers can use non-completing 409 responses for non-retriable purposes too by not including `Upload-Offset`.\r\n\r\nThe current design mangles all these semantics together in my opinion, making certain use cases (like non-retriable 409 and chunk granularity 400) impossible. My concern isn't just about chunk granularity, it's about the conflated semantics overall leading to less broad utility and future extensibility. Chunk granularity is just an example.\r\n\r\nIf desired, I can open a new issue for this to save it for after this is merged. It isn't so important that I'd insist it blocks this PR.",
+          "createdAt": "2026-07-03T08:36:16Z",
+          "updatedAt": "2026-07-03T10:27:43Z"
+        },
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "> If desired, I can open a new issue for this to save it for after this is merged. It isn't so important that I'd insist it blocks this PR.\r\n\r\nIsn't https://github.com/httpwg/http-extensions/issues/3454 already discussing this?\r\n\r\nI would be in favor of keeping this discussion out of this PR, so we don't block it and can move forward.",
+          "createdAt": "2026-07-03T15:00:21Z",
+          "updatedAt": "2026-07-03T15:11:55Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Isn't https://github.com/httpwg/http-extensions/issues/3454 already discussing this?\r\n\r\nYeah, but it's really a tangential concern to that issue, more directly related to client retry semantics. But now that I reread, it does appear to be blocking that issue anyway, so we can continue discussing it there, or spin out a new issue from that discussion later if needed.",
+          "createdAt": "2026-07-03T16:12:29Z",
+          "updatedAt": "2026-07-03T16:13:59Z"
         }
       ],
       "reviews": [
@@ -215209,9 +215271,9 @@
           "comments": [
             {
               "originalPosition": 5,
-              "body": "Typo and run-on sentence:\r\n\r\n```suggestion\r\nIf the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete}}). Note that the status code does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, and therefore resuming the upload would not resolve this error.\r\n```\r\n\r\nAlso, did you mean to say the _status code_ doesn't indicate success? I would think you meant the `Upload-Complete: ?1` field doesn't indicate success.\r\n\r\n```suggestion\r\nIf the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete}}). Note that this does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, and therefore resuming the upload would not resolve this error.\r\n```",
+              "body": "Typo and run-on sentence:\r\n\r\n```suggestion\r\nIf the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete}}). Note that the status code does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, and therefore, resuming the upload would not resolve this error.\r\n```\r\n\r\nAlso, did you mean to say the _status code_ doesn't indicate success? I would think you meant the `Upload-Complete: ?1` field doesn't indicate success.\r\n\r\n```suggestion\r\nIf the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete}}). Note that this does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, and therefore, resuming the upload would not resolve this error.\r\n```",
               "createdAt": "2026-07-02T00:43:33Z",
-              "updatedAt": "2026-07-02T01:49:23Z"
+              "updatedAt": "2026-07-02T23:06:32Z"
             },
             {
               "originalPosition": 50,
@@ -215233,9 +215295,294 @@
             },
             {
               "originalPosition": 95,
-              "body": "Isn't this a normative statement?\n\n```suggestion\nThe client SHOULD limit the number of retries it performs before considering the upload a failure.\n```",
+              "body": "Isn't this a normative statement? If not, it should be rephrased to avoid using the word \"should\".\r\n\r\n```suggestion\r\nThe client SHOULD limit the number of retries it performs before considering the upload a failure.\r\n```",
               "createdAt": "2026-07-02T01:40:31Z",
-              "updatedAt": "2026-07-02T01:41:47Z"
+              "updatedAt": "2026-07-02T03:05:55Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABE1lGjg",
+          "commit": {
+            "abbreviatedOid": "37af341"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-07-02T16:51:29Z",
+          "updatedAt": "2026-07-02T16:51:30Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "I didn't add `and` since `therefore` already broke the sentence apart",
+              "createdAt": "2026-07-02T16:51:29Z",
+              "updatedAt": "2026-07-02T16:51:30Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABE3g57g",
+          "commit": {
+            "abbreviatedOid": "37af341"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-07-02T22:51:34Z",
+          "updatedAt": "2026-07-02T22:51:35Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "\"Therefore\" is an adverb (like \"consequently\"), not a conjunction (like \"so\"), so it cannot join sentences. You could also replace `therefore` with `so` if you want, assuming that complies with editorial guidelines (which it might not because I don't see that anywhere else). Or you could replace `, therefore` with `; therefore,` since semicolons can join sentences.\r\n\r\n```suggestion\r\nIf the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete}}). Note that this does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation; therefore, resuming the upload would not resolve this error.\r\n```",
+              "createdAt": "2026-07-02T22:51:34Z",
+              "updatedAt": "2026-07-02T23:10:10Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABE5ZICQ",
+          "commit": {
+            "abbreviatedOid": "a8a7823"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2026-07-03T07:01:52Z",
+          "updatedAt": "2026-07-03T08:25:46Z",
+          "comments": [
+            {
+              "originalPosition": 11,
+              "body": "I think this would make it slightly more concise & clear.\n\n```suggestion\nIf the client receives a 2xx successful final response with the `Upload-Complete` header field set to false or missing, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).\n```",
+              "createdAt": "2026-07-03T07:01:52Z",
+              "updatedAt": "2026-07-03T08:25:46Z"
+            },
+            {
+              "originalPosition": 13,
+              "body": "```suggestion\nIf the client receives a non-successful final response with the `Upload-Complete` header field set to false or missing, or if it did not receive a final response, it can apply the heuristics described in {{retry}} to retry or resume the upload.\n```",
+              "createdAt": "2026-07-03T07:02:47Z",
+              "updatedAt": "2026-07-03T08:25:46Z"
+            },
+            {
+              "originalPosition": 89,
+              "body": "I don't like using \"unexpectedly\" here, because the client should be prepared to handle this as an expected situation, even though the situation is unsuccessful. Also rephrased \"value of\" to \"set to\" to be consistent with similar phrasing elsewhere in the document.\n\n```suggestion\nIf the client received a non-successful response with the `Upload-Complete` header field set to false or missing when creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}), it can apply the heuristics described below to retry or resume the upload.\n```",
+              "createdAt": "2026-07-03T07:45:06Z",
+              "updatedAt": "2026-07-03T08:25:46Z"
+            },
+            {
+              "originalPosition": 91,
+              "body": "I think this phrasing is clearer, specifying this recommendation only applies if trying to resume. (And fixed the same inconsistency as https://github.com/httpwg/http-extensions/pull/3472#discussion_r3518276845.) Also, shouldn't we link the offset section here?\n\n```suggestion\n- `409 (Conflict)` with the `Upload-Complete` header field set to false can be resumed with the correct offset ({{upload-offset}}). If no `Upload-Offset` header field is provided, the client SHOULD retrieve the offset ({{offset-retrieving}}) before resuming.\n```",
+              "createdAt": "2026-07-03T07:50:24Z",
+              "updatedAt": "2026-07-03T12:04:48Z"
+            },
+            {
+              "originalPosition": 93,
+              "body": "I don't know that it's clear what \"appropriate\" means in \"appropriate limits\" and \"appropriate delays\". Is it possible to phrase these more concretely? It doesn't have to be specific on how to determine the limits/delays, just something less ambiguous and possibly confusing.",
+              "createdAt": "2026-07-03T08:00:53Z",
+              "updatedAt": "2026-07-03T08:36:49Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABE6CHfA",
+          "commit": {
+            "abbreviatedOid": "a8a7823"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-07-03T08:36:10Z",
+          "updatedAt": "2026-07-03T08:36:10Z",
+          "comments": [
+            {
+              "originalPosition": 93,
+              "body": "The section on upload limits already goes into more detail on how to handle 413 and we shouldn't repeat ourselves.\r\n\r\nI think don't we have to add more text for 429, as a way to discover the appropriate delays is already mentioned in its RFC: https://datatracker.ietf.org/doc/html/rfc6585#autoid-4.",
+              "createdAt": "2026-07-03T08:36:10Z",
+              "updatedAt": "2026-07-03T08:36:10Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABE6GtXA",
+          "commit": {
+            "abbreviatedOid": "37af341"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-07-03T08:46:26Z",
+          "updatedAt": "2026-07-03T08:46:26Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "Thank you for the detailed comments on the grammar, Grant! Before a document is published, it goes through the RFC editors, who help us ensure that spelling and grammar are spotless and consistent in the end. This means we can focus on the technical details for now as these are the important pieces to move the document forward. Of course, we have to care enough about grammar to ensure the document remains readable :)",
+              "createdAt": "2026-07-03T08:46:26Z",
+              "updatedAt": "2026-07-03T08:46:27Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABE6NEHg",
+          "commit": {
+            "abbreviatedOid": "a8a7823"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-07-03T09:00:04Z",
+          "updatedAt": "2026-07-03T09:00:05Z",
+          "comments": [
+            {
+              "originalPosition": 93,
+              "body": "Oh, that reminds me, I really think the recommendations on how the client should behave when retrying for 413 should be moved from the limits section to the retry section. This section is where I'd expect to find that information, not the limits section. That would more than address my complaint about the ambiguity for 413. I expected that to be moved in this PR but forgot.\r\n\r\nI'm not suggesting for 429 (and wasn't for 413, before I remembered the above) that we add more text to clarify what counts as appropriate. I was just suggesting we use different phrasing than \"appropriate\", because \"appropriate\" makes it sound like there's a single correct way to handle it the reader is expected to know about elsewhere. Though I guess that is kind of true for 429? I completely forgot about the `Retry-After` header. Would it be appropriate to reference that spec here? Either way, I suppose that does make my original complaint about 429's phrasing moot as well.",
+              "createdAt": "2026-07-03T09:00:04Z",
+              "updatedAt": "2026-07-03T09:10:20Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABE6jCiA",
+          "commit": {
+            "abbreviatedOid": "37af341"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-07-03T09:44:21Z",
+          "updatedAt": "2026-07-03T09:44:22Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "Ah, okay. In that case, I'll hold back on trivial spelling/grammar fixes until the end. Sorry for the clutter, and thanks for letting me know! Also let me know if I should have held back all these inconsistent phrasing reviews too. (Perhaps something should be added to the contributing guidelines about this?) As you can tell, this is the first RFC I've contributed to, so I appreciate any feedback you have on how I can make this process smoother. :)",
+              "createdAt": "2026-07-03T09:44:21Z",
+              "updatedAt": "2026-07-03T12:39:34Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABE7QDxQ",
+          "commit": {
+            "abbreviatedOid": "a8a7823"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "Sorry for the clutter; this is a separate review because I decided to look at the full render and noticed a few more things.",
+          "createdAt": "2026-07-03T11:49:13Z",
+          "updatedAt": "2026-07-03T12:43:07Z",
+          "comments": [
+            {
+              "originalPosition": 87,
+              "body": "Looks like Marius's suggestion (https://github.com/httpwg/http-extensions/pull/3472#discussion_r3507304143) wasn't applied properly. I'm guessing this should be a top-level heading?\n\n```suggestion\n# Retry {#retry}\n```",
+              "createdAt": "2026-07-03T11:49:13Z",
+              "updatedAt": "2026-07-03T12:43:07Z"
+            },
+            {
+              "originalPosition": 31,
+              "body": "I was never fond of this phrasing and really think we shouldn't keep it for offset retrieval. Especially now that retry behavior is specified for other things, this could easily come off as it being unexpected for clients to implement retrying for 429 like they would for upload creation and upload appending. It gives a false sense of \"they explicitly documented retry behavior for upload creation and upload appending, so if they didn't document any retry behavior for offset retrieval, it must not be important.\"\r\n\r\nThe same somewhat applies to upload cancellation, which currently says nothing at all about how clients should handle responses. But then again, it's not terribly important for upload cancellation to be retried if it fails, since the server will eventually expire the upload anyway, and the client is probably trying to quickly clean things up if it's cancelling. But perhaps we should explicitly comment on that?",
+              "createdAt": "2026-07-03T11:59:52Z",
+              "updatedAt": "2026-07-03T16:21:14Z"
+            },
+            {
+              "originalPosition": 13,
+              "body": "Clients should be able to obtain the upload resource location from a non-successful upload creation response too. In fact, the upload can't be retried or resumed without it. Can the semantics of some 4xx-5xx status codes (including any future ones) clash with something like this? I'm guessing not, since we do the same for 2xx.\r\n\r\n```suggestion\r\nIf the client receives a non-successful final response with the `Upload-Complete: ?0` header field or the header field missing, or if it did not receive a final response, it can apply the heuristics described in {{retry}} to retry or resume the upload. If present, the `Location` response header field points the client to the created upload resource.\r\n```",
+              "createdAt": "2026-07-03T12:22:11Z",
+              "updatedAt": "2026-07-03T12:51:30Z"
+            },
+            {
+              "originalPosition": 91,
+              "body": "Why do we specify \"with the `Upload-Complete` header field value of false\"? We treat `Upload-Complete` absent the same as false for other status codes.\r\n\r\nIs this just to enable non-retriable, non-completing 409 responses? If so, this seems like a very strange semantic workaround for the concern I discussed in https://github.com/httpwg/http-extensions/pull/3472#issuecomment-4874362277. Servers shouldn't have to omit the `Upload-Complete` header in order to signal a non-retriable, non-completing 409 response. Servers shouldn't have to omit the `Upload-Complete` header _ever_ for upload creation & append responses.",
+              "createdAt": "2026-07-03T12:29:27Z",
+              "updatedAt": "2026-07-03T16:22:07Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABE8tmuQ",
+          "commit": {
+            "abbreviatedOid": "37af341"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-07-03T16:19:03Z",
+          "updatedAt": "2026-07-03T16:19:03Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "Also, this review can be resolved now.",
+              "createdAt": "2026-07-03T16:19:03Z",
+              "updatedAt": "2026-07-03T16:19:03Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 3475,
+      "id": "PR_kwDOAUA-v87teZGr",
+      "title": "RESUMABLE: Add version-specific details on cancelling in-flight transfers",
+      "url": "https://github.com/httpwg/http-extensions/pull/3475",
+      "state": "OPEN",
+      "author": "Acconut",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "Acconut"
+      ],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Closes https://github.com/httpwg/http-extensions/issues/3220\r\n\r\nClients and servers can intentionally stop an upload, e.g. based on user input, network changes, maintenance windows, load balancing etc. @MikeBishop noted in his review that the details on cancelling in-flight requests are version-specific. This PR adds a section to explicitly names the corresponding mechanisms.\r\n\r\nPlease let me know whether\r\n- this section is actually useful or just repeats what is already stated in other RFC, and\r\n- the technical details are actually correct.",
+      "createdAt": "2026-07-03T07:26:49Z",
+      "updatedAt": "2026-07-04T13:36:44Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "b1b1c72fd2ec81cead3349cd11f5c953efa940b1",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-upload-3220",
+      "headRefOid": "c694cc637621a475e41f9547ea3258c9b3278fc1",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABE_MYfw",
+          "commit": {
+            "abbreviatedOid": "c694cc6"
+          },
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-07-04T13:30:16Z",
+          "updatedAt": "2026-07-04T13:36:44Z",
+          "comments": [
+            {
+              "originalPosition": 32,
+              "body": "Suggest dropping the details of the error code",
+              "createdAt": "2026-07-04T13:30:16Z",
+              "updatedAt": "2026-07-04T13:36:44Z"
+            },
+            {
+              "originalPosition": 35,
+              "body": "Suggest dropping the details of the error code",
+              "createdAt": "2026-07-04T13:30:41Z",
+              "updatedAt": "2026-07-04T13:36:44Z"
+            },
+            {
+              "originalPosition": 38,
+              "body": "How about adding something like \"verios-specific mechanisms place requirements on clients or servers for actioning the cancellation. However, for all versions of HTTP resumable uploads allows the server to process received representation data and expose the upload offset via the upload resource.",
+              "createdAt": "2026-07-04T13:36:29Z",
+              "updatedAt": "2026-07-04T13:36:44Z"
             }
           ]
         }
