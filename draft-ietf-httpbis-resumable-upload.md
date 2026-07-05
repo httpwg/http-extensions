@@ -961,6 +961,7 @@ Reference:
 * Include `Upload-Limit` in response to limit violation.
 * Clarify that clients might not know limits when starting upload.
 * Remove section covering integrity digests.
+* Increase the draft interop version.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
@@ -1080,7 +1081,7 @@ None
 
 To assist the development of implementations and interoperability testing while this document is still a draft, an interop version is defined. Implementations of this draft use the interop version to identify the iteration of the draft that they implement. The interop version is bumped for breaking changes.
 
-The current interop version is 8.
+The current interop version is 9.
 
 Client implementations of draft versions of the protocol MUST send a header field `Upload-Draft-Interop-Version` with the interop version as its value to its requests. The `Upload-Draft-Interop-Version` field value is an Integer.
 
