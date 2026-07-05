@@ -2836,6 +2836,9 @@ Upload-Complete: ?0
           <li class="normal" id="appendix-A.1-1.15">
             <p id="appendix-A.1-1.15.1">Remove section covering integrity digests.<a href="#appendix-A.1-1.15.1" class="pilcrow">¶</a></p>
 </li>
+          <li class="normal" id="appendix-A.1-1.16">
+            <p id="appendix-A.1-1.16.1">Increase the draft interop version.<a href="#appendix-A.1-1.16.1" class="pilcrow">¶</a></p>
+</li>
         </ul>
 </section>
 </div>
@@ -3141,7 +3144,7 @@ Upload-Complete: ?0
       </h2>
 <p id="appendix-B-1">This section is to be removed before publishing as an RFC.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 <p id="appendix-B-2">To assist the development of implementations and interoperability testing while this document is still a draft, an interop version is defined. Implementations of this draft use the interop version to identify the iteration of the draft that they implement. The interop version is bumped for breaking changes.<a href="#appendix-B-2" class="pilcrow">¶</a></p>
-<p id="appendix-B-3">The current interop version is 8.<a href="#appendix-B-3" class="pilcrow">¶</a></p>
+<p id="appendix-B-3">The current interop version is 9.<a href="#appendix-B-3" class="pilcrow">¶</a></p>
 <p id="appendix-B-4">Client implementations of draft versions of the protocol <span class="bcp14">MUST</span> send a header field <code>Upload-Draft-Interop-Version</code> with the interop version as its value to its requests. The <code>Upload-Draft-Interop-Version</code> field value is an Integer.<a href="#appendix-B-4" class="pilcrow">¶</a></p>
 <p id="appendix-B-5">Server implementations of draft versions of the protocol <span class="bcp14">MUST NOT</span> send a <code>104 (Upload Resumption Supported)</code> informational response when the interop version indicated by the <code>Upload-Draft-Interop-Version</code> header field in the request is missing or mismatching.<a href="#appendix-B-5" class="pilcrow">¶</a></p>
 <p id="appendix-B-6">Server implementations of draft versions of the protocol <span class="bcp14">MUST</span> also send a header field <code>Upload-Draft-Interop-Version</code> with the interop version as its value to the <code>104 (Upload Resumption Supported)</code> informational response.<a href="#appendix-B-6" class="pilcrow">¶</a></p>
