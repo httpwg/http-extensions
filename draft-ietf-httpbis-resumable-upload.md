@@ -982,6 +982,7 @@ Reference:
 * Describe `GET` requests against upload resource.
 * Replace uses of term "upload length" with "representation's length".
 * Include `Upload-Limit` in response to limit violation.
+* Clarify that clients might not know limits when starting upload.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
