@@ -326,20 +326,18 @@ When used in an upload creation response ({{upload-creation}}) or an upload appe
 
 ### Length {#upload-length}
 
-The length of an upload is the number of bytes of representation data that the client intends to upload.
+The length of the representation data might not be known when starting the transfer, for example, because the representation is taken from a streaming source. The representation's length will, however, be known at the latest when the client completes the upload ({{upload-complete}}).
 
-Even the client might not know the total length of the representation data when starting the transfer, for example, because the representation is taken from a streaming source. However, a client SHOULD communicate the length to the server as soon as it becomes known. There are two different ways for the client to indicate and the server to discover the length from requests for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}):
+Despite this, a client SHOULD communicate the representation's length to the server as soon as it becomes known to aid with resource management and facilitate early validation. There are two different ways for the client to indicate and for the server to discover the representation's length from requests for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}):
 
-1. If the request includes the `Upload-Complete` field value set to true and a valid `Content-Length` header field, the request content is the remaining representation data. The length is then the sum of the current offset ({{upload-offset}}) and the `Content-Length` header field value.
+1. If the request includes the `Upload-Complete` field value set to true, the request content is the remaining representation data. The representation's length is then the sum of the current offset ({{upload-offset}}) and the request content's length, which might be announced in the `Content-Length` header field.
 2. The request can include the `Upload-Length` header field defined below.
 
-The `Upload-Length` request and response header field is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the number of bytes of the entire representation data. Other values MUST cause the entire header field to be ignored.
+The `Upload-Length` request and response header field is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the representation's length as a number of bytes. Other values MUST cause the entire header field to be ignored.
 
-If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. If multiple requests include indicators, their indicated values MUST match. A server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) in responses to indicate inconsistent length values.
+If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. The representation's length, if known, MUST stay consistent across subsequent requests. A server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) in responses to indicate inconsistent length indicators.
 
 The `Upload-Length` field can be used in response to an offset retrieval; see {{offset-retrieving-server}}.
-
-The server might not know the length until the upload is complete.
 
 Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` ({{upload-complete}}) header field to indicate that a request completes the upload. The offset could match the length, but the upload can still be incomplete.
 
@@ -350,10 +348,10 @@ A server MAY enforce one or multiple limits, which are communicated to the clien
 The following key-value pairs are defined:
 
 `max-size`:
-: Specifies a maximum size for the representation data, counted in bytes. The server might not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size. The value is an Integer.
+: Specifies a maximum size for the representation data, counted in bytes. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size. The value is an Integer.
 
 `min-size`:
-: Specifies a minimum size for the representation data, counted in bytes, for the server to offer resumable uploads. The server might not create an upload resource if the length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. Resumable uploads impose additional overhead on the server, which might not be acceptable for small representations. Requests with representation data below this value might still be accepted by the server, although without the ability to resume them. The value is an Integer.
+: Specifies a minimum size for the representation data, counted in bytes, for the server to offer resumable uploads. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. Resumable uploads impose additional overhead on the server, which might not be acceptable for small representations. Requests with representation data below this value might still be accepted by the server, although without the ability to resume them. The value is an Integer.
 
 `max-append-size`:
 : Specifies a maximum size counted in bytes for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append or upload creation requests. The value is an Integer.
@@ -378,9 +376,11 @@ When responding to an `OPTIONS` request without the `Upload-Complete` header fie
 
 A client can use an `OPTIONS` request without the `Upload-Complete` header field to discover whether the resource supports resumable uploads and to learn potential limits before creating an upload resource. To reduce the likelihood of failing requests, the limits announced in an `OPTIONS` response SHOULD NOT be less restrictive than the limits applied to an upload once the upload resource has been created, unless the request to create an upload resource included additional information that warrants different limits. For example, a server might announce a general maximum size limit of 1 GB, but reduce it to 100 MB when the media type indicates an image.
 
+When a request is rejected because limits were violated, the response SHOULD include the `Upload-Limit` header field carrying all limits of the corresponding upload if possible. This might not be possible if intermediaries enforce limits.
+
 Servers, including intermediaries, can (and often do) apply restrictions on the size of individual request message content. There is no standard mechanism to communicate such existing size restriction. A server that implements one can respond with a `413 (Content Too Large)` status code; see {{Section 15.5.14 of HTTP}}. Appending to an upload resource, as a series of appends, can be used to upload data up to the `max-size` limit without encountering per-message limits. Servers might apply restrictions that are smaller than the append limits, which would also result in a failed request.
 
-A server responding with a `413 (Content Too Large)` status code as a result of its upload limits SHOULD include the `Upload-Limit` header field in this response if possible. This might not be possible if intermediaries enforce content size restrictions. When a client receives a response with a `413 (Content Too Large)` status code during upload creation ({{upload-creation}}) or append ({{upload-appending}}), it SHOULD retry the request with a smaller size residing between `min-append-size` and `max-append-size`. If these limits are unknown at the time of receiving such a response, the client can attempt to discover them through an `OPTIONS` request. Retrying with the same request content size will likely yield the same error response. Cases where the request content size matches the `min-append-size` limit yet fails with a `413 (Content Too Large)` response might indicate a deployment mismatch that cannot be recovered from.
+When a client receives a response with a `413 (Content Too Large)` status code during upload creation ({{upload-creation}}) or append ({{upload-appending}}), it SHOULD retry the request with a smaller size residing between `min-append-size` and `max-append-size`. If these limits are unknown at the time of receiving such a response, the client can attempt to discover them through an `OPTIONS` request. Retrying with the same request content size will likely yield the same error response. Cases where the request content size matches the `min-append-size` limit yet fails with a `413 (Content Too Large)` response might indicate a deployment mismatch that cannot be recovered from.
 
 ## Upload Creation {#upload-creation}
 
@@ -390,7 +390,7 @@ A client can start a resumable upload from any request that can carry content by
 
 The `Upload-Complete` header field is set to true if the request content includes the entire representation data that the client intends to upload. This is also a requirement for transparently upgrading to resumable uploads from conventional uploads ({{upgrading-uploads}}).
 
-If the client knows the representation data's length, it SHOULD indicate the length in the request to help the server allocate necessary resources for the upload and provide early feedback if the representation violates a limit ({{upload-limit}}). This indication can be done through the `Upload-Length` header field or the combination of the `Content-Length` and `Upload-Complete: ?1` header fields (see {{upload-length}}).
+If the client knows the representation's length, it SHOULD indicate the length in the request to help the server allocate necessary resources for the upload and provide early feedback if the representation violates a limit ({{upload-limit}}), as described in {{upload-length}}.
 
 Clients are not required to discover limits ({{upload-limit}}) before starting the upload and might therefore be initially unaware of limits enforced by the server. However, the client SHOULD respect any limits ({{upload-limit}}) announced during the upload process in the `Upload-Limit` header field in interim or final responses. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client SHOULD stop the current request immediately and cancel the upload ({{upload-cancellation}}). If the client knows that the representation data is smaller than `min-size`, it cannot expect resumability to be offered. The client might still attempt to transfer the representation in a single request, either in a request with the `Upload-Complete` header field set to true (see {{upgrading-uploads}}) or via a conventional upload.
 
@@ -415,7 +415,7 @@ If the `Upload-Complete` request header field is set to true, the client intends
 
 If the `Upload-Complete` request header field is set to false, the client intends to transfer the representation over multiple requests. If the request content was fully processed, the server MUST include the `Location` response header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits if existing. Servers are RECOMMENDED to use the `201 (Created)` status code.
 
-The server MUST record the length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete: ?1` header fields are included in the request.
+The server MUST record the representation's length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete: ?1` header fields are included in the request.
 
 While the request content is being processed, the server MAY send multiple interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress.
 
@@ -542,7 +542,7 @@ A successful response to a `HEAD` or `GET` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset}}),
 - MUST include the `Upload-Complete` header field ({{upload-complete}}) indicating whether a final response was produced from processing the uploaded representation,
-- MUST include the length in the `Upload-Length` header field, unless the client has not supplied one, by providing the corresponding headers as described in ({{upload-length}}),
+- MUST include the representation's length in the `Upload-Length` header field, unless the client has not supplied the representation's length as described in ({{upload-length}}),
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
 
@@ -606,7 +606,7 @@ If the `Upload-Complete` request header field is set to false, the client intend
 
 Even if the upload is complete ({{upload-complete}}) in the server's perspective and the final response from the targeted resource has already been sent, the client might still perform an upload append ({{upload-appending}}) after an offset retrieval ({{offset-retrieving}}) due to the response being lost during transmission. The server can choose to replay the final response to the client if the request to append to the completed upload is valid.
 
-The server MUST record the length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete` header fields are included in the request. If the length is known, the server MUST prevent the offset from exceeding the upload length by rejecting the request once the offset exceeds the length, marking the upload resource invalid and rejecting any further interaction with it. It is not sufficient to rely on the `Content-Length` header field for enforcement because this header field might not be present.
+The server MUST record the representation's length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete` header fields are included in the request. If the representation's length is known, the server MUST prevent the offset from exceeding the representation's length by rejecting the request once the offset exceeds the length, marking the upload resource invalid and rejecting any further interaction with it. It is not sufficient to rely on the `Content-Length` header field for enforcement because this header field might not be present.
 
 While the request content is being processed, the server SHOULD send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
 
@@ -739,7 +739,7 @@ Upload-Complete: ?0
 
 ## Inconsistent Length
 
-This section defines the "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" problem type {{PROBLEM}}. A server can use this problem type when responding to an upload creation ({{upload-creation}}) or upload append request ({{upload-appending}}) to indicate that the request includes inconsistent upload length values, as described in {{upload-length}}.
+This section defines the "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" problem type {{PROBLEM}}. A server can use this problem type when responding to an upload creation ({{upload-creation}}) or upload append request ({{upload-appending}}) to indicate that the request includes inconsistent length values, as described in {{upload-length}}.
 
 The following example shows an example response:
 
@@ -806,7 +806,7 @@ A client might wait for a limited duration to receive a 104 (Upload Resumption S
 
 ### Upgrading To Resumable Uploads {#upgrading-uploads}
 
-Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the representation is transferred in a single request, usually `POST` or `PUT`, without any ability to resume from interruptions. The client can invite the server to upgrade such a request to a resumable upload by adding the `Upload-Complete: ?1` header field to the original request. The `Upload-Length` header field SHOULD be added if the representation data's length is known upfront. The request is not changed otherwise.
+Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the representation is transferred in a single request, usually `POST` or `PUT`, without any ability to resume from interruptions. The client can invite the server to upgrade such a request to a resumable upload by adding the `Upload-Complete: ?1` header field to the original request. The `Upload-Length` header field SHOULD be added if the representation's length is known upfront. The request is not changed otherwise.
 
 If the resource targeted in the initial request supports resumable uploads, the server can create an upload resource and send its URI in a `104 (Upload Resumption Supported)` interim response for the client to resume the upload after interruptions. A resource that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the `Upload-Complete: ?1` header. The transfer then falls back to a non-resumable upload without additional cost.
 
@@ -980,6 +980,8 @@ Reference:
 * Recommend incremental delivery.
 * Clarify `min-size` limit and its client behavior.
 * Describe `GET` requests against upload resource.
+* Replace uses of term "upload length" with "representation's length".
+* Include `Upload-Limit` in response to limit violation.
 
 ## Since draft-ietf-httpbis-resumable-upload-10
 {:numbered="false"}
