@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 6 January 2027                                       Apple Inc.
+Expires: 7 January 2027                                       Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                             5 July 2026
+                                                             6 July 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 January 2027.
+   This Internet-Draft will expire on 7 January 2027.
 
 Copyright Notice
 
@@ -115,15 +115,16 @@ Table of Contents
        10.1.1.  Upgrading To Resumable Uploads
      10.2.  Careful Upload Creation
    11. Incremental Transfer, Processing and Forwarding
-   12. Security Considerations
-   13. IANA Considerations
-     13.1.  HTTP Fields
-     13.2.  HTTP Status Code
-     13.3.  Media Type
-     13.4.  HTTP Problem Types
-   14. References
-     14.1.  Normative References
-     14.2.  Informative References
+   12. Request Cancellation
+   13. Security Considerations
+   14. IANA Considerations
+     14.1.  HTTP Fields
+     14.2.  HTTP Status Code
+     14.3.  Media Type
+     14.4.  HTTP Problem Types
+   15. References
+     15.1.  Normative References
+     15.2.  Informative References
    Appendix A.  Changes
      Since draft-ietf-httpbis-resumable-upload-11
      Since draft-ietf-httpbis-resumable-upload-10
@@ -237,7 +238,7 @@ Table of Contents
    illustrative and non-normative.  Implementations of this protocol are
    expected to follow normative requirements defined in other sections,
    together with applying security considerations presented in
-   Section 12.
+   Section 13.
 
 3.1.  Example 1: Complete upload of representation data with known size
 
@@ -473,7 +474,7 @@ Table of Contents
    An upload resource SHOULD be unique.  Reuse of a URI for a different
    upload resource SHOULD be avoided in order to reduce the chance of
    misdirected or corrupted upload resources, as well as the potential
-   security issues described in Section 12.
+   security issues described in Section 13.
 
 4.1.  State
 
@@ -649,7 +650,7 @@ Table of Contents
    way that causes failures for clients adhering to the initially
    discovered limits.  If the client discovers that it cannot continue
    the upload while adhering to the limits, it SHOULD stop the current
-   request immediately and cancel the upload (Section 4.5).
+   request immediately (Section 12) and cancel the upload (Section 4.5).
 
    The following recommendations for limit changes can minimize the risk
    of causing upload failures:
@@ -748,12 +749,13 @@ Table of Contents
    Upload-Limit header field in interim or final responses.  In
    particular, if the allowed maximum size is less than the amount of
    representation data the client intends to upload, the client SHOULD
-   stop the current request immediately and cancel the upload
-   (Section 4.5).  If the client knows that the representation data is
-   smaller than min-size, it cannot expect resumability to be offered.
-   The client might still attempt to transfer the representation in a
-   single request, either in a request with the Upload-Complete header
-   field set to true (see Section 10.1.1) or via a conventional upload.
+   stop the current request immediately (Section 12) and cancel the
+   upload (Section 4.5).  If the client knows that the representation
+   data is smaller than min-size, it cannot expect resumability to be
+   offered.  The client might still attempt to transfer the
+   representation in a single request, either in a request with the
+   Upload-Complete header field set to true (see Section 10.1.1) or via
+   a conventional upload.
 
    The request content can be empty.  If the Upload-Complete header
    field is then set to true, the client intends to upload an empty
@@ -1551,7 +1553,27 @@ Table of Contents
    Incremental header field defined in Section 3 of [INCREMENTAL] to
    signal their preference for incremental forwarding by intermediaries.
 
-12.  Security Considerations
+12.  Request Cancellation
+
+   A client or server might want to interrupt an in-flight message
+   transfer intentionally for various reasons (see Section 1).  The
+   mechanism to do so depend on the used HTTP version:
+
+   HTTP/1.1:  close the underlying transport connection (Section 9.5 of
+      [HTTP/1.1])
+
+   HTTP/2:  send a RST_STREAM frame (Section 6.4 of [HTTP/2])
+
+   HTTP/3:  send a RESET_STREAM (Section 19.4 of [QUIC]) or STOP_SENDING
+      frame (Section 19.5 of [QUIC])
+
+   Version-specific mechanisms place requirements on clients or servers
+   for actioning the cancellation.  However, for all versions of HTTP
+   resumable uploads allows the server to process received
+   representation data and expose the upload offset via the upload
+   resource, enabling continuation of the upload after interruption.
+
+13.  Security Considerations
 
    The upload resource URI is the identifier used for modifying the
    upload.  Without further protection of this URI, an attacker may
@@ -1614,9 +1636,9 @@ Table of Contents
    allocated to uploads might not be an effective strategy when using
    resumable uploads.
 
-13.  IANA Considerations
+14.  IANA Considerations
 
-13.1.  HTTP Fields
+14.1.  HTTP Fields
 
    IANA is asked to register the following entries in the "Hypertext
    Transfer Protocol (HTTP) Field Name Registry":
@@ -1639,7 +1661,7 @@ Table of Contents
 
                                  Table 1
 
-13.2.  HTTP Status Code
+14.2.  HTTP Status Code
 
    IANA is asked to register the following entry in the "HTTP Status
    Codes" registry:
@@ -1650,7 +1672,7 @@ Table of Contents
 
    Specification:  Section 5 of this document
 
-13.3.  Media Type
+14.3.  Media Type
 
    IANA is asked to register the following entry in the "Media Types"
    registry:
@@ -1665,7 +1687,7 @@ Table of Contents
 
    Encoding considerations:  binary
 
-   Security considerations:  see Section 12 of this document
+   Security considerations:  see Section 13 of this document
 
    Interoperability considerations:  N/A
 
@@ -1700,7 +1722,7 @@ Table of Contents
 
    Change controller:  IETF
 
-13.4.  HTTP Problem Types
+14.4.  HTTP Problem Types
 
    IANA is asked to register the following entry in the "HTTP Problem
    Types" registry:
@@ -1726,9 +1748,9 @@ Table of Contents
 
    Reference:  Section 7.2 of this document
 
-14.  References
+15.  References
 
-14.1.  Normative References
+15.1.  Normative References
 
    [CACHING]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Caching", STD 98, RFC 9111,
@@ -1755,6 +1777,10 @@ Table of Contents
               Ed., "HTTP/1.1", STD 99, RFC 9112, DOI 10.17487/RFC9112,
               June 2022, <https://www.rfc-editor.org/rfc/rfc9112>.
 
+   [HTTP/2]   Thomson, M., Ed. and C. Benfield, Ed., "HTTP/2", RFC 9113,
+              DOI 10.17487/RFC9113, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9113>.
+
    [PATCH]    Dusseault, L. and J. Snell, "PATCH Method for HTTP",
               RFC 5789, DOI 10.17487/RFC5789, March 2010,
               <https://www.rfc-editor.org/rfc/rfc5789>.
@@ -1762,6 +1788,11 @@ Table of Contents
    [PROBLEM]  Nottingham, M., Wilde, E., and S. Dalal, "Problem Details
               for HTTP APIs", RFC 9457, DOI 10.17487/RFC9457, July 2023,
               <https://www.rfc-editor.org/rfc/rfc9457>.
+
+   [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
+              Multiplexed and Secure Transport", RFC 9000,
+              DOI 10.17487/RFC9000, May 2021,
+              <https://www.rfc-editor.org/rfc/rfc9000>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1777,7 +1808,7 @@ Table of Contents
               HTTP", RFC 9651, DOI 10.17487/RFC9651, September 2024,
               <https://www.rfc-editor.org/rfc/rfc9651>.
 
-14.2.  Informative References
+15.2.  Informative References
 
    [INCREMENTAL]
               Oku, K., Pauly, T., and M. Thomson, "Incremental
@@ -1836,6 +1867,8 @@ Since draft-ietf-httpbis-resumable-upload-11
    *  Remove section covering integrity digests.
 
    *  Increase the draft interop version.
+
+   *  Add version-specific details on cancelling in-flight transfers.
 
 Since draft-ietf-httpbis-resumable-upload-10
 
