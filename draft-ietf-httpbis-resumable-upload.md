@@ -1104,11 +1104,11 @@ The current interop version is 9.
 
 Client implementations of draft versions of the protocol MUST send a header field `Upload-Draft-Interop-Version` with the interop version as its value to its requests. The `Upload-Draft-Interop-Version` field value is an Integer.
 
-Server implementations of draft versions of the protocol MUST NOT send a `104 (Upload Resumption Supported)` informational response when the interop version indicated by the `Upload-Draft-Interop-Version` header field in the request is missing or mismatching.
+Server implementations of draft versions of the protocol MUST NOT send a `104 (Upload Resumption Supported)` interim response when the interop version indicated by the `Upload-Draft-Interop-Version` header field in the request is missing or mismatching.
 
-Server implementations of draft versions of the protocol MUST also send a header field `Upload-Draft-Interop-Version` with the interop version as its value to the `104 (Upload Resumption Supported)` informational response.
+Server implementations of draft versions of the protocol MUST also send a header field `Upload-Draft-Interop-Version` with the interop version as its value to the `104 (Upload Resumption Supported)` interim response.
 
-Client implementations of draft versions of the protocol MUST ignore a `104 (Upload Resumption Supported)` informational response with missing or mismatching interop version indicated by the `Upload-Draft-Interop-Version` header field.
+Client implementations of draft versions of the protocol MUST ignore a `104 (Upload Resumption Supported)` interim response with missing or mismatching interop version indicated by the `Upload-Draft-Interop-Version` header field.
 
 The reason both the client and the server are sending and checking the draft version is to ensure that implementations of the final RFC will not accidentally interop with draft implementations, as they will not check the existence of the `Upload-Draft-Interop-Version` header field.
 
