@@ -113,7 +113,7 @@ Table of Contents
 
    No-Vary-Search: key-order
 
-   If the specific query parameters (e.g., ones indicating something for
+   If specific query parameters (e.g., ones indicating something for
    analytics) do not semantically affect the served resource, this is
    indicated using
 
@@ -156,6 +156,12 @@ Table of Contents
    and [HTTP-CACHING], whereas "URL" is used in the context of the
    algorithms specified in [WHATWG-URL].
 
+   The term "query parameters" in this document refers to the keys and
+   values resulting from parsing a URL's query component using the
+   application/x-www-form-urlencoded
+   (https://url.spec.whatwg.org/#concept-urlencoded) format
+   [WHATWG-URL].
+
    This document also adopts some conventions and notation typical in
    WHATWG and W3C usage, especially as it relates to algorithms.  See
    [WHATWG-INFRA], and in particular:
@@ -174,7 +180,7 @@ Table of Contents
    [STRUCTURED-FIELDS] whose value MUST be a dictionary (Section 3.2 of
    [STRUCTURED-FIELDS]).
 
-   It has the following authoring conformance requirements:
+   It has the following constraints:
 
    *  If present, the key-order entry's value MUST be a boolean
       (Section 3.3.6 of [STRUCTURED-FIELDS]).
@@ -194,11 +200,7 @@ Table of Contents
    such entries (but future documents might assign meaning to such
    entries).
 
-      |  As always, the authoring conformance requirements are not
-      |  binding on implementations.  Implementations instead need to
-      |  implement the processing model for URL variation configurations
-      |  (configs) given by the obtain a URL variation config algorithm
-      |  (Section 5.2).
+      |  A parsing algorithm is defined in Section 5.2.
 
 4.  Data model
 
@@ -301,13 +303,12 @@ Table of Contents
 
 5.2.  Obtain a URL variation config
 
-   To _obtain a URL variation config_ given a response
-   (https://fetch.spec.whatwg.org/#concept-response) _response_:
+   To _obtain a URL variation config_ given an HTTP response
+   (Section 3.4 of [HTTP]) _response_:
 
-   1.  Let _fieldValue_ be the result of getting a structured field
-       value (https://fetch.spec.whatwg.org/#concept-header-list-get-
-       structured-header) [FETCH] given `No-Vary-Search` and
-       "dictionary" from _response_'s header list.
+   1.  Let _fieldValue_ be the result of parsing the No-Vary-Search
+       field from _response_ as a Dictionary (Section 4.2 of
+       [STRUCTURED-FIELDS]).
 
    2.  Return the result of parsing a URL variation config (Section 5.1)
        given _fieldValue_.
@@ -637,8 +638,7 @@ Table of Contents
 
    However, since the impact is limited to query parameters, this does
    not cross the relevant security boundary, which is the origin
-   (https://html.spec.whatwg.org/multipage/browsers.html#concept-origin)
-   [HTML].  (Or perhaps just the host
+   ([ORIGIN]).  (Or perhaps just the host
    (https://url.spec.whatwg.org/#concept-url-host), from the perspective
    of web browser security UI (https://url.spec.whatwg.org/#url-
    rendering-simplification).  [WHATWG-URL]) Indeed, we have already
@@ -741,6 +741,10 @@ Table of Contents
               <https://privacycg.github.io/nav-tracking-mitigations/>.
               W3C Privacy CG
 
+   [ORIGIN]   Barth, A., "The Web Origin Concept", RFC 6454,
+              DOI 10.17487/RFC6454, December 2011,
+              <https://www.rfc-editor.org/rfc/rfc6454>.
+
 Acknowledgments
 
    This document benefited from valuable reviews and suggestions by:
@@ -780,8 +784,8 @@ Index
 
       O
 
-         obtain a URL variation config  Section 3, Paragraph 5.1;
-            Section 4, Paragraph 4; *_Section 5.2, Paragraph 1_*
+         obtain a URL variation config  Section 4, Paragraph 4;
+            *_Section 5.2, Paragraph 1_*
 
       P
 
