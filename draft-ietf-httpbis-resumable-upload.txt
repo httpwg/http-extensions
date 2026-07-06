@@ -255,9 +255,9 @@ Table of Contents
    client, signaling support for resumable uploads and the upload
    resource's URI via the Location header field (Section 10.2.2 of
    [HTTP]).  The client can start sending the representation data in the
-   request content immediately after the request header.  Alternatively,
-   it could also await the acknowledgement in form of the interim
-   response.
+   request content immediately after the request header section.
+   Alternatively, it could also await the acknowledgment in the form of
+   the interim response.
 
    Client                                  Server
    |                                            |
@@ -307,7 +307,7 @@ Table of Contents
    that the upload resumes from.  Once the remaining representation data
    is transferred, the server processes the entire representation and
    responds with whatever the initial request to /project/123/files
-   would have produced if it had not been interrupted, e.g. a 200 (OK)
+   would have produced if it had not been interrupted, e.g., a 200 (OK)
    response.
 
    Client                                       Server
@@ -425,11 +425,11 @@ Table of Contents
                   Figure 7: Resuming an interrupted upload
 
    4) The request to append the last part of the representation data has
-   a Upload-Complete field value set to true to indicate the complete
+   an Upload-Complete field value set to true to indicate the complete
    transfer.  Once the remaining representation data is transferred, the
    server processes the entire representation and responds with whatever
    the initial request to /project/123/files would have produced if its
-   representation had been fully transferred and processed, e.g. a 200
+   representation had been fully transferred and processed, e.g., a 200
    (OK) response.
 
    Client                                       Server
@@ -509,7 +509,7 @@ Table of Contents
    entire header field to be ignored.
 
    The Upload-Offset header field in responses serves as an
-   acknowledgement of the processed representation data and as a
+   acknowledgment of the processed representation data and as a
    guarantee that no retransmission of it will be necessary.  Clients
    can use this guarantee to free resources associated to transferred
    representation data.
@@ -768,7 +768,7 @@ Table of Contents
    commence.
 
    Representation metadata included in the initial request (see
-   Section 8.3 of [HTTP]) can affect how servers act on the uploaded
+   Section 8.2 of [HTTP]) can affect how servers act on the uploaded
    representation data.  The Content-Type header field (Section 8.3 of
    [HTTP]) indicates the media type of the representation.  The Content-
    Encoding header field (Section 8.4 of [HTTP]) names the content
@@ -1324,8 +1324,8 @@ Table of Contents
 
 5.  Status Code 104 (Upload Resumption Supported)
 
-   The 104 (Upload Resumption Supported) status code is can be used for
-   two purposes:
+   The 104 (Upload Resumption Supported) status code can be used for two
+   purposes:
 
    *  When responding to requests to create uploads, an interim response
       with the 104 (Upload Resumption Supported) status code can be sent
@@ -1517,8 +1517,8 @@ Table of Contents
    cost.
 
    This upgrade can also be performed transparently by a library or
-   program that acts as a HTTP client by sending requests on behalf of a
-   user.  When the user instructs the client to send a non-resumable
+   program that acts as an HTTP client by sending requests on behalf of
+   a user.  When the user instructs the client to send a non-resumable
    request, the client can perform the upgrade transparently and handle
    potential interruptions and resumptions under the hood without
    involving the user.  The last response received by the client is
@@ -1543,7 +1543,7 @@ Table of Contents
    not carry representation data.
 
    This approach is best suited if the client cannot receive interim
-   responses, e.g. due to a limitation in the provided HTTP interface,
+   responses, e.g., due to a limitation in the provided HTTP interface,
    or if large representations are transferred where the cost of the
    additional request is minuscule compared to the effort of
    transferring the representation itself.
@@ -1567,7 +1567,7 @@ Table of Contents
 
    A client or server might want to interrupt an in-flight message
    transfer intentionally for various reasons (see Section 1).  The
-   mechanism to do so depend on the used HTTP version:
+   mechanism to do so depends on the HTTP version in use:
 
    HTTP/1.1:  close the underlying transport connection (Section 9.5 of
       [HTTP/1.1])
@@ -1578,10 +1578,10 @@ Table of Contents
       frame (Section 19.5 of [QUIC])
 
    Version-specific mechanisms place requirements on clients or servers
-   for actioning the cancellation.  However, for all versions of HTTP
-   resumable uploads allows the server to process received
-   representation data and expose the upload offset via the upload
-   resource, enabling continuation of the upload after interruption.
+   for actioning the cancellation.  However, for all versions of HTTP,
+   resumable uploads allow the server to process received representation
+   data and expose the upload offset via the upload resource, enabling
+   continuation of the upload after interruption.
 
 13.  Security Considerations
 
@@ -2052,19 +2052,19 @@ Appendix B.  Draft Version Identification
    value is an Integer.
 
    Server implementations of draft versions of the protocol MUST NOT
-   send a 104 (Upload Resumption Supported) informational response when
-   the interop version indicated by the Upload-Draft-Interop-Version
-   header field in the request is missing or mismatching.
+   send a 104 (Upload Resumption Supported) interim response when the
+   interop version indicated by the Upload-Draft-Interop-Version header
+   field in the request is missing or mismatching.
 
    Server implementations of draft versions of the protocol MUST also
    send a header field Upload-Draft-Interop-Version with the interop
-   version as its value to the 104 (Upload Resumption Supported)
-   informational response.
+   version as its value to the 104 (Upload Resumption Supported) interim
+   response.
 
    Client implementations of draft versions of the protocol MUST ignore
-   a 104 (Upload Resumption Supported) informational response with
-   missing or mismatching interop version indicated by the Upload-Draft-
-   Interop-Version header field.
+   a 104 (Upload Resumption Supported) interim response with missing or
+   mismatching interop version indicated by the Upload-Draft-Interop-
+   Version header field.
 
    The reason both the client and the server are sending and checking
    the draft version is to ensure that implementations of the final RFC
