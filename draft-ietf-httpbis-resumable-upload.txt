@@ -103,6 +103,7 @@ Table of Contents
        4.5.2.  Server Behavior
        4.5.3.  Example
      4.6.  Concurrency
+     4.7.  Retry
    5.  Status Code 104 (Upload Resumption Supported)
    6.  Media Type application/partial-upload
    7.  Problem Types
@@ -776,28 +777,25 @@ Table of Contents
    filename.  For this purpose, the inline disposition type is
    RECOMMENDED.
 
-   If the client received a final response with a
+   If the client received a final response with the Upload-Complete: ?1
+   header field, the upload is complete and the corresponding response
+   comes from the resource processing the representation according to
+   the initial request (Section 4.1.2).  Note that this does not
+   necessarily indicate success. 4xx (Client Error) or 5xx (Server
+   Error) status codes indicate in this case an error occurred while
+   processing the representation, and therefore, resuming the upload
+   would not resolve this error.
 
-   *  2xx (Successful) status code and the request content contained the
-      entire representation data, the upload is complete and the
-      response comes from the resource targeted by the initial request
-      processing the representation.
+   If the client receives a 2xx successful final response with the
+   Upload-Complete header field set to false or missing, the Location
+   response header field points the client to the created upload
+   resource.  The client can continue appending representation data to
+   it (Section 4.4).
 
-   *  2xx (Successful) status code and the request content did not
-      contain the entire representation data, the Location response
-      header field points the client to the created upload resource.
-      The client can continue appending representation data to it
-      (Section 4.4).
-
-   *  4xx (Client Error) status code, the client SHOULD NOT attempt to
-      retry or resume the upload, unless the semantics of the response
-      allow or recommend the client to retry the request.
-
-   *  5xx (Server Error) status code or no final response at all due to
-      connectivity issues, the client MAY automatically attempt upload
-      resumption by retrieving the current offset (Section 4.3) if it
-      received the URI of the upload resource in a 104 (Upload
-      Resumption Supported) interim response.
+   If the client receives a 4xx client error or 5xx server error final
+   response with the Upload-Complete header field set to false or
+   missing, or if it did not receive a final response, it can apply the
+   heuristics described in Section 4.7 to retry or resume the upload.
 
 4.2.2.  Server Behavior
 
@@ -856,6 +854,11 @@ Table of Contents
    The server SHOULD include the Upload-Complete (Section 4.1.2) header
    field in the response to indicate whether it is the result of
    processing the uploaded representation.
+
+   The server SHOULD NOT generate a response with the 301 (Moved
+   Permanently), 302 (Found), or 303 (See Other) status codes and the
+   Upload-Complete: ?0 header field because clients might follow the
+   redirect without preserving the original method.
 
    The server might not process the entire request content when the
    upload is interrupted, for example because of dropped connection or
@@ -984,21 +987,13 @@ Table of Contents
    cause the previous request to be terminated by the server as
    described in Section 4.6.
 
-   If the client received a response with a
+   If the client receives a 2xx successful response, the client can
+   continue appending representation data to it and/or mark the upload
+   as complete (Section 4.4).
 
-   *  2xx (Successful) status code, the client can continue appending
-      representation data to it and/or mark the upload as complete
-      (Section 4.4).
-
-   *  307 (Temporary Redirect) or 308 (Permanent Redirect) status code,
-      the client MAY retry retrieving the offset from the new URI.
-
-   *  4xx (Client Error) status code, the client SHOULD NOT attempt to
-      retry or resume the upload, unless the semantics of the response
-      allow or recommend the client to retry the request.
-
-   *  5xx (Server Error) status code or no final response at all due to
-      connectivity issues, the client MAY retry retrieving the offset.
+   If the client receives a 4xx client error or 5xx server error
+   response, or if it did not receive a response, the client MAY retry
+   retrieving the offset.
 
 4.3.2.  Server Behavior
 
@@ -1022,9 +1017,9 @@ Table of Contents
    *  SHOULD include the Cache-Control header field with the value no-
       store to prevent HTTP caching ([CACHING]).
 
-   The resource SHOULD NOT generate a response with the 301 (Moved
-   Permanently) and 302 (Found) status codes because clients might
-   follow the redirect without preserving the HEAD method.
+   The server SHOULD NOT generate a response with the 301 (Moved
+   Permanently), 302 (Found), or 303 (See Other) status codes because
+   clients might follow the redirect without preserving the HEAD method.
 
    A client does not require response content for an offset retrieval
    request in order to successfully resume an upload.  Therefore,
@@ -1078,34 +1073,16 @@ Table of Contents
    If the client received a final response with the Upload-Complete: ?1
    header field, the upload is complete and the corresponding response
    comes from the resource processing the representation according to
-   the initial request (see Section 4.2).  Note that the status code
-   does not necessary indicate success. 4xx (Client Error) or 5xx
-   (Server Error) status codes indicate in this case that the
-   representation was fully transmitted, but an error occurred while
-   processing it.  Resuming the upload would not resolve this error.
+   the initial request (Section 4.1.2).  Note that this does not
+   necessarily indicate success. 4xx (Client Error) or 5xx (Server
+   Error) status codes indicate in this case an error occurred while
+   processing the representation, and therefore, resuming the upload
+   would not resolve this error.
 
-   If the client received a final response with the Upload-Complete: ?0
-   header field or the header field missing, the next step depends on
-   the status code:
-
-   *  A 2xx (Successful) status code indicates that representation data
-      was appended but the upload is not complete.  The client can
-      continue appending representation data.
-
-   *  For a 307 (Temporary Redirect) or 308 (Permanent Redirect) status
-      code, the client MAY retry appending to the new URI.
-
-   *  For a 4xx (Client Error) status code, the client SHOULD NOT
-      attempt to retry or resume the upload, unless the semantics of the
-      response allow or recommend the client to retry the request.
-
-   *  For a 5xx (Server Error) status code, the client MAY automatically
-      attempt upload resumption by retrieving the current offset
-      (Section 4.3).
-
-   If no final response was received at all due to connectivity issues,
-   the client MAY automatically attempt upload resumption by retrieving
-   the current offset (Section 4.3).
+   If the client received a 4xx client error or 5xx server error final
+   response with the Upload-Complete header field set to false or
+   missing, or if it did not receive a final response, it can apply the
+   heuristics described in Section 4.7 to retry or resume the upload.
 
 4.4.2.  Server Behavior
 
@@ -1178,6 +1155,11 @@ Table of Contents
    field in the response to indicate whether it is the result of
    processing the uploaded representation.
 
+   The server SHOULD NOT generate a response with the 301 (Moved
+   Permanently), 302 (Found), or 303 (See Other) status codes and the
+   Upload-Complete: ?0 header field because clients might follow the
+   redirect without preserving the PATCH method.
+
 4.4.3.  Examples
 
    A) The following example shows an upload append request.  The client
@@ -1246,8 +1228,9 @@ Table of Contents
    HTTP connection(s) or stream(s) as described in Section 4.6.
 
    The server SHOULD NOT generate a response with the 301 (Moved
-   Permanently) and 302 (Found) status codes because clients might
-   follow the redirect without preserving the DELETE method.
+   Permanently), 302 (Found), or 303 (See Other) status codes because
+   clients might follow the redirect without preserving the DELETE
+   method.
 
 4.5.3.  Example
 
@@ -1311,6 +1294,33 @@ Table of Contents
    the upload, causing friction for the end users.  Therefore, the
    recommended approach is to terminate previous requests to enable
    quick resumption of uploads.
+
+4.7.  Retry
+
+   If the client received a 4xx client error or 5xx server error
+   response with the Upload-Complete header field set to false or
+   missing when creating the upload resource (Section 4.2) or appending
+   to it (Section 4.4), it can apply the heuristics described below to
+   retry or resume the upload.
+
+   *  409 (Conflict) with the Upload-Complete header field set to false
+      can be resumed with the correct offset (Section 4.1.1).  If no
+      Upload-Offset header field is provided, the client SHOULD retrieve
+      the offset (Section 4.3) before resuming.
+
+   *  413 (Content Too Large) can be resumed after applying appropriate
+      limits (Section 4.1.4).
+
+   *  429 (Too Many Requests) can be retried after appropriate delays.
+
+   *  5xx (Server Error) status codes can be retried.
+
+   If no final response was received at all due to connectivity issues,
+   the client MAY automatically attempt upload resumption by retrieving
+   the current offset (Section 4.3).
+
+   The client SHOULD limit the number of retries it performs before
+   considering the upload a failure.
 
 5.  Status Code 104 (Upload Resumption Supported)
 
@@ -1869,6 +1879,8 @@ Since draft-ietf-httpbis-resumable-upload-11
    *  Increase the draft interop version.
 
    *  Add version-specific details on cancelling in-flight transfers.
+
+   *  Clarify client retry strategies.
 
 Since draft-ietf-httpbis-resumable-upload-10
 
