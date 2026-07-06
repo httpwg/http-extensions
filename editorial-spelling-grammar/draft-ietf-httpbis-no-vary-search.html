@@ -1255,7 +1255,7 @@ certain query parameters identify the same resource. It allows resources to decl
 No-Vary-Search: key-order
 </pre><a href="#section-1-3" class="pilcrow">¶</a>
 </div>
-<p id="section-1-4">If the specific query parameters (e.g., ones indicating something for analytics) do not semantically affect the served resource, this is indicated using<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-4">If specific query parameters (e.g., ones indicating something for analytics) do not semantically affect the served resource, this is indicated using<a href="#section-1-4" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-1-5">
 <pre>
 No-Vary-Search: params=("utm_source" "utm_medium" "utm_campaign")
@@ -1281,16 +1281,17 @@ No-Vary-Search: except=("productId")
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">In this document, the terms "URI" and "URL" are used interchangeably, depending on context. "URI" is used in the context of <span>[<a href="#URI" class="cite xref">URI</a>]</span>, <span>[<a href="#HTTP" class="cite xref">HTTP</a>]</span>, and <span>[<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>, whereas "URL" is used in the context of the algorithms specified in <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">This document also adopts some conventions and notation typical in WHATWG and W3C usage, especially as it relates to algorithms. See <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span>, and in particular:<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-3">The term "query parameters" in this document refers to the keys and values resulting from parsing a URL's query component using the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">This document also adopts some conventions and notation typical in WHATWG and W3C usage, especially as it relates to algorithms. See <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span>, and in particular:<a href="#section-2-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-2-4.1">
-          <p id="section-2-4.1.1">its definition of lists, including the list literal notation « 1, 2, 3 ».<a href="#section-2-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-2-5.1">
+          <p id="section-2-5.1.1">its definition of lists, including the list literal notation « 1, 2, 3 ».<a href="#section-2-5.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-2-4.2">
-          <p id="section-2-4.2.1">its definition of strings, including their representation as code units.<a href="#section-2-4.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-2-5.2">
+          <p id="section-2-5.2.1">its definition of strings, including their representation as code units.<a href="#section-2-5.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-5">(Other concepts used are called out using inline references.)<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">(Other concepts used are called out using inline references.)<a href="#section-2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="header-definition">
@@ -1299,7 +1300,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-http-header-field-definitio" class="section-name selfRef">HTTP header field definition</a>
       </h2>
 <p id="section-3-1">The <code>No-Vary-Search</code> HTTP header field is a structured field <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> whose value <span class="bcp14">MUST</span> be a dictionary (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.2" class="relref">Section 3.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">It has the following authoring conformance requirements:<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-2">It has the following constraints:<a href="#section-3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-3.1">
           <p id="section-3-3.1.1">If present, the <code>key-order</code> entry's value <span class="bcp14">MUST</span> be a boolean (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.3.6" class="relref">Section 3.3.6</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-3.1.1" class="pilcrow">¶</a></p>
@@ -1316,7 +1317,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       </ul>
 <p id="section-3-4">The dictionary <span class="bcp14">MAY</span> contain entries whose keys are not one of <code>key-order</code>, <code>params</code>, and <code>except</code>, but their meaning is not defined by this specification. Implementations of this specification will ignore such entries (but future documents might assign meaning to such entries).<a href="#section-3-4" class="pilcrow">¶</a></p>
 <aside id="section-3-5">
-        <p id="section-3-5.1">As always, the authoring conformance requirements are not binding on implementations. Implementations instead need to implement the processing model for URL variation configurations (configs) given by the <span id="iref-obtain-a-url-variation-conf" class="iref"></span><a href="#obtain-a-url-variation-config" class="internal xref">obtain a URL variation config</a> algorithm (<a href="#obtain-a-url-variation-config" class="auto internal xref">Section 5.2</a>).<a href="#section-3-5.1" class="pilcrow">¶</a></p>
+        <p id="section-3-5.1">A parsing algorithm is defined in <a href="#obtain-a-url-variation-config" class="auto internal xref">Section 5.2</a>.<a href="#section-3-5.1" class="pilcrow">¶</a></p>
 </aside>
 </section>
 </div>
@@ -1345,7 +1346,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </dl>
 <p id="section-4-3"><span id="iref-default-url-variation-confi" class="iref"></span>
 The <em><span id="iref-default-url-variation-config" class="iref"></span>default URL variation config</em> is a URL variation config whose no-vary params is an empty list, vary params is <strong>wildcard</strong>, and vary on key order is true.<a href="#section-4-3" class="pilcrow">¶</a></p>
-<p id="section-4-4">The <span id="iref-obtain-a-url-variation-confi" class="iref"></span><a href="#obtain-a-url-variation-config" class="internal xref">obtain a URL variation config</a> algorithm (<a href="#obtain-a-url-variation-config" class="auto internal xref">Section 5.2</a>) ensures that all URL variation configs obey the following constraints:<a href="#section-4-4" class="pilcrow">¶</a></p>
+<p id="section-4-4">The <span id="iref-obtain-a-url-variation-conf" class="iref"></span><a href="#obtain-a-url-variation-config" class="internal xref">obtain a URL variation config</a> algorithm (<a href="#obtain-a-url-variation-config" class="auto internal xref">Section 5.2</a>) ensures that all URL variation configs obey the following constraints:<a href="#section-4-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4-5.1">
           <p id="section-4-5.1.1">vary params is a list if and only if the no-vary params is <strong>wildcard</strong>; and<a href="#section-4-5.1.1" class="pilcrow">¶</a></p>
@@ -1382,7 +1383,7 @@ To <em><span id="iref-parse-a-url-variation-config" class="iref"></span><a href=
             <p id="section-5.1-2.4.1">If <em>value</em>["<code>key-order</code>"] exists:<a href="#section-5.1-2.4.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-2.4.2">
 <li id="section-5.1-2.4.2.1">
-                <p id="section-5.1-2.4.2.1.1">If <em>value</em>["<code>key-order</code>"] is not a boolean, then return the <span id="iref-default-url-variation-config-8" class="iref"></span>default URL variation config.<a href="#section-5.1-2.4.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.4.2.1.1">If <em>value</em>["<code>key-order</code>"] is not a boolean, then return the <span id="iref-default-url-variation-config-7" class="iref"></span>default URL variation config.<a href="#section-5.1-2.4.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.1-2.4.2.2">
                 <p id="section-5.1-2.4.2.2.1">Set <em>result</em>'s vary on key order to the boolean negation of <em>value</em>["<code>key-order</code>"].<a href="#section-5.1-2.4.2.2.1" class="pilcrow">¶</a></p>
@@ -1390,22 +1391,22 @@ To <em><span id="iref-parse-a-url-variation-config" class="iref"></span><a href=
             </ol>
 </li>
           <li id="section-5.1-2.5">
-            <p id="section-5.1-2.5.1">If both <em>value</em>["<code>params</code>"] and <em>value</em>["<code>except</code>"] exist or neither exists, then return the <span id="iref-default-url-variation-config-9" class="iref"></span>default URL variation config.<a href="#section-5.1-2.5.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.5.1">If both <em>value</em>["<code>params</code>"] and <em>value</em>["<code>except</code>"] exist or neither exists, then return the <span id="iref-default-url-variation-config-8" class="iref"></span>default URL variation config.<a href="#section-5.1-2.5.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-2.6">
             <p id="section-5.1-2.6.1">If <em>value</em>["<code>params</code>"] exists:<a href="#section-5.1-2.6.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-2.6.2">
 <li id="section-5.1-2.6.2.1">
-                <p id="section-5.1-2.6.2.1.1">If <em>value</em>["<code>params</code>"] is not an array, then return the <span id="iref-default-url-variation-config-1" class="iref"></span>default URL variation config.<a href="#section-5.1-2.6.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.6.2.1.1">If <em>value</em>["<code>params</code>"] is not an array, then return the <span id="iref-default-url-variation-config-9" class="iref"></span>default URL variation config.<a href="#section-5.1-2.6.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.1-2.6.2.2">
-                <p id="section-5.1-2.6.2.2.1">If any item in <em>value</em>["<code>params</code>"] is not a string, then return the <span id="iref-default-url-variation-config-11" class="iref"></span>default URL variation config.<a href="#section-5.1-2.6.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.6.2.2.1">If any item in <em>value</em>["<code>params</code>"] is not a string, then return the <span id="iref-default-url-variation-config-1" class="iref"></span>default URL variation config.<a href="#section-5.1-2.6.2.2.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.1-2.6.2.3">
-                <p id="section-5.1-2.6.2.3.1">Set <em>result</em>'s no-vary params to the result of applying <span id="iref-parse-a-key-12" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> (<a href="#parse-a-key" class="auto internal xref">Section 5.3</a>) to each item in <em>value</em>["<code>params</code>"].<a href="#section-5.1-2.6.2.3.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.6.2.3.1">Set <em>result</em>'s no-vary params to the result of applying <span id="iref-parse-a-key-11" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> (<a href="#parse-a-key" class="auto internal xref">Section 5.3</a>) to each item in <em>value</em>["<code>params</code>"].<a href="#section-5.1-2.6.2.3.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.1-2.6.2.4">
-                <p id="section-5.1-2.6.2.4.1">If any item in <em>result</em>'s no-vary params is an error, then return the <span id="iref-default-url-variation-config-13" class="iref"></span>default URL variation config.<a href="#section-5.1-2.6.2.4.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.6.2.4.1">If any item in <em>result</em>'s no-vary params is an error, then return the <span id="iref-default-url-variation-config-12" class="iref"></span>default URL variation config.<a href="#section-5.1-2.6.2.4.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.1-2.6.2.5">
                 <p id="section-5.1-2.6.2.5.1">Set <em>result</em>'s vary params to <strong>wildcard</strong>.<a href="#section-5.1-2.6.2.5.1" class="pilcrow">¶</a></p>
@@ -1416,16 +1417,16 @@ To <em><span id="iref-parse-a-url-variation-config" class="iref"></span><a href=
             <p id="section-5.1-2.7.1">Otherwise, if <em>value</em>["<code>except</code>"] exists:<a href="#section-5.1-2.7.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.1-2.7.2">
 <li id="section-5.1-2.7.2.1">
-                <p id="section-5.1-2.7.2.1.1">If <em>value</em>["<code>except</code>"] is not an array, then return the <span id="iref-default-url-variation-config-14" class="iref"></span>default URL variation config.<a href="#section-5.1-2.7.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.7.2.1.1">If <em>value</em>["<code>except</code>"] is not an array, then return the <span id="iref-default-url-variation-config-13" class="iref"></span>default URL variation config.<a href="#section-5.1-2.7.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.1-2.7.2.2">
-                <p id="section-5.1-2.7.2.2.1">If any item in <em>value</em>["<code>except</code>"] is not a string, then return the <span id="iref-default-url-variation-config-15" class="iref"></span>default URL variation config.<a href="#section-5.1-2.7.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.7.2.2.1">If any item in <em>value</em>["<code>except</code>"] is not a string, then return the <span id="iref-default-url-variation-config-14" class="iref"></span>default URL variation config.<a href="#section-5.1-2.7.2.2.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.1-2.7.2.3">
-                <p id="section-5.1-2.7.2.3.1">Set <em>result</em>'s vary params to the result of applying <span id="iref-parse-a-key-16" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> (<a href="#parse-a-key" class="auto internal xref">Section 5.3</a>) to each item in <em>value</em>["<code>except</code>"].<a href="#section-5.1-2.7.2.3.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.7.2.3.1">Set <em>result</em>'s vary params to the result of applying <span id="iref-parse-a-key-15" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> (<a href="#parse-a-key" class="auto internal xref">Section 5.3</a>) to each item in <em>value</em>["<code>except</code>"].<a href="#section-5.1-2.7.2.3.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.1-2.7.2.4">
-                <p id="section-5.1-2.7.2.4.1">If any item in <em>result</em>'s vary params is an error, then return the <span id="iref-default-url-variation-config-17" class="iref"></span>default URL variation config.<a href="#section-5.1-2.7.2.4.1" class="pilcrow">¶</a></p>
+                <p id="section-5.1-2.7.2.4.1">If any item in <em>result</em>'s vary params is an error, then return the <span id="iref-default-url-variation-config-16" class="iref"></span>default URL variation config.<a href="#section-5.1-2.7.2.4.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-5.1-2.7.2.5">
                 <p id="section-5.1-2.7.2.5.1">Set <em>result</em>'s no-vary params to <strong>wildcard</strong>.<a href="#section-5.1-2.7.2.5.1" class="pilcrow">¶</a></p>
@@ -1437,7 +1438,7 @@ To <em><span id="iref-parse-a-url-variation-config" class="iref"></span><a href=
 </li>
         </ol>
 <aside id="section-5.1-3">
-          <p id="section-5.1-3.1">In general, this algorithm is strict and tends to return the <span id="iref-default-url-variation-config-18" class="iref"></span>default URL variation config whenever it sees something it doesn't recognize. This is because the <span id="iref-default-url-variation-config-19" class="iref"></span>default URL variation config behavior will just cause fewer cache hits, which is an acceptable fallback behavior.<a href="#section-5.1-3.1" class="pilcrow">¶</a></p>
+          <p id="section-5.1-3.1">In general, this algorithm is strict and tends to return the <span id="iref-default-url-variation-config-17" class="iref"></span>default URL variation config whenever it sees something it doesn't recognize. This is because the <span id="iref-default-url-variation-config-18" class="iref"></span>default URL variation config behavior will just cause fewer cache hits, which is an acceptable fallback behavior.<a href="#section-5.1-3.1" class="pilcrow">¶</a></p>
 <p id="section-5.1-3.2">However, unrecognized keys at the top level are ignored, to make it easier to extend this specification in the future. To avoid misbehavior with existing client software, such extensions will likely expand, rather than reduce, the set of requests that a cached response can match.<a href="#section-5.1-3.2" class="pilcrow">¶</a></p>
 </aside>
 <aside id="section-5.1-4">
@@ -1450,11 +1451,11 @@ To <em><span id="iref-parse-a-url-variation-config" class="iref"></span><a href=
         <h3 id="name-obtain-a-url-variation-conf">
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-obtain-a-url-variation-conf" class="section-name selfRef">Obtain a URL variation config</a>
         </h3>
-<p id="section-5.2-1"><span id="iref-obtain-a-url-variation-config" class="iref"></span>
-To <em><span id="iref-obtain-a-url-variation-config-" class="iref"></span><a href="#obtain-a-url-variation-config" class="internal xref">obtain a URL variation config</a></em> given a <a href="https://fetch.spec.whatwg.org/#concept-response">response</a> <em>response</em>:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-1"><span id="iref-obtain-a-url-variation-confi" class="iref"></span>
+To <em><span id="iref-obtain-a-url-variation-config" class="iref"></span><a href="#obtain-a-url-variation-config" class="internal xref">obtain a URL variation config</a></em> given an HTTP response (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-3.4" class="relref">Section 3.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) <em>response</em>:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.2-2">
 <li id="section-5.2-2.1">
-            <p id="section-5.2-2.1.1">Let <em>fieldValue</em> be the result of <a href="https://fetch.spec.whatwg.org/#concept-header-list-get-structured-header">getting a structured field value</a> <span>[<a href="#FETCH" class="cite xref">FETCH</a>]</span> given `<code>No-Vary-Search</code>` and "<code>dictionary</code>" from <em>response</em>'s header list.<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-2.1.1">Let <em>fieldValue</em> be the result of parsing the <code>No-Vary-Search</code> field from <em>response</em> as a Dictionary (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-4.2" class="relref">Section 4.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.2-2.2">
             <p id="section-5.2-2.2.1">Return the result of parsing a URL variation config (<a href="#parse-a-url-variation-config" class="auto internal xref">Section 5.1</a>) given <em>fieldValue</em>. <span id="iref-parse-a-url-variation-config-" class="iref"></span><a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
@@ -1587,8 +1588,8 @@ To <em><span id="iref-obtain-a-url-variation-config-" class="iref"></span><a hre
         <h3 id="name-parse-a-key">
 <a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-parse-a-key" class="section-name selfRef">Parse a key</a>
         </h3>
-<p id="section-5.3-1"><span id="iref-parse-a-key-24" class="iref"></span>
-To <em><span id="iref-parse-a-key-25" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a></em> given an ASCII string <em>keyString</em>:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-1"><span id="iref-parse-a-key-23" class="iref"></span>
+To <em><span id="iref-parse-a-key-24" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a></em> given an ASCII string <em>keyString</em>:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.3-2">
 <li id="section-5.3-2.1">
             <p id="section-5.3-2.1.1">Let <em>keyBytes</em> be the <a href="https://infra.spec.whatwg.org/#isomorphic-encode">isomorphic encoding</a> <span>[<a href="#WHATWG-INFRA" class="cite xref">WHATWG-INFRA</a>]</span> of <em>keyString</em>.<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
@@ -1611,7 +1612,7 @@ To <em><span id="iref-parse-a-key-25" class="iref"></span><a href="#parse-a-key"
           <h4 id="name-examples-2">
 <a href="#section-5.3.1" class="section-number selfRef">5.3.1. </a><a href="#name-examples-2" class="section-name selfRef">Examples</a>
           </h4>
-<p id="section-5.3.1-1">The <span id="iref-parse-a-key-26" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> allows encoding an entire entry list of keys and values in a URI (which is restricted to ASCII characters). For example,<a href="#section-5.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.1-1">The <span id="iref-parse-a-key-25" class="iref"></span><a href="#parse-a-key" class="internal xref">parse a key</a> algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span> allows encoding an entire entry list of keys and values in a URI (which is restricted to ASCII characters). For example,<a href="#section-5.3.1-1" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-5.3.1-2">
 <pre>
 No-Vary-Search: params=("%C3%A9+%E6%B0%97")
@@ -1651,7 +1652,7 @@ Two <a href="https://url.spec.whatwg.org/#concept-url">URLs</a> <span>[<a href="
           <p id="section-6-2.1.1">If the scheme, username, password, host, port, or path of <em>urlA</em> and <em>urlB</em> differ, then return false.<a href="#section-6-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-6-2.2">
-          <p id="section-6-2.2.1">If <em>variationConfig</em> is equivalent to the <span id="iref-default-url-variation-config-28" class="iref"></span>default URL variation config, then:<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-6-2.2.1">If <em>variationConfig</em> is equivalent to the <span id="iref-default-url-variation-config-27" class="iref"></span>default URL variation config, then:<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-6-2.2.2">
 <li id="section-6-2.2.2.1">
               <p id="section-6-2.2.2.1.1">If <em>urlA</em>'s query equals <em>urlB</em>'s query, then return true.<a href="#section-6-2.2.2.1.1" class="pilcrow">¶</a></p>
@@ -1892,7 +1893,7 @@ In this case, even URL pairs that might appear the same after running the <a hre
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-8-1">The main risk to be aware of is the impact of mismatched URLs. In particular, this could cause the user to see a response that was originally fetched from a URL different from the one displayed when they hovered a link, or the URL displayed in the URL bar.<a href="#section-8-1" class="pilcrow">¶</a></p>
-<p id="section-8-2">However, since the impact is limited to query parameters, this does not cross the relevant security boundary, which is the <a href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin">origin</a> <span>[<a href="#HTML" class="cite xref">HTML</a>]</span>. (Or perhaps just the <a href="https://url.spec.whatwg.org/#concept-url-host">host</a>, from <a href="https://url.spec.whatwg.org/#url-rendering-simplification">the perspective of web browser security UI</a>. <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>) Indeed, we have already given origins complete control over how they present the (URL, response body) pair, including on the client side via technology such as <a href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate">history.replaceState()</a> or service workers.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-2">However, since the impact is limited to query parameters, this does not cross the relevant security boundary, which is the origin (<span>[<a href="#ORIGIN" class="cite xref">ORIGIN</a>]</span>). (Or perhaps just the <a href="https://url.spec.whatwg.org/#concept-url-host">host</a>, from <a href="https://url.spec.whatwg.org/#url-rendering-simplification">the perspective of web browser security UI</a>. <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>) Indeed, we have already given origins complete control over how they present the (URL, response body) pair, including on the client side via technology such as <a href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate">history.replaceState()</a> or service workers.<a href="#section-8-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="privacy-considerations">
@@ -2015,9 +2016,13 @@ In this case, even URL pairs that might appear the same after running the <a hre
         </dd>
 <dd class="break"></dd>
 <dt id="NAV-TRACKING-MITIGATIONS">[NAV-TRACKING-MITIGATIONS]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Snyder, P.</span> and <span class="refAuthor">J. Yasskin</span>, <span class="refTitle">"Navigational-Tracking Mitigations"</span>, <span>n.d.</span>, <span>&lt;<a href="https://privacycg.github.io/nav-tracking-mitigations/">https://privacycg.github.io/nav-tracking-mitigations/</a>&gt;</span>. <span class="annotation">W3C Privacy CG</span>
         </dd>
+<dd class="break"></dd>
+<dt id="ORIGIN">[ORIGIN]</dt>
+      <dd>
+<span class="refAuthor">Barth, A.</span>, <span class="refTitle">"The Web Origin Concept"</span>, <span class="seriesInfo">RFC 6454</span>, <span class="seriesInfo">DOI 10.17487/RFC6454</span>, <time datetime="2011-12" class="refDate">December 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6454">https://www.rfc-editor.org/rfc/rfc6454</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -2126,8 +2131,7 @@ In this case, even URL pairs that might appear the same after running the <a hre
                 <dt id="appendix-B-2.3.2.1.1.1">obtain a URL variation config</dt>
                 <dd style="margin-left: 1.5em" id="appendix-B-2.3.2.1.1.2">
                   <p id="appendix-B-2.3.2.1.1.2.1">
-                    <a href="#section-3-5.1" class="auto internal xref">Section 3, Paragraph 5.1</a>; 
-<a href="#section-4-4" class="auto internal xref">Section 4, Paragraph 4</a>; 
+                    <a href="#section-4-4" class="auto internal xref">Section 4, Paragraph 4</a>; 
 <strong><em><a href="#section-5.2-1" class="auto internal xref">Section 5.2, Paragraph 1</a></em></strong><a href="#appendix-B-2.3.2.1.1.2.1" class="pilcrow">¶</a></p>
 </dd>
               <dd class="break"></dd>
