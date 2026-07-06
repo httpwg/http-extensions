@@ -702,7 +702,7 @@ Since implementing this approach is not always technically possible or feasible,
 
 # Status Code `104 (Upload Resumption Supported)` {#status-code-104}
 
-The `104 (Upload Resumption Supported)` status code is can be used for two purposes:
+The `104 (Upload Resumption Supported)` status code can be used for two purposes:
 
 - When responding to requests to create uploads, an interim response with the `104 (Upload Resumption Supported)` status code can be sent to indicate the resource's support for resumable uploads, as well as the URI and limits of the corresponding upload resource in the `Location` and `Upload-Limit` header fields, respectively (see {{upload-creation}}). This notifies the client early about the ability to resume the upload in case of network interruptions.
 - While processing the content of a request to append representation data or create an upload, the server can regularly send interim responses with the `104 (Upload Resumption Supported)` status code to indicate the current upload progress in the `Upload-Offset` header field (see {{upload-creation}} and {{upload-appending}}). This allows the client to show more accurate progress information about the amount of data processed by the server. In addition, clients can use this information to release representation data that was buffered, knowing that it doesn't have to be retransmitted.
