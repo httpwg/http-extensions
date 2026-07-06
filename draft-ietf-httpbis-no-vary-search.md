@@ -108,6 +108,7 @@ informative:
          name: Jeffrey Yasskin
          org: Google LLC
    ann: W3C Privacy CG
+  ORIGIN: RFC6454
 
 --- abstract
 
@@ -126,7 +127,7 @@ certain query parameters identify the same resource. It allows resources to decl
 No-Vary-Search: key-order
 ~~~~
 
-If the specific query parameters (e.g., ones indicating something for analytics) do not semantically affect the served resource, this is indicated using
+If specific query parameters (e.g., ones indicating something for analytics) do not semantically affect the served resource, this is indicated using
 
 ~~~~http-message
 No-Vary-Search: params=("utm_source" "utm_medium" "utm_campaign")
@@ -148,6 +149,7 @@ Note that "cache busting" by sending unique query parameters to avoid retrieving
 
 In this document, the terms "URI" and "URL" are used interchangeably, depending on context. "URI" is used in the context of {{URI}}, {{HTTP}}, and {{HTTP-CACHING}}, whereas "URL" is used in the context of the algorithms specified in {{WHATWG-URL}}.
 
+The term "query parameters" in this document refers to the keys and values resulting from parsing a URL's query component using the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format {{WHATWG-URL}}.
 
 This document also adopts some conventions and notation typical in WHATWG and W3C usage, especially as it relates to algorithms. See {{WHATWG-INFRA}}, and in particular:
 
@@ -160,7 +162,7 @@ This document also adopts some conventions and notation typical in WHATWG and W3
 
 The `No-Vary-Search` HTTP header field is a structured field {{STRUCTURED-FIELDS}} whose value MUST be a dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}).
 
-It has the following authoring conformance requirements:
+It has the following constraints:
 
 * If present, the `key-order` entry's value MUST be a boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}).
 * If present, the `params` entry's value MUST be an inner list of strings ({{Section 3.1.1 of STRUCTURED-FIELDS}}).
@@ -170,7 +172,7 @@ It has the following authoring conformance requirements:
 The dictionary MAY contain entries whose keys are not one of `key-order`, `params`, and `except`, but their meaning is not defined by this specification. Implementations of this specification will ignore such entries (but future documents might assign meaning to such entries).
 
 {:aside}
-> As always, the authoring conformance requirements are not binding on implementations. Implementations instead need to implement the processing model for URL variation configurations (configs) given by the obtain a URL variation config algorithm ({{obtain-a-url-variation-config}}).
+> A parsing algorithm is defined in {{obtain-a-url-variation-config}}.
 
 # Data model {#data-model}
 
@@ -239,9 +241,9 @@ To _parse a URL variation config_ given _value_:
 *[obtain a URL variation config]: #obtain-a-url-variation-config
 
 (((!obtain a URL variation config)))
-To _obtain a URL variation config_ given a [response](https://fetch.spec.whatwg.org/#concept-response) _response_:
+To _obtain a URL variation config_ given an HTTP response ({{Section 3.4 of HTTP}}) _response_:
 
-1. Let _fieldValue_ be the result of [getting a structured field value](https://fetch.spec.whatwg.org/#concept-header-list-get-structured-header) {{FETCH}} given \``No-Vary-Search`\` and "`dictionary`" from _response_'s header list.
+1. Let _fieldValue_ be the result of parsing the `No-Vary-Search` field from _response_ as a Dictionary ({{Section 4.2 of STRUCTURED-FIELDS}}).
 1. Return the result of parsing a URL variation config ({{parse-a-url-variation-config}}) given _fieldValue_. (((parse a URL variation config)))
 
 ### Examples
@@ -425,7 +427,7 @@ To aid cache implementation efficiency, servers SHOULD NOT send different non-em
 
 The main risk to be aware of is the impact of mismatched URLs. In particular, this could cause the user to see a response that was originally fetched from a URL different from the one displayed when they hovered a link, or the URL displayed in the URL bar.
 
-However, since the impact is limited to query parameters, this does not cross the relevant security boundary, which is the [origin](https://html.spec.whatwg.org/multipage/browsers.html#concept-origin) {{HTML}}. (Or perhaps just the [host](https://url.spec.whatwg.org/#concept-url-host), from [the perspective of web browser security UI](https://url.spec.whatwg.org/#url-rendering-simplification). {{WHATWG-URL}}) Indeed, we have already given origins complete control over how they present the (URL, response body) pair, including on the client side via technology such as [history.replaceState()](https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate) or service workers.
+However, since the impact is limited to query parameters, this does not cross the relevant security boundary, which is the origin ({{ORIGIN}}). (Or perhaps just the [host](https://url.spec.whatwg.org/#concept-url-host), from [the perspective of web browser security UI](https://url.spec.whatwg.org/#url-rendering-simplification). {{WHATWG-URL}}) Indeed, we have already given origins complete control over how they present the (URL, response body) pair, including on the client side via technology such as [history.replaceState()](https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate) or service workers.
 
 # Privacy Considerations
 
