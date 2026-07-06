@@ -810,7 +810,7 @@ As described in {{INCREMENTAL}}, intermediaries might interfere with the increme
 
 # Request Cancellation {#request-cancellation}
 
-A client or server might want to interrupt an in-flight message transfer intentionally for various reasons (see {{introduction}}). The mechanism to do so depend on the used HTTP version:
+A client or server might want to interrupt an in-flight message transfer intentionally for various reasons (see {{introduction}}). The mechanism to do so depends on the HTTP version in use:
 
 HTTP/1.1:
 : close the underlying transport connection ({{Section 9.5 of RFC9112}})
