@@ -226,7 +226,7 @@ Client                                       Server
 ~~~
 {: #fig-upload-creation-incomplete title="Upload creation with partial representation data"}
 
-2) Next, intermediate parts are appended ({{upload-appending}}) with the `Upload-Complete` field value set to false, indicating that they are not the last part of the representation data. The offset value in the `Upload-Offset` header field is taken from the previous response when creating the upload or appending to it.
+2) Next, intermediate parts are appended ({{upload-appending}}) with the `Upload-Complete` field value set to false, indicating that they are not the last part of the representation data.
 
 ~~~ aasvg
 Client                                       Server
@@ -307,15 +307,19 @@ The state of an upload consists of the following properties that are tracked by 
 
 ### Offset {#upload-offset}
 
-The offset is the number of bytes from the representation data that have been processed, either during the creation of the upload resource ({{upload-creation}}) or by appending to it ({{upload-appending}}). The offset can be retrieved from the upload resource ({{offset-retrieving}}) and is required when appending representation data ({{upload-appending}}) to synchronize the client and resource regarding the amount of transferred representation data.
+The offset is the number of bytes from the representation data that have been processed, either during the creation of the upload resource ({{upload-creation}}) or by appending to it ({{upload-appending}}). The offset is required when appending representation data ({{upload-appending}}) to synchronize the client and resource regarding the amount of transferred representation data.
 
 The offset reflects application-level processing for the upload. Data may have been delivered and acknowledged at the transport layer without yet being reflected in the offset.
 
-Representation data processed by the upload resource cannot be removed again and, therefore, the offset MUST NOT decrease. If the server loses any part of the state, it MUST deactivate the upload resource and reject further interaction with it.
-
 The `Upload-Offset` request and response header field conveys the offset. `Upload-Offset` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the current offset as viewed by the message sender. Other values MUST cause the entire header field to be ignored.
 
-The `Upload-Offset` header field in responses serves as an acknowledgement of the processed representation data and as a guarantee that no retransmission of it will be necessary. Clients can use this guarantee to free resources associated to transferred representation data.
+The client obtains the current offset in multiple ways:
+
+- The offset can be explicitly retrieved from the upload resource ({{offset-retrieving}}).
+- Interim and final responses when creating the upload ({{upload-creation}}) or appending ({{upload-appending}}) can include the `Upload-Offset` header field.
+- Final responses for appending representation data ({{upload-appending}}) with a `2XX` status code or the `Upload-Complete: ?1` acknowledge that the entire request content was received and the offset increased by the length of the appended representation data.
+
+Representation data processed by the upload resource cannot be removed again and, therefore, the offset as seen by the client MUST NOT decrease. Clients can use this guarantee to free resources associated to transferred representation data, as no retransmission of it will be necessary. If the server loses any part of the state, it MUST deactivate the upload resource and reject further interaction with it.
 
 ### Completeness {#upload-complete}
 
@@ -577,7 +581,7 @@ Cache-Control: no-store
 
 A client can continue the upload and append representation data by sending a `PATCH` request with the `application/partial-upload` media type ({{media-type-partial-upload}}) to the upload resource. The request content is the representation data to append. The request can benefit from incremental delivery; see {{incremental}}.
 
-The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` header field. To ensure that the upload resource will accept the request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ({{offset-retrieving}}) or appending representation data ({{upload-appending}}).
+The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` header field. To ensure that the upload resource will accept the request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ({{offset-retrieving}}), creating the upload ({{upload-creation}}), or appending representation data ({{upload-appending}}).
 
 The request MUST include the `Upload-Complete` header field. Its value is true in two cases:
 
@@ -694,7 +698,7 @@ HTTP/1.1 204 No Content
 
 Resumable uploads, as defined in this document, do not permit uploading representation data in parallel to the same upload resource. The client MUST NOT perform multiple representation data transfers for the same upload resource in parallel.
 
-Even if the client is well-behaved and doesn't send concurrent requests, network interruptions can occur in such a way that the client considers a request as failed while the server is unaware of the problem and considers the request still ongoing. The client might then try to resume the upload with the best intentions, resulting in concurrent requests from the server's perspective. Therefore, the server MUST take measures to prevent race conditions, data loss and corruption from concurrent requests to append representation data ({{upload-appending}}) and/or cancellation ({{upload-cancellation}}) to the same upload resource. In addition, the server MUST NOT send outdated information in responses when retrieving the offset ({{offset-retrieving}}). This means that the offset sent by the server MUST be accepted in a subsequent request to append representation data if no other request to append representation data or cancel was received in the meantime. In other words, clients have to be able to use received offsets.
+Even if the client is well-behaved and doesn't send concurrent requests, network interruptions can occur in such a way that the client considers a request as failed while the server is unaware of the problem and considers the request still ongoing. The client might then try to resume the upload with the best intentions, resulting in concurrent requests from the server's perspective. Therefore, the server MUST take measures to prevent race conditions, data loss and corruption from concurrent requests to append representation data ({{upload-appending}}) and/or cancellation ({{upload-cancellation}}) to the same upload resource. In addition, the server MUST NOT send outdated information in responses. This means that the offset communicated through responses as defined in {{upload-offset}} MUST be accepted in a subsequent request to append representation data if no other request to append representation data or cancel was received in the meantime. In other words, clients have to be able to use received offsets.
 
 The RECOMMENDED approach is as follows: If a server receives a new request to retrieve the offset ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}) while a previous request for creating the upload ({{upload-creation}}) or appending representation data ({{upload-appending}}) to the same upload resource is still ongoing, the server SHOULD prevent race conditions, data loss, and corruption by terminating the previous request before processing the new request. Due to network delay and reordering, the server might still be receiving representation data from an ongoing transfer for the same upload resource, which in the client's perspective has failed. Since the client is not allowed to perform multiple transfers for the same upload resource in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
 
