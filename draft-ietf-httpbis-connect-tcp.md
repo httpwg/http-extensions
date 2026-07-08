@@ -258,7 +258,7 @@ An endpoint that receives invalid data from its peer is subject to the same requ
  * A capsule that is truncated by the end of the stream.
  * A capsule that would require unreasonable effort to process.
 
-Note that very large DATA and FINAL_DATA capsules are not a protocol error, as they can be forwarded using a bounded memory buffer.
+Note that very large DATA and FINAL_DATA capsules are still valid, as they can be forwarded incrementally using a bounded memory buffer.
 
 # Additional Connection Setup Behaviors
 
