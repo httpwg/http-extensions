@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-07T02:22:04.675019+00:00",
+  "timestamp": "2026-07-09T02:08:18.238568+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -76040,7 +76040,7 @@
       ],
       "body": "Similar to https://github.com/httpwg/http-extensions/issues/3420, thought I'd ask about names if we're making it clear that the `DATA` and `FINAL_DATA` capsules represent TCP stream data that can be combined and split. \n\nWould it make sense to name them: \n- `TCP_DATA` and `TCP_FINAL_DATA`\n- `STREAM_DATA` and `FINAL_STREAM_DATA` / `STREAM_FINAL_DATA`\n\nThe latter seems nicer if we're saying that merging and splitting is a generic property of any stream, not just TCP. The former seems nicer if we're saying that merging and splitting can be done only in the context of `connect-tcp`.\n\nThis would also help to distinguish them from the HTTP/2 and HTTP/3 `DATA` frames that they are carried within.\n\nIf we keep the existing names, can we add an editorial note for implementors that they should not confuse them with the HTTP/2 and HTTP/3 frames of the same name?",
       "createdAt": "2026-04-04T08:20:36Z",
-      "updatedAt": "2026-07-06T18:06:26Z",
+      "updatedAt": "2026-07-08T14:41:50Z",
       "closedAt": "2026-07-06T18:06:25Z",
       "comments": [
         {
@@ -76070,6 +76070,13 @@
           "body": "Yeah, I have a slight preference for `STREAM_DATA` and `FINAL_STREAM_DATA` (especially given that they can be merged and split), but I have a very strong preference for avoiding the bikeshed entirely. `DATA` and `FINAL_DATA` are good enough.\n\n> If we keep the existing names, can we add an editorial note for implementors that they should not confuse them with the HTTP/2 and HTTP/3 frames of the same name?\n\nIf we do rev the doc, this would be nice-to-have, but doesn't seem like a blocker.",
           "createdAt": "2026-07-06T18:06:25Z",
           "updatedAt": "2026-07-06T18:06:25Z"
+        },
+        {
+          "author": "bemasc",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "In my view the distinction from HTTP DATA frames is already emphasized sufficiently in this sentence:\n\n> The boundaries between DATA and FINAL_DATA capsules are not significant, and are not expected to match TCP segments, TLS records, HTTP DATA frames, QUIC STREAM frames, etc.",
+          "createdAt": "2026-07-08T14:41:50Z",
+          "updatedAt": "2026-07-08T14:41:50Z"
         }
       ]
     },
@@ -76087,7 +76094,7 @@
       ],
       "body": "A few (potentially editorial) questions about FINAL_DATA that might be worth clarifying in the document text: \n\n1. What happens if I get duplicate FINAL_DATA. We say: \n\n> After sending a FINAL_DATA capsule, an endpoint MUST NOT send any more DATA or FINAL_DATA capsules on this data stream. (See [Section 3.4](https://www.ietf.org/archive/id/draft-ietf-httpbis-connect-tcp-11.html#closing-connections) for related requirements.)\n\nBut there is nothing that says what to do as a receiver if you receive a second FINAL_DATA. Is that an error? Do you ignore it?\n\n2. HTTP stream FIN, but no FINAL_DATA. We say: \n\n> When the receive stream is closed abruptly or without a FINAL_DATA capsule received, the endpoint SHOULD send a TCP RST if the TCP subsystem permits it.\n\nGiven that this potentially means data is truncated, should we upgrade this to a \"MUST, if\", rather than a \"SHOULD, if\"? It'd be nice if this signal were as likely as possible to propagate.\n\n3. FINAL_DATA, but no HTTP stream closure. \n\nWe say that an endpoint \"MUST close its send stream\", but what do I do as a receiver if I get FINAL_DATA but the HTTP stream stays open? Should I have a timeout? Is that an error? Do I just ignore it and decide the other endpoint is taking up some of its stream flow control credit, so it probably shouldn't do that, but it's fine if it does (I like this last one, personally)?",
       "createdAt": "2026-04-04T08:26:00Z",
-      "updatedAt": "2026-07-06T18:39:35Z",
+      "updatedAt": "2026-07-08T06:54:17Z",
       "closedAt": null,
       "comments": [
         {
@@ -76138,6 +76145,20 @@
           "body": "Trying to come up with some concrete suggested text, for (1) perhaps something like: \n\n  > An endpoint that receives a DATA or FINAL_DATA capsule after a FINAL_DATA\n  > capsule on the same data stream MUST treat this as an error on that stream.\n  > Because the endpoint has already sent a TCP FIN toward its destination, \n  > it cannot forward the additional payload, and it therefore MUST abort the \n  > stream using an abrupt closure mechanism appropriate to the HTTP version\n  > (Section 3.4). It SHOULD also send a TCP RST toward the destination if able.\n\nAnd for (3), how about: \n\nIn 3.4: \n\n  > Note: A FINAL_DATA capsule closes only the sending endpoint's direction of\n  > the data stream, analogous to a TCP half-close, so the receiving endpoint\n  > can continue to use the stream sending data in the opposite direction.\n  > If an endpoint sends FINAL_DATA but leaves the underlying stream open\n  > in the same direction, the receiving endpoint MUST ensure that stream is\n  > subject to idle-timeouts or other resource management strategies (see Section 6.1).\n\nAnd then in 6.1: \n\n  > - Idle Stream Resource Growth: A malicious client can signal that a proxied\n  >   connection is finished, for example by sending FINAL_DATA, while\n  >   deliberately holding the CONNECT stream open. This ties up stream state\n  >   and proxy buffers at little cost to the attacker and can evade limits that only\n  >   account for streams with active data flow.\n  >   - Mitigation: Ensure there is an idle timeout for streams with no active \n  >     data flow and count half-closed or otherwise drained streams against the\n  >     per-client concurrency limits described above.",
           "createdAt": "2026-07-06T18:35:14Z",
           "updatedAt": "2026-07-06T18:39:35Z"
+        },
+        {
+          "author": "bemasc",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I've posted #3480 and #3481 to capture your first two points.  On point 3, let me see if I understand the attack.\n\nHere's how I understand the attack scenario:\n1. Client->Proxy: FINAL_DATA(\"foo\")\n2. Proxy->Dest: \"foo\",FIN.  Proxy is in FIN-WAIT-1\n3. Dest->Proxy: FINACK,\"bar\",FIN.\n4. Proxy->Dest: FINACK.\n5. Proxy->Client: FINAL_DATA(\"bar\")\n6. Proxy is in TIME-WAIT.  Buffers are deallocated but the kernel reserves the 5-tuple for up to 4 minutes.\n7. Client holds the request open indefinitely.  Client and proxy both have HTTP state, and neither has TCP state.\n\nThe interesting point here is step 4.  The proxy has sent FINACK, even though it isn't sure that \"bar\" will be received.  Ideally, the FINACK would be withheld until the client closes the request cleanly.  However, in POSIX APIs it is probably impossible for an application to delay the FINACK in this way.\n\nIf we remove step 4 (an ideal proxy that withholds FINACK), then the proxy is stuck in FIN-WAIT-2 instead of TIME-WAIT.  This also wouldn't really require holding any buffers open AFAICS.\n\nEither way, I think the resource usage is captured by the existing \"WAIT-Abuse\" attack, so I don't think we need \"Idle Stream Resource Growth\".",
+          "createdAt": "2026-07-07T22:41:28Z",
+          "updatedAt": "2026-07-07T22:41:28Z"
+        },
+        {
+          "author": "wtarreau",
+          "authorAssociation": "NONE",
+          "body": "> [@wtarreau](https://github.com/wtarreau) Did you reach any conclusion about this after your review?\n\nsorry @bemasc, I've been dragged away from it, I'll restart with the rest of the conversation above in mind.",
+          "createdAt": "2026-07-08T06:54:17Z",
+          "updatedAt": "2026-07-08T06:54:17Z"
         }
       ]
     },
@@ -216305,6 +216326,58 @@
           ]
         }
       ]
+    },
+    {
+      "number": 3480,
+      "id": "PR_kwDOAUA-v87vBWjX",
+      "title": "[connect-tcp] Discuss handling of invalid data",
+      "url": "https://github.com/httpwg/http-extensions/pull/3480",
+      "state": "OPEN",
+      "author": "bemasc",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Addresses point 1 of #3422",
+      "createdAt": "2026-07-07T21:39:59Z",
+      "updatedAt": "2026-07-08T15:19:17Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "bd84e74b033dc945b73c436d07b80141b7e8770a",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "bemasc-invalid-data",
+      "headRefOid": "3f387a6fc8e6d5d98c09fab9d46fdc6cbee67e84",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3481,
+      "id": "PR_kwDOAUA-v87vB8E0",
+      "title": "[connect-tcp] Discuss the application of timeouts",
+      "url": "https://github.com/httpwg/http-extensions/pull/3481",
+      "state": "OPEN",
+      "author": "bemasc",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Addresses point 2 of #3422",
+      "createdAt": "2026-07-07T22:11:59Z",
+      "updatedAt": "2026-07-07T22:13:28Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "bd84e74b033dc945b73c436d07b80141b7e8770a",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "bemasc-timeouts",
+      "headRefOid": "2796971632d88f55fbbc5b2a012e497d51ecde15",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
