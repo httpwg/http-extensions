@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                             6 July 2026
-Expires: 7 January 2027
+Intended status: Standards Track                            13 July 2026
+Expires: 14 January 2027
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 January 2027.
+   This Internet-Draft will expire on 14 January 2027.
 
 Copyright Notice
 
@@ -601,11 +601,11 @@ Table of Contents
          client.
 
    *  *Window Bloat*: An attacker can grow the receive window size by
-      simulating a "long, fat network" [RFC7323], then fill the window
-      (from the sender) and stop acknowledging it (at the receiver).
-      This leaves the proxy buffering up to 1 GiB of TCP data until some
-      timeout, while the attacker does not have to retain a large
-      buffer.
+      simulating a "long, fat network" ([RFC7323], Section 1.1), then
+      fill the window (from the sender) and stop acknowledging it (at
+      the receiver).  This leaves the proxy buffering up to 1 GiB of TCP
+      data until some timeout, while the attacker does not have to
+      retain a large buffer.
 
       -  Mitigation: Limit the maximum receive window for TCP and HTTP
          connections, and the size of userspace buffers used for
@@ -617,11 +617,24 @@ Table of Contents
       proxy-to-destination 4-tuple for up to four minutes after the
       client's connection is closed.
 
-      -  Mitigation: Limit the number of connections for each client to
-         each destination, even if those connections are in a waiting
-         state and the corresponding CONNECT stream is closed.
-         Alternatively, allocate a large range of IP addresses for TCP
-         connections (especially in IPv6).
+      -  Mitigations:
+
+         o  Enable the PAWS optimization ([RFC7323], Section 5) across
+            successive connections (e.g., Linux's tcp_tw_reuse=1
+            [SYSCTL]).  This makes TIME-WAIT 4-tuples rapidly reusable
+            if the destination enables TCP Timestamps, which most do.
+
+         o  Allocate a large range of IP addresses for TCP connections
+            (especially in IPv6).
+
+         o  Limit the number of connections for each client to each
+            destination, even if those connections are in a waiting
+            state and the corresponding CONNECT stream is closed.
+
+         o  If necessary, perform an abrupt TCP closure that destroys
+            the Transmission Control Block.  Note that reusing a 4-tuple
+            in this way can increase the risk of interference between
+            successive connections.
 
 7.  Operational Considerations
 
@@ -885,6 +898,10 @@ Table of Contents
    [RFC9440]  Campbell, B. and M. Bishop, "Client-Cert HTTP Header
               Field", RFC 9440, DOI 10.17487/RFC9440, July 2023,
               <https://www.rfc-editor.org/rfc/rfc9440>.
+
+   [SYSCTL]   "IP Sysctl -- The Linux Kernel documentation", June 2026,
+              <https://www.kernel.org/doc/html/v7.1/networking/ip-
+              sysctl.html>.
 
 Acknowledgments
 
