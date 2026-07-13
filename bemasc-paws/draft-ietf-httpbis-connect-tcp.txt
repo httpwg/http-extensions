@@ -631,6 +631,11 @@ Table of Contents
             destination, even if those connections are in a waiting
             state and the corresponding CONNECT stream is closed.
 
+         o  If necessary, perform an abrupt TCP closure that destroys
+            the Transmission Control Block.  Note that reusing a 4-tuple
+            in this way can increase the risk of interference between
+            successive connections.
+
 7.  Operational Considerations
 
 7.1.  Avoiding HTTP/1.1

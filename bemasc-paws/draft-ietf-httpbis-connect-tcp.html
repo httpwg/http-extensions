@@ -1977,6 +1977,9 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
                   <li class="normal" id="section-6.1-2.3.2.1.2.3">
                     <p id="section-6.1-2.3.2.1.2.3.1">Limit the number of connections for each client to each destination, even if those connections are in a waiting state and the corresponding CONNECT stream is closed.<a href="#section-6.1-2.3.2.1.2.3.1" class="pilcrow">¶</a></p>
 </li>
+                  <li class="normal" id="section-6.1-2.3.2.1.2.4">
+                    <p id="section-6.1-2.3.2.1.2.4.1">If necessary, perform an abrupt TCP closure that destroys the Transmission Control Block.  Note that reusing a 4-tuple in this way can increase the risk of interference between successive connections.<a href="#section-6.1-2.3.2.1.2.4.1" class="pilcrow">¶</a></p>
+</li>
                 </ul>
 </li>
             </ul>
