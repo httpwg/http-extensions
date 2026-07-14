@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-12T01:56:54.936697+00:00",
+  "timestamp": "2026-07-14T01:45:37.788750+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -76094,7 +76094,7 @@
       ],
       "body": "A few (potentially editorial) questions about FINAL_DATA that might be worth clarifying in the document text: \n\n1. What happens if I get duplicate FINAL_DATA. We say: \n\n> After sending a FINAL_DATA capsule, an endpoint MUST NOT send any more DATA or FINAL_DATA capsules on this data stream. (See [Section 3.4](https://www.ietf.org/archive/id/draft-ietf-httpbis-connect-tcp-11.html#closing-connections) for related requirements.)\n\nBut there is nothing that says what to do as a receiver if you receive a second FINAL_DATA. Is that an error? Do you ignore it?\n\n2. HTTP stream FIN, but no FINAL_DATA. We say: \n\n> When the receive stream is closed abruptly or without a FINAL_DATA capsule received, the endpoint SHOULD send a TCP RST if the TCP subsystem permits it.\n\nGiven that this potentially means data is truncated, should we upgrade this to a \"MUST, if\", rather than a \"SHOULD, if\"? It'd be nice if this signal were as likely as possible to propagate.\n\n3. FINAL_DATA, but no HTTP stream closure. \n\nWe say that an endpoint \"MUST close its send stream\", but what do I do as a receiver if I get FINAL_DATA but the HTTP stream stays open? Should I have a timeout? Is that an error? Do I just ignore it and decide the other endpoint is taking up some of its stream flow control credit, so it probably shouldn't do that, but it's fine if it does (I like this last one, personally)?",
       "createdAt": "2026-04-04T08:26:00Z",
-      "updatedAt": "2026-07-08T06:54:17Z",
+      "updatedAt": "2026-07-13T15:35:43Z",
       "closedAt": null,
       "comments": [
         {
@@ -76159,6 +76159,41 @@
           "body": "> [@wtarreau](https://github.com/wtarreau) Did you reach any conclusion about this after your review?\n\nsorry @bemasc, I've been dragged away from it, I'll restart with the rest of the conversation above in mind.",
           "createdAt": "2026-07-08T06:54:17Z",
           "updatedAt": "2026-07-08T06:54:17Z"
+        },
+        {
+          "author": "wtarreau",
+          "authorAssociation": "NONE",
+          "body": "Note that step 4 is in fact just the final ACK since the FIN was already sent at step 2. Also in step 3 the dest is not forced to respond with a FIN, it can also just ack and continue to send data. It will send its FIN once it has nothing to say anymore.\n\nAnother point to keep in mind is to discourage applications from abusing this approach of making the client close first (there's already a warning about this for CONNECT in 9110 or 9112 I don't remember), because this will indeed leave TIME_WAITs on the proxy, and can very quickly deplete its ports.\n\nOne effective way to discourage from doing this is to say that depending on local configuration, a proxy having to send a FIN first MAY instead send an RST to preserve its source ports, but that this may result in in-flight data being truncated and any non-received response being lost. This way the client is prepared to take this risk by sending FINAL_DATA first. IMHO it's better to officially suggest it because the reality will be that this is what will be implemented to avoid a trivial DoS.",
+          "createdAt": "2026-07-13T09:14:06Z",
+          "updatedAt": "2026-07-13T09:14:06Z"
+        },
+        {
+          "author": "wtarreau",
+          "authorAssociation": "NONE",
+          "body": "@bemask, #3480 and #3481 look good to me and indeed seem to address my earlier questions above.",
+          "createdAt": "2026-07-13T09:16:17Z",
+          "updatedAt": "2026-07-13T09:16:17Z"
+        },
+        {
+          "author": "bemasc",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> One effective way to discourage from doing this is to say that depending on local configuration, a proxy having to send a FIN first MAY instead send an RST to preserve its source ports, but that this may result in in-flight data being truncated and any non-received response being lost. This way the client is prepared to take this risk by sending FINAL_DATA first. IMHO it's better to officially suggest it because the reality will be that this is what will be implemented to avoid a trivial DoS.\n\nWe discussed the question of what happens after sending RST last year (https://github.com/httpwg/http-extensions/pull/2949#issuecomment-2816611442).  RFC 9293 says the sender \"should\" enter TIME-WAIT, but you explained that this instruction is usually ignored.  This puts us in a tricky position when making a recommendation; I wouldn't want to contradict RFC 9293.\n\nHowever, while looking into this question, I learned about Linux's `tcp_tw_reuse=1` option, which uses a variant of the PAWS optimization to disambiguate packets from the old and new connections.  That seems like a very clean and quite strong defense against this attack.  Please review proposed text in #3488.",
+          "createdAt": "2026-07-13T14:05:32Z",
+          "updatedAt": "2026-07-13T14:05:32Z"
+        },
+        {
+          "author": "wtarreau",
+          "authorAssociation": "NONE",
+          "body": "Ah I didn't remember we already talked about it, sorry. Yeah I've seen your proposal in #3488, that could be a reasonable mitigation approach that is not portable though. I'm still thinking we should suggest implementations exploring possibilities. For example breaking an association using connect(AF_UNSPEC) does usually cause an RST to be emitted, but more as a result of the connection being instantly destroyed, not the other way around. I have not seen yet a platform where we'd keep TIME_WAIT on client side after this. Maybe we should add another bullet point after your proposed addition along the lines of:\n* resort to any platform-specific mechanism that allows to reliably destroy the connection association\nThis way it remains clean from a protocol perspective (i.e. we do our best to mimic what we see on the other side) while suggesting that implementers do their homework to figure the best ways at their disposal for this.",
+          "createdAt": "2026-07-13T14:57:19Z",
+          "updatedAt": "2026-07-13T14:57:19Z"
+        },
+        {
+          "author": "wtarreau",
+          "authorAssociation": "NONE",
+          "body": "I like the wording you adopted, thanks!",
+          "createdAt": "2026-07-13T15:35:42Z",
+          "updatedAt": "2026-07-13T15:35:42Z"
         }
       ]
     },
@@ -216485,6 +216520,42 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3488,
+      "id": "PR_kwDOAUA-v87xGeIB",
+      "title": "[connect-tcp] Offer tcp_tw_reuse=1 and abrupt closure as a TIME-WAIT defense",
+      "url": "https://github.com/httpwg/http-extensions/pull/3488",
+      "state": "MERGED",
+      "author": "bemasc",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "See #3422",
+      "createdAt": "2026-07-13T14:01:21Z",
+      "updatedAt": "2026-07-13T15:38:04Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "bd84e74b033dc945b73c436d07b80141b7e8770a",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "bemasc-paws",
+      "headRefOid": "c779b0a6946f33c0f32a12bc7ecd7755952b910a",
+      "closedAt": "2026-07-13T15:38:02Z",
+      "mergedAt": "2026-07-13T15:38:02Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "7ddf01573fd7c311153aa31dd487f56b5799e57c"
+      },
+      "comments": [
+        {
+          "author": "bemasc",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Approved by @wtarreau here: https://github.com/httpwg/http-extensions/issues/3422#issuecomment-4959710625",
+          "createdAt": "2026-07-13T15:37:07Z",
+          "updatedAt": "2026-07-13T15:37:07Z"
+        }
+      ],
       "reviews": []
     }
   ]
