@@ -982,10 +982,10 @@ Table of Contents
    upload MUST be considered a failure.  The client then MUST NOT
    continue the upload and SHOULD cancel the upload (Section 4.5).
 
-   The client MUST NOT perform offset retrieval while creation
-   (Section 4.2) or appending (Section 4.4) is in progress as this can
-   cause the previous request to be terminated by the server as
-   described in Section 4.6.
+   The client MUST NOT perform offset retrieval while the creation
+   (Section 4.2) of or appending (Section 4.4) to the same upload
+   resource is in progress as this can cause the previous request to be
+   terminated by the server as described in Section 4.6.
 
    If the client receives a 2xx successful response with a valid Upload-
    Offset header field, the client can continue appending representation
@@ -1245,9 +1245,11 @@ Table of Contents
 4.6.  Concurrency
 
    Resumable uploads, as defined in this document, do not permit
-   uploading representation data in parallel to the same upload
-   resource.  The client MUST NOT perform multiple representation data
-   transfers for the same upload resource in parallel.
+   uploading representation data in parallel requests for the same
+   upload.  The client MUST NOT perform multiple representation data
+   transfers for the same upload resource in parallel, or perform
+   representation data transfers while the creation of the same upload
+   resource is still in progress.
 
    Even if the client is well-behaved and doesn't send concurrent
    requests, network interruptions can occur in such a way that the
