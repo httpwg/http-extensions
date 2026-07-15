@@ -529,13 +529,13 @@ Upload-Complete: ?1
 
 If the client wants to resume the upload after an interruption, it has to know the amount of representation data processed by the upload resource so far. It can fetch the offset by sending a `HEAD` or `GET` request to the upload resource. Using `HEAD` is RECOMMENDED, since response content is not required for resumption. Upon a successful response, the client can continue the upload by appending representation data ({{upload-appending}}) starting at the offset indicated by the `Upload-Offset` response header field.
 
-The offset can be less than or equal to the number of bytes of representation data that the client has already sent. The client is expected to handle backtracking of a reasonable length. On the other hand, the offset can be greater than the amount of sent representation data if the upload resource obtained additional representation data on behalf of the client. If the client is not able to provide the representation data at the given offset, the upload MUST be considered a failure. The client then MUST NOT continue the upload and SHOULD cancel the upload ({{upload-cancellation}}).
+The offset can be less than or equal to the number of bytes of representation data that the client has already sent. The client is expected to handle backtracking of a reasonable length. On the other hand, the offset can be greater than the amount of sent representation data, for example, if the upload resource obtained additional representation data on behalf of the client. If the client is not able to provide the representation data at the given offset, the upload MUST be considered a failure. The client then MUST NOT continue the upload and SHOULD cancel the upload ({{upload-cancellation}}).
 
 The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or appending ({{upload-appending}}) is in progress as this can cause the previous request to be terminated by the server as described in {{concurrency}}.
 
-If the client receives a 2xx successful response, the client can continue appending representation data to it and/or mark the upload as complete ({{upload-appending}}).
+If the client receives a 2xx successful response with a valid Upload-Offset header field, the client can continue appending representation data to it and/or mark the upload as complete ({{upload-appending}}).
 
-If the client receives a 4xx client error or 5xx server error response, or if it did not receive a response, the client MAY retry retrieving the offset.
+If the client receives a 2xx successful response without a valid Upload-Offset header field, a 4xx client error, or 5xx server error response, or if it did not receive a response, the client MAY retry retrieving the offset.
 
 ### Server Behavior {#offset-retrieving-server}
 
