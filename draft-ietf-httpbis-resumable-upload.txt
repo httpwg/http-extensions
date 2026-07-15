@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 14 January 2027                                      Apple Inc.
+Expires: 16 January 2027                                      Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                            13 July 2026
+                                                            15 July 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 January 2027.
+   This Internet-Draft will expire on 16 January 2027.
 
 Copyright Notice
 
@@ -976,7 +976,7 @@ Table of Contents
    representation data that the client has already sent.  The client is
    expected to handle backtracking of a reasonable length.  On the other
    hand, the offset can be greater than the amount of sent
-   representation data if the upload resource obtained additional
+   representation data, for example, if the server obtained additional
    representation data on behalf of the client.  If the client is not
    able to provide the representation data at the given offset, the
    upload MUST be considered a failure.  The client then MUST NOT
@@ -987,11 +987,12 @@ Table of Contents
    cause the previous request to be terminated by the server as
    described in Section 4.6.
 
-   If the client receives a 2xx successful response, the client can
-   continue appending representation data to it and/or mark the upload
-   as complete (Section 4.4).
+   If the client receives a 2xx successful response with a valid Upload-
+   Offset header field, the client can continue appending representation
+   data to it and/or mark the upload as complete (Section 4.4).
 
-   If the client receives a 4xx client error or 5xx server error
+   If the client receives a 2xx successful response without a valid
+   Upload-Offset header field, a 4xx client error, or 5xx server error
    response, or if it did not receive a response, the client MAY retry
    retrieving the offset.
 
