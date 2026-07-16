@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-14T01:45:37.788750+00:00",
+  "timestamp": "2026-07-16T01:51:35.916357+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -71073,7 +71073,7 @@
       ],
       "body": "@gstrauss provided the following feedback on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0094.html wrt Section 4.1\n\n> These headings are misnamed\n> * 4.1.1 Offset        ->  Upload-Offset\n> * 4.1.2 Completeness  ->  Upload-Complete\n> * 4.1.3 Length        ->  Upload-Length\n> * 4.1.4 Limits        ->  Upload-Limit\n> \n> Considering the doc states that the server is required to keep state, such as the target resource, it appears that important state items are not all clearly defined under the topic \"State\".\n\nSection 4.1 defines properties of the state of an upload. It also defines headers to transfer state information between endpoints. Therefore this is a subjective editorial issue.",
       "createdAt": "2025-08-11T21:41:07Z",
-      "updatedAt": "2026-06-19T21:33:59Z",
+      "updatedAt": "2026-07-15T19:37:00Z",
       "closedAt": null,
       "comments": [
         {
@@ -72705,7 +72705,7 @@
       ],
       "body": "During WGLC review, @MikeBishop raised the following issue on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0123.html\n\n> Most of Section 4.1.4 seems misplaced. Other than max-age, these are not limits of a particular upload resource (the topic of Section 4), but limits of the base resource's support of Resumable Uploads. This is indicated by the use of OPTIONS on the base resource to probe for these values. Consider separating Upload-Limit into properties of the base resource and properties of the upload resource, and pulling the properties of the base resource into their own section.\n\nThis seems like a design change proposal",
       "createdAt": "2025-08-23T20:33:35Z",
-      "updatedAt": "2026-06-19T21:31:21Z",
+      "updatedAt": "2026-07-15T19:37:00Z",
       "closedAt": null,
       "comments": [
         {
@@ -72812,7 +72812,7 @@
       ],
       "body": "During WGLC review, @MikeBishop raised the following issue on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0123.html\n\n> In 4.3.1, it might be reasonable for the client to require that the offset be no less than the last Upload-Offset that it received in interim responses during the previous upload. After all, we already said the client can discard that data.",
       "createdAt": "2025-08-23T20:37:13Z",
-      "updatedAt": "2026-07-06T20:35:36Z",
+      "updatedAt": "2026-07-15T19:37:01Z",
       "closedAt": null,
       "comments": [
         {
@@ -73066,7 +73066,7 @@
       "id": "I_kwDOAUA-v87HnTxr",
       "title": "RESUMABLE: consider splitting some text out Section 4.4 (append) to keep focus on interim exchanges",
       "url": "https://github.com/httpwg/http-extensions/issues/3227",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -73078,8 +73078,8 @@
       ],
       "body": "During WGLC review, @MikeBishop raised the following issue on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0123.html\n\n> You might consider splitting out part of 4.4 (Append) to a new Upload Completion section, so that 4.4 can focus on handling these interim exchanges.",
       "createdAt": "2025-08-24T00:42:46Z",
-      "updatedAt": "2026-06-19T21:29:57Z",
-      "closedAt": null,
+      "updatedAt": "2026-07-15T19:51:41Z",
+      "closedAt": "2026-07-15T19:51:41Z",
       "comments": [
         {
           "author": "Acconut",
@@ -73087,6 +73087,13 @@
           "body": "That sounds like a good idea. The new section could also be referenced from the upload creation section, as an upload can also be completed in the first request.",
           "createdAt": "2025-09-30T11:31:55Z",
           "updatedAt": "2025-09-30T11:31:55Z"
+        },
+        {
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "We moved a significant part of completeness to a new section in #3404 and also moved the retry parts in #3472. I think the issue was addressed.",
+          "createdAt": "2026-07-15T19:51:41Z",
+          "updatedAt": "2026-07-15T19:51:41Z"
         }
       ]
     },
@@ -77052,7 +77059,7 @@
       ],
       "body": "While implementing my generalized resumable upload client, I ran into several edge cases related to `Upload-Offset` as a response header that I seeked for guidance from the draft on, but the draft doesn't say anything about them.\n\n1. _(This is the only purely editorial issue.)_ In a 2xx response to a creation/append request, a client can determine the new upload offset for the `Upload-Offset` response header based on the length of the content it uploaded added to the previous offset. For example, if the client sent `Upload-Offset: 100` and `Content-Length: 50`, the client knows from a 2xx response that the new offset should be 150. This is implied by the [definition of upload offset](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.1.1-1). It's also specified that the client can [free previous resources](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.1.1-4) upon receipt of a new `Upload-Offset` value, but the same is not specified for changes to the upload offset in general. I think this suggestion may be better communicated if generalized to the offset implied by responses in general (e.g., as implied by a 2xx response), rather than specific to the `Upload-Offset` header.\n2. In a 2xx response to a creation/append request, how should a client treat an `Upload-Offset` value inconsistent with what the client requested? Reusing the previous example, what should the client do if the server replies to that request with `Upload-Offset: 125` or `Upload-Offset: 200` instead of the correct `Upload-Offset: 150`?\n3. In an offset retrieval response, how should a client treat an `Upload-Offset` value below its current known offset? In other words, what should the client do if the server tells it that the offset moved backwards?\n4. Similarly, should a client handle the case that the offset moved forward further ahead than it knows it ever uploaded the representation, since that implies the server messed up? Or should the client just take that for granted, since that allows a simpler implementation?\n5. In an offset retrieval response, how should a client treat a missing or invalid `Upload-Offset`? The [definition of the `Upload-Offset` header](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.1.1-3) currently says syntactically invalid or negative values \"MUST cause the entire header field to be ignored\", but ignoring the header on offset retrieval responses is unacceptable, which seems like an oversight in this definition.\n\nI'm guessing that, for some of these, we'd want the client to abort its current request and cancel the upload, similarly to [when the server messes up](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.2.2-7) the `Location` response header.",
       "createdAt": "2026-06-15T22:30:10Z",
-      "updatedAt": "2026-07-06T20:35:20Z",
+      "updatedAt": "2026-07-15T20:17:45Z",
       "closedAt": null,
       "comments": [
         {
@@ -77173,6 +77180,13 @@
           "body": "Opened https://github.com/httpwg/http-extensions/pull/3479 to address the first point.",
           "createdAt": "2026-07-06T20:35:20Z",
           "updatedAt": "2026-07-06T20:35:20Z"
+        },
+        {
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "#3491 to address 4 and 5",
+          "createdAt": "2026-07-15T20:17:45Z",
+          "updatedAt": "2026-07-15T20:17:45Z"
         }
       ]
     },
@@ -77190,7 +77204,7 @@
       ],
       "body": "For a client handling a 4xx creation/append response with `Upload-Complete: ?0`, it can resume the upload by sending an offset retrieval request, waiting for the response, and then submitting an append request at the retrieved offset. But this isn't necessary if the response includes an up-to-date `Upload-Offset` value already; then, a client can just use that and save a round trip, immediately resuming the upload at the given offset without performing offset retrieval.\n\nThis is especially problematic for servers that require that incomplete appends conform to a particular chunk granularity. Since clients have no way to tell what a server's chunk granularity is, a server with a chunk granularity requirement will respond to nearly every incomplete creation/append with a non-completing 4xx response (as per https://github.com/httpwg/http-extensions/issues/3193#issuecomment-3893170872), since most request content lengths won't be a multiple of the server's chunk granularity. Then the client has to perform offset retrieval to send every single chunk but the first and last. This puts unnecessary load on clients and servers wherever chunk granularity is involved.\n\nI'd strongly argue we should recommend servers include the `Upload-Offset` header in 4xx responses with `Upload-Complete: ?0`. We don't have to recommend clients actually use this information, since as Guoye Zhang said in [a comment](https://github.com/httpwg/http-extensions/pull/3319#discussion_r2474114941), that would make client implementations more complex. But clients should at least have the option to opt into that sometimes-very-significant performance optimization, and I expect it to be very simple for servers to include that information.\n\n~~[This paragraph](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.4.1-2) should also be modified to mention this as one of the sources clients are recommended to take the offset from, though I'm not sure how I'd phrase that.~~ EDIT: I'm not sure why I thought any change was needed there. Looking at it again, it seems like it already covers this.\n\nThis could also be extended to ~~3xx-5xx~~ 3xx responses that contain the `Upload-Complete: ?0` header. There is no point in recommending this for 2xx since the offset after a non-completing 2xx response can be inferred from the previous known offset + the requested content length. I also wouldn't recommend extending this to any responses without the `Upload-Complete` header, since those responses are often generated without awareness of resumable uploads.",
       "createdAt": "2026-06-16T02:45:03Z",
-      "updatedAt": "2026-07-06T22:58:51Z",
+      "updatedAt": "2026-07-15T19:37:02Z",
       "closedAt": null,
       "comments": [
         {
@@ -77492,10 +77506,12 @@
       "author": "GrantGryczan",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "resumable-upload"
+      ],
       "body": "Ever since #3404, `Upload-Complete` has been defined in two very different and inconsistent ways:\n\n1. In append/creation responses, false means resumable upload semantics apply to the response, and true means the semantics of the initial targeted resource apply to the response.\n2. In offset retrieval responses, false means the server has not sent a complete response before, and true means it has.\n\nWhen I pointed this out, @guoye-zhang originally suggested in https://github.com/httpwg/http-extensions/pull/3404#issuecomment-4456976441 and https://github.com/httpwg/http-extensions/pull/3404#issuecomment-4457154800 that it might be best to remove the `Upload-Complete` header from offset retrieval responses, since knowing that the upload was completed without knowing the final response and whether it was successful is generally not very useful.\n\nI said we should hold off so I can get a feel for it with my implementation. I've since gotten a feel for it, and I've come to agree. I'm not entirely convinced that there are absolutely no situations where it's useful, but I suspect that the rare situations where it is somewhat useful won't find it essential.\n\nOne example I thought of where it could be somewhat useful is to avoid wasting bandwidth on sending content when recovering a lost early response. If a clients sends an `Upload-Complete: ?0` request, and the server responds with `Upload-Complete: ?1`, but the client never receives that response, then the client will perform offset retrieval, see the `Upload-Complete: ?1` indicating that it missed a complete response previously, and send an empty append just to possibly obtain that response instead of wastefully trying to continue the upload by sending more data. But I don't think that's a big deal.\n\nThen again, it may also not be a big deal that there are two different ways this header is defined. One nice thing about having only one semantic meaning is that the handler for creation, append, and offset retrieval responses can all treat `Upload-Complete` the same way: if true, that response can be treated as the final response to the initial targeted resource. This could simplify some client implementations, since they could use the same handler for all 3 types of responses. For offset retrieval responses, that code path would simply never run for compliant servers, since offset retrieval responses would never have `Upload-Complete`.",
       "createdAt": "2026-07-10T15:33:39Z",
-      "updatedAt": "2026-07-10T15:39:31Z",
+      "updatedAt": "2026-07-15T19:37:03Z",
       "closedAt": null,
       "comments": []
     },
@@ -77509,19 +77525,11 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "EDIT: Sorry, created this issue on accident.",
+      "body": "EDIT: Oops, accidentally double-clicked the create issue button. I would delete this issue if I could.",
       "createdAt": "2026-07-10T15:33:40Z",
-      "updatedAt": "2026-07-10T16:54:27Z",
+      "updatedAt": "2026-07-15T21:04:54Z",
       "closedAt": "2026-07-10T15:41:33Z",
-      "comments": [
-        {
-          "author": "GrantGryczan",
-          "authorAssociation": "CONTRIBUTOR",
-          "body": "Oops, accidentally double-clicked the create issue button. I would delete this issue if I could.",
-          "createdAt": "2026-07-10T15:41:33Z",
-          "updatedAt": "2026-07-10T15:42:35Z"
-        }
-      ]
+      "comments": []
     },
     {
       "number": 3484,
@@ -77532,10 +77540,12 @@
       "author": "GrantGryczan",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "resumable-upload"
+      ],
       "body": "#3472 seems to have created a regression by removing the following text from upload creation's client specifications:\n\n> If the client received a final response with a\n> \n> - `2xx (Successful)` status code and the request content contained the entire representation data, the upload is complete and the response comes from the resource targeted by the initial request processing the representation.\n> - [...]\n\nThis was replaced with the following:\n\n> If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and [...].\n> \n> If the client receives a 2xx successful final response with the `Upload-Complete` header field set to false or missing, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ([Section 4.4](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#upload-appending)).\n> \n> [...]\n\nIn particular, if a client sends a creation request with `Upload-Complete: ?1`, a 2xx response with `Upload-Complete` missing should be treated as if the upload had been completed. In general, if the client sent `Upload-Complete: ?1`, then a 2xx response should mean the upload was completed. The old text (poorly) captured that, but the new text always treats `Upload-Complete` missing as `Upload-Complete: ?0`.\n\nA similar regression occurred for upload append's client specifications. The new text no longer specifies how 2xx should be treated at all. To simplify the client implementation, I would hope for 2xx responses to an `Upload-Complete: ?1` upload append request to also be considered complete. I don't want to have to special-case the response handler for upload creation to treat 2xx without `Upload-Complete` differently from the same for upload append.\n\nFurther, perhaps servers should be required not to use `Upload-Complete: ?0` in a 2xx response to a request with `Upload-Complete: ?1`? That seems self-contradictory: 2xx means \"I fulfilled your request\", but `Upload-Complete: ?0` means \"I didn't complete the upload (even though you requested me to)\".",
       "createdAt": "2026-07-10T16:07:48Z",
-      "updatedAt": "2026-07-10T16:35:17Z",
+      "updatedAt": "2026-07-15T19:53:12Z",
       "closedAt": null,
       "comments": []
     },
@@ -77544,16 +77554,26 @@
       "id": "I_kwDOAUA-v88AAAABIX955w",
       "title": "RESUMABLE: Imprecise requirements against sending concurrent requests",
       "url": "https://github.com/httpwg/http-extensions/issues/3485",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "GrantGryczan",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "resumable-upload"
+      ],
       "body": "The section on concurrency requires this for upload append:\n\n> Resumable uploads, as defined in this document, do not permit uploading representation data in parallel to the same upload resource. The client MUST NOT perform multiple representation data transfers for the same upload resource in parallel.\n\nBut this requirement mistakenly does not apply to upload creation, since upload creation isn't a data transfer to an upload resource. This phrasing should be changed so that a client is not allowed to append to a resource from the same upload as an ongoing creation request.\n\nOffset retrieval is already covered by this paragraph:\n\n> The client MUST NOT perform offset retrieval while creation ([Section 4.2](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#upload-creation)) or appending ([Section 4.4](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#upload-appending)) is in progress as this can cause the previous request to be terminated by the server as described in [Section 4.6](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#concurrency).\n\nBut this should be clarified to be specific to each upload, rather than the client as a whole. It's fine to perform offset retrieval to one upload while creating or appending to another.",
       "createdAt": "2026-07-10T16:47:31Z",
-      "updatedAt": "2026-07-10T16:48:55Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2026-07-15T21:22:38Z",
+      "closedAt": "2026-07-15T21:22:38Z",
+      "comments": [
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "Good comments. Guoye opened #3492 to address these.",
+          "createdAt": "2026-07-15T20:42:55Z",
+          "updatedAt": "2026-07-15T20:42:55Z"
+        }
+      ]
     },
     {
       "number": 3486,
@@ -201117,7 +201137,7 @@
       ],
       "body": "This is one proposal for addressing the point raised in #3169. \r\n\r\nCurrently, the bulk of the spec is located in Section 4. We have an entire spec for the topic of resumable uploads, so being shy to use top-level sections for key concepts might be a bit conservative. This PR flattens the structure (but doesn't move any sections around) in order to reduce the amount of third-level sections, making space to only define the new headers in them. (FWIW 4th-level TOC items tend to indicate over-nesting and don't always get rendered in the TOC)\r\n\r\nLanding this would number sections and be slightly disruptive to open reviews/issues. If we like the direction, I'd suggest holding it until other issues are closed out.\r\n\r\nCurrent ToC (ignoring appendices)\r\n\r\n```\r\n   1.  Introduction\r\n   2.  Conventions and Definitions\r\n   3.  Overview\r\n     3.1.  Example 1: Complete upload of representation data with\r\n           known size\r\n     3.2.  Example 2: Upload as a series of parts\r\n   4.  Upload Resource\r\n     4.1.  State\r\n       4.1.1.  Offset\r\n       4.1.2.  Completeness\r\n       4.1.3.  Length\r\n       4.1.4.  Limits\r\n     4.2.  Upload Creation\r\n       4.2.1.  Client Behavior\r\n       4.2.2.  Server Behavior\r\n       4.2.3.  Examples\r\n     4.3.  Offset Retrieval\r\n       4.3.1.  Client Behavior\r\n       4.3.2.  Server Behavior\r\n       4.3.3.  Example\r\n     4.4.  Upload Append\r\n       4.4.1.  Client Behavior\r\n       4.4.2.  Server Behavior\r\n       4.4.3.  Example\r\n     4.5.  Upload Cancellation\r\n       4.5.1.  Client Behavior\r\n       4.5.2.  Server Behavior\r\n       4.5.3.  Example\r\n     4.6.  Concurrency\r\n   5.  Status Code 104 (Upload Resumption Supported)\r\n   6.  Media Type application/partial-upload\r\n   7.  Problem Types\r\n     7.1.  Mismatching Offset\r\n     7.2.  Completed Upload\r\n     7.3.  Inconsistent Length\r\n   8.  Content Codings\r\n   9.  Transfer Codings\r\n   10. Integrity Digests\r\n     10.1.  Representation Digests\r\n     10.2.  Content Digests\r\n   11. Responses to Uploads\r\n   12. Upload Strategies\r\n     12.1.  Optimistic Upload Creation\r\n       12.1.1.  Upgrading To Resumable Uploads\r\n     12.2.  Careful Upload Creation\r\n   13. Security Considerations\r\n   14. IANA Considerations\r\n     14.1.  HTTP Fields\r\n     14.2.  HTTP Status Code\r\n     14.3.  Media Type\r\n     14.4.  HTTP Problem Types\r\n   15. References\r\n     15.1.  Normative References\r\n     15.2.  Informative References\r\n ````\r\n\r\n\r\n\r\nProposed Toc (ignoring appendices)\r\n\r\n```\r\n   1.  Introduction\r\n   2.  Conventions and Definitions\r\n   3.  Overview\r\n     3.1.  Example 1: Complete upload of representation data with\r\n           known size\r\n     3.2.  Example 2: Upload as a series of parts\r\n   4.  Upload Resource\r\n     4.1.  Offset\r\n       4.1.1.  Upload-Offset\r\n     4.2.  Completeness\r\n       4.2.1.  Upload-Complete\r\n     4.3.  Length\r\n       4.3.1.  Upload-Length\r\n     4.4.  Limits\r\n       4.4.1.  Upload-Limits\r\n   5.  Upload Creation\r\n     5.1.  Client Behavior\r\n     5.2.  Server Behavior\r\n     5.3.  Examples\r\n   6.  Offset Retrieval\r\n     6.1.  Client Behavior\r\n     6.2.  Server Behavior\r\n     6.3.  Example\r\n   7.  Upload Append\r\n     7.1.  Client Behavior\r\n     7.2.  Server Behavior\r\n     7.3.  Example\r\n   8.  Upload Cancellation\r\n     8.1.  Client Behavior\r\n     8.2.  Server Behavior\r\n     8.3.  Example\r\n   9.  Concurrency\r\n   10. Status Code 104 (Upload Resumption Supported)\r\n   11. Media Type application/partial-upload\r\n   12. Problem Types\r\n     12.1.  Mismatching Offset\r\n     12.2.  Completed Upload\r\n     12.3.  Inconsistent Length\r\n   13. Content Codings\r\n   14. Transfer Codings\r\n   15. Integrity Digests\r\n     15.1.  Representation Digests\r\n     15.2.  Content Digests\r\n   16. Responses to Uploads\r\n   17. Upload Strategies\r\n     17.1.  Optimistic Upload Creation\r\n       17.1.1.  Upgrading To Resumable Uploads\r\n     17.2.  Careful Upload Creation\r\n   18. Security Considerations\r\n   19. IANA Considerations\r\n     19.1.  HTTP Fields\r\n     19.2.  HTTP Status Code\r\n     19.3.  Media Type\r\n     19.4.  HTTP Problem Types\r\n   20. References\r\n     20.1.  Normative References\r\n     20.2.  Informative References\r\n````",
       "createdAt": "2025-08-22T17:10:22Z",
-      "updatedAt": "2026-06-22T15:52:36Z",
+      "updatedAt": "2026-07-15T19:37:36Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "3a3aba6e84f57b0fc21daf6f38172911a72d3bb7",
@@ -216369,7 +216389,7 @@
       ],
       "body": "This PR addresses two comments:\r\n\r\nFrom https://github.com/httpwg/http-extensions/issues/3451:\r\n\r\n> In a 2xx response to a creation/append request, a client can determine the new upload offset for the Upload-Offset response header based on the length of the content it uploaded added to the previous offset. For example, if the client sent Upload-Offset: 100 and Content-Length: 50, the client knows from a 2xx response that the new offset should be 150. This is implied by the [definition of upload offset](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.1.1-1). It's also specified that the client can [free previous resources](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.1.1-4) upon receipt of a new Upload-Offset value, but the same is not specified for changes to the upload offset in general. I think this suggestion may be better communicated if generalized to the offset implied by responses in general (e.g., as implied by a 2xx response), rather than specific to the Upload-Offset header.\r\n\r\nTo address this, mention that a client can learn the offset implicitly through responses.\r\n\r\nFrom https://github.com/httpwg/http-extensions/issues/3222:\r\n\r\n> In 4.3.1, it might be reasonable for the client to require that the offset be no less than the last Upload-Offset that it received in interim responses during the previous upload. After all, we already said the client can discard that data.\r\n\r\nThe text has been expanded to that the client must never observe a decreasing offset value, regardless through which means.\r\n\r\nCloses https://github.com/httpwg/http-extensions/issues/3451.\r\nCloses https://github.com/httpwg/http-extensions/issues/3222.\r\n",
       "createdAt": "2026-07-06T20:33:22Z",
-      "updatedAt": "2026-07-06T22:23:58Z",
+      "updatedAt": "2026-07-15T20:34:16Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "bd84e74b033dc945b73c436d07b80141b7e8770a",
@@ -216439,14 +216459,7 @@
           "body": "",
           "createdAt": "2026-07-06T22:16:39Z",
           "updatedAt": "2026-07-06T22:19:13Z",
-          "comments": [
-            {
-              "originalPosition": 1,
-              "body": "Oh, also, while we're clarifying client offset behavior, I'd like to suggest the non-controversial editorial change I previously mentioned relating to #3451's 4th point as well, which would make me more comfortable closing the issue. The offset can be greater for any reason, so this should only be framed as an example. And resources don't obtain things; servers do.\r\n\r\n```suggestion\r\nThe offset can be less than or equal to the number of bytes of representation data that the client has already sent. The client is expected to handle backtracking of a reasonable length. On the other hand, the offset can be greater than the amount of sent representation data, for example, if the server obtained additional representation data on behalf of the client. If the client is not able to provide the representation data at the given offset, the upload MUST be considered a failure. The client then MUST NOT continue the upload and SHOULD cancel the upload ({{upload-cancellation}}).\r\n```\r\n\r\nEDIT: Not sure why GitHub is rendering this suggestion as replacing an empty line. Line 535 is not empty. I'm going to guess it just hit a character limit.",
-              "createdAt": "2026-07-06T22:16:40Z",
-              "updatedAt": "2026-07-06T22:26:59Z"
-            }
-          ]
+          "comments": []
         },
         {
           "id": "PRR_kwDOAUA-v88AAAABFJOfXw",
@@ -216557,6 +216570,183 @@
         }
       ],
       "reviews": []
+    },
+    {
+      "number": 3489,
+      "id": "PR_kwDOAUA-v87x9ko4",
+      "title": "Add note that \"+\" maps to SP",
+      "url": "https://github.com/httpwg/http-extensions/pull/3489",
+      "state": "OPEN",
+      "author": "nidhijaju",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "no-vary-search"
+      ],
+      "body": "Fixes https://github.com/httpwg/http-extensions/issues/3487.",
+      "createdAt": "2026-07-15T09:50:35Z",
+      "updatedAt": "2026-07-15T09:50:35Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7ddf01573fd7c311153aa31dd487f56b5799e57c",
+      "headRepository": "nidhijaju/http-extensions",
+      "headRefName": "space-I18N",
+      "headRefOid": "d3e8c4b7c49fa1493f8d2e4212f2b0bbcee4514d",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3490,
+      "id": "PR_kwDOAUA-v87x-Veh",
+      "title": "Avoid using query parameter before it's defined",
+      "url": "https://github.com/httpwg/http-extensions/pull/3490",
+      "state": "OPEN",
+      "author": "nidhijaju",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "no-vary-search"
+      ],
+      "body": "Fixes https://github.com/httpwg/http-extensions/issues/3486.",
+      "createdAt": "2026-07-15T10:22:43Z",
+      "updatedAt": "2026-07-15T10:22:44Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7ddf01573fd7c311153aa31dd487f56b5799e57c",
+      "headRepository": "nidhijaju/http-extensions",
+      "headRefName": "query-parameters",
+      "headRefOid": "1c10261dadfce4cd38246e773bc1c215c036cea3",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3491,
+      "id": "PR_kwDOAUA-v87yM1rS",
+      "title": "Clarify upload retrieval response behavior",
+      "url": "https://github.com/httpwg/http-extensions/pull/3491",
+      "state": "MERGED",
+      "author": "guoye-zhang",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Addresses points 4 and 5 from https://github.com/httpwg/http-extensions/issues/3451.",
+      "createdAt": "2026-07-15T20:17:13Z",
+      "updatedAt": "2026-07-15T21:21:54Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7ddf01573fd7c311153aa31dd487f56b5799e57c",
+      "headRepository": "guoye-zhang/http-extensions",
+      "headRefName": "offset-retrieval",
+      "headRefOid": "f4da3aa55d33a5ceb538a425e836dacc67065864",
+      "closedAt": "2026-07-15T21:21:51Z",
+      "mergedAt": "2026-07-15T21:21:51Z",
+      "mergedBy": "guoye-zhang",
+      "mergeCommit": {
+        "oid": "508bc8a356f08acccdfae387c4fc82705a206531"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABGJuJ8g",
+          "commit": {
+            "abbreviatedOid": "e0c8885"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-07-15T20:17:50Z",
+          "updatedAt": "2026-07-15T20:17:50Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABGJ0AYg",
+          "commit": {
+            "abbreviatedOid": "e0c8885"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-07-15T20:31:39Z",
+          "updatedAt": "2026-07-15T20:46:03Z",
+          "comments": [
+            {
+              "originalPosition": 50,
+              "body": "Resources don't obtain things; servers do.\r\n\r\n```suggestion\r\nThe offset can be less than or equal to the number of bytes of representation data that the client has already sent. The client is expected to handle backtracking of a reasonable length. On the other hand, the offset can be greater than the amount of sent representation data, for example, if the server obtained additional representation data on behalf of the client. If the client is not able to provide the representation data at the given offset, the upload MUST be considered a failure. The client then MUST NOT continue the upload and SHOULD cancel the upload ({{upload-cancellation}}).\r\n```\r\n\r\n(I commented this on the other PR, but this PR is covering my other suggestion from that comment, I'll move this one here too and delete that.)",
+              "createdAt": "2026-07-15T20:31:39Z",
+              "updatedAt": "2026-07-15T21:15:07Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 3492,
+      "id": "PR_kwDOAUA-v87yNYYq",
+      "title": "RESUMABLE: Address concurrency feedback",
+      "url": "https://github.com/httpwg/http-extensions/pull/3492",
+      "state": "MERGED",
+      "author": "guoye-zhang",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Resolves #3485",
+      "createdAt": "2026-07-15T20:41:09Z",
+      "updatedAt": "2026-07-15T21:22:40Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7ddf01573fd7c311153aa31dd487f56b5799e57c",
+      "headRepository": "guoye-zhang/http-extensions",
+      "headRefName": "concurrency",
+      "headRefOid": "94384a457c066979a163c9666742c7c8e77b98a1",
+      "closedAt": "2026-07-15T21:22:37Z",
+      "mergedAt": "2026-07-15T21:22:37Z",
+      "mergedBy": "guoye-zhang",
+      "mergeCommit": {
+        "oid": "92a107465a3c54e9c3bdd3da12425b9d7f4a3be5"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABGJ4JiA",
+          "commit": {
+            "abbreviatedOid": "94384a4"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-07-15T20:42:07Z",
+          "updatedAt": "2026-07-15T20:42:07Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABGJ8Plw",
+          "commit": {
+            "abbreviatedOid": "94384a4"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-07-15T20:52:37Z",
+          "updatedAt": "2026-07-15T20:52:37Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
