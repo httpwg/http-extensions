@@ -533,7 +533,7 @@ The offset can be less than or equal to the number of bytes of representation da
 
 The client MUST NOT perform offset retrieval while the creation ({{upload-creation}}) of or appending ({{upload-appending}}) to the same upload resource is in progress as this can cause the previous request to be terminated by the server as described in {{concurrency}}.
 
-If the client receives a 2xx successful response with a valid Upload-Offset header field, the client can continue appending representation data to it and/or mark the upload as complete ({{upload-appending}}).
+If the client receives a 2xx successful response with a valid Upload-Offset header field, the client can continue appending representation data to it ({{upload-appending}}).
 
 If the client receives a 2xx successful response without a valid Upload-Offset header field, a 4xx client error, or 5xx server error response, or if it did not receive a response, the client MAY retry retrieving the offset.
 
@@ -542,8 +542,6 @@ If the client receives a 2xx successful response without a valid Upload-Offset h
 A successful response to a `HEAD` or `GET` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset}}),
-- MUST include the `Upload-Complete` header field ({{upload-complete}}) indicating whether a final response was produced from processing the uploaded representation,
-- MUST include the representation's length in the `Upload-Length` header field, unless the client has not supplied the representation's length as described in ({{upload-length}}),
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
 
@@ -967,6 +965,11 @@ Reference:
 # Changes
 {:removeinrfc="true"}
 
+## Since draft-ietf-httpbis-resumable-upload-12
+{:numbered="false"}
+
+* Upload-Complete and Upload-Length are no longer required on offset retrieval responses.
+
 ## Since draft-ietf-httpbis-resumable-upload-11
 {:numbered="false"}
 
@@ -1107,7 +1110,7 @@ None
 
 To assist the development of implementations and interoperability testing while this document is still a draft, an interop version is defined. Implementations of this draft use the interop version to identify the iteration of the draft that they implement. The interop version is bumped for breaking changes.
 
-The current interop version is 9.
+The current interop version is 10.
 
 Client implementations of draft versions of the protocol MUST send a header field `Upload-Draft-Interop-Version` with the interop version as its value to its requests. The `Upload-Draft-Interop-Version` field value is an Integer.
 
