@@ -968,7 +968,7 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-12
 {:numbered="false"}
 
-* Upload-Complete and Upload-Length are no longer required on offset retrival responses.
+* Upload-Complete and Upload-Length are no longer required on offset retrieval responses.
 
 ## Since draft-ietf-httpbis-resumable-upload-11
 {:numbered="false"}
