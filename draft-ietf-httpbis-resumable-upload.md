@@ -542,7 +542,6 @@ If the client receives a 2xx successful response without a valid Upload-Offset h
 A successful response to a `HEAD` or `GET` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset}}),
-- MUST include the representation's length in the `Upload-Length` header field, unless the client has not supplied the representation's length as described in ({{upload-length}}),
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
 
@@ -969,7 +968,7 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-12
 {:numbered="false"}
 
-* Upload-Complete is no longer required on offset retrival responses
+* Upload-Complete and Upload-Length are no longer required on offset retrival responses.
 
 ## Since draft-ietf-httpbis-resumable-upload-11
 {:numbered="false"}
