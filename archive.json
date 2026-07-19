@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-16T01:51:35.916357+00:00",
+  "timestamp": "2026-07-19T01:54:24.670804+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77502,7 +77502,7 @@
       "id": "I_kwDOAUA-v88AAAABIXbcJA",
       "title": "RESUMABLE: `Upload-Complete` is semantically inconsistent in offset retrieval responses",
       "url": "https://github.com/httpwg/http-extensions/issues/3482",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "GrantGryczan",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -77511,8 +77511,8 @@
       ],
       "body": "Ever since #3404, `Upload-Complete` has been defined in two very different and inconsistent ways:\n\n1. In append/creation responses, false means resumable upload semantics apply to the response, and true means the semantics of the initial targeted resource apply to the response.\n2. In offset retrieval responses, false means the server has not sent a complete response before, and true means it has.\n\nWhen I pointed this out, @guoye-zhang originally suggested in https://github.com/httpwg/http-extensions/pull/3404#issuecomment-4456976441 and https://github.com/httpwg/http-extensions/pull/3404#issuecomment-4457154800 that it might be best to remove the `Upload-Complete` header from offset retrieval responses, since knowing that the upload was completed without knowing the final response and whether it was successful is generally not very useful.\n\nI said we should hold off so I can get a feel for it with my implementation. I've since gotten a feel for it, and I've come to agree. I'm not entirely convinced that there are absolutely no situations where it's useful, but I suspect that the rare situations where it is somewhat useful won't find it essential.\n\nOne example I thought of where it could be somewhat useful is to avoid wasting bandwidth on sending content when recovering a lost early response. If a clients sends an `Upload-Complete: ?0` request, and the server responds with `Upload-Complete: ?1`, but the client never receives that response, then the client will perform offset retrieval, see the `Upload-Complete: ?1` indicating that it missed a complete response previously, and send an empty append just to possibly obtain that response instead of wastefully trying to continue the upload by sending more data. But I don't think that's a big deal.\n\nThen again, it may also not be a big deal that there are two different ways this header is defined. One nice thing about having only one semantic meaning is that the handler for creation, append, and offset retrieval responses can all treat `Upload-Complete` the same way: if true, that response can be treated as the final response to the initial targeted resource. This could simplify some client implementations, since they could use the same handler for all 3 types of responses. For offset retrieval responses, that code path would simply never run for compliant servers, since offset retrieval responses would never have `Upload-Complete`.",
       "createdAt": "2026-07-10T15:33:39Z",
-      "updatedAt": "2026-07-15T19:37:03Z",
-      "closedAt": null,
+      "updatedAt": "2026-07-16T16:51:02Z",
+      "closedAt": "2026-07-16T16:51:02Z",
       "comments": []
     },
     {
@@ -77545,9 +77545,24 @@
       ],
       "body": "#3472 seems to have created a regression by removing the following text from upload creation's client specifications:\n\n> If the client received a final response with a\n> \n> - `2xx (Successful)` status code and the request content contained the entire representation data, the upload is complete and the response comes from the resource targeted by the initial request processing the representation.\n> - [...]\n\nThis was replaced with the following:\n\n> If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and [...].\n> \n> If the client receives a 2xx successful final response with the `Upload-Complete` header field set to false or missing, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ([Section 4.4](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#upload-appending)).\n> \n> [...]\n\nIn particular, if a client sends a creation request with `Upload-Complete: ?1`, a 2xx response with `Upload-Complete` missing should be treated as if the upload had been completed. In general, if the client sent `Upload-Complete: ?1`, then a 2xx response should mean the upload was completed. The old text (poorly) captured that, but the new text always treats `Upload-Complete` missing as `Upload-Complete: ?0`.\n\nA similar regression occurred for upload append's client specifications. The new text no longer specifies how 2xx should be treated at all. To simplify the client implementation, I would hope for 2xx responses to an `Upload-Complete: ?1` upload append request to also be considered complete. I don't want to have to special-case the response handler for upload creation to treat 2xx without `Upload-Complete` differently from the same for upload append.\n\nFurther, perhaps servers should be required not to use `Upload-Complete: ?0` in a 2xx response to a request with `Upload-Complete: ?1`? That seems self-contradictory: 2xx means \"I fulfilled your request\", but `Upload-Complete: ?0` means \"I didn't complete the upload (even though you requested me to)\".",
       "createdAt": "2026-07-10T16:07:48Z",
-      "updatedAt": "2026-07-15T19:53:12Z",
+      "updatedAt": "2026-07-16T17:17:16Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "What if we say that missing `Upload-Complete` value on the response is assumed to be the same as `Upload-Complete` value on the requests? Would that be a simplification of the logic and while maintaining the desirable properties?",
+          "createdAt": "2026-07-16T10:05:37Z",
+          "updatedAt": "2026-07-16T10:05:37Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "If that's only for 2xx, that should work. Missing for other status codes should still be treated as false (with the exception of 409 responses with `Upload-Complete` missing, which is treated differently from false).\n\nBut as I said, shouldn't we also prohibit servers from including `Upload-Complete: ?0` in a 2xx response to an `Upload-Complete: ?1` request?",
+          "createdAt": "2026-07-16T16:45:24Z",
+          "updatedAt": "2026-07-16T17:17:16Z"
+        }
+      ]
     },
     {
       "number": 3485,
@@ -77608,6 +77623,40 @@
       "body": "5.3.1:\n\n> The [parse a key](https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html#parse-a-key) algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format [[WHATWG-URL](https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html#WHATWG-URL)] allows encoding an entire entry list of keys and values in a URI (which is restricted to ASCII characters). For example,\n\n> No-Vary-Search: params=(\"%C3%A9+%E6%B0%97\")\n\n> will result in a URL variation config whose vary params are \u00ab \"\u00e9 \u6c17\" \u00bb\n\nMay it would be good to notice that \"+\" maps to SP?\n\n",
       "createdAt": "2026-07-11T12:46:27Z",
       "updatedAt": "2026-07-11T12:46:27Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 3494,
+      "id": "I_kwDOAUA-v88AAAABJCwMOg",
+      "title": "RESUMABLE: Clarifying origin and synthesized redirects for upload resources",
+      "url": "https://github.com/httpwg/http-extensions/issues/3494",
+      "state": "OPEN",
+      "author": "guoye-zhang",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Came up during the HTTP workshop, we should provide suggestions for browsers to handle upload resumption as if it's a cross-origin redirect.",
+      "createdAt": "2026-07-16T12:08:22Z",
+      "updatedAt": "2026-07-16T12:08:22Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 3496,
+      "id": "I_kwDOAUA-v88AAAABJOHUkg",
+      "title": "no-vary: \"conventional\" form",
+      "url": "https://github.com/httpwg/http-extensions/issues/3496",
+      "state": "OPEN",
+      "author": "reschke",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Not sure what the definition of \"conventional\" is (see https://www.ietf.org/archive/id/draft-ietf-httpbis-no-vary-search-06.html#table-2)\n\nExample:\n\nWhy is\n~~~\nNo-Vary-Search: key-order, except=(\"x\")\n~~~\n\nmore **_conventional_** than:\n\n~~~\nNo-Vary-Search: except=(\"x\"), key-order\n~~~\n\n?",
+      "createdAt": "2026-07-17T18:12:29Z",
+      "updatedAt": "2026-07-17T18:12:29Z",
       "closedAt": null,
       "comments": []
     }
@@ -216747,6 +216796,98 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 3493,
+      "id": "PR_kwDOAUA-v87yZpJ8",
+      "title": "Stop requiring Upload-Complete on offset retrieval responses",
+      "url": "https://github.com/httpwg/http-extensions/pull/3493",
+      "state": "MERGED",
+      "author": "guoye-zhang",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Resolves #3482",
+      "createdAt": "2026-07-16T07:59:37Z",
+      "updatedAt": "2026-07-16T16:51:05Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "92a107465a3c54e9c3bdd3da12425b9d7f4a3be5",
+      "headRepository": "guoye-zhang/http-extensions",
+      "headRefName": "offset-complete",
+      "headRefOid": "3d197fe1b22c624abf23b4a767176c9d46898cfb",
+      "closedAt": "2026-07-16T16:51:01Z",
+      "mergedAt": "2026-07-16T16:51:01Z",
+      "mergedBy": "guoye-zhang",
+      "mergeCommit": {
+        "oid": "040f5de83453fa5071e0658877537852dd6e0dbb"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABGRIFMw",
+          "commit": {
+            "abbreviatedOid": "608336f"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Looks good, thanks!",
+          "createdAt": "2026-07-16T16:05:03Z",
+          "updatedAt": "2026-07-16T16:05:16Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "Just a typo:\n\n```suggestion\n* Upload-Complete and Upload-Length are no longer required on offset retrieval responses.\n```",
+              "createdAt": "2026-07-16T16:05:03Z",
+              "updatedAt": "2026-07-16T16:05:16Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 3495,
+      "id": "PR_kwDOAUA-v87yoxGi",
+      "title": "RESUMABLE: Generalize completeness response header",
+      "url": "https://github.com/httpwg/http-extensions/pull/3495",
+      "state": "OPEN",
+      "author": "GrantGryczan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "@guoye-zhang Sorry, I forgot to mention this in #3493! Now that `Upload-Complete` is only used in creation and append, do we still need this phrasing? You added it [here](https://github.com/httpwg/http-extensions/pull/3404/changes/1332e9c8a9930f16b89dcf86b7c81c966c2bd34b).\r\n\r\nIf the phrasing is still needed for future-proofing (allowing extended definitions to use the header for other purposes), then you can just close this PR. But I'm guessing it was only added to exclude offset retrieval from this definition.",
+      "createdAt": "2026-07-16T17:42:30Z",
+      "updatedAt": "2026-07-16T20:02:14Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "040f5de83453fa5071e0658877537852dd6e0dbb",
+      "headRepository": "GrantGryczan/http-extensions",
+      "headRefName": "patch-3",
+      "headRefOid": "32c8648c7bbcd8b10f3eb9eb763c86b62bfa5330",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I actually thought about this, and decided to keep it since otherwise, the only valid value for upload-complete is false in offset retrieval which is somewhat unintuitive, and all existing implementations are non-compliant. Keeping it scoped to creation and appending means that you use it however you want on offset retrieval.",
+          "createdAt": "2026-07-16T19:43:22Z",
+          "updatedAt": "2026-07-16T19:43:22Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I see, fair enough. But in that case, clients can't rely on the header semantics being consistent for offset retrieval, which was one of the benefits of removing it. Not that it matters to me personally, but worth noting.",
+          "createdAt": "2026-07-16T19:47:30Z",
+          "updatedAt": "2026-07-16T20:02:14Z"
+        }
+      ],
+      "reviews": []
     }
   ]
 }
