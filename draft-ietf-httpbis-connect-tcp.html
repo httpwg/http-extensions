@@ -20,7 +20,7 @@
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.10.0
+    platformdirs 4.10.1
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
@@ -1047,7 +1047,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Schwartz</td>
-<td class="center">Expires 17 January 2027</td>
+<td class="center">Expires 22 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1060,12 +1060,12 @@ svg {
 <dd class="internet-draft">draft-ietf-httpbis-connect-tcp-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-07-16" class="published">16 July 2026</time>
+<time datetime="2026-07-21" class="published">21 July 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-17">17 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-01-22">22 January 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1099,7 +1099,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 17 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1167,6 +1167,11 @@ svg {
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
                 <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-closing-connections" class="internal xref">Closing Connections</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4.2.1">
+                    <p id="section-toc.1-1.3.2.4.2.1.1"><a href="#section-3.4.1" class="auto internal xref">3.4.1</a>.  <a href="#name-handling-invalid-data" class="internal xref">Handling Invalid Data</a></p>
+</li>
+                </ul>
 </li>
             </ul>
 </li>
@@ -1811,6 +1816,32 @@ see <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>], <a href="https://r
 <figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
 <a href="#name-rst-after-fin-example-http-" class="selfRef">RST after FIN example (HTTP/3)</a>
           </figcaption></figure>
+<div id="handling-invalid-data">
+<section id="section-3.4.1">
+          <h4 id="name-handling-invalid-data">
+<a href="#section-3.4.1" class="section-number selfRef">3.4.1. </a><a href="#name-handling-invalid-data" class="section-name selfRef">Handling Invalid Data</a>
+          </h4>
+<p id="section-3.4.1-1">An endpoint that receives invalid data from its peer is subject to the same requirements as when receiving an abrupt closure of the receive stream (see <a href="#closing-connections" class="auto internal xref">Section 3.4</a>).  Some examples of invalid data include:<a href="#section-3.4.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.4.1-2.1">
+              <p id="section-3.4.1-2.1.1">A second FINAL_DATA capsule.<a href="#section-3.4.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.4.1-2.2">
+              <p id="section-3.4.1-2.2.1">A DATA capsule after FINAL_DATA.<a href="#section-3.4.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.4.1-2.3">
+              <p id="section-3.4.1-2.3.1">Data that results in a parsing error under the Capsule Protocol.<a href="#section-3.4.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.4.1-2.4">
+              <p id="section-3.4.1-2.4.1">A capsule that is truncated by the end of the stream.<a href="#section-3.4.1-2.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.4.1-2.5">
+              <p id="section-3.4.1-2.5.1">A capsule that would require unreasonable effort to process.<a href="#section-3.4.1-2.5.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.4.1-3">Note that very large DATA and FINAL_DATA capsules are still valid, as they can be forwarded incrementally using a bounded memory buffer.<a href="#section-3.4.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 </section>

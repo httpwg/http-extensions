@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                            16 July 2026
-Expires: 17 January 2027
+Intended status: Standards Track                            21 July 2026
+Expires: 22 January 2027
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 January 2027.
+   This Internet-Draft will expire on 22 January 2027.
 
 Copyright Notice
 
@@ -65,6 +65,7 @@ Table of Contents
        3.3.1.  Origin-scoped Headers
        3.3.2.  Authentication Headers
      3.4.  Closing Connections
+       3.4.1.  Handling Invalid Data
    4.  Additional Connection Setup Behaviors
      4.1.  Latency optimizations
      4.2.  Conveying metadata
@@ -435,6 +436,26 @@ Table of Contents
      |            |                          |            |
 
                   Figure 7: RST after FIN example (HTTP/3)
+
+3.4.1.  Handling Invalid Data
+
+   An endpoint that receives invalid data from its peer is subject to
+   the same requirements as when receiving an abrupt closure of the
+   receive stream (see Section 3.4).  Some examples of invalid data
+   include:
+
+   *  A second FINAL_DATA capsule.
+
+   *  A DATA capsule after FINAL_DATA.
+
+   *  Data that results in a parsing error under the Capsule Protocol.
+
+   *  A capsule that is truncated by the end of the stream.
+
+   *  A capsule that would require unreasonable effort to process.
+
+   Note that very large DATA and FINAL_DATA capsules are still valid, as
+   they can be forwarded incrementally using a bounded memory buffer.
 
 4.  Additional Connection Setup Behaviors
 
