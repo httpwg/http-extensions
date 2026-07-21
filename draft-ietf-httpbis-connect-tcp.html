@@ -1214,6 +1214,9 @@ svg {
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
                 <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-gateway-compatibility" class="internal xref">Gateway Compatibility</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-timeouts" class="internal xref">Timeouts</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
@@ -1970,7 +1973,7 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
       </h2>
 <p id="section-6-1">Template-driven TCP proxying is largely subject to the same security risks as classic HTTP CONNECT.  For example, any restrictions on authorized use of the proxy (see <span>[<a href="#RFC9110" class="cite xref">RFC9110</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a></span>) apply equally to both.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">A small additional risk is posed by the use of a URI Template parser on the client side.  The template input string could be crafted to exploit any vulnerabilities in the parser implementation.  Client implementers should apply their usual precautions for code that processes untrusted inputs.<a href="#section-6-2" class="pilcrow">¶</a></p>
-<div id="resource-exhaustion-attacks">
+<div id="resource-exhaustion">
 <section id="section-6.1">
         <h3 id="name-resource-exhaustion-attacks">
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-resource-exhaustion-attacks" class="section-name selfRef">Resource Exhaustion attacks</a>
@@ -2092,6 +2095,15 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 </li>
         </ul>
 <p id="section-7.2-3">If the proxy relies on TLS Client Certificates for client authentication, the gateway must perform this authentication itself or pass the relevant information to the origin (e.g., using a "Client-Cert" request header field <span>[<a href="#RFC9440" class="cite xref">RFC9440</a>]</span>).<a href="#section-7.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="timeouts">
+<section id="section-7.3">
+        <h3 id="name-timeouts">
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-timeouts" class="section-name selfRef">Timeouts</a>
+        </h3>
+<p id="section-7.3-1">Except when actively sending or receiving data, an endpoint is always waiting for an event from its peer or its TCP connection.  HTTP and TCP are designed to ensure that such an event always arrives, so the connection is never permanently stuck in any state until it is fully closed.  However, for efficient operation, it may be necessary to adjust the settings for TCP keep-alives (<span>[<a href="#TCP" class="cite xref">TCP</a>], <a href="https://rfc-editor.org/rfc/rfc9293#section-3.8.4" class="relref">Section 3.8.4</a></span>), QUIC idle timeouts (<span>[<a href="#QUIC" class="cite xref">QUIC</a>], <a href="https://rfc-editor.org/rfc/rfc9000#section-10.1" class="relref">Section 10.1</a></span>), HTTP/2 PING frames (<span>[<a href="#RFC9113" class="cite xref">RFC9113</a>], <a href="https://rfc-editor.org/rfc/rfc9113#section-6.7" class="relref">Section 6.7</a></span>), and other transport options.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+<p id="section-7.3-2">Endpoints <span class="bcp14">MAY</span> impose additional timeouts, especially as a defense against certain resource exhaustion attacks (<a href="#resource-exhaustion" class="auto internal xref">Section 6.1</a>).  However, operators should apply timeouts cautiously to minimize the impact on connections that are functioning but slow.  Any timeout imposed by the endpoint <span class="bcp14">MUST</span> be treated as an abrupt closure of the affected stream or connection (<a href="#closing-connections" class="auto internal xref">Section 3.4</a>).<a href="#section-7.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2312,6 +2324,10 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
         <dd>
 <span class="refAuthor">Pauly, T.</span>, <span class="refAuthor">Damjanovic, D.</span>, and <span class="refAuthor">Y. Rosomakho</span>, <span class="refTitle">"Communicating Proxy Configurations in Provisioning Domains"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-intarea-proxy-config-14</span>, <time datetime="2026-05-19" class="refDate">19 May 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-intarea-proxy-config-14">https://datatracker.ietf.org/doc/html/draft-ietf-intarea-proxy-config-14</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="QUIC">[QUIC]</dt>
+        <dd>
+<span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">M. Thomson, Ed.</span>, <span class="refTitle">"QUIC: A UDP-Based Multiplexed and Secure Transport"</span>, <span class="seriesInfo">RFC 9000</span>, <span class="seriesInfo">DOI 10.17487/RFC9000</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9000">https://www.rfc-editor.org/rfc/rfc9000</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC6265">[RFC6265]</dt>
         <dd>
 <span class="refAuthor">Barth, A.</span>, <span class="refTitle">"HTTP State Management Mechanism"</span>, <span class="seriesInfo">RFC 6265</span>, <span class="seriesInfo">DOI 10.17487/RFC6265</span>, <time datetime="2011-04" class="refDate">April 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6265">https://www.rfc-editor.org/rfc/rfc6265</a>&gt;</span>. </dd>
@@ -2341,8 +2357,12 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 <span class="refAuthor">Campbell, B.</span> and <span class="refAuthor">M. Bishop</span>, <span class="refTitle">"Client-Cert HTTP Header Field"</span>, <span class="seriesInfo">RFC 9440</span>, <span class="seriesInfo">DOI 10.17487/RFC9440</span>, <time datetime="2023-07" class="refDate">July 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9440">https://www.rfc-editor.org/rfc/rfc9440</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SYSCTL">[SYSCTL]</dt>
-      <dd>
+        <dd>
 <span class="refTitle">"IP Sysctl -- The Linux Kernel documentation"</span>, <time datetime="2026-06" class="refDate">June 2026</time>, <span>&lt;<a href="https://www.kernel.org/doc/html/v7.1/networking/ip-sysctl.html">https://www.kernel.org/doc/html/v7.1/networking/ip-sysctl.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="TCP">[TCP]</dt>
+      <dd>
+<span class="refAuthor">Eddy, W., Ed.</span>, <span class="refTitle">"Transmission Control Protocol (TCP)"</span>, <span class="seriesInfo">STD 7</span>, <span class="seriesInfo">RFC 9293</span>, <span class="seriesInfo">DOI 10.17487/RFC9293</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9293">https://www.rfc-editor.org/rfc/rfc9293</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>

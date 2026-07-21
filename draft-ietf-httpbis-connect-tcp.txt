@@ -77,6 +77,7 @@ Table of Contents
    7.  Operational Considerations
      7.1.  Avoiding HTTP/1.1
      7.2.  Gateway Compatibility
+     7.3.  Timeouts
    8.  IANA Considerations
      8.1.  New Upgrade Token
        8.1.1.  Interop testing
@@ -725,6 +726,24 @@ Table of Contents
    or pass the relevant information to the origin (e.g., using a
    "Client-Cert" request header field [RFC9440]).
 
+7.3.  Timeouts
+
+   Except when actively sending or receiving data, an endpoint is always
+   waiting for an event from its peer or its TCP connection.  HTTP and
+   TCP are designed to ensure that such an event always arrives, so the
+   connection is never permanently stuck in any state until it is fully
+   closed.  However, for efficient operation, it may be necessary to
+   adjust the settings for TCP keep-alives ([TCP], Section 3.8.4), QUIC
+   idle timeouts ([QUIC], Section 10.1), HTTP/2 PING frames ([RFC9113],
+   Section 6.7), and other transport options.
+
+   Endpoints MAY impose additional timeouts, especially as a defense
+   against certain resource exhaustion attacks (Section 6.1).  However,
+   operators should apply timeouts cautiously to minimize the impact on
+   connections that are functioning but slow.  Any timeout imposed by
+   the endpoint MUST be treated as an abrupt closure of the affected
+   stream or connection (Section 3.4).
+
 8.  IANA Considerations
 
 8.1.  New Upgrade Token
@@ -889,6 +908,11 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-intarea-
               proxy-config-14>.
 
+   [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
+              Multiplexed and Secure Transport", RFC 9000,
+              DOI 10.17487/RFC9000, May 2021,
+              <https://www.rfc-editor.org/rfc/rfc9000>.
+
    [RFC6265]  Barth, A., "HTTP State Management Mechanism", RFC 6265,
               DOI 10.17487/RFC6265, April 2011,
               <https://www.rfc-editor.org/rfc/rfc6265>.
@@ -923,6 +947,10 @@ Table of Contents
    [SYSCTL]   "IP Sysctl -- The Linux Kernel documentation", June 2026,
               <https://www.kernel.org/doc/html/v7.1/networking/ip-
               sysctl.html>.
+
+   [TCP]      Eddy, W., Ed., "Transmission Control Protocol (TCP)",
+              STD 7, RFC 9293, DOI 10.17487/RFC9293, August 2022,
+              <https://www.rfc-editor.org/rfc/rfc9293>.
 
 Acknowledgments
 
