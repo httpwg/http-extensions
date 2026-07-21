@@ -329,7 +329,7 @@ Template-driven TCP proxying is largely subject to the same security risks as cl
 
 A small additional risk is posed by the use of a URI Template parser on the client side.  The template input string could be crafted to exploit any vulnerabilities in the parser implementation.  Client implementers should apply their usual precautions for code that processes untrusted inputs.
 
-## Resource Exhaustion attacks
+## Resource Exhaustion attacks {#resource-exhaustion}
 
 A malicious client can achieve cause highly asymmetric resource usage at the proxy by colluding with a destination server and violating the ordinary rules of TCP or HTTP.  Some example attacks, and mitigations that proxies can apply:
 
@@ -371,6 +371,12 @@ Templated TCP proxies can make use of standard HTTP gateways and path-routing to
 * allow any "Proxy-Status" headers to traverse the gateway.
 
 If the proxy relies on TLS Client Certificates for client authentication, the gateway must perform this authentication itself or pass the relevant information to the origin (e.g., using a "Client-Cert" request header field {{?RFC9440}}).
+
+## Timeouts
+
+Except when actively sending or receiving data, an endpoint is always waiting for an event from its peer or its TCP connection.  HTTP and TCP are designed to ensure that such an event always arrives, so the connection is never permanently stuck in any state until it is fully closed.  However, for efficient operation, it may be necessary to adjust the settings for TCP keep-alives ({{?TCP=RFC9293, Section 3.8.4}}), QUIC idle timeouts ({{?QUIC=RFC9000, Section 10.1}}), HTTP/2 PING frames ({{?RFC9113, Section 6.7}}), and other transport options.
+
+Endpoints MAY impose additional timeouts, especially as a defense against certain resource exhaustion attacks ({{resource-exhaustion}}).  However, operators should apply timeouts cautiously to minimize the impact on connections that are functioning but slow.  Any timeout imposed by the endpoint MUST be treated as an abrupt closure of the affected stream or connection ({{closing-connections}}).
 
 # IANA Considerations
 
