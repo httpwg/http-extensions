@@ -252,6 +252,18 @@ The mandatory behaviors above enable endpoints to detect any truncation of incom
 ~~~
 {: title="RST after FIN example (HTTP/3)"}
 
+### Handling Invalid Data
+
+An endpoint that receives invalid data from its peer is subject to the same requirements as when receiving an abrupt closure of the receive stream (see {{closing-connections}}).  Some examples of invalid data include:
+
+ * A second FINAL_DATA capsule.
+ * A DATA capsule after FINAL_DATA.
+ * Data that results in a parsing error under the Capsule Protocol.
+ * A capsule that is truncated by the end of the stream.
+ * A capsule that would require unreasonable effort to process.
+
+Note that very large DATA and FINAL_DATA capsules are still valid, as they can be forwarded incrementally using a bounded memory buffer.
+
 # Additional Connection Setup Behaviors
 
 This section discusses some behaviors that are permitted or recommended in order to enhance the performance or functionality of connection setup.
