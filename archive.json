@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-19T01:54:24.670804+00:00",
+  "timestamp": "2026-07-21T01:54:08.241226+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -70749,7 +70749,7 @@
       "id": "I_kwDOAUA-v87FY-2p",
       "title": "RESUMABLE: proposal to change the design to support parallel uploads",
       "url": "https://github.com/httpwg/http-extensions/issues/3159",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -70758,8 +70758,8 @@
       ],
       "body": "@gstrauss provided the following feedback on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0094.html wrt the Introduction section\n\n> \"Unlike ranged downloads, this protocol does not support transferring an upload as multiple requests in parallel.\"\nThat is an application limitation due to over-specified implementation details\nand flaws in the resumable upload protocol design.  The client should manage the state of the resource through successful upload of chunks.  If a chunk fails for any reason, the chunk should be resent, perhaps in multiple smaller chunks.\n\nThis is a proposal to change the technical design established during the development of the document.",
       "createdAt": "2025-08-11T21:04:00Z",
-      "updatedAt": "2025-08-13T06:00:36Z",
-      "closedAt": null,
+      "updatedAt": "2026-07-19T06:28:14Z",
+      "closedAt": "2026-07-19T06:28:14Z",
       "comments": [
         {
           "author": "gstrauss",
@@ -70816,6 +70816,13 @@
           "body": "Most of the discussion is besides the point of the issue I created. Please stay on topic. The proposal is to change the design and that would allow parallel upload.\n\nAuthors need to hear from the WG to understand if this is a property that they want or not.",
           "createdAt": "2025-08-13T06:00:36Z",
           "updatedAt": "2025-08-13T06:00:36Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closing this as the authors have not heard enough support to meet the bar of such a large technical design.",
+          "createdAt": "2026-07-19T06:28:14Z",
+          "updatedAt": "2026-07-19T06:28:14Z"
         }
       ]
     },
@@ -71292,7 +71299,7 @@
       "id": "I_kwDOAUA-v87FZiye",
       "title": "RESUMABLE: proposal to do different discovery mechanisms",
       "url": "https://github.com/httpwg/http-extensions/issues/3176",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -71301,8 +71308,8 @@
       ],
       "body": "@gstrauss provided the following feedback on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0094.html wrt Section 4.1.4\n\n> More broadly, I think that there could be many better ways to do \"discovery\" of the resumable-upload application rather than what is defined in the doc, and I hope more isolated, too.  An independent request to create a temporary resource would be my starting point, maybe to a target under /.well-known/.",
       "createdAt": "2025-08-11T22:11:23Z",
-      "updatedAt": "2025-08-13T08:48:49Z",
-      "closedAt": null,
+      "updatedAt": "2026-07-19T06:29:23Z",
+      "closedAt": "2026-07-19T06:28:52Z",
       "comments": [
         {
           "author": "mnot",
@@ -71373,6 +71380,13 @@
           "body": "Thats a decision for the chairs to make.\n\nThe authors plan to address the editorial and minor design issues that have been raised by mid-september.",
           "createdAt": "2025-08-13T08:48:49Z",
           "updatedAt": "2025-08-13T08:48:49Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closing this as the authors have not heard enough support to meet the bar of such a large technical design change.",
+          "createdAt": "2026-07-19T06:28:52Z",
+          "updatedAt": "2026-07-19T06:29:23Z"
         }
       ]
     },
@@ -71452,7 +71466,7 @@
       "id": "I_kwDOAUA-v87FZnEK",
       "title": "RESUMABLE: opportunity to improve text on server behavior",
       "url": "https://github.com/httpwg/http-extensions/issues/3180",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -71464,8 +71478,8 @@
       ],
       "body": "@gstrauss provided the following feedback on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0094.html wrt Section 4.2.2\n\n> \"The resource targeted by this initial request is responsible for processing the representation data transferred in the resumable uload according to the method and header fields in the initial request...\"\n> \n> This wording is confusing with wording earlier in the doc that the upload resource is responsible for keeping state.  The upload resource must keep state, including the original target resource.  Once the upload resource is complete, only then does the server pass the complete upload resoure to the original target resource for processing.\n> \n> That is quite a requirement to be so subtle!  This suggests that the server MUST save the *ENTIRE* set of request headers of the initial request alongside the upload resource, and then manipulate the request headers with final length, possibly remove Upload-*, or more, before finally sending a complete upload resource to the initial resource target for processing.\n\nFurther analysis is need to figure out if changes on this topic would be editorial (ensuring wording matches current intent) or if there are other normative changes that get surfaced.",
       "createdAt": "2025-08-11T22:19:45Z",
-      "updatedAt": "2025-10-14T08:41:05Z",
-      "closedAt": null,
+      "updatedAt": "2026-07-19T06:42:53Z",
+      "closedAt": "2026-07-19T06:42:53Z",
       "comments": [
         {
           "author": "gstrauss",
@@ -71494,6 +71508,13 @@
           "body": "I agree with @guoye-zhang on this one. Could we get an example to highlight the issue described in the original email?",
           "createdAt": "2025-10-14T08:41:05Z",
           "updatedAt": "2025-10-14T08:41:05Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hearing no further comments, closing the editorial issue.",
+          "createdAt": "2026-07-19T06:42:53Z",
+          "updatedAt": "2026-07-19T06:42:53Z"
         }
       ]
     },
@@ -71614,7 +71635,7 @@
       "id": "I_kwDOAUA-v87FZvmm",
       "title": "RESUMABLE: proposal - requirements on tying HTTP requests together create a fragile design and this should stop the document leaving the WG for publication",
       "url": "https://github.com/httpwg/http-extensions/issues/3185",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -71623,8 +71644,8 @@
       ],
       "body": "@gstrauss provided the following feedback on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0094.html wrt Section 4.2.2.\n\n> Not only is this fragile, but it imposes a requirement that the server maintain state for exclusive access to the upload resource, and have a new request affect a different request -- which are big implementation requirements -- tying together multiple HTTP requests which are supposed to be independent in HTTP.\n** This is a huge failure and should immediately disqualify this draft from proceeding passed last call. **\n\n>Related is the fragile behavior specified in 4.3 Offset Retrieval:\n\"The client MUST NOT perform offset retrieval while creation (Seciton 4.2) or appending (Section 4.4) is in progress as this can cause the previous request to be terminated by the server as described in Section 4.6.\"",
       "createdAt": "2025-08-11T22:37:59Z",
-      "updatedAt": "2025-08-13T12:30:10Z",
-      "closedAt": null,
+      "updatedAt": "2026-07-19T06:33:46Z",
+      "closedAt": "2026-07-19T06:33:46Z",
       "comments": [
         {
           "author": "mnot",
@@ -71723,6 +71744,13 @@
           "body": "It sounds like parralelization is an optimization that can be fragile.\n\nThere's a lot of open questions and tradeoffs here for both the current design and the proposal. \n\nI suggest the way to make progress is to implement and gather data on the respective approaches under varying network conditions such as low/high RTT, low/high bandwidth, network loss / disconnects, client disconnects, and server disconnects.\n\nThere are several client and server implementations of draft 09. If we have one or more implementations of the proposed design, it would allow us to more concretely compare the two. The testbed can be a collaborative effort.",
           "createdAt": "2025-08-13T12:29:38Z",
           "updatedAt": "2025-08-13T12:30:10Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closing this as the authors have not heard enough support to meet the bar of such a large technical design change.",
+          "createdAt": "2026-07-19T06:33:45Z",
+          "updatedAt": "2026-07-19T06:33:45Z"
         }
       ]
     },
@@ -71731,7 +71759,7 @@
       "id": "I_kwDOAUA-v87FZweg",
       "title": "RESUMABLE: proposal - change the design from server-managed to client-managed",
       "url": "https://github.com/httpwg/http-extensions/issues/3186",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -71742,9 +71770,17 @@
       ],
       "body": "@gstrauss provided the following feedback on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0094.html wrt Section 4.2.2\n\n> This fragility could potentially be avoided if the client managed the overall upload resource state rather than the server.  The client could send chunks of representation data, and then resend the whole chunk on failure.  (Maybe try to recover by sending smaller chunks.)  The server would manage the upload resource per-request and apply policies per-request.",
       "createdAt": "2025-08-11T22:39:51Z",
-      "updatedAt": "2025-10-02T17:45:34Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2026-07-19T06:34:23Z",
+      "closedAt": "2026-07-19T06:34:23Z",
+      "comments": [
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closing this as the authors have not heard enough support to meet the bar of such a large technical design change.",
+          "createdAt": "2026-07-19T06:34:23Z",
+          "updatedAt": "2026-07-19T06:34:23Z"
+        }
+      ]
     },
     {
       "number": 3187,
@@ -71801,7 +71837,7 @@
       "id": "I_kwDOAUA-v87FZ0zB",
       "title": "RESUMABLE: proposal - revisit partial upload vs. PATCH discussion",
       "url": "https://github.com/httpwg/http-extensions/issues/3188",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -71812,8 +71848,8 @@
       ],
       "body": "@gstrauss provided the following feedback on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0094.html wrt Section 4.4.1\n\n> \"A client can continue the upload and append representation data by sending a PATCH request with the application/partial-upload media type ...\"\n> Why Content-Type: application/partial-upload ?\nCould instead use Range request header and a proper Content-Type (or application/octet-stream) since the PATCH request is a byte range, already defined by the RFC.\nWith OPTIONS, could use Accept-Patch.  See the RFC 5789 for PATCH.",
       "createdAt": "2025-08-11T22:47:48Z",
-      "updatedAt": "2025-10-02T17:44:04Z",
-      "closedAt": null,
+      "updatedAt": "2026-07-19T06:37:55Z",
+      "closedAt": "2026-07-19T06:37:55Z",
       "comments": [
         {
           "author": "LPardue",
@@ -71870,6 +71906,13 @@
           "body": "> With OPTIONS, could use Accept-Patch. See the RFC 5789 for PATCH.\n\nShould be covered by https://github.com/httpwg/http-extensions/pull/3242.",
           "createdAt": "2025-10-02T17:42:54Z",
           "updatedAt": "2025-10-02T17:42:54Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The topic of what method to use for upload appending has been comprehensively discussed during the process. The authors are satisfied that the current document reflects rough consensus. Therefore closing.",
+          "createdAt": "2026-07-19T06:37:55Z",
+          "updatedAt": "2026-07-19T06:37:55Z"
         }
       ]
     },
@@ -71899,7 +71942,7 @@
       "id": "I_kwDOAUA-v87FZ3Mt",
       "title": "RESUMABLE: proposal - upload resource should be a temporary file and nothing more",
       "url": "https://github.com/httpwg/http-extensions/issues/3190",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -71908,8 +71951,8 @@
       ],
       "body": "@gstrauss provided the following feedback on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0094.html wrt Section 4.4.2\n\n> The upload resource should be a temporary file, and for draft-ietf-httpbis-resumable-upload, maintains state.  A better design might be only a temporary file and nothing more.",
       "createdAt": "2025-08-11T22:53:10Z",
-      "updatedAt": "2025-08-13T12:21:50Z",
-      "closedAt": null,
+      "updatedAt": "2026-07-19T06:45:38Z",
+      "closedAt": "2026-07-19T06:45:38Z",
       "comments": [
         {
           "author": "LPardue",
@@ -71987,6 +72030,13 @@
           "body": "I observe that to be true.\n\nMany of us are volunteers and there are limits to everyone's time and how they choose to spend it.",
           "createdAt": "2025-08-13T12:21:50Z",
           "updatedAt": "2025-08-13T12:21:50Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closing this as the authors have not heard enough support to meet the bar of such a large technical design change.",
+          "createdAt": "2026-07-19T06:45:38Z",
+          "updatedAt": "2026-07-19T06:45:38Z"
         }
       ]
     },
@@ -72058,7 +72108,7 @@
       "id": "I_kwDOAUA-v87FZ7kH",
       "title": "RESUMABLE: opinion - the design has unnecessary premature options",
       "url": "https://github.com/httpwg/http-extensions/issues/3192",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -72067,8 +72117,8 @@
       ],
       "body": "@gstrauss provided the following feedback on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0094.html wrt Section 11\n\n> This document is overly complex, in part due to unnecessary premature optimizations like this one.  If an upload is small, the upload can be repeated, if safe.  If an upload is not small, then an extra round trip to mark the upload as complete should almost never be a performance problem.",
       "createdAt": "2025-08-11T23:04:28Z",
-      "updatedAt": "2025-10-02T17:39:50Z",
-      "closedAt": null,
+      "updatedAt": "2026-07-19T06:39:48Z",
+      "closedAt": "2026-07-19T06:39:48Z",
       "comments": [
         {
           "author": "LPardue",
@@ -72097,6 +72147,13 @@
           "body": "Proposal: close with no action",
           "createdAt": "2025-10-02T17:39:50Z",
           "updatedAt": "2025-10-02T17:39:50Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hearing no other comments since October 2025, closing with no action.",
+          "createdAt": "2026-07-19T06:39:46Z",
+          "updatedAt": "2026-07-19T06:39:46Z"
         }
       ]
     },
@@ -216541,10 +216598,12 @@
       "author": "bemasc",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "connect-tcp"
+      ],
       "body": "Addresses point 1 of #3422",
       "createdAt": "2026-07-07T21:39:59Z",
-      "updatedAt": "2026-07-08T15:19:17Z",
+      "updatedAt": "2026-07-20T14:11:02Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "bd84e74b033dc945b73c436d07b80141b7e8770a",
@@ -216555,7 +216614,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "bemasc",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@ekinnear Please review",
+          "createdAt": "2026-07-20T14:11:02Z",
+          "updatedAt": "2026-07-20T14:11:02Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -216567,10 +216634,12 @@
       "author": "bemasc",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "connect-tcp"
+      ],
       "body": "Addresses point 2 of #3422",
       "createdAt": "2026-07-07T22:11:59Z",
-      "updatedAt": "2026-07-07T22:13:28Z",
+      "updatedAt": "2026-07-20T14:11:05Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "bd84e74b033dc945b73c436d07b80141b7e8770a",
@@ -216581,7 +216650,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "bemasc",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@ekinnear Please review",
+          "createdAt": "2026-07-20T14:11:05Z",
+          "updatedAt": "2026-07-20T14:11:05Z"
+        }
+      ],
       "reviews": []
     },
     {
