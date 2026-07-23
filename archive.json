@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-21T01:54:08.241226+00:00",
+  "timestamp": "2026-07-23T02:00:38.664723+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77596,13 +77596,15 @@
       "state": "OPEN",
       "author": "GrantGryczan",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "guoye-zhang"
+      ],
       "labels": [
         "resumable-upload"
       ],
       "body": "#3472 seems to have created a regression by removing the following text from upload creation's client specifications:\n\n> If the client received a final response with a\n> \n> - `2xx (Successful)` status code and the request content contained the entire representation data, the upload is complete and the response comes from the resource targeted by the initial request processing the representation.\n> - [...]\n\nThis was replaced with the following:\n\n> If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and [...].\n> \n> If the client receives a 2xx successful final response with the `Upload-Complete` header field set to false or missing, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ([Section 4.4](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#upload-appending)).\n> \n> [...]\n\nIn particular, if a client sends a creation request with `Upload-Complete: ?1`, a 2xx response with `Upload-Complete` missing should be treated as if the upload had been completed. In general, if the client sent `Upload-Complete: ?1`, then a 2xx response should mean the upload was completed. The old text (poorly) captured that, but the new text always treats `Upload-Complete` missing as `Upload-Complete: ?0`.\n\nA similar regression occurred for upload append's client specifications. The new text no longer specifies how 2xx should be treated at all. To simplify the client implementation, I would hope for 2xx responses to an `Upload-Complete: ?1` upload append request to also be considered complete. I don't want to have to special-case the response handler for upload creation to treat 2xx without `Upload-Complete` differently from the same for upload append.\n\nFurther, perhaps servers should be required not to use `Upload-Complete: ?0` in a 2xx response to a request with `Upload-Complete: ?1`? That seems self-contradictory: 2xx means \"I fulfilled your request\", but `Upload-Complete: ?0` means \"I didn't complete the upload (even though you requested me to)\".",
       "createdAt": "2026-07-10T16:07:48Z",
-      "updatedAt": "2026-07-16T17:17:16Z",
+      "updatedAt": "2026-07-22T22:23:25Z",
       "closedAt": null,
       "comments": [
         {
@@ -77691,13 +77693,15 @@
       "state": "OPEN",
       "author": "guoye-zhang",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "guoye-zhang"
+      ],
       "labels": [
         "resumable-upload"
       ],
       "body": "Came up during the HTTP workshop, we should provide suggestions for browsers to handle upload resumption as if it's a cross-origin redirect.",
       "createdAt": "2026-07-16T12:08:22Z",
-      "updatedAt": "2026-07-16T12:08:22Z",
+      "updatedAt": "2026-07-22T22:23:33Z",
       "closedAt": null,
       "comments": []
     },
@@ -77716,6 +77720,30 @@
       "updatedAt": "2026-07-17T18:12:29Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 3497,
+      "id": "I_kwDOAUA-v88AAAABJuc8JQ",
+      "title": "secondary-server-certs: frame name",
+      "url": "https://github.com/httpwg/http-extensions/issues/3497",
+      "state": "OPEN",
+      "author": "yaroslavros",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Can we please change `SERVER_CERTIFICATE` frame name back to `CERTIFICATE`?\n\nPotential future specification of client side secondary certificates could use the same frame to send client certificates. The content would be identical - carrying an exported authenticator.\n\nOn top of that, all other HTTP frame types do not have CLIENT_ or SERVER_ prefix even if they are applicable only in a single direction.",
+      "createdAt": "2026-07-22T09:48:16Z",
+      "updatedAt": "2026-07-22T10:23:26Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Personally I like the current name and the very clear separation of concerns.\n\nCode points are cheap and a future extension that supported client certs can easily add them. While the contents might be similar, the intent can be different. A new extensions would still need to define a setting etc do I'm not sure how much work a shared frame would save",
+          "createdAt": "2026-07-22T10:23:26Z",
+          "updatedAt": "2026-07-22T10:23:26Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -216594,7 +216622,7 @@
       "id": "PR_kwDOAUA-v87vBWjX",
       "title": "[connect-tcp] Discuss handling of invalid data",
       "url": "https://github.com/httpwg/http-extensions/pull/3480",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bemasc",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -216603,17 +216631,19 @@
       ],
       "body": "Addresses point 1 of #3422",
       "createdAt": "2026-07-07T21:39:59Z",
-      "updatedAt": "2026-07-20T14:11:02Z",
+      "updatedAt": "2026-07-21T20:34:58Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "bd84e74b033dc945b73c436d07b80141b7e8770a",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "bemasc-invalid-data",
       "headRefOid": "3f387a6fc8e6d5d98c09fab9d46fdc6cbee67e84",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-07-21T20:34:57Z",
+      "mergedAt": "2026-07-21T20:34:57Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "196cdcd335e1a9467fdab6ed4bae79e0b8343c10"
+      },
       "comments": [
         {
           "author": "bemasc",
@@ -216621,6 +216651,13 @@
           "body": "@ekinnear Please review",
           "createdAt": "2026-07-20T14:11:02Z",
           "updatedAt": "2026-07-20T14:11:02Z"
+        },
+        {
+          "author": "bemasc",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "For the sake of having something to review this week, I'm going to merge this PR.  I'll keep issue #3422 open until we confirm that the language has consensus.",
+          "createdAt": "2026-07-21T20:34:48Z",
+          "updatedAt": "2026-07-21T20:34:48Z"
         }
       ],
       "reviews": []
@@ -216630,7 +216667,7 @@
       "id": "PR_kwDOAUA-v87vB8E0",
       "title": "[connect-tcp] Discuss the application of timeouts",
       "url": "https://github.com/httpwg/http-extensions/pull/3481",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bemasc",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -216639,17 +216676,19 @@
       ],
       "body": "Addresses point 2 of #3422",
       "createdAt": "2026-07-07T22:11:59Z",
-      "updatedAt": "2026-07-20T14:11:05Z",
+      "updatedAt": "2026-07-21T20:35:21Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "bd84e74b033dc945b73c436d07b80141b7e8770a",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "bemasc-timeouts",
       "headRefOid": "2796971632d88f55fbbc5b2a012e497d51ecde15",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-07-21T20:35:19Z",
+      "mergedAt": "2026-07-21T20:35:19Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "88b1bb5ac274cea518361d6e00146d3111d2df09"
+      },
       "comments": [
         {
           "author": "bemasc",
@@ -216657,6 +216696,13 @@
           "body": "@ekinnear Please review",
           "createdAt": "2026-07-20T14:11:05Z",
           "updatedAt": "2026-07-20T14:11:05Z"
+        },
+        {
+          "author": "bemasc",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "For the sake of having something to review this week, I'm going to merge this PR.  I'll keep issue #3422 open until we confirm that the language has consensus.",
+          "createdAt": "2026-07-21T20:35:08Z",
+          "updatedAt": "2026-07-21T20:35:08Z"
         }
       ],
       "reviews": []
@@ -216930,21 +216976,23 @@
       "id": "PR_kwDOAUA-v87yoxGi",
       "title": "RESUMABLE: Generalize completeness response header",
       "url": "https://github.com/httpwg/http-extensions/pull/3495",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "GrantGryczan",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "resumable-upload"
+      ],
       "body": "@guoye-zhang Sorry, I forgot to mention this in #3493! Now that `Upload-Complete` is only used in creation and append, do we still need this phrasing? You added it [here](https://github.com/httpwg/http-extensions/pull/3404/changes/1332e9c8a9930f16b89dcf86b7c81c966c2bd34b).\r\n\r\nIf the phrasing is still needed for future-proofing (allowing extended definitions to use the header for other purposes), then you can just close this PR. But I'm guessing it was only added to exclude offset retrieval from this definition.",
       "createdAt": "2026-07-16T17:42:30Z",
-      "updatedAt": "2026-07-16T20:02:14Z",
+      "updatedAt": "2026-07-22T18:48:29Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "040f5de83453fa5071e0658877537852dd6e0dbb",
       "headRepository": "GrantGryczan/http-extensions",
       "headRefName": "patch-3",
       "headRefOid": "32c8648c7bbcd8b10f3eb9eb763c86b62bfa5330",
-      "closedAt": null,
+      "closedAt": "2026-07-22T18:48:19Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -216962,6 +217010,13 @@
           "body": "I see, fair enough. But in that case, clients can't rely on the header semantics being consistent for offset retrieval, which was one of the benefits of removing it. Not that it matters to me personally, but worth noting.",
           "createdAt": "2026-07-16T19:47:30Z",
           "updatedAt": "2026-07-16T20:02:14Z"
+        },
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "I would prefer to keep the current phrasing as-is since it does contribute a bit to clarify the purpose of this header field.",
+          "createdAt": "2026-07-22T08:05:38Z",
+          "updatedAt": "2026-07-22T08:05:38Z"
         }
       ],
       "reviews": []
