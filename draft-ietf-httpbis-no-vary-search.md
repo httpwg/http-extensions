@@ -303,13 +303,13 @@ To _parse a key_ given an ASCII string _keyString_:
 
 ### Examples
 
-The parse a key algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format {{WHATWG-URL}} allows encoding an entire entry list of keys and values in a URI (which is restricted to ASCII characters). For example,
+The parse a key algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format {{WHATWG-URL}} allows encoding an entire entry list of keys and values in a URI (which is restricted to ASCII characters). For example:
 
 ~~~~http-message
 No-Vary-Search: params=("%C3%A9+%E6%B0%97")
 ~~~~
 
-will result in a URL variation config whose vary params are « "`é 気`" ». Note that the "`+`" character in the encoded string is mapped to a space (SP). As explained in a later example, the canonicalization process during equivalence testing means this will treat as equivalent URIs such as:
+Notice that while the input string `"%C3%A9+%E6%B0%97"` consists entirely of ASCII characters (as required at the HTTP layer), the percent-decoding step used by the User Agent produces a non-ASCII result. This will result in a URL variation config whose vary params are « "`é 気`" ». Note that the "`+`" character in the encoded string is mapped to a space (SP). As explained in a later example, the canonicalization process during equivalence testing means this will treat as equivalent URIs such as:
 
 <!-- link "a later example" and "equivalence testing" -->
 
@@ -394,15 +394,7 @@ So, for example, given any non-default value for the `"No-Vary-Search"` response
 
 # Caching {#caching}
 
-If a cache {{HTTP-CACHING}} implements this specification, the presented target URI requirement in {{Section 4 of HTTP-CACHING}}:
-
-> the presented target URI (Section 7.1 of [HTTP]) and that of the stored response match, and
-{:quote}
-
-is replaced with:
-
-> the presented target URI (Section 7.1 of [HTTP]) and that of the stored response match or are equivalent modulo URL variation config, and
-{:quote}
+If a cache {{HTTP-CACHING}} implements this specification, it expands the concept of a matching target URI described in {{Section 4 of HTTP-CACHING}}. Specifically, a presented target URI and that of a stored response are considered to match if they are either exactly identical, or are equivalent modulo URL variation config ({{comparing}}) given the stored response's `No-Vary-Search` header.
 
 Cache implementations MAY fail to reuse a stored response whose target URI matches _only_ modulo URL variation config, if the cache has more recently stored a response which:
 
@@ -428,7 +420,9 @@ To aid cache implementation efficiency, servers SHOULD NOT send different non-em
 
 # Security Considerations
 
-The main risk to be aware of is the impact of mismatched URLs. In particular, this could cause the user to see a response that was originally fetched from a URL different from the one displayed when they hovered a link, or the URL displayed in the URL bar.
+The main risk to be aware of is a cache returning a response that was originally fetched from a URL different from the one requested. In a web browser, this could cause the user to see a response fetched from a URL different from the one displayed when they hovered a link, or the URL displayed in the URL bar.
+
+For shared caches, such as CDNs or forward proxies, returning a response for a different URL carries the risk of cross-user state leakage. If a server incorrectly declares that a query parameter does not affect the response, but that parameter actually dictates user-specific or sensitive content, the shared cache might serve one user's personalized response to another user. However, because the origin strictly controls the `No-Vary-Search` header, it is the origin's responsibility to ensure that ignored parameters are safe to disregard for all users.
 
 Incorrect configuration of this field can exacerbate cache poisoning or data leakage risks. Parameters MUST NOT be ignored if doing so would bypass server processing required for safe response reuse. This includes parameters used for authorization, user identification, signature verification, user consent, routing, auditing, revocation, or any other security-sensitive operations.
 
