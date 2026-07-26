@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-23T02:00:38.664723+00:00",
+  "timestamp": "2026-07-26T01:59:29.148140+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -76104,7 +76104,7 @@
       ],
       "body": "Similar to https://github.com/httpwg/http-extensions/issues/3420, thought I'd ask about names if we're making it clear that the `DATA` and `FINAL_DATA` capsules represent TCP stream data that can be combined and split. \n\nWould it make sense to name them: \n- `TCP_DATA` and `TCP_FINAL_DATA`\n- `STREAM_DATA` and `FINAL_STREAM_DATA` / `STREAM_FINAL_DATA`\n\nThe latter seems nicer if we're saying that merging and splitting is a generic property of any stream, not just TCP. The former seems nicer if we're saying that merging and splitting can be done only in the context of `connect-tcp`.\n\nThis would also help to distinguish them from the HTTP/2 and HTTP/3 `DATA` frames that they are carried within.\n\nIf we keep the existing names, can we add an editorial note for implementors that they should not confuse them with the HTTP/2 and HTTP/3 frames of the same name?",
       "createdAt": "2026-04-04T08:20:36Z",
-      "updatedAt": "2026-07-08T14:41:50Z",
+      "updatedAt": "2026-07-24T07:21:01Z",
       "closedAt": "2026-07-06T18:06:25Z",
       "comments": [
         {
@@ -76141,6 +76141,13 @@
           "body": "In my view the distinction from HTTP DATA frames is already emphasized sufficiently in this sentence:\n\n> The boundaries between DATA and FINAL_DATA capsules are not significant, and are not expected to match TCP segments, TLS records, HTTP DATA frames, QUIC STREAM frames, etc.",
           "createdAt": "2026-07-08T14:41:50Z",
           "updatedAt": "2026-07-08T14:41:50Z"
+        },
+        {
+          "author": "DavidSchinazi",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "FWIW I also prefer DATA and FINAL_DATA",
+          "createdAt": "2026-07-24T07:21:01Z",
+          "updatedAt": "2026-07-24T07:21:01Z"
         }
       ]
     },
@@ -77701,9 +77708,17 @@
       ],
       "body": "Came up during the HTTP workshop, we should provide suggestions for browsers to handle upload resumption as if it's a cross-origin redirect.",
       "createdAt": "2026-07-16T12:08:22Z",
-      "updatedAt": "2026-07-22T22:23:33Z",
+      "updatedAt": "2026-07-23T21:29:21Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "We could reference RFC9110's guidelines on following redirects: https://www.rfc-editor.org/rfc/rfc9110.html#section-15.4-5. It includes security considerations like stripping cookies and authorization headers. Should clients do the same when sending requests to the upload resource for resumption?\n\nAlternatively, or additionally, we could add a security consideration stating that the upload resource might belong to a different origin and that a client has to check if it should requests there and if any information should be omitted. ",
+          "createdAt": "2026-07-23T21:20:45Z",
+          "updatedAt": "2026-07-23T21:29:21Z"
+        }
+      ]
     },
     {
       "number": 3496,
@@ -77733,7 +77748,7 @@
       "labels": [],
       "body": "Can we please change `SERVER_CERTIFICATE` frame name back to `CERTIFICATE`?\n\nPotential future specification of client side secondary certificates could use the same frame to send client certificates. The content would be identical - carrying an exported authenticator.\n\nOn top of that, all other HTTP frame types do not have CLIENT_ or SERVER_ prefix even if they are applicable only in a single direction.",
       "createdAt": "2026-07-22T09:48:16Z",
-      "updatedAt": "2026-07-22T10:23:26Z",
+      "updatedAt": "2026-07-25T22:13:50Z",
       "closedAt": null,
       "comments": [
         {
@@ -77742,6 +77757,57 @@
           "body": "Personally I like the current name and the very clear separation of concerns.\n\nCode points are cheap and a future extension that supported client certs can easily add them. While the contents might be similar, the intent can be different. A new extensions would still need to define a setting etc do I'm not sure how much work a shared frame would save",
           "createdAt": "2026-07-22T10:23:26Z",
           "updatedAt": "2026-07-22T10:23:26Z"
+        },
+        {
+          "author": "yaroslavros",
+          "authorAssociation": "NONE",
+          "body": "Still, I find this inconsistent and a bit awkward.\n\nAlso, the applicability of the frame name may become non-obvious with PTTH \ud83e\udd54",
+          "createdAt": "2026-07-25T22:13:49Z",
+          "updatedAt": "2026-07-25T22:13:49Z"
+        }
+      ]
+    },
+    {
+      "number": 3498,
+      "id": "I_kwDOAUA-v88AAAABJ62byw",
+      "title": "RESUMABLE: Tracking issue for browser integration",
+      "url": "https://github.com/httpwg/http-extensions/issues/3498",
+      "state": "OPEN",
+      "author": "Acconut",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "This issue is intended to serve as a pointer to discussions around integrating resumable uploads into browsers, in particular:\n\n- Fetch API: https://github.com/whatwg/fetch/issues/1626\n- HTML Forms: https://github.com/whatwg/html/issues/12690\n\nPossible topics to consider in this context are:\n\n- Cross origin resource sharing (CORS): The upload resource might belong to another origin than the initial request went to. When resuming an upload in such a case, the HEAD request might serve as the pre-flight request for the following PATCH request.\n- The origin serving the final response might be different from the origin that the initial request went to because the upload resource belongs to another origin. This could lead to different behavior for the user agent depending on whether the upload had to be resumed or not.\n- Cookies\n- Content-Security-Policy\n\nPlease note that the httpbis WG is not the correct place to discuss these. If changes to the resumable uploads draft are necessary to accommodate browser integration, we can collect and discuss them here. Please leave remarks regarding changes to the Fetch API or HTML forms in the corresponding issues linked above.\n\n/cc @annevk ",
+      "createdAt": "2026-07-23T16:03:00Z",
+      "updatedAt": "2026-07-23T16:03:11Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 3499,
+      "id": "I_kwDOAUA-v88AAAABKAMbmw",
+      "title": "Final capsule types",
+      "url": "https://github.com/httpwg/http-extensions/issues/3499",
+      "state": "OPEN",
+      "author": "DavidSchinazi",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "connect-tcp"
+      ],
+      "body": "Please switch to one-byte capsule types (values 0-63).\n\nYou can register them by filing a request [here](https://www.iana.org/form/protocol-assignment) and @LPardue or I can approve them.\n\nCurrent available values are visible [here](https://www.iana.org/assignments/masque/masque.xhtml#http-capsule-types). Make sure to request values as provisional in this request, and mention in the IANA considerations of the doc that they will be made permanent when the RFC is published.",
+      "createdAt": "2026-07-24T07:27:39Z",
+      "updatedAt": "2026-07-24T12:04:46Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "martinthomson",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "You can select a value [here](https://martinthomson.github.io/quic-pick/) if you want a random* draw that is verifiably not grease or already taken.",
+          "createdAt": "2026-07-24T12:04:46Z",
+          "updatedAt": "2026-07-24T12:04:46Z"
         }
       ]
     }
@@ -216757,7 +216823,7 @@
       ],
       "body": "Fixes https://github.com/httpwg/http-extensions/issues/3487.",
       "createdAt": "2026-07-15T09:50:35Z",
-      "updatedAt": "2026-07-15T09:50:35Z",
+      "updatedAt": "2026-07-25T07:36:37Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "7ddf01573fd7c311153aa31dd487f56b5799e57c",
@@ -216769,7 +216835,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABHNdmog",
+          "commit": {
+            "abbreviatedOid": "d3e8c4b"
+          },
+          "author": "reschke",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-07-25T07:36:37Z",
+          "updatedAt": "2026-07-25T07:36:37Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 3490,
@@ -216785,7 +216865,7 @@
       ],
       "body": "Fixes https://github.com/httpwg/http-extensions/issues/3486.",
       "createdAt": "2026-07-15T10:22:43Z",
-      "updatedAt": "2026-07-15T10:22:44Z",
+      "updatedAt": "2026-07-25T07:43:06Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "7ddf01573fd7c311153aa31dd487f56b5799e57c",
@@ -216797,7 +216877,34 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABHNd5xw",
+          "commit": {
+            "abbreviatedOid": "1c10261"
+          },
+          "author": "reschke",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "I don't believe that changing to \"key-value pairs\" helps, as, from the pov of the URI and HTTP RFCs, the query component is entirely opaque.\n\nI'll try to come up with a proposal, but that will take a few days.",
+          "createdAt": "2026-07-25T07:39:42Z",
+          "updatedAt": "2026-07-25T07:39:42Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABHNeLyQ",
+          "commit": {
+            "abbreviatedOid": "1c10261"
+          },
+          "author": "reschke",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "I don't believe that changing to \"key-value pairs\" helps, as, from the pov of the URI and HTTP RFCs, the query component is entirely opaque.\n\nI'll try to come up with a proposal, but that will take a few days.",
+          "createdAt": "2026-07-25T07:43:06Z",
+          "updatedAt": "2026-07-25T07:43:06Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 3491,
@@ -217020,6 +217127,55 @@
         }
       ],
       "reviews": []
+    },
+    {
+      "number": 3500,
+      "id": "PR_kwDOAUA-v871wyUk",
+      "title": "NVS: Address SECDIR review comments",
+      "url": "https://github.com/httpwg/http-extensions/pull/3500",
+      "state": "OPEN",
+      "author": "nidhijaju",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "no-vary-search"
+      ],
+      "body": "@CBonnell: If you could take a look, that would be great. Thank you!",
+      "createdAt": "2026-07-24T08:32:06Z",
+      "updatedAt": "2026-07-24T09:06:15Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "88b1bb5ac274cea518361d6e00146d3111d2df09",
+      "headRepository": "nidhijaju/http-extensions",
+      "headRefName": "secdir-review",
+      "headRefOid": "8c663462cd1e4ba337654096676a86519b7d8cc1",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABHGw9tw",
+          "commit": {
+            "abbreviatedOid": "8c66346"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-07-24T09:06:15Z",
+          "updatedAt": "2026-07-24T09:06:15Z",
+          "comments": [
+            {
+              "originalPosition": 22,
+              "body": "I wonder if this could be simpler, like:\n\n\"{{Section 4 of HTTP-CACHING}} requires that the presented target URI and that of the stored response match in order to reuse a stored response. If a cache implements the \"No-Vary-Search\" extension, is considers the match to include equivalent modulo URL variation config ({{comparing}}).\"",
+              "createdAt": "2026-07-24T09:06:15Z",
+              "updatedAt": "2026-07-24T09:06:15Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
