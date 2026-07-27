@@ -394,7 +394,7 @@ So, for example, given any non-default value for the `"No-Vary-Search"` response
 
 # Caching {#caching}
 
-If a cache {{HTTP-CACHING}} implements this specification, it expands the concept of a matching target URI described in {{Section 4 of HTTP-CACHING}}. Specifically, a presented target URI and that of a stored response are considered to match if they are either exactly identical, or are equivalent modulo URL variation config ({{comparing}}) given the stored response's `No-Vary-Search` header.
+To reuse a stored response, {{Section 4 of HTTP-CACHING}} requires that the presented target URI and that of the stored response match. If a cache implements the `No-Vary-Search` extension, this matching requirement is also satisfied if the URIs are equivalent modulo URL variation config ({{comparing}}) given the stored response's `No-Vary-Search` header.
 
 Cache implementations MAY fail to reuse a stored response whose target URI matches _only_ modulo URL variation config, if the cache has more recently stored a response which:
 
