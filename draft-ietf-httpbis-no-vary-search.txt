@@ -5,8 +5,8 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                            N. Jaju, Ed.
-Expires: 22 January 2027                                      Google LLC
-                                                            21 July 2026
+Expires: 28 January 2027                                      Google LLC
+                                                            27 July 2026
 
 
                The No-Vary-Search HTTP Caching Extension
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 January 2027.
+   This Internet-Draft will expire on 28 January 2027.
 
 Copyright Notice
 
@@ -401,9 +401,10 @@ Table of Contents
    No-Vary-Search: params=("%C3%A9+%E6%B0%97")
 
    will result in a URL variation config whose vary params are « "é 気"
-   ». As explained in a later example, the canonicalization process
-   during equivalence testing means this will treat as equivalent URIs
-   such as:
+   ». Note that the "+" character in the encoded string is mapped to a
+   space (SP).  As explained in a later example, the canonicalization
+   process during equivalence testing means this will treat as
+   equivalent URIs such as:
 
    *  https://example.com/?é 気=1
 
