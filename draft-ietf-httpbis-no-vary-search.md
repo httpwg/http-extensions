@@ -112,7 +112,7 @@ informative:
 
 --- abstract
 
-This specification defines an extension to HTTP Caching, changing how URI query parameters impact caching.
+This specification defines an extension to HTTP Caching, changing how URI query parameters impact caching. It introduces the `"No-Vary-Search"` response header field, which allows origin servers to signal to caches that certain query parameters do not semantically affect the served response and can be ignored for cache matching purposes.
 
 --- middle
 
@@ -139,9 +139,11 @@ And if the resource instead wants to take an allowlist-based approach, where onl
 No-Vary-Search: except=("productId")
 ~~~~
 
-Note that "cache busting" by sending unique query parameters to avoid retrieving a cached response can be made ineffective by the `No-Vary-Search` header field.
+Note that "cache busting", the practice of changing a query parameter to create a distinct cache key and force retrieval of a newer response, can be made ineffective by the `"No-Vary-Search"` response header field.
 
-{{header-definition}} defines the new response header field `No-Vary-Search`, using the {{STRUCTURED-FIELDS}} framework. {{data-model}} and {{parsing}} illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. {{comparing}} gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format specified in {{WHATWG-URL}}. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, {{caching}} explains how to extend {{Section 4 of HTTP-CACHING}} to take this new equivalence into account.
+{{header-definition}} defines the new `"No-Vary-Search"` response header field, using the {{STRUCTURED-FIELDS}} framework. {{data-model}} and {{parsing}} illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. {{comparing}} gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format specified in {{WHATWG-URL}}. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, {{caching}} explains how to extend {{Section 4 of HTTP-CACHING}} to take this new equivalence into account.
+
+From a deployment perspective, this extension is implemented by HTTP caches, including browser caches, content delivery networks, and forward proxies. Origin servers send the `"No-Vary-Search"` response header field to provide instructions to these caches. Caches that implement this extension use these instructions to determine when a previously stored response can be safely reused for a new request, even if the query components of the target URIs differ.
 
 # Conventions and Definitions
 
@@ -160,7 +162,7 @@ This document also adopts some conventions and notation typical in WHATWG and W3
 
 # HTTP header field definition {#header-definition}
 
-The `No-Vary-Search` HTTP header field is a structured field {{STRUCTURED-FIELDS}} whose value MUST be a dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}).
+The `"No-Vary-Search"` response header field is a structured field {{STRUCTURED-FIELDS}} whose value MUST be a dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}).
 
 It has the following constraints:
 
@@ -243,34 +245,36 @@ To _parse a URL variation config_ given _value_:
 (((!obtain a URL variation config)))
 To _obtain a URL variation config_ given an HTTP response ({{Section 3.4 of HTTP}}) _response_:
 
-1. Let _fieldValue_ be the result of parsing the `No-Vary-Search` field from _response_ as a Dictionary ({{Section 4.2 of STRUCTURED-FIELDS}}).
+1. Let _fieldValue_ be the result of parsing the `"No-Vary-Search"` response header field from _response_ as a Dictionary ({{Section 4.2 of STRUCTURED-FIELDS}}).
 1. Return the result of parsing a URL variation config ({{parse-a-url-variation-config}}) given _fieldValue_. (((parse a URL variation config)))
 
 ### Examples
 
 The following illustrates how various inputs are parsed, in terms of their impact on the resulting no-vary params and vary params:
 
-| Input                                  | Result                                                    |
-|----------------------------------------+-----------------------------------------------------------|
-| `No-Vary-Search: params=("a")`         | no-vary params: « "`a`" »<br>vary params: __wildcard__    |
-| `No-Vary-Search: except=("x")`         | no-vary params: __wildcard__<br>vary params: « "`x`" »    |
-| `No-Vary-Search: params=()`            | no-vary params: (empty list)<br>vary params: __wildcard__ |
-| `No-Vary-Search: except=()`            | no-vary params: __wildcard__<br>vary params: (empty list) |
+| Input                                  | Result                                                                                |
+|----------------------------------------+---------------------------------------------------------------------------------------|
+| `No-Vary-Search: key-order`            | no-vary params: (empty list)<br>vary params: __wildcard__<br>vary on key order: false |
+| `No-Vary-Search: params=("a")`         | no-vary params: « "`a`" »<br>vary params: __wildcard__                                |
+| `No-Vary-Search: except=("x")`         | no-vary params: __wildcard__<br>vary params: « "`x`" »                                |
+| `No-Vary-Search: params=()`            | no-vary params: (empty list)<br>vary params: __wildcard__                             |
+| `No-Vary-Search: except=()`            | no-vary params: __wildcard__<br>vary params: (empty list)                             |
 
 The following inputs are all invalid and will cause the default URL variation config to be returned:
 
-{:compact}
-  * `No-Vary-Search: key-order="not a boolean"`
-  * `No-Vary-Search: params="not an inner list"`
-  * `No-Vary-Search: params=(not-a-string)`
-  * `No-Vary-Search: params=?0`
-  * `No-Vary-Search: params=?1`
-  * `No-Vary-Search: params=?1, except=("x")`
-  * `No-Vary-Search: params=("a"), except=("x")`
-  * `No-Vary-Search: params=(), except=()`
-  * `No-Vary-Search: except="not an inner list"`
-  * `No-Vary-Search: except=(not-a-string)`
-  * `No-Vary-Search: except=?1`
+| Input                                        | Explanation                                         |
+|----------------------------------------------|-----------------------------------------------------|
+| `No-Vary-Search: key-order="not a boolean"`  | `key-order` expects a boolean, not a string         |
+| `No-Vary-Search: params="not an inner list"` | `params` expects an inner list, not a string        |
+| `No-Vary-Search: params=(not-a-string)`      | `params` items must be strings (tokens are invalid) |
+| `No-Vary-Search: params=?0`                  | `params` expects an inner list, not a boolean       |
+| `No-Vary-Search: params=?1`                  | `params` expects an inner list, not a boolean       |
+| `No-Vary-Search: params=?1, except=("x")`    | `params` and `except` cannot both be present        |
+| `No-Vary-Search: params=("a"), except=("x")` | `params` and `except` cannot both be present        |
+| `No-Vary-Search: params=(), except=()`       | `params` and `except` cannot both be present        |
+| `No-Vary-Search: except="not an inner list"` | `except` expects an inner list, not a string        |
+| `No-Vary-Search: except=(not-a-string)`      | `except` items must be strings (tokens are invalid) |
+| `No-Vary-Search: except=?1`                  | `except` expects an inner list, not a boolean       |
 
   The following inputs are valid, but somewhat unconventional. They are shown alongside their more conventional form.
 
@@ -376,7 +380,7 @@ Two [URLs](https://url.spec.whatwg.org/#concept-url) {{WHATWG-URL}} _urlA_ and _
 
 Due to how the application/x-www-form-urlencoded parser canonicalizes query strings, there are some cases where query strings which do not appear obviously equivalent, will end up being treated as equivalent after parsing.
 
-So, for example, given any non-default value for `No-Vary-Search`, such as `No-Vary-Search: key-order`, we will have the following equivalences:
+So, for example, given any non-default value for the `"No-Vary-Search"` response header field, such as `No-Vary-Search: key-order`, we will have the following equivalences:
 
 | First Query | Second Query    | Explanation                                         |
 |-------------+-----------------+-----------------------------------------------------|
@@ -404,13 +408,13 @@ is replaced with:
 Cache implementations MAY fail to reuse a stored response whose target URI matches _only_ modulo URL variation config, if the cache has more recently stored a response which:
 
 * has a target URI which is equal to the presented target URI, excluding the query, and
-* has a non-empty value for the `No-Vary-Search` field, and
-* has a `No-Vary-Search` field value different from the stored response being considered for reuse.
+* has a non-empty value for the `"No-Vary-Search"` response header field, and
+* has a `"No-Vary-Search"` response header field value different from the stored response being considered for reuse.
 
 {:aside}
 > Caches aren't required to reuse stored responses, generally. However, the above expressly empowers caches to, if it is advantageous for performance or other reasons, search a smaller number of stored responses.
 >
-> That is, because caches might store more than one response for a given pathname, they need a way to efficiently look up the No-Vary-Search value without accessing all cached responses. Such a cache might take steps like the following to identify a stored response in a performant way, before checking the other conditions in {{Section 4 of HTTP-CACHING}}:
+> That is, because caches might store more than one response for a given pathname, they need a way to efficiently look up the `"No-Vary-Search"` response header field value without accessing all cached responses. Such a cache might take steps like the following to identify a stored response in a performant way, before checking the other conditions in {{Section 4 of HTTP-CACHING}}:
 >
 > 1. Let exactMatch be cache\[presentedTargetURI\]. If it is a stored response that can be reused, return it.
 > 1. Let targetPath be presentedTargetURI, with query parameters removed.
@@ -421,17 +425,21 @@ Cache implementations MAY fail to reuse a stored response whose target URI match
 > 1. If nvsMatch's target URI and presentedTargetURI are not equivalent modulo URL variation config ({{comparing}}) given variationConfig, then return null.
 > 1. If nvsMatch is a stored response that can be reused, return it. Otherwise, return null.
 
-To aid cache implementation efficiency, servers SHOULD NOT send different non-empty values for the `No-Vary-Search` field in response to requests for a given pathname over time, unless there is a need to update how they handle the query component. Doing so would cause cache implementations that use a strategy like the above to miss some stored responses that could otherwise have been reused.
+To aid cache implementation efficiency, servers SHOULD NOT send different non-empty values for the `"No-Vary-Search"` response header field in response to requests for a given pathname over time, unless there is a need to update how they handle the query component. Doing so would cause cache implementations that use a strategy like the above to miss some stored responses that could otherwise have been reused.
 
 # Security Considerations
 
 The main risk to be aware of is the impact of mismatched URLs. In particular, this could cause the user to see a response that was originally fetched from a URL different from the one displayed when they hovered a link, or the URL displayed in the URL bar.
 
-However, since the impact is limited to query parameters, this does not cross the relevant security boundary, which is the origin ({{ORIGIN}}). (Or perhaps just the [host](https://url.spec.whatwg.org/#concept-url-host), from [the perspective of web browser security UI](https://url.spec.whatwg.org/#url-rendering-simplification). {{WHATWG-URL}}) Indeed, we have already given origins complete control over how they present the (URL, response body) pair, including on the client side via technology such as [history.replaceState()](https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate) or service workers.
+Incorrect configuration of this field can exacerbate cache poisoning or data leakage risks. Parameters MUST NOT be ignored if doing so would bypass server processing required for safe response reuse. This includes parameters used for authorization, user identification, signature verification, user consent, routing, auditing, revocation, or any other security-sensitive operations.
+
+However, since the impact is limited to query parameters, this does not cross the relevant security boundary, which is the origin ({{ORIGIN}}). (See also the [host](https://url.spec.whatwg.org/#concept-url-host) from [the perspective of web browser security UI](https://url.spec.whatwg.org/#url-rendering-simplification). {{WHATWG-URL}}) Indeed, origins already have complete control over how they present URLs and response bodies, including on the client side via technology such as [history.replaceState()](https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate) or service workers.
 
 # Privacy Considerations
 
 This proposal is adjacent to the highly-privacy-relevant space of [navigational tracking](https://privacycg.github.io/nav-tracking-mitigations/#terminology), which often uses query parameters to pass along user identifiers. However, we believe this proposal itself does not have privacy impacts. It does not interfere with [existing navigational tracking mitigations](https://privacycg.github.io/nav-tracking-mitigations/#deployed-mitigations), or any known future ones being contemplated. Indeed, if a page were to encode user identifiers in its URI, the only ability this proposal gives is to *reduce* such user tracking by preventing server processing of such user IDs (since the server is bypassed in favor of the cache). {{NAV-TRACKING-MITIGATIONS}}
+
+However, an errant configuration that incorrectly ignores parameters related to user identity or private state could expose cached content meant for one user to another. While this mistake can occur with standard caching, the `"No-Vary-Search"` response header field increases the surface area for such misconfigurations, making it critical that origins accurately classify their query parameters.
 
 # IANA Considerations
 
