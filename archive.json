@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-26T01:59:29.148140+00:00",
+  "timestamp": "2026-07-28T01:48:32.891678+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77679,7 +77679,7 @@
       "id": "I_kwDOAUA-v88AAAABIdDKTg",
       "title": "no-vary: I18N example",
       "url": "https://github.com/httpwg/http-extensions/issues/3487",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "reschke",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -77688,8 +77688,8 @@
       ],
       "body": "5.3.1:\n\n> The [parse a key](https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html#parse-a-key) algorithm allows encoding non-ASCII key strings in the ASCII structured header field format, similar to how the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format [[WHATWG-URL](https://httpwg.org/http-extensions/draft-ietf-httpbis-no-vary-search.html#WHATWG-URL)] allows encoding an entire entry list of keys and values in a URI (which is restricted to ASCII characters). For example,\n\n> No-Vary-Search: params=(\"%C3%A9+%E6%B0%97\")\n\n> will result in a URL variation config whose vary params are \u00ab \"\u00e9 \u6c17\" \u00bb\n\nMay it would be good to notice that \"+\" maps to SP?\n\n",
       "createdAt": "2026-07-11T12:46:27Z",
-      "updatedAt": "2026-07-11T12:46:27Z",
-      "closedAt": null,
+      "updatedAt": "2026-07-27T07:20:06Z",
+      "closedAt": "2026-07-27T07:20:06Z",
       "comments": []
     },
     {
@@ -77810,6 +77810,22 @@
           "updatedAt": "2026-07-24T12:04:46Z"
         }
       ]
+    },
+    {
+      "number": 3501,
+      "id": "I_kwDOAUA-v88AAAABKYxp8A",
+      "title": "Cookies: New cookie with differing value dropped during duplicate check",
+      "url": "https://github.com/httpwg/http-extensions/issues/3501",
+      "state": "OPEN",
+      "author": "JasonTheKitten",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Hello,\n\nhttps://httpwg.org/http-extensions/draft-ietf-httpbis-layered-cookies.html#section-5.4.3-2.18.2.2.1\n> If cookie's secure is equal to oldCookie's secure, cookie's same-site is equal to oldCookie's same-site, and cookie's expiry-time is equal to oldCookie's expiry-time, then return null.\n\nThis clause is used to check for duplicate cookies, and skip the rest of the Store a Cookie algorithm if the cookie is equal to an existing cookie.\n\nHowever, it does not check if the value is the same or not.\n\nAs such, two cookies having the same attributes, except the value, will result in the cookie with the new value being dropped (and the old value being kept)\n\n(And this would be common for cookies that are removed on browser exit, as they have the same null expiry-time)\n\nI did some quick testing and this does not match major browser behavior - browsers keep the cookie with the new value, even if they have the same same-site, secure, and expiry time (or lack thereof).\n\nI propose revising it to:\n> If cookie's secure is equal to oldCookie's secure, cookie's same-site is equal to oldCookie's same-site, cookie's expiry-time is equal to oldCookie's expiry-time, and cookie's value is equal to oldCookie's value, then return null.",
+      "createdAt": "2026-07-27T20:26:56Z",
+      "updatedAt": "2026-07-27T20:26:56Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -216814,7 +216830,7 @@
       "id": "PR_kwDOAUA-v87x9ko4",
       "title": "Add note that \"+\" maps to SP",
       "url": "https://github.com/httpwg/http-extensions/pull/3489",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "nidhijaju",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -216823,17 +216839,19 @@
       ],
       "body": "Fixes https://github.com/httpwg/http-extensions/issues/3487.",
       "createdAt": "2026-07-15T09:50:35Z",
-      "updatedAt": "2026-07-25T07:36:37Z",
+      "updatedAt": "2026-07-27T07:20:10Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "7ddf01573fd7c311153aa31dd487f56b5799e57c",
       "headRepository": "nidhijaju/http-extensions",
       "headRefName": "space-I18N",
       "headRefOid": "d3e8c4b7c49fa1493f8d2e4212f2b0bbcee4514d",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-07-27T07:20:05Z",
+      "mergedAt": "2026-07-27T07:20:05Z",
+      "mergedBy": "nidhijaju",
+      "mergeCommit": {
+        "oid": "c0fc4a2c9ef310e45d992f08da307493f7b2517c"
+      },
       "comments": [],
       "reviews": [
         {
@@ -217142,13 +217160,13 @@
       ],
       "body": "@CBonnell: If you could take a look, that would be great. Thank you!",
       "createdAt": "2026-07-24T08:32:06Z",
-      "updatedAt": "2026-07-24T09:06:15Z",
+      "updatedAt": "2026-07-27T08:04:14Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "88b1bb5ac274cea518361d6e00146d3111d2df09",
+      "baseRefOid": "c0fc4a2c9ef310e45d992f08da307493f7b2517c",
       "headRepository": "nidhijaju/http-extensions",
       "headRefName": "secdir-review",
-      "headRefOid": "8c663462cd1e4ba337654096676a86519b7d8cc1",
+      "headRefOid": "398de8998eceba86680849cae5e65a540fa17a00",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -217172,6 +217190,26 @@
               "body": "I wonder if this could be simpler, like:\n\n\"{{Section 4 of HTTP-CACHING}} requires that the presented target URI and that of the stored response match in order to reuse a stored response. If a cache implements the \"No-Vary-Search\" extension, is considers the match to include equivalent modulo URL variation config ({{comparing}}).\"",
               "createdAt": "2026-07-24T09:06:15Z",
               "updatedAt": "2026-07-24T09:06:15Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABHTMtlQ",
+          "commit": {
+            "abbreviatedOid": "8c66346"
+          },
+          "author": "nidhijaju",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-07-27T07:58:30Z",
+          "updatedAt": "2026-07-27T07:58:30Z",
+          "comments": [
+            {
+              "originalPosition": 22,
+              "body": "Thanks, adjusted.",
+              "createdAt": "2026-07-27T07:58:30Z",
+              "updatedAt": "2026-07-27T07:58:30Z"
             }
           ]
         }
