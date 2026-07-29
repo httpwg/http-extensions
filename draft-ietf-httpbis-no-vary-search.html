@@ -8,9 +8,9 @@
 <meta content="Domenic Denicola" name="author">
 <meta content="Jeremy Roman" name="author">
 <meta content="Nidhi Jaju" name="author">
-<meta content="
-       This specification defines an extension to HTTP Caching, changing how URI query parameters impact caching. 
-    " name="description">
+<meta content='
+       This specification defines an extension to HTTP Caching, changing how URI query parameters impact caching. It introduces the  "No-Vary-Search"  response header field, which allows origin servers to signal to caches that certain query parameters do not semantically affect the served response and can be ignored for cache matching purposes. 
+    ' name="description">
 <meta content="xml2rfc 3.34.0" name="generator">
 <meta content="http" name="keyword">
 <meta content="caching" name="keyword">
@@ -64,7 +64,6 @@
   src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: italic;
@@ -113,7 +112,6 @@
   src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: normal;
@@ -178,7 +176,6 @@
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
 }
 
 @font-face {
@@ -1051,7 +1048,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Denicola, et al.</td>
-<td class="center">Expires 28 January 2027</td>
+<td class="center">Expires 30 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1061,12 @@ svg {
 <dd class="internet-draft">draft-ietf-httpbis-no-vary-search-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-07-27" class="published">27 July 2026</time>
+<time datetime="2026-07-29" class="published">29 July 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-28">28 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-01-30">30 January 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1091,7 +1088,7 @@ svg {
 <h1 id="title">The No-Vary-Search HTTP Caching Extension</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This specification defines an extension to HTTP Caching, changing how URI query parameters impact caching.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This specification defines an extension to HTTP Caching, changing how URI query parameters impact caching. It introduces the <code>"No-Vary-Search"</code> response header field, which allows origin servers to signal to caches that certain query parameters do not semantically affect the served response and can be ignored for cache matching purposes.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1128,7 +1125,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 28 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 30 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1267,8 +1264,9 @@ No-Vary-Search: params=("utm_source" "utm_medium" "utm_campaign")
 No-Vary-Search: except=("productId")
 </pre><a href="#section-1-7" class="pilcrow">¶</a>
 </div>
-<p id="section-1-8">Note that "cache busting" by sending unique query parameters to avoid retrieving a cached response can be made ineffective by the <code>No-Vary-Search</code> header field.<a href="#section-1-8" class="pilcrow">¶</a></p>
-<p id="section-1-9"><a href="#header-definition" class="auto internal xref">Section 3</a> defines the new response header field <code>No-Vary-Search</code>, using the <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> framework. <a href="#data-model" class="auto internal xref">Section 4</a> and <a href="#parsing" class="auto internal xref">Section 5</a> illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. <a href="#comparing" class="auto internal xref">Section 6</a> gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format specified in <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, <a href="#caching" class="auto internal xref">Section 7</a> explains how to extend <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span> to take this new equivalence into account.<a href="#section-1-9" class="pilcrow">¶</a></p>
+<p id="section-1-8">Note that "cache busting", the practice of changing a query parameter to create a distinct cache key and force retrieval of a newer response, can be made ineffective by the <code>"No-Vary-Search"</code> response header field.<a href="#section-1-8" class="pilcrow">¶</a></p>
+<p id="section-1-9"><a href="#header-definition" class="auto internal xref">Section 3</a> defines the new <code>"No-Vary-Search"</code> response header field, using the <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> framework. <a href="#data-model" class="auto internal xref">Section 4</a> and <a href="#parsing" class="auto internal xref">Section 5</a> illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. <a href="#comparing" class="auto internal xref">Section 6</a> gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the <a href="https://url.spec.whatwg.org/#concept-urlencoded">application/x-www-form-urlencoded</a> format specified in <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, <a href="#caching" class="auto internal xref">Section 7</a> explains how to extend <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span> to take this new equivalence into account.<a href="#section-1-9" class="pilcrow">¶</a></p>
+<p id="section-1-10">From a deployment perspective, this extension is implemented by HTTP caches, including browser caches, content delivery networks, and forward proxies. Origin servers send the <code>"No-Vary-Search"</code> response header field to provide instructions to these caches. Caches that implement this extension use these instructions to determine when a previously stored response can be safely reused for a new request, even if the query components of the target URIs differ.<a href="#section-1-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1299,7 +1297,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-http-header-field-definitio">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-http-header-field-definitio" class="section-name selfRef">HTTP header field definition</a>
       </h2>
-<p id="section-3-1">The <code>No-Vary-Search</code> HTTP header field is a structured field <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> whose value <span class="bcp14">MUST</span> be a dictionary (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.2" class="relref">Section 3.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">The <code>"No-Vary-Search"</code> response header field is a structured field <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> whose value <span class="bcp14">MUST</span> be a dictionary (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.2" class="relref">Section 3.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">It has the following constraints:<a href="#section-3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-3.1">
@@ -1455,7 +1453,7 @@ To <em><span id="iref-parse-a-url-variation-config" class="iref"></span><a href=
 To <em><span id="iref-obtain-a-url-variation-config" class="iref"></span><a href="#obtain-a-url-variation-config" class="internal xref">obtain a URL variation config</a></em> given an HTTP response (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-3.4" class="relref">Section 3.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) <em>response</em>:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.2-2">
 <li id="section-5.2-2.1">
-            <p id="section-5.2-2.1.1">Let <em>fieldValue</em> be the result of parsing the <code>No-Vary-Search</code> field from <em>response</em> as a Dictionary (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-4.2" class="relref">Section 4.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-2.1.1">Let <em>fieldValue</em> be the result of parsing the <code>"No-Vary-Search"</code> response header field from <em>response</em> as a Dictionary (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-4.2" class="relref">Section 4.2</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>).<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.2-2.2">
             <p id="section-5.2-2.2.1">Return the result of parsing a URL variation config (<a href="#parse-a-url-variation-config" class="auto internal xref">Section 5.1</a>) given <em>fieldValue</em>. <span id="iref-parse-a-url-variation-config-" class="iref"></span><a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
@@ -1476,6 +1474,12 @@ To <em><span id="iref-obtain-a-url-variation-config" class="iref"></span><a href
               </tr>
             </thead>
             <tbody>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: key-order</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">no-vary params: (empty list)<br>vary params: <strong>wildcard</strong><br>vary on key order: false</td>
+              </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">
                   <code>No-Vary-Search: params=("a")</code>
@@ -1505,44 +1509,97 @@ To <em><span id="iref-obtain-a-url-variation-config" class="iref"></span><a href
             </tbody>
           </table>
 <p id="section-5.2.1-3">The following inputs are all invalid and will cause the <span id="iref-default-url-variation-config-2" class="iref"></span>default URL variation config to be returned:<a href="#section-5.2.1-3" class="pilcrow">¶</a></p>
-<ul class="compact">
-<li class="compact" id="section-5.2.1-4.1">
-              <p id="section-5.2.1-4.1.1"><code>No-Vary-Search: key-order="not a boolean"</code><a href="#section-5.2.1-4.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="compact" id="section-5.2.1-4.2">
-              <p id="section-5.2.1-4.2.1"><code>No-Vary-Search: params="not an inner list"</code><a href="#section-5.2.1-4.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="compact" id="section-5.2.1-4.3">
-              <p id="section-5.2.1-4.3.1"><code>No-Vary-Search: params=(not-a-string)</code><a href="#section-5.2.1-4.3.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="compact" id="section-5.2.1-4.4">
-              <p id="section-5.2.1-4.4.1"><code>No-Vary-Search: params=?0</code><a href="#section-5.2.1-4.4.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="compact" id="section-5.2.1-4.5">
-              <p id="section-5.2.1-4.5.1"><code>No-Vary-Search: params=?1</code><a href="#section-5.2.1-4.5.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="compact" id="section-5.2.1-4.6">
-              <p id="section-5.2.1-4.6.1"><code>No-Vary-Search: params=?1, except=("x")</code><a href="#section-5.2.1-4.6.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="compact" id="section-5.2.1-4.7">
-              <p id="section-5.2.1-4.7.1"><code>No-Vary-Search: params=("a"), except=("x")</code><a href="#section-5.2.1-4.7.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="compact" id="section-5.2.1-4.8">
-              <p id="section-5.2.1-4.8.1"><code>No-Vary-Search: params=(), except=()</code><a href="#section-5.2.1-4.8.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="compact" id="section-5.2.1-4.9">
-              <p id="section-5.2.1-4.9.1"><code>No-Vary-Search: except="not an inner list"</code><a href="#section-5.2.1-4.9.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="compact" id="section-5.2.1-4.10">
-              <p id="section-5.2.1-4.10.1"><code>No-Vary-Search: except=(not-a-string)</code><a href="#section-5.2.1-4.10.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="compact" id="section-5.2.1-4.11">
-              <p id="section-5.2.1-4.11.1"><code>No-Vary-Search: except=?1</code><a href="#section-5.2.1-4.11.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<p id="section-5.2.1-5">The following inputs are valid, but somewhat unconventional. They are shown alongside their more conventional form.<a href="#section-5.2.1-5" class="pilcrow">¶</a></p>
 <table class="center" id="table-2">
             <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
+<thead>
+              <tr>
+                <th class="text-left" rowspan="1" colspan="1">Input</th>
+                <th class="text-left" rowspan="1" colspan="1">Explanation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: key-order="not a boolean"</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>key-order</code> expects a boolean, not a string</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: params="not an inner list"</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>params</code> expects an inner list, not a string</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: params=(not-a-string)</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>params</code> items must be strings (tokens are invalid)</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: params=?0</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>params</code> expects an inner list, not a boolean</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: params=?1</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>params</code> expects an inner list, not a boolean</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: params=?1, except=("x")</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>params</code> and <code>except</code> cannot both be present</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: params=("a"), except=("x")</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>params</code> and <code>except</code> cannot both be present</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: params=(), except=()</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>params</code> and <code>except</code> cannot both be present</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: except="not an inner list"</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>except</code> expects an inner list, not a string</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: except=(not-a-string)</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>except</code> items must be strings (tokens are invalid)</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>No-Vary-Search: except=?1</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>except</code> expects an inner list, not a boolean</td>
+              </tr>
+            </tbody>
+          </table>
+<p id="section-5.2.1-5">The following inputs are valid, but somewhat unconventional. They are shown alongside their more conventional form.<a href="#section-5.2.1-5" class="pilcrow">¶</a></p>
+<table class="center" id="table-3">
+            <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
 <thead>
               <tr>
                 <th class="text-left" rowspan="1" colspan="1">Input</th>
@@ -1739,9 +1796,9 @@ In this case, even URL pairs that might appear the same after running the <a hre
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-examples-3" class="section-name selfRef">Examples</a>
         </h3>
 <p id="section-6.1-1">Due to how the application/x-www-form-urlencoded parser canonicalizes query strings, there are some cases where query strings which do not appear obviously equivalent, will end up being treated as equivalent after parsing.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.1-2">So, for example, given any non-default value for <code>No-Vary-Search</code>, such as <code>No-Vary-Search: key-order</code>, we will have the following equivalences:<a href="#section-6.1-2" class="pilcrow">¶</a></p>
-<table class="center" id="table-3">
-          <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
+<p id="section-6.1-2">So, for example, given any non-default value for the <code>"No-Vary-Search"</code> response header field, such as <code>No-Vary-Search: key-order</code>, we will have the following equivalences:<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<table class="center" id="table-4">
+          <caption><a href="#table-4" class="selfRef">Table 4</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">First Query</th>
@@ -1848,15 +1905,15 @@ In this case, even URL pairs that might appear the same after running the <a hre
           <p id="section-7-6.1.1">has a target URI which is equal to the presented target URI, excluding the query, and<a href="#section-7-6.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-7-6.2">
-          <p id="section-7-6.2.1">has a non-empty value for the <code>No-Vary-Search</code> field, and<a href="#section-7-6.2.1" class="pilcrow">¶</a></p>
+          <p id="section-7-6.2.1">has a non-empty value for the <code>"No-Vary-Search"</code> response header field, and<a href="#section-7-6.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-7-6.3">
-          <p id="section-7-6.3.1">has a <code>No-Vary-Search</code> field value different from the stored response being considered for reuse.<a href="#section-7-6.3.1" class="pilcrow">¶</a></p>
+          <p id="section-7-6.3.1">has a <code>"No-Vary-Search"</code> response header field value different from the stored response being considered for reuse.<a href="#section-7-6.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <aside id="section-7-7">
         <p id="section-7-7.1">Caches aren't required to reuse stored responses, generally. However, the above expressly empowers caches to, if it is advantageous for performance or other reasons, search a smaller number of stored responses.<a href="#section-7-7.1" class="pilcrow">¶</a></p>
-<p id="section-7-7.2">That is, because caches might store more than one response for a given pathname, they need a way to efficiently look up the No-Vary-Search value without accessing all cached responses. Such a cache might take steps like the following to identify a stored response in a performant way, before checking the other conditions in <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>:<a href="#section-7-7.2" class="pilcrow">¶</a></p>
+<p id="section-7-7.2">That is, because caches might store more than one response for a given pathname, they need a way to efficiently look up the <code>"No-Vary-Search"</code> response header field value without accessing all cached responses. Such a cache might take steps like the following to identify a stored response in a performant way, before checking the other conditions in <span><a href="https://rfc-editor.org/rfc/rfc9111#section-4" class="relref">Section 4</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>:<a href="#section-7-7.2" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-7-7.3">
 <li id="section-7-7.3.1">
             <p id="section-7-7.3.1.1">Let exactMatch be cache[presentedTargetURI]. If it is a stored response that can be reused, return it.<a href="#section-7-7.3.1.1" class="pilcrow">¶</a></p>
@@ -1884,7 +1941,7 @@ In this case, even URL pairs that might appear the same after running the <a hre
 </li>
         </ol>
 </aside>
-<p id="section-7-8">To aid cache implementation efficiency, servers <span class="bcp14">SHOULD NOT</span> send different non-empty values for the <code>No-Vary-Search</code> field in response to requests for a given pathname over time, unless there is a need to update how they handle the query component. Doing so would cause cache implementations that use a strategy like the above to miss some stored responses that could otherwise have been reused.<a href="#section-7-8" class="pilcrow">¶</a></p>
+<p id="section-7-8">To aid cache implementation efficiency, servers <span class="bcp14">SHOULD NOT</span> send different non-empty values for the <code>"No-Vary-Search"</code> response header field in response to requests for a given pathname over time, unless there is a need to update how they handle the query component. Doing so would cause cache implementations that use a strategy like the above to miss some stored responses that could otherwise have been reused.<a href="#section-7-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
@@ -1893,7 +1950,8 @@ In this case, even URL pairs that might appear the same after running the <a hre
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-8-1">The main risk to be aware of is the impact of mismatched URLs. In particular, this could cause the user to see a response that was originally fetched from a URL different from the one displayed when they hovered a link, or the URL displayed in the URL bar.<a href="#section-8-1" class="pilcrow">¶</a></p>
-<p id="section-8-2">However, since the impact is limited to query parameters, this does not cross the relevant security boundary, which is the origin (<span>[<a href="#ORIGIN" class="cite xref">ORIGIN</a>]</span>). (Or perhaps just the <a href="https://url.spec.whatwg.org/#concept-url-host">host</a>, from <a href="https://url.spec.whatwg.org/#url-rendering-simplification">the perspective of web browser security UI</a>. <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>) Indeed, we have already given origins complete control over how they present the (URL, response body) pair, including on the client side via technology such as <a href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate">history.replaceState()</a> or service workers.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-2">Incorrect configuration of this field can exacerbate cache poisoning or data leakage risks. Parameters <span class="bcp14">MUST NOT</span> be ignored if doing so would bypass server processing required for safe response reuse. This includes parameters used for authorization, user identification, signature verification, user consent, routing, auditing, revocation, or any other security-sensitive operations.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-3">However, since the impact is limited to query parameters, this does not cross the relevant security boundary, which is the origin (<span>[<a href="#ORIGIN" class="cite xref">ORIGIN</a>]</span>). (See also the <a href="https://url.spec.whatwg.org/#concept-url-host">host</a> from <a href="https://url.spec.whatwg.org/#url-rendering-simplification">the perspective of web browser security UI</a>. <span>[<a href="#WHATWG-URL" class="cite xref">WHATWG-URL</a>]</span>) Indeed, origins already have complete control over how they present URLs and response bodies, including on the client side via technology such as <a href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#dom-history-replacestate">history.replaceState()</a> or service workers.<a href="#section-8-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="privacy-considerations">
@@ -1902,6 +1960,7 @@ In this case, even URL pairs that might appear the same after running the <a hre
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-privacy-considerations" class="section-name selfRef">Privacy Considerations</a>
       </h2>
 <p id="section-9-1">This proposal is adjacent to the highly-privacy-relevant space of <a href="https://privacycg.github.io/nav-tracking-mitigations/#terminology">navigational tracking</a>, which often uses query parameters to pass along user identifiers. However, we believe this proposal itself does not have privacy impacts. It does not interfere with <a href="https://privacycg.github.io/nav-tracking-mitigations/#deployed-mitigations">existing navigational tracking mitigations</a>, or any known future ones being contemplated. Indeed, if a page were to encode user identifiers in its URI, the only ability this proposal gives is to <em>reduce</em> such user tracking by preventing server processing of such user IDs (since the server is bypassed in favor of the cache). <span>[<a href="#NAV-TRACKING-MITIGATIONS" class="cite xref">NAV-TRACKING-MITIGATIONS</a>]</span><a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-9-2">However, an errant configuration that incorrectly ignores parameters related to user identity or private state could expose cached content meant for one user to another. While this mistake can occur with standard caching, the <code>"No-Vary-Search"</code> response header field increases the surface area for such misconfigurations, making it critical that origins accurately classify their query parameters.<a href="#section-9-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">

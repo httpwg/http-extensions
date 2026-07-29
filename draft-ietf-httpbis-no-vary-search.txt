@@ -5,8 +5,8 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                            N. Jaju, Ed.
-Expires: 28 January 2027                                      Google LLC
-                                                            27 July 2026
+Expires: 30 January 2027                                      Google LLC
+                                                            29 July 2026
 
 
                The No-Vary-Search HTTP Caching Extension
@@ -15,7 +15,10 @@ Expires: 28 January 2027                                      Google LLC
 Abstract
 
    This specification defines an extension to HTTP Caching, changing how
-   URI query parameters impact caching.
+   URI query parameters impact caching.  It introduces the "No-Vary-
+   Search" response header field, which allows origin servers to signal
+   to caches that certain query parameters do not semantically affect
+   the served response and can be ignored for cache matching purposes.
 
 About This Document
 
@@ -49,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 January 2027.
+   This Internet-Draft will expire on 30 January 2027.
 
 Copyright Notice
 
@@ -125,12 +128,13 @@ Table of Contents
 
    No-Vary-Search: except=("productId")
 
-   Note that "cache busting" by sending unique query parameters to avoid
-   retrieving a cached response can be made ineffective by the No-Vary-
-   Search header field.
+   Note that "cache busting", the practice of changing a query parameter
+   to create a distinct cache key and force retrieval of a newer
+   response, can be made ineffective by the "No-Vary-Search" response
+   header field.
 
-   Section 3 defines the new response header field No-Vary-Search, using
-   the [STRUCTURED-FIELDS] framework.  Section 4 and Section 5
+   Section 3 defines the new "No-Vary-Search" response header field,
+   using the [STRUCTURED-FIELDS] framework.  Section 4 and Section 5
    illustrate the data model for how the field value can be represented
    in specifications, and the process for parsing the raw output from
    the structured field parser into that data model.  Section 6 gives
@@ -142,6 +146,14 @@ Table of Contents
    field is not useful for URLs whose query component does not follow
    that format.)  Finally, Section 7 explains how to extend Section 4 of
    [HTTP-CACHING] to take this new equivalence into account.
+
+   From a deployment perspective, this extension is implemented by HTTP
+   caches, including browser caches, content delivery networks, and
+   forward proxies.  Origin servers send the "No-Vary-Search" response
+   header field to provide instructions to these caches.  Caches that
+   implement this extension use these instructions to determine when a
+   previously stored response can be safely reused for a new request,
+   even if the query components of the target URIs differ.
 
 2.  Conventions and Definitions
 
@@ -176,7 +188,7 @@ Table of Contents
 
 3.  HTTP header field definition
 
-   The No-Vary-Search HTTP header field is a structured field
+   The "No-Vary-Search" response header field is a structured field
    [STRUCTURED-FIELDS] whose value MUST be a dictionary (Section 3.2 of
    [STRUCTURED-FIELDS]).
 
@@ -306,9 +318,9 @@ Table of Contents
    To _obtain a URL variation config_ given an HTTP response
    (Section 3.4 of [HTTP]) _response_:
 
-   1.  Let _fieldValue_ be the result of parsing the No-Vary-Search
-       field from _response_ as a Dictionary (Section 4.2 of
-       [STRUCTURED-FIELDS]).
+   1.  Let _fieldValue_ be the result of parsing the "No-Vary-Search"
+       response header field from _response_ as a Dictionary
+       (Section 4.2 of [STRUCTURED-FIELDS]).
 
    2.  Return the result of parsing a URL variation config (Section 5.1)
        given _fieldValue_.
@@ -318,38 +330,69 @@ Table of Contents
    The following illustrates how various inputs are parsed, in terms of
    their impact on the resulting no-vary params and vary params:
 
-      +==============================+==============================+
-      | Input                        | Result                       |
-      +==============================+==============================+
-      | No-Vary-Search: params=("a") | no-vary params: « "a" »      |
-      |                              | vary params: *wildcard*      |
-      +------------------------------+------------------------------+
-      | No-Vary-Search: except=("x") | no-vary params: *wildcard*   |
-      |                              | vary params: « "x" »         |
-      +------------------------------+------------------------------+
-      | No-Vary-Search: params=()    | no-vary params: (empty list) |
-      |                              | vary params: *wildcard*      |
-      +------------------------------+------------------------------+
-      | No-Vary-Search: except=()    | no-vary params: *wildcard*   |
-      |                              | vary params: (empty list)    |
-      +------------------------------+------------------------------+
+            +=================+==============================+
+            | Input           | Result                       |
+            +=================+==============================+
+            | No-Vary-Search: | no-vary params: (empty list) |
+            | key-order       | vary params: *wildcard*      |
+            |                 | vary on key order: false     |
+            +-----------------+------------------------------+
+            | No-Vary-Search: | no-vary params: « "a" »      |
+            | params=("a")    | vary params: *wildcard*      |
+            +-----------------+------------------------------+
+            | No-Vary-Search: | no-vary params: *wildcard*   |
+            | except=("x")    | vary params: « "x" »         |
+            +-----------------+------------------------------+
+            | No-Vary-Search: | no-vary params: (empty list) |
+            | params=()       | vary params: *wildcard*      |
+            +-----------------+------------------------------+
+            | No-Vary-Search: | no-vary params: *wildcard*   |
+            | except=()       | vary params: (empty list)    |
+            +-----------------+------------------------------+
 
-                                  Table 1
+                                 Table 1
 
    The following inputs are all invalid and will cause the default URL
    variation config to be returned:
 
-   *  No-Vary-Search: key-order="not a boolean"
-   *  No-Vary-Search: params="not an inner list"
-   *  No-Vary-Search: params=(not-a-string)
-   *  No-Vary-Search: params=?0
-   *  No-Vary-Search: params=?1
-   *  No-Vary-Search: params=?1, except=("x")
-   *  No-Vary-Search: params=("a"), except=("x")
-   *  No-Vary-Search: params=(), except=()
-   *  No-Vary-Search: except="not an inner list"
-   *  No-Vary-Search: except=(not-a-string)
-   *  No-Vary-Search: except=?1
+       +============================+==============================+
+       | Input                      | Explanation                  |
+       +============================+==============================+
+       | No-Vary-Search: key-       | key-order expects a boolean, |
+       | order="not a boolean"      | not a string                 |
+       +----------------------------+------------------------------+
+       | No-Vary-Search:            | params expects an inner      |
+       | params="not an inner list" | list, not a string           |
+       +----------------------------+------------------------------+
+       | No-Vary-Search:            | params items must be strings |
+       | params=(not-a-string)      | (tokens are invalid)         |
+       +----------------------------+------------------------------+
+       | No-Vary-Search: params=?0  | params expects an inner      |
+       |                            | list, not a boolean          |
+       +----------------------------+------------------------------+
+       | No-Vary-Search: params=?1  | params expects an inner      |
+       |                            | list, not a boolean          |
+       +----------------------------+------------------------------+
+       | No-Vary-Search: params=?1, | params and except cannot     |
+       | except=("x")               | both be present              |
+       +----------------------------+------------------------------+
+       | No-Vary-Search:            | params and except cannot     |
+       | params=("a"), except=("x") | both be present              |
+       +----------------------------+------------------------------+
+       | No-Vary-Search: params=(), | params and except cannot     |
+       | except=()                  | both be present              |
+       +----------------------------+------------------------------+
+       | No-Vary-Search:            | except expects an inner      |
+       | except="not an inner list" | list, not a string           |
+       +----------------------------+------------------------------+
+       | No-Vary-Search:            | except items must be strings |
+       | except=(not-a-string)      | (tokens are invalid)         |
+       +----------------------------+------------------------------+
+       | No-Vary-Search: except=?1  | except expects an inner      |
+       |                            | list, not a boolean          |
+       +----------------------------+------------------------------+
+
+                                  Table 2
 
    The following inputs are valid, but somewhat unconventional.  They
    are shown alongside their more conventional form.
@@ -367,7 +410,7 @@ Table of Contents
        | No-Vary-Search: key-order=?0 | (omit the header field)   |
        +------------------------------+---------------------------+
 
-                                 Table 2
+                                 Table 3
 
 5.3.  Parse a key
 
@@ -520,9 +563,9 @@ Table of Contents
    appear obviously equivalent, will end up being treated as equivalent
    after parsing.
 
-   So, for example, given any non-default value for No-Vary-Search, such
-   as No-Vary-Search: key-order, we will have the following
-   equivalences:
+   So, for example, given any non-default value for the "No-Vary-Search"
+   response header field, such as No-Vary-Search: key-order, we will
+   have the following equivalences:
 
         +=============+==============+============================+
         | First Query | Second Query | Explanation                |
@@ -552,7 +595,7 @@ Table of Contents
         |             |              | SPACE                      |
         +-------------+--------------+----------------------------+
 
-                                  Table 3
+                                  Table 4
 
 7.  Caching
 
@@ -575,10 +618,11 @@ Table of Contents
    *  has a target URI which is equal to the presented target URI,
       excluding the query, and
 
-   *  has a non-empty value for the No-Vary-Search field, and
+   *  has a non-empty value for the "No-Vary-Search" response header
+      field, and
 
-   *  has a No-Vary-Search field value different from the stored
-      response being considered for reuse.
+   *  has a "No-Vary-Search" response header field value different from
+      the stored response being considered for reuse.
 
       |  Caches aren't required to reuse stored responses, generally.
       |  However, the above expressly empowers caches to, if it is
@@ -587,10 +631,11 @@ Table of Contents
       |  
       |  That is, because caches might store more than one response for
       |  a given pathname, they need a way to efficiently look up the
-      |  No-Vary-Search value without accessing all cached responses.
-      |  Such a cache might take steps like the following to identify a
-      |  stored response in a performant way, before checking the other
-      |  conditions in Section 4 of [HTTP-CACHING]:
+      |  "No-Vary-Search" response header field value without accessing
+      |  all cached responses.  Such a cache might take steps like the
+      |  following to identify a stored response in a performant way,
+      |  before checking the other conditions in Section 4 of
+      |  [HTTP-CACHING]:
       |  
       |     1.  Let exactMatch be cache[presentedTargetURI].  If it is a
       |         stored response that can be reused, return it.
@@ -624,11 +669,12 @@ Table of Contents
       |         return it.  Otherwise, return null.
 
    To aid cache implementation efficiency, servers SHOULD NOT send
-   different non-empty values for the No-Vary-Search field in response
-   to requests for a given pathname over time, unless there is a need to
-   update how they handle the query component.  Doing so would cause
-   cache implementations that use a strategy like the above to miss some
-   stored responses that could otherwise have been reused.
+   different non-empty values for the "No-Vary-Search" response header
+   field in response to requests for a given pathname over time, unless
+   there is a need to update how they handle the query component.  Doing
+   so would cause cache implementations that use a strategy like the
+   above to miss some stored responses that could otherwise have been
+   reused.
 
 8.  Security Considerations
 
@@ -637,16 +683,23 @@ Table of Contents
    originally fetched from a URL different from the one displayed when
    they hovered a link, or the URL displayed in the URL bar.
 
+   Incorrect configuration of this field can exacerbate cache poisoning
+   or data leakage risks.  Parameters MUST NOT be ignored if doing so
+   would bypass server processing required for safe response reuse.
+   This includes parameters used for authorization, user identification,
+   signature verification, user consent, routing, auditing, revocation,
+   or any other security-sensitive operations.
+
    However, since the impact is limited to query parameters, this does
    not cross the relevant security boundary, which is the origin
-   ([ORIGIN]).  (Or perhaps just the host
-   (https://url.spec.whatwg.org/#concept-url-host), from the perspective
+   ([ORIGIN]).  (See also the host
+   (https://url.spec.whatwg.org/#concept-url-host) from the perspective
    of web browser security UI (https://url.spec.whatwg.org/#url-
-   rendering-simplification).  [WHATWG-URL]) Indeed, we have already
-   given origins complete control over how they present the (URL,
-   response body) pair, including on the client side via technology such
-   as history.replaceState() (https://html.spec.whatwg.org/multipage/
-   nav-history-apis.html#dom-history-replacestate) or service workers.
+   rendering-simplification).  [WHATWG-URL]) Indeed, origins already
+   have complete control over how they present URLs and response bodies,
+   including on the client side via technology such as
+   history.replaceState() (https://html.spec.whatwg.org/multipage/nav-
+   history-apis.html#dom-history-replacestate) or service workers.
 
 9.  Privacy Considerations
 
@@ -662,6 +715,13 @@ Table of Contents
    _reduce_ such user tracking by preventing server processing of such
    user IDs (since the server is bypassed in favor of the cache).
    [NAV-TRACKING-MITIGATIONS]
+
+   However, an errant configuration that incorrectly ignores parameters
+   related to user identity or private state could expose cached content
+   meant for one user to another.  While this mistake can occur with
+   standard caching, the "No-Vary-Search" response header field
+   increases the surface area for such misconfigurations, making it
+   critical that origins accurately classify their query parameters.
 
 10.  IANA Considerations
 
