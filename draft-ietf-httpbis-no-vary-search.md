@@ -392,6 +392,8 @@ So, for example, given any non-default value for the `"No-Vary-Search"` response
 | `?a=%20`    | `?a= &`         | `%20` is parsed as U+0020 SPACE                     |
 | `?a=+`      | `?a= &`         | `+` is parsed as U+0020 SPACE                       |
 
+Note that no Unicode normalization is performed during this comparison. For example, a query string of `?a=%C3%A9` (using the NFC encoding of `é`) and `?a=e%CC%81` (using the NFD encoding of `é`) will not be treated as equivalent.
+
 # Caching {#caching}
 
 To reuse a stored response, {{Section 4 of HTTP-CACHING}} requires that the presented target URI and that of the stored response match. If a cache implements the `No-Vary-Search` extension, this matching requirement is also satisfied if the URIs are equivalent modulo URL variation config ({{comparing}}) given the stored response's `No-Vary-Search` header.
