@@ -138,7 +138,7 @@ And if the resource instead wants to take an allowlist-based approach, where onl
 No-Vary-Search: except=("productId")
 ~~~~
 
-Note that "cache busting", the practice of changing a parameter in the query component to create a distinct cache key and force retrieval of a newer response, can be made ineffective by the `"No-Vary-Search"` response header field.
+Note that "cache busting", the practice of changing a part of the query component to create a distinct cache key and force retrieval of a newer response, can be made ineffective by the `"No-Vary-Search"` response header field.
 
 {{header-definition}} defines the new `"No-Vary-Search"` response header field, using the {{STRUCTURED-FIELDS}} framework. {{data-model}} and {{parsing}} illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. {{comparing}} gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format specified in {{WHATWG-URL}}. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, {{caching}} explains how to extend {{Section 4 of HTTP-CACHING}} to take this new equivalence into account.
 
