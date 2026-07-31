@@ -5,8 +5,8 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                            N. Jaju, Ed.
-Expires: 30 January 2027                                      Google LLC
-                                                            29 July 2026
+Expires: 1 February 2027                                      Google LLC
+                                                            31 July 2026
 
 
                The No-Vary-Search HTTP Caching Extension
@@ -15,10 +15,11 @@ Expires: 30 January 2027                                      Google LLC
 Abstract
 
    This specification defines an extension to HTTP Caching, changing how
-   URI query parameters impact caching.  It introduces the "No-Vary-
+   the URI query component impacts caching.  It introduces the "No-Vary-
    Search" response header field, which allows origin servers to signal
-   to caches that certain query parameters do not semantically affect
-   the served response and can be ignored for cache matching purposes.
+   to caches that certain parts of the query component do not
+   semantically affect the served response and can be ignored for cache
+   matching purposes.
 
 About This Document
 
@@ -52,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 January 2027.
+   This Internet-Draft will expire on 1 February 2027.
 
 Copyright Notice
 
@@ -107,12 +108,14 @@ Table of Contents
    The "No-Vary-Search" response header field defines a caching
    extension, as described in Section 4 of [HTTP-CACHING], that tackles
    a specific subset of this general problem, for when different URIs
-   that only differ in certain query parameters identify the same
-   resource.  It allows resources to declare that some or all parts of
-   the query component do not semantically affect the served response,
-   and thus can be ignored for cache matching purposes.  For example, if
-   the order of the query parameters do not affect which resource is
-   identified, this is indicated using
+   that differ only in their query component identify the same resource.
+   It allows resources to declare that some or all parts of the query
+   component do not semantically affect the served response, and thus
+   can be ignored for cache matching purposes.  This is achieved by
+   interpreting the query component as a sequence of parameters encoded
+   using the application/x-www-form-urlencoded format [WHATWG-URL].  For
+   example, if the order of the parameters within the query component
+   does not affect which resource is identified, this is indicated using
 
    No-Vary-Search: key-order
 
@@ -128,10 +131,10 @@ Table of Contents
 
    No-Vary-Search: except=("productId")
 
-   Note that "cache busting", the practice of changing a query parameter
-   to create a distinct cache key and force retrieval of a newer
-   response, can be made ineffective by the "No-Vary-Search" response
-   header field.
+   Note that "cache busting", the practice of changing a part of the
+   query component to create a distinct cache key and force retrieval of
+   a newer response, can be made ineffective by the "No-Vary-Search"
+   response header field.
 
    Section 3 defines the new "No-Vary-Search" response header field,
    using the [STRUCTURED-FIELDS] framework.  Section 4 and Section 5
