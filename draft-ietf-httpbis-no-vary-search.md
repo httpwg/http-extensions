@@ -112,7 +112,7 @@ informative:
 
 --- abstract
 
-This specification defines an extension to HTTP Caching, changing how URI query parameters impact caching. It introduces the `"No-Vary-Search"` response header field, which allows origin servers to signal to caches that certain query parameters do not semantically affect the served response and can be ignored for cache matching purposes.
+This specification defines an extension to HTTP Caching, changing how the URI query component impacts caching. It introduces the `"No-Vary-Search"` response header field, which allows origin servers to signal to caches that certain parts of the query component do not semantically affect the served response and can be ignored for cache matching purposes.
 
 --- middle
 
@@ -120,8 +120,7 @@ This specification defines an extension to HTTP Caching, changing how URI query 
 
 HTTP caching {{HTTP-CACHING}} is based on reusing resources which match across a number of cache keys, with the most important one being the presented target URI ({{Section 7.1 of HTTP}}). However, sometimes multiple URIs can represent the same resource. This leads to caches not always being as helpful as they could be: if the cache contains a response under one URI, but the response is then requested under another, the cached version will be ignored.
 
-The "No-Vary-Search" response header field defines a caching extension, as described in {{Section 4 of HTTP-CACHING}}, that tackles a specific subset of this general problem, for when different URIs that only differ in
-certain query parameters identify the same resource. It allows resources to declare that some or all parts of the query component do not semantically affect the served response, and thus can be ignored for cache matching purposes. For example, if the order of the query parameters do not affect which resource is identified, this is indicated using
+The "No-Vary-Search" response header field defines a caching extension, as described in {{Section 4 of HTTP-CACHING}}, that tackles a specific subset of this general problem, for when different URIs that differ only in their query component identify the same resource. It allows resources to declare that some or all parts of the query component do not semantically affect the served response, and thus can be ignored for cache matching purposes. This is achieved by interpreting the query component as a sequence of parameters encoded using the `application/x-www-form-urlencoded` format {{WHATWG-URL}}. For example, if the order of the parameters within the query component does not affect which resource is identified, this is indicated using
 
 ~~~~http-message
 No-Vary-Search: key-order
@@ -139,7 +138,7 @@ And if the resource instead wants to take an allowlist-based approach, where onl
 No-Vary-Search: except=("productId")
 ~~~~
 
-Note that "cache busting", the practice of changing a query parameter to create a distinct cache key and force retrieval of a newer response, can be made ineffective by the `"No-Vary-Search"` response header field.
+Note that "cache busting", the practice of changing a part of the query component to create a distinct cache key and force retrieval of a newer response, can be made ineffective by the `"No-Vary-Search"` response header field.
 
 {{header-definition}} defines the new `"No-Vary-Search"` response header field, using the {{STRUCTURED-FIELDS}} framework. {{data-model}} and {{parsing}} illustrate the data model for how the field value can be represented in specifications, and the process for parsing the raw output from the structured field parser into that data model. {{comparing}} gives the key algorithm for comparing if two URLs are equivalent under the influence of the header field; notably, it leans on the decomposition of the query component into keys and values given by the [application/x-www-form-urlencoded](https://url.spec.whatwg.org/#concept-urlencoded) format specified in {{WHATWG-URL}}. (As such, this header field is not useful for URLs whose query component does not follow that format.) Finally, {{caching}} explains how to extend {{Section 4 of HTTP-CACHING}} to take this new equivalence into account.
 
