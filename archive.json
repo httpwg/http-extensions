@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-30T01:43:49.000783+00:00",
+  "timestamp": "2026-08-02T01:58:58.851469+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77661,7 +77661,7 @@
       "id": "I_kwDOAUA-v88AAAABIdCR-A",
       "title": "no-vary-search: definition of query param late",
       "url": "https://github.com/httpwg/http-extensions/issues/3486",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "reschke",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -77670,8 +77670,8 @@
       ],
       "body": "(nitpicking)\n\nAs reader (very) familiar with URI and HTTP specs, I can't help noticing that \"query parameter\" is used in the introduction, and people familiar with RFC 3986 will immediately think: that RFC does not define what that is.\n\nA forward reference would be quite lame; but maybe there's another way to handle this?",
       "createdAt": "2026-07-11T12:42:07Z",
-      "updatedAt": "2026-07-11T12:46:43Z",
-      "closedAt": null,
+      "updatedAt": "2026-07-31T13:07:14Z",
+      "closedAt": "2026-07-31T13:07:14Z",
       "comments": []
     },
     {
@@ -77708,7 +77708,7 @@
       ],
       "body": "Came up during the HTTP workshop, we should provide suggestions for browsers to handle upload resumption as if it's a cross-origin redirect.",
       "createdAt": "2026-07-16T12:08:22Z",
-      "updatedAt": "2026-07-23T21:29:21Z",
+      "updatedAt": "2026-07-30T16:40:29Z",
       "closedAt": null,
       "comments": [
         {
@@ -77717,6 +77717,13 @@
           "body": "We could reference RFC9110's guidelines on following redirects: https://www.rfc-editor.org/rfc/rfc9110.html#section-15.4-5. It includes security considerations like stripping cookies and authorization headers. Should clients do the same when sending requests to the upload resource for resumption?\n\nAlternatively, or additionally, we could add a security consideration stating that the upload resource might belong to a different origin and that a client has to check if it should requests there and if any information should be omitted. ",
           "createdAt": "2026-07-23T21:20:45Z",
           "updatedAt": "2026-07-23T21:29:21Z"
+        },
+        {
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "SVCB RFC mentions treating the resource record as a 307 redirect: https://datatracker.ietf.org/doc/html/rfc9460#section-9.5-4 Wondering if we should put something similar.",
+          "createdAt": "2026-07-30T16:40:29Z",
+          "updatedAt": "2026-07-30T16:40:29Z"
         }
       ]
     },
@@ -77729,10 +77736,12 @@
       "author": "reschke",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "no-vary-search"
+      ],
       "body": "Not sure what the definition of \"conventional\" is (see https://www.ietf.org/archive/id/draft-ietf-httpbis-no-vary-search-06.html#table-2)\n\nExample:\n\nWhy is\n~~~\nNo-Vary-Search: key-order, except=(\"x\")\n~~~\n\nmore **_conventional_** than:\n\n~~~\nNo-Vary-Search: except=(\"x\"), key-order\n~~~\n\n?",
       "createdAt": "2026-07-17T18:12:29Z",
-      "updatedAt": "2026-07-17T18:12:29Z",
+      "updatedAt": "2026-07-31T09:42:53Z",
       "closedAt": null,
       "comments": []
     },
@@ -77820,12 +77829,29 @@
       "author": "JasonTheKitten",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "cookies"
+      ],
       "body": "Hello,\n\nhttps://httpwg.org/http-extensions/draft-ietf-httpbis-layered-cookies.html#section-5.4.3-2.18.2.2.1\n> If cookie's secure is equal to oldCookie's secure, cookie's same-site is equal to oldCookie's same-site, and cookie's expiry-time is equal to oldCookie's expiry-time, then return null.\n\nThis clause is used to check for duplicate cookies, and skip the rest of the Store a Cookie algorithm if the cookie is equal to an existing cookie.\n\nHowever, it does not check if the value is the same or not.\n\nAs such, two cookies having the same attributes, except the value, will result in the cookie with the new value being dropped (and the old value being kept)\n\n(And this would be common for cookies that are removed on browser exit, as they have the same null expiry-time)\n\nI did some quick testing and this does not match major browser behavior - browsers keep the cookie with the new value, even if they have the same same-site, secure, and expiry time (or lack thereof).\n\nI propose revising it to:\n> If cookie's secure is equal to oldCookie's secure, cookie's same-site is equal to oldCookie's same-site, cookie's expiry-time is equal to oldCookie's expiry-time, and cookie's value is equal to oldCookie's value, then return null.",
       "createdAt": "2026-07-27T20:26:56Z",
-      "updatedAt": "2026-07-27T20:26:56Z",
+      "updatedAt": "2026-07-30T13:06:30Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "johannhof",
+          "authorAssociation": "MEMBER",
+          "body": "That seems right to me, and is probably a bug in the layering draft.\n\nThe other thing I'm realizing while looking at this is that it took me a while to figure out why we're doing this optimization at all, given that it doesn't seem to be in 6265bis AFAICS. Would probably be helpful to have some note there. I *think* the reason is that the previous algorithm was not explicit about whether or not implementations can do these kinds of optimizations internally, which end up having a web-observable effect on cookie event listeners etc.\n\nMight be worth testing again, maybe with a WPT if it doesn't exist.\n\n@annevk WDYT?",
+          "createdAt": "2026-07-30T12:23:45Z",
+          "updatedAt": "2026-07-30T12:23:45Z"
+        },
+        {
+          "author": "johannhof",
+          "authorAssociation": "MEMBER",
+          "body": "To answer my own question, it looks like @DCtheTall introduced this test a while ago and it seems to pass all around https://wpt.fyi/results/cookiestore/change_eventhandler_for_no_change.https.window.html?label=experimental&label=master&aligned",
+          "createdAt": "2026-07-30T13:06:30Z",
+          "updatedAt": "2026-07-30T13:06:30Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -216874,7 +216900,7 @@
       "id": "PR_kwDOAUA-v87x-Veh",
       "title": "Avoid using query parameter before it's defined",
       "url": "https://github.com/httpwg/http-extensions/pull/3490",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "nidhijaju",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -216883,18 +216909,28 @@
       ],
       "body": "Fixes https://github.com/httpwg/http-extensions/issues/3486.",
       "createdAt": "2026-07-15T10:22:43Z",
-      "updatedAt": "2026-07-25T07:43:06Z",
+      "updatedAt": "2026-07-31T13:07:18Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "7ddf01573fd7c311153aa31dd487f56b5799e57c",
+      "baseRefOid": "ea1362dfe23ad36f8ef5218bb252a03f59754064",
       "headRepository": "nidhijaju/http-extensions",
       "headRefName": "query-parameters",
-      "headRefOid": "1c10261dadfce4cd38246e773bc1c215c036cea3",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "5fce85fd62324a928db2dde474ea982340e324b4",
+      "closedAt": "2026-07-31T13:07:13Z",
+      "mergedAt": "2026-07-31T13:07:13Z",
+      "mergedBy": "nidhijaju",
+      "mergeCommit": {
+        "oid": "17cd4c486c8e49e681787ef3e17a0aa28919d8a0"
+      },
+      "comments": [
+        {
+          "author": "nidhijaju",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I've attempted to update the text and removed \"key-value pairs\". Let me know if this looks better.\r\nHappy to incorporate alternate text suggestions as well.",
+          "createdAt": "2026-07-30T03:07:30Z",
+          "updatedAt": "2026-07-30T03:07:30Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOAUA-v88AAAABHNd5xw",
@@ -216906,7 +216942,7 @@
           "state": "COMMENTED",
           "body": "I don't believe that changing to \"key-value pairs\" helps, as, from the pov of the URI and HTTP RFCs, the query component is entirely opaque.\n\nI'll try to come up with a proposal, but that will take a few days.",
           "createdAt": "2026-07-25T07:39:42Z",
-          "updatedAt": "2026-07-25T07:39:42Z",
+          "updatedAt": "2026-07-31T12:51:49Z",
           "comments": []
         },
         {
@@ -216920,6 +216956,19 @@
           "body": "I don't believe that changing to \"key-value pairs\" helps, as, from the pov of the URI and HTTP RFCs, the query component is entirely opaque.\n\nI'll try to come up with a proposal, but that will take a few days.",
           "createdAt": "2026-07-25T07:43:06Z",
           "updatedAt": "2026-07-25T07:43:06Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABH87n0w",
+          "commit": {
+            "abbreviatedOid": "5fce85f"
+          },
+          "author": "reschke",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Awesome! Thanks!",
+          "createdAt": "2026-07-31T12:53:10Z",
+          "updatedAt": "2026-07-31T12:53:10Z",
           "comments": []
         }
       ]
@@ -217160,7 +217209,7 @@
       ],
       "body": "@CBonnell: If you could take a look, that would be great. Thank you!",
       "createdAt": "2026-07-24T08:32:06Z",
-      "updatedAt": "2026-07-29T10:25:36Z",
+      "updatedAt": "2026-07-31T12:45:22Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "c0fc4a2c9ef310e45d992f08da307493f7b2517c",
@@ -217210,6 +217259,39 @@
               "body": "Thanks, adjusted.",
               "createdAt": "2026-07-27T07:58:30Z",
               "updatedAt": "2026-07-27T07:58:30Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABHzJgbQ",
+          "commit": {
+            "abbreviatedOid": "086e6f7"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-07-30T11:41:49Z",
+          "updatedAt": "2026-07-30T11:41:49Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABH84NsA",
+          "commit": {
+            "abbreviatedOid": "086e6f7"
+          },
+          "author": "reschke",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-07-31T12:44:28Z",
+          "updatedAt": "2026-07-31T12:45:22Z",
+          "comments": [
+            {
+              "originalPosition": 33,
+              "body": "+1",
+              "createdAt": "2026-07-31T12:44:28Z",
+              "updatedAt": "2026-07-31T12:45:22Z"
             }
           ]
         }
