@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-08-02T01:58:58.851469+00:00",
+  "timestamp": "2026-08-04T01:46:58.748058+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -217200,7 +217200,7 @@
       "id": "PR_kwDOAUA-v871wyUk",
       "title": "NVS: Address SECDIR review comments",
       "url": "https://github.com/httpwg/http-extensions/pull/3500",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "nidhijaju",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -217209,17 +217209,19 @@
       ],
       "body": "@CBonnell: If you could take a look, that would be great. Thank you!",
       "createdAt": "2026-07-24T08:32:06Z",
-      "updatedAt": "2026-07-31T12:45:22Z",
+      "updatedAt": "2026-08-03T04:14:35Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "c0fc4a2c9ef310e45d992f08da307493f7b2517c",
+      "baseRefOid": "17cd4c486c8e49e681787ef3e17a0aa28919d8a0",
       "headRepository": "nidhijaju/http-extensions",
       "headRefName": "secdir-review",
-      "headRefOid": "086e6f70f8db3edabf4ec31e90b27612e22021df",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "2621dfaa74aa2453a88e75adec9e73b1640cb0e0",
+      "closedAt": "2026-08-03T04:14:26Z",
+      "mergedAt": "2026-08-03T04:14:26Z",
+      "mergedBy": "nidhijaju",
+      "mergeCommit": {
+        "oid": "dc9f98dadd8d54da2fee9d7d1e4424400832e995"
+      },
       "comments": [],
       "reviews": [
         {
