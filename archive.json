@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-08-04T01:46:58.748058+00:00",
+  "timestamp": "2026-08-06T01:49:14.562886+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -216631,7 +216631,7 @@
       ],
       "body": "This PR addresses two comments:\r\n\r\nFrom https://github.com/httpwg/http-extensions/issues/3451:\r\n\r\n> In a 2xx response to a creation/append request, a client can determine the new upload offset for the Upload-Offset response header based on the length of the content it uploaded added to the previous offset. For example, if the client sent Upload-Offset: 100 and Content-Length: 50, the client knows from a 2xx response that the new offset should be 150. This is implied by the [definition of upload offset](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.1.1-1). It's also specified that the client can [free previous resources](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.1.1-4) upon receipt of a new Upload-Offset value, but the same is not specified for changes to the upload offset in general. I think this suggestion may be better communicated if generalized to the offset implied by responses in general (e.g., as implied by a 2xx response), rather than specific to the Upload-Offset header.\r\n\r\nTo address this, mention that a client can learn the offset implicitly through responses.\r\n\r\nFrom https://github.com/httpwg/http-extensions/issues/3222:\r\n\r\n> In 4.3.1, it might be reasonable for the client to require that the offset be no less than the last Upload-Offset that it received in interim responses during the previous upload. After all, we already said the client can discard that data.\r\n\r\nThe text has been expanded to that the client must never observe a decreasing offset value, regardless through which means.\r\n\r\nCloses https://github.com/httpwg/http-extensions/issues/3451.\r\nCloses https://github.com/httpwg/http-extensions/issues/3222.\r\n",
       "createdAt": "2026-07-06T20:33:22Z",
-      "updatedAt": "2026-07-15T20:34:16Z",
+      "updatedAt": "2026-08-04T22:30:05Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "bd84e74b033dc945b73c436d07b80141b7e8770a",
@@ -216722,6 +216722,19 @@
               "updatedAt": "2026-07-06T22:36:44Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABIaXuWg",
+          "commit": {
+            "abbreviatedOid": "bab2069"
+          },
+          "author": "jjrauch32-lab",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-08-04T22:30:05Z",
+          "updatedAt": "2026-08-04T22:30:05Z",
+          "comments": []
         }
       ]
     },
