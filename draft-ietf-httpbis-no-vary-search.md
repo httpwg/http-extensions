@@ -205,23 +205,26 @@ To _parse a URL variation config_ given _value_:
 1. Let _result_ be a new URL variation config.
 1. Set _result_'s vary on key order to true.
 1. If _value_\["`key-order`"] exists:
-    1. If _value_\["`key-order`"] is not a boolean, then return the default URL variation config.
-    1. Set _result_'s vary on key order to the boolean negation of _value_\["`key-order`"].
+    1. Let _keyOrderValue_ be the `item_or_inner_list` component of the tuple _value_\["`key-order`"] (ignoring any parameters).
+    1. If _keyOrderValue_ is not a boolean, then return the default URL variation config.
+    1. Set _result_'s vary on key order to the boolean negation of _keyOrderValue_.
 1. If both _value_\["`params`"] and _value_\["`except`"] exist, then return the default URL variation config.
 1. If neither _value_\["`params`"] nor _value_\["`except`"] exists:
     1. Set _result_'s no-vary params to an empty list.
     1. Set _result_'s vary params to __wildcard__.
 1. If _value_\["`params`"] exists:
-    1. If _value_\["`params`"] is not an inner list, then return the default URL variation config.
-    1. If any item in _value_\["`params`"] is not a string, then return the default URL variation config.
-    1. Set _result_'s no-vary params to the result of applying parse a key ({{parse-a-key}}) to each item in _value_\["`params`"].
-    1. If any item in _result_'s no-vary params is an error, then return the default URL variation config.
+    1. Let _paramsValue_ be the `item_or_inner_list` component of the tuple _value_\["`params`"] (ignoring any parameters).
+    1. If _paramsValue_ is not an inner list, then return the default URL variation config.
+    1. Let _paramsList_ be a list containing the `bare_item` component of each tuple in _paramsValue_ (ignoring any parameters).
+    1. If any item in _paramsList_ is not a string, then return the default URL variation config.
+    1. Set _result_'s no-vary params to the result of applying parse a key ({{parse-a-key}}) to each item in _paramsList_.
     1. Set _result_'s vary params to __wildcard__.
 1. Otherwise, if _value_\["`except`"] exists:
-    1. If _value_\["`except`"] is not an inner list, then return the default URL variation config.
-    1. If any item in _value_\["`except`"] is not a string, then return the default URL variation config.
-    1. Set _result_'s vary params to the result of applying parse a key ({{parse-a-key}}) to each item in _value_\["`except`"].
-    1. If any item in _result_'s vary params is an error, then return the default URL variation config.
+    1. Let _exceptValue_ be the `item_or_inner_list` component of the tuple _value_\["`except`"] (ignoring any parameters).
+    1. If _exceptValue_ is not an inner list, then return the default URL variation config.
+    1. Let _exceptList_ be a list containing the `bare_item` component of each tuple in _exceptValue_ (ignoring any parameters).
+    1. If any item in _exceptList_ is not a string, then return the default URL variation config.
+    1. Set _result_'s vary params to the result of applying parse a key ({{parse-a-key}}) to each item in _exceptList_.
     1. Set _result_'s no-vary params to __wildcard__.
 1. Return _result_.
 
@@ -380,7 +383,7 @@ So, for example, given any non-default value for the `"No-Vary-Search"` response
 | null        | `?`             | A null query is parsed the same as an empty string  |
 | `?a=x`      | `?%61=%78`      | Parsing performs percent-decoding                   |
 | `?a=é`      | `?a=%C3%A9`     | Parsing performs percent-decoding                   |
-| `?a=%f6`    | `?a=%ef%bf%bd`  | Both values are parsed as U+FFFD (&#xfffd;)         |
+| `?a=%f6`    | `?a=%ef%bf%bd`  | An invalid UTF-8 sequence and the literal U+FFFD character are both parsed as U+FFFD (&#xfffd;) |
 | `?a=x&&&&`  | `?a=x`          | Parsing splits on `&` and discards empty strings    |
 | `?a=`       | `?a`            | Both parse as having an empty string value for `a`  |
 | `?a=%20`    | `?a= &`         | `%20` is parsed as U+0020 SPACE                     |
@@ -427,6 +430,8 @@ The main risk to be aware of is a cache returning a response that was originally
 For shared caches, such as CDNs or forward proxies, returning a response for a different URL carries the risk of cross-user state leakage. If a server incorrectly declares that a query parameter does not affect the response, but that parameter actually dictates user-specific or sensitive content, the shared cache might serve one user's personalized response to another user. However, because the origin strictly controls the `"No-Vary-Search"` response header field, it is the origin's responsibility to ensure that ignored parameters are safe to disregard for all users.
 
 The `"No-Vary-Search"` response header field alters the algorithm that caches use for URI identifier comparison. As discussed in {{?RFC6943}}, altering identifier comparison logic can lead to security issues, primarily through "false positives" where two identifiers are incorrectly deemed equivalent.
+
+Because URL query parsing replaces invalid percent-encoded UTF-8 sequences with `U+FFFD`, lossy decoding can map distinct query strings onto the same cache key (for example, `?a=%f6` and `?a=%ef%bf%bd`). Origins should not rely on invalid percent-encoded sequences being distinguishable, as this is a concrete example of the false positives warned about in {{?RFC6943}}.
 
 Incorrect configuration of this field can exacerbate cache poisoning or data leakage risks by causing such false positives. Origin servers MUST NOT declare a parameter as no-vary if doing so would bypass server processing required for safe response reuse. This includes parameters used for authorization, user identification, signature verification, user consent, routing, auditing, revocation, or any other security-sensitive operations.
 
