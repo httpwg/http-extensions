@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-08-06T01:49:14.562886+00:00",
+  "timestamp": "2026-08-13T01:14:08.182322+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77850,6 +77850,40 @@
           "body": "To answer my own question, it looks like @DCtheTall introduced this test a while ago and it seems to pass all around https://wpt.fyi/results/cookiestore/change_eventhandler_for_no_change.https.window.html?label=experimental&label=master&aligned",
           "createdAt": "2026-07-30T13:06:30Z",
           "updatedAt": "2026-07-30T13:06:30Z"
+        }
+      ]
+    },
+    {
+      "number": 3503,
+      "id": "I_kwDOAUA-v88AAAABMTDn9A",
+      "title": "RESUMABLE: Bad UX from recommendation against resuming after `max-age`",
+      "url": "https://github.com/httpwg/http-extensions/issues/3503",
+      "state": "OPEN",
+      "author": "GrantGryczan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editorial",
+        "resumable-upload"
+      ],
+      "body": "The relevant part of the `max-age` limit definition is:\n\n> Specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource as these requests will likely fail.\n\nThe recommendation against accessing the upload resource can very easily lead to a bad end user experience.\n\nSuppose a client application receives a 201 creation response with `Upload-Limit: max-age=600`, and it begins appending the rest of the file. It will take 20 minutes in total due to being a large file on a poor connection. 15 minutes in, the user's network connection fails. The server received 15 minutes' worth of data, but the 104 responses don't include `Upload-Limit` or the client can't see 104 responses (e.g., since it's a browser client). Because it's been over 600 seconds since the generation of the previous response, the client believes the upload is expired despite that it really isn't. The upload is needlessly restarted instead of resumed.\n\nThe same problem would occur if the end user decided to abort the request by using a pause button in the application. They'll probably want to resume again shortly, but because the last response was received more than `max-age` seconds ago, the client will consider the upload expired.\n\nI'm not sure what the best way to fix this is. Perhaps in the absence of a response after request termination, clients should assume the last `max-age` applies again? Alternatively, for simplicity and guaranteed accuracy, this recommendation could simply be removed, letting the server inform the client of the missing resource (e.g., via 404 or 410) in the event it actually did expire.\n\nEither way, it may be worth adding an explicit note about this situation to inform clients to consider this common edge case.",
+      "createdAt": "2026-08-11T12:39:43Z",
+      "updatedAt": "2026-08-12T00:32:05Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "I'm not sure I fully understand the scenario you described. Is the server extending the upload resource's lifetime while the upload is ongoing? It seems to be like that's what you're assuming or otherwise the server wouldn't continue handling requests after the 600s have passed. Some deployments might adjust the lifetime dynamically but some will also just configure a static one fitting their use cases.\n\nIt should be fine to allow clients to attempt to access the upload resource, but they shouldn't expect it to be available if the last indicator of remaining lifetime has passed. We could say:\n\n>  specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and **a client SHOULD NOT expected to be able to access the upload resource as these requests might fail.**\n\nA client could either optimistically try if the resource is still available. Alternatively, it could also pause the upload and check the remaining lifetime when the last known point of expiration is reached.",
+          "createdAt": "2026-08-11T16:17:10Z",
+          "updatedAt": "2026-08-11T16:17:10Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yes, that was an assumption I made. The resumable upload protocol would be half-useless for large uploads if any interruption towards the end caused the entire upload to fail, so I would expect (and hope) servers in practice to extend the upload's lifetime for any upload offset progress, with limitations if the server is architected in a way that allows idle, incomplete uploads to enable Slowloris attacks. As I see it, the larger the upload, the more benefit the protocol provides, so this is an important point to me. A small upload could be restarted instead of resumed without as much of a problem.\n\nWith that rephrasing of the recommendation, I'm not sure that the recommendation has any impact on client implementations at all. What actionable difference would that recommendation make? If there is something actionable there, I think it could probably be rephrased more clearly.",
+          "createdAt": "2026-08-12T00:09:56Z",
+          "updatedAt": "2026-08-12T00:32:05Z"
         }
       ]
     }
@@ -217346,6 +217380,44 @@
           "body": "> @mallory: If you could take a look, that would be great. Thank you!\n\nLooks great. Thanks! ",
           "createdAt": "2026-07-28T11:17:05Z",
           "updatedAt": "2026-07-28T11:17:05Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 3504,
+      "id": "PR_kwDOAUA-v8794fE0",
+      "title": "Address mnot's last call feedback",
+      "url": "https://github.com/httpwg/http-extensions/pull/3504",
+      "state": "MERGED",
+      "author": "nidhijaju",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "no-vary-search"
+      ],
+      "body": "Addresses https://lists.w3.org/Archives/Public/ietf-http-wg/2026JulSep/0137.html.",
+      "createdAt": "2026-08-12T05:32:53Z",
+      "updatedAt": "2026-08-12T08:36:58Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "dc9f98dadd8d54da2fee9d7d1e4424400832e995",
+      "headRepository": "nidhijaju/http-extensions",
+      "headRefName": "mnot-lastcall-review",
+      "headRefOid": "af44c2d6fb9510c90dbcfa5d0b3075a5a355b151",
+      "closedAt": "2026-08-12T08:36:53Z",
+      "mergedAt": "2026-08-12T08:36:53Z",
+      "mergedBy": "nidhijaju",
+      "mergeCommit": {
+        "oid": "1a26fd083c69c2de79a57b7b2c532da532eb58ec"
+      },
+      "comments": [
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "Looks good to me.",
+          "createdAt": "2026-08-12T07:34:20Z",
+          "updatedAt": "2026-08-12T07:34:20Z"
         }
       ],
       "reviews": []
