@@ -5,8 +5,8 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                            N. Jaju, Ed.
-Expires: 13 February 2027                                     Google LLC
-                                                          12 August 2026
+Expires: 14 February 2027                                     Google LLC
+                                                          13 August 2026
 
 
                The No-Vary-Search HTTP Caching Extension
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 February 2027.
+   This Internet-Draft will expire on 14 February 2027.
 
 Copyright Notice
 
@@ -265,11 +265,14 @@ Table of Contents
 
    4.  If _value_["key-order"] exists:
 
-       1.  If _value_["key-order"] is not a boolean, then return the
-           default URL variation config.
+       1.  Let _keyOrderValue_ be the item_or_inner_list component of
+           the tuple _value_["key-order"] (ignoring any parameters).
 
-       2.  Set _result_'s vary on key order to the boolean negation of
-           _value_["key-order"].
+       2.  If _keyOrderValue_ is not a boolean, then return the default
+           URL variation config.
+
+       3.  Set _result_'s vary on key order to the boolean negation of
+           _keyOrderValue_.
 
    5.  If both _value_["params"] and _value_["except"] exist, then
        return the default URL variation config.
@@ -282,35 +285,41 @@ Table of Contents
 
    7.  If _value_["params"] exists:
 
-       1.  If _value_["params"] is not an inner list, then return the
+       1.  Let _paramsValue_ be the item_or_inner_list component of the
+           tuple _value_["params"] (ignoring any parameters).
+
+       2.  If _paramsValue_ is not an inner list, then return the
            default URL variation config.
 
-       2.  If any item in _value_["params"] is not a string, then return
-           the default URL variation config.
+       3.  Let _paramsList_ be a list containing the bare_item component
+           of each tuple in _paramsValue_ (ignoring any parameters).
 
-       3.  Set _result_'s no-vary params to the result of applying parse
-           a key (Section 5.3) to each item in _value_["params"].
+       4.  If any item in _paramsList_ is not a string, then return the
+           default URL variation config.
 
-       4.  If any item in _result_'s no-vary params is an error, then
-           return the default URL variation config.
+       5.  Set _result_'s no-vary params to the result of applying parse
+           a key (Section 5.3) to each item in _paramsList_.
 
-       5.  Set _result_'s vary params to *wildcard*.
+       6.  Set _result_'s vary params to *wildcard*.
 
    8.  Otherwise, if _value_["except"] exists:
 
-       1.  If _value_["except"] is not an inner list, then return the
+       1.  Let _exceptValue_ be the item_or_inner_list component of the
+           tuple _value_["except"] (ignoring any parameters).
+
+       2.  If _exceptValue_ is not an inner list, then return the
            default URL variation config.
 
-       2.  If any item in _value_["except"] is not a string, then return
-           the default URL variation config.
+       3.  Let _exceptList_ be a list containing the bare_item component
+           of each tuple in _exceptValue_ (ignoring any parameters).
 
-       3.  Set _result_'s vary params to the result of applying parse a
-           key (Section 5.3) to each item in _value_["except"].
+       4.  If any item in _exceptList_ is not a string, then return the
+           default URL variation config.
 
-       4.  If any item in _result_'s vary params is an error, then
-           return the default URL variation config.
+       5.  Set _result_'s vary params to the result of applying parse a
+           key (Section 5.3) to each item in _exceptList_.
 
-       5.  Set _result_'s no-vary params to *wildcard*.
+       6.  Set _result_'s no-vary params to *wildcard*.
 
    9.  Return _result_.
 
@@ -582,33 +591,33 @@ Table of Contents
    response header field, such as No-Vary-Search: key-order, we will
    have the following equivalences:
 
-        +=============+==============+============================+
-        | First Query | Second Query | Explanation                |
-        +=============+==============+============================+
-        | null        | ?            | A null query is parsed the |
-        |             |              | same as an empty string    |
-        +-------------+--------------+----------------------------+
-        | ?a=x        | ?%61=%78     | Parsing performs percent-  |
-        |             |              | decoding                   |
-        +-------------+--------------+----------------------------+
-        | ?a=é        | ?a=%C3%A9    | Parsing performs percent-  |
-        |             |              | decoding                   |
-        +-------------+--------------+----------------------------+
-        | ?a=%f6      | ?a=%ef%bf%bd | Both values are parsed as  |
-        |             |              | U+FFFD (�)                 |
-        +-------------+--------------+----------------------------+
-        | ?a=x&&&&    | ?a=x         | Parsing splits on & and    |
-        |             |              | discards empty strings     |
-        +-------------+--------------+----------------------------+
-        | ?a=         | ?a           | Both parse as having an    |
-        |             |              | empty string value for a   |
-        +-------------+--------------+----------------------------+
-        | ?a=%20      | ?a= &        | %20 is parsed as U+0020    |
-        |             |              | SPACE                      |
-        +-------------+--------------+----------------------------+
-        | ?a=+        | ?a= &        | + is parsed as U+0020      |
-        |             |              | SPACE                      |
-        +-------------+--------------+----------------------------+
+        +==========+==============+===============================+
+        | First    | Second Query | Explanation                   |
+        | Query    |              |                               |
+        +==========+==============+===============================+
+        | null     | ?            | A null query is parsed the    |
+        |          |              | same as an empty string       |
+        +----------+--------------+-------------------------------+
+        | ?a=x     | ?%61=%78     | Parsing performs percent-     |
+        |          |              | decoding                      |
+        +----------+--------------+-------------------------------+
+        | ?a=é     | ?a=%C3%A9    | Parsing performs percent-     |
+        |          |              | decoding                      |
+        +----------+--------------+-------------------------------+
+        | ?a=%f6   | ?a=%ef%bf%bd | An invalid UTF-8 sequence and |
+        |          |              | the literal U+FFFD character  |
+        |          |              | are both parsed as U+FFFD (�) |
+        +----------+--------------+-------------------------------+
+        | ?a=x&&&& | ?a=x         | Parsing splits on & and       |
+        |          |              | discards empty strings        |
+        +----------+--------------+-------------------------------+
+        | ?a=      | ?a           | Both parse as having an empty |
+        |          |              | string value for a            |
+        +----------+--------------+-------------------------------+
+        | ?a=%20   | ?a= &        | %20 is parsed as U+0020 SPACE |
+        +----------+--------------+-------------------------------+
+        | ?a=+     | ?a= &        | + is parsed as U+0020 SPACE   |
+        +----------+--------------+-------------------------------+
 
                                   Table 4
 
@@ -729,6 +738,13 @@ Table of Contents
    altering identifier comparison logic can lead to security issues,
    primarily through "false positives" where two identifiers are
    incorrectly deemed equivalent.
+
+   Because URL query parsing replaces invalid percent-encoded UTF-8
+   sequences with U+FFFD, lossy decoding can map distinct query strings
+   onto the same cache key (for example, ?a=%f6 and ?a=%ef%bf%bd).
+   Origins should not rely on invalid percent-encoded sequences being
+   distinguishable, as this is a concrete example of the false positives
+   warned about in [RFC6943].
 
    Incorrect configuration of this field can exacerbate cache poisoning
    or data leakage risks by causing such false positives.  Origin
@@ -923,12 +939,11 @@ Index
 
          default URL variation config  *_Section 4, Paragraph 3_*;
             Section 5.1, Paragraph 2.1.1; Section 5.1, Paragraph
-            2.4.2.1.1; Section 5.1, Paragraph 2.5.1; Section 5.1,
-            Paragraph 2.7.2.1.1; Section 5.1, Paragraph 2.7.2.2.1;
-            Section 5.1, Paragraph 2.7.2.4.1; Section 5.1, Paragraph
-            2.8.2.1.1; Section 5.1, Paragraph 2.8.2.2.1; Section 5.1,
-            Paragraph 2.8.2.4.1; Section 5.1, Paragraph 3.1;
-            Section 5.2.1, Paragraph 3; Section 6, Paragraph 2.2.1
+            2.4.2.2.1; Section 5.1, Paragraph 2.5.1; Section 5.1,
+            Paragraph 2.7.2.2.1; Section 5.1, Paragraph 2.7.2.4.1;
+            Section 5.1, Paragraph 2.8.2.2.1; Section 5.1, Paragraph
+            2.8.2.4.1; Section 5.1, Paragraph 3.1; Section 5.2.1,
+            Paragraph 3; Section 6, Paragraph 2.2.1
 
       E
 
@@ -941,8 +956,8 @@ Index
 
       P
 
-         parse a key  Section 5.1, Paragraph 2.7.2.3.1; Section 5.1,
-            Paragraph 2.8.2.3.1; *_Section 5.3, Paragraph 1_*;
+         parse a key  Section 5.1, Paragraph 2.7.2.5.1; Section 5.1,
+            Paragraph 2.8.2.5.1; *_Section 5.3, Paragraph 1_*;
             Section 5.3.1, Paragraph 1
          parse a URL variation config  *_Section 5.1, Paragraph 1_*;
             Section 5.2, Paragraph 2.2.1
