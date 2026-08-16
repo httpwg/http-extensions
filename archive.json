@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-08-13T01:14:08.182322+00:00",
+  "timestamp": "2026-08-16T00:47:58.847504+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77868,7 +77868,7 @@
       ],
       "body": "The relevant part of the `max-age` limit definition is:\n\n> Specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource as these requests will likely fail.\n\nThe recommendation against accessing the upload resource can very easily lead to a bad end user experience.\n\nSuppose a client application receives a 201 creation response with `Upload-Limit: max-age=600`, and it begins appending the rest of the file. It will take 20 minutes in total due to being a large file on a poor connection. 15 minutes in, the user's network connection fails. The server received 15 minutes' worth of data, but the 104 responses don't include `Upload-Limit` or the client can't see 104 responses (e.g., since it's a browser client). Because it's been over 600 seconds since the generation of the previous response, the client believes the upload is expired despite that it really isn't. The upload is needlessly restarted instead of resumed.\n\nThe same problem would occur if the end user decided to abort the request by using a pause button in the application. They'll probably want to resume again shortly, but because the last response was received more than `max-age` seconds ago, the client will consider the upload expired.\n\nI'm not sure what the best way to fix this is. Perhaps in the absence of a response after request termination, clients should assume the last `max-age` applies again? Alternatively, for simplicity and guaranteed accuracy, this recommendation could simply be removed, letting the server inform the client of the missing resource (e.g., via 404 or 410) in the event it actually did expire.\n\nEither way, it may be worth adding an explicit note about this situation to inform clients to consider this common edge case.",
       "createdAt": "2026-08-11T12:39:43Z",
-      "updatedAt": "2026-08-12T00:32:05Z",
+      "updatedAt": "2026-08-13T09:11:37Z",
       "closedAt": null,
       "comments": [
         {
@@ -77881,9 +77881,9 @@
         {
           "author": "GrantGryczan",
           "authorAssociation": "CONTRIBUTOR",
-          "body": "Yes, that was an assumption I made. The resumable upload protocol would be half-useless for large uploads if any interruption towards the end caused the entire upload to fail, so I would expect (and hope) servers in practice to extend the upload's lifetime for any upload offset progress, with limitations if the server is architected in a way that allows idle, incomplete uploads to enable Slowloris attacks. As I see it, the larger the upload, the more benefit the protocol provides, so this is an important point to me. A small upload could be restarted instead of resumed without as much of a problem.\n\nWith that rephrasing of the recommendation, I'm not sure that the recommendation has any impact on client implementations at all. What actionable difference would that recommendation make? If there is something actionable there, I think it could probably be rephrased more clearly.",
+          "body": "Yes, that was an assumption I made: servers are likely to extend the upload resource's lifetime as the upload progresses without being able to inform the client. The resumable upload protocol would be half-useless for large uploads if any interruption towards the end caused the entire upload to fail, so I would expect servers in practice to do this. As I see it, the larger the upload, the more benefit the protocol provides, so I believe this is an important point. A small upload could be restarted instead of resumed without as much of a problem.\n\nI'm not sure your rephrasing of the recommendation has any impact on client implementations at all (as opposed to removing it). What actionable difference would that recommendation make? If there is something actionable there, I think it could probably be rephrased more clearly. If not, I'd just end the sentence after \"inaccessible\".\n\nIf anything, I think the opposite recommendation would be better in practice: clients shouldn't actively enforce the max age, because their max age will often be out of date. But I wouldn't argue such a change to the protocol is necessary. An informative note would suffice.",
           "createdAt": "2026-08-12T00:09:56Z",
-          "updatedAt": "2026-08-12T00:32:05Z"
+          "updatedAt": "2026-08-13T09:11:37Z"
         }
       ]
     }
@@ -217418,6 +217418,72 @@
           "body": "Looks good to me.",
           "createdAt": "2026-08-12T07:34:20Z",
           "updatedAt": "2026-08-12T07:34:20Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 3505,
+      "id": "PR_kwDOAUA-v87-ak51",
+      "title": "Add dates for WHATWG references",
+      "url": "https://github.com/httpwg/http-extensions/pull/3505",
+      "state": "OPEN",
+      "author": "nidhijaju",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "no-vary-search"
+      ],
+      "body": "Addresses https://lists.w3.org/Archives/Public/ietf-http-wg/2026JulSep/0145.html.",
+      "createdAt": "2026-08-13T05:33:25Z",
+      "updatedAt": "2026-08-13T05:33:26Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "1a26fd083c69c2de79a57b7b2c532da532eb58ec",
+      "headRepository": "nidhijaju/http-extensions",
+      "headRefName": "ref-date",
+      "headRefOid": "1c9bb06329eb8658766ea1be43cf527082c58471",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3506,
+      "id": "PR_kwDOAUA-v87-clBu",
+      "title": "Address mnot's last call review comments",
+      "url": "https://github.com/httpwg/http-extensions/pull/3506",
+      "state": "MERGED",
+      "author": "nidhijaju",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "no-vary-search"
+      ],
+      "body": "Addresses https://mailarchive.ietf.org/arch/msg/last-call/zbaUjvGCpwAqfgYyN-KNh1vx-ac/.",
+      "createdAt": "2026-08-13T07:09:47Z",
+      "updatedAt": "2026-08-13T07:27:36Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "1a26fd083c69c2de79a57b7b2c532da532eb58ec",
+      "headRepository": "nidhijaju/http-extensions",
+      "headRefName": "mnot-lastcall-review-2",
+      "headRefOid": "e3309e6fe4116e2b394c3e99208ee9ac1a49163b",
+      "closedAt": "2026-08-13T07:27:30Z",
+      "mergedAt": "2026-08-13T07:27:30Z",
+      "mergedBy": "nidhijaju",
+      "mergeCommit": {
+        "oid": "8367bf93340abde7e3dd61eaaecae2e89274763a"
+      },
+      "comments": [
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "Looks good to me (and Claude :)",
+          "createdAt": "2026-08-13T07:26:07Z",
+          "updatedAt": "2026-08-13T07:26:07Z"
         }
       ],
       "reviews": []
