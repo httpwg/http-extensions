@@ -53,6 +53,7 @@ normative:
          name: Anne van Kesteren
          org: Apple Inc.
    ann: WHATWG
+   date: 2026-05-21
   WHATWG-INFRA:
    target: https://infra.spec.whatwg.org/
    title: Infra Living Standard
@@ -66,6 +67,7 @@ normative:
          name: Domenic Denicola
          org: Google LLC
    ann: WHATWG
+   date: 2026-07-17
   WHATWG-URL:
    target: https://url.spec.whatwg.org/
    title: URL Living Standard
@@ -75,6 +77,7 @@ normative:
          name: Anne van Kesteren
          org: Apple Inc.
    ann: WHATWG
+   date: 2026-07-06
 
 informative:
   HTML:
@@ -86,6 +89,7 @@ informative:
          name: Anne van Kesteren
          org: Apple Inc.
    ann: WHATWG
+   date: 2026-08-11
   NAV-TRACKING-MITIGATIONS:
    target: https://privacycg.github.io/nav-tracking-mitigations/
    title: Navigational-Tracking Mitigations
