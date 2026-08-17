@@ -73,13 +73,13 @@ When using "connect-tcp", TCP payload data is sent in the payload of new Capsule
 
 ~~~
 DATA Capsule {
-  Type (i) = $TBD1,
+  Type (i) = 0x08,
   Length (i),  # MAY be zero
   TCP Payload (..),
 }
 
 FINAL_DATA Capsule {
-  Type (i) = $TBD2,
+  Type (i) = 0x09,
   Length (i),  # MAY be zero
   TCP Payload (..),
 }
@@ -407,13 +407,8 @@ IF APPROVED, IANA is requested to add the following entry to the "HTTP Capsule T
 
 | ------ | ------------ | --------- | ---------------------------------- | ----------------- | ------- |
 | Value  | Capsule Type | Status    | Reference                          | Change Controller | Contact |
-| (TBD1) | DATA         | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
-| (TBD2) | FINAL_DATA   | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
-
-### Interop testing
-{:removeInRFC="true"}
-
-For this draft version of the protocol, the Capsule Type values `0x2028d7f2` and `0x2028d7f3` shall be used provisionally for testing, under the names "DATA-12" and "FINAL_DATA-12".
+| 0x08   | DATA         | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
+| 0x09   | FINAL_DATA   | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
 
 --- back
 
