@@ -83,7 +83,6 @@ Table of Contents
        8.1.1.  Interop testing
      8.2.  New MASQUE Default Template
      8.3.  New Capsule Type
-       8.3.1.  Interop testing
    9.  References
      9.1.  Normative References
      9.2.  Informative References
@@ -97,10 +96,9 @@ Table of Contents
    HTTP has used the CONNECT method for proxying TCP connections since
    HTTP/1.1.  When using CONNECT, the request target specifies a host
    and port number, and the proxy forwards TCP payloads between the
-   client and this destination ([RFC9110], Section 9.3.6).  To date,
-   this is the only mechanism defined for proxying TCP over HTTP.  In
-   this specification, this is referred to as a "classic HTTP CONNECT
-   proxy".
+   client and this destination ([HTTP], Section 9.3.6).  To date, this
+   is the only mechanism defined for proxying TCP over HTTP.  In this
+   specification, this is referred to as a "classic HTTP CONNECT proxy".
 
    HTTP/3 uses a UDP transport, so it cannot be forwarded using the pre-
    existing CONNECT mechanism.  To enable forward proxying of HTTP/3,
@@ -108,7 +106,7 @@ Table of Contents
    proxying UDP datagrams [CONNECT-UDP], and more generally IP datagrams
    [CONNECT-IP].  The destination host and port number (if applicable)
    are encoded into the HTTP resource path, and end-to-end datagrams are
-   wrapped into HTTP Datagrams [RFC9297] on the client-proxy path.
+   wrapped into HTTP Datagrams [CAPSULE] on the client-proxy path.
 
 1.2.  Problems
 
@@ -123,9 +121,9 @@ Table of Contents
 
    The absence of an explicit origin for the proxy also rules out the
    usual defenses against server port misdirection attacks (see
-   Section 7.4 of [RFC9110]) and creates ambiguity about the use of
-   origin-scoped response header fields (e.g., "Alt-Svc" [RFC7838],
-   "Strict-Transport-Security" [RFC6797]).
+   Section 7.4 of [HTTP]) and creates ambiguity about the use of origin-
+   scoped response header fields (e.g., "Alt-Svc" [ALT-SVC], "Strict-
+   Transport-Security" [HSTS]).
 
    Classic HTTP CONNECT requests are not extensible to carry in-stream
    metadata.  For example, the WRAP_UP capsule
@@ -170,13 +168,13 @@ Table of Contents
    related requirements.)
 
    DATA Capsule {
-     Type (i) = $TBD1,
+     Type (i) = 0x08,
      Length (i),  # MAY be zero
      TCP Payload (..),
    }
 
    FINAL_DATA Capsule {
-     Type (i) = $TBD2,
+     Type (i) = 0x09,
      Length (i),  # MAY be zero
      TCP Payload (..),
    }
@@ -205,15 +203,15 @@ Table of Contents
    encapsulation overhead when they are forwarded.
 
    This protocol can be extended by defining additional relevant Capsule
-   Types.  According to the Capsule Protocol ([RFC9297], Section 3.2),
+   Types.  According to the Capsule Protocol ([CAPSULE], Section 3.2),
    new Capsule Types should be ignored by pre-existing proxies and
    intermediaries.  If a new Capsule Type cannot safely be ignored, the
    endpoints can confirm support using a new HTTP header field.
 
 3.1.  In HTTP/1.1
 
-   In HTTP/1.1, the client uses the proxy by issuing a request as
-   follows:
+   In HTTP/1.1 [HTTP/1.1], the client uses the proxy by issuing a
+   request as follows:
 
    *  The method SHALL be "GET".
 
@@ -225,13 +223,13 @@ Table of Contents
 
    *  The request SHALL include a "Connection" header field with the
       value "Upgrade".  (Note that this requirement is case-insensitive
-      as per Section 7.6.1 of [RFC9110].)
+      as per Section 7.6.1 of [HTTP].)
 
    *  The request SHALL include an "Upgrade" header field with the value
       "connect-tcp".
 
    *  The request SHOULD include a "Capsule-Protocol: ?1" header (as
-      recommended in [RFC9297], Section 3.4).
+      recommended in [CAPSULE], Section 3.4).
 
    If the request is well-formed and permissible, the proxy MUST attempt
    to establish the TCP connection before sending any response status
@@ -290,12 +288,12 @@ Table of Contents
       Template.
 
    A templated TCP proxying request that does not conform to all of
-   these requirements represents a client error (see [RFC9110],
-   Section 15.5) and may be malformed (see Section 8.1.1 of [RFC9113]
-   and Section 4.1.2 of [RFC9114]).
+   these requirements represents a client error (see [HTTP],
+   Section 15.5) and may be malformed (see Section 8.1.1 of [HTTP/2] and
+   Section 4.1.2 of [HTTP/3]).
 
    Additionally the "capsule-protocol" header field SHOULD be present
-   with a value of "?1" (as recommended in [RFC9297], Section 3.4).
+   with a value of "?1" (as recommended in [CAPSULE], Section 3.4).
 
    HEADERS
    :method = CONNECT
@@ -323,9 +321,9 @@ Table of Contents
    Here are some origin-scoped headers that could potentially be sent by
    a templated TCP proxy:
 
-   *  "Alt-Svc" [RFC7838]
+   *  "Alt-Svc" [ALT-SVC]
 
-   *  "Strict-Transport-Security" [RFC6797]
+   *  "Strict-Transport-Security" [HSTS]
 
    *  "Accept-CH" [RFC8942]
 
@@ -338,13 +336,13 @@ Table of Contents
    Authentication to a templated TCP proxy normally uses ordinary HTTP
    authentication via the "401 (Unauthorized)" response code, the "WWW-
    Authenticate" response header field, and the "Authorization" request
-   header field ([RFC9110], Section 11.6).  A templated TCP proxy does
-   not use the "407 (Proxy Authentication Required)" response code and
-   related header fields ([RFC9110], Section 11.7) because they do not
+   header field ([HTTP], Section 11.6).  A templated TCP proxy does not
+   use the "407 (Proxy Authentication Required)" response code and
+   related header fields ([HTTP], Section 11.7) because they do not
    traverse HTTP gateways (see Section 7.2).
 
    Clients SHOULD assume that all proxy resources generated by a single
-   template share a protection space (i.e., a realm) ([RFC9110],
+   template share a protection space (i.e., a realm) ([HTTP],
    Section 11.5).  For many authentication schemes, this will allow the
    client to avoid waiting for a "401 (Unauthorized)" response before
    each new connection through the proxy.
@@ -376,14 +374,14 @@ Table of Contents
       -  Otherwise, the endpoint SHOULD close the send stream abruptly,
          using a mechanism appropriate to the HTTP version:
 
-         o  HTTP/3: reset the stream with H3_CONNECT_ERROR; see
-            [RFC9000], Section 19.4 and [RFC9114], Section 8.1
+         o  HTTP/3: reset the stream with H3_CONNECT_ERROR; see [QUIC],
+            Section 19.4 and [HTTP/3], Section 8.1
 
-         o  HTTP/2: reset the stream with CONNECT_ERROR; see [RFC9113],
+         o  HTTP/2: reset the stream with CONNECT_ERROR; see [HTTP/2],
             Sections 6.4 and 7
 
          o  HTTP/1.1 over TLS: TCP shutdown without a TLS closure alert;
-            see [RFC8446], Section 6.1.
+            see [TLS], Section 6.1.
 
          o  HTTP/1.1 without TLS: TCP RST
 
@@ -468,42 +466,42 @@ Table of Contents
 
    When using this specification in HTTP/2 or HTTP/3, clients MAY start
    sending TCP stream content optimistically, subject to flow control
-   limits (Section 5.2 of [RFC9113] or Section 4.1 of [RFC9000]).
-   Proxies MUST buffer this "optimistic" content until the TCP stream
-   becomes writable, and discard it if the TCP connection fails.
-   (Clients MUST NOT use "optimistic" behavior in HTTP/1.1, as this
-   would interfere with reuse of the connection after an error response
-   such as "401 (Unauthorized)".)
+   limits (Section 5.2 of [HTTP/2] or Section 4.1 of [QUIC]).  Proxies
+   MUST buffer this "optimistic" content until the TCP stream becomes
+   writable, and discard it if the TCP connection fails.  (Clients MUST
+   NOT use "optimistic" behavior in HTTP/1.1, as this would interfere
+   with reuse of the connection after an error response such as "401
+   (Unauthorized)".)
 
    Servers that host a proxy under this specification MAY offer support
    for TLS early data in accordance with [RFC8470].  Clients MAY send
    "connect-tcp" requests in early data, and MAY include "optimistic"
    TCP content in early data (in HTTP/2 and HTTP/3).  At the TLS layer,
    proxies MAY ignore, reject, or accept the early_data extension
-   ([RFC8446], Section 4.2.10).  At the HTTP layer, proxies MAY process
-   the request immediately, return a "425 (Too Early)" response
-   ([RFC8470], Section 5.2), or delay some or all processing of the
-   request until the handshake completes.  For example, a proxy with
-   limited anti-replay defenses might choose to perform DNS resolution
-   of the target_host when a request arrives in early data, but delay
-   the TCP connection until the TLS handshake completes.
+   ([TLS], Section 4.2.10).  At the HTTP layer, proxies MAY process the
+   request immediately, return a "425 (Too Early)" response ([RFC8470],
+   Section 5.2), or delay some or all processing of the request until
+   the handshake completes.  For example, a proxy with limited anti-
+   replay defenses might choose to perform DNS resolution of the
+   target_host when a request arrives in early data, but delay the TCP
+   connection until the TLS handshake completes.
 
    When DNS resolution of target_host produces multiple IP addresses,
-   proxies SHOULD use a racing procedure such as Happy Eyeballs
-   [RFC8305] to accelerate connection establishment.  Proxies that race
-   multiple connection attempts MUST buffer any optimistic content until
-   a connection is selected and MUST NOT transmit any payload data on
-   the other connections.
+   proxies SHOULD use a racing procedure such as Happy Eyeballs [HEv2]
+   to accelerate connection establishment.  Proxies that race multiple
+   connection attempts MUST buffer any optimistic content until a
+   connection is selected and MUST NOT transmit any payload data on the
+   other connections.
 
 4.2.  Conveying metadata
 
    This specification supports the "Expect: 100-continue" request header
-   ([RFC9110], Section 10.1.1) in any HTTP version.  The "100
-   (Continue)" status code confirms receipt of a request at the proxy
-   without waiting for the proxy-destination TCP handshake to succeed or
-   fail.  Clients MAY send "Expect: 100-continue", and proxies MUST
-   respect it by returning "100 (Continue)" if the request is not
-   immediately rejected.  This allows for a few useful improvements:
+   ([HTTP], Section 10.1.1) in any HTTP version.  The "100 (Continue)"
+   status code confirms receipt of a request at the proxy without
+   waiting for the proxy-destination TCP handshake to succeed or fail.
+   Clients MAY send "Expect: 100-continue", and proxies MUST respect it
+   by returning "100 (Continue)" if the request is not immediately
+   rejected.  This allows for a few useful improvements:
 
    *  Clients can provide a clearer status indication while waiting for
       the destination host to respond.  (TCP handshakes can hang for
@@ -539,8 +537,8 @@ Table of Contents
    *  The URI template can include a high-entropy path, similar to
       Capability URLs [CAPABILITY].
 
-   *  The proxy can require HTTP Concealed Authentication [CONCEALED],
-      Section 6.4.
+   *  The proxy can require HTTP Concealed Authentication ([CONCEALED],
+      Section 6.4).
 
 5.2.  Clients
 
@@ -597,8 +595,8 @@ Table of Contents
 
    Template-driven TCP proxying is largely subject to the same security
    risks as classic HTTP CONNECT.  For example, any restrictions on
-   authorized use of the proxy (see [RFC9110], Section 9.3.6) apply
-   equally to both.
+   authorized use of the proxy (see [HTTP], Section 9.3.6) apply equally
+   to both.
 
    A small additional risk is posed by the use of a URI Template parser
    on the client side.  The template input string could be crafted to
@@ -680,8 +678,8 @@ Table of Contents
       -  Faulty implementations may fail to send a TLS closure alert
          during graceful shutdown, or fail to report an error when the
          expected closure alert is not received.  These misbehaviors are
-         not compliant with [RFC8446], but they are common nonetheless
-         among HTTP/1.1 implementations today.
+         not compliant with [TLS], but they are common nonetheless among
+         HTTP/1.1 implementations today.
 
    *  The number of active connections through each client may be
       limited by the number of available TCP client ports, especially
@@ -734,7 +732,7 @@ Table of Contents
    connection is never permanently stuck in any state until it is fully
    closed.  However, for efficient operation, it may be necessary to
    adjust the settings for TCP keep-alives ([TCP], Section 3.8.4), QUIC
-   idle timeouts ([QUIC], Section 10.1), HTTP/2 PING frames ([RFC9113],
+   idle timeouts ([QUIC], Section 10.1), HTTP/2 PING frames ([HTTP/2],
    Section 6.7), and other transport options.
 
    Endpoints MAY impose additional timeouts, especially as a defense
@@ -784,37 +782,54 @@ Table of Contents
    IF APPROVED, IANA is requested to add the following entry to the
    "HTTP Capsule Types" registry:
 
-    +======+============+===========+============+============+=======+
-    |Value | Capsule    | Status    | Reference  | Change     |Contact|
-    |      | Type       |           |            | Controller |       |
-    +======+============+===========+============+============+=======+
-    |(TBD1)| DATA       | permanent | (This      | IETF       |HTTPBIS|
-    |      |            |           | document), |            |       |
-    |      |            |           | Section 3  |            |       |
-    +------+------------+-----------+------------+------------+-------+
-    |(TBD2)| FINAL_DATA | permanent | (This      | IETF       |HTTPBIS|
-    |      |            |           | document), |            |       |
-    |      |            |           | Section 3  |            |       |
-    +------+------------+-----------+------------+------------+-------+
+   +=====+============+===========+============+============+=========+
+   |Value| Capsule    | Status    | Reference  | Change     | Contact |
+   |     | Type       |           |            | Controller |         |
+   +=====+============+===========+============+============+=========+
+   |0x08 | DATA       | permanent | (This      | IETF       | HTTPBIS |
+   |     |            |           | document), |            |         |
+   |     |            |           | Section 3  |            |         |
+   +-----+------------+-----------+------------+------------+---------+
+   |0x09 | FINAL_DATA | permanent | (This      | IETF       | HTTPBIS |
+   |     |            |           | document), |            |         |
+   |     |            |           | Section 3  |            |         |
+   +-----+------------+-----------+------------+------------+---------+
 
-                                  Table 3
-
-8.3.1.  Interop testing
-
-   This section is to be removed before publishing as an RFC.
-
-   For this draft version of the protocol, the Capsule Type values
-   0x2028d7f2 and 0x2028d7f3 shall be used provisionally for testing,
-   under the names "DATA-12" and "FINAL_DATA-12".
+                                 Table 3
 
 9.  References
 
 9.1.  Normative References
 
+   [CAPSULE]  Schinazi, D. and L. Pardue, "HTTP Datagrams and the
+              Capsule Protocol", RFC 9297, DOI 10.17487/RFC9297, August
+              2022, <https://www.rfc-editor.org/rfc/rfc9297>.
+
    [CONNECT-UDP]
               Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
               DOI 10.17487/RFC9298, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9298>.
+
+   [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., "HTTP Semantics", STD 97, RFC 9110,
+              DOI 10.17487/RFC9110, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9110>.
+
+   [HTTP/1.1] Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., "HTTP/1.1", STD 99, RFC 9112, DOI 10.17487/RFC9112,
+              June 2022, <https://www.rfc-editor.org/rfc/rfc9112>.
+
+   [HTTP/2]   Thomson, M., Ed. and C. Benfield, Ed., "HTTP/2", RFC 9113,
+              DOI 10.17487/RFC9113, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9113>.
+
+   [HTTP/3]   Bishop, M., Ed., "HTTP/3", RFC 9114, DOI 10.17487/RFC9114,
+              June 2022, <https://www.rfc-editor.org/rfc/rfc9114>.
+
+   [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
+              Multiplexed and Secure Transport", RFC 9000,
+              DOI 10.17487/RFC9000, May 2021,
+              <https://www.rfc-editor.org/rfc/rfc9000>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -834,30 +849,9 @@ Table of Contents
               RFC 8441, DOI 10.17487/RFC8441, September 2018,
               <https://www.rfc-editor.org/rfc/rfc8441>.
 
-   [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
-              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
-              <https://www.rfc-editor.org/rfc/rfc8446>.
-
    [RFC8470]  Thomson, M., Nottingham, M., and W. Tarreau, "Using Early
               Data in HTTP", RFC 8470, DOI 10.17487/RFC8470, September
               2018, <https://www.rfc-editor.org/rfc/rfc8470>.
-
-   [RFC9000]  Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
-              Multiplexed and Secure Transport", RFC 9000,
-              DOI 10.17487/RFC9000, May 2021,
-              <https://www.rfc-editor.org/rfc/rfc9000>.
-
-   [RFC9110]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
-              Ed., "HTTP Semantics", STD 97, RFC 9110,
-              DOI 10.17487/RFC9110, June 2022,
-              <https://www.rfc-editor.org/rfc/rfc9110>.
-
-   [RFC9113]  Thomson, M., Ed. and C. Benfield, Ed., "HTTP/2", RFC 9113,
-              DOI 10.17487/RFC9113, June 2022,
-              <https://www.rfc-editor.org/rfc/rfc9113>.
-
-   [RFC9114]  Bishop, M., Ed., "HTTP/3", RFC 9114, DOI 10.17487/RFC9114,
-              June 2022, <https://www.rfc-editor.org/rfc/rfc9114>.
 
    [RFC9209]  Nottingham, M. and P. Sikora, "The Proxy-Status HTTP
               Response Header Field", RFC 9209, DOI 10.17487/RFC9209,
@@ -867,11 +861,15 @@ Table of Contents
               RFC 9220, DOI 10.17487/RFC9220, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9220>.
 
-   [RFC9297]  Schinazi, D. and L. Pardue, "HTTP Datagrams and the
-              Capsule Protocol", RFC 9297, DOI 10.17487/RFC9297, August
-              2022, <https://www.rfc-editor.org/rfc/rfc9297>.
+   [TLS]      Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", RFC 9846, DOI 10.17487/RFC9846, July 2026,
+              <https://www.rfc-editor.org/rfc/rfc9846>.
 
 9.2.  Informative References
+
+   [ALT-SVC]  Nottingham, M., McManus, P., and J. Reschke, "HTTP
+              Alternative Services", RFC 7838, DOI 10.17487/RFC7838,
+              April 2016, <https://www.rfc-editor.org/rfc/rfc7838>.
 
    [CAPABILITY]
               "Good Practices for Capability URLs", February 2014,
@@ -893,6 +891,16 @@ Table of Contents
               RFC 9484, DOI 10.17487/RFC9484, October 2023,
               <https://www.rfc-editor.org/rfc/rfc9484>.
 
+   [HEv2]     Schinazi, D. and T. Pauly, "Happy Eyeballs Version 2:
+              Better Connectivity Using Concurrency", RFC 8305,
+              DOI 10.17487/RFC8305, December 2017,
+              <https://www.rfc-editor.org/rfc/rfc8305>.
+
+   [HSTS]     Hodges, J., Jackson, C., and A. Barth, "HTTP Strict
+              Transport Security (HSTS)", RFC 6797,
+              DOI 10.17487/RFC6797, November 2012,
+              <https://www.rfc-editor.org/rfc/rfc6797>.
+
    [I-D.ietf-httpbis-wrap-up]
               Schinazi, D. and L. Pardue, "The HTTP Wrap Up Capsule",
               Work in Progress, Internet-Draft, draft-ietf-httpbis-wrap-
@@ -908,33 +916,14 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-intarea-
               proxy-config-14>.
 
-   [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
-              Multiplexed and Secure Transport", RFC 9000,
-              DOI 10.17487/RFC9000, May 2021,
-              <https://www.rfc-editor.org/rfc/rfc9000>.
-
    [RFC6265]  Barth, A., "HTTP State Management Mechanism", RFC 6265,
               DOI 10.17487/RFC6265, April 2011,
               <https://www.rfc-editor.org/rfc/rfc6265>.
-
-   [RFC6797]  Hodges, J., Jackson, C., and A. Barth, "HTTP Strict
-              Transport Security (HSTS)", RFC 6797,
-              DOI 10.17487/RFC6797, November 2012,
-              <https://www.rfc-editor.org/rfc/rfc6797>.
 
    [RFC7323]  Borman, D., Braden, B., Jacobson, V., and R.
               Scheffenegger, Ed., "TCP Extensions for High Performance",
               RFC 7323, DOI 10.17487/RFC7323, September 2014,
               <https://www.rfc-editor.org/rfc/rfc7323>.
-
-   [RFC7838]  Nottingham, M., McManus, P., and J. Reschke, "HTTP
-              Alternative Services", RFC 7838, DOI 10.17487/RFC7838,
-              April 2016, <https://www.rfc-editor.org/rfc/rfc7838>.
-
-   [RFC8305]  Schinazi, D. and T. Pauly, "Happy Eyeballs Version 2:
-              Better Connectivity Using Concurrency", RFC 8305,
-              DOI 10.17487/RFC8305, December 2017,
-              <https://www.rfc-editor.org/rfc/rfc8305>.
 
    [RFC8942]  Grigorik, I. and Y. Weiss, "HTTP Client Hints", RFC 8942,
               DOI 10.17487/RFC8942, February 2021,
