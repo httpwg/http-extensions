@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-08-16T00:47:58.847504+00:00",
+  "timestamp": "2026-08-18T00:44:03.762183+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77884,6 +77884,51 @@
           "body": "Yes, that was an assumption I made: servers are likely to extend the upload resource's lifetime as the upload progresses without being able to inform the client. The resumable upload protocol would be half-useless for large uploads if any interruption towards the end caused the entire upload to fail, so I would expect servers in practice to do this. As I see it, the larger the upload, the more benefit the protocol provides, so I believe this is an important point. A small upload could be restarted instead of resumed without as much of a problem.\n\nI'm not sure your rephrasing of the recommendation has any impact on client implementations at all (as opposed to removing it). What actionable difference would that recommendation make? If there is something actionable there, I think it could probably be rephrased more clearly. If not, I'd just end the sentence after \"inaccessible\".\n\nIf anything, I think the opposite recommendation would be better in practice: clients shouldn't actively enforce the max age, because their max age will often be out of date. But I wouldn't argue such a change to the protocol is necessary. An informative note would suffice.",
           "createdAt": "2026-08-12T00:09:56Z",
           "updatedAt": "2026-08-13T09:11:37Z"
+        }
+      ]
+    },
+    {
+      "number": 3507,
+      "id": "I_kwDOAUA-v88AAAABNGe8rw",
+      "title": "RESUMABLE: Let optimistic clients use 409s instead of offset retrieval",
+      "url": "https://github.com/httpwg/http-extensions/issues/3507",
+      "state": "OPEN",
+      "author": "GrantGryczan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "My friend @Trellord had a great idea for our client implementation. The protocol [recommends](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#section-4.4.1-2) clients use the offset from the \"immediate previous response\" when appending.\n\n> To ensure that the upload resource will accept the request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ([Section 4.3](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#offset-retrieving)) or appending representation data ([Section 4.4](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#upload-appending)).\n\nFor example, if a client appends at offset 1000, but the server responds with status 500, this text recommends that the client perform offset retrieval before appending again (since otherwise the immediate previous response is status 500). But for optimistic clients, it may actually be better to simply append at offset 1000 again. In the event that the old offset is actually correct, it saves a round trip. And if the offset is wrong, the server can reject it immediately before processing the request body, and the response is required to include the correct offset with status 409. The client can therefore rely on 409 responses to retrieve offsets rather than performing explicit offset retrieval.\n\nOf course, there are downsides to this approach, such as wasted bandwidth before the server cuts off the request. But my point is that this approach goes against the recommendation, and I think this approach is very reasonable and shouldn't be recommended against. An optimistic client may intentionally _not_ want to \"ensure that the upload resource will accept the request\".",
+      "createdAt": "2026-08-17T18:25:11Z",
+      "updatedAt": "2026-08-17T23:02:03Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This optimistic retry only applies when the full request body was already sent out but the client didn't receive a successful response? I think doing it is fine but it's a narrow optimization since most interruptions probably happen when the request body is being uploaded.",
+          "createdAt": "2026-08-17T20:42:02Z",
+          "updatedAt": "2026-08-17T20:42:02Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Not necessarily full request body, no. The upload could be interrupted by an early response. This is most likely to happen with 4xx-5xx errors. It's less practical for network interruptions. One example is 429, where rate-limiting responses tend to be returned as soon as possible rather than after accepting a portion of the request content, so it just isn't very useful to perform offset retrieval. My implementation will still perform explicit offset retrieval for network interruptions, for example. Or perhaps I'll implement it to only perform offset retrieval if there's been more upload progress in the last request than the `min-append-size` limit, if that's simple enough to implement.\n\nEDIT: Yeah, that was very simple to implement (just 3 extra lines of code), so I ended up doing that.",
+          "createdAt": "2026-08-17T21:43:53Z",
+          "updatedAt": "2026-08-17T22:25:16Z"
+        },
+        {
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Oh you want to retry at the old offset? I was assuming that you are resuming at the end offset assuming the entire request was processed and appended.\n\nI don't mind that the spec allowing it, but probably would just keep my code simple and always do a retrieval.",
+          "createdAt": "2026-08-17T21:52:18Z",
+          "updatedAt": "2026-08-17T21:52:18Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yeah! Makes sense. I will also note that a maximally optimistic client can be implemented extremely simply by never performing offset retrieval at all, relying entirely on 2xx and 409 for offset updates. It'd be even simpler than doing offset retrieval on every append. Not recommending you do that of course, since that is maximally optimistic. But it's worth noting this methodology can be applied in a very simple way too.",
+          "createdAt": "2026-08-17T21:57:52Z",
+          "updatedAt": "2026-08-17T23:02:03Z"
         }
       ]
     }
@@ -217427,7 +217472,7 @@
       "id": "PR_kwDOAUA-v87-ak51",
       "title": "Add dates for WHATWG references",
       "url": "https://github.com/httpwg/http-extensions/pull/3505",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "nidhijaju",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -217436,18 +217481,28 @@
       ],
       "body": "Addresses https://lists.w3.org/Archives/Public/ietf-http-wg/2026JulSep/0145.html.",
       "createdAt": "2026-08-13T05:33:25Z",
-      "updatedAt": "2026-08-13T05:33:26Z",
+      "updatedAt": "2026-08-17T06:38:18Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "1a26fd083c69c2de79a57b7b2c532da532eb58ec",
       "headRepository": "nidhijaju/http-extensions",
       "headRefName": "ref-date",
       "headRefOid": "1c9bb06329eb8658766ea1be43cf527082c58471",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "closedAt": "2026-08-17T06:38:13Z",
+      "mergedAt": "2026-08-17T06:38:13Z",
+      "mergedBy": "nidhijaju",
+      "mergeCommit": {
+        "oid": "ddc5642589dbf7f90425d2cc355e3c4936f0119e"
+      },
+      "comments": [
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "LGTM - RFC Editor will help with this stuff anyway.",
+          "createdAt": "2026-08-17T05:21:39Z",
+          "updatedAt": "2026-08-17T05:21:39Z"
+        }
+      ],
       "reviews": []
     },
     {
