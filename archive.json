@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-08-18T00:44:03.762183+00:00",
+  "timestamp": "2026-08-20T00:44:05.737062+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77754,10 +77754,12 @@
       "author": "yaroslavros",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "secondary-server-certs"
+      ],
       "body": "Can we please change `SERVER_CERTIFICATE` frame name back to `CERTIFICATE`?\n\nPotential future specification of client side secondary certificates could use the same frame to send client certificates. The content would be identical - carrying an exported authenticator.\n\nOn top of that, all other HTTP frame types do not have CLIENT_ or SERVER_ prefix even if they are applicable only in a single direction.",
       "createdAt": "2026-07-22T09:48:16Z",
-      "updatedAt": "2026-07-25T22:13:50Z",
+      "updatedAt": "2026-08-19T01:56:28Z",
       "closedAt": null,
       "comments": [
         {
@@ -77896,10 +77898,12 @@
       "author": "GrantGryczan",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "resumable-upload"
+      ],
       "body": "My friend @Trellord had a great idea for our client implementation. The protocol [recommends](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#section-4.4.1-2) clients use the offset from the \"immediate previous response\" when appending.\n\n> To ensure that the upload resource will accept the request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ([Section 4.3](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#offset-retrieving)) or appending representation data ([Section 4.4](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#upload-appending)).\n\nFor example, if a client appends at offset 1000, but the server responds with status 500, this text recommends that the client perform offset retrieval before appending again (since otherwise the immediate previous response is status 500). But for optimistic clients, it may actually be better to simply append at offset 1000 again. In the event that the old offset is actually correct, it saves a round trip. And if the offset is wrong, the server can reject it immediately before processing the request body, and the response is required to include the correct offset with status 409. The client can therefore rely on 409 responses to retrieve offsets rather than performing explicit offset retrieval.\n\nOf course, there are downsides to this approach, such as wasted bandwidth before the server cuts off the request. But my point is that this approach goes against the recommendation, and I think this approach is very reasonable and shouldn't be recommended against. An optimistic client may intentionally _not_ want to \"ensure that the upload resource will accept the request\".",
       "createdAt": "2026-08-17T18:25:11Z",
-      "updatedAt": "2026-08-17T23:02:03Z",
+      "updatedAt": "2026-08-18T06:35:10Z",
       "closedAt": null,
       "comments": [
         {
@@ -217541,6 +217545,34 @@
           "updatedAt": "2026-08-13T07:26:07Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 3508,
+      "id": "PR_kwDOAUA-v88AAAABAF9WBA",
+      "title": "Address Mahesh's feedback",
+      "url": "https://github.com/httpwg/http-extensions/pull/3508",
+      "state": "OPEN",
+      "author": "nidhijaju",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "no-vary-search"
+      ],
+      "body": "Addresses https://lists.w3.org/Archives/Public/ietf-http-wg/2026JulSep/0180.html.\r\n\r\n@mjethanandani Could you please take a look to see if this looks good? Thank you!\r\n\r\nNote: I haven't adjusted the WHATWG references since there is an ongoing discussion about it.",
+      "createdAt": "2026-08-18T03:32:42Z",
+      "updatedAt": "2026-08-18T03:32:43Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "4146dcd5a45cffbf740fd9d5689943ee2290d4bd",
+      "headRepository": "nidhijaju/http-extensions",
+      "headRefName": "mahesh-feedback",
+      "headRefOid": "64f1fca52cf9c3389938295dfee9ec199d2a2965",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
     }
   ]
