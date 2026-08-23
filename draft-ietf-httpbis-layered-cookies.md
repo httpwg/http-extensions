@@ -1025,11 +1025,13 @@ They return a URL path.
 
 1.  Assert: _path_ is a non-empty list.
 
-2.  If _path_'s size is greater than 1, then remove _path_'s last item.
+1.  Let _defaultPath_ be a clone of _path_.
 
-3.  Otherwise, set _path_[0] to the empty string.
+1.  If _defaultPath_'s size is greater than 1, then remove _defaultPath_'s last item.
 
-4.  Return _path_.
+1.  Otherwise, set _defaultPath_[0] to the empty string.
+
+1.  Return _defaultPath_.
 
 
 ### Path Matching
@@ -1037,16 +1039,23 @@ They return a URL path.
 To determine if a URL path _requestPath_ **Path-Matches** a URL path _cookiePath_, run these steps.
 They return a boolean.
 
-1.  Let _serializedRequestPath_ be the result of URL path serializing _requestPath_.
+1.  If _requestPath_ equals _cookiePath_, then return true.
 
-2.  Let _serializedCookiePath_ be the result of URL path serializing _cookiePath_.
+1.  Let _prefix_ be a clone of _cookiePath_.
 
-3.  If _serializedCookiePath_ is _serializedRequestPath_, then return true.
+1.  If _prefix_ is not empty and _prefix_'s last item is the empty string, then remove _prefix_'s
+    last item.
 
-4.  If _serializedRequestPath_ starts with _serializedCookiePath_ and _serializedCookiePath_ ends
-    with a U+002F (/), then return true.
+    Note: A _cookiePath_ whose last segment is empty is one whose `Path` attribute ended in a
+    U+002F (/). It matches what it contains, but not the path it is the directory of.
 
-5.  Return whether the concatenation of _serializedRequestPath_ followed by U+002F (/) starts with _serializedCookiePath_.
+1.  If _prefix_'s size is greater than or equal to _requestPath_'s size, then return false.
+
+1.  Return whether _requestPath_ starts with _prefix_.
+
+Note: Comparing URL path segments rather than serialized paths ensures a _cookiePath_ only matches
+at a segment boundary. A _cookiePath_ of `/foo` matches a _requestPath_ of `/foo/bar`, but not one of
+`/foobar`.
 
 
 ## Main Algorithms
@@ -1060,7 +1069,7 @@ URL path _path_, boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPu
 
 1. If _cookie_ is failure, then return.
 
-1. Return the result of Store a Cookie given _cookie_, _isSecure_, _host_, _path_, _httpOnlyAllowed_,
+1. Return the result of Store a Cookie given _cookie_, _isSecure_, _host_, _httpOnlyAllowed_,
    _allowNonHostOnlyCookieForPublicSuffix_, and _sameSiteStrictOrLaxAllowed_.
 
 
@@ -1105,6 +1114,8 @@ URL path _path_, run these steps. They return a new cookie or failure:
 1. Set _cookie_'s path to the result of running Cookie Default Path with _path_.
 
    Note: A `Path` attribute can override this.
+
+1. Let _pathAttributeValue_ be null.
 
 1. While _attributesInput_ is not an empty byte sequence:
 
@@ -1192,11 +1203,7 @@ URL path _path_, run these steps. They return a new cookie or failure:
     1. If _attributeName_ is a byte-case-insensitive match for `Path`:
 
         1. If _attributeValue_ is not empty and if the first byte of
-           _attributeValue_ is 0x2F (/), then:
-
-           1. Set _cookie_'s path to _attributeValue_ split on 0x2F (/).
-
-           1. Set _cookie_'s has-path attribute to true.
+           _attributeValue_ is 0x2F (/), then set _pathAttributeValue_ to _attributeValue_.
 
     1.  If _attributeName_ is a byte-case-insensitive match for `Secure`:
 
@@ -1213,6 +1220,32 @@ URL path _path_, run these steps. They return a new cookie or failure:
         1.  If _attributeValue_ is a byte-case-insensitive match for `Strict`, then set _cookie_'s same-site to "strict".
 
         1.  If _attributeValue_ is a byte-case-insensitive match for `Lax`, then set _cookie_'s same-site to "lax".
+
+1. If _pathAttributeValue_ is non-null:
+
+    1. Let _pathString_ be the isomorphic decoding of _pathAttributeValue_.
+
+    1. If _pathString_ is not an ASCII string, then return failure.
+
+       Note: A URL path's segments are ASCII strings, so such a `Path` attribute cannot be
+       represented. Returning failure keeps a cookie that no request could carry out of the user
+       agent's cookie store altogether.
+
+    1. Let _segments_ be the result of strictly splitting _pathString_ on U+002F (/).
+
+    1. Assert: _segments_[0] is the empty string.
+
+    1. Remove _segments_[0].
+
+       Note: This is what makes _segments_ a URL path, as a URL path has no leading empty segment.
+
+    1. Set _cookie_'s path to _segments_.
+
+    1. Set _cookie_'s has-path attribute to true.
+
+   Note: This happens after all attributes have been processed so that only the `Path` attribute
+   that "wins" is considered, in keeping with how the rest of _cookie_ is checked once parsing has
+   settled on its final values.
 
 1. Return _cookie_.
 
@@ -1315,7 +1348,7 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
    then return null.
 
 1. If the user agent's cookie store contains a cookie _oldCookie_ whose name is _cookie_'s name,
-   host is host-equal to _cookie_'s host, host-only is _cookie_'s host-only, and path is path-equal to _cookie_'s path:
+   host is host-equal to _cookie_'s host, host-only is _cookie_'s host-only, and path equals _cookie_'s path:
 
     1. If _httpOnlyAllowed_ is false and _oldCookie_'s http-only is true,
        then return null.
