@@ -5,8 +5,8 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                            N. Jaju, Ed.
-Expires: 18 February 2027                                     Google LLC
-                                                          17 August 2026
+Expires: 24 February 2027                                     Google LLC
+                                                          23 August 2026
 
 
                The No-Vary-Search HTTP Caching Extension
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 February 2027.
+   This Internet-Draft will expire on 24 February 2027.
 
 Copyright Notice
 
