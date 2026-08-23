@@ -831,7 +831,7 @@ A cookie _cookie_ is **Http-prefix compatible** if:
 
 1. _cookie_'s secure is true; and
 
-1. _cookie_'s http-only is false,
+1. _cookie_'s http-only is true,
 
 
 ## Cookie Store Eviction {#cookie-store-eviction}
