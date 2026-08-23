@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-08-20T00:44:05.737062+00:00",
+  "timestamp": "2026-08-23T00:50:02.014506+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77933,6 +77933,60 @@
           "body": "Yeah! Makes sense. I will also note that a maximally optimistic client can be implemented extremely simply by never performing offset retrieval at all, relying entirely on 2xx and 409 for offset updates. It'd be even simpler than doing offset retrieval on every append. Not recommending you do that of course, since that is maximally optimistic. But it's worth noting this methodology can be applied in a very simple way too.",
           "createdAt": "2026-08-17T21:57:52Z",
           "updatedAt": "2026-08-17T23:02:03Z"
+        }
+      ]
+    },
+    {
+      "number": 3509,
+      "id": "I_kwDOAUA-v88AAAABNezdUA",
+      "title": "RESUMABLE: Should clients be able to obtain upload resource location from non-successful creation responses?",
+      "url": "https://github.com/httpwg/http-extensions/issues/3509",
+      "state": "CLOSED",
+      "author": "GrantGryczan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "For clients that can't read 1xx responses (such as browser-based clients), or for servers that can't send 1xx responses, the only way to obtain the upload resource location is via the `Location` header on a creation response. In that situation, if a server responds with 4xx-5xx after creating an upload resource, the client has no means to resume (or cancel) the upload. For example, this can happen if the creation request's content is too large, but an amount up to the `max-append-size` is still accepted and processed before a 413 response is returned. Another example is 4xx responses due to mismatched chunk granularity (https://github.com/httpwg/http-extensions/issues/3193#issuecomment-3893170872).\n\nFor reference, the only condition under which servers are specified to be able to include `Location` in creation responses is as follows:\n\n> If the request content was fully processed, the server MUST include the `Location` response header field pointing to the upload resource [...]\n\nAnd the only condition under which clients are specified to be able to use `Location` from creation responses is as follows:\n\n> If the client receives a 2xx successful final response with the `Upload-Complete` header field set to false or missing, the `Location` response header field points the client to the created upload resource.\n\nAdditional conditions would need to be added to support this, and as @guoye-zhang [commented](https://github.com/httpwg/http-extensions/pull/3472#discussion_r3531008280) as follows, it's probably not future-proof to just define the `Location` header on all 4xx-5xx responses to upload creation.\n\n> Let's discuss whether Location in 4xx/5xx can be used in a separate issue. Could potentially make it work if `Upload-Complete: ?0` is also present. Otherwise a new error response might define a different meaning for Location.\n\nThen again, we already define the `Location` header on all 2xx responses to upload creation, including those without the `Upload-Complete` header, even though new 2xx codes can define additional `Location` header semantics. Perhaps we shouldn't? But that's probably fine because, unlike 4xx-5xx responses, successful creation responses are necessarily returned from part of the server aware of this protocol, so it shouldn't return a status that defines conflicting `Location` semantics.",
+      "createdAt": "2026-08-20T04:28:43Z",
+      "updatedAt": "2026-08-21T20:02:36Z",
+      "closedAt": "2026-08-20T18:58:19Z",
+      "comments": [
+        {
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The expectation of a client not supporting 104 is to use an empty creation to retrieve the resumption URL, so it wouldn't hit any size limits and has the minimum chance of connection interruption during the upload.",
+          "createdAt": "2026-08-20T05:12:41Z",
+          "updatedAt": "2026-08-20T05:12:41Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I forgot that some servers may not support 104 responses either. Let me edit that in.\n\nAlso, to play devil's advocate, a more optimistic client may prefer to possibly save round trips by sending a small amount of data on creation and restarting the upload if it fails after so little. Such a client would nevertheless prefer to continue using the upload resource the server created if the server created one. But that's probably not too common, and if not for servers sometimes lacking 1xx support, I'd agree this isn't very useful.",
+          "createdAt": "2026-08-20T05:19:26Z",
+          "updatedAt": "2026-08-20T05:37:10Z"
+        },
+        {
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "As an implementor of an automatic upgrading client, I won't add code to take Location from 4xx and resume from it. If the server doesn't support 104, it doesn't get upload resumption. However, this spec doesn't just document what I implement. If others find this use case compelling enough, it can be allowed by the spec. Personally I don't find it necessary.",
+          "createdAt": "2026-08-20T06:50:49Z",
+          "updatedAt": "2026-08-20T06:50:49Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yeah, thinking about it some more, this really isn't that useful overall. For servers lacking 1xx support, there are far bigger issues: network interruptions, one of the most essential use cases for this protocol, would stop the server from providing the upload resource location to clients performing the entire upload in one request (because they expect 1xx support). So this is really a drop in the bucket for such servers, and I don't think it's worth doing anything about it. Closing this.",
+          "createdAt": "2026-08-20T18:58:19Z",
+          "updatedAt": "2026-08-20T18:58:19Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Should probably still label this issue so it's searchable.",
+          "createdAt": "2026-08-21T17:16:03Z",
+          "updatedAt": "2026-08-21T17:16:03Z"
         }
       ]
     }
@@ -217561,7 +217615,7 @@
       ],
       "body": "Addresses https://lists.w3.org/Archives/Public/ietf-http-wg/2026JulSep/0180.html.\r\n\r\n@mjethanandani Could you please take a look to see if this looks good? Thank you!\r\n\r\nNote: I haven't adjusted the WHATWG references since there is an ongoing discussion about it.",
       "createdAt": "2026-08-18T03:32:42Z",
-      "updatedAt": "2026-08-18T03:32:43Z",
+      "updatedAt": "2026-08-21T02:05:52Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "4146dcd5a45cffbf740fd9d5689943ee2290d4bd",
