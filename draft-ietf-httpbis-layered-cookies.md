@@ -1259,7 +1259,10 @@ stored or cannot be distinguished from the cookie it replaced:
 
     1. If _host_ does not Domain-Match _cookie_'s host, then return null.
 
-    1. Set _cookie_'s host-only to false.
+    1. If _cookie_'s host is an IP address and is host-equal to _host_, then set _cookie_'s
+       host-only to true.
+
+    1. Otherwise, set _cookie_'s host-only to false.
 
 1. Assert: _cookie_'s host is a domain or IP address.
 
