@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-08-23T00:50:02.014506+00:00",
+  "timestamp": "2026-08-25T00:46:44.227421+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77836,7 +77836,7 @@
       ],
       "body": "Hello,\n\nhttps://httpwg.org/http-extensions/draft-ietf-httpbis-layered-cookies.html#section-5.4.3-2.18.2.2.1\n> If cookie's secure is equal to oldCookie's secure, cookie's same-site is equal to oldCookie's same-site, and cookie's expiry-time is equal to oldCookie's expiry-time, then return null.\n\nThis clause is used to check for duplicate cookies, and skip the rest of the Store a Cookie algorithm if the cookie is equal to an existing cookie.\n\nHowever, it does not check if the value is the same or not.\n\nAs such, two cookies having the same attributes, except the value, will result in the cookie with the new value being dropped (and the old value being kept)\n\n(And this would be common for cookies that are removed on browser exit, as they have the same null expiry-time)\n\nI did some quick testing and this does not match major browser behavior - browsers keep the cookie with the new value, even if they have the same same-site, secure, and expiry time (or lack thereof).\n\nI propose revising it to:\n> If cookie's secure is equal to oldCookie's secure, cookie's same-site is equal to oldCookie's same-site, cookie's expiry-time is equal to oldCookie's expiry-time, and cookie's value is equal to oldCookie's value, then return null.",
       "createdAt": "2026-07-27T20:26:56Z",
-      "updatedAt": "2026-07-30T13:06:30Z",
+      "updatedAt": "2026-08-23T12:16:05Z",
       "closedAt": null,
       "comments": [
         {
@@ -77852,6 +77852,13 @@
           "body": "To answer my own question, it looks like @DCtheTall introduced this test a while ago and it seems to pass all around https://wpt.fyi/results/cookiestore/change_eventhandler_for_no_change.https.window.html?label=experimental&label=master&aligned",
           "createdAt": "2026-07-30T13:06:30Z",
           "updatedAt": "2026-07-30T13:06:30Z"
+        },
+        {
+          "author": "annevk",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I created #3510. I didn't quite go with the fix suggested by @JasonTheKitten as I noticed we also need to update the last-access-time and were not doing that today. I also created some additional tests around this.",
+          "createdAt": "2026-08-23T12:16:05Z",
+          "updatedAt": "2026-08-23T12:16:05Z"
         }
       ]
     },
@@ -217627,6 +217634,155 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3510,
+      "id": "PR_kwDOAUA-v88AAAABAs3iFQ",
+      "title": "Do not drop a cookie whose value or http-only changed",
+      "url": "https://github.com/httpwg/http-extensions/pull/3510",
+      "state": "OPEN",
+      "author": "annevk",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "cookies"
+      ],
+      "body": "Store a Cookie compared secure, same-site, and expiry-time against the cookie\nbeing replaced, but not value or http-only, and returned null without storing\nwhen those matched. That dropped the very common case of a cookie being\nreissued with a new value, and silently ignored a newly added HttpOnly\nattribute.\n\nCompare value and http-only as well, and always store the cookie, returning\nnull afterwards to signal that it cannot be distinguished from the cookie it\nreplaced. As a result last-access-time is refreshed again.\n\nAlso document what Store a Cookie returns.\n\nFixes #3501.\n\nTests: https://github.com/web-platform-tests/wpt/pull/62161",
+      "createdAt": "2026-08-23T12:13:55Z",
+      "updatedAt": "2026-08-23T12:22:21Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "4146dcd5a45cffbf740fd9d5689943ee2290d4bd",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "store-a-cookie-changed",
+      "headRefOid": "405ba9213d73660da224bccd6658197d43cd1dab",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3511,
+      "id": "PR_kwDOAUA-v88AAAABAs49gQ",
+      "title": "Require HttpOnly for the \"__Http-\" and \"__Host-Http-\" prefixes",
+      "url": "https://github.com/httpwg/http-extensions/pull/3511",
+      "state": "MERGED",
+      "author": "annevk",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "cookies"
+      ],
+      "body": "Http-prefix compatible required http-only to be false, which is the opposite of\nwhat the prefixes are for. It made \"__Http-\" and \"__Host-Http-\" cookies\nsettable only without an HttpOnly attribute, and rejected the ones set with it,\ncontradicting the descriptions of both prefixes.\n\nTests: cookies/prefix/__Http.https.html and\ncookies/prefix/__Host-Http.https.html already assert the intended behaviour.",
+      "createdAt": "2026-08-23T12:22:13Z",
+      "updatedAt": "2026-08-23T20:45:40Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "4146dcd5a45cffbf740fd9d5689943ee2290d4bd",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "http-prefix-httponly",
+      "headRefOid": "12cf0aae1abda2c35964cd3e38d3e2df0c7d486a",
+      "closedAt": "2026-08-23T20:45:38Z",
+      "mergedAt": "2026-08-23T20:45:38Z",
+      "mergedBy": "johannhof",
+      "mergeCommit": {
+        "oid": "ac046fec832cd96700840f25cdbf1e5ad8cd078c"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABKjdoPQ",
+          "commit": {
+            "abbreviatedOid": "12cf0aa"
+          },
+          "author": "yoavweiss",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Oh my. LGTM. Thanks for catching that!!",
+          "createdAt": "2026-08-23T19:57:55Z",
+          "updatedAt": "2026-08-23T19:57:55Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABKji93w",
+          "commit": {
+            "abbreviatedOid": "12cf0aa"
+          },
+          "author": "johannhof",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-08-23T20:44:50Z",
+          "updatedAt": "2026-08-23T20:44:50Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3512,
+      "id": "PR_kwDOAUA-v88AAAABAt9q9Q",
+      "title": "Make a cookie's path a URL path",
+      "url": "https://github.com/httpwg/http-extensions/pull/3512",
+      "state": "OPEN",
+      "author": "annevk",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "cookies"
+      ],
+      "body": "Path-Matches compared serialized paths, which made a cookie path of /foo match a\nrequest path of /foobar, and passed URL paths to the URL path serializer, which\ntakes a URL. Compare URL path segments instead, using the operations URL now\nprovides.\n\nThe Path attribute was split into a list that kept its leading empty segment,\nwhich is not how a URL path is represented, so such a path matched nothing and no\n\"__Host-\" prefixed cookie could be set. Isomorphic decode the attribute, drop\nthat segment, and return failure if the result is not an ASCII string, rather\nthan storing a path no request could ever carry. That check applies to the Path\nattribute that wins, so it happens once all attributes have been processed.\n\nCookie Default Path removed an item from the URL path it was given, or replaced\nthat path's first item, and it is called with a request URL's path. Operate on a\nclone instead.\n\nAlso stop passing a path to Store a Cookie, which takes no such argument.\n\nDepends on https://github.com/whatwg/url/pull/929.\n\nTests: https://github.com/web-platform-tests/wpt/pull/62165",
+      "createdAt": "2026-08-23T18:00:48Z",
+      "updatedAt": "2026-08-23T18:04:35Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "4146dcd5a45cffbf740fd9d5689943ee2290d4bd",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "cookie-path-url-path",
+      "headRefOid": "3d099202c08628a0f245c774eefec264ef66df4e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3513,
+      "id": "PR_kwDOAUA-v88AAAABAw5eew",
+      "title": "Treat a Domain attribute matching an IP address host as host-only",
+      "url": "https://github.com/httpwg/http-extensions/pull/3513",
+      "state": "OPEN",
+      "author": "annevk",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "cookies"
+      ],
+      "body": "Domain-Match only performs suffix matching when the host is a domain, so a\nDomain attribute equal to an IP address host reaches exactly the hosts a\nhost-only cookie reaches. Storing such a cookie as non-host-only gained nothing\nand cost something: host-only is part of what distinguishes one cookie from\nanother, so it could sit alongside an otherwise identical host-only cookie, with\nboth being sent.\n\nIt also made the \"__Host-\" prefix reject a cookie whose Domain attribute could\nnot do any of the subdomain spanning that prefix exists to prevent.",
+      "createdAt": "2026-08-24T07:19:39Z",
+      "updatedAt": "2026-08-24T07:22:07Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "ac046fec832cd96700840f25cdbf1e5ad8cd078c",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "cookie-ip-host-only",
+      "headRefOid": "0cb68de50b63ecdda9194b846c13208874f7a89c",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "annevk",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This cannot be tested unfortunately, but I'm pretty sure implementations do this already.",
+          "createdAt": "2026-08-24T07:22:07Z",
+          "updatedAt": "2026-08-24T07:22:07Z"
+        }
+      ],
       "reviews": []
     }
   ]
