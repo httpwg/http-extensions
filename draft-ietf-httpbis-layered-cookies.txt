@@ -6,7 +6,7 @@ HTTP                                                A. van Kesteren, Ed.
 Internet-Draft                                                     Apple
 Obsoletes: [6265] (if approved)                          J. Hofmann, Ed.
 Intended status: Standards Track                                  Google
-Expires: 24 February 2027                                 23 August 2026
+Expires: 26 February 2027                                 25 August 2026
 
 
                 Cookies: HTTP State Management Mechanism
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 February 2027.
+   This Internet-Draft will expire on 26 February 2027.
 
 Copyright Notice
 
@@ -1298,7 +1298,9 @@ Table of Contents
    To *Store a Cookie* given a cookie _cookie_, boolean _isSecure_,
    domain or IP address _host_, boolean _httpOnlyAllowed_, boolean
    _allowNonHostOnlyCookieForPublicSuffix_, and boolean
-   _sameSiteStrictOrLaxAllowed_:
+   _sameSiteStrictOrLaxAllowed_, run these steps.  They return _cookie_,
+   or null if _cookie_ was not stored or cannot be distinguished from
+   the cookie it replaced:
 
    1.   Assert: _cookie_'s name's length + _cookie_'s value's length is
         not 0 or greater than 4096.
@@ -1407,7 +1409,9 @@ Table of Contents
 
         then return null.
 
-   18.  If the user agent's cookie store contains a cookie _oldCookie_
+   18.  Let _changed_ be true.
+
+   19.  If the user agent's cookie store contains a cookie _oldCookie_
         whose name is _cookie_'s name, host is host-equal to _cookie_'s
         host, host-only is _cookie_'s host-only, and path is path-equal
         to _cookie_'s path:
@@ -1415,10 +1419,12 @@ Table of Contents
         1.  If _httpOnlyAllowed_ is false and _oldCookie_'s http-only is
             true, then return null.
 
-        2.  If _cookie_'s secure is equal to _oldCookie_'s secure,
+        2.  If _cookie_'s value is equal to _oldCookie_'s value,
+            _cookie_'s secure is equal to _oldCookie_'s secure,
+            _cookie_'s http-only is equal to _oldCookie_'s http-only,
             _cookie_'s same-site is equal to _oldCookie_'s same-site,
             and _cookie_'s expiry-time is equal to _oldCookie_'s expiry-
-            time, then return null.
+            time, then set _changed_ to false.
 
         3.  Set _cookie_'s creation-time to _oldCookie_'s creation-time.
 
@@ -1427,9 +1433,11 @@ Table of Contents
         Note: This algorithm maintains the invariant that there is at
         most one such cookie.
 
-   19.  Insert _cookie_ into the user agent's cookie store.
+   20.  Insert _cookie_ into the user agent's cookie store.
 
-   20.  Return _cookie_.
+   21.  If _changed_ is false, then return null.
+
+   22.  Return _cookie_.
 
 5.4.4.  Garbage Collect Cookies
 
