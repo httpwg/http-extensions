@@ -1225,7 +1225,9 @@ cookie attribute "wins".
 ### Store a Cookie {#store-a-cookie}
 
 To **Store a Cookie** given a cookie _cookie_, boolean _isSecure_, domain or IP address _host_,
-boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and boolean _sameSiteStrictOrLaxAllowed_:
+boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and boolean
+_sameSiteStrictOrLaxAllowed_, run these steps. They return _cookie_, or null if _cookie_ was not
+stored or cannot be distinguished from the cookie it replaced:
 
 1. Assert: _cookie_'s name's length + _cookie_'s value's length is not 0 or greater than 4096.
 
@@ -1314,14 +1316,18 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
 
    then return null.
 
+1. Let _changed_ be true.
+
 1. If the user agent's cookie store contains a cookie _oldCookie_ whose name is _cookie_'s name,
    host is host-equal to _cookie_'s host, host-only is _cookie_'s host-only, and path is path-equal to _cookie_'s path:
 
     1. If _httpOnlyAllowed_ is false and _oldCookie_'s http-only is true,
        then return null.
 
-    1. If _cookie_'s secure is equal to _oldCookie_'s secure, _cookie_'s same-site is equal to _oldCookie_'s
-       same-site, and _cookie_'s expiry-time is equal to _oldCookie_'s expiry-time, then return null.
+    1. If _cookie_'s value is equal to _oldCookie_'s value, _cookie_'s secure is equal to
+       _oldCookie_'s secure, _cookie_'s http-only is equal to _oldCookie_'s http-only, _cookie_'s
+       same-site is equal to _oldCookie_'s same-site, and _cookie_'s expiry-time is equal to
+       _oldCookie_'s expiry-time, then set _changed_ to false.
 
     1. Set _cookie_'s creation-time to _oldCookie_'s creation-time.
 
@@ -1330,6 +1336,8 @@ boolean _httpOnlyAllowed_, boolean _allowNonHostOnlyCookieForPublicSuffix_, and 
    Note: This algorithm maintains the invariant that there is at most one such cookie.
 
 1. Insert _cookie_ into the user agent's cookie store.
+
+1. If _changed_ is false, then return null.
 
 1. Return _cookie_.
 
