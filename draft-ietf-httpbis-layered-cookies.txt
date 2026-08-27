@@ -6,7 +6,7 @@ HTTP                                                A. van Kesteren, Ed.
 Internet-Draft                                                     Apple
 Obsoletes: [6265] (if approved)                          J. Hofmann, Ed.
 Intended status: Standards Track                                  Google
-Expires: 26 February 2027                                 25 August 2026
+Expires: 28 February 2027                                 27 August 2026
 
 
                 Cookies: HTTP State Management Mechanism
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 February 2027.
+   This Internet-Draft will expire on 28 February 2027.
 
 Copyright Notice
 
@@ -1339,7 +1339,10 @@ Table of Contents
         1.  If _host_ does not Domain-Match _cookie_'s host, then return
             null.
 
-        2.  Set _cookie_'s host-only to false.
+        2.  If _cookie_'s host is an IP address and is host-equal to
+            _host_, then set _cookie_'s host-only to true.
+
+        3.  Otherwise, set _cookie_'s host-only to false.
 
    8.   Assert: _cookie_'s host is a domain or IP address.
 
