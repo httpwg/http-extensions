@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-08-25T00:46:44.227421+00:00",
+  "timestamp": "2026-08-27T06:20:24.934720+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77827,7 +77827,7 @@
       "id": "I_kwDOAUA-v88AAAABKYxp8A",
       "title": "Cookies: New cookie with differing value dropped during duplicate check",
       "url": "https://github.com/httpwg/http-extensions/issues/3501",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "JasonTheKitten",
       "authorAssociation": "NONE",
       "assignees": [],
@@ -77836,8 +77836,8 @@
       ],
       "body": "Hello,\n\nhttps://httpwg.org/http-extensions/draft-ietf-httpbis-layered-cookies.html#section-5.4.3-2.18.2.2.1\n> If cookie's secure is equal to oldCookie's secure, cookie's same-site is equal to oldCookie's same-site, and cookie's expiry-time is equal to oldCookie's expiry-time, then return null.\n\nThis clause is used to check for duplicate cookies, and skip the rest of the Store a Cookie algorithm if the cookie is equal to an existing cookie.\n\nHowever, it does not check if the value is the same or not.\n\nAs such, two cookies having the same attributes, except the value, will result in the cookie with the new value being dropped (and the old value being kept)\n\n(And this would be common for cookies that are removed on browser exit, as they have the same null expiry-time)\n\nI did some quick testing and this does not match major browser behavior - browsers keep the cookie with the new value, even if they have the same same-site, secure, and expiry time (or lack thereof).\n\nI propose revising it to:\n> If cookie's secure is equal to oldCookie's secure, cookie's same-site is equal to oldCookie's same-site, cookie's expiry-time is equal to oldCookie's expiry-time, and cookie's value is equal to oldCookie's value, then return null.",
       "createdAt": "2026-07-27T20:26:56Z",
-      "updatedAt": "2026-08-23T12:16:05Z",
-      "closedAt": null,
+      "updatedAt": "2026-08-25T15:20:24Z",
+      "closedAt": "2026-08-25T15:20:24Z",
       "comments": [
         {
           "author": "johannhof",
@@ -217641,7 +217641,7 @@
       "id": "PR_kwDOAUA-v88AAAABAs3iFQ",
       "title": "Do not drop a cookie whose value or http-only changed",
       "url": "https://github.com/httpwg/http-extensions/pull/3510",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "annevk",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -217650,19 +217650,57 @@
       ],
       "body": "Store a Cookie compared secure, same-site, and expiry-time against the cookie\nbeing replaced, but not value or http-only, and returned null without storing\nwhen those matched. That dropped the very common case of a cookie being\nreissued with a new value, and silently ignored a newly added HttpOnly\nattribute.\n\nCompare value and http-only as well, and always store the cookie, returning\nnull afterwards to signal that it cannot be distinguished from the cookie it\nreplaced. As a result last-access-time is refreshed again.\n\nAlso document what Store a Cookie returns.\n\nFixes #3501.\n\nTests: https://github.com/web-platform-tests/wpt/pull/62161",
       "createdAt": "2026-08-23T12:13:55Z",
-      "updatedAt": "2026-08-23T12:22:21Z",
+      "updatedAt": "2026-08-25T15:28:08Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "4146dcd5a45cffbf740fd9d5689943ee2290d4bd",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "store-a-cookie-changed",
       "headRefOid": "405ba9213d73660da224bccd6658197d43cd1dab",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "closedAt": "2026-08-25T15:20:23Z",
+      "mergedAt": "2026-08-25T15:20:23Z",
+      "mergedBy": "johannhof",
+      "mergeCommit": {
+        "oid": "51fe454e8b233fa97bfde741c2724e7ccfc96895"
+      },
+      "comments": [
+        {
+          "author": "annevk",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@johannhof thanks for reviewing, but please don't use merge commits going forward. Rebase and merge is right there.",
+          "createdAt": "2026-08-25T15:21:47Z",
+          "updatedAt": "2026-08-25T15:21:47Z"
+        },
+        {
+          "author": "johannhof",
+          "authorAssociation": "MEMBER",
+          "body": "I actually dislike merge commits as well, but thought (also looking at recent git history) that they were what others do as well in this repo. @mnot any guidance? Happy to go with rebase.",
+          "createdAt": "2026-08-25T15:25:05Z",
+          "updatedAt": "2026-08-25T15:25:05Z"
+        },
+        {
+          "author": "annevk",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Well thanks to us complaining they enabled the other options for this repository, so we can choose and do better.",
+          "createdAt": "2026-08-25T15:28:08Z",
+          "updatedAt": "2026-08-25T15:28:08Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABK0GJPg",
+          "commit": {
+            "abbreviatedOid": "405ba92"
+          },
+          "author": "johannhof",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-08-25T15:18:25Z",
+          "updatedAt": "2026-08-25T15:18:25Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 3511,
