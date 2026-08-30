@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-08-27T06:20:24.934720+00:00",
+  "timestamp": "2026-08-30T02:44:18.683378+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -217622,7 +217622,7 @@
       ],
       "body": "Addresses https://lists.w3.org/Archives/Public/ietf-http-wg/2026JulSep/0180.html.\r\n\r\n@mjethanandani Could you please take a look to see if this looks good? Thank you!\r\n\r\nNote: I haven't adjusted the WHATWG references since there is an ongoing discussion about it.",
       "createdAt": "2026-08-18T03:32:42Z",
-      "updatedAt": "2026-08-21T02:05:52Z",
+      "updatedAt": "2026-08-28T16:56:32Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "4146dcd5a45cffbf740fd9d5689943ee2290d4bd",
@@ -217634,7 +217634,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABLTI-Ww",
+          "commit": {
+            "abbreviatedOid": "64f1fca"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-08-28T16:56:32Z",
+          "updatedAt": "2026-08-28T16:56:32Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 3510,
@@ -217792,7 +217806,7 @@
       "id": "PR_kwDOAUA-v88AAAABAw5eew",
       "title": "Treat a Domain attribute matching an IP address host as host-only",
       "url": "https://github.com/httpwg/http-extensions/pull/3513",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "annevk",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -217801,17 +217815,19 @@
       ],
       "body": "Domain-Match only performs suffix matching when the host is a domain, so a\nDomain attribute equal to an IP address host reaches exactly the hosts a\nhost-only cookie reaches. Storing such a cookie as non-host-only gained nothing\nand cost something: host-only is part of what distinguishes one cookie from\nanother, so it could sit alongside an otherwise identical host-only cookie, with\nboth being sent.\n\nIt also made the \"__Host-\" prefix reject a cookie whose Domain attribute could\nnot do any of the subdomain spanning that prefix exists to prevent.",
       "createdAt": "2026-08-24T07:19:39Z",
-      "updatedAt": "2026-08-24T07:22:07Z",
+      "updatedAt": "2026-08-27T14:18:43Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "ac046fec832cd96700840f25cdbf1e5ad8cd078c",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "cookie-ip-host-only",
       "headRefOid": "0cb68de50b63ecdda9194b846c13208874f7a89c",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-08-27T14:18:41Z",
+      "mergedAt": "2026-08-27T14:18:41Z",
+      "mergedBy": "johannhof",
+      "mergeCommit": {
+        "oid": "a269ef55cc263b93b6edfd0f669e4be4d2c2a45d"
+      },
       "comments": [
         {
           "author": "annevk",
@@ -217821,7 +217837,21 @@
           "updatedAt": "2026-08-24T07:22:07Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABLIS3uA",
+          "commit": {
+            "abbreviatedOid": "0cb68de"
+          },
+          "author": "johannhof",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-08-27T14:18:04Z",
+          "updatedAt": "2026-08-27T14:18:04Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
