@@ -5,8 +5,8 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                            N. Jaju, Ed.
-Expires: 28 February 2027                                     Google LLC
-                                                          27 August 2026
+Expires: 4 March 2027                                         Google LLC
+                                                          31 August 2026
 
 
                The No-Vary-Search HTTP Caching Extension
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 February 2027.
+   This Internet-Draft will expire on 4 March 2027.
 
 Copyright Notice
 
@@ -358,6 +358,10 @@ Table of Contents
             | key-order       | vary params: *wildcard*      |
             |                 | vary on key order: false     |
             +-----------------+------------------------------+
+            | No-Vary-Search: | no-vary params: (empty list) |
+            | key-order=?1    | vary params: *wildcard*      |
+            |                 | vary on key order: false     |
+            +-----------------+------------------------------+
             | No-Vary-Search: | no-vary params: « "a" »      |
             | params=("a")    | vary params: *wildcard*      |
             +-----------------+------------------------------+
@@ -635,15 +639,22 @@ Table of Contents
    variation config (Section 6) given the stored response's No-Vary-
    Search header.
 
+   Note that while Section 5.2.3 of [HTTP-CACHING] defines cache
+   extensions as Cache-Control directives, the "No-Vary-Search" response
+   header field is defined as a standalone header.  This design choice
+   leverages Structured Fields ([STRUCTURED-FIELDS]) to provide a robust
+   parsing model without overloading the existing, complex Cache-Control
+   parsing logic.
+
+   The "No-Vary-Search" response header field operates in addition to
+   content negotiation and the Vary header field (see Section 4.1 of
+   [HTTP-CACHING]).
+
    This document does not alter the requirements for cache invalidation
    (see Section 4.4 of [HTTP-CACHING]).  A cache MAY invalidate stored
    responses for URIs that are equivalent modulo URL variation config,
    but is not required to do so.  Therefore, state-changing requests
    might not invalidate all conceptually equivalent responses.
-
-   Note that the "No-Vary-Search" response header field operates in
-   addition to content negotiation and the Vary header field (see
-   Section 4.1 of [HTTP-CACHING]).
 
    Cache implementations MAY fail to reuse a stored response whose
    target URI matches _only_ modulo URL variation config, if the cache
