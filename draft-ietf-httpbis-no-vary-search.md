@@ -255,6 +255,7 @@ The following illustrates how various inputs are parsed, in terms of their impac
 | Input                                  | Result                                                                                |
 |----------------------------------------+---------------------------------------------------------------------------------------|
 | `No-Vary-Search: key-order`            | no-vary params: (empty list)<br>vary params: __wildcard__<br>vary on key order: false |
+| `No-Vary-Search: key-order=?1`         | no-vary params: (empty list)<br>vary params: __wildcard__<br>vary on key order: false |
 | `No-Vary-Search: params=("a")`         | no-vary params: « "`a`" »<br>vary params: __wildcard__                                |
 | `No-Vary-Search: except=("x")`         | no-vary params: __wildcard__<br>vary params: « "`x`" »                                |
 | `No-Vary-Search: params=()`            | no-vary params: (empty list)<br>vary params: __wildcard__                             |
@@ -399,9 +400,11 @@ Note that no Unicode normalization is performed during this comparison. For exam
 
 To reuse a stored response, {{Section 4 of HTTP-CACHING}} requires that the presented target URI and that of the stored response match. If a cache implements the `No-Vary-Search` extension, this matching requirement is also satisfied if the URIs are equivalent modulo URL variation config ({{comparing}}) given the stored response's `No-Vary-Search` header.
 
-This document does not alter the requirements for cache invalidation (see Section 4.4 of {{HTTP-CACHING}}). A cache MAY invalidate stored responses for URIs that are equivalent modulo URL variation config, but is not required to do so. Therefore, state-changing requests might not invalidate all conceptually equivalent responses.
+Note that while {{Section 5.2.3 of HTTP-CACHING}} defines cache extensions as `Cache-Control` directives, the `"No-Vary-Search"` response header field is defined as a standalone header. This design choice leverages Structured Fields ({{STRUCTURED-FIELDS}}) to provide a robust parsing model without overloading the existing, complex `Cache-Control` parsing logic.
 
-Note that the `"No-Vary-Search"` response header field operates in addition to content negotiation and the `Vary` header field (see Section 4.1 of {{HTTP-CACHING}}).
+The `"No-Vary-Search"` response header field operates in addition to content negotiation and the `Vary` header field (see {{Section 4.1 of HTTP-CACHING}}).
+
+This document does not alter the requirements for cache invalidation (see {{Section 4.4 of HTTP-CACHING}}). A cache MAY invalidate stored responses for URIs that are equivalent modulo URL variation config, but is not required to do so. Therefore, state-changing requests might not invalidate all conceptually equivalent responses.
 
 Cache implementations MAY fail to reuse a stored response whose target URI matches _only_ modulo URL variation config, if the cache has a stored response with a more recent `Date` header field which:
 
