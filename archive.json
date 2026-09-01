@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-08-30T02:44:18.683378+00:00",
+  "timestamp": "2026-09-01T02:50:48.280462+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -217613,7 +217613,7 @@
       "id": "PR_kwDOAUA-v88AAAABAF9WBA",
       "title": "Address Mahesh's feedback",
       "url": "https://github.com/httpwg/http-extensions/pull/3508",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "nidhijaju",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -217622,17 +217622,19 @@
       ],
       "body": "Addresses https://lists.w3.org/Archives/Public/ietf-http-wg/2026JulSep/0180.html.\r\n\r\n@mjethanandani Could you please take a look to see if this looks good? Thank you!\r\n\r\nNote: I haven't adjusted the WHATWG references since there is an ongoing discussion about it.",
       "createdAt": "2026-08-18T03:32:42Z",
-      "updatedAt": "2026-08-28T16:56:32Z",
+      "updatedAt": "2026-08-31T13:16:55Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "4146dcd5a45cffbf740fd9d5689943ee2290d4bd",
       "headRepository": "nidhijaju/http-extensions",
       "headRefName": "mahesh-feedback",
       "headRefOid": "64f1fca52cf9c3389938295dfee9ec199d2a2965",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-08-31T13:16:50Z",
+      "mergedAt": "2026-08-31T13:16:49Z",
+      "mergedBy": "nidhijaju",
+      "mergeCommit": {
+        "oid": "1057fe0f1570aa539eb90502411995e28ba304c7"
+      },
       "comments": [],
       "reviews": [
         {
