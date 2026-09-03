@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-01T02:50:48.280462+00:00",
+  "timestamp": "2026-09-03T02:17:56.490768+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -217789,7 +217789,7 @@
       ],
       "body": "Path-Matches compared serialized paths, which made a cookie path of /foo match a\nrequest path of /foobar, and passed URL paths to the URL path serializer, which\ntakes a URL. Compare URL path segments instead, using the operations URL now\nprovides.\n\nThe Path attribute was split into a list that kept its leading empty segment,\nwhich is not how a URL path is represented, so such a path matched nothing and no\n\"__Host-\" prefixed cookie could be set. Isomorphic decode the attribute, drop\nthat segment, and return failure if the result is not an ASCII string, rather\nthan storing a path no request could ever carry. That check applies to the Path\nattribute that wins, so it happens once all attributes have been processed.\n\nCookie Default Path removed an item from the URL path it was given, or replaced\nthat path's first item, and it is called with a request URL's path. Operate on a\nclone instead.\n\nAlso stop passing a path to Store a Cookie, which takes no such argument.\n\nDepends on https://github.com/whatwg/url/pull/929.\n\nTests: https://github.com/web-platform-tests/wpt/pull/62165",
       "createdAt": "2026-08-23T18:00:48Z",
-      "updatedAt": "2026-08-23T18:04:35Z",
+      "updatedAt": "2026-09-03T00:59:14Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "4146dcd5a45cffbf740fd9d5689943ee2290d4bd",
@@ -217801,7 +217801,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABL8nUmg",
+          "commit": {
+            "abbreviatedOid": "3d09920"
+          },
+          "author": "johannhof",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "This is a great PR, thank you Anne. And I appreciate the notes that helped me understand it \ud83d\ude05 \n\nNot merging immediately in case you want to merge the URL PR first.",
+          "createdAt": "2026-09-03T00:59:14Z",
+          "updatedAt": "2026-09-03T00:59:14Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 3513,
