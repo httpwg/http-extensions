@@ -68,7 +68,7 @@ When this happens, it is common practice to use a 503 (Service Unavailable) stat
 
 While other status codes (e.g., 403 (Forbidden)) could be used, they can also suffer (to varying degrees) from the same problem: being confused with an error, operational problem, or other condition.
 
-This specification defines a new status code to specifically address this situation.
+This specification defines a new status code to specifically address this situation, making servers' behavior more legible to their operators. It does not introduce any new capability.
 
 ## Notational Conventions
 
