@@ -39,6 +39,7 @@ author:
 
 normative:
   HTTP: RFC9110
+  HTTP-CACHING: RFC9111
   FETCH:
     target: https://fetch.spec.whatwg.org/
     title: Fetch
@@ -80,6 +81,8 @@ The {{&CODE}} (Preliminary Request Denied) status code indicates that the server
 A preliminary request is one that contains a Sec-Purpose header field {{FETCH}} containing the value "prefetch".
 
 This indication is only applicable to the associated request; future preliminary requests might or might not succeed.
+
+This status code is not heuristically cacheable (see {{Section 15.1 of HTTP}}). To avoid responses with this status code being reused by a cache, they SHOULD NOT be cacheable (see {{Section 3 of HTTP-CACHING}}).
 
 # IANA Considerations
 
