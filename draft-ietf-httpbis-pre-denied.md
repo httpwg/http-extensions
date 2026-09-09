@@ -84,6 +84,8 @@ This indication is only applicable to the associated request; future preliminary
 
 Because responses with this status code are not intended to be displayed to a user, they SHOULD have zero-length content, and any content that is sent SHOULD be discarded.
 
+Both origin servers and gateways acting on their behalf (e.g., Content Delivery Networks and so-called "reverse proxies") MAY generate this status code. Proxies (who are not acting on behalf of the origin server) SHOULD NOT generate it.
+
 This status code is not heuristically cacheable (see {{Section 15.1 of HTTP}}). To avoid responses with this status code being reused by a cache, they SHOULD NOT be cacheable (see {{Section 3 of HTTP-CACHING}}).
 
 # IANA Considerations
