@@ -24,7 +24,7 @@ github-issue-label: pre-denied
 
 entity:
   SELF: "RFC nnnn"
-  CODE: "4NN"
+  CODE: "419"
 
 author:
  -
