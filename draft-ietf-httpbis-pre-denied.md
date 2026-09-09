@@ -82,6 +82,8 @@ A preliminary request is one that contains a Sec-Purpose header field {{FETCH}} 
 
 This indication is only applicable to the associated request; future preliminary requests might or might not succeed.
 
+Because responses with this status code are not intended to be displayed to a user, they SHOULD have zero-length content, and any content that is sent SHOULD be discarded.
+
 This status code is not heuristically cacheable (see {{Section 15.1 of HTTP}}). To avoid responses with this status code being reused by a cache, they SHOULD NOT be cacheable (see {{Section 3 of HTTP-CACHING}}).
 
 # IANA Considerations
