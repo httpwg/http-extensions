@@ -68,7 +68,7 @@ Table of Contents
 
    1.  Introduction
      1.1.  Notational Conventions
-   2.  The 4NN (Purpose Declined) Status Code
+   2.  The 419 (Purpose Declined) Status Code
    3.  IANA Considerations
    4.  Security Considerations
    5.  Normative References
@@ -106,9 +106,9 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-2.  The 4NN (Purpose Declined) Status Code
+2.  The 419 (Purpose Declined) Status Code
 
-   The 4NN (Purpose Declined) status code indicates that the server is
+   The 419 (Purpose Declined) status code indicates that the server is
    refusing a request based upon its declared purpose.
 
    A request's declared purpose is indicted by its Sec-Purpose header
@@ -136,7 +136,7 @@ Table of Contents
    The following entry should be registered in the "HTTP Status Codes"
    registry:
 
-   *  Code: 4NN
+   *  Code: 419
 
    *  Description: Purpose Declined
 
