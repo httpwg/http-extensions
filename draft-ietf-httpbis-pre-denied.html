@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>The Preliminary Request Denied HTTP Status Code</title>
+<title>The Purpose Declined HTTP Status Code</title>
 <meta content="Mark Nottingham" name="author">
 <meta content="
        This specification defines an HTTP status code to indicate that the server
-is denying a prefetch request. 
+is denying a request based upon its declared purpose. 
     " name="description">
 <meta content="xml2rfc 3.34.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
@@ -1041,7 +1041,7 @@ svg {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">The Preliminary Request Denied HTTP Stat</td>
+<td class="center">The Purpose Declined HTTP Status Code</td>
 <td class="right">September 2026</td>
 </tr></thead>
 <tfoot><tr>
@@ -1074,11 +1074,11 @@ svg {
 </dd>
 </dl>
 </div>
-<h1 id="title">The Preliminary Request Denied HTTP Status Code</h1>
+<h1 id="title">The Purpose Declined HTTP Status Code</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This specification defines an HTTP status code to indicate that the server
-is denying a prefetch request.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+is denying a request based upon its declared purpose.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1153,7 +1153,7 @@ is denying a prefetch request.<a href="#section-abstract-1" class="pilcrow">¶</
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-the-4nn-preliminary-request" class="internal xref">The 4NN (Preliminary Request Denied) Status Code</a></p>
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-the-4nn-purpose-declined-st" class="internal xref">The 4NN (Purpose Declined) Status Code</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
@@ -1195,14 +1195,14 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
 </div>
 </section>
 </div>
-<div id="the-code-preliminary-request-denied-status-code">
+<div id="the-code-purpose-declined-status-code">
 <section id="section-2">
-      <h2 id="name-the-4nn-preliminary-request">
-<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-the-4nn-preliminary-request" class="section-name selfRef">The 4NN (Preliminary Request Denied) Status Code</a>
+      <h2 id="name-the-4nn-purpose-declined-st">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-the-4nn-purpose-declined-st" class="section-name selfRef">The 4NN (Purpose Declined) Status Code</a>
       </h2>
-<p id="section-2-1">The 4NN (Preliminary Request Denied) status code indicates that the server is refusing a preliminary request.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">A preliminary request is one that contains a Sec-Purpose header field <span>[<a href="#FETCH" class="cite xref">FETCH</a>]</span> containing the value "prefetch" (ignoring parameters).<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">This indication is only applicable to the associated request; future preliminary requests might or might not succeed.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-1">The 4NN (Purpose Declined) status code indicates that the server is refusing a request based upon its declared purpose.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">A request's declared purpose is indicted by its Sec-Purpose header field <span>[<a href="#FETCH" class="cite xref">FETCH</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">This indication is only applicable to the associated request; future requests with the same purpose might or might not succeed.<a href="#section-2-3" class="pilcrow">¶</a></p>
 <p id="section-2-4">Because responses with this status code are not intended to be displayed to a user, they <span class="bcp14">SHOULD</span> have zero-length content, and any content that is sent <span class="bcp14">SHOULD</span> be discarded.<a href="#section-2-4" class="pilcrow">¶</a></p>
 <p id="section-2-5">Both origin servers and gateways acting on their behalf (e.g., Content Delivery Networks and so-called "reverse proxies") <span class="bcp14">MAY</span> generate this status code. Proxies (who are not acting on behalf of the origin server) <span class="bcp14">SHOULD NOT</span> generate it.<a href="#section-2-5" class="pilcrow">¶</a></p>
 <p id="section-2-6">This status code is not heuristically cacheable (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.1" class="relref">Section 15.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). To avoid responses with this status code being reused by a cache, they <span class="bcp14">SHOULD NOT</span> be cacheable (see <span><a href="https://rfc-editor.org/rfc/rfc9111#section-3" class="relref">Section 3</a> of [<a href="#HTTP-CACHING" class="cite xref">HTTP-CACHING</a>]</span>).<a href="#section-2-6" class="pilcrow">¶</a></p>
@@ -1219,7 +1219,7 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
           <p id="section-3-2.1.1">Code: 4NN<a href="#section-3-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-2.2">
-          <p id="section-3-2.2.1">Description: Preliminary Request Denied<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-3-2.2.1">Description: Purpose Declined<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-2.3">
           <p id="section-3-2.3.1">Specification: RFC nnnn (this document)<a href="#section-3-2.3.1" class="pilcrow">¶</a></p>

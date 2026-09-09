@@ -8,13 +8,13 @@ Intended status: Standards Track                        9 September 2026
 Expires: 13 March 2027
 
 
-            The Preliminary Request Denied HTTP Status Code
+                 The Purpose Declined HTTP Status Code
                   draft-ietf-httpbis-pre-denied-latest
 
 Abstract
 
    This specification defines an HTTP status code to indicate that the
-   server is denying a prefetch request.
+   server is denying a request based upon its declared purpose.
 
 About This Document
 
@@ -68,7 +68,7 @@ Table of Contents
 
    1.  Introduction
      1.1.  Notational Conventions
-   2.  The 4NN (Preliminary Request Denied) Status Code
+   2.  The 4NN (Purpose Declined) Status Code
    3.  IANA Considerations
    4.  Security Considerations
    5.  Normative References
@@ -106,16 +106,16 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-2.  The 4NN (Preliminary Request Denied) Status Code
+2.  The 4NN (Purpose Declined) Status Code
 
-   The 4NN (Preliminary Request Denied) status code indicates that the
-   server is refusing a preliminary request.
+   The 4NN (Purpose Declined) status code indicates that the server is
+   refusing a request based upon its declared purpose.
 
-   A preliminary request is one that contains a Sec-Purpose header field
-   [FETCH] containing the value "prefetch" (ignoring parameters).
+   A request's declared purpose is indicted by its Sec-Purpose header
+   field [FETCH].
 
    This indication is only applicable to the associated request; future
-   preliminary requests might or might not succeed.
+   requests with the same purpose might or might not succeed.
 
    Because responses with this status code are not intended to be
    displayed to a user, they SHOULD have zero-length content, and any
@@ -138,7 +138,7 @@ Table of Contents
 
    *  Code: 4NN
 
-   *  Description: Preliminary Request Denied
+   *  Description: Purpose Declined
 
    *  Specification: RFC nnnn (this document)
 
