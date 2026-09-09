@@ -24,7 +24,7 @@ github-issue-label: pre-denied
 
 entity:
   SELF: "RFC nnnn"
-  CODE: "4xx"
+  CODE: "4NN"
 
 author:
  -
@@ -46,12 +46,12 @@ normative:
     author:
       -
         organization: WHAT Working Group
-    date: 2026
+    date:
 
 
 --- abstract
 
-This specification defines a HTTP status code to indicate that the server
+This specification defines an HTTP status code to indicate that the server
 is denying a prefetch request.
 
 --- middle
