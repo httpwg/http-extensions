@@ -52,7 +52,7 @@ normative:
 --- abstract
 
 This specification defines a HTTP status code to indicate that the server
-is denying a prefetch or preload request.
+is denying a prefetch request.
 
 --- middle
 
