@@ -4,8 +4,8 @@
 
 Network Working Group                                      M. Nottingham
 Internet-Draft                                                Cloudflare
-Intended status: Standards Track                          31 August 2026
-Expires: 4 March 2027
+Intended status: Standards Track                        9 September 2026
+Expires: 13 March 2027
 
 
             The Preliminary Request Denied HTTP Status Code
@@ -13,8 +13,8 @@ Expires: 4 March 2027
 
 Abstract
 
-   This specification defines a HTTP status code to indicate that the
-   server is denying a prefetch or preload request.
+   This specification defines an HTTP status code to indicate that the
+   server is denying a prefetch request.
 
 About This Document
 
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 March 2027.
+   This Internet-Draft will expire on 13 March 2027.
 
 Copyright Notice
 
@@ -68,7 +68,7 @@ Table of Contents
 
    1.  Introduction
      1.1.  Notational Conventions
-   2.  The 4xx (Preliminary Request Denied) Status Code
+   2.  The 4NN (Preliminary Request Denied) Status Code
    3.  IANA Considerations
    4.  Security Considerations
    5.  Normative References
@@ -85,7 +85,7 @@ Table of Contents
    and could have negative impacts.
 
    When this happens, it is common practice to use a 503 (Service
-   Unavailable) status code.  However, this has been shown to cause
+   Unavailable) status code.  However, this has been observed to cause
    confusion: a server operator who sees a spike in that status code
    being sent tends to draw the conclusion that there is a server-side
    operational issue.
@@ -95,7 +95,8 @@ Table of Contents
    confused with an error, operational problem, or other condition.
 
    This specification defines a new status code to specifically address
-   this situation.
+   this situation, making servers' behavior more legible to their
+   operators.  It does not introduce any new capability.
 
 1.1.  Notational Conventions
 
@@ -105,23 +106,37 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-2.  The 4xx (Preliminary Request Denied) Status Code
+2.  The 4NN (Preliminary Request Denied) Status Code
 
-   The 4xx (Preliminary Request Denied) status code indicates that the
+   The 4NN (Preliminary Request Denied) status code indicates that the
    server is refusing a preliminary request.
 
    A preliminary request is one that contains a Sec-Purpose header field
-   [FETCH] containing the value "prefetch".
+   [FETCH] containing the value "prefetch" (ignoring parameters).
 
    This indication is only applicable to the associated request; future
    preliminary requests might or might not succeed.
+
+   Because responses with this status code are not intended to be
+   displayed to a user, they SHOULD have zero-length content, and any
+   content that is sent SHOULD be discarded.
+
+   Both origin servers and gateways acting on their behalf (e.g.,
+   Content Delivery Networks and so-called "reverse proxies") MAY
+   generate this status code.  Proxies (who are not acting on behalf of
+   the origin server) SHOULD NOT generate it.
+
+   This status code is not heuristically cacheable (see Section 15.1 of
+   [HTTP]).  To avoid responses with this status code being reused by a
+   cache, they SHOULD NOT be cacheable (see Section 3 of
+   [HTTP-CACHING]).
 
 3.  IANA Considerations
 
    The following entry should be registered in the "HTTP Status Codes"
    registry:
 
-   *  Code: 4xx
+   *  Code: 4NN
 
    *  Description: Preliminary Request Denied
 
@@ -136,13 +151,19 @@ Table of Contents
 
 5.  Normative References
 
-   [FETCH]    WHAT Working Group, "Fetch", 2026,
+   [FETCH]    WHAT Working Group, "Fetch", n.d.,
               <https://fetch.spec.whatwg.org/>.
 
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
               DOI 10.17487/RFC9110, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9110>.
+
+   [HTTP-CACHING]
+              Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., "HTTP Caching", STD 98, RFC 9111,
+              DOI 10.17487/RFC9111, June 2022,
+              <https://www.rfc-editor.org/rfc/rfc9111>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
