@@ -78,7 +78,7 @@ This specification defines a new status code to specifically address this situat
 
 The {{&CODE}} (Preliminary Request Denied) status code indicates that the server is refusing a preliminary request.
 
-A preliminary request is one that contains a Sec-Purpose header field {{FETCH}} containing the value "prefetch".
+A preliminary request is one that contains a Sec-Purpose header field {{FETCH}} containing the value "prefetch" (ignoring parameters).
 
 This indication is only applicable to the associated request; future preliminary requests might or might not succeed.
 
