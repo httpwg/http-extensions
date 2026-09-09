@@ -1,5 +1,5 @@
 ---
-title: The Preliminary Request Denied HTTP Status Code
+title: The Purpose Declined HTTP Status Code
 docname: draft-ietf-httpbis-pre-denied-latest
 date: {DATE}
 category: std
@@ -52,7 +52,7 @@ normative:
 --- abstract
 
 This specification defines an HTTP status code to indicate that the server
-is denying a prefetch request.
+is denying a request based upon its declared purpose.
 
 --- middle
 
@@ -74,13 +74,13 @@ This specification defines a new status code to specifically address this situat
 
 {::boilerplate bcp14-tagged}
 
-# The {{&CODE}} (Preliminary Request Denied) Status Code
+# The {{&CODE}} (Purpose Declined) Status Code
 
-The {{&CODE}} (Preliminary Request Denied) status code indicates that the server is refusing a preliminary request.
+The {{&CODE}} (Purpose Declined) status code indicates that the server is refusing a request based upon its declared purpose.
 
-A preliminary request is one that contains a Sec-Purpose header field {{FETCH}} containing the value "prefetch" (ignoring parameters).
+A request's declared purpose is indicted by its Sec-Purpose header field {{FETCH}}.
 
-This indication is only applicable to the associated request; future preliminary requests might or might not succeed.
+This indication is only applicable to the associated request; future requests with the same purpose might or might not succeed.
 
 Because responses with this status code are not intended to be displayed to a user, they SHOULD have zero-length content, and any content that is sent SHOULD be discarded.
 
@@ -93,7 +93,7 @@ This status code is not heuristically cacheable (see {{Section 15.1 of HTTP}}). 
 The following entry should be registered in the "HTTP Status Codes" registry:
 
 * Code: {{&CODE}}
-* Description: Preliminary Request Denied
+* Description: Purpose Declined
 * Specification: {{&SELF}} (this document)
 
 # Security Considerations
