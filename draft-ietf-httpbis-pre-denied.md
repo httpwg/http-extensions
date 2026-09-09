@@ -64,7 +64,7 @@ is denying a prefetch request.
 In some circumstances, a server might have information that leads it to believe that sending a full
 response will not improve performance, and could have negative impacts.
 
-When this happens, it is common practice to use a 503 (Service Unavailable) status code. However, this has been shown to cause confusion: a server operator who sees a spike in that status code being sent tends to draw the conclusion that there is a server-side operational issue.
+When this happens, it is common practice to use a 503 (Service Unavailable) status code. However, this has been observed to cause confusion: a server operator who sees a spike in that status code being sent tends to draw the conclusion that there is a server-side operational issue.
 
 While other status codes (e.g., 403 (Forbidden)) could be used, they can also suffer (to varying degrees) from the same problem: being confused with an error, operational problem, or other condition.
 
