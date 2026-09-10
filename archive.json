@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-03T02:17:56.490768+00:00",
+  "timestamp": "2026-09-10T02:20:57.318708+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -75729,7 +75729,7 @@
       ],
       "body": "The initial draft suggests 'Preliminary Request Denied', which is fairly specific. In subsequent discussion, a broader semantic, such as 'Purpose Declined' was suggested.",
       "createdAt": "2026-04-03T20:59:46Z",
-      "updatedAt": "2026-04-19T20:19:16Z",
+      "updatedAt": "2026-09-09T08:51:39Z",
       "closedAt": null,
       "comments": [
         {
@@ -75745,6 +75745,13 @@
           "body": "One reason to deny a prefetch is that the serving of the content might have side-effects (consider the display of ads as an example, which often involves payment or at least the recording of an impression).  So the use case is fine.  And 400 series is right.\n\nThe question about scope is the hard one.  \"Purpose Declined\" is a reasonable thing to expand it to, though it might not be expanding it at all unless there are other purposes that are eventually defined.\n\nI wonder whether this couldn't be expanded to include `Sec-Fetch-Dest` as well, perhaps even `Sec-Fetch-Mode`.  The idea here is that the context into which the response will be placed is not compatible with the expectations of the server.",
           "createdAt": "2026-04-19T20:19:16Z",
           "updatedAt": "2026-04-19T20:19:16Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "Roughed in in [46fb980](https://github.com/httpwg/http-extensions/commit/46fb980b8a2fe0a7cff3204b9ef23fbc1d766375). ",
+          "createdAt": "2026-09-09T08:51:39Z",
+          "updatedAt": "2026-09-09T08:51:39Z"
         }
       ]
     },
@@ -75753,7 +75760,7 @@
       "id": "I_kwDOAUA-v876eIzZ",
       "title": "Status Code",
       "url": "https://github.com/httpwg/http-extensions/issues/3410",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "mnot",
       "authorAssociation": "MEMBER",
       "assignees": [],
@@ -75762,8 +75769,8 @@
       ],
       "body": "A specific status code needs to be selected.\n\nThe initial draft suggests one in the 4xx range. That seems to be appropriate given the semantics desired (whether broad or narrow; see #3409). \n\nIf that holds, we should select a code that is unregistered and relatively unused.\n\nThe next unassigned 4xx status code is 419. No use is documented in MDN or wikipedia, but I see a few resources that mention a single PHP framework is squatting on it to indicate that a session token is expired.",
       "createdAt": "2026-04-03T21:07:26Z",
-      "updatedAt": "2026-04-03T21:07:26Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-09T08:53:23Z",
+      "closedAt": "2026-09-09T08:53:23Z",
       "comments": []
     },
     {
