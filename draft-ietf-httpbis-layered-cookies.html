@@ -1051,7 +1051,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">van Kesteren &amp; Hofmann</td>
-<td class="center">Expires 13 March 2027</td>
+<td class="center">Expires 14 March 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg {
 <a href="https://www.rfc-editor.org/rfc/rfc[6265]" class="eref">[6265]</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-09-09" class="published">9 September 2026</time>
+<time datetime="2026-09-10" class="published">10 September 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-03-13">13 March 2027</time></dd>
+<dd class="expires"><time datetime="2027-03-14">14 March 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1133,7 +1133,7 @@ header fields are widely used on the Internet. This document obsoletes RFC
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 14 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2478,13 +2478,16 @@ They return a URL path.<a href="#section-5.3.3-1" class="pilcrow">¶</a></p>
               <p id="section-5.3.3-2.1.1">Assert: <em>path</em> is a non-empty list.<a href="#section-5.3.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.3.3-2.2">
-              <p id="section-5.3.3-2.2.1">If <em>path</em>'s size is greater than 1, then remove <em>path</em>'s last item.<a href="#section-5.3.3-2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-5.3.3-2.2.1">Let <em>defaultPath</em> be a clone of <em>path</em>.<a href="#section-5.3.3-2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.3.3-2.3">
-              <p id="section-5.3.3-2.3.1">Otherwise, set <em>path</em>[0] to the empty string.<a href="#section-5.3.3-2.3.1" class="pilcrow">¶</a></p>
+              <p id="section-5.3.3-2.3.1">If <em>defaultPath</em>'s size is greater than 1, then remove <em>defaultPath</em>'s last item.<a href="#section-5.3.3-2.3.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.3.3-2.4">
-              <p id="section-5.3.3-2.4.1">Return <em>path</em>.<a href="#section-5.3.3-2.4.1" class="pilcrow">¶</a></p>
+              <p id="section-5.3.3-2.4.1">Otherwise, set <em>defaultPath</em>[0] to the empty string.<a href="#section-5.3.3-2.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-5.3.3-2.5">
+              <p id="section-5.3.3-2.5.1">Return <em>defaultPath</em>.<a href="#section-5.3.3-2.5.1" class="pilcrow">¶</a></p>
 </li>
           </ol>
 </section>
@@ -2498,22 +2501,28 @@ They return a URL path.<a href="#section-5.3.3-1" class="pilcrow">¶</a></p>
 They return a boolean.<a href="#section-5.3.4-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.3.4-2">
 <li id="section-5.3.4-2.1">
-              <p id="section-5.3.4-2.1.1">Let <em>serializedRequestPath</em> be the result of URL path serializing <em>requestPath</em>.<a href="#section-5.3.4-2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-5.3.4-2.1.1">If <em>requestPath</em> equals <em>cookiePath</em>, then return true.<a href="#section-5.3.4-2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.3.4-2.2">
-              <p id="section-5.3.4-2.2.1">Let <em>serializedCookiePath</em> be the result of URL path serializing <em>cookiePath</em>.<a href="#section-5.3.4-2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-5.3.4-2.2.1">Let <em>prefix</em> be a clone of <em>cookiePath</em>.<a href="#section-5.3.4-2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.3.4-2.3">
-              <p id="section-5.3.4-2.3.1">If <em>serializedCookiePath</em> is <em>serializedRequestPath</em>, then return true.<a href="#section-5.3.4-2.3.1" class="pilcrow">¶</a></p>
+              <p id="section-5.3.4-2.3.1">If <em>prefix</em> is not empty and <em>prefix</em>'s last item is the empty string, then remove <em>prefix</em>'s
+last item.<a href="#section-5.3.4-2.3.1" class="pilcrow">¶</a></p>
+<p id="section-5.3.4-2.3.2">
+Note: A <em>cookiePath</em> whose last segment is empty is one whose <code>Path</code> attribute ended in a
+U+002F (/). It matches what it contains, but not the path it is the directory of.<a href="#section-5.3.4-2.3.2" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.3.4-2.4">
-              <p id="section-5.3.4-2.4.1">If <em>serializedRequestPath</em> starts with <em>serializedCookiePath</em> and <em>serializedCookiePath</em> ends
-with a U+002F (/), then return true.<a href="#section-5.3.4-2.4.1" class="pilcrow">¶</a></p>
+              <p id="section-5.3.4-2.4.1">If <em>prefix</em>'s size is greater than or equal to <em>requestPath</em>'s size, then return false.<a href="#section-5.3.4-2.4.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.3.4-2.5">
-              <p id="section-5.3.4-2.5.1">Return whether the concatenation of <em>serializedRequestPath</em> followed by U+002F (/) starts with <em>serializedCookiePath</em>.<a href="#section-5.3.4-2.5.1" class="pilcrow">¶</a></p>
+              <p id="section-5.3.4-2.5.1">Return whether <em>requestPath</em> starts with <em>prefix</em>.<a href="#section-5.3.4-2.5.1" class="pilcrow">¶</a></p>
 </li>
           </ol>
+<p id="section-5.3.4-3">Note: Comparing URL path segments rather than serialized paths ensures a <em>cookiePath</em> only matches
+at a segment boundary. A <em>cookiePath</em> of <code>/foo</code> matches a <em>requestPath</em> of <code>/foo/bar</code>, but not one of
+<code>/foobar</code>.<a href="#section-5.3.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2538,7 +2547,7 @@ URL path <em>path</em>, boolean <em>httpOnlyAllowed</em>, boolean <em>allowNonHo
               <p id="section-5.4.1-2.2.1">If <em>cookie</em> is failure, then return.<a href="#section-5.4.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.4.1-2.3">
-              <p id="section-5.4.1-2.3.1">Return the result of Store a Cookie given <em>cookie</em>, <em>isSecure</em>, <em>host</em>, <em>path</em>, <em>httpOnlyAllowed</em>,
+              <p id="section-5.4.1-2.3.1">Return the result of Store a Cookie given <em>cookie</em>, <em>isSecure</em>, <em>host</em>, <em>httpOnlyAllowed</em>,
 <em>allowNonHostOnlyCookieForPublicSuffix</em>, and <em>sameSiteStrictOrLaxAllowed</em>.<a href="#section-5.4.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
           </ol>
@@ -2604,183 +2613,214 @@ empty byte sequence).<a href="#section-5.4.2-2.10.1" class="pilcrow">¶</a></p>
 Note: A <code>Path</code> attribute can override this.<a href="#section-5.4.2-2.14.2" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.4.2-2.15">
-              <p id="section-5.4.2-2.15.1">While <em>attributesInput</em> is not an empty byte sequence:<a href="#section-5.4.2-2.15.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.15.2">
-<li id="section-5.4.2-2.15.2.1">
-                  <p id="section-5.4.2-2.15.2.1.1">Let <em>maxAgeSeen</em> be false.<a href="#section-5.4.2-2.15.2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-5.4.2-2.15.1">Let <em>pathAttributeValue</em> be null.<a href="#section-5.4.2-2.15.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.4.2-2.15.2.2">
-                  <p id="section-5.4.2-2.15.2.2.1">Let <em>char</em> be the result of consuming the first byte of <em>attributesInput</em>.<a href="#section-5.4.2-2.15.2.2.1" class="pilcrow">¶</a></p>
+            <li id="section-5.4.2-2.16">
+              <p id="section-5.4.2-2.16.1">While <em>attributesInput</em> is not an empty byte sequence:<a href="#section-5.4.2-2.16.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.16.2">
+<li id="section-5.4.2-2.16.2.1">
+                  <p id="section-5.4.2-2.16.2.1.1">Let <em>maxAgeSeen</em> be false.<a href="#section-5.4.2-2.16.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.4.2-2.15.2.3">
-                  <p id="section-5.4.2-2.15.2.3.1">Assert: <em>char</em> is 0x3B (;).<a href="#section-5.4.2-2.15.2.3.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.2">
+                  <p id="section-5.4.2-2.16.2.2.1">Let <em>char</em> be the result of consuming the first byte of <em>attributesInput</em>.<a href="#section-5.4.2-2.16.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.4.2-2.15.2.4">
-                  <p id="section-5.4.2-2.15.2.4.1">Let <em>attributeNameValueInput</em> be null.<a href="#section-5.4.2-2.15.2.4.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.3">
+                  <p id="section-5.4.2-2.16.2.3.1">Assert: <em>char</em> is 0x3B (;).<a href="#section-5.4.2-2.16.2.3.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.4.2-2.15.2.5">
-                  <p id="section-5.4.2-2.15.2.5.1">If <em>attributesInput</em> contains 0x3B (;), then
+                <li id="section-5.4.2-2.16.2.4">
+                  <p id="section-5.4.2-2.16.2.4.1">Let <em>attributeNameValueInput</em> be null.<a href="#section-5.4.2-2.16.2.4.1" class="pilcrow">¶</a></p>
+</li>
+                <li id="section-5.4.2-2.16.2.5">
+                  <p id="section-5.4.2-2.16.2.5.1">If <em>attributesInput</em> contains 0x3B (;), then
 set <em>attributeNameValueInput</em> to the result of consuming the bytes of
-<em>attributesInput</em> up to, but not including, the first 0x3B (;).<a href="#section-5.4.2-2.15.2.5.1" class="pilcrow">¶</a></p>
+<em>attributesInput</em> up to, but not including, the first 0x3B (;).<a href="#section-5.4.2-2.16.2.5.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.4.2-2.15.2.6">
-                  <p id="section-5.4.2-2.15.2.6.1">Otherwise, set <em>attributeNameValueInput</em> to the result of consuming the remainder of <em>attributesInput</em>.<a href="#section-5.4.2-2.15.2.6.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.6">
+                  <p id="section-5.4.2-2.16.2.6.1">Otherwise, set <em>attributeNameValueInput</em> to the result of consuming the remainder of <em>attributesInput</em>.<a href="#section-5.4.2-2.16.2.6.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.4.2-2.15.2.7">
-                  <p id="section-5.4.2-2.15.2.7.1">Let <em>attributeName</em> be null.<a href="#section-5.4.2-2.15.2.7.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.7">
+                  <p id="section-5.4.2-2.16.2.7.1">Let <em>attributeName</em> be null.<a href="#section-5.4.2-2.16.2.7.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.4.2-2.15.2.8">
-                  <p id="section-5.4.2-2.15.2.8.1">Let <em>attributeValue</em> be the empty string.<a href="#section-5.4.2-2.15.2.8.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.8">
+                  <p id="section-5.4.2-2.16.2.8.1">Let <em>attributeValue</em> be the empty string.<a href="#section-5.4.2-2.16.2.8.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.4.2-2.15.2.9">
-                  <p id="section-5.4.2-2.15.2.9.1">If <em>attributeNameValueInput</em> contains a 0x3D (=), then set <em>attributeName</em> to the bytes
+                <li id="section-5.4.2-2.16.2.9">
+                  <p id="section-5.4.2-2.16.2.9.1">If <em>attributeNameValueInput</em> contains a 0x3D (=), then set <em>attributeName</em> to the bytes
 up to, but not including, the first 0x3D (=) of <em>attributeNameValueInput</em>, and <em>attributeValue</em> to the bytes
-after the first 0x3D (=) of <em>attributeNameValueInput</em>.<a href="#section-5.4.2-2.15.2.9.1" class="pilcrow">¶</a></p>
+after the first 0x3D (=) of <em>attributeNameValueInput</em>.<a href="#section-5.4.2-2.16.2.9.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.4.2-2.15.2.10">
-                  <p id="section-5.4.2-2.15.2.10.1">Otherwise, set <em>attributeName</em> to <em>attributeNameValueInput</em>.<a href="#section-5.4.2-2.15.2.10.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.10">
+                  <p id="section-5.4.2-2.16.2.10.1">Otherwise, set <em>attributeName</em> to <em>attributeNameValueInput</em>.<a href="#section-5.4.2-2.16.2.10.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.4.2-2.15.2.11">
-                  <p id="section-5.4.2-2.15.2.11.1">Remove any leading or trailing WSP bytes from <em>attributeName</em> and <em>attributeValue</em>.<a href="#section-5.4.2-2.15.2.11.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.11">
+                  <p id="section-5.4.2-2.16.2.11.1">Remove any leading or trailing WSP bytes from <em>attributeName</em> and <em>attributeValue</em>.<a href="#section-5.4.2-2.16.2.11.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.4.2-2.15.2.12">
-                  <p id="section-5.4.2-2.15.2.12.1">If <em>attributeValue</em>'s length is greater than 1024, then continue.<a href="#section-5.4.2-2.15.2.12.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.12">
+                  <p id="section-5.4.2-2.16.2.12.1">If <em>attributeValue</em>'s length is greater than 1024, then continue.<a href="#section-5.4.2-2.16.2.12.1" class="pilcrow">¶</a></p>
 </li>
-                <li id="section-5.4.2-2.15.2.13">
-                  <p id="section-5.4.2-2.15.2.13.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>Expires</code>:<a href="#section-5.4.2-2.15.2.13.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.15.2.13.2">
-<li id="section-5.4.2-2.15.2.13.2.1">
-                      <p id="section-5.4.2-2.15.2.13.2.1.1">If <em>maxAgeSeen</em> is true, then continue.<a href="#section-5.4.2-2.15.2.13.2.1.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.13">
+                  <p id="section-5.4.2-2.16.2.13.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>Expires</code>:<a href="#section-5.4.2-2.16.2.13.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.16.2.13.2">
+<li id="section-5.4.2-2.16.2.13.2.1">
+                      <p id="section-5.4.2-2.16.2.13.2.1.1">If <em>maxAgeSeen</em> is true, then continue.<a href="#section-5.4.2-2.16.2.13.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.13.2.2">
-                      <p id="section-5.4.2-2.15.2.13.2.2.1">Let <em>expiryTime</em> be the result of running Parse a Date given <em>attributeValue</em>.<a href="#section-5.4.2-2.15.2.13.2.2.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.13.2.2">
+                      <p id="section-5.4.2-2.16.2.13.2.2.1">Let <em>expiryTime</em> be the result of running Parse a Date given <em>attributeValue</em>.<a href="#section-5.4.2-2.16.2.13.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.13.2.3">
-                      <p id="section-5.4.2-2.15.2.13.2.3.1">If <em>attributeValue</em> is failure, then continue.<a href="#section-5.4.2-2.15.2.13.2.3.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.13.2.3">
+                      <p id="section-5.4.2-2.16.2.13.2.3.1">If <em>attributeValue</em> is failure, then continue.<a href="#section-5.4.2-2.16.2.13.2.3.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.13.2.4">
-                      <p id="section-5.4.2-2.15.2.13.2.4.1">If <em>expiryTime</em> is greater than the current time and date + the user agent's cookie age limit,
-then set <em>expiryTime</em> to the user agent's cookie age limit.<a href="#section-5.4.2-2.15.2.13.2.4.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.13.2.4">
+                      <p id="section-5.4.2-2.16.2.13.2.4.1">If <em>expiryTime</em> is greater than the current time and date + the user agent's cookie age limit,
+then set <em>expiryTime</em> to the user agent's cookie age limit.<a href="#section-5.4.2-2.16.2.13.2.4.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.13.2.5">
-                      <p id="section-5.4.2-2.15.2.13.2.5.1">If <em>expiryTime</em> is earlier than the earliest date the user agent can
+                    <li id="section-5.4.2-2.16.2.13.2.5">
+                      <p id="section-5.4.2-2.16.2.13.2.5.1">If <em>expiryTime</em> is earlier than the earliest date the user agent can
 represent, the user agent MAY replace <em>expiryTime</em> with the earliest
-representable date.<a href="#section-5.4.2-2.15.2.13.2.5.1" class="pilcrow">¶</a></p>
+representable date.<a href="#section-5.4.2-2.16.2.13.2.5.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.13.2.6">
-                      <p id="section-5.4.2-2.15.2.13.2.6.1">Set <em>cookie</em>'s expiry-time to <em>expiryTime</em>.<a href="#section-5.4.2-2.15.2.13.2.6.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.13.2.6">
+                      <p id="section-5.4.2-2.16.2.13.2.6.1">Set <em>cookie</em>'s expiry-time to <em>expiryTime</em>.<a href="#section-5.4.2-2.16.2.13.2.6.1" class="pilcrow">¶</a></p>
 </li>
                   </ol>
 </li>
-                <li id="section-5.4.2-2.15.2.14">
-                  <p id="section-5.4.2-2.15.2.14.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>Max-Age</code>:<a href="#section-5.4.2-2.15.2.14.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.15.2.14.2">
-<li id="section-5.4.2-2.15.2.14.2.1">
-                      <p id="section-5.4.2-2.15.2.14.2.1.1">If <em>attributeValue</em> is empty, continue.<a href="#section-5.4.2-2.15.2.14.2.1.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.14">
+                  <p id="section-5.4.2-2.16.2.14.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>Max-Age</code>:<a href="#section-5.4.2-2.16.2.14.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.16.2.14.2">
+<li id="section-5.4.2-2.16.2.14.2.1">
+                      <p id="section-5.4.2-2.16.2.14.2.1.1">If <em>attributeValue</em> is empty, continue.<a href="#section-5.4.2-2.16.2.14.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.14.2.2">
-                      <p id="section-5.4.2-2.15.2.14.2.2.1">If the first byte of <em>attributeValue</em> is neither a DIGIT, nor 0x2D (-)
-followed by a DIGIT, then continue.<a href="#section-5.4.2-2.15.2.14.2.2.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.14.2.2">
+                      <p id="section-5.4.2-2.16.2.14.2.2.1">If the first byte of <em>attributeValue</em> is neither a DIGIT, nor 0x2D (-)
+followed by a DIGIT, then continue.<a href="#section-5.4.2-2.16.2.14.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.14.2.3">
-                      <p id="section-5.4.2-2.15.2.14.2.3.1">If the remainder of <em>attributeValue</em> contains a non-DIGIT, then continue.<a href="#section-5.4.2-2.15.2.14.2.3.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.14.2.3">
+                      <p id="section-5.4.2-2.16.2.14.2.3.1">If the remainder of <em>attributeValue</em> contains a non-DIGIT, then continue.<a href="#section-5.4.2-2.16.2.14.2.3.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.14.2.4">
-                      <p id="section-5.4.2-2.15.2.14.2.4.1">Let <em>deltaSeconds</em> be <em>attributeValue</em>, converted to a base 10 integer.<a href="#section-5.4.2-2.15.2.14.2.4.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.14.2.4">
+                      <p id="section-5.4.2-2.16.2.14.2.4.1">Let <em>deltaSeconds</em> be <em>attributeValue</em>, converted to a base 10 integer.<a href="#section-5.4.2-2.16.2.14.2.4.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.14.2.5">
-                      <p id="section-5.4.2-2.15.2.14.2.5.1">Set <em>deltaSeconds</em> to the smaller of <em>deltaSeconds</em> and the user agent's cookie age limit, in seconds.<a href="#section-5.4.2-2.15.2.14.2.5.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.14.2.5">
+                      <p id="section-5.4.2-2.16.2.14.2.5.1">Set <em>deltaSeconds</em> to the smaller of <em>deltaSeconds</em> and the user agent's cookie age limit, in seconds.<a href="#section-5.4.2-2.16.2.14.2.5.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.14.2.6">
-                      <p id="section-5.4.2-2.15.2.14.2.6.1">If <em>deltaSeconds</em> is less than or equal to 0, let <em>expiryTime</em> be
+                    <li id="section-5.4.2-2.16.2.14.2.6">
+                      <p id="section-5.4.2-2.16.2.14.2.6.1">If <em>deltaSeconds</em> is less than or equal to 0, let <em>expiryTime</em> be
 the earliest representable date and time. Otherwise, let <em>expiryTime</em>
-be the current date and time + <em>deltaSeconds</em> seconds.<a href="#section-5.4.2-2.15.2.14.2.6.1" class="pilcrow">¶</a></p>
+be the current date and time + <em>deltaSeconds</em> seconds.<a href="#section-5.4.2-2.16.2.14.2.6.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.14.2.7">
-                      <p id="section-5.4.2-2.15.2.14.2.7.1">Set <em>cookie</em>'s expiry-time to <em>expiryTime</em>.<a href="#section-5.4.2-2.15.2.14.2.7.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.14.2.7">
+                      <p id="section-5.4.2-2.16.2.14.2.7.1">Set <em>cookie</em>'s expiry-time to <em>expiryTime</em>.<a href="#section-5.4.2-2.16.2.14.2.7.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.14.2.8">
-                      <p id="section-5.4.2-2.15.2.14.2.8.1">Set <em>maxAgeSeen</em> to true.<a href="#section-5.4.2-2.15.2.14.2.8.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.14.2.8">
+                      <p id="section-5.4.2-2.16.2.14.2.8.1">Set <em>maxAgeSeen</em> to true.<a href="#section-5.4.2-2.16.2.14.2.8.1" class="pilcrow">¶</a></p>
 </li>
                   </ol>
 </li>
-                <li id="section-5.4.2-2.15.2.15">
-                  <p id="section-5.4.2-2.15.2.15.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>Domain</code>:<a href="#section-5.4.2-2.15.2.15.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.15.2.15.2">
-<li id="section-5.4.2-2.15.2.15.2.1">
-                      <p id="section-5.4.2-2.15.2.15.2.1.1">Let <em>host</em> be failure.<a href="#section-5.4.2-2.15.2.15.2.1.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.15">
+                  <p id="section-5.4.2-2.16.2.15.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>Domain</code>:<a href="#section-5.4.2-2.16.2.15.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.16.2.15.2">
+<li id="section-5.4.2-2.16.2.15.2.1">
+                      <p id="section-5.4.2-2.16.2.15.2.1.1">Let <em>host</em> be failure.<a href="#section-5.4.2-2.16.2.15.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.15.2.2">
-                      <p id="section-5.4.2-2.15.2.15.2.2.1">If <em>attributeValue</em> contains only ASCII bytes:<a href="#section-5.4.2-2.15.2.15.2.2.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.15.2.15.2.2.2">
-<li id="section-5.4.2-2.15.2.15.2.2.2.1">
-                          <p id="section-5.4.2-2.15.2.15.2.2.2.1.1">Let <em>hostInput</em> be <em>attributeValue</em>, ASCII decoded.<a href="#section-5.4.2-2.15.2.15.2.2.2.1.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.15.2.2">
+                      <p id="section-5.4.2-2.16.2.15.2.2.1">If <em>attributeValue</em> contains only ASCII bytes:<a href="#section-5.4.2-2.16.2.15.2.2.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.16.2.15.2.2.2">
+<li id="section-5.4.2-2.16.2.15.2.2.2.1">
+                          <p id="section-5.4.2-2.16.2.15.2.2.2.1.1">Let <em>hostInput</em> be <em>attributeValue</em>, ASCII decoded.<a href="#section-5.4.2-2.16.2.15.2.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                        <li id="section-5.4.2-2.15.2.15.2.2.2.2">
-                          <p id="section-5.4.2-2.15.2.15.2.2.2.2.1">If <em>hostInput</em> starts with U+002E (.), then set <em>hostInput</em> to <em>hostInput</em>
-without its leading U+002E (.).<a href="#section-5.4.2-2.15.2.15.2.2.2.2.1" class="pilcrow">¶</a></p>
+                        <li id="section-5.4.2-2.16.2.15.2.2.2.2">
+                          <p id="section-5.4.2-2.16.2.15.2.2.2.2.1">If <em>hostInput</em> starts with U+002E (.), then set <em>hostInput</em> to <em>hostInput</em>
+without its leading U+002E (.).<a href="#section-5.4.2-2.16.2.15.2.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                        <li id="section-5.4.2-2.15.2.15.2.2.2.3">
-                          <p id="section-5.4.2-2.15.2.15.2.2.2.3.1">Set <em>host</em> to the result of host parsing <em>hostInput</em>.<a href="#section-5.4.2-2.15.2.15.2.2.2.3.1" class="pilcrow">¶</a></p>
+                        <li id="section-5.4.2-2.16.2.15.2.2.2.3">
+                          <p id="section-5.4.2-2.16.2.15.2.2.2.3.1">Set <em>host</em> to the result of host parsing <em>hostInput</em>.<a href="#section-5.4.2-2.16.2.15.2.2.2.3.1" class="pilcrow">¶</a></p>
 </li>
                       </ol>
 </li>
-                    <li id="section-5.4.2-2.15.2.15.2.3">
-                      <p id="section-5.4.2-2.15.2.15.2.3.1">Set <em>cookie</em>'s host to <em>host</em>.<a href="#section-5.4.2-2.15.2.15.2.3.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.15.2.3">
+                      <p id="section-5.4.2-2.16.2.15.2.3.1">Set <em>cookie</em>'s host to <em>host</em>.<a href="#section-5.4.2-2.16.2.15.2.3.1" class="pilcrow">¶</a></p>
 </li>
                   </ol>
 </li>
-                <li id="section-5.4.2-2.15.2.16">
-                  <p id="section-5.4.2-2.15.2.16.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>Path</code>:<a href="#section-5.4.2-2.15.2.16.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.15.2.16.2">
-<li id="section-5.4.2-2.15.2.16.2.1">
-                      <p id="section-5.4.2-2.15.2.16.2.1.1">If <em>attributeValue</em> is not empty and if the first byte of
-<em>attributeValue</em> is 0x2F (/), then:<a href="#section-5.4.2-2.15.2.16.2.1.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.15.2.16.2.1.2">
-<li id="section-5.4.2-2.15.2.16.2.1.2.1">
-                          <p id="section-5.4.2-2.15.2.16.2.1.2.1.1">Set <em>cookie</em>'s path to <em>attributeValue</em> split on 0x2F (/).<a href="#section-5.4.2-2.15.2.16.2.1.2.1.1" class="pilcrow">¶</a></p>
-</li>
-                        <li id="section-5.4.2-2.15.2.16.2.1.2.2">
-                          <p id="section-5.4.2-2.15.2.16.2.1.2.2.1">Set <em>cookie</em>'s has-path attribute to true.<a href="#section-5.4.2-2.15.2.16.2.1.2.2.1" class="pilcrow">¶</a></p>
-</li>
-                      </ol>
+                <li id="section-5.4.2-2.16.2.16">
+                  <p id="section-5.4.2-2.16.2.16.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>Path</code>:<a href="#section-5.4.2-2.16.2.16.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.16.2.16.2">
+<li id="section-5.4.2-2.16.2.16.2.1">
+                      <p id="section-5.4.2-2.16.2.16.2.1.1">If <em>attributeValue</em> is not empty and if the first byte of
+<em>attributeValue</em> is 0x2F (/), then set <em>pathAttributeValue</em> to <em>attributeValue</em>.<a href="#section-5.4.2-2.16.2.16.2.1.1" class="pilcrow">¶</a></p>
 </li>
                   </ol>
 </li>
-                <li id="section-5.4.2-2.15.2.17">
-                  <p id="section-5.4.2-2.15.2.17.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>Secure</code>:<a href="#section-5.4.2-2.15.2.17.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.15.2.17.2">
-<li id="section-5.4.2-2.15.2.17.2.1">
-                      <p id="section-5.4.2-2.15.2.17.2.1.1">Set <em>cookie</em>'s secure to true.<a href="#section-5.4.2-2.15.2.17.2.1.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.17">
+                  <p id="section-5.4.2-2.16.2.17.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>Secure</code>:<a href="#section-5.4.2-2.16.2.17.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.16.2.17.2">
+<li id="section-5.4.2-2.16.2.17.2.1">
+                      <p id="section-5.4.2-2.16.2.17.2.1.1">Set <em>cookie</em>'s secure to true.<a href="#section-5.4.2-2.16.2.17.2.1.1" class="pilcrow">¶</a></p>
 </li>
                   </ol>
 </li>
-                <li id="section-5.4.2-2.15.2.18">
-                  <p id="section-5.4.2-2.15.2.18.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>HttpOnly</code>:<a href="#section-5.4.2-2.15.2.18.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.15.2.18.2">
-<li id="section-5.4.2-2.15.2.18.2.1">
-                      <p id="section-5.4.2-2.15.2.18.2.1.1">Set <em>cookie</em>'s http-only to true.<a href="#section-5.4.2-2.15.2.18.2.1.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.18">
+                  <p id="section-5.4.2-2.16.2.18.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>HttpOnly</code>:<a href="#section-5.4.2-2.16.2.18.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.16.2.18.2">
+<li id="section-5.4.2-2.16.2.18.2.1">
+                      <p id="section-5.4.2-2.16.2.18.2.1.1">Set <em>cookie</em>'s http-only to true.<a href="#section-5.4.2-2.16.2.18.2.1.1" class="pilcrow">¶</a></p>
 </li>
                   </ol>
 </li>
-                <li id="section-5.4.2-2.15.2.19">
-                  <p id="section-5.4.2-2.15.2.19.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>SameSite</code>:<a href="#section-5.4.2-2.15.2.19.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.15.2.19.2">
-<li id="section-5.4.2-2.15.2.19.2.1">
-                      <p id="section-5.4.2-2.15.2.19.2.1.1">If <em>attributeValue</em> is a byte-case-insensitive match for <code>None</code>, then set <em>cookie</em>'s same-site to "none".<a href="#section-5.4.2-2.15.2.19.2.1.1" class="pilcrow">¶</a></p>
+                <li id="section-5.4.2-2.16.2.19">
+                  <p id="section-5.4.2-2.16.2.19.1">If <em>attributeName</em> is a byte-case-insensitive match for <code>SameSite</code>:<a href="#section-5.4.2-2.16.2.19.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.16.2.19.2">
+<li id="section-5.4.2-2.16.2.19.2.1">
+                      <p id="section-5.4.2-2.16.2.19.2.1.1">If <em>attributeValue</em> is a byte-case-insensitive match for <code>None</code>, then set <em>cookie</em>'s same-site to "none".<a href="#section-5.4.2-2.16.2.19.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.19.2.2">
-                      <p id="section-5.4.2-2.15.2.19.2.2.1">If <em>attributeValue</em> is a byte-case-insensitive match for <code>Strict</code>, then set <em>cookie</em>'s same-site to "strict".<a href="#section-5.4.2-2.15.2.19.2.2.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.19.2.2">
+                      <p id="section-5.4.2-2.16.2.19.2.2.1">If <em>attributeValue</em> is a byte-case-insensitive match for <code>Strict</code>, then set <em>cookie</em>'s same-site to "strict".<a href="#section-5.4.2-2.16.2.19.2.2.1" class="pilcrow">¶</a></p>
 </li>
-                    <li id="section-5.4.2-2.15.2.19.2.3">
-                      <p id="section-5.4.2-2.15.2.19.2.3.1">If <em>attributeValue</em> is a byte-case-insensitive match for <code>Lax</code>, then set <em>cookie</em>'s same-site to "lax".<a href="#section-5.4.2-2.15.2.19.2.3.1" class="pilcrow">¶</a></p>
+                    <li id="section-5.4.2-2.16.2.19.2.3">
+                      <p id="section-5.4.2-2.16.2.19.2.3.1">If <em>attributeValue</em> is a byte-case-insensitive match for <code>Lax</code>, then set <em>cookie</em>'s same-site to "lax".<a href="#section-5.4.2-2.16.2.19.2.3.1" class="pilcrow">¶</a></p>
 </li>
                   </ol>
 </li>
               </ol>
 </li>
-            <li id="section-5.4.2-2.16">
-              <p id="section-5.4.2-2.16.1">Return <em>cookie</em>.<a href="#section-5.4.2-2.16.1" class="pilcrow">¶</a></p>
+            <li id="section-5.4.2-2.17">
+              <p id="section-5.4.2-2.17.1">If <em>pathAttributeValue</em> is non-null:<a href="#section-5.4.2-2.17.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.4.2-2.17.2">
+<li id="section-5.4.2-2.17.2.1">
+                  <p id="section-5.4.2-2.17.2.1.1">Let <em>pathString</em> be the isomorphic decoding of <em>pathAttributeValue</em>.<a href="#section-5.4.2-2.17.2.1.1" class="pilcrow">¶</a></p>
+</li>
+                <li id="section-5.4.2-2.17.2.2">
+                  <p id="section-5.4.2-2.17.2.2.1">If <em>pathString</em> is not an ASCII string, then return failure.<a href="#section-5.4.2-2.17.2.2.1" class="pilcrow">¶</a></p>
+<p id="section-5.4.2-2.17.2.2.2">
+Note: A URL path's segments are ASCII strings, so such a <code>Path</code> attribute cannot be
+represented. Returning failure keeps a cookie that no request could carry out of the user
+agent's cookie store altogether.<a href="#section-5.4.2-2.17.2.2.2" class="pilcrow">¶</a></p>
+</li>
+                <li id="section-5.4.2-2.17.2.3">
+                  <p id="section-5.4.2-2.17.2.3.1">Let <em>segments</em> be the result of strictly splitting <em>pathString</em> on U+002F (/).<a href="#section-5.4.2-2.17.2.3.1" class="pilcrow">¶</a></p>
+</li>
+                <li id="section-5.4.2-2.17.2.4">
+                  <p id="section-5.4.2-2.17.2.4.1">Assert: <em>segments</em>[0] is the empty string.<a href="#section-5.4.2-2.17.2.4.1" class="pilcrow">¶</a></p>
+</li>
+                <li id="section-5.4.2-2.17.2.5">
+                  <p id="section-5.4.2-2.17.2.5.1">Remove <em>segments</em>[0].<a href="#section-5.4.2-2.17.2.5.1" class="pilcrow">¶</a></p>
+<p id="section-5.4.2-2.17.2.5.2">
+Note: This is what makes <em>segments</em> a URL path, as a URL path has no leading empty segment.<a href="#section-5.4.2-2.17.2.5.2" class="pilcrow">¶</a></p>
+</li>
+                <li id="section-5.4.2-2.17.2.6">
+                  <p id="section-5.4.2-2.17.2.6.1">Set <em>cookie</em>'s path to <em>segments</em>.<a href="#section-5.4.2-2.17.2.6.1" class="pilcrow">¶</a></p>
+</li>
+                <li id="section-5.4.2-2.17.2.7">
+                  <p id="section-5.4.2-2.17.2.7.1">Set <em>cookie</em>'s has-path attribute to true.<a href="#section-5.4.2-2.17.2.7.1" class="pilcrow">¶</a></p>
+</li>
+              </ol>
+<p id="section-5.4.2-2.17.3">
+Note: This happens after all attributes have been processed so that only the <code>Path</code> attribute
+that "wins" is considered, in keeping with how the rest of <em>cookie</em> is checked once parsing has
+settled on its final values.<a href="#section-5.4.2-2.17.3" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-5.4.2-2.18">
+              <p id="section-5.4.2-2.18.1">Return <em>cookie</em>.<a href="#section-5.4.2-2.18.1" class="pilcrow">¶</a></p>
 </li>
           </ol>
 <p id="section-5.4.2-3">Note: Attributes with an unrecognized <em>attributeName</em> are ignored.<a href="#section-5.4.2-3" class="pilcrow">¶</a></p>
@@ -2939,7 +2979,7 @@ then return null.<a href="#section-5.4.3-2.17.3" class="pilcrow">¶</a></p>
 </li>
             <li id="section-5.4.3-2.19">
               <p id="section-5.4.3-2.19.1">If the user agent's cookie store contains a cookie <em>oldCookie</em> whose name is <em>cookie</em>'s name,
-host is host-equal to <em>cookie</em>'s host, host-only is <em>cookie</em>'s host-only, and path is path-equal to <em>cookie</em>'s path:<a href="#section-5.4.3-2.19.1" class="pilcrow">¶</a></p>
+host is host-equal to <em>cookie</em>'s host, host-only is <em>cookie</em>'s host-only, and path equals <em>cookie</em>'s path:<a href="#section-5.4.3-2.19.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-5.4.3-2.19.2">
 <li id="section-5.4.3-2.19.2.1">
                   <p id="section-5.4.3-2.19.2.1.1">If <em>httpOnlyAllowed</em> is false and <em>oldCookie</em>'s http-only is true,
