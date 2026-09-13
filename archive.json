@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-10T02:20:57.318708+00:00",
+  "timestamp": "2026-09-13T02:21:04.377139+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77766,7 +77766,7 @@
       ],
       "body": "Can we please change `SERVER_CERTIFICATE` frame name back to `CERTIFICATE`?\n\nPotential future specification of client side secondary certificates could use the same frame to send client certificates. The content would be identical - carrying an exported authenticator.\n\nOn top of that, all other HTTP frame types do not have CLIENT_ or SERVER_ prefix even if they are applicable only in a single direction.",
       "createdAt": "2026-07-22T09:48:16Z",
-      "updatedAt": "2026-08-19T01:56:28Z",
+      "updatedAt": "2026-09-10T05:34:40Z",
       "closedAt": null,
       "comments": [
         {
@@ -77782,6 +77782,13 @@
           "body": "Still, I find this inconsistent and a bit awkward.\n\nAlso, the applicability of the frame name may become non-obvious with PTTH \ud83e\udd54",
           "createdAt": "2026-07-25T22:13:49Z",
           "updatedAt": "2026-07-25T22:13:49Z"
+        },
+        {
+          "author": "martinthomson",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This extension is a clear example of where \ud83e\udd54 would need special handling.  TLS EAs are asymmetric, such that a TLS client needs to be challenged, whereas a server does not.  (A fix for that might involve the use of a Fiat-Shamir heuristic-like synthetic challenge, but that's considerably more work.)",
+          "createdAt": "2026-09-10T05:34:40Z",
+          "updatedAt": "2026-09-10T05:34:40Z"
         }
       ]
     },
@@ -217787,7 +217794,7 @@
       "id": "PR_kwDOAUA-v88AAAABAt9q9Q",
       "title": "Make a cookie's path a URL path",
       "url": "https://github.com/httpwg/http-extensions/pull/3512",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "annevk",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -217796,17 +217803,19 @@
       ],
       "body": "Path-Matches compared serialized paths, which made a cookie path of /foo match a\nrequest path of /foobar, and passed URL paths to the URL path serializer, which\ntakes a URL. Compare URL path segments instead, using the operations URL now\nprovides.\n\nThe Path attribute was split into a list that kept its leading empty segment,\nwhich is not how a URL path is represented, so such a path matched nothing and no\n\"__Host-\" prefixed cookie could be set. Isomorphic decode the attribute, drop\nthat segment, and return failure if the result is not an ASCII string, rather\nthan storing a path no request could ever carry. That check applies to the Path\nattribute that wins, so it happens once all attributes have been processed.\n\nCookie Default Path removed an item from the URL path it was given, or replaced\nthat path's first item, and it is called with a request URL's path. Operate on a\nclone instead.\n\nAlso stop passing a path to Store a Cookie, which takes no such argument.\n\nDepends on https://github.com/whatwg/url/pull/929.\n\nTests: https://github.com/web-platform-tests/wpt/pull/62165",
       "createdAt": "2026-08-23T18:00:48Z",
-      "updatedAt": "2026-09-03T00:59:14Z",
+      "updatedAt": "2026-09-10T08:40:47Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "4146dcd5a45cffbf740fd9d5689943ee2290d4bd",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "cookie-path-url-path",
       "headRefOid": "3d099202c08628a0f245c774eefec264ef66df4e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-09-10T08:40:45Z",
+      "mergedAt": "2026-09-10T08:40:45Z",
+      "mergedBy": "annevk",
+      "mergeCommit": {
+        "oid": "f9f079af84fe047359daa712e54a6912d2882e12"
+      },
       "comments": [],
       "reviews": [
         {
