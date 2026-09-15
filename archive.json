@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-13T02:21:04.377139+00:00",
+  "timestamp": "2026-09-15T02:41:56.350018+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77275,7 +77275,7 @@
       ],
       "body": "For a client handling a 4xx creation/append response with `Upload-Complete: ?0`, it can resume the upload by sending an offset retrieval request, waiting for the response, and then submitting an append request at the retrieved offset. But this isn't necessary if the response includes an up-to-date `Upload-Offset` value already; then, a client can just use that and save a round trip, immediately resuming the upload at the given offset without performing offset retrieval.\n\nThis is especially problematic for servers that require that incomplete appends conform to a particular chunk granularity. Since clients have no way to tell what a server's chunk granularity is, a server with a chunk granularity requirement will respond to nearly every incomplete creation/append with a non-completing 4xx response (as per https://github.com/httpwg/http-extensions/issues/3193#issuecomment-3893170872), since most request content lengths won't be a multiple of the server's chunk granularity. Then the client has to perform offset retrieval to send every single chunk but the first and last. This puts unnecessary load on clients and servers wherever chunk granularity is involved.\n\nI'd strongly argue we should recommend servers include the `Upload-Offset` header in 4xx responses with `Upload-Complete: ?0`. We don't have to recommend clients actually use this information, since as Guoye Zhang said in [a comment](https://github.com/httpwg/http-extensions/pull/3319#discussion_r2474114941), that would make client implementations more complex. But clients should at least have the option to opt into that sometimes-very-significant performance optimization, and I expect it to be very simple for servers to include that information.\n\n~~[This paragraph](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.4.1-2) should also be modified to mention this as one of the sources clients are recommended to take the offset from, though I'm not sure how I'd phrase that.~~ EDIT: I'm not sure why I thought any change was needed there. Looking at it again, it seems like it already covers this.\n\nThis could also be extended to ~~3xx-5xx~~ 3xx responses that contain the `Upload-Complete: ?0` header. There is no point in recommending this for 2xx since the offset after a non-completing 2xx response can be inferred from the previous known offset + the requested content length. I also wouldn't recommend extending this to any responses without the `Upload-Complete` header, since those responses are often generated without awareness of resumable uploads.",
       "createdAt": "2026-06-16T02:45:03Z",
-      "updatedAt": "2026-07-15T19:37:02Z",
+      "updatedAt": "2026-09-14T21:16:53Z",
       "closedAt": null,
       "comments": [
         {
@@ -77361,6 +77361,13 @@
           "body": "By the way, I would be willing to compromise on this with some added clarification that servers MAY include `Upload-Offset` in non-completing 3xx-5xx responses in order to save some clients a round trip from offset retrieval. My current concern is mostly that servers currently don't even know they can do this, and that it helps. But if we go with that, I'd still like to know the rationale against making it a recommendation.",
           "createdAt": "2026-07-06T22:39:39Z",
           "updatedAt": "2026-07-06T22:51:02Z"
+        },
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "In general, we should try to avoid introducing duplicate way to achieve the same thing and strive to be as simple as possible. I know this might not seem like it when looking at the document's page count, but we're trying :)",
+          "createdAt": "2026-09-14T21:16:53Z",
+          "updatedAt": "2026-09-14T21:16:53Z"
         }
       ]
     },
@@ -77891,7 +77898,7 @@
       ],
       "body": "The relevant part of the `max-age` limit definition is:\n\n> Specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource as these requests will likely fail.\n\nThe recommendation against accessing the upload resource can very easily lead to a bad end user experience.\n\nSuppose a client application receives a 201 creation response with `Upload-Limit: max-age=600`, and it begins appending the rest of the file. It will take 20 minutes in total due to being a large file on a poor connection. 15 minutes in, the user's network connection fails. The server received 15 minutes' worth of data, but the 104 responses don't include `Upload-Limit` or the client can't see 104 responses (e.g., since it's a browser client). Because it's been over 600 seconds since the generation of the previous response, the client believes the upload is expired despite that it really isn't. The upload is needlessly restarted instead of resumed.\n\nThe same problem would occur if the end user decided to abort the request by using a pause button in the application. They'll probably want to resume again shortly, but because the last response was received more than `max-age` seconds ago, the client will consider the upload expired.\n\nI'm not sure what the best way to fix this is. Perhaps in the absence of a response after request termination, clients should assume the last `max-age` applies again? Alternatively, for simplicity and guaranteed accuracy, this recommendation could simply be removed, letting the server inform the client of the missing resource (e.g., via 404 or 410) in the event it actually did expire.\n\nEither way, it may be worth adding an explicit note about this situation to inform clients to consider this common edge case.",
       "createdAt": "2026-08-11T12:39:43Z",
-      "updatedAt": "2026-08-13T09:11:37Z",
+      "updatedAt": "2026-09-14T21:18:03Z",
       "closedAt": null,
       "comments": [
         {
@@ -77907,6 +77914,13 @@
           "body": "Yes, that was an assumption I made: servers are likely to extend the upload resource's lifetime as the upload progresses without being able to inform the client. The resumable upload protocol would be half-useless for large uploads if any interruption towards the end caused the entire upload to fail, so I would expect servers in practice to do this. As I see it, the larger the upload, the more benefit the protocol provides, so I believe this is an important point. A small upload could be restarted instead of resumed without as much of a problem.\n\nI'm not sure your rephrasing of the recommendation has any impact on client implementations at all (as opposed to removing it). What actionable difference would that recommendation make? If there is something actionable there, I think it could probably be rephrased more clearly. If not, I'd just end the sentence after \"inaccessible\".\n\nIf anything, I think the opposite recommendation would be better in practice: clients shouldn't actively enforce the max age, because their max age will often be out of date. But I wouldn't argue such a change to the protocol is necessary. An informative note would suffice.",
           "createdAt": "2026-08-12T00:09:56Z",
           "updatedAt": "2026-08-13T09:11:37Z"
+        },
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "> Yes, that was an assumption I made: servers are likely to extend the upload resource's lifetime as the upload progresses without being able to inform the client. The resumable upload protocol would be half-useless for large uploads if any interruption towards the end caused the entire upload to fail, so I would expect servers in practice to do this.\n\nIt depends on the server configuration. I've worked on servers that flush content directly to cloud storages, where the server keeps no state and allows the upload to be resumed 24hrs after it has been created. We don't extend the lifetime as that should already be plenty. So yes, some server will extend the lifetime, but not necessarily all.\n\n> I'm not sure your rephrasing of the recommendation has any impact on client implementations at all (as opposed to removing it). What actionable difference would that recommendation make? If there is something actionable there, I think it could probably be rephrased more clearly. If not, I'd just end the sentence after \"inaccessible\".\n\nAlright, we can also remove the part. I don't have a strong opinion here.",
+          "createdAt": "2026-09-14T21:09:48Z",
+          "updatedAt": "2026-09-14T21:09:48Z"
         }
       ]
     },
@@ -77924,7 +77938,7 @@
       ],
       "body": "My friend @Trellord had a great idea for our client implementation. The protocol [recommends](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#section-4.4.1-2) clients use the offset from the \"immediate previous response\" when appending.\n\n> To ensure that the upload resource will accept the request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ([Section 4.3](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#offset-retrieving)) or appending representation data ([Section 4.4](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#upload-appending)).\n\nFor example, if a client appends at offset 1000, but the server responds with status 500, this text recommends that the client perform offset retrieval before appending again (since otherwise the immediate previous response is status 500). But for optimistic clients, it may actually be better to simply append at offset 1000 again. In the event that the old offset is actually correct, it saves a round trip. And if the offset is wrong, the server can reject it immediately before processing the request body, and the response is required to include the correct offset with status 409. The client can therefore rely on 409 responses to retrieve offsets rather than performing explicit offset retrieval.\n\nOf course, there are downsides to this approach, such as wasted bandwidth before the server cuts off the request. But my point is that this approach goes against the recommendation, and I think this approach is very reasonable and shouldn't be recommended against. An optimistic client may intentionally _not_ want to \"ensure that the upload resource will accept the request\".",
       "createdAt": "2026-08-17T18:25:11Z",
-      "updatedAt": "2026-08-18T06:35:10Z",
+      "updatedAt": "2026-09-14T21:05:40Z",
       "closedAt": null,
       "comments": [
         {
@@ -77954,6 +77968,13 @@
           "body": "Yeah! Makes sense. I will also note that a maximally optimistic client can be implemented extremely simply by never performing offset retrieval at all, relying entirely on 2xx and 409 for offset updates. It'd be even simpler than doing offset retrieval on every append. Not recommending you do that of course, since that is maximally optimistic. But it's worth noting this methodology can be applied in a very simple way too.",
           "createdAt": "2026-08-17T21:57:52Z",
           "updatedAt": "2026-08-17T23:02:03Z"
+        },
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "You are right that offset retrieval could often (or always) be skipped, but it comes with certain caveats. Some server or proxy implementations attempt to read the entire request content before sending a response, at least for HTTP/1.1. In these cases, the client doesn't receive an early signal that the PATCH request won't work. Some server also close the connection if they weren't able to send the response after a pre-defined duration, loosing the response entirely\n\nDepending on your setup and how much of the infrastructure between client and server you control, such optimistic behavior can be acceptable or not. Of course, it's also possible to implement the optimistic PATCH with a fallback to offset retrieval. All of this behavior is allowed in the spec through the use of SHOULD. BCP 14 defines this keyword as:\n\n> [3](https://www.rfc-editor.org/info/rfc2119/#section-3). SHOULD   This word, or the adjective \"RECOMMENDED\", mean that there\n>    may exist valid reasons in particular circumstances to ignore a\n>    particular item, but the full implications must be understood and\n>    carefully weighed before choosing a different course.\n\nThis fits the situation here very well. Most implementations should just perform offset retrieval, but you can also optimistically skip it if you know what the consequences are.\n\nHence I don't think we need changes to the document and my recommendation is to close this issue with no action.",
+          "createdAt": "2026-09-14T21:05:40Z",
+          "updatedAt": "2026-09-14T21:05:40Z"
         }
       ]
     },
@@ -78010,6 +78031,27 @@
           "updatedAt": "2026-08-21T17:16:03Z"
         }
       ]
+    },
+    {
+      "number": 3514,
+      "id": "I_kwDOAUA-v88AAAABRSCdsA",
+      "title": "RESUMABLE: Reference Incremental via its RFC",
+      "url": "https://github.com/httpwg/http-extensions/issues/3514",
+      "state": "OPEN",
+      "author": "Acconut",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "Acconut"
+      ],
+      "labels": [
+        "editorial",
+        "resumable-upload"
+      ],
+      "body": "The document describing `Incremental` has been published as RFC RFC 10036. We should update our reference.",
+      "createdAt": "2026-09-14T21:20:54Z",
+      "updatedAt": "2026-09-14T21:20:55Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
