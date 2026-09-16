@@ -363,7 +363,7 @@ The following key-value pairs are defined:
 : Specifies a minimum size counted in bytes for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append or upload creation requests. The value is an Integer. This limit does not apply to upload creation requests with no content, or to requests completing the upload by including the `Upload-Complete: ?1` header field.
 
 `max-age`:
-: Specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource as these requests will likely fail. The value is an Integer.
+: Specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible. The value is an Integer.
 
 Clients usually discover limits through the `Upload-Limit` header field when the upload resource is created ({{upload-creation}}). Throughout the lifetime of the upload resource, these limits SHOULD NOT change in a way that causes failures for clients adhering to the initially discovered limits. If the client discovers that it cannot continue the upload while adhering to the limits, it SHOULD stop the current request immediately ({{request-cancellation}}) and cancel the upload ({{upload-cancellation}}).
 
