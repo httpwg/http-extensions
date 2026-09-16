@@ -317,7 +317,7 @@ The client obtains the current offset in multiple ways:
 
 - The offset can be explicitly retrieved from the upload resource ({{offset-retrieving}}).
 - Interim and final responses when creating the upload ({{upload-creation}}) or appending ({{upload-appending}}) can include the `Upload-Offset` header field.
-- Final responses for appending representation data ({{upload-appending}}) with a `2XX` status code and the `Upload-Complete: ?0` acknowledge that the entire request content was received and the offset increased by the length of the appended representation data.
+- Final responses for appending representation data ({{upload-appending}}) with a `2XX` status code and the `Upload-Complete: ?0` acknowledge that the entire request content was received and the offset increased by the length of the appended representation data. However, the value of an `Upload-Offset` header field has presedence, if present.
 
 Representation data processed by the upload resource cannot be removed again and, therefore, the offset as seen by the client MUST NOT decrease. Clients can use this guarantee to free resources associated to transferred representation data, as no retransmission of it will be necessary. If the server loses any part of the state, it MUST deactivate the upload resource and reject further interaction with it.
 
