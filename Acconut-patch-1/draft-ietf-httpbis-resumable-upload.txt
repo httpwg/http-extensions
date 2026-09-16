@@ -642,9 +642,7 @@ Table of Contents
    max-age:  Specifies the remaining lifetime of the upload resource in
       seconds counted from the generation of the response.  After the
       resource's lifetime is reached, the server might make the upload
-      resource inaccessible and a client SHOULD NOT attempt to access
-      the upload resource as these requests will likely fail.  The value
-      is an Integer.
+      resource inaccessible.  The value is an Integer.
 
    Clients usually discover limits through the Upload-Limit header field
    when the upload resource is created (Section 4.2).  Throughout the
@@ -2106,7 +2104,7 @@ Authors' Addresses
 
    Marius Kleidl (editor)
    Transloadit
-   Email: marius@transloadit.com
+   Email: ietf@mariuskleidl.net
 
 
    Guoye Zhang (editor)
