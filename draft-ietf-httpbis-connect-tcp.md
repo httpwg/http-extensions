@@ -20,7 +20,14 @@ author:
     email: ietf@bemasc.net
 
 normative:
-
+  RFC9110:
+    display: HTTP
+  RFC9112:
+    display: HTTP/1.1
+  RFC9113:
+    display: HTTP/2
+  RFC9114:
+    display: HTTP/3
 informative:
   CAPABILITY:
     title: Good Practices for Capability URLs
@@ -30,6 +37,10 @@ informative:
     title: Clear Site Data
     date: 30 November 2017
     target: https://www.w3.org/TR/clear-site-data/
+  SYSCTL:
+    title: IP Sysctl -- The Linux Kernel documentation
+    date: 14 June 2026
+    target: https://www.kernel.org/doc/html/v7.1/networking/ip-sysctl.html
 
 --- abstract
 
@@ -43,13 +54,13 @@ TCP proxying using HTTP CONNECT has long been part of the core HTTP specificatio
 
 HTTP has used the CONNECT method for proxying TCP connections since HTTP/1.1.  When using CONNECT, the request target specifies a host and port number, and the proxy forwards TCP payloads between the client and this destination ({{?RFC9110, Section 9.3.6}}).  To date, this is the only mechanism defined for proxying TCP over HTTP.  In this specification, this is referred to as a "classic HTTP CONNECT proxy".
 
-HTTP/3 uses a UDP transport, so it cannot be forwarded using the pre-existing CONNECT mechanism.  To enable forward proxying of HTTP/3, the MASQUE effort has defined proxy mechanisms that are capable of proxying UDP datagrams {{!CONNECT-UDP=RFC9298}}, and more generally IP datagrams {{?CONNECT-IP=RFC9484}}.  The destination host and port number (if applicable) are encoded into the HTTP resource path, and end-to-end datagrams are wrapped into HTTP Datagrams {{?RFC9297}} on the client-proxy path.
+HTTP/3 uses a UDP transport, so it cannot be forwarded using the pre-existing CONNECT mechanism.  To enable forward proxying of HTTP/3, the MASQUE effort has defined proxy mechanisms that are capable of proxying UDP datagrams {{!CONNECT-UDP=RFC9298}}, and more generally IP datagrams {{?CONNECT-IP=RFC9484}}.  The destination host and port number (if applicable) are encoded into the HTTP resource path, and end-to-end datagrams are wrapped into HTTP Datagrams {{CAPSULE}} on the client-proxy path.
 
 ## Problems
 
 HTTP clients can be configured to use proxies by selecting a proxy hostname, a port, and whether to use a security protocol. However, Classic HTTP CONNECT requests using the proxy do not carry this configuration information. Instead, they only indicate the hostname and port of the target. This prevents any HTTP server from hosting multiple distinct proxy services, as the server cannot distinguish them by path (as with distinct resources) or by origin (as in "virtual hosting").
 
-The absence of an explicit origin for the proxy also rules out the usual defenses against server port misdirection attacks (see {{Section 7.4 of ?RFC9110}}) and creates ambiguity about the use of origin-scoped response header fields (e.g., "Alt-Svc" {{?RFC7838}}, "Strict-Transport-Security" {{?RFC6797}}).
+The absence of an explicit origin for the proxy also rules out the usual defenses against server port misdirection attacks (see {{Section 7.4 of ?RFC9110}}) and creates ambiguity about the use of origin-scoped response header fields (e.g., "Alt-Svc" {{?ALT-SVC=RFC7838}}, "Strict-Transport-Security" {{?HSTS=RFC6797}}).
 
 Classic HTTP CONNECT requests are not extensible to carry in-stream metadata. For example, the WRAP_UP capsule {{?I-D.ietf-httpbis-wrap-up}} cannot be used with Classic HTTP CONNECT.
 
@@ -69,13 +80,13 @@ When using "connect-tcp", TCP payload data is sent in the payload of new Capsule
 
 ~~~
 DATA Capsule {
-  Type (i) = $TBD1,
+  Type (i) = 0x08,
   Length (i),  # MAY be zero
   TCP Payload (..),
 }
 
 FINAL_DATA Capsule {
-  Type (i) = $TBD2,
+  Type (i) = 0x09,
   Length (i),  # MAY be zero
   TCP Payload (..),
 }
@@ -92,18 +103,18 @@ An intermediary MAY merge and split successive DATA and FINAL_DATA capsules, sub
 
 For example, an intermediary holding two successive DATA capsules in its transmission buffer could merge them, saving at least 2 bytes of encapsulation overhead when they are forwarded.
 
-This protocol can be extended by defining additional relevant Capsule Types.  According to the Capsule Protocol ({{?RFC9297, Section 3.2}}), new Capsule Types should be ignored by pre-existing proxies and intermediaries.  If a new Capsule Type cannot safely be ignored, the endpoints can confirm support using a new HTTP header field.
+This protocol can be extended by defining additional relevant Capsule Types.  According to the Capsule Protocol ({{!CAPSULE=RFC9297, Section 3.2}}), new Capsule Types should be ignored by pre-existing proxies and intermediaries.  If a new Capsule Type cannot safely be ignored, the endpoints can confirm support using a new HTTP header field.
 
 ## In HTTP/1.1
 
-In HTTP/1.1, the client uses the proxy by issuing a request as follows:
+In HTTP/1.1 {{RFC9112}}, the client uses the proxy by issuing a request as follows:
 
 * The method SHALL be "GET".
 * The request's target SHALL correspond to the URI derived from expansion of the proxy's URI Template.
 * The request SHALL include a single "Host" header field containing the origin of the proxy.
 * The request SHALL include a "Connection" header field with the value "Upgrade".  (Note that this requirement is case-insensitive as per {{Section 7.6.1 of !RFC9110}}.)
 * The request SHALL include an "Upgrade" header field with the value "connect-tcp".
-* The request SHOULD include a "Capsule-Protocol: ?1" header (as recommended in {{!RFC9297, Section 3.4}}).
+* The request SHOULD include a "Capsule-Protocol: ?1" header (as recommended in {{CAPSULE, Section 3.4}}).
 
 If the request is well-formed and permissible, the proxy MUST attempt to establish the TCP connection before sending any response status code other than "100 (Continue)" (see {{conveying-metadata}}).  If the TCP connection is successful, the response SHALL be as follows:
 
@@ -143,7 +154,7 @@ In HTTP/2 and HTTP/3, the proxy MUST include SETTINGS_ENABLE_CONNECT_PROTOCOL in
 
 A templated TCP proxying request that does not conform to all of these requirements represents a client error (see {{!RFC9110, Section 15.5}}) and may be malformed (see {{Section 8.1.1 of !RFC9113}} and {{Section 4.1.2 of !RFC9114}}).
 
-Additionally the "capsule-protocol" header field SHOULD be present with a value of "?1" (as recommended in {{!RFC9297, Section 3.4}}).
+Additionally the "capsule-protocol" header field SHOULD be present with a value of "?1" (as recommended in {{CAPSULE, Section 3.4}}).
 
 ~~~
 HEADERS
@@ -165,8 +176,8 @@ Ordinary HTTP headers apply only to the single resource identified in the reques
 
 Unlike classic HTTP CONNECT proxies, a templated TCP proxy has an unambiguous origin of its own.  Origin-scoped headers apply to this origin when they are associated with a templated TCP proxy response.  Here are some origin-scoped headers that could potentially be sent by a templated TCP proxy:
 
-* "Alt-Svc" {{?RFC7838}}
-* "Strict-Transport-Security" {{?RFC6797}}
+* "Alt-Svc" {{ALT-SVC}}
+* "Strict-Transport-Security" {{HSTS}}
 * "Accept-CH" {{?RFC8942}}
 * "Set-Cookie" {{?RFC6265}}, which has configurable scope.
 * "Clear-Site-Data" {{CLEAR-SITE-DATA}}
@@ -191,11 +202,11 @@ When closing connections, endpoints are subject to the following requirements:
   - If the connection closed gracefully, the endpoint MUST close the send stream gracefully.
   - Otherwise, the endpoint SHOULD close the send stream abruptly, using a mechanism appropriate to the HTTP version:
     - HTTP/3: reset the stream with H3_CONNECT_ERROR;
-      see {{!RFC9000, Section 19.4}} and {{?RFC9114, Section 8.1}}
+      see {{!QUIC=RFC9000, Section 19.4}} and {{?RFC9114, Section 8.1}}
     - HTTP/2: reset the stream with CONNECT_ERROR;
       see {{!RFC9113}}, Sections 6.4 and 7
     - HTTP/1.1 over TLS: TCP shutdown without a TLS closure alert;
-      see {{!RFC8446, Section 6.1}}.
+      see {{!TLS=RFC9846, Section 6.1}}.
     - HTTP/1.1 without TLS: TCP RST
 * When the receive stream is closed abruptly or without a FINAL_DATA capsule received, the endpoint SHOULD send a TCP RST if the TCP subsystem permits it.
 
@@ -248,17 +259,29 @@ The mandatory behaviors above enable endpoints to detect any truncation of incom
 ~~~
 {: title="RST after FIN example (HTTP/3)"}
 
+### Handling Invalid Data
+
+An endpoint that receives invalid data from its peer is subject to the same requirements as when receiving an abrupt closure of the receive stream (see {{closing-connections}}).  Some examples of invalid data include:
+
+ * A second FINAL_DATA capsule.
+ * A DATA capsule after FINAL_DATA.
+ * Data that results in a parsing error under the Capsule Protocol.
+ * A capsule that is truncated by the end of the stream.
+ * A capsule that would require unreasonable effort to process.
+
+Note that very large DATA and FINAL_DATA capsules are still valid, as they can be forwarded incrementally using a bounded memory buffer.
+
 # Additional Connection Setup Behaviors
 
 This section discusses some behaviors that are permitted or recommended in order to enhance the performance or functionality of connection setup.
 
 ## Latency optimizations
 
-When using this specification in HTTP/2 or HTTP/3, clients MAY start sending TCP stream content optimistically, subject to flow control limits ({{Section 5.2 of !RFC9113}} or {{Section 4.1 of !RFC9000}}).  Proxies MUST buffer this "optimistic" content until the TCP stream becomes writable, and discard it if the TCP connection fails.  (Clients MUST NOT use "optimistic" behavior in HTTP/1.1, as this would interfere with reuse of the connection after an error response such as "401 (Unauthorized)".)
+When using this specification in HTTP/2 or HTTP/3, clients MAY start sending TCP stream content optimistically, subject to flow control limits ({{Section 5.2 of !RFC9113}} or {{Section 4.1 of !QUIC}}).  Proxies MUST buffer this "optimistic" content until the TCP stream becomes writable, and discard it if the TCP connection fails.  (Clients MUST NOT use "optimistic" behavior in HTTP/1.1, as this would interfere with reuse of the connection after an error response such as "401 (Unauthorized)".)
 
-Servers that host a proxy under this specification MAY offer support for TLS early data in accordance with {{!RFC8470}}.  Clients MAY send "connect-tcp" requests in early data, and MAY include "optimistic" TCP content in early data (in HTTP/2 and HTTP/3).  At the TLS layer, proxies MAY ignore, reject, or accept the `early_data` extension ({{!RFC8446, Section 4.2.10}}).  At the HTTP layer, proxies MAY process the request immediately, return a "425 (Too Early)" response ({{!RFC8470, Section 5.2}}), or delay some or all processing of the request until the handshake completes.  For example, a proxy with limited anti-replay defenses might choose to perform DNS resolution of the `target_host` when a request arrives in early data, but delay the TCP connection until the TLS handshake completes.
+Servers that host a proxy under this specification MAY offer support for TLS early data in accordance with {{!RFC8470}}.  Clients MAY send "connect-tcp" requests in early data, and MAY include "optimistic" TCP content in early data (in HTTP/2 and HTTP/3).  At the TLS layer, proxies MAY ignore, reject, or accept the `early_data` extension ({{TLS, Section 4.2.10}}).  At the HTTP layer, proxies MAY process the request immediately, return a "425 (Too Early)" response ({{!RFC8470, Section 5.2}}), or delay some or all processing of the request until the handshake completes.  For example, a proxy with limited anti-replay defenses might choose to perform DNS resolution of the `target_host` when a request arrives in early data, but delay the TCP connection until the TLS handshake completes.
 
-When DNS resolution of `target_host` produces multiple IP addresses, proxies SHOULD use a racing procedure such as Happy Eyeballs {{?RFC8305}} to accelerate connection establishment.  Proxies that race multiple connection attempts MUST buffer any optimistic content until a connection is selected and MUST NOT transmit any payload data on the other connections.
+When DNS resolution of `target_host` produces multiple IP addresses, proxies SHOULD use a racing procedure such as Happy Eyeballs {{?HEv2=RFC8305}} to accelerate connection establishment.  Proxies that race multiple connection attempts MUST buffer any optimistic content until a connection is selected and MUST NOT transmit any payload data on the other connections.
 
 ## Conveying metadata
 
@@ -279,7 +302,7 @@ For server operators, template-driven TCP proxies are particularly valuable in s
 Template-driven TCP proxies can also be made invisible to probes from unauthorized clients:
 
 * The URI template can include a high-entropy path, similar to Capability URLs {{CAPABILITY}}.
-* The proxy can require HTTP Concealed Authentication {{?CONCEALED=RFC9729, Section 6.4}}.
+* The proxy can require HTTP Concealed Authentication ({{?CONCEALED=RFC9729, Section 6.4}}).
 
 ## Clients
 
@@ -313,16 +336,20 @@ Template-driven TCP proxying is largely subject to the same security risks as cl
 
 A small additional risk is posed by the use of a URI Template parser on the client side.  The template input string could be crafted to exploit any vulnerabilities in the parser implementation.  Client implementers should apply their usual precautions for code that processes untrusted inputs.
 
-## Resource Exhaustion attacks
+## Resource Exhaustion attacks {#resource-exhaustion}
 
 A malicious client can achieve cause highly asymmetric resource usage at the proxy by colluding with a destination server and violating the ordinary rules of TCP or HTTP.  Some example attacks, and mitigations that proxies can apply:
 
 * **Connection Pileup**: A malicious client can attempt to open a large number of connections to exhaust the proxy's memory, port, or file descriptor limits. When using HTTP/2 or HTTP/3, each incremental TCP connection imposes a much higher cost on the proxy than on the attacker.
   - Mitigation: Limit the number of concurrent connections per client.
-* **Window Bloat**: An attacker can grow the receive window size by simulating a "long, fat network" {{?RFC7323}}, then fill the window (from the sender) and stop acknowledging it (at the receiver).  This leaves the proxy buffering up to 1 GiB of TCP data until some timeout, while the attacker does not have to retain a large buffer.
+* **Window Bloat**: An attacker can grow the receive window size by simulating a "long, fat network" ({{?RFC7323, Section 1.1}}), then fill the window (from the sender) and stop acknowledging it (at the receiver).  This leaves the proxy buffering up to 1 GiB of TCP data until some timeout, while the attacker does not have to retain a large buffer.
   - Mitigation: Limit the maximum receive window for TCP and HTTP connections, and the size of userspace buffers used for proxying.  Alternatively, monitor the connections' send queues and limit the total buffered data per client.
 * **WAIT Abuse**: An attacker can force the proxy into a TIME-WAIT, CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a proxy-to-destination 4-tuple for up to four minutes after the client's connection is closed.
-  - Mitigation: Limit the number of connections for each client to each destination, even if those connections are in a waiting state and the corresponding CONNECT stream is closed.  Alternatively, allocate a large range of IP addresses for TCP connections (especially in IPv6).
+  - Mitigations:
+    * Enable the PAWS optimization ({{?RFC7323, Section 5}}) across successive connections (e.g., Linux's `tcp_tw_reuse=1` {{SYSCTL}}).  This makes TIME-WAIT 4-tuples rapidly reusable if the destination enables TCP Timestamps, which most do.
+    * Allocate a large range of IP addresses for TCP connections (especially in IPv6).
+    * Limit the number of connections for each client to each destination, even if those connections are in a waiting state and the corresponding CONNECT stream is closed.
+    * If necessary, perform an abrupt TCP closure that destroys the Transmission Control Block.  Note that reusing a 4-tuple in this way can increase the risk of interference between successive connections.
 
 # Operational Considerations
 
@@ -333,7 +360,7 @@ While this specification is fully functional under HTTP/1.1, performance-sensiti
 * Each CONNECT request requires a new TCP and TLS connection, imposing a higher cost in setup latency, congestion control convergence, CPU time, and data transfer.
 * The graceful and abrupt closure signals ({{closing-connections}}) are more likely to be missing or corrupted:
   - Some implementations may be unable to emit the recommended abrupt closure signals, due to limitations in their TCP and TLS subsystems.
-  - Faulty implementations may fail to send a TLS closure alert during graceful shutdown, or fail to report an error when the expected closure alert is not received.  These misbehaviors are not compliant with {{RFC8446}}, but they are common nonetheless among HTTP/1.1 implementations today.
+  - Faulty implementations may fail to send a TLS closure alert during graceful shutdown, or fail to report an error when the expected closure alert is not received.  These misbehaviors are not compliant with {{TLS}}, but they are common nonetheless among HTTP/1.1 implementations today.
 * The number of active connections through each client may be limited by the number of available TCP client ports, especially if:
   - The client only has one IP address that can be used to reach the proxy.
   - The client is shared between many parties, such as when acting as a gateway or concentrator.
@@ -351,6 +378,12 @@ Templated TCP proxies can make use of standard HTTP gateways and path-routing to
 * allow any "Proxy-Status" headers to traverse the gateway.
 
 If the proxy relies on TLS Client Certificates for client authentication, the gateway must perform this authentication itself or pass the relevant information to the origin (e.g., using a "Client-Cert" request header field {{?RFC9440}}).
+
+## Timeouts
+
+Except when actively sending or receiving data, an endpoint is always waiting for an event from its peer or its TCP connection.  HTTP and TCP are designed to ensure that such an event always arrives, so the connection is never permanently stuck in any state until it is fully closed.  However, for efficient operation, it may be necessary to adjust the settings for TCP keep-alives ({{?TCP=RFC9293, Section 3.8.4}}), QUIC idle timeouts ({{?QUIC, Section 10.1}}), HTTP/2 PING frames ({{?RFC9113, Section 6.7}}), and other transport options.
+
+Endpoints MAY impose additional timeouts, especially as a defense against certain resource exhaustion attacks ({{resource-exhaustion}}).  However, operators should apply timeouts cautiously to minimize the impact on connections that are functioning but slow.  Any timeout imposed by the endpoint MUST be treated as an abrupt closure of the affected stream or connection ({{closing-connections}}).
 
 # IANA Considerations
 
@@ -381,13 +414,8 @@ IF APPROVED, IANA is requested to add the following entry to the "HTTP Capsule T
 
 | ------ | ------------ | --------- | ---------------------------------- | ----------------- | ------- |
 | Value  | Capsule Type | Status    | Reference                          | Change Controller | Contact |
-| (TBD1) | DATA         | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
-| (TBD2) | FINAL_DATA   | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
-
-### Interop testing
-{:removeInRFC="true"}
-
-For this draft version of the protocol, the Capsule Type values `0x2028d7f2` and `0x2028d7f3` shall be used provisionally for testing, under the names "DATA-12" and "FINAL_DATA-12".
+| 0x08   | DATA         | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
+| 0x09   | FINAL_DATA   | permanent | (This document), {{specification}} | IETF              | HTTPBIS |
 
 --- back
 
