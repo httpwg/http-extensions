@@ -512,6 +512,8 @@ Table of Contents
       with a 2XX status code and the Upload-Complete: ?0 acknowledge
       that the entire request content was received and the offset
       increased by the length of the appended representation data.
+      However, the value of an Upload-Offset header field has
+      presedence, if present.
 
    Representation data processed by the upload resource cannot be
    removed again and, therefore, the offset as seen by the client MUST
