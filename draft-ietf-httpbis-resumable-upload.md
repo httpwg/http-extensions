@@ -69,7 +69,7 @@ informative:
     target:
      "https://web.archive.org/web/20150315054838/http://ha.ckers.org/slowloris/"
   RFC8792:
-  INCREMENTAL: I-D.ietf-httpbis-incremental
+  INCREMENTAL: RFC10036
 
 --- abstract
 
