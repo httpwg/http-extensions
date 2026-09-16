@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 14 March 2027                                        Apple Inc.
+Expires: 20 March 2027                                        Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                       10 September 2026
+                                                       16 September 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 March 2027.
+   This Internet-Draft will expire on 20 March 2027.
 
 Copyright Notice
 
@@ -1818,10 +1818,9 @@ Table of Contents
 
    [INCREMENTAL]
               Oku, K., Pauly, T., and M. Thomson, "Incremental
-              Forwarding of HTTP Messages", Work in Progress, Internet-
-              Draft, draft-ietf-httpbis-incremental-04, 2 March 2026,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              incremental-04>.
+              Forwarding of HTTP Messages", RFC 10036,
+              DOI 10.17487/RFC10036, August 2026,
+              <https://www.rfc-editor.org/rfc/rfc10036>.
 
    [RFC8792]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,
               "Handling Long Lines in Content of Internet-Drafts and
