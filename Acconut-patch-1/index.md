@@ -1,4 +1,4 @@
-# Editor's drafts for draft-ietf-httpbis-pre-denied-01 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/draft-ietf-httpbis-pre-denied-01)
+# Editor's drafts for Acconut-patch-1 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/Acconut-patch-1)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
