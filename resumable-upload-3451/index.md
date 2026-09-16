@@ -4,7 +4,7 @@
 | ----- | --- | --- | --- |
 | [Resumable Uploads](./draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](./draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | same as main |
 | [Templated CONNECT-TCP](./draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](./draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | same as main |
-| [The Preliminary Request Denied HTTP Status Code](./draft-ietf-httpbis-pre-denied.html "The Preliminary Request Denied HTTP Status Code (HTML)") | [plain text](./draft-ietf-httpbis-pre-denied.txt "The Preliminary Request Denied HTTP Status Code (Text)") | same as main |
+| [The Purpose Declined HTTP Status Code](./draft-ietf-httpbis-pre-denied.html "The Purpose Declined HTTP Status Code (HTML)") | [plain text](./draft-ietf-httpbis-pre-denied.txt "The Purpose Declined HTTP Status Code (Text)") | same as main |
 | [The HTTP Wrap Up Capsule](./draft-ietf-httpbis-wrap-up.html "The HTTP Wrap Up Capsule (HTML)") | [plain text](./draft-ietf-httpbis-wrap-up.txt "The HTTP Wrap Up Capsule (Text)") | same as main |
 | [HTTP Server Secondary Cert Auth](./draft-ietf-httpbis-secondary-server-certs.html "Secondary Certificate Authentication of HTTP Servers (HTML)") | [plain text](./draft-ietf-httpbis-secondary-server-certs.txt "Secondary Certificate Authentication of HTTP Servers (Text)") | same as main |
 | [Compression Dictionary Transport](./draft-ietf-httpbis-compression-dictionary.html "Compression Dictionary Transport (HTML)") | [plain text](./draft-ietf-httpbis-compression-dictionary.txt "Compression Dictionary Transport (Text)") | same as main |
