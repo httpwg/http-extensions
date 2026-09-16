@@ -1286,10 +1286,10 @@ Table of Contents
    representation data (Section 4.4) and/or cancellation (Section 4.5)
    to the same upload resource.  In addition, the server MUST NOT send
    outdated information in responses.  This means that the offset
-   communicated through responses as defined in Section 4.1.1 MUST be
-   accepted in a subsequent request to append representation data if no
-   other request to append representation data or cancel was received in
-   the meantime.  In other words, clients have to be able to use
+   communicated through final responses as defined in Section 4.1.1 MUST
+   be accepted in a subsequent request to append representation data if
+   no other request to append representation data or cancel was received
+   in the meantime.  In other words, clients have to be able to use
    received offsets.
 
    The RECOMMENDED approach is as follows: If a server receives a new
