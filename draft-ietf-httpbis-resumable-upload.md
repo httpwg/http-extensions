@@ -29,7 +29,7 @@ author:
     name: Marius Kleidl
     role: editor
     organization: Transloadit
-    email: marius@transloadit.com
+    email: ietf@mariuskleidl.net
   -
     ins: G. Zhang
     name: Guoye Zhang
