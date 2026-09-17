@@ -506,17 +506,16 @@ Table of Contents
    *  The offset can be explicitly retrieved from the upload resource
       (Section 4.3).
 
-   *  Interim and final responses when creating the upload (Section 4.2)
-      or appending (Section 4.4) can include the Upload-Offset header
+   *  Interim and final responses for creating the upload (Section 4.2)
+      or appending (Section 4.4) with a non-2XX status code and the
+      Upload-Complete: ?0 header can include the Upload-Offset header
       field.
 
    *  Final responses for appending representation data (Section 4.4)
-      with a 2XX status code and the Upload-Complete: ?0 acknowledge
-      that the entire request content was received and the offset
-      increased by the length of the appended representation data.  The
-      value of an Upload-Offset header field takes precedence, if
-      present.  However, its value MUST NOT be smaller than the offset
-      derived by adding the appended representation data's length.
+      with a 2XX status code and the Upload-Complete: ?0 header
+      acknowledge that the entire request content was received and the
+      offset increased by the length of the appended representation
+      data.
 
    Representation data processed by the upload resource cannot be
    removed again and, therefore, the offset as seen by the client MUST
