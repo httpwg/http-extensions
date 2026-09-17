@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                       16 September 2026
-Expires: 20 March 2027
+Intended status: Standards Track                       17 September 2026
+Expires: 21 March 2027
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 March 2027.
+   This Internet-Draft will expire on 21 March 2027.
 
 Copyright Notice
 
@@ -64,6 +64,7 @@ Table of Contents
      3.3.  Use of Other Relevant Headers
        3.3.1.  Origin-scoped Headers
        3.3.2.  Authentication Headers
+       3.3.3.  Caching Headers
      3.4.  Closing Connections
        3.4.1.  Handling Invalid Data
    4.  Additional Connection Setup Behaviors
@@ -292,7 +293,7 @@ Table of Contents
    Section 15.5) and may be malformed (see Section 8.1.1 of [HTTP/2] and
    Section 4.1.2 of [HTTP/3]).
 
-   Additionally the "capsule-protocol" header field SHOULD be present
+   Additionally, the "capsule-protocol" header field SHOULD be present
    with a value of "?1" (as recommended in [CAPSULE], Section 3.4).
 
    HEADERS
@@ -350,6 +351,24 @@ Table of Contents
    TLS Client Certificate authentication can also be used (see
    Section 7.2).
 
+3.3.3.  Caching Headers
+
+   In HTTP/2 and HTTP/3, this specification uses the CONNECT method,
+   which is not subject to caching ([HTTP], Section 9.3.6).  However, in
+   HTTP/1.1, the method is GET, which in other usages can be cacheable.
+   To minimize discrepancies between HTTP versions, the following
+   requirements apply when using HTTP/1.1:
+
+   *  If the response has a heuristically cacheable status code ([HTTP],
+      Section 15.1), it SHOULD also carry a Cache-Control: no-store
+      header field.
+
+      -  This can occur if the request is rejected or the connection
+         fails.
+
+   *  The proxy SHOULD NOT attach any other caching-related header
+      fields to the response.
+
 3.4.  Closing Connections
 
    Connection termination is essentially symmetrical for proxies and
@@ -375,15 +394,15 @@ Table of Contents
          using a mechanism appropriate to the HTTP version:
 
          o  HTTP/3: reset the stream with H3_CONNECT_ERROR; see [QUIC],
-            Section 19.4 and [HTTP/3], Section 8.1
+            Section 19.4 and [HTTP/3], Section 8.1.
 
          o  HTTP/2: reset the stream with CONNECT_ERROR; see [HTTP/2],
-            Sections 6.4 and 7
+            Sections 6.4 and 7.
 
          o  HTTP/1.1 over TLS: TCP shutdown without a TLS closure alert;
             see [TLS], Section 6.1.
 
-         o  HTTP/1.1 without TLS: TCP RST
+         o  HTTP/1.1 without TLS: TCP RST.
 
    *  When the receive stream is closed abruptly or without a FINAL_DATA
       capsule received, the endpoint SHOULD send a TCP RST if the TCP
@@ -393,46 +412,52 @@ Table of Contents
    truncation of incoming TCP data.  The recommended behaviors propagate
    any TCP errors through the proxy connection.
 
-   +-------+    +------------+    +------------+    +-------+
-   | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
-   +-+-----+    +-+----------+    +----------+-+    +-----+-+
-     +---"abc"--->+-------DATA{"abc"}------->+---"abc"--->|
-     +----FIN---->+------FINAL_DATA{""}----->+----FIN---->|
-     |<---FIN-----+<-----FINAL_DATA{""}------+<---FIN-----+
-     |            |<----QUIC.STREAM{FIN}-----+            |
-     +---FINACK-->+-----QUIC.STREAM{FIN}---->|            |
-     |            |                          |            |
+   In HTTP/3, endpoints MAY negotiate and use the RESET_STREAM_AT frame
+   in order to reduce data loss during an abrupt closure
+   [I-D.ietf-quic-reliable-stream-reset].  However, RESET_STREAM_AT may
+   not be very effective in this case, as TCP implementations will
+   typically discard pending data when a RST is received.
+
+   +-------+    +------------+     +------------+    +-------+
+   | TCP A |    | Endpoint A |     | Endpoint B |    | TCP B |
+   +-+-----+    +-+----------+     +----------+-+    +-----+-+
+     +---"abc"--->+--------DATA{"abc"}------->+---"abc"--->|
+     +----FIN---->+------FINAL_DATA{""}------>+----FIN---->|
+     |<---FIN-----+<-----FINAL_DATA{""}-------+<---FIN-----+
+     |            |<----QUIC.STREAM{FIN}------+            |
+     +---FINACK-->+-----QUIC.STREAM{FIN}----->|            |
+     |            |                           |            |
 
            Figure 4: Simple graceful termination example (HTTP/3)
 
-   +-------+    +------------+    +------------+    +-------+
-   | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
-   +-+-----+    +-+----------+    +----------+-+    +-----+-+
-     +----RST---->+---RST_STREAM{CON_ERR}--->+----RST---->|
-     |            |                          |            |
+   +-------+    +------------+     +------------+    +-------+
+   | TCP A |    | Endpoint A |     | Endpoint B |    | TCP B |
+   +-+-----+    +-+----------+     +----------+-+    +-----+-+
+     +----RST---->+----RST_STREAM{CON_ERR}--->+----RST---->|
+     |            |                           |            |
 
            Figure 5: Simple TCP RST termination example (HTTP/2)
 
-   +-------+    +------------+    +------------+    +-------+
-   | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
-   +-+-----+    +-+----------+    +----------+-+    +-----+-+
-     +---"abc"--->+-------DATA{"abc"}------->+---"abc"--->|
-     |            |  (... timeout @ A ...)   |            |
-     |            +--FIN (no close_notify)-->+----RST---->|
-     |            |                          |            |
+   +-------+    +------------+     +------------+    +-------+
+   | TCP A |    | Endpoint A |     | Endpoint B |    | TCP B |
+   +-+-----+    +-+----------+     +----------+-+    +-----+-+
+     +---"abc"--->+--------DATA{"abc"}------->+---"abc"--->|
+     |            |   (... timeout @ A ...)   |            |
+     |            +--FIN (no close_notify) -->+----RST---->|
+     |            |                           |            |
 
                     Figure 6: Timeout example (HTTP/1.1)
 
-   +-------+    +------------+    +------------+    +-------+
-   | TCP A |    | Endpoint A |    | Endpoint B |    | TCP B |
-   +-+-----+    +-+----------+    +----------+-+    +-----+-+
-     +-----FIN--->+-------FINAL_DATA{""}---->+-----FIN--->|
-     |            |                          |            |
-     |    (FIN)   |                          |    (FIN)   |
-     |<---"abc"---+<----FINAL_DATA{"abc"}----+<---"abc"---+
-     |            |<----QUIC.STREAM{FIN}-----+            |
-     +-----RST--->+-----H3_CONNECT_ERROR---->+-----RST--->|
-     |            |                          |            |
+   +-------+    +------------+     +------------+    +-------+
+   | TCP A |    | Endpoint A |     | Endpoint B |    | TCP B |
+   +-+-----+    +-+----------+     +----------+-+    +-----+-+
+     +-----FIN--->+-------FINAL_DATA{""}----->+-----FIN--->|
+     |            |                           |            |
+     |    (FIN)   |                           |    (FIN)   |
+     |<---"abc"---+<----FINAL_DATA{"abc"}-----+<---"abc"---+
+     |            |<----QUIC.STREAM{FIN}------+            |
+     +-----RST--->+-----H3_CONNECT_ERROR----->+-----RST--->|
+     |            |                           |            |
 
                   Figure 7: RST after FIN example (HTTP/3)
 
@@ -516,10 +541,10 @@ Table of Contents
       the request is rejected.
 
    Proxies implementing this specification SHOULD include a "Proxy-
-   Status" response header field [RFC9209] in any success or failure
-   response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support
-   advanced client behaviors and diagnostics.  Clients and proxies MUST
-   NOT send trailer fields on "connect-tcp" streams.
+   Status" response header field [PROXY-STATUS] in any success or
+   failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to
+   support advanced client behaviors and diagnostics.  Clients and
+   proxies MUST NOT send trailer fields on "connect-tcp" streams.
 
 5.  Applicability
 
@@ -596,7 +621,9 @@ Table of Contents
    Template-driven TCP proxying is largely subject to the same security
    risks as classic HTTP CONNECT.  For example, any restrictions on
    authorized use of the proxy (see [HTTP], Section 9.3.6) apply equally
-   to both.
+   to both.  The destination_ip_prohibited Proxy Error Type from
+   Section 2.3.5 of [PROXY-STATUS] can be useful when rejecting
+   unuthorized requests.
 
    A small additional risk is posed by the use of a URI Template parser
    on the client side.  The template input string could be crafted to
@@ -604,10 +631,13 @@ Table of Contents
    implementers should apply their usual precautions for code that
    processes untrusted inputs.
 
+   See Section 7 of [CONNECT-UDP] for a comparison of the risks of
+   operating a TCP or UDP proxy.
+
 6.1.  Resource Exhaustion attacks
 
-   A malicious client can achieve cause highly asymmetric resource usage
-   at the proxy by colluding with a destination server and violating the
+   A malicious client can cause highly asymmetric resource usage at the
+   proxy by colluding with a destination server and violating the
    ordinary rules of TCP or HTTP.  Some example attacks, and mitigations
    that proxies can apply:
 
@@ -826,6 +856,11 @@ Table of Contents
    [HTTP/3]   Bishop, M., Ed., "HTTP/3", RFC 9114, DOI 10.17487/RFC9114,
               June 2022, <https://www.rfc-editor.org/rfc/rfc9114>.
 
+   [PROXY-STATUS]
+              Nottingham, M. and P. Sikora, "The Proxy-Status HTTP
+              Response Header Field", RFC 9209, DOI 10.17487/RFC9209,
+              June 2022, <https://www.rfc-editor.org/rfc/rfc9209>.
+
    [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", RFC 9000,
               DOI 10.17487/RFC9000, May 2021,
@@ -852,10 +887,6 @@ Table of Contents
    [RFC8470]  Thomson, M., Nottingham, M., and W. Tarreau, "Using Early
               Data in HTTP", RFC 8470, DOI 10.17487/RFC8470, September
               2018, <https://www.rfc-editor.org/rfc/rfc8470>.
-
-   [RFC9209]  Nottingham, M. and P. Sikora, "The Proxy-Status HTTP
-              Response Header Field", RFC 9209, DOI 10.17487/RFC9209,
-              June 2022, <https://www.rfc-editor.org/rfc/rfc9209>.
 
    [RFC9220]  Hamilton, R., "Bootstrapping WebSockets with HTTP/3",
               RFC 9220, DOI 10.17487/RFC9220, June 2022,
@@ -915,6 +946,13 @@ Table of Contents
               intarea-proxy-config-14, 19 May 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-intarea-
               proxy-config-14>.
+
+   [I-D.ietf-quic-reliable-stream-reset]
+              Seemann, M. and K. Oku, "QUIC Stream Resets with Partial
+              Delivery", Work in Progress, Internet-Draft, draft-ietf-
+              quic-reliable-stream-reset-11, 6 September 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-quic-
+              reliable-stream-reset-11>.
 
    [RFC6265]  Barth, A., "HTTP State Management Mechanism", RFC 6265,
               DOI 10.17487/RFC6265, April 2011,
