@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-15T02:41:56.350018+00:00",
+  "timestamp": "2026-09-17T02:40:43.721051+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -76172,7 +76172,7 @@
       ],
       "body": "A few (potentially editorial) questions about FINAL_DATA that might be worth clarifying in the document text: \n\n1. What happens if I get duplicate FINAL_DATA. We say: \n\n> After sending a FINAL_DATA capsule, an endpoint MUST NOT send any more DATA or FINAL_DATA capsules on this data stream. (See [Section 3.4](https://www.ietf.org/archive/id/draft-ietf-httpbis-connect-tcp-11.html#closing-connections) for related requirements.)\n\nBut there is nothing that says what to do as a receiver if you receive a second FINAL_DATA. Is that an error? Do you ignore it?\n\n2. HTTP stream FIN, but no FINAL_DATA. We say: \n\n> When the receive stream is closed abruptly or without a FINAL_DATA capsule received, the endpoint SHOULD send a TCP RST if the TCP subsystem permits it.\n\nGiven that this potentially means data is truncated, should we upgrade this to a \"MUST, if\", rather than a \"SHOULD, if\"? It'd be nice if this signal were as likely as possible to propagate.\n\n3. FINAL_DATA, but no HTTP stream closure. \n\nWe say that an endpoint \"MUST close its send stream\", but what do I do as a receiver if I get FINAL_DATA but the HTTP stream stays open? Should I have a timeout? Is that an error? Do I just ignore it and decide the other endpoint is taking up some of its stream flow control credit, so it probably shouldn't do that, but it's fine if it does (I like this last one, personally)?",
       "createdAt": "2026-04-04T08:26:00Z",
-      "updatedAt": "2026-07-13T15:35:43Z",
+      "updatedAt": "2026-09-16T18:28:27Z",
       "closedAt": null,
       "comments": [
         {
@@ -76272,6 +76272,13 @@
           "body": "I like the wording you adopted, thanks!",
           "createdAt": "2026-07-13T15:35:42Z",
           "updatedAt": "2026-07-13T15:35:42Z"
+        },
+        {
+          "author": "MikeBishop",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Is this resolved by #3488?",
+          "createdAt": "2026-09-16T18:28:27Z",
+          "updatedAt": "2026-09-16T18:28:27Z"
         }
       ]
     },
@@ -77123,14 +77130,16 @@
       "state": "OPEN",
       "author": "GrantGryczan",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "Acconut"
+      ],
       "labels": [
         "editorial",
         "resumable-upload"
       ],
       "body": "While implementing my generalized resumable upload client, I ran into several edge cases related to `Upload-Offset` as a response header that I seeked for guidance from the draft on, but the draft doesn't say anything about them.\n\n1. _(This is the only purely editorial issue.)_ In a 2xx response to a creation/append request, a client can determine the new upload offset for the `Upload-Offset` response header based on the length of the content it uploaded added to the previous offset. For example, if the client sent `Upload-Offset: 100` and `Content-Length: 50`, the client knows from a 2xx response that the new offset should be 150. This is implied by the [definition of upload offset](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.1.1-1). It's also specified that the client can [free previous resources](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.1.1-4) upon receipt of a new `Upload-Offset` value, but the same is not specified for changes to the upload offset in general. I think this suggestion may be better communicated if generalized to the offset implied by responses in general (e.g., as implied by a 2xx response), rather than specific to the `Upload-Offset` header.\n2. In a 2xx response to a creation/append request, how should a client treat an `Upload-Offset` value inconsistent with what the client requested? Reusing the previous example, what should the client do if the server replies to that request with `Upload-Offset: 125` or `Upload-Offset: 200` instead of the correct `Upload-Offset: 150`?\n3. In an offset retrieval response, how should a client treat an `Upload-Offset` value below its current known offset? In other words, what should the client do if the server tells it that the offset moved backwards?\n4. Similarly, should a client handle the case that the offset moved forward further ahead than it knows it ever uploaded the representation, since that implies the server messed up? Or should the client just take that for granted, since that allows a simpler implementation?\n5. In an offset retrieval response, how should a client treat a missing or invalid `Upload-Offset`? The [definition of the `Upload-Offset` header](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.1.1-3) currently says syntactically invalid or negative values \"MUST cause the entire header field to be ignored\", but ignoring the header on offset retrieval responses is unacceptable, which seems like an oversight in this definition.\n\nI'm guessing that, for some of these, we'd want the client to abort its current request and cancel the upload, similarly to [when the server messes up](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.2.2-7) the `Location` response header.",
       "createdAt": "2026-06-15T22:30:10Z",
-      "updatedAt": "2026-07-15T20:17:45Z",
+      "updatedAt": "2026-09-16T19:39:20Z",
       "closedAt": null,
       "comments": [
         {
@@ -77269,13 +77278,15 @@
       "state": "OPEN",
       "author": "GrantGryczan",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "GrantGryczan"
+      ],
       "labels": [
         "resumable-upload"
       ],
       "body": "For a client handling a 4xx creation/append response with `Upload-Complete: ?0`, it can resume the upload by sending an offset retrieval request, waiting for the response, and then submitting an append request at the retrieved offset. But this isn't necessary if the response includes an up-to-date `Upload-Offset` value already; then, a client can just use that and save a round trip, immediately resuming the upload at the given offset without performing offset retrieval.\n\nThis is especially problematic for servers that require that incomplete appends conform to a particular chunk granularity. Since clients have no way to tell what a server's chunk granularity is, a server with a chunk granularity requirement will respond to nearly every incomplete creation/append with a non-completing 4xx response (as per https://github.com/httpwg/http-extensions/issues/3193#issuecomment-3893170872), since most request content lengths won't be a multiple of the server's chunk granularity. Then the client has to perform offset retrieval to send every single chunk but the first and last. This puts unnecessary load on clients and servers wherever chunk granularity is involved.\n\nI'd strongly argue we should recommend servers include the `Upload-Offset` header in 4xx responses with `Upload-Complete: ?0`. We don't have to recommend clients actually use this information, since as Guoye Zhang said in [a comment](https://github.com/httpwg/http-extensions/pull/3319#discussion_r2474114941), that would make client implementations more complex. But clients should at least have the option to opt into that sometimes-very-significant performance optimization, and I expect it to be very simple for servers to include that information.\n\n~~[This paragraph](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.4.1-2) should also be modified to mention this as one of the sources clients are recommended to take the offset from, though I'm not sure how I'd phrase that.~~ EDIT: I'm not sure why I thought any change was needed there. Looking at it again, it seems like it already covers this.\n\nThis could also be extended to ~~3xx-5xx~~ 3xx responses that contain the `Upload-Complete: ?0` header. There is no point in recommending this for 2xx since the offset after a non-completing 2xx response can be inferred from the previous known offset + the requested content length. I also wouldn't recommend extending this to any responses without the `Upload-Complete` header, since those responses are often generated without awareness of resumable uploads.",
       "createdAt": "2026-06-16T02:45:03Z",
-      "updatedAt": "2026-09-14T21:16:53Z",
+      "updatedAt": "2026-09-16T23:38:26Z",
       "closedAt": null,
       "comments": [
         {
@@ -77368,6 +77379,27 @@
           "body": "In general, we should try to avoid introducing duplicate way to achieve the same thing and strive to be as simple as possible. I know this might not seem like it when looking at the document's page count, but we're trying :)",
           "createdAt": "2026-09-14T21:16:53Z",
           "updatedAt": "2026-09-14T21:16:53Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Setting aside all of my tangential propositions above, is adding something like this not simple enough to be worth the significant performance gain to some use cases like chunk granularity?\n\n> Servers MAY include `Upload-Offset` in 4xx and 5xx responses to indicate the offset the client can resume at.",
+          "createdAt": "2026-09-15T11:57:22Z",
+          "updatedAt": "2026-09-15T11:57:22Z"
+        },
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "That might do the trick, yes. Can you open a PR for this change?",
+          "createdAt": "2026-09-15T12:30:07Z",
+          "updatedAt": "2026-09-15T12:30:07Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Actually, correct me if I'm wrong, but with #3479, _all_ creation and append responses are already specified to be able to include a usable `Upload-Offset`, which I think is sufficiently clear includes 4xx-5xx responses:\n\nhttps://github.com/httpwg/http-extensions/blob/bab2069048e1fcda1c9f3bfcb08774f3ae98550d/draft-ietf-httpbis-resumable-upload.md?plain=1#L319\n\nOf course, I would prefer it be a recommendation for 4xx responses, but I guess others think that's too complex, right?",
+          "createdAt": "2026-09-16T23:35:59Z",
+          "updatedAt": "2026-09-16T23:38:26Z"
         }
       ]
     },
@@ -77891,14 +77923,16 @@
       "state": "OPEN",
       "author": "GrantGryczan",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "Acconut"
+      ],
       "labels": [
         "editorial",
         "resumable-upload"
       ],
       "body": "The relevant part of the `max-age` limit definition is:\n\n> Specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible and a client SHOULD NOT attempt to access the upload resource as these requests will likely fail.\n\nThe recommendation against accessing the upload resource can very easily lead to a bad end user experience.\n\nSuppose a client application receives a 201 creation response with `Upload-Limit: max-age=600`, and it begins appending the rest of the file. It will take 20 minutes in total due to being a large file on a poor connection. 15 minutes in, the user's network connection fails. The server received 15 minutes' worth of data, but the 104 responses don't include `Upload-Limit` or the client can't see 104 responses (e.g., since it's a browser client). Because it's been over 600 seconds since the generation of the previous response, the client believes the upload is expired despite that it really isn't. The upload is needlessly restarted instead of resumed.\n\nThe same problem would occur if the end user decided to abort the request by using a pause button in the application. They'll probably want to resume again shortly, but because the last response was received more than `max-age` seconds ago, the client will consider the upload expired.\n\nI'm not sure what the best way to fix this is. Perhaps in the absence of a response after request termination, clients should assume the last `max-age` applies again? Alternatively, for simplicity and guaranteed accuracy, this recommendation could simply be removed, letting the server inform the client of the missing resource (e.g., via 404 or 410) in the event it actually did expire.\n\nEither way, it may be worth adding an explicit note about this situation to inform clients to consider this common edge case.",
       "createdAt": "2026-08-11T12:39:43Z",
-      "updatedAt": "2026-09-14T21:18:03Z",
+      "updatedAt": "2026-09-16T19:39:34Z",
       "closedAt": null,
       "comments": [
         {
@@ -77921,6 +77955,13 @@
           "body": "> Yes, that was an assumption I made: servers are likely to extend the upload resource's lifetime as the upload progresses without being able to inform the client. The resumable upload protocol would be half-useless for large uploads if any interruption towards the end caused the entire upload to fail, so I would expect servers in practice to do this.\n\nIt depends on the server configuration. I've worked on servers that flush content directly to cloud storages, where the server keeps no state and allows the upload to be resumed 24hrs after it has been created. We don't extend the lifetime as that should already be plenty. So yes, some server will extend the lifetime, but not necessarily all.\n\n> I'm not sure your rephrasing of the recommendation has any impact on client implementations at all (as opposed to removing it). What actionable difference would that recommendation make? If there is something actionable there, I think it could probably be rephrased more clearly. If not, I'd just end the sentence after \"inaccessible\".\n\nAlright, we can also remove the part. I don't have a strong opinion here.",
           "createdAt": "2026-09-14T21:09:48Z",
           "updatedAt": "2026-09-14T21:09:48Z"
+        },
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "> > I'm not sure your rephrasing of the recommendation has any impact on client implementations at all (as opposed to removing it). What actionable difference would that recommendation make? If there is something actionable there, I think it could probably be rephrased more clearly. If not, I'd just end the sentence after \"inaccessible\".\n> \n> Alright, we can also remove the part. I don't have a strong opinion here.\n\nOpened https://github.com/httpwg/http-extensions/pull/3516 for this.",
+          "createdAt": "2026-09-16T19:38:32Z",
+          "updatedAt": "2026-09-16T19:38:32Z"
         }
       ]
     },
@@ -77938,7 +77979,7 @@
       ],
       "body": "My friend @Trellord had a great idea for our client implementation. The protocol [recommends](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#section-4.4.1-2) clients use the offset from the \"immediate previous response\" when appending.\n\n> To ensure that the upload resource will accept the request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ([Section 4.3](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#offset-retrieving)) or appending representation data ([Section 4.4](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#upload-appending)).\n\nFor example, if a client appends at offset 1000, but the server responds with status 500, this text recommends that the client perform offset retrieval before appending again (since otherwise the immediate previous response is status 500). But for optimistic clients, it may actually be better to simply append at offset 1000 again. In the event that the old offset is actually correct, it saves a round trip. And if the offset is wrong, the server can reject it immediately before processing the request body, and the response is required to include the correct offset with status 409. The client can therefore rely on 409 responses to retrieve offsets rather than performing explicit offset retrieval.\n\nOf course, there are downsides to this approach, such as wasted bandwidth before the server cuts off the request. But my point is that this approach goes against the recommendation, and I think this approach is very reasonable and shouldn't be recommended against. An optimistic client may intentionally _not_ want to \"ensure that the upload resource will accept the request\".",
       "createdAt": "2026-08-17T18:25:11Z",
-      "updatedAt": "2026-09-14T21:05:40Z",
+      "updatedAt": "2026-09-15T13:14:35Z",
       "closedAt": null,
       "comments": [
         {
@@ -77975,6 +78016,13 @@
           "body": "You are right that offset retrieval could often (or always) be skipped, but it comes with certain caveats. Some server or proxy implementations attempt to read the entire request content before sending a response, at least for HTTP/1.1. In these cases, the client doesn't receive an early signal that the PATCH request won't work. Some server also close the connection if they weren't able to send the response after a pre-defined duration, loosing the response entirely\n\nDepending on your setup and how much of the infrastructure between client and server you control, such optimistic behavior can be acceptable or not. Of course, it's also possible to implement the optimistic PATCH with a fallback to offset retrieval. All of this behavior is allowed in the spec through the use of SHOULD. BCP 14 defines this keyword as:\n\n> [3](https://www.rfc-editor.org/info/rfc2119/#section-3). SHOULD   This word, or the adjective \"RECOMMENDED\", mean that there\n>    may exist valid reasons in particular circumstances to ignore a\n>    particular item, but the full implications must be understood and\n>    carefully weighed before choosing a different course.\n\nThis fits the situation here very well. Most implementations should just perform offset retrieval, but you can also optimistically skip it if you know what the consequences are.\n\nHence I don't think we need changes to the document and my recommendation is to close this issue with no action.",
           "createdAt": "2026-09-14T21:05:40Z",
           "updatedAt": "2026-09-14T21:05:40Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Don't server implementations have to support reading partial request content as it's uploaded in order for this protocol to be useful? In my experience, servers that buffer the entire request content don't even give you access to the request when the request fails before the full content is received.",
+          "createdAt": "2026-09-15T13:04:51Z",
+          "updatedAt": "2026-09-15T13:14:35Z"
         }
       ]
     },
@@ -78037,7 +78085,7 @@
       "id": "I_kwDOAUA-v88AAAABRSCdsA",
       "title": "RESUMABLE: Reference Incremental via its RFC",
       "url": "https://github.com/httpwg/http-extensions/issues/3514",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "Acconut",
       "authorAssociation": "MEMBER",
       "assignees": [
@@ -78049,8 +78097,8 @@
       ],
       "body": "The document describing `Incremental` has been published as RFC RFC 10036. We should update our reference.",
       "createdAt": "2026-09-14T21:20:54Z",
-      "updatedAt": "2026-09-14T21:20:55Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-16T18:49:52Z",
+      "closedAt": "2026-09-16T18:49:52Z",
       "comments": []
     }
   ],
@@ -216831,18 +216879,26 @@
       ],
       "body": "This PR addresses two comments:\r\n\r\nFrom https://github.com/httpwg/http-extensions/issues/3451:\r\n\r\n> In a 2xx response to a creation/append request, a client can determine the new upload offset for the Upload-Offset response header based on the length of the content it uploaded added to the previous offset. For example, if the client sent Upload-Offset: 100 and Content-Length: 50, the client knows from a 2xx response that the new offset should be 150. This is implied by the [definition of upload offset](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.1.1-1). It's also specified that the client can [free previous resources](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-11.html#section-4.1.1-4) upon receipt of a new Upload-Offset value, but the same is not specified for changes to the upload offset in general. I think this suggestion may be better communicated if generalized to the offset implied by responses in general (e.g., as implied by a 2xx response), rather than specific to the Upload-Offset header.\r\n\r\nTo address this, mention that a client can learn the offset implicitly through responses.\r\n\r\nFrom https://github.com/httpwg/http-extensions/issues/3222:\r\n\r\n> In 4.3.1, it might be reasonable for the client to require that the offset be no less than the last Upload-Offset that it received in interim responses during the previous upload. After all, we already said the client can discard that data.\r\n\r\nThe text has been expanded to that the client must never observe a decreasing offset value, regardless through which means.\r\n\r\nCloses https://github.com/httpwg/http-extensions/issues/3451.\r\nCloses https://github.com/httpwg/http-extensions/issues/3222.\r\n",
       "createdAt": "2026-07-06T20:33:22Z",
-      "updatedAt": "2026-08-04T22:30:05Z",
+      "updatedAt": "2026-09-16T22:33:05Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "bd84e74b033dc945b73c436d07b80141b7e8770a",
+      "baseRefOid": "50e8effab30a8fe9b7a36e871aa4409b5ff1145c",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "resumable-upload-3451",
-      "headRefOid": "bab2069048e1fcda1c9f3bfcb08774f3ae98550d",
+      "headRefOid": "93c0425f848e4a0561e4d6a32a43a7e9f110c3ac",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "@GrantGryczan @guoye-zhang I tried to update the PR following your suggestions. Please review the changes in https://github.com/httpwg/http-extensions/pull/3479/changes/bab2069048e1fcda1c9f3bfcb08774f3ae98550d..93c0425f848e4a0561e4d6a32a43a7e9f110c3ac and let me know if it's still not correct.",
+          "createdAt": "2026-09-16T19:29:33Z",
+          "updatedAt": "2026-09-16T19:29:33Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOAUA-v88AAAABFIqyEA",
@@ -216878,9 +216934,9 @@
           "comments": [
             {
               "originalPosition": 118,
-              "body": "What about taking it implicitly from 2xx responses? Also, is there a particular reason this is a \"SHOULD\" and not a \"MUST\"? No well-behaved client will ever do anything different, as far as I can think of.",
+              "body": "What about taking it implicitly from 2xx responses?",
               "createdAt": "2026-07-06T21:46:18Z",
-              "updatedAt": "2026-07-06T22:57:17Z"
+              "updatedAt": "2026-08-15T03:33:43Z"
             },
             {
               "originalPosition": 1,
@@ -216935,6 +216991,166 @@
           "createdAt": "2026-08-04T22:30:05Z",
           "updatedAt": "2026-08-04T22:30:05Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABN5AP3Q",
+          "commit": {
+            "abbreviatedOid": "bab2069"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-09-16T19:05:56Z",
+          "updatedAt": "2026-09-16T19:05:57Z",
+          "comments": [
+            {
+              "originalPosition": 54,
+              "body": "```suggestion\n- Final responses for appending representation data ({{upload-appending}}) with a `2XX` status code and the `Upload-Complete: ?0` acknowledge that the entire request content was received and the offset increased by the length of the appended representation data.\n```\n\nThat seems about right.",
+              "createdAt": "2026-09-16T19:05:56Z",
+              "updatedAt": "2026-09-16T19:05:57Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABN5E3qQ",
+          "commit": {
+            "abbreviatedOid": "bab2069"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-09-16T19:13:41Z",
+          "updatedAt": "2026-09-16T19:13:41Z",
+          "comments": [
+            {
+              "originalPosition": 54,
+              "body": "In those cases, the Upload-Offset value should take the presedence, I think, as the sever can move the offset forward as well. But it's also not a big deal If a client doesn't check that value since it will discover the correct one after a 409.",
+              "createdAt": "2026-09-16T19:13:41Z",
+              "updatedAt": "2026-09-16T19:13:41Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABN5F4dQ",
+          "commit": {
+            "abbreviatedOid": "bab2069"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-09-16T19:15:17Z",
+          "updatedAt": "2026-09-16T19:15:17Z",
+          "comments": [
+            {
+              "originalPosition": 118,
+              "body": "That's also allowed. The line doesn't mention that it SHOULD be taken from the response's header. That omission is intentional and means that taking it implicitly is also fine.",
+              "createdAt": "2026-09-16T19:15:17Z",
+              "updatedAt": "2026-09-16T19:15:17Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABN5HmlQ",
+          "commit": {
+            "abbreviatedOid": "da1d63b"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-09-16T19:18:22Z",
+          "updatedAt": "2026-09-16T19:18:22Z",
+          "comments": [
+            {
+              "originalPosition": 54,
+              "body": "```suggestion\n- Final responses for appending representation data ({{upload-appending}}) with a `2XX` status code and the `Upload-Complete: ?0` acknowledge that the entire request content was received and the offset increased by the length of the appended representation data. However, the value of an `Upload-Offset` header field has presedence, if present.\n```",
+              "createdAt": "2026-09-16T19:18:22Z",
+              "updatedAt": "2026-09-16T19:18:22Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABN5LofQ",
+          "commit": {
+            "abbreviatedOid": "bab2069"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-09-16T19:25:05Z",
+          "updatedAt": "2026-09-16T19:25:06Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "> This \"MUST be accepted\" requirement should exclude offsets from interim responses\r\n\r\nWe can say that only final responses count.\r\n\r\n> I advise changing \"if no other request to append representation data or cancel was received in the meantime\" to be more general, including ongoing requests as well as upload creation requests.\r\n\r\nCan you explain the reason why this would be necessary? Do you have a concrete suggestion for the text?",
+              "createdAt": "2026-09-16T19:25:06Z",
+              "updatedAt": "2026-09-16T19:25:06Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABN5L76A",
+          "commit": {
+            "abbreviatedOid": "793ada9"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-09-16T19:25:33Z",
+          "updatedAt": "2026-09-16T19:25:33Z",
+          "comments": [
+            {
+              "originalPosition": 163,
+              "body": "```suggestion\nEven if the client is well-behaved and doesn't send concurrent requests, network interruptions can occur in such a way that the client considers a request as failed while the server is unaware of the problem and considers the request still ongoing. The client might then try to resume the upload with the best intentions, resulting in concurrent requests from the server's perspective. Therefore, the server MUST take measures to prevent race conditions, data loss and corruption from concurrent requests to append representation data ({{upload-appending}}) and/or cancellation ({{upload-cancellation}}) to the same upload resource. In addition, the server MUST NOT send outdated information in responses. This means that the offset communicated through final responses as defined in {{upload-offset}} MUST be accepted in a subsequent request to append representation data if no other request to append representation data or cancel was received in the meantime. In other words, clients have to be able to use received offsets.\n```",
+              "createdAt": "2026-09-16T19:25:33Z",
+              "updatedAt": "2026-09-16T19:25:33Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABN6A0Ag",
+          "commit": {
+            "abbreviatedOid": "bab2069"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-09-16T20:54:36Z",
+          "updatedAt": "2026-09-16T20:54:37Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "> We can say that only final responses count.\r\n\r\nThat works.\r\n\r\n> Can you explain the reason why this would be necessary? Do you have a concrete suggestion for the text?\r\n\r\nI don't remember what I was trying to say there, and I currently don't see any issue with that part, so disregard.",
+              "createdAt": "2026-09-16T20:54:36Z",
+              "updatedAt": "2026-09-16T20:54:37Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABN6nzww",
+          "commit": {
+            "abbreviatedOid": "93c0425"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "",
+          "createdAt": "2026-09-16T22:06:57Z",
+          "updatedAt": "2026-09-16T22:33:05Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "`Upload-Offset` can't take precedence over the implicit offset progress from a 2xx response. Otherwise, the `Upload-Offset` header may indicate an earlier offset than the offset implied by the successful append progress, which would be invalid. I'd consider that backwards offset progress, which isn't allowed by the protocol as per the next paragraph. You could fix this by adding that servers must not set this offset to be smaller than the one implied by 2xx.",
+              "createdAt": "2026-09-16T22:06:57Z",
+              "updatedAt": "2026-09-16T22:51:06Z"
+            }
+          ]
         }
       ]
     },
@@ -217923,6 +218139,83 @@
           "body": "",
           "createdAt": "2026-08-27T14:18:04Z",
           "updatedAt": "2026-08-27T14:18:04Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3515,
+      "id": "PR_kwDOAUA-v88AAAABD0QI3Q",
+      "title": "RESUMABLE: Reference Incremental via its RFC",
+      "url": "https://github.com/httpwg/http-extensions/pull/3515",
+      "state": "MERGED",
+      "author": "Acconut",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "Acconut"
+      ],
+      "labels": [
+        "editorial",
+        "resumable-upload"
+      ],
+      "body": "Updated reference for INCREMENTAL from I-D to RFC10036.\r\n\r\nCloses https://github.com/httpwg/http-extensions/issues/3514.",
+      "createdAt": "2026-09-16T18:47:31Z",
+      "updatedAt": "2026-09-16T18:49:53Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "f9f079af84fe047359daa712e54a6912d2882e12",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "Acconut-patch-1",
+      "headRefOid": "fefa12b0919c20cc64f81cdc31a8b1512d7588c5",
+      "closedAt": "2026-09-16T18:49:51Z",
+      "mergedAt": "2026-09-16T18:49:51Z",
+      "mergedBy": "Acconut",
+      "mergeCommit": {
+        "oid": "9390d851a077ec81c624d1a851c706b2a5e3893d"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3516,
+      "id": "PR_kwDOAUA-v88AAAABD0owjA",
+      "title": "RESUMABLE: Remove discouragement against requests after expiration.",
+      "url": "https://github.com/httpwg/http-extensions/pull/3516",
+      "state": "OPEN",
+      "author": "Acconut",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "Acconut"
+      ],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Clarified the description of the 'max-age' parameter by removing the mention of client access attempts after expiration. A client might legitimately send a request to probe the upload resource's existence.\r\n\r\nCloses https://github.com/httpwg/http-extensions/issues/3503.",
+      "createdAt": "2026-09-16T19:37:54Z",
+      "updatedAt": "2026-09-16T20:39:36Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "50e8effab30a8fe9b7a36e871aa4409b5ff1145c",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "Acconut-patch-1",
+      "headRefOid": "cf033d97e8bdc7be27c5dc76d84ba6e350d1cb31",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABN53b8A",
+          "commit": {
+            "abbreviatedOid": "cf033d9"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-09-16T20:39:36Z",
+          "updatedAt": "2026-09-16T20:39:36Z",
           "comments": []
         }
       ]
