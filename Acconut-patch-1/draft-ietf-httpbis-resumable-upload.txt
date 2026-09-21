@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 20 March 2027                                        Apple Inc.
+Expires: 25 March 2027                                        Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                       16 September 2026
+                                                       21 September 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 March 2027.
+   This Internet-Draft will expire on 25 March 2027.
 
 Copyright Notice
 
@@ -1839,6 +1839,8 @@ Since draft-ietf-httpbis-resumable-upload-12
 
    *  Upload-Complete and Upload-Length are no longer required on offset
       retrieval responses.
+
+   *  Remove discouragement against sending requests after expiration.
 
 Since draft-ietf-httpbis-resumable-upload-11
 
