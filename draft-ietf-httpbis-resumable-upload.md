@@ -974,6 +974,7 @@ Reference:
 
 * Upload-Complete and Upload-Length are no longer required on offset retrieval responses.
 * Remove discouragement against sending requests after expiration.
+* Clarify how upload offset is inferred from responses.
 
 ## Since draft-ietf-httpbis-resumable-upload-11
 {:numbered="false"}
