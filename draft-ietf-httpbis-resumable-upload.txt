@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 21 March 2027                                        Apple Inc.
+Expires: 25 March 2027                                        Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                       17 September 2026
+                                                       21 September 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 March 2027.
+   This Internet-Draft will expire on 25 March 2027.
 
 Copyright Notice
 
@@ -642,9 +642,7 @@ Table of Contents
    max-age:  Specifies the remaining lifetime of the upload resource in
       seconds counted from the generation of the response.  After the
       resource's lifetime is reached, the server might make the upload
-      resource inaccessible and a client SHOULD NOT attempt to access
-      the upload resource as these requests will likely fail.  The value
-      is an Integer.
+      resource inaccessible.  The value is an Integer.
 
    Clients usually discover limits through the Upload-Limit header field
    when the upload resource is created (Section 4.2).  Throughout the
@@ -1841,6 +1839,8 @@ Since draft-ietf-httpbis-resumable-upload-12
 
    *  Upload-Complete and Upload-Length are no longer required on offset
       retrieval responses.
+
+   *  Remove discouragement against sending requests after expiration.
 
 Since draft-ietf-httpbis-resumable-upload-11
 
