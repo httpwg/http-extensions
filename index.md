@@ -23,7 +23,7 @@ View [saved issues](issues.html), or the latest GitHub [issues](https://github.c
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
-| [Resumable Uploads](Acconut-patch-1/draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](Acconut-patch-1/draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | same as main |
+| [Resumable Uploads](Acconut-patch-1/draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](Acconut-patch-1/draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-resumable-upload.txt&url_2=https://httpwg.github.io/http-extensions/Acconut-patch-1/draft-ietf-httpbis-resumable-upload.txt) |
 | [Templated CONNECT-TCP](Acconut-patch-1/draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](Acconut-patch-1/draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-connect-tcp.txt&url_2=https://httpwg.github.io/http-extensions/Acconut-patch-1/draft-ietf-httpbis-connect-tcp.txt) |
 | [The Purpose Declined HTTP Status Code](Acconut-patch-1/draft-ietf-httpbis-pre-denied.html "The Purpose Declined HTTP Status Code (HTML)") | [plain text](Acconut-patch-1/draft-ietf-httpbis-pre-denied.txt "The Purpose Declined HTTP Status Code (Text)") | same as main |
 | [The HTTP Wrap Up Capsule](Acconut-patch-1/draft-ietf-httpbis-wrap-up.html "The HTTP Wrap Up Capsule (HTML)") | [plain text](Acconut-patch-1/draft-ietf-httpbis-wrap-up.txt "The HTTP Wrap Up Capsule (Text)") | same as main |
@@ -42,7 +42,7 @@ View [saved issues](issues.html), or the latest GitHub [issues](https://github.c
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
-| [Resumable Uploads](resumable-upload-3451/draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](resumable-upload-3451/draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | [diff with main](https://author-tools.ietf.org/api/iddiff?url_1=https://httpwg.github.io/http-extensions/draft-ietf-httpbis-resumable-upload.txt&url_2=https://httpwg.github.io/http-extensions/resumable-upload-3451/draft-ietf-httpbis-resumable-upload.txt) |
+| [Resumable Uploads](resumable-upload-3451/draft-ietf-httpbis-resumable-upload.html "Resumable Uploads for HTTP (HTML)") | [plain text](resumable-upload-3451/draft-ietf-httpbis-resumable-upload.txt "Resumable Uploads for HTTP (Text)") | same as main |
 | [Templated CONNECT-TCP](resumable-upload-3451/draft-ietf-httpbis-connect-tcp.html "Template-Driven HTTP CONNECT Proxying for TCP (HTML)") | [plain text](resumable-upload-3451/draft-ietf-httpbis-connect-tcp.txt "Template-Driven HTTP CONNECT Proxying for TCP (Text)") | same as main |
 | [The Purpose Declined HTTP Status Code](resumable-upload-3451/draft-ietf-httpbis-pre-denied.html "The Purpose Declined HTTP Status Code (HTML)") | [plain text](resumable-upload-3451/draft-ietf-httpbis-pre-denied.txt "The Purpose Declined HTTP Status Code (Text)") | same as main |
 | [The HTTP Wrap Up Capsule](resumable-upload-3451/draft-ietf-httpbis-wrap-up.html "The HTTP Wrap Up Capsule (HTML)") | [plain text](resumable-upload-3451/draft-ietf-httpbis-wrap-up.txt "The HTTP Wrap Up Capsule (Text)") | same as main |
