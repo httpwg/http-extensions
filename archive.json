@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-22T02:37:21.704301+00:00",
+  "timestamp": "2026-09-24T02:27:15.301591+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -218554,6 +218554,83 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 3517,
+      "id": "PR_kwDOAUA-v88AAAABEza6LA",
+      "title": "RESUMABLE: Disallow 2xx + incomplete response to a complete request",
+      "url": "https://github.com/httpwg/http-extensions/pull/3517",
+      "state": "OPEN",
+      "author": "guoye-zhang",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Resolves #3484\r\n\r\n@GrantGryczan I think it's cleaner to define Upload-Complete: missing -> false on the response. This is the very first thing the client implementation checks, and shouldn't rely on other pieces of info like the status code to interpret.",
+      "createdAt": "2026-09-23T18:43:51Z",
+      "updatedAt": "2026-09-24T00:40:42Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "f66f269dfd744e778f53fb38ce96ce04a1323fff",
+      "headRepository": "guoye-zhang/http-extensions",
+      "headRefName": "2xx-completeness",
+      "headRefOid": "6e4d38f6122d376d6c1f32230092c8ba0cfd4988",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABO83AaQ",
+          "commit": {
+            "abbreviatedOid": "6e4d38f"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-09-24T00:28:02Z",
+          "updatedAt": "2026-09-24T00:40:42Z",
+          "comments": [
+            {
+              "originalPosition": 55,
+              "body": "If response `Upload-Complete` missing is treated the same as false in general, then \"with the `Upload-Complete` header field set to false\" is now a useless condition here. @Acconut said in https://github.com/httpwg/http-extensions/pull/3472#discussion_r3525601956 that the distinction between false and missing is important here, so it might be a bad idea to treat missing as false in general.",
+              "createdAt": "2026-09-24T00:28:02Z",
+              "updatedAt": "2026-09-24T00:41:06Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 3518,
+      "id": "PR_kwDOAUA-v88AAAABEzit1g",
+      "title": "RESUMABLE: Mention considerations for different origins",
+      "url": "https://github.com/httpwg/http-extensions/pull/3518",
+      "state": "OPEN",
+      "author": "guoye-zhang",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Resolves #3494",
+      "createdAt": "2026-09-23T18:57:32Z",
+      "updatedAt": "2026-09-23T18:57:33Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "f66f269dfd744e778f53fb38ce96ce04a1323fff",
+      "headRepository": "guoye-zhang/http-extensions",
+      "headRefName": "redirect-origin",
+      "headRefOid": "3e2460effd6d7d979728abcd879eb4f94a068ace",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
