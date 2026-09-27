@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-24T02:27:15.301591+00:00",
+  "timestamp": "2026-09-27T02:47:48.955247+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77658,7 +77658,7 @@
       "id": "I_kwDOAUA-v88AAAABIXr5cw",
       "title": "RESUMABLE: Problems with completeness in 2xx creation and append responses",
       "url": "https://github.com/httpwg/http-extensions/issues/3484",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "GrantGryczan",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -77669,8 +77669,8 @@
       ],
       "body": "#3472 seems to have created a regression by removing the following text from upload creation's client specifications:\n\n> If the client received a final response with a\n> \n> - `2xx (Successful)` status code and the request content contained the entire representation data, the upload is complete and the response comes from the resource targeted by the initial request processing the representation.\n> - [...]\n\nThis was replaced with the following:\n\n> If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and [...].\n> \n> If the client receives a 2xx successful final response with the `Upload-Complete` header field set to false or missing, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ([Section 4.4](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#upload-appending)).\n> \n> [...]\n\nIn particular, if a client sends a creation request with `Upload-Complete: ?1`, a 2xx response with `Upload-Complete` missing should be treated as if the upload had been completed. In general, if the client sent `Upload-Complete: ?1`, then a 2xx response should mean the upload was completed. The old text (poorly) captured that, but the new text always treats `Upload-Complete` missing as `Upload-Complete: ?0`.\n\nA similar regression occurred for upload append's client specifications. The new text no longer specifies how 2xx should be treated at all. To simplify the client implementation, I would hope for 2xx responses to an `Upload-Complete: ?1` upload append request to also be considered complete. I don't want to have to special-case the response handler for upload creation to treat 2xx without `Upload-Complete` differently from the same for upload append.\n\nFurther, perhaps servers should be required not to use `Upload-Complete: ?0` in a 2xx response to a request with `Upload-Complete: ?1`? That seems self-contradictory: 2xx means \"I fulfilled your request\", but `Upload-Complete: ?0` means \"I didn't complete the upload (even though you requested me to)\".",
       "createdAt": "2026-07-10T16:07:48Z",
-      "updatedAt": "2026-07-22T22:23:25Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-24T17:52:01Z",
+      "closedAt": "2026-09-24T17:52:01Z",
       "comments": [
         {
           "author": "guoye-zhang",
@@ -218560,26 +218560,28 @@
       "id": "PR_kwDOAUA-v88AAAABEza6LA",
       "title": "RESUMABLE: Disallow 2xx + incomplete response to a complete request",
       "url": "https://github.com/httpwg/http-extensions/pull/3517",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "guoye-zhang",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
         "resumable-upload"
       ],
-      "body": "Resolves #3484\r\n\r\n@GrantGryczan I think it's cleaner to define Upload-Complete: missing -> false on the response. This is the very first thing the client implementation checks, and shouldn't rely on other pieces of info like the status code to interpret.",
+      "body": "Resolves #3484",
       "createdAt": "2026-09-23T18:43:51Z",
-      "updatedAt": "2026-09-24T00:40:42Z",
+      "updatedAt": "2026-09-24T17:52:04Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "f66f269dfd744e778f53fb38ce96ce04a1323fff",
       "headRepository": "guoye-zhang/http-extensions",
       "headRefName": "2xx-completeness",
-      "headRefOid": "6e4d38f6122d376d6c1f32230092c8ba0cfd4988",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "8a16a4e9386edd393c48ea7dd708aff5b2aa1d11",
+      "closedAt": "2026-09-24T17:52:00Z",
+      "mergedAt": "2026-09-24T17:52:00Z",
+      "mergedBy": "guoye-zhang",
+      "mergeCommit": {
+        "oid": "bb79dde23a352ddcfbfd374b72f312f13979695c"
+      },
       "comments": [],
       "reviews": [
         {
@@ -218601,6 +218603,52 @@
               "updatedAt": "2026-09-24T00:41:06Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABO9xYew",
+          "commit": {
+            "abbreviatedOid": "8a16a4e"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-09-24T03:17:34Z",
+          "updatedAt": "2026-09-24T03:17:34Z",
+          "comments": [
+            {
+              "originalPosition": 55,
+              "body": "You are right. Reverted that part.",
+              "createdAt": "2026-09-24T03:17:34Z",
+              "updatedAt": "2026-09-24T03:17:34Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABO-1Leg",
+          "commit": {
+            "abbreviatedOid": "8a16a4e"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "LGTM, thanks!",
+          "createdAt": "2026-09-24T05:57:46Z",
+          "updatedAt": "2026-09-24T05:57:46Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABPGEJiA",
+          "commit": {
+            "abbreviatedOid": "8a16a4e"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-09-24T17:36:47Z",
+          "updatedAt": "2026-09-24T17:36:47Z",
+          "comments": []
         }
       ]
     },
@@ -218618,19 +218666,100 @@
       ],
       "body": "Resolves #3494",
       "createdAt": "2026-09-23T18:57:32Z",
-      "updatedAt": "2026-09-23T18:57:33Z",
+      "updatedAt": "2026-09-24T18:14:25Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "f66f269dfd744e778f53fb38ce96ce04a1323fff",
+      "baseRefOid": "bb79dde23a352ddcfbfd374b72f312f13979695c",
       "headRepository": "guoye-zhang/http-extensions",
       "headRefName": "redirect-origin",
-      "headRefOid": "3e2460effd6d7d979728abcd879eb4f94a068ace",
+      "headRefOid": "eb583d007cede09fef4b4b981961684ab39e0829",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABPARf1Q",
+          "commit": {
+            "abbreviatedOid": "3e2460e"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-09-24T08:37:46Z",
+          "updatedAt": "2026-09-24T08:37:47Z",
+          "comments": [
+            {
+              "originalPosition": 32,
+              "body": "Should we extend this a bit and mention that clients have to consider the change of origin? For example, so that they don't mix up the cookies when following the upload resource? Or is that not necessary to repeat here because it's covered in other RFCs already?",
+              "createdAt": "2026-09-24T08:37:46Z",
+              "updatedAt": "2026-09-24T08:37:47Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABPASMAA",
+          "commit": {
+            "abbreviatedOid": "3e2460e"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-09-24T08:39:02Z",
+          "updatedAt": "2026-09-24T08:39:02Z",
+          "comments": [
+            {
+              "originalPosition": 34,
+              "body": "Interesting solution! That should work in theory, but I haven't tried it yet.",
+              "createdAt": "2026-09-24T08:39:02Z",
+              "updatedAt": "2026-09-24T08:39:02Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABPGP9qQ",
+          "commit": {
+            "abbreviatedOid": "3e2460e"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-09-24T17:54:11Z",
+          "updatedAt": "2026-09-24T17:54:11Z",
+          "comments": [
+            {
+              "originalPosition": 32,
+              "body": "Yeah, maybe we should also move this to the security section",
+              "createdAt": "2026-09-24T17:54:11Z",
+              "updatedAt": "2026-09-24T17:54:11Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABPGc4NQ",
+          "commit": {
+            "abbreviatedOid": "3e2460e"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-09-24T18:14:25Z",
+          "updatedAt": "2026-09-24T18:14:25Z",
+          "comments": [
+            {
+              "originalPosition": 32,
+              "body": "I asked Claude to add it, and it added even more details to the paragraph",
+              "createdAt": "2026-09-24T18:14:25Z",
+              "updatedAt": "2026-09-24T18:14:25Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
