@@ -123,7 +123,7 @@ If the request is well-formed and permissible, the proxy MUST attempt to establi
 * The response SHALL include a single "Upgrade" header field with the value "connect-tcp".
 * The response SHOULD include a "Capsule-Protocol: ?1" header (as above).
 
-If the request is malformed or impermissible, the proxy MUST return a 4XX error code.  If a TCP connection was not established, the proxy MUST NOT switch protocols to "connect-tcp", and the client MAY reuse this connection for additional HTTP requests.
+If a TCP connection was not established, the proxy MUST NOT switch protocols to "connect-tcp", and the client MAY reuse this connection for additional HTTP requests.
 
 ~~~
 Client                                                 Proxy
@@ -140,6 +140,7 @@ Capsule-Protocol: ?1
                             Connection: Upgrade
                             Upgrade: connect-tcp
                             Capsule-Protocol: ?1
+                            Proxy-Status: example.com
 ~~~
 {: title="Templated TCP proxy example in HTTP/1.1"}
 
@@ -289,6 +290,14 @@ When using this specification in HTTP/2 or HTTP/3, clients MAY start sending TCP
 Servers that host a proxy under this specification MAY offer support for TLS early data in accordance with {{!RFC8470}}.  Clients MAY send "connect-tcp" requests in early data, and MAY include "optimistic" TCP content in early data (in HTTP/2 and HTTP/3).  At the TLS layer, proxies MAY ignore, reject, or accept the `early_data` extension ({{TLS, Section 4.2.10}}).  At the HTTP layer, proxies MAY process the request immediately, return a "425 (Too Early)" response ({{!RFC8470, Section 5.2}}), or delay some or all processing of the request until the handshake completes.  For example, a proxy with limited anti-replay defenses might choose to perform DNS resolution of the `target_host` when a request arrives in early data, but delay the TCP connection until the TLS handshake completes.
 
 When DNS resolution of `target_host` produces multiple IP addresses, proxies SHOULD use a racing procedure such as Happy Eyeballs {{?HEv2=RFC8305}} to accelerate connection establishment.  Proxies that race multiple connection attempts MUST buffer any optimistic content until a connection is selected and MUST NOT transmit any payload data on the other connections.
+
+## Indicating Failure
+
+If the request is malformed or impermissible, the proxy MUST return a 4XX error code.  For example, if the proxy performs DNS resolution of `target_host` and receives an IP address that is disallowed by the proxy's policy, it might return 403 (Forbidden).
+
+If a TCP connection was attempted but did not succeed, the proxy MUST return a 5XX error code.  The 502 (Bad Gateway) and 504 (Gateway Timeout) status codes are commonly used.
+
+The proxy MAY use a 429 (Too Many Requests) or 503 (Service Unavailable) status code to indicate a temporary failure.  If included, the "Retry-After" response header applies to all requests using this URI Template.
 
 ## Conveying metadata
 
