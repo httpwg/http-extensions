@@ -160,7 +160,7 @@ Additionally, the "capsule-protocol" header field SHOULD be present with a value
 HEADERS
 :method = CONNECT
 :scheme = https
-:authority = request-proxy.example
+:authority = templated-proxy.example
 :path = /proxy?target_host=2001%3Adb8%3A%3A1&target_port=443
 :protocol = connect-tcp
 capsule-protocol = ?1
