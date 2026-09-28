@@ -1888,9 +1888,10 @@ capsule-protocol = ?1
         <h3 id="name-indicating-failure">
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-indicating-failure" class="section-name selfRef">Indicating Failure</a>
         </h3>
-<p id="section-4.2-1">If the request is malformed or impermissible, the proxy <span class="bcp14">MUST</span> return a 4XX error code.  For example, if the proxy performs DNS resolution of <code>target_host</code> and receives an IP address that is disallowed by the proxy's policy, it might return 403 (Forbidden).<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2-2">If a TCP connection was attempted but did not succeed, the proxy <span class="bcp14">MUST</span> return a 5XX error code.  The 502 (Bad Gateway) and 504 (Gateway Timeout) status codes are commonly used.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.2-3">The proxy <span class="bcp14">MAY</span> use a 429 (Too Many Requests) or 503 (Service Unavailable) status code to indicate a temporary failure.  If included, the "Retry-After" response header applies to all requests using this URI Template.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-1">Failure to initiate a tunnel is indicated by the HTTP response status code.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">A 4XX status code indicates the the request is malformed or impermissible.  For example, if the proxy performs DNS resolution of <code>target_host</code> and receives an IP address that is disallowed by the proxy's policy, it might return 403 (Forbidden).<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">A 5XX status code indicates a failure in the attempt, such as when a TCP connection was attempted but did not succeed.  The 502 (Bad Gateway) and 504 (Gateway Timeout) status codes are commonly used.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-4">The 429 (Too Many Requests) and 503 (Service Unavailable) status codes indicate a temporary failure, and can carry a "Retry-After" response header field.  If included, this field applies to all requests using this URI Template.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conveying-metadata">
