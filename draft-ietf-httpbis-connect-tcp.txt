@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                       24 September 2026
-Expires: 28 March 2027
+Intended status: Standards Track                       28 September 2026
+Expires: 1 April 2027
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 March 2027.
+   This Internet-Draft will expire on 1 April 2027.
 
 Copyright Notice
 
@@ -623,7 +623,7 @@ Table of Contents
    authorized use of the proxy (see [HTTP], Section 9.3.6) apply equally
    to both.  The destination_ip_prohibited Proxy Error Type from
    Section 2.3.5 of [PROXY-STATUS] can be useful when rejecting
-   unuthorized requests.
+   unauthorized requests.
 
    A small additional risk is posed by the use of a URI Template parser
    on the client side.  The template input string could be crafted to

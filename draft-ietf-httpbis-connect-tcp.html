@@ -1044,7 +1044,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Schwartz</td>
-<td class="center">Expires 28 March 2027</td>
+<td class="center">Expires 1 April 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1057,12 +1057,12 @@ svg {
 <dd class="internet-draft">draft-ietf-httpbis-connect-tcp-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-09-24" class="published">24 September 2026</time>
+<time datetime="2026-09-28" class="published">28 September 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-03-28">28 March 2027</time></dd>
+<dd class="expires"><time datetime="2027-04-01">1 April 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1096,7 +1096,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 28 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1985,7 +1985,7 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
       <h2 id="name-security-considerations">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-6-1">Template-driven TCP proxying is largely subject to the same security risks as classic HTTP CONNECT.  For example, any restrictions on authorized use of the proxy (see <span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a></span>) apply equally to both.  The destination_ip_prohibited Proxy Error Type from <span><a href="https://rfc-editor.org/rfc/rfc9209#section-2.3.5" class="relref">Section 2.3.5</a> of [<a href="#PROXY-STATUS" class="cite xref">PROXY-STATUS</a>]</span> can be useful when rejecting unuthorized requests.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-1">Template-driven TCP proxying is largely subject to the same security risks as classic HTTP CONNECT.  For example, any restrictions on authorized use of the proxy (see <span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a></span>) apply equally to both.  The <code>destination_ip_prohibited</code> Proxy Error Type from <span><a href="https://rfc-editor.org/rfc/rfc9209#section-2.3.5" class="relref">Section 2.3.5</a> of [<a href="#PROXY-STATUS" class="cite xref">PROXY-STATUS</a>]</span> can be useful when rejecting unauthorized requests.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">A small additional risk is posed by the use of a URI Template parser on the client side.  The template input string could be crafted to exploit any vulnerabilities in the parser implementation.  Client implementers should apply their usual precautions for code that processes untrusted inputs.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <p id="section-6-3">See <span><a href="https://rfc-editor.org/rfc/rfc9298#section-7" class="relref">Section 7</a> of [<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span> for a comparison of the risks of operating a TCP or UDP proxy.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <div id="resource-exhaustion">
