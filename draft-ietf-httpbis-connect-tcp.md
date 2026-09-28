@@ -293,11 +293,13 @@ When DNS resolution of `target_host` produces multiple IP addresses, proxies SHO
 
 ## Indicating Failure
 
-If the request is malformed or impermissible, the proxy MUST return a 4XX error code.  For example, if the proxy performs DNS resolution of `target_host` and receives an IP address that is disallowed by the proxy's policy, it might return 403 (Forbidden).
+Failure to initiate a tunnel is indicated by the HTTP response status code.
 
-If a TCP connection was attempted but did not succeed, the proxy MUST return a 5XX error code.  The 502 (Bad Gateway) and 504 (Gateway Timeout) status codes are commonly used.
+A 4XX status code indicates the the request is malformed or impermissible.  For example, if the proxy performs DNS resolution of `target_host` and receives an IP address that is disallowed by the proxy's policy, it might return 403 (Forbidden).
 
-The proxy MAY use a 429 (Too Many Requests) or 503 (Service Unavailable) status code to indicate a temporary failure.  If included, the "Retry-After" response header applies to all requests using this URI Template.
+A 5XX status code indicates a failure in the attempt, such as when a TCP connection was attempted but did not succeed.  The 502 (Bad Gateway) and 504 (Gateway Timeout) status codes are commonly used.
+
+The 429 (Too Many Requests) and 503 (Service Unavailable) status codes indicate a temporary failure, and can carry a "Retry-After" response header field.  If included, this field applies to all requests using this URI Template.
 
 ## Conveying metadata
 
