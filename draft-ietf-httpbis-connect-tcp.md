@@ -339,7 +339,7 @@ If the client infers that classic HTTP CONNECT is not supported, it SHOULD retry
 
 # Security Considerations
 
-Template-driven TCP proxying is largely subject to the same security risks as classic HTTP CONNECT.  For example, any restrictions on authorized use of the proxy (see {{?RFC9110, Section 9.3.6}}) apply equally to both.  The destination_ip_prohibited Proxy Error Type from {{Section 2.3.5 of PROXY-STATUS}} can be useful when rejecting unuthorized requests.
+Template-driven TCP proxying is largely subject to the same security risks as classic HTTP CONNECT.  For example, any restrictions on authorized use of the proxy (see {{?RFC9110, Section 9.3.6}}) apply equally to both.  The `destination_ip_prohibited` Proxy Error Type from {{Section 2.3.5 of PROXY-STATUS}} can be useful when rejecting unauthorized requests.
 
 A small additional risk is posed by the use of a URI Template parser on the client side.  The template input string could be crafted to exploit any vulnerabilities in the parser implementation.  Client implementers should apply their usual precautions for code that processes untrusted inputs.
 
