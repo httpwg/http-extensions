@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-27T02:47:48.955247+00:00",
+  "timestamp": "2026-09-29T03:30:09.803160+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -218760,6 +218760,74 @@
           ]
         }
       ]
+    },
+    {
+      "number": 3519,
+      "id": "PR_kwDOAUA-v88AAAABFhzU6Q",
+      "title": "[connect-tcp] Provide more specific guidance on HTTP status codes",
+      "url": "https://github.com/httpwg/http-extensions/pull/3519",
+      "state": "OPEN",
+      "author": "bemasc",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "connect-tcp"
+      ],
+      "body": "",
+      "createdAt": "2026-09-28T15:41:41Z",
+      "updatedAt": "2026-09-28T19:19:03Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "cb151e0e3f2186e12f68235033441cb4db65a93c",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "bemasc-status-codes",
+      "headRefOid": "da4b09df33cb3a9dd2d1b3f8b0a6cdbb170f926c",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABPmsImw",
+          "commit": {
+            "abbreviatedOid": "b271330"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "\ud83d\udea2 it!",
+          "createdAt": "2026-09-28T17:12:02Z",
+          "updatedAt": "2026-09-28T17:12:02Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3520,
+      "id": "PR_kwDOAUA-v88AAAABFkeuqA",
+      "title": "[connect-tcp] Adjust usage of \"proxy\" vs. \"tunnel\"",
+      "url": "https://github.com/httpwg/http-extensions/pull/3520",
+      "state": "OPEN",
+      "author": "bemasc",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This is an attempt to be approximately consistent with both the HTTP RFCs (which prefer \"tunneling\") and the MASQUE RFCs (which prefer \"proxying\").",
+      "createdAt": "2026-09-28T20:12:55Z",
+      "updatedAt": "2026-09-28T20:14:10Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "cb151e0e3f2186e12f68235033441cb4db65a93c",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "bemasc-tunneling-terminology",
+      "headRefOid": "8a01aa5a3296da0b73ebd17ce3fff509558eba68",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
