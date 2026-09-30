@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 1 April 2027                                         Apple Inc.
+Expires: 3 April 2027                                         Apple Inc.
                                                           L. Pardue, Ed.
                                                               Cloudflare
-                                                       28 September 2026
+                                                       30 September 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 April 2027.
+   This Internet-Draft will expire on 3 April 2027.
 
 Copyright Notice
 
@@ -118,6 +118,7 @@ Table of Contents
    11. Incremental Transfer, Processing and Forwarding
    12. Request Cancellation
    13. Security Considerations
+     13.1.  Different Origins
    14. IANA Considerations
      14.1.  HTTP Fields
      14.2.  HTTP Status Code
@@ -872,7 +873,8 @@ Table of Contents
    The server SHOULD NOT generate a response with the 301 (Moved
    Permanently), 302 (Found), or 303 (See Other) status codes and the
    Upload-Complete: ?0 header field because clients might follow the
-   redirect without preserving the original method.
+   redirect without preserving the original method.  See Section 13.1
+   for redirecting a response that completes the upload.
 
    The server might not process the entire request content when the
    upload is interrupted, for example because of dropped connection or
@@ -1169,7 +1171,8 @@ Table of Contents
    The server SHOULD NOT generate a response with the 301 (Moved
    Permanently), 302 (Found), or 303 (See Other) status codes and the
    Upload-Complete: ?0 header field because clients might follow the
-   redirect without preserving the PATCH method.
+   redirect without preserving the PATCH method.  See Section 13.1 for
+   redirecting a response that completes the upload.
 
 4.4.3.  Examples
 
@@ -1659,6 +1662,31 @@ Table of Contents
    allocated to uploads might not be an effective strategy when using
    resumable uploads.
 
+13.1.  Different Origins
+
+   The resource targeted by the initial request (Section 4.2) and the
+   upload resource might have different origins ([ORIGIN]).  For
+   example, the initial request might be sent to an application server,
+   while the upload resource is hosted by a dedicated storage service.
+
+   Clients have to consider this change of origin when following the
+   Location header field to the upload resource.  Credentials and other
+   per-origin state associated with the initially targeted resource are
+   not necessarily applicable to the upload resource, and remain scoped
+   to their respective origins.  Clients also have to consider that
+   disclosing an upload resource URI to a different origin can leak the
+   capability to read, append to, or cancel the upload.
+
+   Because the upload can be completed either by the initial request or
+   by an upload append request (Section 4.4), the final response might
+   come from a different origin depending on whether the upload was
+   resumed.  To avoid this, the server MAY respond to the request that
+   completes the upload with a 303 (See Other) status code, redirecting
+   the user agent to the origin of the initially targeted resource.
+   Because a 303 (See Other) response directs the user agent to retrieve
+   the result with GET, the considerations regarding method preservation
+   in Section 4.2 and Section 4.4 do not apply in this case.
+
 14.  IANA Considerations
 
 14.1.  HTTP Fields
@@ -1839,6 +1867,10 @@ Table of Contents
               DOI 10.17487/RFC10036, August 2026,
               <https://www.rfc-editor.org/rfc/rfc10036>.
 
+   [ORIGIN]   Barth, A., "The Web Origin Concept", RFC 6454,
+              DOI 10.17487/RFC6454, December 2011,
+              <https://www.rfc-editor.org/rfc/rfc6454>.
+
    [RFC8792]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,
               "Handling Long Lines in Content of Internet-Drafts and
               RFCs", RFC 8792, DOI 10.17487/RFC8792, June 2020,
@@ -1865,6 +1897,9 @@ Since draft-ietf-httpbis-resumable-upload-12
 
    *  Disallow successful responses indicating an incomplete upload when
       the request indicated completion.
+
+   *  Describe considerations for the initially targeted resource and
+      the upload resource having different origins.
 
 Since draft-ietf-httpbis-resumable-upload-11
 
