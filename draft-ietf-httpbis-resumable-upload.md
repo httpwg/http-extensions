@@ -70,6 +70,7 @@ informative:
      "https://web.archive.org/web/20150315054838/http://ha.ckers.org/slowloris/"
   RFC8792:
   INCREMENTAL: RFC10036
+  ORIGIN: RFC6454
 
 --- abstract
 
@@ -429,7 +430,7 @@ Where a response requires a `Location` header field to be included, all interim 
 
 The server SHOULD include the `Upload-Complete` ({{upload-complete}}) header field in the response to indicate whether it is the result of processing the uploaded representation.
 
-The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes and the `Upload-Complete: ?0` header field because clients might follow the redirect without preserving the original method.
+The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes and the `Upload-Complete: ?0` header field because clients might follow the redirect without preserving the original method. See {{origin}} for redirecting a response that completes the upload.
 
 The server might not process the entire request content when the upload is interrupted, for example because of dropped connection or canceled request. In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. In addition, the upload resource MUST NOT be considered complete then.
 
@@ -608,7 +609,7 @@ While the request content is being processed, the server SHOULD send interim res
 
 The server SHOULD include the `Upload-Complete` ({{upload-complete}}) header field in the response to indicate whether it is the result of processing the uploaded representation.
 
-The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes and the `Upload-Complete: ?0` header field because clients might follow the redirect without preserving the `PATCH` method.
+The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes and the `Upload-Complete: ?0` header field because clients might follow the redirect without preserving the `PATCH` method. See {{origin}} for redirecting a response that completes the upload.
 
 ### Examples {#upload-appending-example}
 
@@ -845,6 +846,14 @@ Resumable uploads are vulnerable to Slowloris-style attacks {{SLOWLORIS}}. A mal
 
 Uploads performed as a series of appends can be used to upload data up to the `max-size` limit, which could be a larger size than a server or intermediary might normally permit in conventional single upload request message content. Servers or intermediaries need to consider that relying solely on message content limits to constrain resources allocated to uploads might not be an effective strategy when using resumable uploads.
 
+## Different Origins {#origin}
+
+The resource targeted by the initial request ({{upload-creation}}) and the upload resource might have different origins ({{ORIGIN}}). For example, the initial request might be sent to an application server, while the upload resource is hosted by a dedicated storage service.
+
+Clients have to consider this change of origin when following the `Location` header field to the upload resource. Credentials and other per-origin state associated with the initially targeted resource are not necessarily applicable to the upload resource, and remain scoped to their respective origins. Clients also have to consider that disclosing an upload resource URI to a different origin can leak the capability to read, append to, or cancel the upload.
+
+Because the upload can be completed either by the initial request or by an upload append request ({{upload-appending}}), the final response might come from a different origin depending on whether the upload was resumed. To avoid this, the server MAY respond to the request that completes the upload with a `303 (See Other)` status code, redirecting the user agent to the origin of the initially targeted resource. Because a `303 (See Other)` response directs the user agent to retrieve the result with `GET`, the considerations regarding method preservation in {{upload-creation}} and {{upload-appending}} do not apply in this case.
+
 # IANA Considerations
 
 ## HTTP Fields
@@ -976,6 +985,7 @@ Reference:
 * Remove discouragement against sending requests after expiration.
 * Clarify how upload offset is inferred from responses.
 * Disallow successful responses indicating an incomplete upload when the request indicated completion.
+* Describe considerations for the initially targeted resource and the upload resource having different origins.
 
 ## Since draft-ietf-httpbis-resumable-upload-11
 {:numbered="false"}
