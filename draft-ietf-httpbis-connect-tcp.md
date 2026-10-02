@@ -44,7 +44,7 @@ informative:
 
 --- abstract
 
-TCP proxying using HTTP CONNECT has long been part of the core HTTP specification.  However, this proxying functionality has several important deficiencies in modern HTTP environments.  This specification defines an alternative HTTP proxy service configuration for TCP connections.  This configuration is described by a URI Template, similar to the CONNECT-UDP and CONNECT-IP protocols.
+TCP tunneling using HTTP CONNECT has long been part of the core HTTP specification.  However, this tunneling functionality has several important deficiencies in modern HTTP environments.  This specification defines an alternative HTTP proxy service configuration for TCP connections.  This configuration is described by a URI Template, similar to the CONNECT-UDP and CONNECT-IP protocols.
 
 --- middle
 
@@ -52,9 +52,9 @@ TCP proxying using HTTP CONNECT has long been part of the core HTTP specificatio
 
 ## History
 
-HTTP has used the CONNECT method for proxying TCP connections since HTTP/1.1.  When using CONNECT, the request target specifies a host and port number, and the proxy forwards TCP payloads between the client and this destination ({{?RFC9110, Section 9.3.6}}).  To date, this is the only mechanism defined for proxying TCP over HTTP.  In this specification, this is referred to as a "classic HTTP CONNECT proxy".
+HTTP has used the CONNECT method for tunneling TCP connections since HTTP/1.1.  When using CONNECT, the request target specifies a host and port number, and the proxy forwards TCP payloads between the client and this destination ({{?RFC9110, Section 9.3.6}}).  To date, this is the only mechanism defined for proxying TCP over HTTP.  In this specification, this is referred to as a "classic HTTP CONNECT proxy".
 
-HTTP/3 uses a UDP transport, so it cannot be forwarded using the pre-existing CONNECT mechanism.  To enable forward proxying of HTTP/3, the MASQUE effort has defined proxy mechanisms that are capable of proxying UDP datagrams {{!CONNECT-UDP=RFC9298}}, and more generally IP datagrams {{?CONNECT-IP=RFC9484}}.  The destination host and port number (if applicable) are encoded into the HTTP resource path, and end-to-end datagrams are wrapped into HTTP Datagrams {{CAPSULE}} on the client-proxy path.
+HTTP/3 uses a UDP transport, so it cannot be forwarded using the pre-existing CONNECT mechanism.  To enable forward proxying of HTTP/3, the MASQUE effort has defined proxy mechanisms that are capable of tunneling UDP datagrams {{!CONNECT-UDP=RFC9298}}, and more generally IP datagrams {{?CONNECT-IP=RFC9484}}.  The destination host and port number (if applicable) are encoded into the HTTP resource path, and end-to-end datagrams are wrapped into HTTP Datagrams {{CAPSULE}} on the client-proxy path.
 
 ## Problems
 
@@ -66,11 +66,13 @@ Classic HTTP CONNECT requests are not extensible to carry in-stream metadata. Fo
 
 ## Overview
 
-This specification describes an alternative mechanism for proxying TCP in HTTP.  Like {{?CONNECT-UDP}} and {{?CONNECT-IP}}, the proxy service is identified by a URI Template.  Proxy interactions reuse standard HTTP components and semantics, avoiding changes to the core HTTP protocol.
+This specification describes an alternative mechanism for tunneling TCP in HTTP.  Like {{?CONNECT-UDP}} and {{?CONNECT-IP}}, the proxy service is identified by a URI Template.  Proxy interactions reuse standard HTTP components and semantics, avoiding changes to the core HTTP protocol.
 
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
+
+In this document, we use the term "proxy" to refer to the HTTP server that acts upon the client's TCP tunneling request. If there are HTTP intermediaries (as defined in Section 3.7 of [HTTP]) between the client and the proxy, those are referred to as "intermediaries" or "gateways" in this document.
 
 # Specification
 
@@ -215,7 +217,7 @@ When closing connections, endpoints are subject to the following requirements:
     - HTTP/1.1 without TLS: TCP RST.
 * When the receive stream is closed abruptly or without a FINAL_DATA capsule received, the endpoint SHOULD send a TCP RST if the TCP subsystem permits it.
 
-The mandatory behaviors above enable endpoints to detect any truncation of incoming TCP data.  The recommended behaviors propagate any TCP errors through the proxy connection.
+The mandatory behaviors above enable endpoints to detect any truncation of incoming TCP data.  The recommended behaviors propagate any TCP errors through the tunnel.
 
 In HTTP/3, endpoints MAY negotiate and use the RESET_STREAM_AT frame in order to reduce data loss during an abrupt closure {{?I-D.ietf-quic-reliable-stream-reset}}.  However, RESET_STREAM_AT may not be very effective in this case, as TCP implementations will typically discard pending data when a RST is received.
 
@@ -295,7 +297,7 @@ When DNS resolution of `target_host` produces multiple IP addresses, proxies SHO
 This specification supports the "Expect: 100-continue" request header ({{?RFC9110, Section 10.1.1}}) in any HTTP version.  The "100 (Continue)" status code confirms receipt of a request at the proxy without waiting for the proxy-destination TCP handshake to succeed or fail.  Clients MAY send "Expect: 100-continue", and proxies MUST respect it by returning "100 (Continue)" if the request is not immediately rejected.  This allows for a few useful improvements:
 
 * Clients can provide a clearer status indication while waiting for the destination host to respond.  (TCP handshakes can hang for several minutes before failing.)
-* Clients can apply separate timeouts to the proxying request and connection establishment.
+* Clients can apply separate timeouts to the tunneling request and connection establishment.
 * In HTTP/2 and HTTP/3, clients have the option to delay some or all of the optimistic payload data until after confirming that the request is permissible.  This strategy reduces wasted effort when the request is rejected.
 
 Proxies implementing this specification SHOULD include a "Proxy-Status" response header field {{!PROXY-STATUS=RFC9209}} in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  Clients and proxies MUST NOT send trailer fields on "connect-tcp" streams.
@@ -352,7 +354,7 @@ A malicious client can cause highly asymmetric resource usage at the proxy by co
 * **Connection Pileup**: A malicious client can attempt to open a large number of connections to exhaust the proxy's memory, port, or file descriptor limits. When using HTTP/2 or HTTP/3, each incremental TCP connection imposes a much higher cost on the proxy than on the attacker.
   - Mitigation: Limit the number of concurrent connections per client.
 * **Window Bloat**: An attacker can grow the receive window size by simulating a "long, fat network" ({{?RFC7323, Section 1.1}}), then fill the window (from the sender) and stop acknowledging it (at the receiver).  This leaves the proxy buffering up to 1 GiB of TCP data until some timeout, while the attacker does not have to retain a large buffer.
-  - Mitigation: Limit the maximum receive window for TCP and HTTP connections, and the size of userspace buffers used for proxying.  Alternatively, monitor the connections' send queues and limit the total buffered data per client.
+  - Mitigation: Limit the maximum receive window for TCP and HTTP connections, and the size of userspace buffers used for forwarding data.  Alternatively, monitor the connections' send queues and limit the total buffered data per client.
 * **WAIT Abuse**: An attacker can force the proxy into a TIME-WAIT, CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a proxy-to-destination 4-tuple for up to four minutes after the client's connection is closed.
   - Mitigations:
     * Enable the PAWS optimization ({{?RFC7323, Section 5}}) across successive connections (e.g., Linux's `tcp_tw_reuse=1` {{SYSCTL}}).  This makes TIME-WAIT 4-tuples rapidly reusable if the destination enables TCP Timestamps, which most do.
@@ -373,7 +375,7 @@ While this specification is fully functional under HTTP/1.1, performance-sensiti
 * The number of active connections through each client may be limited by the number of available TCP client ports, especially if:
   - The client only has one IP address that can be used to reach the proxy.
   - The client is shared between many parties, such as when acting as a gateway or concentrator.
-  - The proxied connections are often closed by the destination. This causes the client to initiate closure of the client-to-proxy connection, leaving the client in a TIME-WAIT state for up to four minutes.
+  - The tunneled connections are often closed by the destination. This causes the client to initiate closure of the client-to-proxy connection, leaving the client in a TIME-WAIT state for up to four minutes.
 
 ## Gateway Compatibility
 
