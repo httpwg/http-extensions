@@ -978,6 +978,11 @@ Reference:
 # Changes
 {:removeinrfc="true"}
 
+## Since draft-ietf-httpbis-resumable-upload-13
+{:numbered="false"}
+
+None yet.
+
 ## Since draft-ietf-httpbis-resumable-upload-12
 {:numbered="false"}
 
