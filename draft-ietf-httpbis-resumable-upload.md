@@ -40,7 +40,7 @@ author:
     ins: L. Pardue
     name: Lucas Pardue
     role: editor
-    organization: Cloudflare
+    organization: Apple
     email: lucas@lucaspardue.com
 
 
