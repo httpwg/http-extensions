@@ -313,8 +313,6 @@ No-Vary-Search: params=("%C3%A9+%E6%B0%97")
 
 Notice that while the input string `"%C3%A9+%E6%B0%97"` consists entirely of ASCII characters (as required at the HTTP layer), the percent-decoding step used by the cache produces a non-ASCII result. This will result in a URL variation config whose no-vary params are « "`é 気`" ». Note that the "`+`" character in the encoded string is mapped to a space (SP). As explained in a later example, the canonicalization process during equivalence testing means this will treat as equivalent URIs such as:
 
-<!-- link "a later example" and "equivalence testing" -->
-
 * `https://example.com/?é 気=1`
 * `https://example.com/?é+気=2`
 * `https://example.com/?%C3%A9%20気=3`
