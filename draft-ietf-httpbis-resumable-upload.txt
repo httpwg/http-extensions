@@ -7,7 +7,7 @@ Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
 Expires: 10 April 2027                                        Apple Inc.
                                                           L. Pardue, Ed.
-                                                              Cloudflare
+                                                                   Apple
                                                           7 October 2026
 
 
@@ -2179,5 +2179,5 @@ Authors' Addresses
 
 
    Lucas Pardue (editor)
-   Cloudflare
+   Apple
    Email: lucas@lucaspardue.com
