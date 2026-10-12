@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                          7 October 2026
-Expires: 10 April 2027
+Intended status: Standards Track                         12 October 2026
+Expires: 15 April 2027
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 April 2027.
+   This Internet-Draft will expire on 15 April 2027.
 
 Copyright Notice
 
@@ -69,7 +69,8 @@ Table of Contents
        3.4.1.  Handling Invalid Data
    4.  Additional Connection Setup Behaviors
      4.1.  Latency optimizations
-     4.2.  Conveying metadata
+     4.2.  Indicating Failure
+     4.3.  Conveying metadata
    5.  Applicability
      5.1.  Servers
      5.2.  Clients
@@ -234,7 +235,7 @@ Table of Contents
 
    If the request is well-formed and permissible, the proxy MUST attempt
    to establish the TCP connection before sending any response status
-   code other than "100 (Continue)" (see Section 4.2).  If the TCP
+   code other than "100 (Continue)" (see Section 4.3).  If the TCP
    connection is successful, the response SHALL be as follows:
 
    *  The HTTP status code SHALL be "101 (Switching Protocols)".
@@ -248,10 +249,9 @@ Table of Contents
    *  The response SHOULD include a "Capsule-Protocol: ?1" header (as
       above).
 
-   If the request is malformed or impermissible, the proxy MUST return a
-   4XX error code.  If a TCP connection was not established, the proxy
-   MUST NOT switch protocols to "connect-tcp", and the client MAY reuse
-   this connection for additional HTTP requests.
+   If a TCP connection was not established, the proxy MUST NOT switch
+   protocols to "connect-tcp", and the client MAY reuse this connection
+   for additional HTTP requests.
 
    Client                                                 Proxy
 
@@ -267,6 +267,7 @@ Table of Contents
                                Connection: Upgrade
                                Upgrade: connect-tcp
                                Capsule-Protocol: ?1
+                               Proxy-Status: example.com
 
              Figure 2: Templated TCP proxy example in HTTP/1.1
 
@@ -518,7 +519,26 @@ Table of Contents
    connection is selected and MUST NOT transmit any payload data on the
    other connections.
 
-4.2.  Conveying metadata
+4.2.  Indicating Failure
+
+   Failure to initiate a tunnel is indicated by the HTTP response status
+   code.
+
+   A 4XX status code indicates the the request is malformed or
+   impermissible.  For example, if the proxy performs DNS resolution of
+   target_host and receives an IP address that is disallowed by the
+   proxy's policy, it might return 403 (Forbidden).
+
+   A 5XX status code indicates a failure in the attempt, such as when a
+   TCP connection was attempted but did not succeed.  The 502 (Bad
+   Gateway) and 504 (Gateway Timeout) status codes are commonly used.
+
+   The 429 (Too Many Requests) and 503 (Service Unavailable) status
+   codes indicate a temporary failure, and can carry a "Retry-After"
+   response header field.  If included, this field applies to all
+   requests using this URI Template.
+
+4.3.  Conveying metadata
 
    This specification supports the "Expect: 100-continue" request header
    ([HTTP], Section 10.1.1) in any HTTP version.  The "100 (Continue)"

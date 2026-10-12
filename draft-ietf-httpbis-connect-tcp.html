@@ -1044,7 +1044,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Schwartz</td>
-<td class="center">Expires 10 April 2027</td>
+<td class="center">Expires 15 April 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1057,12 +1057,12 @@ svg {
 <dd class="internet-draft">draft-ietf-httpbis-connect-tcp-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-07" class="published">7 October 2026</time>
+<time datetime="2026-10-12" class="published">12 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-10">10 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-04-15">15 April 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1096,7 +1096,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 10 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 15 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1182,7 +1182,10 @@ svg {
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-latency-optimizations" class="internal xref">Latency optimizations</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
-                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-conveying-metadata" class="internal xref">Conveying metadata</a></p>
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-indicating-failure" class="internal xref">Indicating Failure</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-conveying-metadata" class="internal xref">Conveying metadata</a></p>
 </li>
             </ul>
 </li>
@@ -1373,7 +1376,7 @@ FINAL_DATA Capsule {
             <p id="section-3.1-2.6.1">The request <span class="bcp14">SHOULD</span> include a "Capsule-Protocol: ?1" header (as recommended in <span>[<a href="#CAPSULE" class="cite xref">CAPSULE</a>], <a href="https://rfc-editor.org/rfc/rfc9297#section-3.4" class="relref">Section 3.4</a></span>).<a href="#section-3.1-2.6.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.1-3">If the request is well-formed and permissible, the proxy <span class="bcp14">MUST</span> attempt to establish the TCP connection before sending any response status code other than "100 (Continue)" (see <a href="#conveying-metadata" class="auto internal xref">Section 4.2</a>).  If the TCP connection is successful, the response <span class="bcp14">SHALL</span> be as follows:<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">If the request is well-formed and permissible, the proxy <span class="bcp14">MUST</span> attempt to establish the TCP connection before sending any response status code other than "100 (Continue)" (see <a href="#conveying-metadata" class="auto internal xref">Section 4.3</a>).  If the TCP connection is successful, the response <span class="bcp14">SHALL</span> be as follows:<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1-4.1">
             <p id="section-3.1-4.1.1">The HTTP status code <span class="bcp14">SHALL</span> be "101 (Switching Protocols)".<a href="#section-3.1-4.1.1" class="pilcrow">¶</a></p>
@@ -1388,7 +1391,7 @@ FINAL_DATA Capsule {
             <p id="section-3.1-4.4.1">The response <span class="bcp14">SHOULD</span> include a "Capsule-Protocol: ?1" header (as above).<a href="#section-3.1-4.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.1-5">If the request is malformed or impermissible, the proxy <span class="bcp14">MUST</span> return a 4XX error code.  If a TCP connection was not established, the proxy <span class="bcp14">MUST NOT</span> switch protocols to "connect-tcp", and the client <span class="bcp14">MAY</span> reuse this connection for additional HTTP requests.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1-5">If a TCP connection was not established, the proxy <span class="bcp14">MUST NOT</span> switch protocols to "connect-tcp", and the client <span class="bcp14">MAY</span> reuse this connection for additional HTTP requests.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
 <span id="name-templated-tcp-proxy-example"></span><figure id="figure-2">
           <div class="alignLeft art-text artwork" id="section-3.1-6.1">
 <pre>
@@ -1406,6 +1409,7 @@ Capsule-Protocol: ?1
                             Connection: Upgrade
                             Upgrade: connect-tcp
                             Capsule-Protocol: ?1
+                            Proxy-Status: example.com
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
@@ -1879,24 +1883,35 @@ capsule-protocol = ?1
 <p id="section-4.1-3">When DNS resolution of <code>target_host</code> produces multiple IP addresses, proxies <span class="bcp14">SHOULD</span> use a racing procedure such as Happy Eyeballs <span>[<a href="#HEv2" class="cite xref">HEv2</a>]</span> to accelerate connection establishment.  Proxies that race multiple connection attempts <span class="bcp14">MUST</span> buffer any optimistic content until a connection is selected and <span class="bcp14">MUST NOT</span> transmit any payload data on the other connections.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="conveying-metadata">
+<div id="indicating-failure">
 <section id="section-4.2">
-        <h3 id="name-conveying-metadata">
-<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-conveying-metadata" class="section-name selfRef">Conveying metadata</a>
+        <h3 id="name-indicating-failure">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-indicating-failure" class="section-name selfRef">Indicating Failure</a>
         </h3>
-<p id="section-4.2-1">This specification supports the "Expect: 100-continue" request header (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-10.1.1" class="relref">Section 10.1.1</a></span>) in any HTTP version.  The "100 (Continue)" status code confirms receipt of a request at the proxy without waiting for the proxy-destination TCP handshake to succeed or fail.  Clients <span class="bcp14">MAY</span> send "Expect: 100-continue", and proxies <span class="bcp14">MUST</span> respect it by returning "100 (Continue)" if the request is not immediately rejected.  This allows for a few useful improvements:<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-1">Failure to initiate a tunnel is indicated by the HTTP response status code.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">A 4XX status code indicates the the request is malformed or impermissible.  For example, if the proxy performs DNS resolution of <code>target_host</code> and receives an IP address that is disallowed by the proxy's policy, it might return 403 (Forbidden).<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">A 5XX status code indicates a failure in the attempt, such as when a TCP connection was attempted but did not succeed.  The 502 (Bad Gateway) and 504 (Gateway Timeout) status codes are commonly used.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-4">The 429 (Too Many Requests) and 503 (Service Unavailable) status codes indicate a temporary failure, and can carry a "Retry-After" response header field.  If included, this field applies to all requests using this URI Template.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="conveying-metadata">
+<section id="section-4.3">
+        <h3 id="name-conveying-metadata">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-conveying-metadata" class="section-name selfRef">Conveying metadata</a>
+        </h3>
+<p id="section-4.3-1">This specification supports the "Expect: 100-continue" request header (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-10.1.1" class="relref">Section 10.1.1</a></span>) in any HTTP version.  The "100 (Continue)" status code confirms receipt of a request at the proxy without waiting for the proxy-destination TCP handshake to succeed or fail.  Clients <span class="bcp14">MAY</span> send "Expect: 100-continue", and proxies <span class="bcp14">MUST</span> respect it by returning "100 (Continue)" if the request is not immediately rejected.  This allows for a few useful improvements:<a href="#section-4.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.2-2.1">
-            <p id="section-4.2-2.1.1">Clients can provide a clearer status indication while waiting for the destination host to respond.  (TCP handshakes can hang for several minutes before failing.)<a href="#section-4.2-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.3-2.1">
+            <p id="section-4.3-2.1.1">Clients can provide a clearer status indication while waiting for the destination host to respond.  (TCP handshakes can hang for several minutes before failing.)<a href="#section-4.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-2.2">
-            <p id="section-4.2-2.2.1">Clients can apply separate timeouts to the proxying request and connection establishment.<a href="#section-4.2-2.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.3-2.2">
+            <p id="section-4.3-2.2.1">Clients can apply separate timeouts to the proxying request and connection establishment.<a href="#section-4.3-2.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-2.3">
-            <p id="section-4.2-2.3.1">In HTTP/2 and HTTP/3, clients have the option to delay some or all of the optimistic payload data until after confirming that the request is permissible.  This strategy reduces wasted effort when the request is rejected.<a href="#section-4.2-2.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.3-2.3">
+            <p id="section-4.3-2.3.1">In HTTP/2 and HTTP/3, clients have the option to delay some or all of the optimistic payload data until after confirming that the request is permissible.  This strategy reduces wasted effort when the request is rejected.<a href="#section-4.3-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.2-3">Proxies implementing this specification <span class="bcp14">SHOULD</span> include a "Proxy-Status" response header field <span>[<a href="#PROXY-STATUS" class="cite xref">PROXY-STATUS</a>]</span> in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  Clients and proxies <span class="bcp14">MUST NOT</span> send trailer fields on "connect-tcp" streams.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.3-3">Proxies implementing this specification <span class="bcp14">SHOULD</span> include a "Proxy-Status" response header field <span>[<a href="#PROXY-STATUS" class="cite xref">PROXY-STATUS</a>]</span> in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  Clients and proxies <span class="bcp14">MUST NOT</span> send trailer fields on "connect-tcp" streams.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
