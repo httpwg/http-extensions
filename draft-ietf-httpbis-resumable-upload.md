@@ -838,15 +838,27 @@ Version-specific mechanisms place requirements on clients or servers for actioni
 
 # Security Considerations
 
+## Upload Resource URIs
+
 The upload resource URI is the identifier used for modifying the upload. Without further protection of this URI, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can access the upload resource. To reduce the risk of unauthorized access, it is RECOMMENDED to generate upload resource URIs in such a way that makes it hard to be guessed by unauthorized clients. In addition, servers may embed information about the storage or processing location of the uploaded representation in the upload resource URI to make routing requests more efficient. If so, they MUST ensure that no internal information is leaked in the URI that is not intended to be exposed.
+
+## Untrusted Input
 
 Uploaded representation data and its metadata are untrusted input. Server operators have to be careful of where uploaded data is written and subsequently accessed, especially if the operations cause the representation to be processed or executed by the server. In addition, metadata MUST be validated and/or sanitized if the server takes its values into consideration for processing or storing the representation.
 
+## Content Scanning
+
 Some servers or intermediaries provide scanning of content uploaded by clients. Any scanning mechanism that relies on receiving a complete representation in a single request message can be defeated by resumable uploads because content can be split across multiple messages. Servers or intermediaries wishing to perform content scanning SHOULD consider how resumable uploads can circumvent scanning and take appropriate measures. Possible strategies include waiting for the upload to complete before scanning the entire representation, or disabling resumable uploads.
+
+## Time-of-Check to Time-of-Use
 
 There can be a significant delay between the creation of an upload resource and its completion. Policy decisions or authorization checks performed on the initial request might become outdated or invalid by the time the upload completes. To mitigate vulnerabilities arising from time-of-check to time-of-use (TOCTOU) conditions, the server SHOULD validate that the user is still allowed to perform the requested action before finalizing the upload. This includes, for example, validating access privileges and quota policies associated with the upload resource.
 
+## Resource Exhaustion
+
 Resumable uploads are vulnerable to Slowloris-style attacks {{SLOWLORIS}}. A malicious client may create upload resources and keep them alive by regularly sending `PATCH` requests with no or small content to the upload resources. This could be abused to exhaust server resources by creating and holding open uploads indefinitely with minimal work. Servers SHOULD provide mitigations for Slowloris attacks, such as increasing the maximum number of clients the server will allow, limiting the number of uploads a single client is allowed to make, imposing restrictions on the minimum transfer speed an upload is allowed to have, and restricting the length of time an upload resource can exist.
+
+## Message Size Limits
 
 Uploads performed as a series of appends can be used to upload data up to the `max-size` limit, which could be a larger size than a server or intermediary might normally permit in conventional single upload request message content. Servers or intermediaries need to consider that relying solely on message content limits to constrain resources allocated to uploads might not be an effective strategy when using resumable uploads.
 
