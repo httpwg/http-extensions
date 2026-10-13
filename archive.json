@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-10-08T03:46:45.782181+00:00",
+  "timestamp": "2026-10-13T04:46:26.383320+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77866,7 +77866,7 @@
       "id": "I_kwDOAUA-v88AAAABKAMbmw",
       "title": "Final capsule types",
       "url": "https://github.com/httpwg/http-extensions/issues/3499",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "DavidSchinazi",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -77875,8 +77875,8 @@
       ],
       "body": "Please switch to one-byte capsule types (values 0-63).\n\nYou can register them by filing a request [here](https://www.iana.org/form/protocol-assignment) and @LPardue or I can approve them.\n\nCurrent available values are visible [here](https://www.iana.org/assignments/masque/masque.xhtml#http-capsule-types). Make sure to request values as provisional in this request, and mention in the IANA considerations of the doc that they will be made permanent when the RFC is published.",
       "createdAt": "2026-07-24T07:27:39Z",
-      "updatedAt": "2026-07-24T12:04:46Z",
-      "closedAt": null,
+      "updatedAt": "2026-10-12T14:00:46Z",
+      "closedAt": "2026-10-12T14:00:46Z",
       "comments": [
         {
           "author": "martinthomson",
@@ -77884,6 +77884,13 @@
           "body": "You can select a value [here](https://martinthomson.github.io/quic-pick/) if you want a random* draw that is verifiably not grease or already taken.",
           "createdAt": "2026-07-24T12:04:46Z",
           "updatedAt": "2026-07-24T12:04:46Z"
+        },
+        {
+          "author": "bemasc",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "These have now been assigned (0x08 and 0x09): https://www.iana.org/assignments/masque.",
+          "createdAt": "2026-10-12T14:00:46Z",
+          "updatedAt": "2026-10-12T14:00:46Z"
         }
       ]
     },
@@ -218808,7 +218815,7 @@
       "id": "PR_kwDOAUA-v88AAAABFhzU6Q",
       "title": "[connect-tcp] Provide more specific guidance on HTTP status codes",
       "url": "https://github.com/httpwg/http-extensions/pull/3519",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bemasc",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -218817,17 +218824,19 @@
       ],
       "body": "",
       "createdAt": "2026-09-28T15:41:41Z",
-      "updatedAt": "2026-09-28T19:19:03Z",
+      "updatedAt": "2026-10-12T14:07:55Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "cb151e0e3f2186e12f68235033441cb4db65a93c",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "bemasc-status-codes",
       "headRefOid": "da4b09df33cb3a9dd2d1b3f8b0a6cdbb170f926c",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-10-12T14:07:53Z",
+      "mergedAt": "2026-10-12T14:07:53Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "58348cc2daf0886a00a4143be63cb816a3960da1"
+      },
       "comments": [],
       "reviews": [
         {
@@ -218857,7 +218866,7 @@
       "labels": [],
       "body": "This is an attempt to be approximately consistent with both the HTTP RFCs (which prefer \"tunneling\") and the MASQUE RFCs (which prefer \"proxying\").",
       "createdAt": "2026-09-28T20:12:55Z",
-      "updatedAt": "2026-09-28T20:14:10Z",
+      "updatedAt": "2026-10-12T14:03:21Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "cb151e0e3f2186e12f68235033441cb4db65a93c",
@@ -218868,7 +218877,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "bemasc",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@royfielding Does this address your concern about terminology in this draft (https://lists.w3.org/Archives/Public/ietf-http-wg/2026JulSep/0318.html)?",
+          "createdAt": "2026-10-12T14:03:21Z",
+          "updatedAt": "2026-10-12T14:03:21Z"
+        }
+      ],
       "reviews": []
     },
     {
