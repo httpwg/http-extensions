@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                         12 October 2026
-Expires: 15 April 2027
+Intended status: Standards Track                         13 October 2026
+Expires: 16 April 2027
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -13,8 +13,8 @@ Expires: 15 April 2027
 
 Abstract
 
-   TCP proxying using HTTP CONNECT has long been part of the core HTTP
-   specification.  However, this proxying functionality has several
+   TCP tunneling using HTTP CONNECT has long been part of the core HTTP
+   specification.  However, this tunneling functionality has several
    important deficiencies in modern HTTP environments.  This
    specification defines an alternative HTTP proxy service configuration
    for TCP connections.  This configuration is described by a URI
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 April 2027.
+   This Internet-Draft will expire on 16 April 2027.
 
 Copyright Notice
 
@@ -95,7 +95,7 @@ Table of Contents
 
 1.1.  History
 
-   HTTP has used the CONNECT method for proxying TCP connections since
+   HTTP has used the CONNECT method for tunneling TCP connections since
    HTTP/1.1.  When using CONNECT, the request target specifies a host
    and port number, and the proxy forwards TCP payloads between the
    client and this destination ([HTTP], Section 9.3.6).  To date, this
@@ -105,10 +105,11 @@ Table of Contents
    HTTP/3 uses a UDP transport, so it cannot be forwarded using the pre-
    existing CONNECT mechanism.  To enable forward proxying of HTTP/3,
    the MASQUE effort has defined proxy mechanisms that are capable of
-   proxying UDP datagrams [CONNECT-UDP], and more generally IP datagrams
-   [CONNECT-IP].  The destination host and port number (if applicable)
-   are encoded into the HTTP resource path, and end-to-end datagrams are
-   wrapped into HTTP Datagrams [CAPSULE] on the client-proxy path.
+   tunneling UDP datagrams [CONNECT-UDP], and more generally IP
+   datagrams [CONNECT-IP].  The destination host and port number (if
+   applicable) are encoded into the HTTP resource path, and end-to-end
+   datagrams are wrapped into HTTP Datagrams [CAPSULE] on the client-
+   proxy path.
 
 1.2.  Problems
 
@@ -133,7 +134,7 @@ Table of Contents
 
 1.3.  Overview
 
-   This specification describes an alternative mechanism for proxying
+   This specification describes an alternative mechanism for tunneling
    TCP in HTTP.  Like [CONNECT-UDP] and [CONNECT-IP], the proxy service
    is identified by a URI Template.  Proxy interactions reuse standard
    HTTP components and semantics, avoiding changes to the core HTTP
@@ -146,6 +147,12 @@ Table of Contents
    "OPTIONAL" in this document are to be interpreted as described in
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
+
+   In this document, we use the term "proxy" to refer to the HTTP server
+   that acts upon the client's TCP tunneling request.  If there are HTTP
+   intermediaries (as defined in Section 3.7 of [HTTP]) between the
+   client and the proxy, those are referred to as "intermediaries" or
+   "gateways" in this document.
 
 3.  Specification
 
@@ -411,7 +418,7 @@ Table of Contents
 
    The mandatory behaviors above enable endpoints to detect any
    truncation of incoming TCP data.  The recommended behaviors propagate
-   any TCP errors through the proxy connection.
+   any TCP errors through the tunnel.
 
    In HTTP/3, endpoints MAY negotiate and use the RESET_STREAM_AT frame
    in order to reduce data loss during an abrupt closure
@@ -552,7 +559,7 @@ Table of Contents
       the destination host to respond.  (TCP handshakes can hang for
       several minutes before failing.)
 
-   *  Clients can apply separate timeouts to the proxying request and
+   *  Clients can apply separate timeouts to the tunneling request and
       connection establishment.
 
    *  In HTTP/2 and HTTP/3, clients have the option to delay some or all
@@ -679,8 +686,8 @@ Table of Contents
 
       -  Mitigation: Limit the maximum receive window for TCP and HTTP
          connections, and the size of userspace buffers used for
-         proxying.  Alternatively, monitor the connections' send queues
-         and limit the total buffered data per client.
+         forwarding data.  Alternatively, monitor the connections' send
+         queues and limit the total buffered data per client.
 
    *  *WAIT Abuse*: An attacker can force the proxy into a TIME-WAIT,
       CLOSE-WAIT, or FIN-WAIT state until the timer expires, tying up a
@@ -741,7 +748,7 @@ Table of Contents
       -  The client is shared between many parties, such as when acting
          as a gateway or concentrator.
 
-      -  The proxied connections are often closed by the destination.
+      -  The tunneled connections are often closed by the destination.
          This causes the client to initiate closure of the client-to-
          proxy connection, leaving the client in a TIME-WAIT state for
          up to four minutes.
