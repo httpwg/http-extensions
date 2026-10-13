@@ -102,7 +102,7 @@ This specification defines a new mechanism for resumable uploads from client to 
 
 Utilizing resumable uploads, applications can recover from unintended interruptions, but also interrupt an upload on purpose to later resume it, for example, when a user wants to pause an upload, the device's network connectivity changes, or bandwidth should be saved for higher priority tasks.
 
-The document introduces the concept of an upload resource to facilitate resumable uploads ({{upload-resource}}) and defines new header fields to communicate the state of the upload ({{state}}), the status code `104 (Upload Resumption Supported)` to indicate the resource's support for resumable uploads ({{status-code-104}}), and the `application/partial-upload` media type to label partial representation data when resuming an upload ({{media-type-partial-upload}}).
+The document introduces the concept of an upload resource to facilitate resumable uploads ({{upload-resource}}) and defines new header fields to communicate the state of the upload ({{upload-offset}}, {{upload-complete}}, {{upload-length}}, and {{upload-limit}}), the status code `104 (Upload Resumption Supported)` to indicate the resource's support for resumable uploads ({{status-code-104}}), and the `application/partial-upload` media type to label partial representation data when resuming an upload ({{media-type-partial-upload}}).
 
 # Conventions and Definitions
 
@@ -294,7 +294,7 @@ Client                                       Server
 
 # Upload Resource {#upload-resource}
 
-A resumable upload is enabled through interaction with an upload resource. When a resumable upload begins, the server is asked to create an upload resource through a request to another resource ({{upload-creation}}). Using this upload resource, the client can query the upload progress ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}). The server is responsible for persisting the state of the upload resource ({{state}}) and updating it as the upload progresses.
+A resumable upload is enabled through interaction with an upload resource. When a resumable upload begins, the server is asked to create an upload resource through a request to another resource ({{upload-creation}}). Using this upload resource, the client can query the upload progress ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}). The server is responsible for persisting the state of the upload resource ({{upload-offset}}, {{upload-complete}}, {{upload-length}}, and {{upload-limit}}) and updating it as the upload progresses.
 
 An upload resource is specific to the upload of one representation. For uploading multiple representations, multiple upload resources have to be used.
 
@@ -302,11 +302,9 @@ The server can clean up an upload resource and make it inaccessible immediately 
 
 An upload resource SHOULD be unique. Reuse of a URI for a different upload resource SHOULD be avoided in order to reduce the chance of misdirected or corrupted upload resources, as well as the potential security issues described in {{security-considerations}}.
 
-## State
-
 The state of an upload consists of the following properties that are tracked by the server.
 
-### Offset {#upload-offset}
+## Offset {#upload-offset}
 
 The offset is the number of bytes from the representation data that have been processed, either during the creation of the upload resource ({{upload-creation}}) or by appending to it ({{upload-appending}}). The offset is required when appending representation data ({{upload-appending}}) to synchronize the client and resource regarding the amount of transferred representation data.
 
@@ -322,7 +320,7 @@ The client obtains the current offset in multiple ways:
 
 Representation data processed by the upload resource cannot be removed again and, therefore, the offset as seen by the client MUST NOT decrease. Clients can use this guarantee to free resources associated to transferred representation data, as no retransmission of it will be necessary. If the server loses any part of the state, it MUST deactivate the upload resource and reject further interaction with it.
 
-### Completeness {#upload-complete}
+## Completeness {#upload-complete}
 
 An upload is incomplete until it is explicitly marked as completed by the client or the server. After this point, no more representation data can be appended.
 
@@ -332,7 +330,7 @@ An upload is marked as completed either when a request for creating the upload r
 
 When used in an upload creation response ({{upload-creation}}) or an upload append response ({{upload-appending}}), `Upload-Complete` signals whether the response comes from the initial targeted resource. The value of true means that the semantics of the targeted resource apply, and the value of false means that the semantics of the resumable upload protocol apply. The client SHOULD NOT perform upload resumption to the upload resource after receiving a response with the `Upload-Complete` field value set to true. Note that `Upload-Complete` can be true even when the full representation data was not transmitted in the case that the server decides to generate an early response when processing the targeted resource. Also note that `Upload-Complete` can be false in response to an invalid operation performed on a completed upload.
 
-### Length {#upload-length}
+## Length {#upload-length}
 
 The length of the representation data might not be known when starting the transfer, for example, because the representation is taken from a streaming source. The representation's length will, however, be known at the latest when the client completes the upload ({{upload-complete}}).
 
@@ -349,7 +347,7 @@ The `Upload-Length` field can be used in response to an offset retrieval; see {{
 
 Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` ({{upload-complete}}) header field to indicate that a request completes the upload. The offset could match the length, but the upload can still be incomplete.
 
-### Limits {#upload-limit}
+## Limits {#upload-limit}
 
 A server MAY enforce one or multiple limits, which are communicated to the client via the `Upload-Limit` response header field. `Upload-Limit` is a Dictionary Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
