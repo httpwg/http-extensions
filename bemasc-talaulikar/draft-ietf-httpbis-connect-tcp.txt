@@ -228,8 +228,8 @@ Table of Contents
    *  The request's target SHALL correspond to the URI derived from
       expansion of the proxy's URI Template.
 
-   *  The request SHALL include a single "Host" header field containing
-      the origin of the proxy.
+   *  The request SHALL include a single "Host" header field,
+      identifying the proxy.
 
    *  The request SHALL include a "Connection" header field with the
       value "Upgrade".  (Note that this requirement is case-insensitive
