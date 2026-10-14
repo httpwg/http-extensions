@@ -328,7 +328,7 @@ An upload is incomplete until it is explicitly marked as completed by the client
 
 ### Upload-Complete {#upload-complete-hdr}
 
-The `Upload-Complete` request and response header field conveys the completeness state. `Upload-Complete` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) and indicates whether the upload is complete or not. Other values MUST cause the entire header field to be ignored.
+The `Upload-Complete` request and response header field is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}); its meaning in requests and responses is described below. Other values MUST cause the entire header field to be ignored.
 
 An upload is marked as completed either when a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) includes the `Upload-Complete` header field with a true value and the request content was fully processed, or when a response includes the `Upload-Complete` header field with a true value.
 
