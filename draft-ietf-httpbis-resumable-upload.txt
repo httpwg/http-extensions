@@ -1631,6 +1631,13 @@ Table of Contents
    is not intended to be exposed.  Routing information could, for
    instance, be encoded so that only the server can interpret it.
 
+   If knowing the upload resource URI is enough to access the upload,
+   the URI is in effect a credential.  Like other credentials, it needs
+   to be protected in transit (see Section 17.16.1 of [HTTP]).  URIs are
+   also often logged or displayed by servers, proxies, and user agents,
+   so the URI can be disclosed to third parties (see Section 17.9 of
+   [HTTP]).
+
 19.2.  Untrusted Input
 
    Uploaded representation data and its metadata are untrusted input.
