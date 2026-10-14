@@ -319,8 +319,8 @@ The `Upload-Offset` request and response header field conveys the offset. `Uploa
 The client obtains the current offset in multiple ways:
 
 - The offset can be explicitly retrieved from the upload resource ({{offset-retrieving}}).
-- Interim and final responses for creating the upload ({{upload-creation}}) or appending ({{upload-appending}}) with a non-`2XX` status code and the `Upload-Complete: ?0` header can include the `Upload-Offset` header field.
-- Final responses for appending representation data ({{upload-appending}}) with a `2XX` status code and the `Upload-Complete: ?0` header acknowledge that the entire request content was received and the offset increased by the length of the appended representation data. An `Upload-Offset` header field's value MUST match this inferred offset, if present.
+- Interim responses for creating the upload ({{upload-creation}}) or appending ({{upload-appending}}), and final responses for either with a non-`2xx` status code and the `Upload-Complete: ?0` header field, can include the `Upload-Offset` header field.
+- Final responses for appending representation data ({{upload-appending}}) with a `2xx` status code and the `Upload-Complete: ?0` header field acknowledge that the entire request content was received and the offset increased by the length of the appended representation data. An `Upload-Offset` header field's value MUST match this inferred offset, if present.
 
 ## Completeness {#upload-complete}
 
