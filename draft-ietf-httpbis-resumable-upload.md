@@ -842,6 +842,8 @@ Version-specific mechanisms place requirements on clients or servers for actioni
 
 The upload resource URI is the identifier used for modifying the upload. Without further protection of this URI, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can access the upload resource. To reduce the risk of unauthorized access, it is RECOMMENDED to generate upload resource URIs in such a way that makes it hard to be guessed by unauthorized clients. In addition, servers may embed information about the storage or processing location of the uploaded representation in the upload resource URI to make routing requests more efficient. If so, they MUST ensure that no internal information is leaked in the URI that is not intended to be exposed.
 
+If knowing the upload resource URI is enough to access the upload, the URI is in effect a credential. Like other credentials, it needs to be protected in transit (see {{Section 17.16.1 of HTTP}}). URIs are also often logged or displayed by servers, proxies, and user agents, so the URI can be disclosed to third parties (see {{Section 17.9 of HTTP}}).
+
 ## Untrusted Input
 
 Uploaded representation data and its metadata are untrusted input. Server operators have to be careful of where uploaded data is written and subsequently accessed, especially if the operations cause the representation to be processed or executed by the server. In addition, metadata MUST be validated and/or sanitized if the server takes its values into consideration for processing or storing the representation.
