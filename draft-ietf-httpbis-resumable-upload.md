@@ -840,7 +840,11 @@ Version-specific mechanisms place requirements on clients or servers for actioni
 
 ## Upload Resource URIs {#security-uri}
 
-The upload resource URI is the identifier used for modifying the upload. Without further protection of this URI, an attacker may obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can access the upload resource. To reduce the risk of unauthorized access, it is RECOMMENDED to generate upload resource URIs in such a way that makes it hard to be guessed by unauthorized clients. In addition, servers may embed information about the storage or processing location of the uploaded representation in the upload resource URI to make routing requests more efficient. If so, they MUST ensure that no internal information is leaked in the URI that is not intended to be exposed.
+The upload resource URI is the identifier used for modifying the upload. Without further protection of this URI, an attacker can perform any operation on the upload resource: obtain information about it, append data to it, or cancel it. Each of these requests can also cause a server to terminate an in-flight request from a legitimate client ({{concurrency}}).
+
+To mitigate these risks, the server SHOULD ensure that only authorized clients can access the upload resource. It is also RECOMMENDED to generate upload resource URIs in such a way that makes it hard to be guessed by unauthorized clients.
+
+Servers might embed information in the upload resource URI, such as a storage or processing location, to make request routing more efficient. Because the URI is visible to the client and to anyone else who obtains it, servers MUST NOT include information in it that is not intended to be exposed. Routing information could, for instance, be encoded so that only the server can interpret it.
 
 ## Untrusted Input
 
