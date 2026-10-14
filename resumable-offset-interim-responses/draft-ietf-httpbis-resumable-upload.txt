@@ -527,9 +527,9 @@ Table of Contents
       (Section 6).
 
    *  Interim responses for creating the upload (Section 5) or appending
-      (Section 7), and final responses for either with a non-2xx status
-      code and the Upload-Complete: ?0 header field, can include the
-      Upload-Offset header field.
+      (Section 7), and their final responses with a non-2xx status code
+      and the Upload-Complete: ?0 header field, can include the Upload-
+      Offset header field.
 
    *  Final responses for appending representation data (Section 7) with
       a 2xx status code and the Upload-Complete: ?0 header field
