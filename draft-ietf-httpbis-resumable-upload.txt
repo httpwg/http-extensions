@@ -865,16 +865,12 @@ Table of Contents
    status code and the Upload-Offset header field set to the current
    offset to inform the client about the upload progress.
 
-   Where a response requires a Location header field to be included, all
-   interim and final response messages for the same request MUST contain
-   an identical Location value.  However, final responses including the
-   Upload-Complete: ?1 header field are exempt from this requirement
-   because they are the result of processing the transferred
-   representation and the Location value does not necessarily represent
-   the upload location.  Where the Location value is expected to be
-   identical across multiple messages, clients SHOULD verify this.  If
-   verification fails, clients SHOULD abort the current request and
-   cancel the upload (Section 8).
+   Every response to the same request that identifies the upload
+   resource in Location MUST use the same URI.  A final response with
+   Upload-Complete: ?1 is the result of processing the representation,
+   so its Location can identify a different resource.  Clients SHOULD
+   check that the upload resource URI does not change, and SHOULD abort
+   the current request and cancel the upload (Section 8) if it does.
 
    The server SHOULD include the Upload-Complete (Section 4.2.1) header
    field in the response to indicate whether it is the result of
