@@ -846,6 +846,8 @@ To mitigate these risks, the server SHOULD ensure that only authorized clients c
 
 Servers might embed information in the upload resource URI, such as a storage or processing location, to make request routing more efficient. Because the URI is visible to the client and to anyone else who obtains it, servers MUST NOT include information in it that is not intended to be exposed. Routing information could, for instance, be encoded so that only the server can interpret it.
 
+If knowing the upload resource URI is enough to access the upload, the URI is in effect a credential. Like other credentials, it needs to be protected in transit (see {{Section 17.16.1 of HTTP}}). URIs are also often logged or displayed by servers, proxies, and user agents, so the URI can be disclosed to third parties (see {{Section 17.9 of HTTP}}).
+
 ## Untrusted Input
 
 Uploaded representation data and its metadata are untrusted input. Server operators have to be careful of where uploaded data is written and subsequently accessed, especially if the operations cause the representation to be processed or executed by the server. In addition, metadata MUST be validated and/or sanitized if the server takes its values into consideration for processing or storing the representation.
