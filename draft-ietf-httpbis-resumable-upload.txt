@@ -170,8 +170,8 @@ Table of Contents
    in the request), there are caveats that affect its deployability; see
    Section 14.5 of [HTTP].
 
-   Canceled upload request can be triggered for various reasons,
-   including but not limited to:
+   Upload requests can be canceled for various reasons, including but
+   not limited to:
 
    explicit client cancellation:  e.g., terminating a user-agent process
 
@@ -180,7 +180,8 @@ Table of Contents
 
    explicit server cancellation:  e.g., scheduled maintenance
 
-   implicit server cancellation:  e.g., DoS mitigation or internal error
+   implicit server cancellation:  e.g., denial-of-service mitigation or
+      internal error
 
    Connections can be dropped due to a variety of network or transport
    layer reasons triggered by endpoints or on-path elements.
@@ -219,8 +220,8 @@ Table of Contents
    Some examples in this document contain long lines that may be folded,
    as described in [RFC8792].
 
-   The terms Structured Header, Item, Dictionary, String, Integer, and
-   Boolean are imported from [STRUCTURED-FIELDS].
+   The terms Structured Header, Item, Dictionary, Integer, and Boolean
+   are imported from [STRUCTURED-FIELDS].
 
    The terms "representation", "representation data", "representation
    metadata", "content", "client" and "server" are from Section 3 of
@@ -333,14 +334,15 @@ Table of Contents
    |------------------------------------------------>|
    |                                                 |
    |                                          200 OK |
+   |                             Upload-Complete: ?1 |
    |<------------------------------------------------|
    |                                                 |
 
                           Figure 3: Upload Append
 
    4) If the client is not interested in completing the upload, it can
-   instruct the server to delete the upload resource and all associated
-   representation data (Section 8).
+   cancel the upload (Section 8).  The server can then release the
+   upload resource and any associated representation data.
 
    Client                                       Server
    |                                                 |
@@ -453,6 +455,7 @@ Table of Contents
    |------------------------------------------------>|
    |                                                 |
    |                                          200 OK |
+   |                             Upload-Complete: ?1 |
    |<------------------------------------------------|
    |                                                 |
 
@@ -962,7 +965,7 @@ Table of Contents
 
    D) The following example shows an upload creation being rejected by
    the server because the request content cannot be decoded.  The
-   Upload-Complete header in the response is set to true since the
+   Upload-Complete header field in the response is set to true since the
    server is uninterested in receiving the full representation after the
    decoding failure, and the upload is complete in its perspective.  The
    client cannot continue the upload.
@@ -999,10 +1002,10 @@ Table of Contents
    representation data that the client has already sent.  The client is
    expected to handle backtracking of a reasonable length.  On the other
    hand, the offset can be greater than the amount of sent
-   representation data, for example, if the server obtained additional
-   representation data on behalf of the client.  If the client is not
-   able to provide the representation data at the given offset, the
-   upload MUST be considered a failure.  The client then MUST NOT
+   representation data, for example, if the server already has data from
+   an earlier attempt to upload the same representation.  If the client
+   is not able to provide the representation data at the given offset,
+   the upload MUST be considered a failure.  The client then MUST NOT
    continue the upload and SHOULD cancel the upload (Section 8).
 
    The client MUST NOT perform offset retrieval while the creation
@@ -1156,11 +1159,11 @@ Table of Contents
    completed upload is valid.
 
    The server MUST record the representation's length according to
-   Section 4.3 if the Upload-Length or Upload-Complete header fields are
-   included in the request.  If the representation's length is known,
-   the server MUST prevent the offset from exceeding the
-   representation's length by rejecting the request once the offset
-   exceeds the length, marking the upload resource invalid and rejecting
+   Section 4.3 if the Upload-Length or Upload-Complete: ?1 header fields
+   are included in the request.  If the representation's length is
+   known, the server MUST NOT let the offset exceed it: if appending a
+   request's content would take the offset past the length, the server
+   MUST reject the request, deactivate the upload resource, and reject
    any further interaction with it.  It is not sufficient to rely on the
    Content-Length header field for enforcement because this header field
    might not be present.
@@ -1208,7 +1211,7 @@ Table of Contents
    transfers the remaining 4567890 bytes and completes the upload with a
    length of 1234567890 bytes.  The server processes the uploaded
    representation and generates the corresponding response, in this
-   example containing extracted meta data:
+   example containing extracted metadata:
 
    PATCH /upload/d38d6ffe8 HTTP/1.1
    Host: example.com
@@ -1452,8 +1455,7 @@ Table of Contents
    Upload-Length on the content coded data (that is, the representation
    data).  Moreover, the content codings are retained throughout the
    entire upload, meaning that the server is not required to decode the
-   representation data to support resumable uploads.  See Appendix A of
-   [DIGEST-FIELDS] for more information.
+   representation data to support resumable uploads.
 
 15.  Transfer Codings
 
@@ -1535,9 +1537,9 @@ Table of Contents
    a 104 (Upload Resumption Supported) interim response for the client
    to resume the upload after interruptions.  A resource that does not
    support resumable uploads or does not want to upgrade to a resumable
-   upload for this request ignores the Upload-Complete: ?1 header.  The
-   transfer then falls back to a non-resumable upload without additional
-   cost.
+   upload for this request ignores the Upload-Complete: ?1 header field.
+   The transfer then falls back to a non-resumable upload without
+   additional cost.
 
    This upgrade can also be performed transparently by a library or
    program that acts as an HTTP client by sending requests on behalf of
@@ -1595,10 +1597,10 @@ Table of Contents
    HTTP/1.1:  close the underlying transport connection (Section 9.5 of
       [HTTP/1.1])
 
-   HTTP/2:  send a RST_STREAM frame (Section 6.4 of [HTTP/2])
+   HTTP/2:  reset the stream (Section 6.4 of [HTTP/2])
 
-   HTTP/3:  send a RESET_STREAM (Section 19.4 of [QUIC]) or STOP_SENDING
-      frame (Section 19.5 of [QUIC])
+   HTTP/3:  abruptly terminate the request stream (Section 4.1.1 of
+      [HTTP/3])
 
    Version-specific mechanisms place requirements on clients or servers
    for actioning the cancellation.  However, for all versions of HTTP,
@@ -1845,11 +1847,6 @@ Table of Contents
               DOI 10.17487/RFC6266, June 2011,
               <https://www.rfc-editor.org/rfc/rfc6266>.
 
-   [DIGEST-FIELDS]
-              Polli, R. and L. Pardue, "Digest Fields", RFC 9530,
-              DOI 10.17487/RFC9530, February 2024,
-              <https://www.rfc-editor.org/rfc/rfc9530>.
-
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
               DOI 10.17487/RFC9110, June 2022,
@@ -1863,6 +1860,9 @@ Table of Contents
               DOI 10.17487/RFC9113, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9113>.
 
+   [HTTP/3]   Bishop, M., Ed., "HTTP/3", RFC 9114, DOI 10.17487/RFC9114,
+              June 2022, <https://www.rfc-editor.org/rfc/rfc9114>.
+
    [PATCH]    Dusseault, L. and J. Snell, "PATCH Method for HTTP",
               RFC 5789, DOI 10.17487/RFC5789, March 2010,
               <https://www.rfc-editor.org/rfc/rfc5789>.
@@ -1870,11 +1870,6 @@ Table of Contents
    [PROBLEM]  Nottingham, M., Wilde, E., and S. Dalal, "Problem Details
               for HTTP APIs", RFC 9457, DOI 10.17487/RFC9457, July 2023,
               <https://www.rfc-editor.org/rfc/rfc9457>.
-
-   [QUIC]     Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
-              Multiplexed and Secure Transport", RFC 9000,
-              DOI 10.17487/RFC9000, May 2021,
-              <https://www.rfc-editor.org/rfc/rfc9000>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,

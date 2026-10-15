@@ -1439,7 +1439,7 @@ svg {
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
 <p id="section-1-1">HTTP data transfers can encounter interruption due to reasons such as canceled requests or dropped connections. If the intended recipient can indicate how much of the data was processed prior to interruption, a sender can resume data transfer at that point instead of attempting to transfer all of the data again. HTTP range requests (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-14" class="relref">Section 14</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) support this concept of resumable data transfers for downloads from server to client. While partial PUT is one method for uploading a partial representation (via Content-Range in the request), there are caveats that affect its deployability; see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-14.5" class="relref">Section 14.5</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">Canceled upload request can be triggered for various reasons, including but not limited to:<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-2">Upload requests can be canceled for various reasons, including but not limited to:<a href="#section-1-2" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-1-3">
         <dt id="section-1-3.1">explicit client cancellation:</dt>
         <dd style="margin-left: 1.5em" id="section-1-3.2">
@@ -1458,7 +1458,7 @@ svg {
         <dd class="break"></dd>
 <dt id="section-1-3.7">implicit server cancellation:</dt>
         <dd style="margin-left: 1.5em" id="section-1-3.8">
-          <p id="section-1-3.8.1">e.g., DoS mitigation or internal error<a href="#section-1-3.8.1" class="pilcrow">¶</a></p>
+          <p id="section-1-3.8.1">e.g., denial-of-service mitigation or internal error<a href="#section-1-3.8.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
@@ -1478,7 +1478,7 @@ svg {
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">Some examples in this document contain long lines that may be folded, as described in <span>[<a href="#RFC8792" class="cite xref">RFC8792</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">The terms Structured Header, Item, Dictionary, String, Integer, and Boolean are imported from <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-3">The terms Structured Header, Item, Dictionary, Integer, and Boolean are imported from <span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
 <p id="section-2-4">The terms "representation", "representation data", "representation metadata", "content", "client" and "server" are from <span><a href="https://rfc-editor.org/rfc/rfc9110#section-3" class="relref">Section 3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
 <p id="section-2-5">The term "URI" is used as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-4" class="relref">Section 4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2-5" class="pilcrow">¶</a></p>
 <p id="section-2-6">The term "patch document" is taken from <span>[<a href="#PATCH" class="cite xref">PATCH</a>]</span>.<a href="#section-2-6" class="pilcrow">¶</a></p>
@@ -1581,13 +1581,13 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <figure id="figure-3">
           <div id="section-3.1-7.1">
             <div class="alignLeft art-svg artwork" id="section-3.1-7.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="416" viewBox="0 0 416 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,224" fill="none" stroke="black"></path>
-                <path d="M 408,48 L 408,224" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="256" width="416" viewBox="0 0 416 256" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,240" fill="none" stroke="black"></path>
+                <path d="M 408,48 L 408,240" fill="none" stroke="black"></path>
                 <path d="M 16,160 L 400,160" fill="none" stroke="black"></path>
-                <path d="M 16,208 L 400,208" fill="none" stroke="black"></path>
+                <path d="M 16,224 L 400,224" fill="none" stroke="black"></path>
                 <polygon class="arrowhead" points="408,160 396,154.4 396,165.6" fill="black" transform="rotate(0,400,160)"></polygon>
-                <polygon class="arrowhead" points="24,208 12,202.4 12,213.6" fill="black" transform="rotate(180,16,208)"></polygon>
+                <polygon class="arrowhead" points="24,224 12,218.4 12,229.6" fill="black" transform="rotate(180,16,224)"></polygon>
                 <g class="text">
                   <text x="28" y="36">Client</text>
                   <text x="388" y="36">Server</text>
@@ -1605,6 +1605,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
                   <text x="252" y="148">X]</text>
                   <text x="360" y="196">200</text>
                   <text x="388" y="196">OK</text>
+                  <text x="308" y="212">Upload-Complete:</text>
+                  <text x="388" y="212">?1</text>
                 </g>
               </svg><a href="#section-3.1-7.1.1" class="pilcrow">¶</a>
 </div>
@@ -1613,7 +1615,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#name-upload-append" class="selfRef">Upload Append</a>
           </figcaption></figure>
 </div>
-<p id="section-3.1-8">4) If the client is not interested in completing the upload, it can instruct the server to delete the upload resource and all associated representation data (<a href="#upload-cancellation" class="auto internal xref">Section 8</a>).<a href="#section-3.1-8" class="pilcrow">¶</a></p>
+<p id="section-3.1-8">4) If the client is not interested in completing the upload, it can cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 8</a>). The server can then release the upload resource and any associated representation data.<a href="#section-3.1-8" class="pilcrow">¶</a></p>
 <span id="name-upload-cancellation"></span><div id="fig-upload-cancellation">
 <figure id="figure-4">
           <div id="section-3.1-9.1">
@@ -1777,13 +1779,13 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <figure id="figure-8">
           <div id="section-3.2-10.1">
             <div class="alignLeft art-svg artwork" id="section-3.2-10.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="416" viewBox="0 0 416 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,48 L 8,224" fill="none" stroke="black"></path>
-                <path d="M 408,48 L 408,224" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="256" width="416" viewBox="0 0 416 256" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,48 L 8,240" fill="none" stroke="black"></path>
+                <path d="M 408,48 L 408,240" fill="none" stroke="black"></path>
                 <path d="M 16,160 L 400,160" fill="none" stroke="black"></path>
-                <path d="M 16,208 L 400,208" fill="none" stroke="black"></path>
+                <path d="M 16,224 L 400,224" fill="none" stroke="black"></path>
                 <polygon class="arrowhead" points="408,160 396,154.4 396,165.6" fill="black" transform="rotate(0,400,160)"></polygon>
-                <polygon class="arrowhead" points="24,208 12,202.4 12,213.6" fill="black" transform="rotate(180,16,208)"></polygon>
+                <polygon class="arrowhead" points="24,224 12,218.4 12,229.6" fill="black" transform="rotate(180,16,224)"></polygon>
                 <g class="text">
                   <text x="28" y="36">Client</text>
                   <text x="388" y="36">Server</text>
@@ -1802,6 +1804,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
                   <text x="332" y="148">Z]</text>
                   <text x="360" y="196">200</text>
                   <text x="388" y="196">OK</text>
+                  <text x="308" y="212">Upload-Complete:</text>
+                  <text x="388" y="212">?1</text>
                 </g>
               </svg><a href="#section-3.2-10.1.1" class="pilcrow">¶</a>
 </div>
@@ -2079,7 +2083,7 @@ Location: https://example.com/upload/0587fa44b
 HTTP/1.1 500 Internal Server Error
 </pre><a href="#section-5.3-9" class="pilcrow">¶</a>
 </div>
-<p id="section-5.3-10">D) The following example shows an upload creation being rejected by the server because the request content cannot be decoded. The <code>Upload-Complete</code> header in the response is set to true since the server is uninterested in receiving the full representation after the decoding failure, and the upload is complete in its perspective. The client cannot continue the upload.<a href="#section-5.3-10" class="pilcrow">¶</a></p>
+<p id="section-5.3-10">D) The following example shows an upload creation being rejected by the server because the request content cannot be decoded. The <code>Upload-Complete</code> header field in the response is set to true since the server is uninterested in receiving the full representation after the decoding failure, and the upload is complete in its perspective. The client cannot continue the upload.<a href="#section-5.3-10" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-5.3-11">
 <pre>
 POST /upload-gzip HTTP/1.1
@@ -2116,7 +2120,7 @@ Upload-Complete: ?1
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-client-behavior-2" class="section-name selfRef">Client Behavior</a>
         </h3>
 <p id="section-6.1-1">If the client wants to resume the upload after an interruption, it has to know the amount of representation data processed by the upload resource so far. It can fetch the offset by sending a <code>HEAD</code> or <code>GET</code> request to the upload resource. Using <code>HEAD</code> is <span class="bcp14">RECOMMENDED</span>, since response content is not required for resumption. Upon a successful response, the client can continue the upload by appending representation data (<a href="#upload-appending" class="auto internal xref">Section 7</a>) starting at the offset indicated by the <code>Upload-Offset</code> response header field.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.1-2">The offset can be less than or equal to the number of bytes of representation data that the client has already sent. The client is expected to handle backtracking of a reasonable length. On the other hand, the offset can be greater than the amount of sent representation data, for example, if the server obtained additional representation data on behalf of the client. If the client is not able to provide the representation data at the given offset, the upload <span class="bcp14">MUST</span> be considered a failure. The client then <span class="bcp14">MUST NOT</span> continue the upload and <span class="bcp14">SHOULD</span> cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 8</a>).<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.1-2">The offset can be less than or equal to the number of bytes of representation data that the client has already sent. The client is expected to handle backtracking of a reasonable length. On the other hand, the offset can be greater than the amount of sent representation data, for example, if the server already has data from an earlier attempt to upload the same representation. If the client is not able to provide the representation data at the given offset, the upload <span class="bcp14">MUST</span> be considered a failure. The client then <span class="bcp14">MUST NOT</span> continue the upload and <span class="bcp14">SHOULD</span> cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 8</a>).<a href="#section-6.1-2" class="pilcrow">¶</a></p>
 <p id="section-6.1-3">The client <span class="bcp14">MUST NOT</span> perform offset retrieval while the creation (<a href="#upload-creation" class="auto internal xref">Section 5</a>) of or appending (<a href="#upload-appending" class="auto internal xref">Section 7</a>) to the same upload resource is in progress as this can cause the previous request to be terminated by the server as described in <a href="#concurrency" class="auto internal xref">Section 9</a>.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 <p id="section-6.1-4">If the client receives a 2xx successful response with a valid Upload-Offset header field, the client can continue appending representation data to it (<a href="#upload-appending" class="auto internal xref">Section 7</a>).<a href="#section-6.1-4" class="pilcrow">¶</a></p>
 <p id="section-6.1-5">If the client receives a 2xx successful response without a valid Upload-Offset header field, a 4xx client error, or 5xx server error response, or if it did not receive a response, the client <span class="bcp14">MAY</span> retry retrieving the offset.<a href="#section-6.1-5" class="pilcrow">¶</a></p>
@@ -2205,7 +2209,7 @@ Cache-Control: no-store
 <p id="section-7.2-4">If the <code>Upload-Complete</code> request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully processed, the upload is marked as complete and the server <span class="bcp14">SHOULD</span> generate the response that matches what the resource, that was targeted by the initial upload creation (<a href="#upload-creation" class="auto internal xref">Section 5</a>), would have generated if it had processed the entire representation in the initial request. However, the response <span class="bcp14">MUST</span> include the <code>Upload-Complete</code> header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the uploaded representation. The server <span class="bcp14">MUST NOT</span> emit a 2xx successful response with the <code>Upload-Complete</code> header field set to false or missing in response to a request with the <code>Upload-Complete</code> request header field set to true.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
 <p id="section-7.2-5">If the <code>Upload-Complete</code> request header field is set to false, the client intends to transfer the remaining representation data over multiple requests. If the request content was fully processed, the server acknowledges the appended data by sending a <code>2xx (Successful)</code> response with the <code>Upload-Complete</code> header field set to false.<a href="#section-7.2-5" class="pilcrow">¶</a></p>
 <p id="section-7.2-6">Even if the upload is complete (<a href="#upload-complete" class="auto internal xref">Section 4.2</a>) in the server's perspective and the final response from the targeted resource has already been sent, the client might still perform an upload append (<a href="#upload-appending" class="auto internal xref">Section 7</a>) after an offset retrieval (<a href="#offset-retrieving" class="auto internal xref">Section 6</a>) due to the response being lost during transmission. The server can choose to replay the final response to the client if the request to append to the completed upload is valid.<a href="#section-7.2-6" class="pilcrow">¶</a></p>
-<p id="section-7.2-7">The server <span class="bcp14">MUST</span> record the representation's length according to <a href="#upload-length" class="auto internal xref">Section 4.3</a> if the <code>Upload-Length</code> or <code>Upload-Complete</code> header fields are included in the request. If the representation's length is known, the server <span class="bcp14">MUST</span> prevent the offset from exceeding the representation's length by rejecting the request once the offset exceeds the length, marking the upload resource invalid and rejecting any further interaction with it. It is not sufficient to rely on the <code>Content-Length</code> header field for enforcement because this header field might not be present.<a href="#section-7.2-7" class="pilcrow">¶</a></p>
+<p id="section-7.2-7">The server <span class="bcp14">MUST</span> record the representation's length according to <a href="#upload-length" class="auto internal xref">Section 4.3</a> if the <code>Upload-Length</code> or <code>Upload-Complete: ?1</code> header fields are included in the request. If the representation's length is known, the server <span class="bcp14">MUST NOT</span> let the offset exceed it: if appending a request's content would take the offset past the length, the server <span class="bcp14">MUST</span> reject the request, deactivate the upload resource, and reject any further interaction with it. It is not sufficient to rely on the <code>Content-Length</code> header field for enforcement because this header field might not be present.<a href="#section-7.2-7" class="pilcrow">¶</a></p>
 <p id="section-7.2-8">While the request content is being processed, the server <span class="bcp14">SHOULD</span> send interim responses with a <code>104 (Upload Resumption Supported)</code> status code and the <code>Upload-Offset</code> header field set to the current offset to inform the client about the upload progress. These interim responses <span class="bcp14">MUST NOT</span> include the <code>Location</code> header field.<a href="#section-7.2-8" class="pilcrow">¶</a></p>
 <p id="section-7.2-9">The server <span class="bcp14">SHOULD</span> include the <code>Upload-Complete</code> (<a href="#upload-complete-hdr" class="auto internal xref">Section 4.2.1</a>) header field in the response to indicate whether it is the result of processing the uploaded representation.<a href="#section-7.2-9" class="pilcrow">¶</a></p>
 <p id="section-7.2-10">The server <span class="bcp14">SHOULD NOT</span> generate a response with the <code>301 (Moved Permanently)</code>, <code>302 (Found)</code>, or <code>303 (See Other)</code> status codes and the <code>Upload-Complete: ?0</code> header field because clients might follow the redirect without preserving the <code>PATCH</code> method. See <a href="#origin" class="auto internal xref">Section 19.7</a> for redirecting a response that completes the upload.<a href="#section-7.2-10" class="pilcrow">¶</a></p>
@@ -2238,7 +2242,7 @@ HTTP/1.1 204 No Content
 Upload-Complete: ?0
 </pre><a href="#section-7.3-3" class="pilcrow">¶</a>
 </div>
-<p id="section-7.3-4">B) The next example shows an upload append, where the client transfers the remaining 4567890 bytes and completes the upload with a length of 1234567890 bytes. The server processes the uploaded representation and generates the corresponding response, in this example containing extracted meta data:<a href="#section-7.3-4" class="pilcrow">¶</a></p>
+<p id="section-7.3-4">B) The next example shows an upload append, where the client transfers the remaining 4567890 bytes and completes the upload with a length of 1234567890 bytes. The server processes the uploaded representation and generates the corresponding response, in this example containing extracted metadata:<a href="#section-7.3-4" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-7.3-5">
 <pre>
 PATCH /upload/d38d6ffe8 HTTP/1.1
@@ -2436,7 +2440,7 @@ Upload-Complete: ?0
       <h2 id="name-content-codings">
 <a href="#section-14" class="section-number selfRef">14. </a><a href="#name-content-codings" class="section-name selfRef">Content Codings</a>
       </h2>
-<p id="section-14-1">Since the codings listed in <code>Content-Encoding</code> are a characteristic of the representation (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>), both the client and the server always compute the values for <code>Upload-Offset</code> and optionally <code>Upload-Length</code> on the content coded data (that is, the representation data). Moreover, the content codings are retained throughout the entire upload, meaning that the server is not required to decode the representation data to support resumable uploads. See <span><a href="https://rfc-editor.org/rfc/rfc9530#appendix-A" class="relref">Appendix A</a> of [<a href="#DIGEST-FIELDS" class="cite xref">DIGEST-FIELDS</a>]</span> for more information.<a href="#section-14-1" class="pilcrow">¶</a></p>
+<p id="section-14-1">Since the codings listed in <code>Content-Encoding</code> are a characteristic of the representation (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4" class="relref">Section 8.4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>), both the client and the server always compute the values for <code>Upload-Offset</code> and optionally <code>Upload-Length</code> on the content coded data (that is, the representation data). Moreover, the content codings are retained throughout the entire upload, meaning that the server is not required to decode the representation data to support resumable uploads.<a href="#section-14-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="transfer-codings">
@@ -2469,7 +2473,7 @@ Upload-Complete: ?0
 <a href="#section-16.1.1" class="section-number selfRef">16.1.1. </a><a href="#name-upgrading-to-resumable-uplo" class="section-name selfRef">Upgrading To Resumable Uploads</a>
           </h4>
 <p id="section-16.1.1-1">Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the representation is transferred in a single request, usually <code>POST</code> or <code>PUT</code>, without any ability to resume from interruptions. The client can invite the server to upgrade such a request to a resumable upload by adding the <code>Upload-Complete: ?1</code> header field to the original request. The <code>Upload-Length</code> header field <span class="bcp14">SHOULD</span> be added if the representation's length is known upfront. The request is not changed otherwise.<a href="#section-16.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-16.1.1-2">If the resource targeted in the initial request supports resumable uploads, the server can create an upload resource and send its URI in a <code>104 (Upload Resumption Supported)</code> interim response for the client to resume the upload after interruptions. A resource that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the <code>Upload-Complete: ?1</code> header. The transfer then falls back to a non-resumable upload without additional cost.<a href="#section-16.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-16.1.1-2">If the resource targeted in the initial request supports resumable uploads, the server can create an upload resource and send its URI in a <code>104 (Upload Resumption Supported)</code> interim response for the client to resume the upload after interruptions. A resource that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the <code>Upload-Complete: ?1</code> header field. The transfer then falls back to a non-resumable upload without additional cost.<a href="#section-16.1.1-2" class="pilcrow">¶</a></p>
 <p id="section-16.1.1-3">This upgrade can also be performed transparently by a library or program that acts as an HTTP client by sending requests on behalf of a user. When the user instructs the client to send a non-resumable request, the client can perform the upgrade transparently and handle potential interruptions and resumptions under the hood without involving the user. The last response received by the client is considered the response for the entire upload and should be provided to the user.<a href="#section-16.1.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2511,12 +2515,12 @@ Upload-Complete: ?0
         <dd class="break"></dd>
 <dt id="section-18-2.3">HTTP/2:</dt>
         <dd style="margin-left: 1.5em" id="section-18-2.4">
-          <p id="section-18-2.4.1">send a <code>RST_STREAM</code> frame (<span><a href="https://rfc-editor.org/rfc/rfc9113#section-6.4" class="relref">Section 6.4</a> of [<a href="#RFC9113" class="cite xref">HTTP/2</a>]</span>)<a href="#section-18-2.4.1" class="pilcrow">¶</a></p>
+          <p id="section-18-2.4.1">reset the stream (<span><a href="https://rfc-editor.org/rfc/rfc9113#section-6.4" class="relref">Section 6.4</a> of [<a href="#RFC9113" class="cite xref">HTTP/2</a>]</span>)<a href="#section-18-2.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-18-2.5">HTTP/3:</dt>
         <dd style="margin-left: 1.5em" id="section-18-2.6">
-          <p id="section-18-2.6.1">send a <code>RESET_STREAM</code> (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-19.4" class="relref">Section 19.4</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>) or <code>STOP_SENDING</code> frame (<span><a href="https://rfc-editor.org/rfc/rfc9000#section-19.5" class="relref">Section 19.5</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>)<a href="#section-18-2.6.1" class="pilcrow">¶</a></p>
+          <p id="section-18-2.6.1">abruptly terminate the request stream (<span><a href="https://rfc-editor.org/rfc/rfc9114#section-4.1.1" class="relref">Section 4.1.1</a> of [<a href="#RFC9114" class="cite xref">HTTP/3</a>]</span>)<a href="#section-18-2.6.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
@@ -2849,10 +2853,6 @@ Upload-Complete: ?0
         <dd>
 <span class="refAuthor">Reschke, J.</span>, <span class="refTitle">"Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)"</span>, <span class="seriesInfo">RFC 6266</span>, <span class="seriesInfo">DOI 10.17487/RFC6266</span>, <time datetime="2011-06" class="refDate">June 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6266">https://www.rfc-editor.org/rfc/rfc6266</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="DIGEST-FIELDS">[DIGEST-FIELDS]</dt>
-        <dd>
-<span class="refAuthor">Polli, R.</span> and <span class="refAuthor">L. Pardue</span>, <span class="refTitle">"Digest Fields"</span>, <span class="seriesInfo">RFC 9530</span>, <span class="seriesInfo">DOI 10.17487/RFC9530</span>, <time datetime="2024-02" class="refDate">February 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9530">https://www.rfc-editor.org/rfc/rfc9530</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="HTTP">[HTTP]</dt>
         <dd>
 <span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI 10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>&gt;</span>. </dd>
@@ -2865,6 +2865,10 @@ Upload-Complete: ?0
         <dd>
 <span class="refAuthor">Thomson, M., Ed.</span> and <span class="refAuthor">C. Benfield, Ed.</span>, <span class="refTitle">"HTTP/2"</span>, <span class="seriesInfo">RFC 9113</span>, <span class="seriesInfo">DOI 10.17487/RFC9113</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9113">https://www.rfc-editor.org/rfc/rfc9113</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC9114">[HTTP/3]</dt>
+        <dd>
+<span class="refAuthor">Bishop, M., Ed.</span>, <span class="refTitle">"HTTP/3"</span>, <span class="seriesInfo">RFC 9114</span>, <span class="seriesInfo">DOI 10.17487/RFC9114</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9114">https://www.rfc-editor.org/rfc/rfc9114</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="PATCH">[PATCH]</dt>
         <dd>
 <span class="refAuthor">Dusseault, L.</span> and <span class="refAuthor">J. Snell</span>, <span class="refTitle">"PATCH Method for HTTP"</span>, <span class="seriesInfo">RFC 5789</span>, <span class="seriesInfo">DOI 10.17487/RFC5789</span>, <time datetime="2010-03" class="refDate">March 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5789">https://www.rfc-editor.org/rfc/rfc5789</a>&gt;</span>. </dd>
@@ -2872,10 +2876,6 @@ Upload-Complete: ?0
 <dt id="PROBLEM">[PROBLEM]</dt>
         <dd>
 <span class="refAuthor">Nottingham, M.</span>, <span class="refAuthor">Wilde, E.</span>, and <span class="refAuthor">S. Dalal</span>, <span class="refTitle">"Problem Details for HTTP APIs"</span>, <span class="seriesInfo">RFC 9457</span>, <span class="seriesInfo">DOI 10.17487/RFC9457</span>, <time datetime="2023-07" class="refDate">July 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9457">https://www.rfc-editor.org/rfc/rfc9457</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="QUIC">[QUIC]</dt>
-        <dd>
-<span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">M. Thomson, Ed.</span>, <span class="refTitle">"QUIC: A UDP-Based Multiplexed and Secure Transport"</span>, <span class="seriesInfo">RFC 9000</span>, <span class="seriesInfo">DOI 10.17487/RFC9000</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9000">https://www.rfc-editor.org/rfc/rfc9000</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
