@@ -117,7 +117,7 @@ In HTTP/1.1 {{RFC9112}}, the client uses the proxy by issuing a request as follo
 
 * The method SHALL be "GET".
 * The request's target SHALL correspond to the URI derived from expansion of the proxy's URI Template.
-* The request SHALL include a single "Host" header field containing the origin of the proxy.
+* The request SHALL include a single "Host" header field whose value identifies the proxy.
 * The request SHALL include a "Connection" header field with the value "Upgrade".  (Note that this requirement is case-insensitive as per {{Section 7.6.1 of !RFC9110}}.)
 * The request SHALL include an "Upgrade" header field with the value "connect-tcp".
 * The request SHOULD include a "Capsule-Protocol: ?1" header (as recommended in {{CAPSULE, Section 3.4}}).
