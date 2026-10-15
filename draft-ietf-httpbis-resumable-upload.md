@@ -94,7 +94,7 @@ explicit server cancellation:
 : e.g., scheduled maintenance
 
 implicit server cancellation:
-: e.g., DoS mitigation or internal error
+: e.g., denial-of-service mitigation or internal error
 
 Connections can be dropped due to a variety of network or transport layer reasons triggered by endpoints or on-path elements.
 
