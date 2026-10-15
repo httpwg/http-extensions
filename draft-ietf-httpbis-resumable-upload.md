@@ -82,7 +82,7 @@ HTTP data transfers can encounter interruption due to reasons such as canceled r
 
 HTTP data transfers can encounter interruption due to reasons such as canceled requests or dropped connections. If the intended recipient can indicate how much of the data was processed prior to interruption, a sender can resume data transfer at that point instead of attempting to transfer all of the data again. HTTP range requests (see {{Section 14 of HTTP}}) support this concept of resumable data transfers for downloads from server to client. While partial PUT is one method for uploading a partial representation (via Content-Range in the request), there are caveats that affect its deployability; see {{Section 14.5 of HTTP}}.
 
-Canceled upload request can be triggered for various reasons, including but not limited to:
+Upload requests can be canceled for various reasons, including but not limited to:
 
 explicit client cancellation:
 : e.g., terminating a user-agent process
