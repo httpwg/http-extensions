@@ -486,6 +486,7 @@ Upload-Length: 123456789
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
 Location: https://example.com/upload/3fd4994ad
+Upload-Limit: max-size=1234567890
 
 HTTP/1.1 201 Created
 Location: https://example.com/upload/3fd4994ad
