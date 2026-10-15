@@ -51,7 +51,8 @@ normative:
     display: HTTP/1.1
   RFC9113:
     display: HTTP/2
-  QUIC: RFC9000
+  RFC9114:
+    display: HTTP/3
   STRUCTURED-FIELDS: RFC9651
   PATCH: RFC5789
   PROBLEM: RFC9457
@@ -829,10 +830,10 @@ HTTP/1.1:
 : close the underlying transport connection ({{Section 9.5 of RFC9112}})
 
 HTTP/2:
-: send a `RST_STREAM` frame ({{Section 6.4 of RFC9113}})
+: reset the stream ({{Section 6.4 of RFC9113}})
 
 HTTP/3:
-: send a `RESET_STREAM` ({{Section 19.4 of QUIC}}) or `STOP_SENDING` frame ({{Section 19.5 of QUIC}})
+: abruptly terminate the request stream ({{Section 4.1.1 of RFC9114}})
 
 Version-specific mechanisms place requirements on clients or servers for actioning the cancellation. However, for all versions of HTTP, resumable uploads allow the server to process received representation data and expose the upload offset via the upload resource, enabling continuation of the upload after interruption.
 
