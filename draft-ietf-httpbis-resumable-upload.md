@@ -465,7 +465,6 @@ Upload-Offset: 23456789
 
 HTTP/1.1 200 OK
 Upload-Complete: ?1
-Upload-Limit: max-size=1234567890
 Content-Type: application/json
 
 {"attachmentId": "b530ce8ff"}
