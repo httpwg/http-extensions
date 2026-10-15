@@ -713,7 +713,7 @@ If the client received a 4xx client error or 5xx server error response with the 
 
 If no final response was received at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
 
-The client SHOULD limit the number of retries it performs before considering the upload a failure.
+The client SHOULD limit the number of retries it performs before considering the upload a failure, and SHOULD then cancel the upload ({{upload-cancellation}}) if it can still reach the upload resource.
 
 # Status Code `104 (Upload Resumption Supported)` {#status-code-104}
 
