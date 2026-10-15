@@ -189,7 +189,7 @@ Client                                       Server
 ~~~
 {: #fig-upload-appending title="Upload Append"}
 
-4) If the client is not interested in completing the upload, it can instruct the server to delete the upload resource and all associated representation data ({{upload-cancellation}}).
+4) If the client is not interested in completing the upload, it can cancel the upload ({{upload-cancellation}}). The server can then release the upload resource and any associated representation data.
 
 ~~~ aasvg
 Client                                       Server
