@@ -7,7 +7,7 @@
 <title>Template-Driven HTTP CONNECT Proxying for TCP</title>
 <meta content="Benjamin M. Schwartz" name="author">
 <meta content="
-       TCP tunneling using HTTP CONNECT has long been part of the core HTTP specification.  However, this tunneling functionality has several important deficiencies in modern HTTP environments.  This specification defines an alternative HTTP proxy service configuration for TCP connections.  This configuration is described by a URI Template, similar to the CONNECT-UDP and CONNECT-IP protocols. 
+       TCP tunneling using HTTP CONNECT has long been part of the core HTTP specification.  However, this tunneling functionality has several important deficiencies.  This specification defines an alternative HTTP proxy service configuration for TCP connections.  This configuration is described by a URI Template, similar to the CONNECT-UDP and CONNECT-IP protocols. 
     " name="description">
 <meta content="xml2rfc 3.34.1" name="generator">
 <meta content="draft-ietf-httpbis-connect-tcp-latest" name="ietf.draft">
@@ -1044,7 +1044,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Schwartz</td>
-<td class="center">Expires 16 April 2027</td>
+<td class="center">Expires 18 April 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1057,12 +1057,12 @@ svg {
 <dd class="internet-draft">draft-ietf-httpbis-connect-tcp-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-13" class="published">13 October 2026</time>
+<time datetime="2026-10-15" class="published">15 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-16">16 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-04-18">18 April 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1075,7 +1075,7 @@ svg {
 <h1 id="title">Template-Driven HTTP CONNECT Proxying for TCP</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">TCP tunneling using HTTP CONNECT has long been part of the core HTTP specification.  However, this tunneling functionality has several important deficiencies in modern HTTP environments.  This specification defines an alternative HTTP proxy service configuration for TCP connections.  This configuration is described by a URI Template, similar to the CONNECT-UDP and CONNECT-IP protocols.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">TCP tunneling using HTTP CONNECT has long been part of the core HTTP specification.  However, this tunneling functionality has several important deficiencies.  This specification defines an alternative HTTP proxy service configuration for TCP connections.  This configuration is described by a URI Template, similar to the CONNECT-UDP and CONNECT-IP protocols.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1096,7 +1096,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 16 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 18 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1198,6 +1198,9 @@ svg {
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
                 <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-clients" class="internal xref">Clients</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-gateways" class="internal xref">Gateways</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
@@ -1215,10 +1218,7 @@ svg {
                 <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-avoiding-http-11" class="internal xref">Avoiding HTTP/1.1</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
-                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-gateway-compatibility" class="internal xref">Gateway Compatibility</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
-                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-timeouts" class="internal xref">Timeouts</a></p>
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-timeouts" class="internal xref">Timeouts</a></p>
 </li>
             </ul>
 </li>
@@ -1272,8 +1272,8 @@ svg {
         <h3 id="name-history">
 <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-history" class="section-name selfRef">History</a>
         </h3>
-<p id="section-1.1-1">HTTP has used the CONNECT method for tunneling TCP connections since HTTP/1.1.  When using CONNECT, the request target specifies a host and port number, and the proxy forwards TCP payloads between the client and this destination (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a></span>).  To date, this is the only mechanism defined for proxying TCP over HTTP.  In this specification, this is referred to as a "classic HTTP CONNECT proxy".<a href="#section-1.1-1" class="pilcrow">¶</a></p>
-<p id="section-1.1-2">HTTP/3 uses a UDP transport, so it cannot be forwarded using the pre-existing CONNECT mechanism.  To enable forward proxying of HTTP/3, the MASQUE effort has defined proxy mechanisms that are capable of tunneling UDP datagrams <span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span>, and more generally IP datagrams <span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>.  The destination host and port number (if applicable) are encoded into the HTTP resource path, and end-to-end datagrams are wrapped into HTTP Datagrams <span>[<a href="#CAPSULE" class="cite xref">CAPSULE</a>]</span> on the client-proxy path.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+<p id="section-1.1-1">HTTP has used the CONNECT method for tunneling TCP connections since HTTP/1.1.  When using CONNECT, the request target specifies a host and port number, and the proxy forwards TCP payloads between the client and the target destination (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a></span>). To date, this is the only mechanism defined for proxying TCP over HTTP.  In this specification, this is referred to as a "classic HTTP CONNECT proxy".<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-2">HTTP/3 <span>[<a href="#RFC9114" class="cite xref">HTTP/3</a>]</span> uses a UDP transport, so it cannot be forwarded using the pre-existing CONNECT mechanism.  To enable forward proxying of HTTP/3, the MASQUE effort has defined proxy mechanisms that are capable of tunneling UDP datagrams <span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span>, and more generally IP datagrams <span>[<a href="#CONNECT-IP" class="cite xref">CONNECT-IP</a>]</span>.  The destination host and port number (if applicable) are encoded into the HTTP resource path, and end-to-end datagrams are wrapped into HTTP Datagrams <span>[<a href="#CAPSULE" class="cite xref">CAPSULE</a>]</span> on the client-proxy path.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="problems">
@@ -1281,9 +1281,9 @@ svg {
         <h3 id="name-problems">
 <a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-problems" class="section-name selfRef">Problems</a>
         </h3>
-<p id="section-1.2-1">HTTP clients can be configured to use proxies by selecting a proxy hostname, a port, and whether to use a security protocol. However, Classic HTTP CONNECT requests using the proxy do not carry this configuration information. Instead, they only indicate the hostname and port of the target. This prevents any HTTP server from hosting multiple distinct proxy services, as the server cannot distinguish them by path (as with distinct resources) or by origin (as in "virtual hosting").<a href="#section-1.2-1" class="pilcrow">¶</a></p>
-<p id="section-1.2-2">The absence of an explicit origin for the proxy also rules out the usual defenses against server port misdirection attacks (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.4" class="relref">Section 7.4</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) and creates ambiguity about the use of origin-scoped response header fields (e.g., "Alt-Svc" <span>[<a href="#ALT-SVC" class="cite xref">ALT-SVC</a>]</span>, "Strict-Transport-Security" <span>[<a href="#HSTS" class="cite xref">HSTS</a>]</span>).<a href="#section-1.2-2" class="pilcrow">¶</a></p>
-<p id="section-1.2-3">Classic HTTP CONNECT requests are not extensible to carry in-stream metadata. For example, the WRAP_UP capsule <span>[<a href="#I-D.ietf-httpbis-wrap-up" class="cite xref">I-D.ietf-httpbis-wrap-up</a>]</span> cannot be used with Classic HTTP CONNECT.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
+<p id="section-1.2-1">HTTP clients can be configured to use proxies by selecting a proxy hostname, a port number, and whether to use a security protocol. However, classic HTTP CONNECT requests using the proxy do not carry this configuration information. Instead, they only indicate the hostname and port of the target. This prevents any HTTP server from hosting multiple distinct proxy services, as the server cannot distinguish them by path (as with distinct resources) or by origin (as in "virtual hosting").<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2-2">The absence of an explicit origin for the proxy also rules out the usual defenses against server port misdirection attacks (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.4" class="relref">Section 7.4</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>) and creates ambiguity about the use of origin-scoped response header fields (e.g., "Alt-Svc" <span>[<a href="#ALT-SVC" class="cite xref">ALT-SVC</a>]</span> or "Strict-Transport-Security" <span>[<a href="#HSTS" class="cite xref">HSTS</a>]</span>).<a href="#section-1.2-2" class="pilcrow">¶</a></p>
+<p id="section-1.2-3">Classic HTTP CONNECT requests are not extensible to carry in-stream metadata. For example, the WRAP_UP capsule <span>[<a href="#I-D.ietf-httpbis-wrap-up" class="cite xref">I-D.ietf-httpbis-wrap-up</a>]</span> cannot be used with classic HTTP CONNECT.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="overview">
@@ -1305,7 +1305,9 @@ svg {
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">In this document, we use the term "proxy" to refer to the HTTP server that acts upon the client's TCP tunneling request. If there are HTTP intermediaries (as defined in Section 3.7 of [HTTP]) between the client and the proxy, those are referred to as "intermediaries" or "gateways" in this document.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-2">In this document, the term "proxy" refers to the HTTP server that acts upon a client's TCP tunneling request. If there are HTTP intermediaries (as defined in Section 3.7 of [HTTP]) between the client and the proxy, those are referred to as "intermediaries" or "gateways" in this document.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">The term "endpoint" describes an implementation of this specification in either client or proxy role.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">The term "templated TCP proxy" refers to a proxy that is identified by a URI Template in accordance with this specification.<a href="#section-2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="specification">
@@ -1313,8 +1315,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-specification">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-specification" class="section-name selfRef">Specification</a>
       </h2>
-<p id="section-3-1">A template-driven TCP transport proxy for HTTP is identified by a URI Template <span>[<a href="#RFC6570" class="cite xref">RFC6570</a>]</span> containing variables named "target_host" and "target_port".  This URI Template and its variable values <span class="bcp14">MUST</span> meet all the same requirements as for UDP proxying (<span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>], <a href="https://rfc-editor.org/rfc/rfc9298#section-2" class="relref">Section 2</a></span>), and are subject to the same validation rules.  The client <span class="bcp14">MUST</span> substitute the destination host and port number into this template to produce the request URI.  The derived URI serves as the destination of a Capsule Protocol connection using the Upgrade Token "connect-tcp" (see registration in <a href="#new-upgrade-token" class="auto internal xref">Section 8.1</a>).<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">When using "connect-tcp", TCP payload data is sent in the payload of new Capsule Types named DATA and FINAL_DATA (see <a href="#fig-capsules" class="auto internal xref">Figure 1</a> and registrations in <a href="#data-capsule" class="auto internal xref">Section 8.3</a>).  The ordered concatenation of these capsule payloads, which <span class="bcp14">MAY</span> be empty, represents the TCP payload data.  A FINAL_DATA capsule additionally indicates that the sender has closed this stream, semantically equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint <span class="bcp14">MUST NOT</span> send any more DATA or FINAL_DATA capsules on this data stream. (See <a href="#closing-connections" class="auto internal xref">Section 3.4</a> for related requirements.)<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-1">A template-driven TCP transport proxy for HTTP is identified by a URI Template <span>[<a href="#RFC6570" class="cite xref">RFC6570</a>]</span> containing variables named "target_host" and "target_port".  This URI Template and its variable values <span class="bcp14">MUST</span> meet all the same requirements as for UDP proxying (<span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>], <a href="https://rfc-editor.org/rfc/rfc9298#section-2" class="relref">Section 2</a></span>), and are subject to the same validation rules.  Clients <span class="bcp14">MUST</span> substitute the destination host and port number into this template to produce a request URI.  The derived URI serves as the destination of a Capsule Protocol connection using the Upgrade Token "connect-tcp" (see registration in <a href="#new-upgrade-token" class="auto internal xref">Section 8.1</a>).<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">When using "connect-tcp", TCP payload data is sent in the payload of new Capsule Types named DATA and FINAL_DATA (see <a href="#fig-capsules" class="auto internal xref">Figure 1</a> and registrations in <a href="#data-capsule" class="auto internal xref">Section 8.3</a>).  The ordered concatenation of these capsule payloads, which <span class="bcp14">MAY</span> be empty, represents the TCP payload data.  A FINAL_DATA capsule additionally indicates that the sender has closed this stream, semantically equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint <span class="bcp14">MUST NOT</span> send any more DATA or FINAL_DATA capsules on this data stream. See <a href="#closing-connections" class="auto internal xref">Section 3.4</a> for related requirements.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <span id="name-data-and-final_data-capsule"></span><div id="fig-capsules">
 <figure id="figure-1">
         <div class="alignLeft art-text artwork" id="section-3-3.1">
@@ -1350,7 +1352,7 @@ FINAL_DATA Capsule {
 </li>
       </ul>
 <p id="section-3-7">For example, an intermediary holding two successive DATA capsules in its transmission buffer could merge them, saving at least 2 bytes of encapsulation overhead when they are forwarded.<a href="#section-3-7" class="pilcrow">¶</a></p>
-<p id="section-3-8">This protocol can be extended by defining additional relevant Capsule Types.  According to the Capsule Protocol (<span>[<a href="#CAPSULE" class="cite xref">CAPSULE</a>], <a href="https://rfc-editor.org/rfc/rfc9297#section-3.2" class="relref">Section 3.2</a></span>), new Capsule Types should be ignored by pre-existing proxies and intermediaries.  If a new Capsule Type cannot safely be ignored, the endpoints can confirm support using a new HTTP header field.<a href="#section-3-8" class="pilcrow">¶</a></p>
+<p id="section-3-8">This protocol can be extended by defining additional relevant Capsule Types.  According to the Capsule Protocol (<span>[<a href="#CAPSULE" class="cite xref">CAPSULE</a>], <a href="https://rfc-editor.org/rfc/rfc9297#section-3.2" class="relref">Section 3.2</a></span>), new Capsule Types are silently dropped by pre-existing proxies and forwarded unmodified by intermediaries.  If a new Capsule Type cannot safely be ignored, the endpoints can confirm support using a new HTTP header field.<a href="#section-3-8" class="pilcrow">¶</a></p>
 <div id="in-http11">
 <section id="section-3.1">
         <h3 id="name-in-http-11">
@@ -1365,7 +1367,7 @@ FINAL_DATA Capsule {
             <p id="section-3.1-2.2.1">The request's target <span class="bcp14">SHALL</span> correspond to the URI derived from expansion of the proxy's URI Template.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.1-2.3">
-            <p id="section-3.1-2.3.1">The request <span class="bcp14">SHALL</span> include a single "Host" header field containing the origin of the proxy.<a href="#section-3.1-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-2.3.1">The request <span class="bcp14">SHALL</span> include a single "Host" header field whose value identifies the proxy.<a href="#section-3.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.1-2.4">
             <p id="section-3.1-2.4.1">The request <span class="bcp14">SHALL</span> include a "Connection" header field with the value "Upgrade".  (Note that this requirement is case-insensitive as per <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.6.1" class="relref">Section 7.6.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>.)<a href="#section-3.1-2.4.1" class="pilcrow">¶</a></p>
@@ -1494,9 +1496,9 @@ capsule-protocol = ?1
           <h4 id="name-authentication-headers">
 <a href="#section-3.3.2" class="section-number selfRef">3.3.2. </a><a href="#name-authentication-headers" class="section-name selfRef">Authentication Headers</a>
           </h4>
-<p id="section-3.3.2-1">Authentication to a templated TCP proxy normally uses ordinary HTTP authentication via the "401 (Unauthorized)" response code, the "WWW-Authenticate" response header field, and the "Authorization" request header field (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-11.6" class="relref">Section 11.6</a></span>).  A templated TCP proxy does not use the "407 (Proxy Authentication Required)" response code and related header fields (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-11.7" class="relref">Section 11.7</a></span>) because they do not traverse HTTP gateways (see <a href="#gateway-compatibility" class="auto internal xref">Section 7.2</a>).<a href="#section-3.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-1">Authentication to a templated TCP proxy normally uses ordinary HTTP authentication via the "401 (Unauthorized)" response code, the "WWW-Authenticate" response header field, and the "Authorization" request header field (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-11.6" class="relref">Section 11.6</a></span>).  A templated TCP proxy does not use the "407 (Proxy Authentication Required)" response code and related header fields (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-11.7" class="relref">Section 11.7</a></span>) because they do not traverse HTTP gateways (see <a href="#gateway-compatibility" class="auto internal xref">Section 5.3</a>).<a href="#section-3.3.2-1" class="pilcrow">¶</a></p>
 <p id="section-3.3.2-2">Clients <span class="bcp14">SHOULD</span> assume that all proxy resources generated by a single template share a protection space (i.e., a realm) (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-11.5" class="relref">Section 11.5</a></span>).  For many authentication schemes, this will allow the client to avoid waiting for a "401 (Unauthorized)" response before each new connection through the proxy.<a href="#section-3.3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.3.2-3">TLS Client Certificate authentication can also be used (see <a href="#gateway-compatibility" class="auto internal xref">Section 7.2</a>).<a href="#section-3.3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-3">TLS Client Certificate authentication can also be used (see <a href="#gateway-compatibility" class="auto internal xref">Section 5.3</a>).<a href="#section-3.3.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="caching-headers">
@@ -1527,7 +1529,7 @@ capsule-protocol = ?1
         <h3 id="name-closing-connections">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-closing-connections" class="section-name selfRef">Closing Connections</a>
         </h3>
-<p id="section-3.4-1">Connection termination is essentially symmetrical for proxies and their clients.  In this section, we use the term "endpoint" to describe an implementation of this specification in either role.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-1">Connection termination is essentially symmetrical for proxies and their clients, which we refer to here as the "endpoints" of a request.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <p id="section-3.4-2">When closing connections, endpoints are subject to the following requirements:<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.4-3.1">
@@ -1565,11 +1567,12 @@ capsule-protocol = ?1
             <p id="section-3.4-3.4.1">When the receive stream is closed abruptly or without a FINAL_DATA capsule received, the endpoint <span class="bcp14">SHOULD</span> send a TCP RST if the TCP subsystem permits it.<a href="#section-3.4-3.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.4-4">The mandatory behaviors above enable endpoints to detect any truncation of incoming TCP data.  The recommended behaviors propagate any TCP errors through the tunnel.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
-<p id="section-3.4-5">In HTTP/3, endpoints <span class="bcp14">MAY</span> negotiate and use the RESET_STREAM_AT frame in order to reduce data loss during an abrupt closure <span>[<a href="#I-D.ietf-quic-reliable-stream-reset" class="cite xref">I-D.ietf-quic-reliable-stream-reset</a>]</span>.  However, RESET_STREAM_AT may not be very effective in this case, as TCP implementations will typically discard pending data when a RST is received.<a href="#section-3.4-5" class="pilcrow">¶</a></p>
+<p id="section-3.4-4">Any locally imposed timeout (<a href="#timeouts" class="auto internal xref">Section 7.2</a>) <span class="bcp14">MUST</span> be treated as an abrupt closure of the affected stream or connection.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
+<p id="section-3.4-5">The mandatory behaviors above enable endpoints to detect any truncation of incoming TCP data.  The recommended behaviors propagate any TCP errors through the tunnel.<a href="#section-3.4-5" class="pilcrow">¶</a></p>
+<p id="section-3.4-6">In HTTP/3, endpoints <span class="bcp14">MAY</span> negotiate and use the RESET_STREAM_AT frame in order to reduce data loss during an abrupt closure <span>[<a href="#I-D.ietf-quic-reliable-stream-reset" class="cite xref">I-D.ietf-quic-reliable-stream-reset</a>]</span>.  However, RESET_STREAM_AT may not be very effective in this case, as TCP implementations will typically discard pending data when a RST is received.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
 <span id="name-simple-graceful-termination"></span><figure id="figure-4">
-          <div id="section-3.4-6.1">
-            <div class="alignLeft art-svg artwork" id="section-3.4-6.1.1">
+          <div id="section-3.4-7.1">
+            <div class="alignLeft art-svg artwork" id="section-3.4-7.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="176" width="480" viewBox="0 0 480 176" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,32 L 8,64" fill="none" stroke="black"></path>
                 <path d="M 24,64 L 24,160" fill="none" stroke="black"></path>
@@ -1642,15 +1645,15 @@ capsule-protocol = ?1
                   <text x="76" y="148">FINACK</text>
                   <text x="236" y="148">QUIC.STREAM{FIN}</text>
                 </g>
-              </svg><a href="#section-3.4-6.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-3.4-7.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
 <a href="#name-simple-graceful-termination" class="selfRef">Simple graceful termination example (HTTP/3)</a>
           </figcaption></figure>
 <span id="name-simple-tcp-rst-termination-"></span><figure id="figure-5">
-          <div id="section-3.4-7.1">
-            <div class="alignLeft art-svg artwork" id="section-3.4-7.1.1">
+          <div id="section-3.4-8.1">
+            <div class="alignLeft art-svg artwork" id="section-3.4-8.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="480" viewBox="0 0 480 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,32 L 8,64" fill="none" stroke="black"></path>
                 <path d="M 24,64 L 24,96" fill="none" stroke="black"></path>
@@ -1692,15 +1695,15 @@ capsule-protocol = ?1
                   <text x="240" y="84">RST_STREAM{CON_ERR}</text>
                   <text x="400" y="84">RST</text>
                 </g>
-              </svg><a href="#section-3.4-7.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-3.4-8.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
 <a href="#name-simple-tcp-rst-termination-" class="selfRef">Simple TCP RST termination example (HTTP/2)</a>
           </figcaption></figure>
 <span id="name-timeout-example-http-11"></span><figure id="figure-6">
-          <div id="section-3.4-8.1">
-            <div class="alignLeft art-svg artwork" id="section-3.4-8.1.1">
+          <div id="section-3.4-9.1">
+            <div class="alignLeft art-svg artwork" id="section-3.4-9.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="144" width="480" viewBox="0 0 480 144" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,32 L 8,64" fill="none" stroke="black"></path>
                 <path d="M 24,64 L 24,128" fill="none" stroke="black"></path>
@@ -1756,15 +1759,15 @@ capsule-protocol = ?1
                   <text x="264" y="116">close_notify)</text>
                   <text x="400" y="116">RST</text>
                 </g>
-              </svg><a href="#section-3.4-8.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-3.4-9.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
 <a href="#name-timeout-example-http-11" class="selfRef">Timeout example (HTTP/1.1)</a>
           </figcaption></figure>
 <span id="name-rst-after-fin-example-http-"></span><figure id="figure-7">
-          <div id="section-3.4-9.1">
-            <div class="alignLeft art-svg artwork" id="section-3.4-9.1.1">
+          <div id="section-3.4-10.1">
+            <div class="alignLeft art-svg artwork" id="section-3.4-10.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="192" width="480" viewBox="0 0 480 192" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,32 L 8,64" fill="none" stroke="black"></path>
                 <path d="M 24,64 L 24,176" fill="none" stroke="black"></path>
@@ -1832,7 +1835,7 @@ capsule-protocol = ?1
                   <text x="236" y="164">H3_CONNECT_ERROR</text>
                   <text x="408" y="164">RST</text>
                 </g>
-              </svg><a href="#section-3.4-9.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-3.4-10.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
@@ -1880,7 +1883,7 @@ capsule-protocol = ?1
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-latency-optimizations" class="section-name selfRef">Latency optimizations</a>
         </h3>
 <p id="section-4.1-1">When using this specification in HTTP/2 or HTTP/3, clients <span class="bcp14">MAY</span> start sending TCP stream content optimistically, subject to flow control limits (<span><a href="https://rfc-editor.org/rfc/rfc9113#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC9113" class="cite xref">HTTP/2</a>]</span> or <span><a href="https://rfc-editor.org/rfc/rfc9000#section-4.1" class="relref">Section 4.1</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>).  Proxies <span class="bcp14">MUST</span> buffer this "optimistic" content until the TCP stream becomes writable, and discard it if the TCP connection fails.  (Clients <span class="bcp14">MUST NOT</span> use "optimistic" behavior in HTTP/1.1, as this would interfere with reuse of the connection after an error response such as "401 (Unauthorized)".)<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2">Servers that host a proxy under this specification <span class="bcp14">MAY</span> offer support for TLS early data in accordance with <span>[<a href="#RFC8470" class="cite xref">RFC8470</a>]</span>.  Clients <span class="bcp14">MAY</span> send "connect-tcp" requests in early data, and <span class="bcp14">MAY</span> include "optimistic" TCP content in early data (in HTTP/2 and HTTP/3).  At the TLS layer, proxies <span class="bcp14">MAY</span> ignore, reject, or accept the <code>early_data</code> extension (<span>[<a href="#TLS" class="cite xref">TLS</a>], <a href="https://rfc-editor.org/rfc/rfc9846#section-4.2.10" class="relref">Section 4.2.10</a></span>).  At the HTTP layer, proxies <span class="bcp14">MAY</span> process the request immediately, return a "425 (Too Early)" response (<span>[<a href="#RFC8470" class="cite xref">RFC8470</a>], <a href="https://rfc-editor.org/rfc/rfc8470#section-5.2" class="relref">Section 5.2</a></span>), or delay some or all processing of the request until the handshake completes.  For example, a proxy with limited anti-replay defenses might choose to perform DNS resolution of the <code>target_host</code> when a request arrives in early data, but delay the TCP connection until the TLS handshake completes.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">Servers that host a proxy under this specification <span class="bcp14">MAY</span> offer support for TLS early data in accordance with <span>[<a href="#RFC8470" class="cite xref">RFC8470</a>]</span>.  Clients <span class="bcp14">MAY</span> send "connect-tcp" requests in early data, and <span class="bcp14">MAY</span> include "optimistic" TCP content in early data (in HTTP/2 and HTTP/3).  At the TLS layer, proxies <span class="bcp14">MAY</span> ignore, reject, or accept the <code>early_data</code> extension (<span>[<a href="#TLS" class="cite xref">TLS</a>], <a href="https://rfc-editor.org/rfc/rfc9846#section-4.3.10" class="relref">Section 4.3.10</a></span>).  At the HTTP layer, proxies <span class="bcp14">MAY</span> process the request immediately, return a "425 (Too Early)" response (<span>[<a href="#RFC8470" class="cite xref">RFC8470</a>], <a href="https://rfc-editor.org/rfc/rfc8470#section-5.2" class="relref">Section 5.2</a></span>), or delay some or all processing of the request until the handshake completes.  For example, a proxy with limited anti-replay defenses might choose to perform DNS resolution of the <code>target_host</code> when a request arrives in early data, but delay the TCP connection until the TLS handshake completes.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.1-3">When DNS resolution of <code>target_host</code> produces multiple IP addresses, proxies <span class="bcp14">SHOULD</span> use a racing procedure such as Happy Eyeballs <span>[<a href="#HEv2" class="cite xref">HEv2</a>]</span> to accelerate connection establishment.  Proxies that race multiple connection attempts <span class="bcp14">MUST</span> buffer any optimistic content until a connection is selected and <span class="bcp14">MUST NOT</span> transmit any payload data on the other connections.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1927,7 +1930,7 @@ capsule-protocol = ?1
         <h3 id="name-servers">
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-servers" class="section-name selfRef">Servers</a>
         </h3>
-<p id="section-5.1-1">For server operators, template-driven TCP proxies are particularly valuable in situations where virtual-hosting is needed, or where multiple proxies must share an origin.  For example, the proxy might benefit from sharing an HTTP gateway that provides DDoS defense, performs request sanitization, or enforces user authorization.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-1">For server operators, template-driven TCP proxies are particularly valuable in situations where virtual-hosting is needed, or where multiple proxies must share an origin.  For example, the proxy might benefit from sharing an HTTP gateway that provides DDoS defense, performs request sanitization, or enforces user authorization (<a href="#gateway-compatibility" class="auto internal xref">Section 5.3</a>).<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2">Template-driven TCP proxies can also be made invisible to probes from unauthorized clients:<a href="#section-5.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.1-3.1">
@@ -1992,6 +1995,37 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 </li>
         </ul>
 <p id="section-5.2-7">If the client infers that classic HTTP CONNECT is not supported, it <span class="bcp14">SHOULD</span> retry the request using the registered default template for "connect-tcp" (<a href="#fig-default" class="auto internal xref">Figure 8</a>).  If this request succeeds, the client <span class="bcp14">SHOULD</span> record a preference for "connect-tcp" to avoid further retry delays.<a href="#section-5.2-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="gateway-compatibility">
+<section id="section-5.3">
+        <h3 id="name-gateways">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-gateways" class="section-name selfRef">Gateways</a>
+        </h3>
+<p id="section-5.3-1">Templated TCP proxy requests can traverse standard HTTP gateways to ease implementation and allow use of shared infrastructure.  However, current gateways might need modifications to support TCP proxy services.  To be compatible, a gateway <span class="bcp14">MUST</span>:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-2.1">
+            <p id="section-5.3-2.1.1">support Extended CONNECT (if acting as an HTTP/2 or HTTP/3 server).<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-2.2">
+            <p id="section-5.3-2.2.1">support HTTP/1.1 Upgrade to "connect-tcp" (if acting as an HTTP/1.1 server)<a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-2.2.2.1">
+                <p id="section-5.3-2.2.2.1.1">only after forwarding the upgrade request to the origin and observing a success response.<a href="#section-5.3-2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-5.3-2.3">
+            <p id="section-5.3-2.3.1">forward the "connect-tcp" protocol to the origin.<a href="#section-5.3-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-2.4">
+            <p id="section-5.3-2.4.1">convert "connect-tcp" requests between all supported HTTP server and client versions.<a href="#section-5.3-2.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-2.5">
+            <p id="section-5.3-2.5.1">allow any "Proxy-Status" headers to traverse the gateway.<a href="#section-5.3-2.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.3-3">If the proxy relies on TLS Client Certificates for client authentication, the gateway <span class="bcp14">MUST</span> perform this authentication itself or pass the relevant information to the origin (e.g., using a "Client-Cert" request header field <span>[<a href="#RFC9440" class="cite xref">RFC9440</a>]</span>).<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2097,44 +2131,13 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
         </ul>
 </section>
 </div>
-<div id="gateway-compatibility">
-<section id="section-7.2">
-        <h3 id="name-gateway-compatibility">
-<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-gateway-compatibility" class="section-name selfRef">Gateway Compatibility</a>
-        </h3>
-<p id="section-7.2-1">Templated TCP proxies can make use of standard HTTP gateways and path-routing to ease implementation and allow use of shared infrastructure.  However, current gateways might need modifications to support TCP proxy services.  To be compatible, a gateway must:<a href="#section-7.2-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7.2-2.1">
-            <p id="section-7.2-2.1.1">support Extended CONNECT (if acting as an HTTP/2 or HTTP/3 server).<a href="#section-7.2-2.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.2-2.2">
-            <p id="section-7.2-2.2.1">support HTTP/1.1 Upgrade to "connect-tcp" (if acting as an HTTP/1.1 server)<a href="#section-7.2-2.2.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7.2-2.2.2.1">
-                <p id="section-7.2-2.2.2.1.1">only after forwarding the upgrade request to the origin and observing a success response.<a href="#section-7.2-2.2.2.1.1" class="pilcrow">¶</a></p>
-</li>
-            </ul>
-</li>
-          <li class="normal" id="section-7.2-2.3">
-            <p id="section-7.2-2.3.1">forward the "connect-tcp" protocol to the origin.<a href="#section-7.2-2.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.2-2.4">
-            <p id="section-7.2-2.4.1">convert "connect-tcp" requests between all supported HTTP server and client versions.<a href="#section-7.2-2.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.2-2.5">
-            <p id="section-7.2-2.5.1">allow any "Proxy-Status" headers to traverse the gateway.<a href="#section-7.2-2.5.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-7.2-3">If the proxy relies on TLS Client Certificates for client authentication, the gateway must perform this authentication itself or pass the relevant information to the origin (e.g., using a "Client-Cert" request header field <span>[<a href="#RFC9440" class="cite xref">RFC9440</a>]</span>).<a href="#section-7.2-3" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="timeouts">
-<section id="section-7.3">
+<section id="section-7.2">
         <h3 id="name-timeouts">
-<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-timeouts" class="section-name selfRef">Timeouts</a>
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-timeouts" class="section-name selfRef">Timeouts</a>
         </h3>
-<p id="section-7.3-1">Except when actively sending or receiving data, an endpoint is always waiting for an event from its peer or its TCP connection.  HTTP and TCP are designed to ensure that such an event always arrives, so the connection is never permanently stuck in any state until it is fully closed.  However, for efficient operation, it may be necessary to adjust the settings for TCP keep-alives (<span>[<a href="#TCP" class="cite xref">TCP</a>], <a href="https://rfc-editor.org/rfc/rfc9293#section-3.8.4" class="relref">Section 3.8.4</a></span>), QUIC idle timeouts (<span>[<a href="#QUIC" class="cite xref">QUIC</a>], <a href="https://rfc-editor.org/rfc/rfc9000#section-10.1" class="relref">Section 10.1</a></span>), HTTP/2 PING frames (<span>[<a href="#RFC9113" class="cite xref">HTTP/2</a>], <a href="https://rfc-editor.org/rfc/rfc9113#section-6.7" class="relref">Section 6.7</a></span>), and other transport options.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
-<p id="section-7.3-2">Endpoints <span class="bcp14">MAY</span> impose additional timeouts, especially as a defense against certain resource exhaustion attacks (<a href="#resource-exhaustion" class="auto internal xref">Section 6.1</a>).  However, operators should apply timeouts cautiously to minimize the impact on connections that are functioning but slow.  Any timeout imposed by the endpoint <span class="bcp14">MUST</span> be treated as an abrupt closure of the affected stream or connection (<a href="#closing-connections" class="auto internal xref">Section 3.4</a>).<a href="#section-7.3-2" class="pilcrow">¶</a></p>
+<p id="section-7.2-1">Except when actively sending or receiving data, an endpoint is always waiting for an event from its peer or its TCP connection.  HTTP and TCP are designed to ensure that such an event always arrives, so the connection is never permanently stuck in any state until it is fully closed.  However, for efficient operation, it may be necessary to adjust the settings for TCP keep-alives (<span>[<a href="#TCP" class="cite xref">TCP</a>], <a href="https://rfc-editor.org/rfc/rfc9293#section-3.8.4" class="relref">Section 3.8.4</a></span>), QUIC idle timeouts (<span>[<a href="#QUIC" class="cite xref">QUIC</a>], <a href="https://rfc-editor.org/rfc/rfc9000#section-10.1" class="relref">Section 10.1</a></span>), HTTP/2 PING frames (<span>[<a href="#RFC9113" class="cite xref">HTTP/2</a>], <a href="https://rfc-editor.org/rfc/rfc9113#section-6.7" class="relref">Section 6.7</a></span>), and other transport options.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-2">Endpoints <span class="bcp14">MAY</span> impose additional timeouts, especially as a defense against certain resource exhaustion attacks (<a href="#resource-exhaustion" class="auto internal xref">Section 6.1</a>).  However, operators should apply timeouts cautiously to minimize the impact on connections that are functioning but slow.   See <a href="#closing-connections" class="auto internal xref">Section 3.4</a> for related requirements.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2149,13 +2152,14 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
         <h3 id="name-new-upgrade-token">
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-new-upgrade-token" class="section-name selfRef">New Upgrade Token</a>
         </h3>
-<p id="section-8.1-1">IF APPROVED, IANA is requested to add the following entry to the HTTP Upgrade Token Registry:<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">IANA is requested to add the following entry to the "HTTP Upgrade Tokens" registry under "Hypertext Transfer Protocol (HTTP) Upgrade Token Registry" registry group:<a href="#section-8.1-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
           <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Value</th>
               <th class="text-left" rowspan="1" colspan="1">Description</th>
+              <th class="text-left" rowspan="1" colspan="1">Expected Version Tokens</th>
               <th class="text-left" rowspan="1" colspan="1">Reference</th>
             </tr>
           </thead>
@@ -2163,6 +2167,7 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
             <tr>
               <td class="text-left" rowspan="1" colspan="1">"connect-tcp"</td>
               <td class="text-left" rowspan="1" colspan="1">Proxying of TCP payloads</td>
+              <td class="text-left" rowspan="1" colspan="1">(None)</td>
               <td class="text-left" rowspan="1" colspan="1">(This document)</td>
             </tr>
           </tbody>
@@ -2183,7 +2188,7 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
         <h3 id="name-new-masque-default-template">
 <a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-new-masque-default-template" class="section-name selfRef">New MASQUE Default Template</a>
         </h3>
-<p id="section-8.2-1">IF APPROVED, IANA is requested to add the following entry to the "MASQUE URI Suffixes" registry:<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.2-1">IANA is requested to add the following entry to the "MASQUE URI Suffixes" registry under "Multiplexed Application Substrate over QUIC Encryption (MASQUE)" registry group:<a href="#section-8.2-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-2">
           <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
 <thead>
@@ -2208,7 +2213,7 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
         <h3 id="name-new-capsule-type">
 <a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-new-capsule-type" class="section-name selfRef">New Capsule Type</a>
         </h3>
-<p id="section-8.3-1">IF APPROVED, IANA is requested to add the following entry to the "HTTP Capsule Types" registry:<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+<p id="section-8.3-1">IANA is requested to add the following entry to the "HTTP Capsule Types" registry under "Multiplexed Application Substrate over QUIC Encryption (MASQUE)" registry group:<a href="#section-8.3-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-3">
           <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
 <thead>
@@ -2313,6 +2318,10 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
         <dd>
 <span class="refAuthor">Hamilton, R.</span>, <span class="refTitle">"Bootstrapping WebSockets with HTTP/3"</span>, <span class="seriesInfo">RFC 9220</span>, <span class="seriesInfo">DOI 10.17487/RFC9220</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9220">https://www.rfc-editor.org/rfc/rfc9220</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="TCP">[TCP]</dt>
+        <dd>
+<span class="refAuthor">Eddy, W., Ed.</span>, <span class="refTitle">"Transmission Control Protocol (TCP)"</span>, <span class="seriesInfo">STD 7</span>, <span class="seriesInfo">RFC 9293</span>, <span class="seriesInfo">DOI 10.17487/RFC9293</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9293">https://www.rfc-editor.org/rfc/rfc9293</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="TLS">[TLS]</dt>
       <dd>
 <span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 9846</span>, <span class="seriesInfo">DOI 10.17487/RFC9846</span>, <time datetime="2026-07" class="refDate">July 2026</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9846">https://www.rfc-editor.org/rfc/rfc9846</a>&gt;</span>. </dd>
@@ -2383,12 +2392,8 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 <span class="refAuthor">Campbell, B.</span> and <span class="refAuthor">M. Bishop</span>, <span class="refTitle">"Client-Cert HTTP Header Field"</span>, <span class="seriesInfo">RFC 9440</span>, <span class="seriesInfo">DOI 10.17487/RFC9440</span>, <time datetime="2023-07" class="refDate">July 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9440">https://www.rfc-editor.org/rfc/rfc9440</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SYSCTL">[SYSCTL]</dt>
-        <dd>
-<span class="refTitle">"IP Sysctl -- The Linux Kernel documentation"</span>, <time datetime="2026-06" class="refDate">June 2026</time>, <span>&lt;<a href="https://www.kernel.org/doc/html/v7.1/networking/ip-sysctl.html">https://www.kernel.org/doc/html/v7.1/networking/ip-sysctl.html</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="TCP">[TCP]</dt>
       <dd>
-<span class="refAuthor">Eddy, W., Ed.</span>, <span class="refTitle">"Transmission Control Protocol (TCP)"</span>, <span class="seriesInfo">STD 7</span>, <span class="seriesInfo">RFC 9293</span>, <span class="seriesInfo">DOI 10.17487/RFC9293</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9293">https://www.rfc-editor.org/rfc/rfc9293</a>&gt;</span>. </dd>
+<span class="refTitle">"IP Sysctl -- The Linux Kernel documentation"</span>, <time datetime="2026-06" class="refDate">June 2026</time>, <span>&lt;<a href="https://www.kernel.org/doc/html/v7.1/networking/ip-sysctl.html">https://www.kernel.org/doc/html/v7.1/networking/ip-sysctl.html</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>

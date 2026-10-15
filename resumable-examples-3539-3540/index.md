@@ -1,4 +1,4 @@
-# Editor's drafts for draft-ietf-httpbis-connect-tcp-15 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/draft-ietf-httpbis-connect-tcp-15)
+# Editor's drafts for resumable-examples-3539-3540 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/resumable-examples-3539-3540)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
