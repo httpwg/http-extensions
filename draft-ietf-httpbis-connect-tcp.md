@@ -356,6 +356,19 @@ Clients SHOULD treat certain errors during classic HTTP CONNECT as indications t
 
 If the client infers that classic HTTP CONNECT is not supported, it SHOULD retry the request using the registered default template for "connect-tcp" ({{fig-default}}).  If this request succeeds, the client SHOULD record a preference for "connect-tcp" to avoid further retry delays.
 
+## Gateways {#gateway-compatibility}
+
+Templated TCP proxy requests can traverse standard HTTP gateways to ease implementation and allow use of shared infrastructure.  However, current gateways might need modifications to support TCP proxy services.  To be compatible, a gateway MUST:
+
+* support Extended CONNECT (if acting as an HTTP/2 or HTTP/3 server).
+* support HTTP/1.1 Upgrade to "connect-tcp" (if acting as an HTTP/1.1 server)
+  - only after forwarding the upgrade request to the origin and observing a success response.
+* forward the "connect-tcp" protocol to the origin.
+* convert "connect-tcp" requests between all supported HTTP server and client versions.
+* allow any "Proxy-Status" headers to traverse the gateway.
+
+If the proxy relies on TLS Client Certificates for client authentication, the gateway MUST perform this authentication itself or pass the relevant information to the origin (e.g., using a "Client-Cert" request header field {{?RFC9440}}).
+
 # Security Considerations
 
 Template-driven TCP proxying is largely subject to the same security risks as classic HTTP CONNECT.  For example, any restrictions on authorized use of the proxy (see {{?RFC9110, Section 9.3.6}}) apply equally to both.  The `destination_ip_prohibited` Proxy Error Type from {{Section 2.3.5 of PROXY-STATUS}} can be useful when rejecting unauthorized requests.
@@ -394,24 +407,11 @@ While this specification is fully functional under HTTP/1.1, performance-sensiti
   - The client is shared between many parties, such as when acting as a gateway or concentrator.
   - The tunneled connections are often closed by the destination. This causes the client to initiate closure of the client-to-proxy connection, leaving the client in a TIME-WAIT state for up to four minutes.
 
-## Gateway Compatibility
-
-Templated TCP proxies can make use of standard HTTP gateways and path-routing to ease implementation and allow use of shared infrastructure.  However, current gateways might need modifications to support TCP proxy services.  To be compatible, a gateway must:
-
-* support Extended CONNECT (if acting as an HTTP/2 or HTTP/3 server).
-* support HTTP/1.1 Upgrade to "connect-tcp" (if acting as an HTTP/1.1 server)
-  - only after forwarding the upgrade request to the origin and observing a success response.
-* forward the "connect-tcp" protocol to the origin.
-* convert "connect-tcp" requests between all supported HTTP server and client versions.
-* allow any "Proxy-Status" headers to traverse the gateway.
-
-If the proxy relies on TLS Client Certificates for client authentication, the gateway must perform this authentication itself or pass the relevant information to the origin (e.g., using a "Client-Cert" request header field {{?RFC9440}}).
-
 ## Timeouts
 
-Except when actively sending or receiving data, an endpoint is always waiting for an event from its peer or its TCP connection.  HTTP and TCP are designed to ensure that such an event always arrives, so the connection is never permanently stuck in any state until it is fully closed.  However, for efficient operation, it may be necessary to adjust the settings for TCP keep-alives ({{?TCP=RFC9293, Section 3.8.4}}), QUIC idle timeouts ({{?QUIC, Section 10.1}}), HTTP/2 PING frames ({{?RFC9113, Section 6.7}}), and other transport options.
+Except when actively sending or receiving data, an endpoint is always waiting for an event from its peer or its TCP connection.  HTTP and TCP are designed to ensure that such an event always arrives, so the connection is never permanently stuck in any state until it is fully closed.  However, for efficient operation, it may be necessary to adjust the settings for TCP keep-alives ({{!TCP=RFC9293, Section 3.8.4}}), QUIC idle timeouts ({{?QUIC, Section 10.1}}), HTTP/2 PING frames ({{?RFC9113, Section 6.7}}), and other transport options.
 
-Endpoints MAY impose additional timeouts, especially as a defense against certain resource exhaustion attacks ({{resource-exhaustion}}).  However, operators should apply timeouts cautiously to minimize the impact on connections that are functioning but slow.  Any timeout imposed by the endpoint MUST be treated as an abrupt closure of the affected stream or connection ({{closing-connections}}).
+Endpoints MAY impose additional timeouts, especially as a defense against certain resource exhaustion attacks ({{resource-exhaustion}}).  However, operators should apply timeouts cautiously to minimize the impact on connections that are functioning but slow.
 
 # IANA Considerations
 
@@ -419,9 +419,9 @@ Endpoints MAY impose additional timeouts, especially as a defense against certai
 
 IANA is requested to add the following entry to the "HTTP Upgrade Tokens" registry under "Hypertext Transfer Protocol (HTTP) Upgrade Token Registry" registry group:
 
-| Value | Description | Reference |
-| ----- | ----------- | --------- |
-| "connect-tcp" | Proxying of TCP payloads | (This document) |
+| Value | Description | Expected Version Tokens | Reference |
+| ----- | ----------- | ----------------------- | --------- |
+| "connect-tcp" | Proxying of TCP payloads | (None) |(This document) |
 
 ### Interop testing
 {:removeInRFC="true"}
