@@ -222,6 +222,8 @@ When closing connections, endpoints are subject to the following requirements:
     - HTTP/1.1 without TLS: TCP RST.
 * When the receive stream is closed abruptly or without a FINAL_DATA capsule received, the endpoint SHOULD send a TCP RST if the TCP subsystem permits it.
 
+Any locally imposed timeout ({{timeouts}}) MUST be treated as an abrupt closure of the affected stream or connection.
+
 The mandatory behaviors above enable endpoints to detect any truncation of incoming TCP data.  The recommended behaviors propagate any TCP errors through the tunnel.
 
 In HTTP/3, endpoints MAY negotiate and use the RESET_STREAM_AT frame in order to reduce data loss during an abrupt closure {{?I-D.ietf-quic-reliable-stream-reset}}.  However, RESET_STREAM_AT may not be very effective in this case, as TCP implementations will typically discard pending data when a RST is received.
