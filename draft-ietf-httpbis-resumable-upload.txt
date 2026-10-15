@@ -1284,12 +1284,10 @@ Table of Contents
    data loss and corruption from concurrent requests to append
    representation data (Section 7) and/or cancellation (Section 8) to
    the same upload resource.  In addition, the server MUST NOT send
-   outdated information in responses.  This means that the offset
-   communicated through final responses as defined in Section 4.1.1 MUST
-   be accepted in a subsequent request to append representation data if
-   no other request to append representation data or cancel was received
-   in the meantime.  In other words, clients have to be able to use
-   received offsets.
+   outdated information in responses.  This means that if a client
+   appends at an offset from a final response (Section 4.1.1), the
+   server MUST NOT reject that request for having the wrong offset,
+   unless another append or a cancellation arrived in between.
 
    The RECOMMENDED approach is as follows: If a server receives a new
    request to retrieve the offset (Section 6), append representation
