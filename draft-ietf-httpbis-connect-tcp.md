@@ -207,7 +207,7 @@ In HTTP/2 and HTTP/3, this specification uses the CONNECT method, which is not s
 
 ## Closing Connections
 
-Connection termination is essentially symmetrical for proxies and their clients.
+Connection termination is essentially symmetrical for proxies and their clients, which we refer to here as the "endpoints" of a request.
 
 When closing connections, endpoints are subject to the following requirements:
 
