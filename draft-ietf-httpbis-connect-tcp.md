@@ -76,7 +76,7 @@ In this document, the term "proxy" refers to the HTTP server that acts upon a cl
 
 The term "endpoint" describes an implementation of this specification in either client or proxy role.
 
-The term "templated TCP proxy" refers to an HTTP proxy that is identified by a URI Template.
+The term "templated TCP proxy" refers to a proxy that is identified by a URI Template in accordance with this specification.
 
 # Specification
 
