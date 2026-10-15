@@ -345,7 +345,7 @@ Despite this, a client SHOULD communicate the representation's length to the ser
 1. If the request includes the `Upload-Complete` field value set to true, the request content is the remaining representation data. The representation's length is then the sum of the current offset ({{upload-offset}}) and the request content's length, which might be announced in the `Content-Length` header field.
 2. The request can include the `Upload-Length` header field defined below.
 
-If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. The representation's length, if known, MUST stay consistent across subsequent requests. A server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) in responses to indicate inconsistent length indicators.
+If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. The representation's length, if known, MUST stay consistent across subsequent requests. A server SHOULD respond to a request with inconsistent length indicators with a `400 (Bad Request)` status code, and can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) to indicate why.
 
 Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` ({{upload-complete-hdr}}) header field to indicate that a request completes the upload. The offset could match the length, but the upload can still be incomplete.
 
