@@ -102,7 +102,7 @@ This specification defines a new mechanism for resumable uploads from client to 
 
 Utilizing resumable uploads, applications can recover from unintended interruptions, but also interrupt an upload on purpose to later resume it, for example, when a user wants to pause an upload, the device's network connectivity changes, or bandwidth should be saved for higher priority tasks.
 
-The document introduces the concept of an upload resource to facilitate resumable uploads ({{upload-resource}}) and defines new header fields to communicate the state of the upload ({{upload-offset-hdr}}, {{upload-complete-hdr}}, {{upload-length-hdr}}, and {{upload-limit}}), the status code `104 (Upload Resumption Supported)` to indicate the resource's support for resumable uploads ({{status-code-104}}), and the `application/partial-upload` media type to label partial representation data when resuming an upload ({{media-type-partial-upload}}).
+The document introduces the concept of an upload resource to facilitate resumable uploads ({{upload-resource}}) and defines new header fields to communicate the state of the upload ({{upload-offset-hdr}}, {{upload-complete-hdr}}, {{upload-length-hdr}}, and {{upload-limits}}), the status code `104 (Upload Resumption Supported)` to indicate the resource's support for resumable uploads ({{status-code-104}}), and the `application/partial-upload` media type to label partial representation data when resuming an upload ({{media-type-partial-upload}}).
 
 # Conventions and Definitions
 
@@ -296,7 +296,7 @@ Client                                       Server
 
 # Upload Resource {#upload-resource}
 
-A resumable upload is enabled through interaction with an upload resource. When a resumable upload begins, the server is asked to create an upload resource through a request to another resource ({{upload-creation}}). Using this upload resource, the client can query the upload progress ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}). The server is responsible for persisting the state of the upload resource ({{upload-offset}}, {{upload-complete}}, {{upload-length}}, and {{upload-limit}}) and updating it as the upload progresses.
+A resumable upload is enabled through interaction with an upload resource. When a resumable upload begins, the server is asked to create an upload resource through a request to another resource ({{upload-creation}}). Using this upload resource, the client can query the upload progress ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}). The server is responsible for persisting the state of the upload resource ({{upload-offset}}, {{upload-complete}}, and {{upload-length}}) and updating it as the upload progresses. Limits ({{upload-limits}}) can also apply to the upload resource.
 
 An upload resource is specific to the upload of one representation. For uploading multiple representations, multiple upload resources have to be used.
 
@@ -355,7 +355,7 @@ The `Upload-Length` request and response header field is an Item Structured Head
 
 The `Upload-Length` field can be used in response to an offset retrieval; see {{offset-retrieving-server}}.
 
-## Limits {#upload-limit}
+# Upload Limits {#upload-limits}
 
 A server MAY enforce one or multiple limits, which are communicated to the client via the `Upload-Limit` response header field. `Upload-Limit` is a Dictionary Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
@@ -390,9 +390,9 @@ When a request is rejected because limits were violated, the response SHOULD inc
 
 Servers, including intermediaries, can (and often do) apply restrictions on the size of individual request message content. There is no standard mechanism to communicate such existing size restriction. A server that implements one can respond with a `413 (Content Too Large)` status code; see {{Section 15.5.14 of HTTP}}. Appending to an upload resource, as a series of appends, can be used to upload data up to the `max-size` limit without encountering per-message limits. Servers might apply restrictions that are smaller than the append limits, which would also result in a failed request.
 
-When a client receives a response with a `413 (Content Too Large)` status code during upload creation ({{upload-creation}}) or append ({{upload-appending}}), it SHOULD retry the request with a smaller size residing between `min-append-size` and `max-append-size`. If these limits are unknown at the time of receiving such a response, the client can attempt to discover them through an `OPTIONS` request ({{upload-limit-options}}). Retrying with the same request content size will likely yield the same error response. Cases where the request content size matches the `min-append-size` limit yet fails with a `413 (Content Too Large)` response might indicate a deployment mismatch that cannot be recovered from.
+When a client receives a response with a `413 (Content Too Large)` status code during upload creation ({{upload-creation}}) or append ({{upload-appending}}), it SHOULD retry the request with a smaller size residing between `min-append-size` and `max-append-size`. If these limits are unknown at the time of receiving such a response, the client can attempt to discover them through an `OPTIONS` request ({{upload-limits-options}}). Retrying with the same request content size will likely yield the same error response. Cases where the request content size matches the `min-append-size` limit yet fails with a `413 (Content Too Large)` response might indicate a deployment mismatch that cannot be recovered from.
 
-### Use with OPTIONS {#upload-limit-options}
+## Use with OPTIONS {#upload-limits-options}
 
 A client can use an `OPTIONS` request without the `Upload-Complete` header field to discover whether the resource supports resumable uploads and to learn potential limits before creating an upload resource.
 
@@ -410,9 +410,9 @@ A client can start a resumable upload from any request that can carry content by
 
 The `Upload-Complete` header field is set to true if the request content includes the entire representation data that the client intends to upload. This is also a requirement for transparently upgrading to resumable uploads from conventional uploads ({{upgrading-uploads}}).
 
-If the client knows the representation's length, it SHOULD indicate the length in the request to help the server allocate necessary resources for the upload and provide early feedback if the representation violates a limit ({{upload-limit}}), as described in {{upload-length}}.
+If the client knows the representation's length, it SHOULD indicate the length in the request to help the server allocate necessary resources for the upload and provide early feedback if the representation violates a limit ({{upload-limits}}), as described in {{upload-length}}.
 
-Clients are not required to discover limits ({{upload-limit}}) before starting the upload and might therefore be initially unaware of limits enforced by the server. However, the client SHOULD respect any limits ({{upload-limit}}) announced during the upload process in the `Upload-Limit` header field in interim or final responses. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client SHOULD stop the current request immediately ({{request-cancellation}}) and cancel the upload ({{upload-cancellation}}). If the client knows that the representation data is smaller than `min-size`, it cannot expect resumability to be offered. The client might still attempt to transfer the representation in a single request, either in a request with the `Upload-Complete` header field set to true (see {{upgrading-uploads}}) or via a conventional upload.
+Clients are not required to discover limits ({{upload-limits}}) before starting the upload and might therefore be initially unaware of limits enforced by the server. However, the client SHOULD respect any limits ({{upload-limits}}) announced during the upload process in the `Upload-Limit` header field in interim or final responses. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client SHOULD stop the current request immediately ({{request-cancellation}}) and cancel the upload ({{upload-cancellation}}). If the client knows that the representation data is smaller than `min-size`, it cannot expect resumability to be offered. The client might still attempt to transfer the representation in a single request, either in a request with the `Upload-Complete` header field set to true (see {{upgrading-uploads}}) or via a conventional upload.
 
 The request content can be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty representation. An `Upload-Complete` header field set to false is also valid. This can be used to retrieve the upload resource's URI before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URI, at the cost of an additional round-trip before data upload can commence.
 
@@ -426,7 +426,7 @@ If the client receives a 4xx client error or 5xx server error final response wit
 
 ## Server Behavior
 
-Upon receiving a request with the `Upload-Complete` header field, the server can choose to offer resumption support for this request by creating an upload resource. If so, the server SHOULD announce the upload resource by sending an interim response with the `104 (Upload Resumption Supported)` status code unless the server is not capable of sending interim responses. The interim response allows the client to resume the upload even if the message exchange gets later interrupted. When sent, it MUST include `Location` header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits ({{upload-limit}}) if existing.
+Upon receiving a request with the `Upload-Complete` header field, the server can choose to offer resumption support for this request by creating an upload resource. If so, the server SHOULD announce the upload resource by sending an interim response with the `104 (Upload Resumption Supported)` status code unless the server is not capable of sending interim responses. The interim response allows the client to resume the upload even if the message exchange gets later interrupted. When sent, it MUST include `Location` header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits ({{upload-limits}}) if existing.
 
 The resource targeted by this initial request is responsible for processing the representation data transferred in the resumable upload according to the method and header fields in the initial request. The upload resource, on the other hand, enables resuming the transfer.
 
@@ -558,7 +558,7 @@ If the client receives a 2xx successful response without a valid Upload-Offset h
 A successful response to a `HEAD` or `GET` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset-hdr}}),
-- MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}) if existing, and
+- MUST indicate the limits in the `Upload-Limit` header field ({{upload-limits}}) if existing, and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
 
 The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes because clients might follow the redirect without preserving the `HEAD` method.
@@ -712,7 +712,7 @@ Since implementing this approach is not always technically possible or feasible,
 If the client received a 4xx client error or 5xx server error response with the `Upload-Complete` header field set to false or missing when creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}), it can apply the heuristics described below to retry or resume the upload.
 
 - `409 (Conflict)` with the `Upload-Complete` header field set to false can be resumed with the correct offset ({{upload-offset}}). If no `Upload-Offset` header field is provided, the client SHOULD retrieve the offset ({{offset-retrieving}}) before resuming.
-- `413 (Content Too Large)` can be resumed after applying appropriate limits ({{upload-limit}}).
+- `413 (Content Too Large)` can be resumed after applying appropriate limits ({{upload-limits}}).
 - `429 (Too Many Requests)` can be retried after appropriate delays.
 - `5xx (Server Error)` status codes can be retried.
 
@@ -895,7 +895,7 @@ IANA is asked to register the following entries in the "Hypertext Transfer Proto
 | Upload-Offset        | permanent | Item            | {{upload-offset-hdr}} of this document    |
 | Upload-Complete      | permanent | Item            | {{upload-complete-hdr}} of this document  |
 | Upload-Length        | permanent | Item            | {{upload-length-hdr}} of this document    |
-| Upload-Limit         | permanent | Dictionary      | {{upload-limit}} of this document         |
+| Upload-Limit         | permanent | Dictionary      | {{upload-limits}} of this document        |
 |----------------------|-----------|-----------------|-------------------------------------------|
 
 ## HTTP Status Code
