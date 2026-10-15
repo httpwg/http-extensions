@@ -102,7 +102,7 @@ This specification defines a new mechanism for resumable uploads from client to 
 
 Utilizing resumable uploads, applications can recover from unintended interruptions, but also interrupt an upload on purpose to later resume it, for example, when a user wants to pause an upload, the device's network connectivity changes, or bandwidth should be saved for higher priority tasks.
 
-The document introduces the concept of an upload resource to facilitate resumable uploads ({{upload-resource}}) and defines new header fields to communicate the state of the upload ({{upload-offset-hdr}}, {{upload-complete-hdr}}, {{upload-length-hdr}}, and {{upload-limits}}), the status code `104 (Upload Resumption Supported)` to indicate the resource's support for resumable uploads ({{status-code-104}}), and the `application/partial-upload` media type to label partial representation data when resuming an upload ({{media-type-partial-upload}}).
+The document introduces the concept of an upload resource to facilitate resumable uploads ({{upload-resource}}) and defines new header fields to communicate the state of the upload ({{upload-offset-hdr}}, {{upload-complete-hdr}}, {{upload-length-hdr}}, and {{upload-limit-hdr}}), the status code `104 (Upload Resumption Supported)` to indicate the resource's support for resumable uploads ({{status-code-104}}), and the `application/partial-upload` media type to label partial representation data when resuming an upload ({{media-type-partial-upload}}).
 
 # Conventions and Definitions
 
@@ -357,9 +357,11 @@ The `Upload-Length` field can be used in response to an offset retrieval; see {{
 
 # Upload Limits {#upload-limits}
 
-A server can limit an upload, for example, in its total size, in the size of each request, or in how long the upload resource remains available. The server announces these limits to the client in the `Upload-Limit` header field, so the client can adhere to them.
+A server can limit an upload, for example, in its total size, in the size of each request, or in how long the upload resource remains available. The server announces these limits to the client in the `Upload-Limit` header field ({{upload-limit-hdr}}), so the client can adhere to them.
 
 A client usually learns the limits when the upload resource is created ({{upload-creation}}). It can learn them before that through an `OPTIONS` request ({{upload-limits-options}}).
+
+## Upload-Limit {#upload-limit-hdr}
 
 `Upload-Limit` is a Dictionary Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
@@ -382,6 +384,8 @@ The following key-value pairs are defined:
 
 Receivers of `Upload-Limit` parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
 
+## Limit Changes {#upload-limits-changes}
+
 Throughout the lifetime of the upload resource, limits SHOULD NOT change in a way that causes failures for clients adhering to the initially discovered limits. If the client discovers that it cannot continue the upload while adhering to the limits, it SHOULD stop the current request immediately ({{request-cancellation}}) and cancel the upload ({{upload-cancellation}}).
 
 The following recommendations for limit changes can minimize the risk of causing upload failures:
@@ -389,6 +393,8 @@ The following recommendations for limit changes can minimize the risk of causing
 * `max-size` and `max-append-size` SHOULD NOT decrease.
 * `min-size` and `min-append-size` SHOULD NOT increase.
 * Between subsequent responses, the end of the upload resource's lifetime as implied by `max-age` SHOULD NOT decrease.
+
+## Limit Violations {#upload-limits-violations}
 
 When a request is rejected because limits were violated, the response SHOULD include the `Upload-Limit` header field carrying all limits of the corresponding upload if possible. This might not be possible if intermediaries enforce limits.
 
@@ -899,7 +905,7 @@ IANA is asked to register the following entries in the "Hypertext Transfer Proto
 | Upload-Offset        | permanent | Item            | {{upload-offset-hdr}} of this document    |
 | Upload-Complete      | permanent | Item            | {{upload-complete-hdr}} of this document  |
 | Upload-Length        | permanent | Item            | {{upload-length-hdr}} of this document    |
-| Upload-Limit         | permanent | Dictionary      | {{upload-limits}} of this document        |
+| Upload-Limit         | permanent | Dictionary      | {{upload-limit-hdr}} of this document     |
 |----------------------|-----------|-----------------|-------------------------------------------|
 
 ## HTTP Status Code
