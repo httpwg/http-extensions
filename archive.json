@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-10-13T04:46:26.383320+00:00",
+  "timestamp": "2026-10-15T02:33:19.520810+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -71068,7 +71068,7 @@
       "id": "I_kwDOAUA-v87FZUbc",
       "title": "RESUMABLE: proposed rename section headers discussing state concepts",
       "url": "https://github.com/httpwg/http-extensions/issues/3169",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -71080,8 +71080,8 @@
       ],
       "body": "@gstrauss provided the following feedback on https://lists.w3.org/Archives/Public/ietf-http-wg/2025JulSep/0094.html wrt Section 4.1\n\n> These headings are misnamed\n> * 4.1.1 Offset        ->  Upload-Offset\n> * 4.1.2 Completeness  ->  Upload-Complete\n> * 4.1.3 Length        ->  Upload-Length\n> * 4.1.4 Limits        ->  Upload-Limit\n> \n> Considering the doc states that the server is required to keep state, such as the target resource, it appears that important state items are not all clearly defined under the topic \"State\".\n\nSection 4.1 defines properties of the state of an upload. It also defines headers to transfer state information between endpoints. Therefore this is a subjective editorial issue.",
       "createdAt": "2025-08-11T21:41:07Z",
-      "updatedAt": "2026-10-06T16:45:12Z",
-      "closedAt": null,
+      "updatedAt": "2026-10-14T09:35:56Z",
+      "closedAt": "2026-10-14T09:35:56Z",
       "comments": [
         {
           "author": "LPardue",
@@ -71089,6 +71089,13 @@
           "body": "I made one, rather large, proposal for this on https://github.com/httpwg/http-extensions/pull/3199 but happy to entertain other options to weigh up the right choice",
           "createdAt": "2025-08-22T17:15:00Z",
           "updatedAt": "2025-08-22T17:15:00Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closing as completed by the merging of 3199. The renaming of the Limits section is subtley different and will be done as a follow up",
+          "createdAt": "2026-10-14T09:35:52Z",
+          "updatedAt": "2026-10-14T09:35:52Z"
         }
       ]
     },
@@ -77658,7 +77665,7 @@
       "id": "I_kwDOAUA-v88AAAABIXr5cw",
       "title": "RESUMABLE: Problems with completeness in 2xx creation and append responses",
       "url": "https://github.com/httpwg/http-extensions/issues/3484",
-      "state": "CLOSED",
+      "state": "OPEN",
       "author": "GrantGryczan",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -77669,8 +77676,8 @@
       ],
       "body": "#3472 seems to have created a regression by removing the following text from upload creation's client specifications:\n\n> If the client received a final response with a\n> \n> - `2xx (Successful)` status code and the request content contained the entire representation data, the upload is complete and the response comes from the resource targeted by the initial request processing the representation.\n> - [...]\n\nThis was replaced with the following:\n\n> If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and [...].\n> \n> If the client receives a 2xx successful final response with the `Upload-Complete` header field set to false or missing, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ([Section 4.4](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#upload-appending)).\n> \n> [...]\n\nIn particular, if a client sends a creation request with `Upload-Complete: ?1`, a 2xx response with `Upload-Complete` missing should be treated as if the upload had been completed. In general, if the client sent `Upload-Complete: ?1`, then a 2xx response should mean the upload was completed. The old text (poorly) captured that, but the new text always treats `Upload-Complete` missing as `Upload-Complete: ?0`.\n\nA similar regression occurred for upload append's client specifications. The new text no longer specifies how 2xx should be treated at all. To simplify the client implementation, I would hope for 2xx responses to an `Upload-Complete: ?1` upload append request to also be considered complete. I don't want to have to special-case the response handler for upload creation to treat 2xx without `Upload-Complete` differently from the same for upload append.\n\nFurther, perhaps servers should be required not to use `Upload-Complete: ?0` in a 2xx response to a request with `Upload-Complete: ?1`? That seems self-contradictory: 2xx means \"I fulfilled your request\", but `Upload-Complete: ?0` means \"I didn't complete the upload (even though you requested me to)\".",
       "createdAt": "2026-07-10T16:07:48Z",
-      "updatedAt": "2026-09-24T17:52:01Z",
-      "closedAt": "2026-09-24T17:52:01Z",
+      "updatedAt": "2026-10-14T20:17:16Z",
+      "closedAt": null,
       "comments": [
         {
           "author": "guoye-zhang",
@@ -77685,6 +77692,27 @@
           "body": "If that's only for 2xx, that should work. Missing for other status codes should still be treated as false (with the exception of 409 responses with `Upload-Complete` missing, which is treated differently from false).\n\nBut as I said, shouldn't we also prohibit servers from including `Upload-Complete: ?0` in a 2xx response to an `Upload-Complete: ?1` request?",
           "createdAt": "2026-07-16T16:45:24Z",
           "updatedAt": "2026-07-16T17:17:16Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I reopened this issue because an AI assistant flagged something during my doc review and I'd like more input to help decide if its real or not. \n\n> #3517 fixed part of the ask, but not all of it.\n> \n> 1. Clients still aren't told what a 2xx with no `Upload-Complete` means after a `?1` request. That was the original ask here, and it's what servers that don't support resumable uploads send (Section 16.1.1).\n> \n> 2. Sections 5.2 and 7.2 forbid a 2xx with `Upload-Complete` \"set to false or missing\", but this issue only asked to forbid `?0`, and so does the changelog. The \"or missing\" also conflicts with Section 16.1.1, which says a server that chooses not to upgrade \"ignores\" the header.\n> \n> 3. Section 7.1 never says what a 2xx `?0` to an append means, and its closing \"Otherwise, the upload is considered a failure\" could be read to cover it.\n> \n> Two ways to fix it:\n> \n> - (a) Forbid only `?0`, and tell clients that 2xx with the field missing after a `?1` request means complete. Section 16.1.1 can stay as it is.\n> - (b) Keep \"or missing\", add the same client rule for servers that don't support the protocol, and change 16.1.1 so a server that declines the upgrade sends `?1`.\n> \n> Either way, 7.1 needs a line saying a 2xx `?0` means the client can continue, as 5.1 does. ",
+          "createdAt": "2026-10-14T10:19:00Z",
+          "updatedAt": "2026-10-14T10:19:00Z"
+        },
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "> 1. Clients still aren't told what a 2xx with no `Upload-Complete` means after a `?1` request. That was the original ask here, and it's what servers that don't support resumable uploads send (Section 16.1.1).\n\nFor creation requests, the client can assume the upload completed when it set `Upload-Complete: ?1` and the response is a 2xx without Upload-Complete because that means that the server either didn't support resumable uploads or didn't want to use them.\n\nFor append requests, I would expect the header to be present since the request is sent to the upload resource, meaning that the server opted into resumable uploads.\n\n> 2\\. Sections 5.2 and 7.2 forbid a 2xx with `Upload-Complete` \"set to false or missing\", but this issue only asked to forbid `?0`, and so does the changelog. The \"or missing\" also conflicts with Section 16.1.1, which says a server that chooses not to upgrade \"ignores\" the header.\n\nNot sure if that's really a problem. If the server doesn't offer the upgrade, the entire section isn't really applicable and the server doesn't have to abide any rules laid out there. Maybe it's better to phrase this in 5.2's first paragraph instead of just address this for Upload-Complete\n\n> Either way, 7.1 needs a line saying a 2xx `?0` means the client can continue, as 5.1 does.\n\nI agree, its removal seems to have been a mistake.",
+          "createdAt": "2026-10-14T19:00:45Z",
+          "updatedAt": "2026-10-14T19:00:45Z"
+        },
+        {
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "1. I was under the impression it's intentionally left unspecified how clients should behave when `Upload-Complete` is missing, since a requirement was added that it not be missing.\n2. Regarding servers that don't support the protocol, I recall finding many issues throughout the protocol if the client isn't meant to presume server support. So I just assumed clients are supposed to presume the server implements the protocol in order to perform upload creation. It would follow that section 16.1.1 is describing a mechanism to transition from not following the protocol to following the protocol, so it makes sense that initially not following the protocol contradicts following the protocol. Am I misunderstanding? The LLM describes this as if section 16.1.1 is trying to say upgrading an upload to resumable can be performed while also initially following the protocol, which if true, is correct that it's a contradiction. But that contradiction existed long before this issue was introduced.\n3. Correct. I saw this and actually had a reminder set to open an issue about it. I don't think that's particularly relevant to this issue though.\n\nWhether the suggested solutions are useful depends on the answer to the second point.",
+          "createdAt": "2026-10-14T20:15:49Z",
+          "updatedAt": "2026-10-14T20:17:16Z"
         }
       ]
     },
@@ -78118,6 +78146,123 @@
       "createdAt": "2026-09-14T21:20:54Z",
       "updatedAt": "2026-09-16T18:49:52Z",
       "closedAt": "2026-09-16T18:49:52Z",
+      "comments": []
+    },
+    {
+      "number": 3525,
+      "id": "I_kwDOAUA-v88AAAABXG-odw",
+      "title": "RESUMABLE: Upload-Complete definition still describes completeness in responses",
+      "url": "https://github.com/httpwg/http-extensions/issues/3525",
+      "state": "CLOSED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editorial",
+        "resumable-upload"
+      ],
+      "body": "Drafted with an AI assistant from a review I ran of the draft; I checked the text and the cited issues.\n\nThe first paragraph of the `Upload-Complete` definition (Section 4.2.1 on main) predates #3404:\n\n> The `Upload-Complete` request and response header field conveys the completeness state. [...] Its value is a Boolean ([...]) and indicates whether the upload is complete or not.\n\nSince #3404, a response value says which semantics apply, two paragraphs later:\n\n> The value of true means that the semantics of the targeted resource apply, and the value of false means that the semantics of the resumable upload protocol apply.\n\nFor responses the definition sentence contradicts that. A 409 offset mismatch on an already-completed upload carries `Upload-Complete: ?0` (Section 7.2). That is correct under the #3404 semantics (see #3275), but it reads as \"the upload is incomplete\" under the definition. #3482 removed the last use of the old meaning, in offset retrieval responses; this sentence is what remains.\n\nSuggested change, leaving the request and response meanings to the paragraphs that follow:\n\n> The `Upload-Complete` request and response header field is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}); its meaning in requests and responses is described below. Other values MUST cause the entire header field to be ignored.",
+      "createdAt": "2026-10-14T10:01:18Z",
+      "updatedAt": "2026-10-14T18:37:45Z",
+      "closedAt": "2026-10-14T18:37:45Z",
+      "comments": []
+    },
+    {
+      "number": 3530,
+      "id": "I_kwDOAUA-v88AAAABXQ2oDA",
+      "title": "RESUMABLE: redirect SHOULD NOTs",
+      "url": "https://github.com/httpwg/http-extensions/issues/3530",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "I'm loathe to open an issue on redirects because I know it's been discussed a lot already. However, one part of the text is wrong and in trying to fix just that I couldn't square the circle.\n\nThe following quote is drafted by an AI assistant; I checked as best I could:\n\n> Offset Retrieval, Upload Append and Upload Cancellation each say the server SHOULD NOT send 301, 302 or 303 \"because clients might follow the redirect without preserving the [HEAD/PATCH/DELETE] method\".\n> \n> That reason doesn't hold for HEAD. RFC 9110 lets 301 and 302 change only POST to GET (Sections 15.4.2 and 15.4.3), and a 303 is followed with \"a GET or HEAD request\" (Section 15.4.4). For PATCH and DELETE it holds for 303 only.\n> \n> The underlying concern seems to be that a redirect gives the upload resource a second URI, which the protocol doesn't define (see the Location requirements in Upload Creation, and #3203). That applies equally to 307 and 308, which aren't mentioned: a client that follows a 307 or 308 on an append continues the upload at a different URI, with nothing saying which URI to use next.\n> \n> Options:\n> \n> - Keep the three codes and fix the rationale, e.g. remove the incorrect statement about preserving HEAD and say something like \"because the upload resource URI is expected to stay the same for the whole upload\".\n> - Cover all redirects for requests to the upload resource, for the same reason.\n> - Allow 307 and 308, and say the client continues at the new URI.\n\nI think revisiting 307 and 308 opens up design issues we don't want again but I'm happy to hear from others",
+      "createdAt": "2026-10-14T21:41:08Z",
+      "updatedAt": "2026-10-14T21:54:47Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I recently used agents to review our code and it found multiple issues how resumable upload interacted with redirects. I think it's probably better to ban it completely from the upload resource since I don't see a point in redirecting.",
+          "createdAt": "2026-10-14T21:54:47Z",
+          "updatedAt": "2026-10-14T21:54:47Z"
+        }
+      ]
+    },
+    {
+      "number": 3531,
+      "id": "I_kwDOAUA-v88AAAABXSoR6g",
+      "title": "RESUMABLE: Should clients cancel an upload they give up on?",
+      "url": "https://github.com/httpwg/http-extensions/issues/3531",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Drafted with an AI assistant while reviewing the draft; I checked the text against main.\n\nThe draft does tell clients to cancel the upload in four failure cases:\n\n- limits they can't meet (Limits, and Upload Creation client behavior)\n- a changed Location (Upload Creation server behavior),\n-  and an offset they can't continue from (Offset Retrieval client behavior).\n\nIt doesn't say anything about a client that runs out of running out of retries. Retry ends with:\n\n> The client SHOULD limit the number of retries it performs before considering the upload a failure.\n\nThe server then holds the partial upload until max-age or its own cleanup. With a transparent upgrade (Upgrading To Resumable Uploads), the user doesn't know the upload resource exists, so only the client can clean it up.\n\nSome proposals \n\n1) Tweak section 10 to match the other cases by adding a recommendation to cancel the upload- \"The client SHOULD limit the number of retries it performs before considering the upload a failure, and SHOULD then cancel the upload ({{upload-cancellation}}) if it can still reach the upload resource.\"\n2) consolidate all the cases that say SHOULD separately into one general rule in Upload Cancellation along lines of \"\"A client that stops an upload without completing it SHOULD cancel the upload, if it can still reach the upload resource.\"\n3) Say that a client can cancel but avoid any normative requirement to do so (a lighter version of 1)",
+      "createdAt": "2026-10-15T00:40:44Z",
+      "updatedAt": "2026-10-15T00:40:44Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 3532,
+      "id": "I_kwDOAUA-v88AAAABXS3x_g",
+      "title": "RESUMABLE: Content-Disposition is defined only as a response header field",
+      "url": "https://github.com/httpwg/http-extensions/issues/3532",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Drafted with an AI assistant while reviewing the draft; I checked the RFC text cited.\n\nUpload Creation  says \n\n> Content-Disposition \"can be used to transmit a filename. For this purpose, the inline disposition type is RECOMMENDED.\"\n\nRFC 6266 defines it only for responses; Section 4:\n\n> The Content-Disposition response header field is used to convey additional information about how to process the response payload\"\n\nNo other document formally extends Content-Disposition to be allowed for requests. Personally, I don't think this draft should try to either.\n\nApparently RFC 8607 (CalDAV) tried to and cited it as one reason for Informational status (Section 1.1):\n\n>  this extension misuses the Content-Disposition header field [RFC6266] as a request header field to convey a filename for an attachment rather than using an existing request header field suitable for that purpose, such as \"Slug\" (see Section 9.7 of [RFC5023]).\"\n\n#3372 settled which disposition type to use, but not whether the field can be used in a request.\n\nOptions, in my order of preference of \"yes do that\" to \"definitely don't do that\"\n\n- Drop the filename guidance; conveying a filename is application-specific.\n- Keep it, and say explicitly that this document uses Content-Disposition in requests (possibly as an update to RFC 6266).\n- Define a request field for the filename.\n- Use Slug, which RFC 8607 suggests, though RFC 5023 defines it for a POST to an AtomPub collection as a hint for the new resource's URI rather than as a filename.\n",
+      "createdAt": "2026-10-15T01:06:39Z",
+      "updatedAt": "2026-10-15T01:06:39Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 3533,
+      "id": "I_kwDOAUA-v88AAAABXTbOYw",
+      "title": "RESUMABLE: Ranges for integer values",
+      "url": "https://github.com/httpwg/http-extensions/issues/3533",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Drafted with an AI assistant while reviewing the draft; I checked the text against main and RFC 9651.\n\nWe define Upload-Offset and Upload-Length as explicitly\n\n> \"a non-negative Integer\"\n\n and\n\n>  \"Other values MUST cause the entire header field to be ignored.\" \n\nThe spec also defines other things that are Integers but doesn't state any range requirements (hence Structured Fields default range would apply). Underspecification seems ripe for interop issues\n\n1. The first group of things are Upload-Limit keys. \n\n1a. `max-size`, `min-size`, `max-append-size`, `min-append-size` and `max-age` are only defined as \"an Integer\". Technically we'd allow  `max-size=-5`, which is nonsense.  Apparently did this in #3201, sorry. Suggestion: make each value \"a non-negative Integer\", and extend there about processing of known keys to have \"a value of unexpected type or out of range\".\n\n1b: If we said \"non-negative Integer\" as proposed in 1a, then we still allow `max-age=0`. This is effectively an immediate end of the resources lifetime. Its similar to Cache-Control max-age but might be surprising to people. Maybe we should call it out?\n\n1c: How to handle semantically illogical limit combos? It's possible on the wire to send `min-size=100, max-size=10`. There is already text that states\n\n> If the client discovers that it cannot continue the upload while adhering to the limits, it SHOULD stop the current request immediately\n\nThat's all well and good but it leaves it up to the client to make the decision and I suspect different clients would make different decisions. Not great. We should probably add strict requirements on the sender such as \"A server MUST NOT send a min-size greater than max-size, or a min-append-size greater than max-append-size.\" \n\n2. the second group are Problem type members.\n\n`expected-offset` and `provided-offset` have no stated type. \n\nSuggestion: make them consistent with the relevant header fields \"Both are non-negative integers, in the same units as Upload-Offset.\"\n\n3. Inconsistent limits. Nothing covers min-size greater than max-size, or min-append-size greater than max-append-size, where a",
+      "createdAt": "2026-10-15T02:09:18Z",
+      "updatedAt": "2026-10-15T02:09:18Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 3534,
+      "id": "I_kwDOAUA-v88AAAABXTnGhQ",
+      "title": "RESUMABLE: min-size=0 rule only covers OPTIONS",
+      "url": "https://github.com/httpwg/http-extensions/issues/3534",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Drafted with an AI assistant while reviewing the draft; I checked the text against main.\n\nFollow-up to a point guoye raised in #3438.\n\nLimits says \n\n> If the server does not apply any limits, it MUST use min-size=0 instead of an empty header value\", \n\nbut only in the OPTIONS paragraph. \n\nThe rule exists because an empty Dictionary is the same as omitting the field (#2833, RFC 9651 Section 3.2), so it is needed wherever the field is required.\n\nOffset Retrieval also requires the field (\"MUST indicate the limits in the Upload-Limit header field\") but doesn't say what a server with no limits sends. One server might send min-size=0, while another omits the field. A strict client might treat the second as non-conformant. Upload Creation doesn't have the problem, because there the field is only required \"if existing\".\n\nSuggestion: move the rule out of the OPTIONS paragraph into the general Upload-Limit text:\n\n> Where this document requires the `Upload-Limit` header field and the server applies no limits, the server MUST send `min-size=0`, because an empty Dictionary cannot be sent ({{Section 3.2 of STRUCTURED-FIELDS}}).",
+      "createdAt": "2026-10-15T02:30:09Z",
+      "updatedAt": "2026-10-15T02:30:09Z",
+      "closedAt": null,
       "comments": []
     }
   ],
@@ -201637,7 +201782,7 @@
       "id": "PR_kwDOAUA-v86k6zhv",
       "title": "Flatten the structure a little reduce a level from TOC",
       "url": "https://github.com/httpwg/http-extensions/pull/3199",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -201646,17 +201791,19 @@
       ],
       "body": "This is one proposal for addressing the point raised in #3169. \r\n\r\nCurrently, the bulk of the spec is located in Section 4. We have an entire spec for the topic of resumable uploads, so being shy to use top-level sections for key concepts might be a bit conservative. This PR flattens the structure (but doesn't move any sections around) in order to reduce the amount of third-level sections, making space to only define the new headers in them. (FWIW 4th-level TOC items tend to indicate over-nesting and don't always get rendered in the TOC)\r\n\r\nLanding this would number sections and be slightly disruptive to open reviews/issues. If we like the direction, I'd suggest holding it until other issues are closed out.\r\n\r\nCurrent ToC (ignoring appendices)\r\n\r\n```\r\n   1.  Introduction\r\n   2.  Conventions and Definitions\r\n   3.  Overview\r\n     3.1.  Example 1: Complete upload of representation data with\r\n           known size\r\n     3.2.  Example 2: Upload as a series of parts\r\n   4.  Upload Resource\r\n     4.1.  State\r\n       4.1.1.  Offset\r\n       4.1.2.  Completeness\r\n       4.1.3.  Length\r\n       4.1.4.  Limits\r\n     4.2.  Upload Creation\r\n       4.2.1.  Client Behavior\r\n       4.2.2.  Server Behavior\r\n       4.2.3.  Examples\r\n     4.3.  Offset Retrieval\r\n       4.3.1.  Client Behavior\r\n       4.3.2.  Server Behavior\r\n       4.3.3.  Example\r\n     4.4.  Upload Append\r\n       4.4.1.  Client Behavior\r\n       4.4.2.  Server Behavior\r\n       4.4.3.  Example\r\n     4.5.  Upload Cancellation\r\n       4.5.1.  Client Behavior\r\n       4.5.2.  Server Behavior\r\n       4.5.3.  Example\r\n     4.6.  Concurrency\r\n   5.  Status Code 104 (Upload Resumption Supported)\r\n   6.  Media Type application/partial-upload\r\n   7.  Problem Types\r\n     7.1.  Mismatching Offset\r\n     7.2.  Completed Upload\r\n     7.3.  Inconsistent Length\r\n   8.  Content Codings\r\n   9.  Transfer Codings\r\n   10. Integrity Digests\r\n     10.1.  Representation Digests\r\n     10.2.  Content Digests\r\n   11. Responses to Uploads\r\n   12. Upload Strategies\r\n     12.1.  Optimistic Upload Creation\r\n       12.1.1.  Upgrading To Resumable Uploads\r\n     12.2.  Careful Upload Creation\r\n   13. Security Considerations\r\n   14. IANA Considerations\r\n     14.1.  HTTP Fields\r\n     14.2.  HTTP Status Code\r\n     14.3.  Media Type\r\n     14.4.  HTTP Problem Types\r\n   15. References\r\n     15.1.  Normative References\r\n     15.2.  Informative References\r\n ````\r\n\r\n\r\n\r\nProposed Toc (ignoring appendices)\r\n\r\n```\r\n   1.  Introduction\r\n   2.  Conventions and Definitions\r\n   3.  Overview\r\n     3.1.  Example 1: Complete upload of representation data with\r\n           known size\r\n     3.2.  Example 2: Upload as a series of parts\r\n   4.  Upload Resource\r\n     4.1.  Offset\r\n       4.1.1.  Upload-Offset\r\n     4.2.  Completeness\r\n       4.2.1.  Upload-Complete\r\n     4.3.  Length\r\n       4.3.1.  Upload-Length\r\n     4.4.  Limits\r\n       4.4.1.  Upload-Limits\r\n   5.  Upload Creation\r\n     5.1.  Client Behavior\r\n     5.2.  Server Behavior\r\n     5.3.  Examples\r\n   6.  Offset Retrieval\r\n     6.1.  Client Behavior\r\n     6.2.  Server Behavior\r\n     6.3.  Example\r\n   7.  Upload Append\r\n     7.1.  Client Behavior\r\n     7.2.  Server Behavior\r\n     7.3.  Example\r\n   8.  Upload Cancellation\r\n     8.1.  Client Behavior\r\n     8.2.  Server Behavior\r\n     8.3.  Example\r\n   9.  Concurrency\r\n   10. Status Code 104 (Upload Resumption Supported)\r\n   11. Media Type application/partial-upload\r\n   12. Problem Types\r\n     12.1.  Mismatching Offset\r\n     12.2.  Completed Upload\r\n     12.3.  Inconsistent Length\r\n   13. Content Codings\r\n   14. Transfer Codings\r\n   15. Integrity Digests\r\n     15.1.  Representation Digests\r\n     15.2.  Content Digests\r\n   16. Responses to Uploads\r\n   17. Upload Strategies\r\n     17.1.  Optimistic Upload Creation\r\n       17.1.1.  Upgrading To Resumable Uploads\r\n     17.2.  Careful Upload Creation\r\n   18. Security Considerations\r\n   19. IANA Considerations\r\n     19.1.  HTTP Fields\r\n     19.2.  HTTP Status Code\r\n     19.3.  Media Type\r\n     19.4.  HTTP Problem Types\r\n   20. References\r\n     20.1.  Normative References\r\n     20.2.  Informative References\r\n````",
       "createdAt": "2025-08-22T17:10:22Z",
-      "updatedAt": "2026-10-06T16:45:36Z",
+      "updatedAt": "2026-10-14T09:13:10Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "3a3aba6e84f57b0fc21daf6f38172911a72d3bb7",
+      "baseRefOid": "c1a82ff3d078f2cabed1c241727703f3729afd34",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "lucas/fix-3169",
-      "headRefOid": "4448d7a4721999045c325095580d8384e6b19a85",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "101bd8700a5b7ea780e39e50731ba40403d42afc",
+      "closedAt": "2026-10-14T09:13:02Z",
+      "mergedAt": "2026-10-14T09:13:02Z",
+      "mergedBy": "LPardue",
+      "mergeCommit": {
+        "oid": "033df59855b379dad53cb9f2e00620965c5590c6"
+      },
       "comments": [
         {
           "author": "LPardue",
@@ -201685,6 +201832,20 @@
           "body": "We should consider add subheading to the security consideration section. It has gotten a bit long now and addresses various topics, so this might add helpful structure.",
           "createdAt": "2026-09-30T06:03:39Z",
           "updatedAt": "2026-09-30T06:03:39Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I resurrected the PR and it _mostly_ stays as originally proposed. Some new text has crept in to the upload resource sections that was more concept than header field specific so I shuffled a couple of paragraphs a little. \r\n\r\nNote that I have unwound the change to the Limit section. Mike raised a point (#3219) that limits are related to the server/resource not the upload resource, so we probably want to hoist that whole subsection out. I'd like to do that in focused a follow up.\r\n\r\nI also took the liberty to break up security considerations as proposed. This is a nice improvement IMO\r\n\r\nProposed table of contents:\r\n\r\n```\r\n   1.  Introduction\r\n   2.  Conventions and Definitions\r\n   3.  Overview\r\n     3.1.  Example 1: Complete upload of representation data with\r\n           known size\r\n     3.2.  Example 2: Upload as a series of parts\r\n   4.  Upload Resource\r\n     4.1.  Offset\r\n       4.1.1.  Upload-Offset\r\n     4.2.  Completeness\r\n       4.2.1.  Upload-Complete\r\n     4.3.  Length\r\n       4.3.1.  Upload-Length\r\n     4.4.  Limits\r\n   5.  Upload Creation\r\n     5.1.  Client Behavior\r\n     5.2.  Server Behavior\r\n     5.3.  Examples\r\n   6.  Offset Retrieval\r\n     6.1.  Client Behavior\r\n     6.2.  Server Behavior\r\n     6.3.  Examples\r\n   7.  Upload Append\r\n     7.1.  Client Behavior\r\n     7.2.  Server Behavior\r\n     7.3.  Examples\r\n   8.  Upload Cancellation\r\n     8.1.  Client Behavior\r\n     8.2.  Server Behavior\r\n     8.3.  Example\r\n   9.  Concurrency\r\n   10. Retry\r\n   11. Status Code 104 (Upload Resumption Supported)\r\n   12. Media Type application/partial-upload\r\n   13. Problem Types\r\n     13.1.  Mismatching Offset\r\n     13.2.  Inconsistent Length\r\n   14. Content Codings\r\n   15. Transfer Codings\r\n   16. Upload Strategies\r\n     16.1.  Optimistic Upload Creation\r\n       16.1.1.  Upgrading To Resumable Uploads\r\n     16.2.  Careful Upload Creation\r\n   17. Incremental Transfer, Processing and Forwarding\r\n   18. Request Cancellation\r\n   19. Security Considerations\r\n     19.1.  Upload Resource URIs\r\n     19.2.  Untrusted Input\r\n     19.3.  Content Scanning\r\n     19.4.  Time-of-Check to Time-of-Use\r\n     19.5.  Resource Exhaustion\r\n     19.6.  Message Size Limits\r\n     19.7.  Different Origins\r\n   20. IANA Considerations\r\n     20.1.  HTTP Fields\r\n     20.2.  HTTP Status Code\r\n     20.3.  Media Type\r\n     20.4.  HTTP Problem Types\r\n   21. References\r\n     21.1.  Normative References\r\n     21.2.  Informative References\r\n   Appendix A.  Changes\r\n   Appendix B.  Draft Version Identification\r\n   Acknowledgments\r\n   Authors' Addresses\r\n```\r\n",
+          "createdAt": "2026-10-13T22:35:23Z",
+          "updatedAt": "2026-10-13T22:35:23Z"
+        },
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Merged this to let me crack on with some other editorials on top.",
+          "createdAt": "2026-10-14T09:13:10Z",
+          "updatedAt": "2026-10-14T09:13:10Z"
         }
       ],
       "reviews": [
@@ -201712,6 +201873,19 @@
           "body": "Great suggestion, thank you!",
           "createdAt": "2025-10-02T16:19:36Z",
           "updatedAt": "2025-10-02T16:19:36Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABSI2sSg",
+          "commit": {
+            "abbreviatedOid": "101bd87"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-14T02:03:16Z",
+          "updatedAt": "2026-10-14T02:03:16Z",
           "comments": []
         }
       ]
@@ -218859,24 +219033,26 @@
       "id": "PR_kwDOAUA-v88AAAABFkeuqA",
       "title": "[connect-tcp] Adjust usage of \"proxy\" vs. \"tunnel\"",
       "url": "https://github.com/httpwg/http-extensions/pull/3520",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bemasc",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "This is an attempt to be approximately consistent with both the HTTP RFCs (which prefer \"tunneling\") and the MASQUE RFCs (which prefer \"proxying\").",
       "createdAt": "2026-09-28T20:12:55Z",
-      "updatedAt": "2026-10-12T14:03:21Z",
+      "updatedAt": "2026-10-13T17:42:23Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "cb151e0e3f2186e12f68235033441cb4db65a93c",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "bemasc-tunneling-terminology",
       "headRefOid": "8a01aa5a3296da0b73ebd17ce3fff509558eba68",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-10-13T17:42:20Z",
+      "mergedAt": "2026-10-13T17:42:20Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "c1a82ff3d078f2cabed1c241727703f3729afd34"
+      },
       "comments": [
         {
           "author": "bemasc",
@@ -218959,6 +219135,346 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 3523,
+      "id": "PR_kwDOAUA-v88AAAABIWzttw",
+      "title": "RESUMABLE: Clarify upload resource URI security considerations",
+      "url": "https://github.com/httpwg/http-extensions/pull/3523",
+      "state": "MERGED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editorial",
+        "resumable-upload"
+      ],
+      "body": "These are editorial changes that restate guidance already in this section.\n\nFirst, as a single para it was getting hard to read, so split out to logically independent aspects: the risks of an attacker getting a URI, mitigations against that, then the separate risks of encoding stuff in URIs.\n\nReviewers should focus on two elements: \n\n- \"it is RECOMMENDED to generate upload resource URIs in such a way that makes it hard to be guessed by unauthorized clients\" -> \"It is also RECOMMENDED that upload resource URIs be hard to guess.\"\n  - I think \"unauthorized\" was doing too much heavy lifting there. It seems simpler and cleaner to just tell folks to use hard-to-guess URIs without caveating who might be trying to guess\n- I restated the routing-info requirement as a MUST NOT and the reason why (the URI is visible to the client and anyone else who obtains it).\n  - is this MUST NOT compatible with the previous MUST, does it change anything about the intent of the old language?\n\n",
+      "createdAt": "2026-10-14T09:25:49Z",
+      "updatedAt": "2026-10-14T18:38:50Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "033df59855b379dad53cb9f2e00620965c5590c6",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-offset-retrieval-abort",
+      "headRefOid": "e62800dfe8b8033445a2f2f5156e0f5f28a21312",
+      "closedAt": "2026-10-14T18:38:47Z",
+      "mergedAt": "2026-10-14T18:38:47Z",
+      "mergedBy": "LPardue",
+      "mergeCommit": {
+        "oid": "0c0253500f27d3d7995982bbd6361bc4b3699f57"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABSS6AHg",
+          "commit": {
+            "abbreviatedOid": "e62800d"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "Thank you, Lucas! Both changes look good to me and retain the actual value of the security consideration.",
+          "createdAt": "2026-10-14T18:30:03Z",
+          "updatedAt": "2026-10-14T18:30:03Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABSS_sVw",
+          "commit": {
+            "abbreviatedOid": "e62800d"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-14T18:36:40Z",
+          "updatedAt": "2026-10-14T18:36:40Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3524,
+      "id": "PR_kwDOAUA-v88AAAABIXEITw",
+      "title": "RESUMABLE: state how to handle URLs when there's no client auth",
+      "url": "https://github.com/httpwg/http-extensions/pull/3524",
+      "state": "MERGED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editorial",
+        "resumable-upload"
+      ],
+      "body": "We recommend auth but don't make it a hard requirement. Therefore, a URL can carry a lot of power. HTTP likes to consider the URL as a credential itself and has language about dealing with them that might not be obvious to implementers, so call it out.\n\nThere's no new normative language, this is just highlighting what was implicit in the design already.",
+      "createdAt": "2026-10-14T09:48:50Z",
+      "updatedAt": "2026-10-14T19:25:43Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "033df59855b379dad53cb9f2e00620965c5590c6",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-uri-credential",
+      "headRefOid": "dd26758b318c9399ce6de8263d8078a03de4f115",
+      "closedAt": "2026-10-14T19:25:40Z",
+      "mergedAt": "2026-10-14T19:25:40Z",
+      "mergedBy": "LPardue",
+      "mergeCommit": {
+        "oid": "86c38f1585e12e7ac00fabd76a40ccb0034b7044"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABSSbOXA",
+          "commit": {
+            "abbreviatedOid": "dd26758"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-14T17:52:27Z",
+          "updatedAt": "2026-10-14T17:52:27Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABSTDa5Q",
+          "commit": {
+            "abbreviatedOid": "dd26758"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "Thank you, that's well put!",
+          "createdAt": "2026-10-14T18:40:58Z",
+          "updatedAt": "2026-10-14T18:40:58Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3526,
+      "id": "PR_kwDOAUA-v88AAAABIXSFJQ",
+      "title": "RESUMABLE: Align the Upload-Complete definition with its response semantics",
+      "url": "https://github.com/httpwg/http-extensions/pull/3526",
+      "state": "MERGED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editorial",
+        "resumable-upload"
+      ],
+      "body": "Closes #3525.\n\nThe document effecively contains contradictory statemtents about what\ntrue or false means. As time has gone by, the meaning has gathered more\nnuance and context-dependent meaning than can be summarized in a short\nstatement. Therefore, simply defer to those instead; hence this is merely \neditorial.",
+      "createdAt": "2026-10-14T10:07:28Z",
+      "updatedAt": "2026-10-14T18:37:45Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "033df59855b379dad53cb9f2e00620965c5590c6",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-upload-complete-definition",
+      "headRefOid": "1a151f760c6a0887b8c79ce661dcef5426b79281",
+      "closedAt": "2026-10-14T18:37:43Z",
+      "mergedAt": "2026-10-14T18:37:43Z",
+      "mergedBy": "LPardue",
+      "mergeCommit": {
+        "oid": "85cbf98f3e7aa6c6659970e5704e86842fc2b8dc"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABSSa93A",
+          "commit": {
+            "abbreviatedOid": "1a151f7"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-14T17:52:05Z",
+          "updatedAt": "2026-10-14T17:52:05Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABSS-V-w",
+          "commit": {
+            "abbreviatedOid": "1a151f7"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "That's a good improvement, thank you!",
+          "createdAt": "2026-10-14T18:35:10Z",
+          "updatedAt": "2026-10-14T18:35:10Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3527,
+      "id": "PR_kwDOAUA-v88AAAABIXo2Qg",
+      "title": "RESUMABLE: Count interim responses as a source of the upload offset",
+      "url": "https://github.com/httpwg/http-extensions/pull/3527",
+      "state": "MERGED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editorial",
+        "resumable-upload"
+      ],
+      "body": "The second bullet in the Upload-Offset definition required `Upload-Complete: ?0` on interim responses as well as final ones. Progress 104s carry only `Upload-Offset` (Upload Creation and Upload Append server behavior), so they were excluded, though the 104 section relies on them for the offset.\n\nThe `?0` condition came from #3479, where it was meant to filter final responses from the targeted resource. This applies it to final responses only.\n\nAlso normalises `2XX` to `2xx` and \"header\" to \"header field\" in the same list.\n\nEditorial; no change in requirements.",
+      "createdAt": "2026-10-14T10:39:57Z",
+      "updatedAt": "2026-10-14T19:32:33Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "033df59855b379dad53cb9f2e00620965c5590c6",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-offset-interim-responses",
+      "headRefOid": "af1c9d4d0a4d906eb96694ae166dd11200f1775e",
+      "closedAt": "2026-10-14T19:32:31Z",
+      "mergedAt": "2026-10-14T19:32:31Z",
+      "mergedBy": "LPardue",
+      "mergeCommit": {
+        "oid": "d8a235e33d1835a6247bfe47a3747353ba4dcbd5"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABSSam7Q",
+          "commit": {
+            "abbreviatedOid": "152958b"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-14T17:51:36Z",
+          "updatedAt": "2026-10-14T17:51:36Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABSTFfkg",
+          "commit": {
+            "abbreviatedOid": "152958b"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-10-14T18:43:46Z",
+          "updatedAt": "2026-10-14T18:44:55Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "> and final responses for either with\n\nI think that might be a few word too much\n\n```suggestion\n- Interim responses for creating the upload ({{upload-creation}}) or appending ({{upload-appending}}), and their final responses with a non-`2xx` status code and the `Upload-Complete: ?0` header field, can include the `Upload-Offset` header field.\n```",
+              "createdAt": "2026-10-14T18:43:46Z",
+              "updatedAt": "2026-10-14T18:44:55Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABSTqeWA",
+          "commit": {
+            "abbreviatedOid": "af1c9d4"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-14T19:31:38Z",
+          "updatedAt": "2026-10-14T19:31:38Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3528,
+      "id": "PR_kwDOAUA-v88AAAABIX8EQQ",
+      "title": "RESUMABLE: Require identical Location only where Location is sent",
+      "url": "https://github.com/httpwg/http-extensions/pull/3528",
+      "state": "MERGED",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editorial",
+        "resumable-upload"
+      ],
+      "body": "#3203 (for #3183) dropped the rule that creation progress 104s MUST NOT include Location, and required \"all interim and final response messages\" to carry an identical Location \"where a response requires\" one. That reads either as every response must carry Location, or as Location must not change wherever it is sent.\n\nThe intention was always the second reading. We can tighten up the text to make this more clear. \n",
+      "createdAt": "2026-10-14T11:07:57Z",
+      "updatedAt": "2026-10-14T19:26:19Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "033df59855b379dad53cb9f2e00620965c5590c6",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-location-consistency",
+      "headRefOid": "d1ec3459fdab9eaa1ed0295328ee71b673aad394",
+      "closedAt": "2026-10-14T19:26:16Z",
+      "mergedAt": "2026-10-14T19:26:16Z",
+      "mergedBy": "LPardue",
+      "mergeCommit": {
+        "oid": "e2feee8b49b435806c0d2f5871c2362834f05d19"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABSSZW3w",
+          "commit": {
+            "abbreviatedOid": "d1ec345"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-14T17:49:50Z",
+          "updatedAt": "2026-10-14T17:49:50Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABSTHV4g",
+          "commit": {
+            "abbreviatedOid": "d1ec345"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "Much more concise, thank you!",
+          "createdAt": "2026-10-14T18:46:15Z",
+          "updatedAt": "2026-10-14T18:46:15Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3529,
+      "id": "PR_kwDOAUA-v88AAAABIZ1eDw",
+      "title": "Changes from IESG review (Ketan Talaulikar)",
+      "url": "https://github.com/httpwg/http-extensions/pull/3529",
+      "state": "MERGED",
+      "author": "bemasc",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "connect-tcp"
+      ],
+      "body": "",
+      "createdAt": "2026-10-14T13:50:52Z",
+      "updatedAt": "2026-10-14T14:56:59Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "033df59855b379dad53cb9f2e00620965c5590c6",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "bemasc-talaulikar",
+      "headRefOid": "d620a97b7141ae25c823b27b7a35412323dfe458",
+      "closedAt": "2026-10-14T14:56:56Z",
+      "mergedAt": "2026-10-14T14:56:56Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "9866f68a9a7e1ca8509ea3e28e89075e42e67ed3"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
