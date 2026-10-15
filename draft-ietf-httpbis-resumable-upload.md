@@ -57,7 +57,6 @@ normative:
   PATCH: RFC5789
   PROBLEM: RFC9457
   URI: RFC3986
-  CONTENT-DISPOSITION: RFC6266
 
 informative:
   SLOWLORIS:
@@ -439,7 +438,7 @@ Clients are not required to discover limits ({{upload-limits}}) before starting 
 
 The request content can be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty representation. An `Upload-Complete` header field set to false is also valid. This can be used to retrieve the upload resource's URI before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URI, at the cost of an additional round trip before data upload can commence.
 
-Representation metadata included in the initial request (see {{Section 8 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field indicates the media type of the representation. The `Content-Encoding` header field names the content codings applied to the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. For this purpose, the `inline` disposition type is RECOMMENDED.
+Representation metadata included in the initial request (see {{Section 8 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field indicates the media type of the representation. The `Content-Encoding` header field names the content codings applied to the representation.
 
 If the client receives a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the target resource of the initial request ({{upload-complete-hdr}}). Note that this does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, and therefore, resuming the upload would not resolve this error.
 
@@ -476,7 +475,6 @@ A) The following example shows an upload creation, where all 123456789 bytes are
 ~~~ http-message
 POST /project/123/files HTTP/1.1
 Host: example.com
-Content-Disposition: inline; filename="file name.jpg"; filename*=UTF-8''file%20name.jpg
 Content-Length: 123456789
 Upload-Length: 123456789
 Upload-Complete: ?1
