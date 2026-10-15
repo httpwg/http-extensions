@@ -323,7 +323,7 @@ Proxies implementing this specification SHOULD include a "Proxy-Status" response
 
 ## Servers
 
-For server operators, template-driven TCP proxies are particularly valuable in situations where virtual-hosting is needed, or where multiple proxies must share an origin.  For example, the proxy might benefit from sharing an HTTP gateway that provides DDoS defense, performs request sanitization, or enforces user authorization  ({{gateway-compatibility}}).
+For server operators, template-driven TCP proxies are particularly valuable in situations where virtual-hosting is needed, or where multiple proxies must share an origin.  For example, the proxy might benefit from sharing an HTTP gateway that provides DDoS defense, performs request sanitization, or enforces user authorization ({{gateway-compatibility}}).
 
 Template-driven TCP proxies can also be made invisible to probes from unauthorized clients:
 
