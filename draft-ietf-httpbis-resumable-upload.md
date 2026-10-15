@@ -641,7 +641,7 @@ HTTP/1.1 204 No Content
 Upload-Complete: ?0
 ~~~
 
-B) The next example shows an upload append, where the client transfers the remaining 4567890 bytes and completes the upload with a length of 1234567890 bytes. The server processes the uploaded representation and generates the corresponding response, in this example containing extracted meta data:
+B) The next example shows an upload append, where the client transfers the remaining 4567890 bytes and completes the upload with a length of 1234567890 bytes. The server processes the uploaded representation and generates the corresponding response, in this example containing extracted metadata:
 
 ~~~ http-message
 PATCH /upload/d38d6ffe8 HTTP/1.1
