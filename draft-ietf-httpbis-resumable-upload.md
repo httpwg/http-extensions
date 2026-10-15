@@ -111,7 +111,7 @@ The document introduces the concept of an upload resource to facilitate resumabl
 
 Some examples in this document contain long lines that may be folded, as described in {{RFC8792}}.
 
-The terms Structured Header, Item, Dictionary, String, Integer, and Boolean are imported from {{STRUCTURED-FIELDS}}.
+The terms Structured Header, Item, Dictionary, Integer, and Boolean are imported from {{STRUCTURED-FIELDS}}.
 
 The terms "representation", "representation data", "representation metadata", "content", "client" and "server" are from {{Section 3 of HTTP}}.
 
