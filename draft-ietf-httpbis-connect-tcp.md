@@ -109,7 +109,7 @@ An intermediary MAY merge and split successive DATA and FINAL_DATA capsules, sub
 
 For example, an intermediary holding two successive DATA capsules in its transmission buffer could merge them, saving at least 2 bytes of encapsulation overhead when they are forwarded.
 
-This protocol can be extended by defining additional relevant Capsule Types.  According to the Capsule Protocol ({{!CAPSULE=RFC9297, Section 3.2}}), new Capsule Types should be ignored by pre-existing proxies and intermediaries.  If a new Capsule Type cannot safely be ignored, the endpoints can confirm support using a new HTTP header field.
+This protocol can be extended by defining additional relevant Capsule Types.  According to the Capsule Protocol ({{!CAPSULE=RFC9297, Section 3.2}}), new Capsule Types are silently dropped by pre-existing proxies and forwarded unmodified by intermediaries.  If a new Capsule Type cannot safely be ignored, the endpoints can confirm support using a new HTTP header field.
 
 ## In HTTP/1.1
 
