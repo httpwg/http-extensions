@@ -464,7 +464,6 @@ HTTP/1.1 104 Upload Resumption Supported
 Upload-Offset: 23456789
 
 HTTP/1.1 200 OK
-Location: https://example.com/upload/b530ce8ff
 Upload-Complete: ?1
 Upload-Limit: max-size=1234567890
 Content-Type: application/json
