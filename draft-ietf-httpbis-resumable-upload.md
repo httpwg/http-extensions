@@ -357,7 +357,11 @@ The `Upload-Length` field can be used in response to an offset retrieval; see {{
 
 # Upload Limits {#upload-limits}
 
-A server MAY enforce one or multiple limits, which are communicated to the client via the `Upload-Limit` response header field. `Upload-Limit` is a Dictionary Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
+A server can limit an upload, for example, in its total size, in the size of each request, or in how long the upload resource remains available. The server announces these limits to the client in the `Upload-Limit` header field, so the client can adhere to them.
+
+A client usually learns the limits when the upload resource is created ({{upload-creation}}). It can learn them before that through an `OPTIONS` request ({{upload-limits-options}}).
+
+`Upload-Limit` is a Dictionary Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
 The following key-value pairs are defined:
 
@@ -376,15 +380,15 @@ The following key-value pairs are defined:
 `max-age`:
 : Specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible. The value is an Integer.
 
-Clients usually discover limits through the `Upload-Limit` header field when the upload resource is created ({{upload-creation}}). Throughout the lifetime of the upload resource, these limits SHOULD NOT change in a way that causes failures for clients adhering to the initially discovered limits. If the client discovers that it cannot continue the upload while adhering to the limits, it SHOULD stop the current request immediately ({{request-cancellation}}) and cancel the upload ({{upload-cancellation}}).
+Receivers of `Upload-Limit` parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
+
+Throughout the lifetime of the upload resource, limits SHOULD NOT change in a way that causes failures for clients adhering to the initially discovered limits. If the client discovers that it cannot continue the upload while adhering to the limits, it SHOULD stop the current request immediately ({{request-cancellation}}) and cancel the upload ({{upload-cancellation}}).
 
 The following recommendations for limit changes can minimize the risk of causing upload failures:
 
 * `max-size` and `max-append-size` SHOULD NOT decrease.
 * `min-size` and `min-append-size` SHOULD NOT increase.
 * Between subsequent responses, the end of the upload resource's lifetime as implied by `max-age` SHOULD NOT decrease.
-
-Receivers of `Upload-Limit` parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
 
 When a request is rejected because limits were violated, the response SHOULD include the `Upload-Limit` header field carrying all limits of the corresponding upload if possible. This might not be possible if intermediaries enforce limits.
 
