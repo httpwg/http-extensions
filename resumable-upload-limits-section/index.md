@@ -1,4 +1,4 @@
-# Editor's drafts for lucas/fix-3169 branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/lucas/fix-3169)
+# Editor's drafts for resumable-upload-limits-section branch of [httpwg/http-extensions](https://github.com/httpwg/http-extensions/tree/resumable-upload-limits-section)
 
 | Draft |     |     |     |
 | ----- | --- | --- | --- |
