@@ -812,7 +812,7 @@ Unlike content codings (see {{Section 8.4.1 of HTTP}}), transfer codings (see {{
 
 The definition of the upload creation request ({{upload-creation}}) provides the client with flexibility to choose whether the representation data is fully or partially transferred in the first request, or if no representation data is included at all. Which behavior is best largely depends on the client's capabilities, its desire to avoid data retransmission, and its knowledge about the resource's support for resumable uploads.
 
-The following subsections describe two typical upload strategies that are suited for common environments. Note that these modes are never explicitly communicated to the server and clients are not required to stick to one strategy, but can mix and adapt them to their needs.
+The following subsections describe two typical upload strategies that are suited for common environments. Note that these strategies are never explicitly communicated to the server, and clients are not required to use only one strategy but can mix and adapt them to their needs.
 
 ## Optimistic Upload Creation
 
