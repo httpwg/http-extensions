@@ -88,13 +88,13 @@ explicit client cancellation:
 : e.g., terminating a user-agent process
 
 implicit client cancellation:
-: e.g., terminating a tab, garbage collecting a process or internal error
+: e.g., terminating a tab, garbage collecting a process, or an internal error
 
 explicit server cancellation:
 : e.g., scheduled maintenance
 
 implicit server cancellation:
-: e.g., denial-of-service mitigation or internal error
+: e.g., denial-of-service mitigation or an internal error
 
 Connections can be dropped due to a variety of network or transport layer reasons triggered by endpoints or on-path elements.
 
@@ -112,7 +112,7 @@ Some examples in this document contain long lines that are folded, as described 
 
 The terms Structured Header, Item, Dictionary, Integer, and Boolean are imported from {{STRUCTURED-FIELDS}}.
 
-The terms "representation", "representation data", "representation metadata", "content", "client" and "server" are from {{Section 3 of HTTP}}.
+The terms "representation", "representation data", "representation metadata", "content", "client", and "server" are from {{Section 3 of HTTP}}.
 
 The term "URI" is used as defined in {{Section 4 of HTTP}}.
 
@@ -431,7 +431,7 @@ If the client knows the representation's length, it SHOULD indicate the length i
 
 Clients are not required to discover limits ({{upload-limits}}) before starting the upload and might therefore be initially unaware of limits enforced by the server. However, the client SHOULD respect any limits ({{upload-limits}}) announced during the upload process in the `Upload-Limit` header field in interim or final responses. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client SHOULD stop the current request immediately ({{request-cancellation}}) and cancel the upload ({{upload-cancellation}}). If the client knows that the representation data is smaller than `min-size` ({{upload-limit-min-size}}), it cannot expect resumability to be offered. The client might still attempt to transfer the representation in a single request, either in a request with the `Upload-Complete` header field set to true (see {{upgrading-uploads}}) or via a conventional upload.
 
-The request content can be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty representation. An `Upload-Complete` header field set to false is also valid. This can be used to retrieve the upload resource's URI before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URI, at the cost of an additional round-trip before data upload can commence.
+The request content can be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty representation. An `Upload-Complete` header field set to false is also valid. This can be used to retrieve the upload resource's URI before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URI, at the cost of an additional round trip before data upload can commence.
 
 Representation metadata included in the initial request (see {{Section 8.2 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field ({{Section 8.3 of HTTP}}) indicates the media type of the representation. The `Content-Encoding` header field ({{Section 8.4 of HTTP}}) names the content codings applied to the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. For this purpose, the `inline` disposition type is RECOMMENDED.
 
@@ -662,7 +662,7 @@ HTTP/1.1 204 No Content
 Upload-Complete: ?0
 ~~~
 
-B) The next example shows an upload append, where the client transfers the remaining 4567890 bytes and completes the upload with a length of 1234567890 bytes. The server processes the uploaded representation and generates the corresponding response, in this example containing extracted metadata:
+B) The following example shows an upload append, where the client transfers the remaining 4567890 bytes and completes the upload with a length of 1234567890 bytes. The server processes the uploaded representation and generates the corresponding response, in this example containing extracted metadata:
 
 ~~~ http-message
 PATCH /upload/d38d6ffe8 HTTP/1.1
@@ -718,7 +718,7 @@ HTTP/1.1 204 No Content
 
 Resumable uploads, as defined in this document, do not permit uploading representation data in parallel requests for the same upload. The client MUST NOT perform multiple representation data transfers for the same upload resource in parallel, or perform representation data transfers while the creation of the same upload resource is still in progress.
 
-Even if the client is well-behaved and doesn't send concurrent requests, network interruptions can occur in such a way that the client considers a request as failed while the server is unaware of the problem and considers the request still ongoing. The client might then try to resume the upload with the best intentions, resulting in concurrent requests from the server's perspective. Therefore, the server MUST take measures to prevent race conditions, data loss and corruption from concurrent requests to append representation data ({{upload-appending}}) and/or cancellation ({{upload-cancellation}}) to the same upload resource. In addition, the server MUST NOT send outdated information in responses. This means that if a client appends at an offset from a final response ({{upload-offset-hdr}}), the server MUST NOT reject that request for having the wrong offset, unless another append or a cancellation arrived in between.
+Even if the client is well-behaved and does not send concurrent requests, network interruptions can occur in such a way that the client considers a request as failed while the server is unaware of the problem and considers the request still ongoing. The client might then try to resume the upload with the best intentions, resulting in concurrent requests from the server's perspective. Therefore, the server MUST take measures to prevent race conditions, data loss, and corruption from concurrent requests to append representation data ({{upload-appending}}) and/or cancellation ({{upload-cancellation}}) to the same upload resource. In addition, the server MUST NOT send outdated information in responses. This means that if a client appends at an offset from a final response ({{upload-offset-hdr}}), the server MUST NOT reject that request for having the wrong offset, unless another append or a cancellation arrived in between.
 
 The RECOMMENDED approach is as follows: If a server receives a new request to retrieve the offset ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}) while a previous request for creating the upload ({{upload-creation}}) or appending representation data ({{upload-appending}}) to the same upload resource is still ongoing, the server SHOULD prevent race conditions, data loss, and corruption by terminating the previous request before processing the new request. Due to network delay and reordering, the server might still be receiving representation data from an ongoing transfer for the same upload resource, which from the client's perspective has failed. Since the client is not allowed to perform multiple transfers for the same upload resource in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
 
@@ -742,13 +742,13 @@ The client SHOULD limit the number of retries it performs before considering the
 The `104 (Upload Resumption Supported)` status code can be used for two purposes:
 
 - When responding to requests to create uploads, a 104 interim response can be sent to indicate the resource's support for resumable uploads, as well as the URI and limits of the corresponding upload resource in the `Location` and `Upload-Limit` header fields, respectively (see {{upload-creation}}). This notifies the client early about the ability to resume the upload in case of network interruptions.
-- While processing the content of a request to append representation data or create an upload, the server can regularly send 104 interim responses to indicate the current upload progress in the `Upload-Offset` header field (see {{upload-creation}} and {{upload-appending}}). This allows the client to show more accurate progress information about the amount of data processed by the server. In addition, clients can use this information to release representation data that was buffered, knowing that it doesn't have to be retransmitted.
+- While processing the content of a request to append representation data or create an upload, the server can regularly send 104 interim responses to indicate the current upload progress in the `Upload-Offset` header field (see {{upload-creation}} and {{upload-appending}}). This allows the client to show more accurate progress information about the amount of data processed by the server. In addition, clients can use this information to release representation data that was buffered, knowing that it does not have to be retransmitted.
 
 When creating or appending resumable uploads, the client can generate a `100-continue` expectation because it wants an indication that the resource is willing to accept the upload. The client MAY treat a 104 interim response as fulfilling the `100-continue` expectation and start sending the request content. However, the server MUST NOT omit the `100 (Continue)` response because it has sent a 104 interim response.
 
 # Media Type `application/partial-upload` {#media-type-partial-upload}
 
-The `application/partial-upload` media type describes a contiguous block from the representation data to be uploaded to a resource. There is no minimum block size and the block might be empty. The block can be a subset of the representation data, where the start and/or end of the block don't line up with the start and/or end of the representation data respectively.
+The `application/partial-upload` media type describes a contiguous block from the representation data to be uploaded to a resource. There is no minimum block size and the block might be empty. The block can be a subset of the representation data, where the start and/or end of the block do not line up with the start and/or end of the representation data respectively.
 
 # Problem Types
 
@@ -837,7 +837,7 @@ The retransmission of representation data or the ultimate upload failure that ca
 
 This approach is best suited if the client cannot receive interim responses, e.g., due to a limitation in the provided HTTP interface, or if large representations are transferred where the cost of the additional request is minuscule compared to the effort of transferring the representation itself.
 
-# Incremental Transfer, Processing and Forwarding {#incremental}
+# Incremental Transfer, Processing, and Forwarding {#incremental}
 
 The resumable upload design is most effective when a server processes request message portions as they arrive, which ensures the greatest chance that data is processed before a possible transfer interruption.
 
