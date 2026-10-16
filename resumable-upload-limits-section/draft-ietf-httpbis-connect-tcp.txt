@@ -15,10 +15,11 @@ Abstract
 
    TCP tunneling using HTTP CONNECT has long been part of the core HTTP
    specification.  However, this tunneling functionality has several
-   important deficiencies.  This specification defines an alternative
-   HTTP proxy service configuration for TCP connections.  This
-   configuration is described by a URI Template, similar to the CONNECT-
-   UDP and CONNECT-IP protocols.
+   important deficiencies due to the lack of a well-defined HTTP origin
+   or path.  This specification defines an alternative HTTP proxy
+   service configuration for TCP connections.  This configuration is
+   described by a URI Template, similar to the CONNECT-UDP and CONNECT-
+   IP protocols.
 
 Status of This Memo
 
@@ -80,6 +81,7 @@ Table of Contents
    7.  Operational Considerations
      7.1.  Avoiding HTTP/1.1
      7.2.  Timeouts
+     7.3.  IP address sharing
    8.  IANA Considerations
      8.1.  New Upgrade Token
        8.1.1.  Interop testing
@@ -185,13 +187,13 @@ Table of Contents
 
    DATA Capsule {
      Type (i) = 0x08,
-     Length (i),  # MAY be zero
+     Length (i),  # may be zero
      TCP Payload (..),
    }
 
    FINAL_DATA Capsule {
      Type (i) = 0x09,
-     Length (i),  # MAY be zero
+     Length (i),  # may be zero
      TCP Payload (..),
    }
 
@@ -201,7 +203,7 @@ Table of Contents
    significant, and are not expected to match TCP segments, TLS records,
    HTTP DATA frames, QUIC STREAM frames, etc.  Recipients SHOULD begin
    forwarding payload from a DATA or FINAL_DATA capsule without waiting
-   to receive the entire capsule.
+   to receive the entire capsule, especially if the capsule is large.
 
    An intermediary MAY merge and split successive DATA and FINAL_DATA
    capsules, subject to the following requirements:
@@ -218,12 +220,8 @@ Table of Contents
    its transmission buffer could merge them, saving at least 2 bytes of
    encapsulation overhead when they are forwarded.
 
-   This protocol can be extended by defining additional relevant Capsule
-   Types.  According to the Capsule Protocol ([CAPSULE], Section 3.2),
-   new Capsule Types are silently dropped by pre-existing proxies and
-   forwarded unmodified by intermediaries.  If a new Capsule Type cannot
-   safely be ignored, the endpoints can confirm support using a new HTTP
-   header field.
+   This protocol supports backward-compatible extensions via additional
+   Capsule Types, as described in Section 3.2 of [CAPSULE].
 
 3.1.  In HTTP/1.1
 
@@ -588,14 +586,13 @@ Table of Contents
 
 5.1.  Servers
 
-   For server operators, template-driven TCP proxies are particularly
-   valuable in situations where virtual-hosting is needed, or where
-   multiple proxies must share an origin.  For example, the proxy might
-   benefit from sharing an HTTP gateway that provides DDoS defense,
-   performs request sanitization, or enforces user authorization
-   (Section 5.3).
+   For server operators, templated TCP proxies are particularly valuable
+   in situations where virtual-hosting is needed, or where multiple
+   proxies must share an origin.  For example, the proxy might benefit
+   from sharing an HTTP gateway that provides DDoS defense, performs
+   request sanitization, or enforces user authorization (Section 5.3).
 
-   Template-driven TCP proxies can also be made invisible to probes from
+   Templated TCP proxies can also be made invisible to probes from
    unauthorized clients:
 
    *  The URI template can include a high-entropy path, similar to
@@ -606,15 +603,14 @@ Table of Contents
 
 5.2.  Clients
 
-   Clients for this specification MAY accept various configuration
-   inputs, including:
+   This specification does not require any specific type of
+   configuration input.  Suitable configuration input types include:
 
    *  A URI Template string, as described in Section 3.
 
    *  An IP address or hostname, with optional or required port and
       scheme (as often used to describe classic HTTP CONNECT proxies).
-      A corresponding template-driven TCP proxy might be found in two
-      ways:
+      A corresponding templated TCP proxy might be found in two ways:
 
       -  At the default template for "connect-tcp" (Figure 8).
 
@@ -622,9 +618,8 @@ Table of Contents
          the corresponding .well-known URI
          ([I-D.ietf-intarea-proxy-config], Section 2).
 
-   *  The full URI, including path, of a provisioning domain resource
-      containing one or more "connect-tcp" proxy sub-dictionaries
-      ([I-D.ietf-intarea-proxy-config], Section 3).
+   *  A provisioning domain resource, configured directly or identified
+      by a local or remote URI (e.g., using "file://" or "https://").
 
    https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
                     /tcp/{target_host}/{target_port}/
@@ -809,6 +804,13 @@ Table of Contents
    operators should apply timeouts cautiously to minimize the impact on
    connections that are functioning but slow.  See Section 3.4 for
    related requirements.
+
+7.3.  IP address sharing
+
+   A TCP proxy typically uses the same IP address to establish
+   connections on behalf of multiple clients, especially in IPv4.
+   [RFC6269] provides guidance regarding difficulties that can arise
+   from IP address sharing, including in this arrangement.
 
 8.  IANA Considerations
 
@@ -1004,6 +1006,11 @@ Table of Contents
    [RFC6265]  Barth, A., "HTTP State Management Mechanism", RFC 6265,
               DOI 10.17487/RFC6265, April 2011,
               <https://www.rfc-editor.org/rfc/rfc6265>.
+
+   [RFC6269]  Ford, M., Ed., Boucadair, M., Durand, A., Levis, P., and
+              P. Roberts, "Issues with IP Address Sharing", RFC 6269,
+              DOI 10.17487/RFC6269, June 2011,
+              <https://www.rfc-editor.org/rfc/rfc6269>.
 
    [RFC7323]  Borman, D., Braden, B., Jacobson, V., and R.
               Scheffenegger, Ed., "TCP Extensions for High Performance",
