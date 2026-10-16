@@ -115,11 +115,11 @@ Some examples in this document contain long lines that are folded, as described 
 
 This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}} to specify syntax and parsing: Item, Dictionary, Integer, and Boolean.
 
-The terms "representation", "representation data", "representation metadata", "content", "client", and "server" are from {{Section 3 of HTTP}}.
+This document uses the following terms from {{Section 3 of HTTP}}: "representation", "representation data", "representation metadata", "content", "client", and "server".
 
-The term "URI" is used as defined in {{Section 4 of HTTP}}.
+This document uses the term "URI" as defined in {{Section 4 of HTTP}}.
 
-The term "patch document" is taken from {{PATCH}}.
+This document uses the term "patch document" from {{PATCH}}.
 
 An _upload resource_ is a temporary resource on the server that facilitates the resumable upload of one representation ({{upload-resource}}).
 
