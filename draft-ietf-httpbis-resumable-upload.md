@@ -72,6 +72,9 @@ informative:
   INCREMENTAL: RFC10036
   ORIGIN: RFC6454
 
+entity:
+  SELF: "RFC nnnn"
+
 --- abstract
 
 HTTP data transfers can encounter interruption due to reasons such as canceled requests or dropped connections. If the intended recipient can indicate how much of the data was processed prior to interruption, a sender can resume data transfer at that point instead of attempting to transfer all of the data again. HTTP range requests support this concept of resumable downloads from server to client. This document describes a mechanism that supports resumable uploads from client to server using HTTP.
@@ -909,10 +912,10 @@ IANA is asked to register the following entries in the "Hypertext Transfer Proto
 |----------------------|-----------|-----------------|-------------------------------------------|
 | Field Name           | Status    | Structured Type |                 Reference                 |
 |----------------------|-----------|-----------------|-------------------------------------------|
-| Upload-Offset        | permanent | Item            | {{upload-offset-hdr}} of this document    |
-| Upload-Complete      | permanent | Item            | {{upload-complete-hdr}} of this document  |
-| Upload-Length        | permanent | Item            | {{upload-length-hdr}} of this document    |
-| Upload-Limit         | permanent | Dictionary      | {{upload-limit-hdr}} of this document     |
+| Upload-Offset        | permanent | Item            | {{upload-offset-hdr}} of {{&SELF}}        |
+| Upload-Complete      | permanent | Item            | {{upload-complete-hdr}} of {{&SELF}}      |
+| Upload-Length        | permanent | Item            | {{upload-length-hdr}} of {{&SELF}}        |
+| Upload-Limit         | permanent | Dictionary      | {{upload-limit-hdr}} of {{&SELF}}         |
 |----------------------|-----------|-----------------|-------------------------------------------|
 
 ## HTTP Status Code
@@ -926,7 +929,7 @@ Description:
 : Upload Resumption Supported
 
 Specification:
-: {{status-code-104}} of this document
+: {{status-code-104}} of {{&SELF}}
 
 ## Media Type
 
@@ -948,13 +951,13 @@ Encoding considerations:
 : binary
 
 Security considerations:
-: see {{security-considerations}} of this document
+: see {{security-considerations}} of {{&SELF}}
 
 Interoperability considerations:
 : N/A
 
 Published specification:
-: {{media-type-partial-upload}} of this document
+: {{media-type-partial-upload}} of {{&SELF}}
 
 Applications that use this media type:
 : Applications that transfer files over unreliable networks or want pause- and resumable uploads.
@@ -1003,7 +1006,7 @@ Recommended HTTP status code:
 : 409
 
 Reference:
-: {{mismatching-offset}} of this document
+: {{mismatching-offset}} of {{&SELF}}
 
 IANA is asked to register the following entry in the "HTTP Problem Types" registry:
 
@@ -1017,7 +1020,7 @@ Recommended HTTP status code:
 : 400
 
 Reference:
-: {{inconsistent-length}} of this document
+: {{inconsistent-length}} of {{&SELF}}
 
 --- back
 
