@@ -367,7 +367,7 @@ A client usually learns the limits when the upload resource is created ({{upload
 
 The `Upload-Limit` response header field is a Dictionary Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
-Receivers of `Upload-Limit` parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
+Receivers of the `Upload-Limit` header field parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
 
 The following key-value pairs are defined.
 
@@ -397,7 +397,7 @@ A client can use an `OPTIONS` request without the `Upload-Complete` header field
 
 When responding to such a request, if the target resource supports the creation of a resumable upload resource ({{upload-creation}}), the server MUST include the `Upload-Limit` header field with the corresponding limits in the response. If a server is configured such that all of its resources support the creation of upload resources with identical limits, it SHOULD include the `Upload-Limit` header field in response to an `OPTIONS` request for the target `*` (if this target is supported).
 
-In an `OPTIONS` response, the presence of `Upload-Limit` signals support for resumable uploads, even when the server applies no limits. An empty Dictionary is equivalent to omitting the field ({{Section 3.2 of STRUCTURED-FIELDS}}), so it cannot carry this signal. If the server does not apply any limits, it MUST send `min-size=0`.
+In an `OPTIONS` response, the presence of the `Upload-Limit` header field signals support for resumable uploads, even when the server applies no limits. An empty Dictionary is equivalent to omitting the field ({{Section 3.2 of STRUCTURED-FIELDS}}), so it cannot carry this signal. If the server does not apply any limits, it MUST send `min-size=0`.
 
 To reduce the likelihood of failing requests, the limits announced in an `OPTIONS` response SHOULD NOT be less restrictive than the limits applied to an upload once the upload resource has been created, unless the request to create an upload resource included additional information that warrants different limits. For example, a server might announce a general maximum size limit of 1 GB, but reduce it to 100 MB when the media type indicates an image.
 
