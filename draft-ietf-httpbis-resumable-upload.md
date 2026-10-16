@@ -46,7 +46,7 @@ author:
 
 normative:
   HTTP: RFC9110
-  CACHING: RFC9111
+  HTTP-CACHING: RFC9111
   RFC9112:
     display: HTTP/1.1
   RFC9113:
@@ -576,7 +576,7 @@ A successful response to a `HEAD` or `GET` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset-hdr}}),
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limits}}) if any, and
-- SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
+- SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{HTTP-CACHING}}).
 
 The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes because clients might follow the redirect without preserving the `HEAD` method.
 
