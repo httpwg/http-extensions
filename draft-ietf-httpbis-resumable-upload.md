@@ -567,7 +567,7 @@ If the client wants to resume the upload after an interruption, it has to know t
 
 The offset can be less than or equal to the number of bytes of representation data that the client has already sent. The client is expected to handle backtracking of a reasonable length. On the other hand, the offset can be greater than the amount of sent representation data, for example, if the server already has data from an earlier attempt to upload the same representation. If the client is not able to provide the representation data at the given offset, the upload MUST be considered a failure. The client then MUST NOT continue the upload and SHOULD cancel the upload ({{upload-cancellation}}).
 
-The client MUST NOT perform offset retrieval while the creation ({{upload-creation}}) of or appending ({{upload-appending}}) to the same upload resource is in progress as this can cause the previous request to be terminated by the server as described in {{concurrency}}.
+The client MUST NOT retrieve the offset while it is still creating ({{upload-creation}}) or appending to ({{upload-appending}}) the same upload resource, because the server might terminate the in-progress request ({{concurrency}}).
 
 If the client receives a `2xx (Successful)` response with a valid `Upload-Offset` header field, the client can continue appending representation data to it ({{upload-appending}}).
 
