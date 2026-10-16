@@ -44,7 +44,7 @@ informative:
 
 --- abstract
 
-TCP tunneling using HTTP CONNECT has long been part of the core HTTP specification.  However, this tunneling functionality has several important deficiencies.  This specification defines an alternative HTTP proxy service configuration for TCP connections.  This configuration is described by a URI Template, similar to the CONNECT-UDP and CONNECT-IP protocols.
+TCP tunneling using HTTP CONNECT has long been part of the core HTTP specification.  However, this tunneling functionality has several important deficiencies due to the lack of a well-defined HTTP origin or path.  This specification defines an alternative HTTP proxy service configuration for TCP connections.  This configuration is described by a URI Template, similar to the CONNECT-UDP and CONNECT-IP protocols.
 
 --- middle
 
@@ -87,19 +87,19 @@ When using "connect-tcp", TCP payload data is sent in the payload of new Capsule
 ~~~
 DATA Capsule {
   Type (i) = 0x08,
-  Length (i),  # MAY be zero
+  Length (i),  # may be zero
   TCP Payload (..),
 }
 
 FINAL_DATA Capsule {
   Type (i) = 0x09,
-  Length (i),  # MAY be zero
+  Length (i),  # may be zero
   TCP Payload (..),
 }
 ~~~
 {: #fig-capsules title="DATA and FINAL_DATA Capsule Formats"}
 
-The boundaries between DATA and FINAL_DATA capsules are not significant, and are not expected to match TCP segments, TLS records, HTTP DATA frames, QUIC STREAM frames, etc.  Recipients SHOULD begin forwarding payload from a DATA or FINAL_DATA capsule without waiting to receive the entire capsule.
+The boundaries between DATA and FINAL_DATA capsules are not significant, and are not expected to match TCP segments, TLS records, HTTP DATA frames, QUIC STREAM frames, etc.  Recipients SHOULD begin forwarding payload from a DATA or FINAL_DATA capsule without waiting to receive the entire capsule, especially if the capsule is large.
 
 An intermediary MAY merge and split successive DATA and FINAL_DATA capsules, subject to the following requirements:
 
@@ -109,7 +109,7 @@ An intermediary MAY merge and split successive DATA and FINAL_DATA capsules, sub
 
 For example, an intermediary holding two successive DATA capsules in its transmission buffer could merge them, saving at least 2 bytes of encapsulation overhead when they are forwarded.
 
-This protocol can be extended by defining additional relevant Capsule Types.  According to the Capsule Protocol ({{!CAPSULE=RFC9297, Section 3.2}}), new Capsule Types are silently dropped by pre-existing proxies and forwarded unmodified by intermediaries.  If a new Capsule Type cannot safely be ignored, the endpoints can confirm support using a new HTTP header field.
+This protocol supports backward-compatible extensions via additional Capsule Types, as described in {{Section 3.2 of !CAPSULE=RFC9297}}.
 
 ## In HTTP/1.1
 
@@ -332,13 +332,13 @@ Template-driven TCP proxies can also be made invisible to probes from unauthoriz
 
 ## Clients
 
-Clients for this specification MAY accept various configuration inputs, including:
+This specification does not require any specific configuration input type.  Suitable configuration input types include:
 
 * A URI Template string, as described in {{specification}}.
 * An IP address or hostname, with optional or required port and scheme (as often used to describe classic HTTP CONNECT proxies).  A corresponding template-driven TCP proxy might be found in two ways:
   - At the default template for "connect-tcp" ({{fig-default}}).
-  - In the "proxy" dictionary of a provisioning domain resource at the corresponding .well-known URI ({{?I-D.ietf-intarea-proxy-config, Section 2}}).
-* The full URI, including path, of a provisioning domain resource containing one or more "connect-tcp" proxy sub-dictionaries ({{?I-D.ietf-intarea-proxy-config, Section 3}}).
+  - In the "proxy" dictionary of a provisioning domain resource ({{?RFC8801, Section 4}}) at the corresponding .well-known URI ({{?I-D.ietf-intarea-proxy-config, Section 2}}).
+* A provisioning domain resource as above, configured directly or identified by a local or remote URI (e.g., using "file://" or "https://").
 
 ~~~
 https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
@@ -412,6 +412,10 @@ While this specification is fully functional under HTTP/1.1, performance-sensiti
 Except when actively sending or receiving data, an endpoint is always waiting for an event from its peer or its TCP connection.  HTTP and TCP are designed to ensure that such an event always arrives, so the connection is never permanently stuck in any state until it is fully closed.  However, for efficient operation, it may be necessary to adjust the settings for TCP keep-alives ({{!TCP=RFC9293, Section 3.8.4}}), QUIC idle timeouts ({{?QUIC, Section 10.1}}), HTTP/2 PING frames ({{?RFC9113, Section 6.7}}), and other transport options.
 
 Endpoints MAY impose additional timeouts, especially as a defense against certain resource exhaustion attacks ({{resource-exhaustion}}).  However, operators should apply timeouts cautiously to minimize the impact on connections that are functioning but slow.   See {{closing-connections}} for related requirements.
+
+## IP address sharing
+
+A TCP proxy typically uses the same IP address to establish connections on behalf of multiple clients, especially in IPv4. {{?RFC6269}} provides guidance regarding difficulties that can arise from IP address sharing, including in this arrangement.
 
 # IANA Considerations
 
