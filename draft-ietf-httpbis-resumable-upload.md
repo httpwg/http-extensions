@@ -917,7 +917,7 @@ IANA is asked to register the following entries in the "Hypertext Transfer Proto
 
 ## HTTP Status Code
 
-IANA is asked to register the following entry in the "HTTP Status Codes" registry:
+IANA is asked to register the following entry in the "Hypertext Transfer Protocol (HTTP) Status Code Registry":
 
 Value:
 : 104 (suggested value)
