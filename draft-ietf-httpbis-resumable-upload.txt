@@ -77,9 +77,9 @@ Table of Contents
    1.  Introduction
    2.  Conventions and Definitions
    3.  Overview
-     3.1.  Example 1: Complete upload of representation data with
-           known size
-     3.2.  Example 2: Upload as a series of parts
+     3.1.  Example 1: Complete Upload of Representation Data with
+           Known Size
+     3.2.  Example 2: Upload as a Series of Parts
    4.  Upload Resource
      4.1.  Offset
        4.1.1.  Upload-Offset
@@ -124,7 +124,7 @@ Table of Contents
    16. Transfer Codings
    17. Upload Strategies
      17.1.  Optimistic Upload Creation
-       17.1.1.  Upgrading To Resumable Uploads
+       17.1.1.  Upgrading to Resumable Uploads
      17.2.  Careful Upload Creation
    18. Incremental Transfer, Processing, and Forwarding
    19. Request Cancellation
@@ -267,7 +267,7 @@ Table of Contents
    together with applying security considerations presented in
    Section 20.
 
-3.1.  Example 1: Complete upload of representation data with known size
+3.1.  Example 1: Complete Upload of Representation Data with Known Size
 
    In this example, the client first attempts to upload representation
    data with a known size in a single HTTP request to the resource at
@@ -368,7 +368,7 @@ Table of Contents
 
                        Figure 4: Upload Cancellation
 
-3.2.  Example 2: Upload as a series of parts
+3.2.  Example 2: Upload as a Series of Parts
 
    In some cases, clients might prefer to upload a representation as a
    series of parts sent serially across multiple HTTP messages.  One use
@@ -381,7 +381,7 @@ Table of Contents
    known to support resumable upload, can upload parts of a
    representation incrementally.
 
-   1) The client is aware that the targeted resource supports resumable
+   1) The client is aware that the target resource supports resumable
    uploads and therefore starts the upload with the Upload-Complete
    header field set to false and the first part of the representation.
 
@@ -398,7 +398,7 @@ Table of Contents
    |<------------------------------------------------|
    |                                                 |
 
-         Figure 5: Upload creation with partial representation data
+         Figure 5: Upload Creation with Partial Representation Data
 
    2) Next, intermediate parts are appended (Section 8) with the Upload-
    Complete header field set to false, indicating that they are not the
@@ -418,7 +418,7 @@ Table of Contents
    |<------------------------------------------------|
    |                                                 |
 
-         Figure 6: Appending partial representation data to upload
+         Figure 6: Appending Partial Representation Data to Upload
 
    3) If the connection was interrupted, the client might want to resume
    the upload, similar to the previous example (Section 3.1).  The
@@ -447,7 +447,7 @@ Table of Contents
    |<------------------------------------------------|
    |                                                 |
 
-                  Figure 7: Resuming an interrupted upload
+                  Figure 7: Resuming an Interrupted Upload
 
    4) The request to append the last part of the representation data has
    the Upload-Complete header field set to true to indicate the complete
@@ -472,7 +472,7 @@ Table of Contents
    |<------------------------------------------------|
    |                                                 |
 
-             Figure 8: Appending remaining representation data
+             Figure 8: Appending Remaining Representation Data
 
 4.  Upload Resource
 
@@ -577,8 +577,8 @@ Table of Contents
 
    When used in an upload creation response (Section 6) or an upload
    append response (Section 8), the Upload-Complete header field signals
-   whether the response comes from the initial targeted resource.  The
-   value of true means that the semantics of the targeted resource
+   whether the response comes from the target resource of the initial
+   request.  The value of true means that the semantics of that resource
    apply, and the value of false means that the semantics of the
    resumable upload protocol apply.  The client SHOULD NOT perform
    upload resumption to the upload resource after receiving a response
@@ -851,12 +851,12 @@ Table of Contents
 
    If the client receives a final response with the Upload-Complete: ?1
    header field, the upload is complete and the corresponding response
-   comes from the resource processing the representation according to
-   the initial request (Section 4.2.1).  Note that this does not
-   necessarily indicate success. 4xx (Client Error) or 5xx (Server
-   Error) status codes indicate in this case an error occurred while
-   processing the representation, and therefore, resuming the upload
-   would not resolve this error.
+   comes from the target resource of the initial request
+   (Section 4.2.1).  Note that this does not necessarily indicate
+   success. 4xx (Client Error) or 5xx (Server Error) status codes
+   indicate in this case an error occurred while processing the
+   representation, and therefore, resuming the upload would not resolve
+   this error.
 
    If the client receives a 2xx (Successful) final response with the
    Upload-Complete header field set to false or missing, and the
@@ -883,7 +883,7 @@ Table of Contents
    pointing to the upload resource and MUST include the Upload-Limit
    header field with the corresponding limits (Section 5) if any.
 
-   The resource targeted by this initial request is responsible for
+   The target resource of the initial request is responsible for
    processing the representation data transferred in the resumable
    upload according to the method and header fields in the initial
    request.  The upload resource, on the other hand, enables resuming
@@ -1138,12 +1138,12 @@ Table of Contents
 
    If the client receives a final response with the Upload-Complete: ?1
    header field, the upload is complete and the corresponding response
-   comes from the resource processing the representation according to
-   the initial request (Section 4.2.1).  Note that this does not
-   necessarily indicate success. 4xx (Client Error) or 5xx (Server
-   Error) status codes indicate in this case an error occurred while
-   processing the representation, and therefore, resuming the upload
-   would not resolve this error.
+   comes from the target resource of the initial request
+   (Section 4.2.1).  Note that this does not necessarily indicate
+   success. 4xx (Client Error) or 5xx (Server Error) status codes
+   indicate in this case an error occurred while processing the
+   representation, and therefore, resuming the upload would not resolve
+   this error.
 
    If the client receives a 4xx (Client Error) or 5xx (Server Error)
    final response with the Upload-Complete header field set to false or
@@ -1180,8 +1180,8 @@ Table of Contents
    client intends to transfer the remaining representation data in one
    request.  If the request content was fully processed, the upload is
    marked as complete and the server SHOULD generate the response that
-   matches what the resource, that was targeted by the initial upload
-   creation (Section 6), would have generated if it had processed the
+   matches what the target resource of the initial upload creation
+   request (Section 6) would have generated if it had processed the
    entire representation in the initial request.  However, the response
    MUST include the Upload-Complete header field set to true, allowing
    clients to identify whether a response, in particular error
@@ -1198,12 +1198,12 @@ Table of Contents
    response with the Upload-Complete header field set to false.
 
    Even if the upload is complete (Section 4.2) from the server's
-   perspective and the final response from the targeted resource has
-   already been sent, the client might still perform an upload append
-   (Section 8) after an offset retrieval (Section 7) due to the response
-   being lost during transmission.  The server can choose to replay the
-   final response to the client if the request to append to the
-   completed upload is valid.
+   perspective and the final response from the target resource of the
+   initial request has already been sent, the client might still perform
+   an upload append (Section 8) after an offset retrieval (Section 7)
+   due to the response being lost during transmission.  The server can
+   choose to replay the final response to the client if the request to
+   append to the completed upload is valid.
 
    The server MUST record the representation's length according to
    Section 4.3 if the Upload-Length or Upload-Complete: ?1 header fields
@@ -1547,8 +1547,8 @@ Table of Contents
    (Upload Resumption Supported) interim response with the upload
    resource's URI, the client cannot resume that upload due to the
    missing URI.  The interim response might not be received if the
-   interruption happens too early in the message exchange, the resource
-   targeted in the initial request does not support resumable uploads,
+   interruption happens too early in the message exchange, the target
+   resource of the initial request does not support resumable uploads,
    the server is not capable of sending the 104 interim response, or an
    intermediary dropped the interim response.  Without a 104 interim
    response, the client needs to either treat the upload as failed or
@@ -1562,7 +1562,7 @@ Table of Contents
    similar to how a client might wait for a 100 (Continue) interim
    response (see Section 10.1.1 of [HTTP]) before committing to work.
 
-17.1.1.  Upgrading To Resumable Uploads
+17.1.1.  Upgrading to Resumable Uploads
 
    Optimistic upload creation allows clients and servers to
    automatically upgrade non-resumable uploads to resumable ones.  In a
@@ -1574,7 +1574,7 @@ Table of Contents
    SHOULD be added if the representation's length is known upfront.  The
    request is not changed otherwise.
 
-   If the resource targeted in the initial request supports resumable
+   If the target resource of the initial request supports resumable
    uploads, the server can create an upload resource and send its URI in
    a 104 interim response for the client to resume the upload after
    interruptions.  A resource that does not support resumable uploads or
@@ -1593,8 +1593,8 @@ Table of Contents
 
 17.2.  Careful Upload Creation
 
-   For a "careful upload creation" the client knows that the resource
-   targeted in the initial request supports resumable uploads and sends
+   For a "careful upload creation" the client knows that the target
+   resource of the initial request supports resumable uploads and sends
    an empty upload creation request without including any representation
    data.  Upon successful response reception, the client can use the
    included upload resource URI to transmit the representation data
@@ -1737,28 +1737,28 @@ Table of Contents
 
 20.7.  Different Origins
 
-   The resource targeted by the initial request (Section 6) and the
-   upload resource might have different origins ([ORIGIN]).  For
-   example, the initial request might be sent to an application server,
-   while the upload resource is hosted by a dedicated storage service.
+   The target resource of the initial request (Section 6) and the upload
+   resource might have different origins ([ORIGIN]).  For example, the
+   initial request might be sent to an application server, while the
+   upload resource is hosted by a dedicated storage service.
 
    Clients have to consider this change of origin when following the
    Location header field to the upload resource.  Credentials and other
-   per-origin state associated with the initially targeted resource are
-   not necessarily applicable to the upload resource, and remain scoped
-   to their respective origins.  Clients also have to consider that
-   disclosing an upload resource URI to a different origin can leak the
-   capability to read, append to, or cancel the upload.
+   per-origin state associated with the target resource of the initial
+   request are not necessarily applicable to the upload resource, and
+   remain scoped to their respective origins.  Clients also have to
+   consider that disclosing an upload resource URI to a different origin
+   can leak the capability to read, append to, or cancel the upload.
 
    Because the upload can be completed either by the initial request or
    by an upload append request (Section 8), the final response might
    come from a different origin depending on whether the upload was
    resumed.  To avoid this, the server MAY respond to the request that
    completes the upload with a 303 (See Other) status code, redirecting
-   the user agent to the origin of the initially targeted resource.
-   Because a 303 (See Other) response directs the user agent to retrieve
-   the result with GET, the considerations regarding method preservation
-   in Section 6 and Section 8 do not apply in this case.
+   the user agent to the origin of the target resource of the initial
+   request.  Because a 303 (See Other) response directs the user agent
+   to retrieve the result with GET, the considerations regarding method
+   preservation in Section 6 and Section 8 do not apply in this case.
 
 21.  IANA Considerations
 
