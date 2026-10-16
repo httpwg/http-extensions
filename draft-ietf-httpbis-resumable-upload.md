@@ -806,7 +806,7 @@ Since the codings listed in the `Content-Encoding` header field are a characteri
 
 # Transfer Codings
 
-Unlike content codings (see {{Section 8.4.1 of HTTP}}), transfer codings (see {{Section 6.1 of RFC9112}}) are a property of the message, not of the representation. Moreover, transfer codings can be applied in transit (e.g., by proxies). This means that a client does not have to consider the transfer codings to compute the upload offset, while a server is responsible for transfer decoding the message before computing the upload offset. The same applies to the `Upload-Length` header field value. Please note that the `Content-Length` header field cannot be used in conjunction with the `Transfer-Encoding` header field.
+Unlike content codings (see {{Section 8.4.1 of HTTP}}), transfer codings (see {{Section 6.1 of RFC9112}}) are a property of the message, not of the representation. Moreover, transfer codings can be applied in transit (e.g., by proxies). This means that a client does not have to consider the transfer codings to compute the upload offset, while a server is responsible for transfer decoding the message before computing the upload offset. The same applies to the `Upload-Length` header field value. See {{Section 6.2 of RFC9112}} for how the `Content-Length` and `Transfer-Encoding` header fields interact.
 
 # Upload Strategies
 
