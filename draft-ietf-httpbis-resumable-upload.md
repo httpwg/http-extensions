@@ -170,7 +170,7 @@ Client                                       Server
 ~~~
 {: #fig-offset-retrieving title="Offset Retrieval"}
 
-3) The client can resume the upload by sending the remaining representation data to the upload resource ({{upload-appending}}), appending to the already stored representation data in the upload using the `application/partial-upload` media type. The `Upload-Offset` value is included to ensure that the client and server agree on the offset that the upload resumes from. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if it had not been interrupted, e.g., a `200 (OK)` response.
+3) The client can resume the upload by sending the remaining representation data to the upload resource ({{upload-appending}}), appending to the already stored representation data in the upload using the `application/partial-upload` media type. The `Upload-Offset` header field is included to ensure that the client and server agree on the offset that the upload resumes from. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if it had not been interrupted, e.g., a `200 (OK)` response.
 
 ~~~ aasvg
 Client                                       Server
@@ -316,7 +316,7 @@ Representation data processed by the upload resource cannot be removed again and
 
 ### Upload-Offset {#upload-offset-hdr}
 
-The `Upload-Offset` request and response header field conveys the offset. `Upload-Offset` is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the current offset as viewed by the message sender. Other values MUST cause the entire header field to be ignored.
+The `Upload-Offset` request and response header field conveys the offset. It is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the current offset as viewed by the message sender. Other values MUST cause the entire header field to be ignored.
 
 The client obtains the current offset in multiple ways:
 
@@ -334,7 +334,7 @@ The `Upload-Complete` request and response header field is an Item Structured He
 
 An upload is marked as completed either when a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) includes the `Upload-Complete` header field with a true value and the request content was fully processed, or when a response includes the `Upload-Complete` header field with a true value.
 
-When used in an upload creation response ({{upload-creation}}) or an upload append response ({{upload-appending}}), `Upload-Complete` signals whether the response comes from the initial targeted resource. The value of true means that the semantics of the targeted resource apply, and the value of false means that the semantics of the resumable upload protocol apply. The client SHOULD NOT perform upload resumption to the upload resource after receiving a response with the `Upload-Complete` field value set to true. Note that `Upload-Complete` can be true even when the full representation data was not transmitted in the case that the server decides to generate an early response when processing the targeted resource. Also note that `Upload-Complete` can be false in response to an invalid operation performed on a completed upload.
+When used in an upload creation response ({{upload-creation}}) or an upload append response ({{upload-appending}}), the `Upload-Complete` header field signals whether the response comes from the initial targeted resource. The value of true means that the semantics of the targeted resource apply, and the value of false means that the semantics of the resumable upload protocol apply. The client SHOULD NOT perform upload resumption to the upload resource after receiving a response with the `Upload-Complete` field value set to true. Note that the `Upload-Complete` header field can be true even when the full representation data was not transmitted in the case that the server decides to generate an early response when processing the targeted resource. Also note that it can be false in response to an invalid operation performed on a completed upload.
 
 ## Length {#upload-length}
 
@@ -432,7 +432,7 @@ The server MUST record the representation's length according to {{upload-length}
 
 While the request content is being processed, the server MAY send multiple interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress.
 
-Every response to the same request that identifies the upload resource in `Location` MUST use the same URI. A final response with `Upload-Complete: ?1` is the result of processing the representation, so its `Location` can identify a different resource. Clients SHOULD check that the upload resource URI does not change, and SHOULD abort the current request and cancel the upload ({{upload-cancellation}}) if it does.
+Every response to the same request that identifies the upload resource in the `Location` header field MUST use the same URI. A final response with `Upload-Complete: ?1` is the result of processing the representation, so its `Location` header field can identify a different resource. Clients SHOULD check that the upload resource URI does not change, and SHOULD abort the current request and cancel the upload ({{upload-cancellation}}) if it does.
 
 The server SHOULD include the `Upload-Complete` ({{upload-complete-hdr}}) header field in the response to indicate whether it is the result of processing the uploaded representation.
 
@@ -777,11 +777,11 @@ Upload-Complete: ?0
 
 # Content Codings
 
-Since the codings listed in `Content-Encoding` are a characteristic of the representation (see {{Section 8.4 of HTTP}}), both the client and the server always compute the values for `Upload-Offset` and optionally `Upload-Length` on the content coded data (that is, the representation data). Moreover, the content codings are retained throughout the entire upload, meaning that the server is not required to decode the representation data to support resumable uploads.
+Since the codings listed in the `Content-Encoding` header field are a characteristic of the representation (see {{Section 8.4 of HTTP}}), both the client and the server always compute the values for the `Upload-Offset` and optionally `Upload-Length` header fields on the content coded data (that is, the representation data). Moreover, the content codings are retained throughout the entire upload, meaning that the server is not required to decode the representation data to support resumable uploads.
 
 # Transfer Codings
 
-Unlike `Content-Encoding` (see {{Section 8.4.1 of HTTP}}), `Transfer-Encoding` (see {{Section 6.1 of RFC9112}}) is a property of the message, not of the representation. Moreover, transfer codings can be applied in transit (e.g., by proxies). This means that a client does not have to consider the transfer codings to compute the upload offset, while a server is responsible for transfer decoding the message before computing the upload offset. The same applies to the value of `Upload-Length`. Please note that the `Content-Length` header field cannot be used in conjunction with the `Transfer-Encoding` header field.
+Unlike content codings (see {{Section 8.4.1 of HTTP}}), transfer codings (see {{Section 6.1 of RFC9112}}) are a property of the message, not of the representation. Moreover, transfer codings can be applied in transit (e.g., by proxies). This means that a client does not have to consider the transfer codings to compute the upload offset, while a server is responsible for transfer decoding the message before computing the upload offset. The same applies to the `Upload-Length` header field value. Please note that the `Content-Length` header field cannot be used in conjunction with the `Transfer-Encoding` header field.
 
 # Upload Strategies
 
