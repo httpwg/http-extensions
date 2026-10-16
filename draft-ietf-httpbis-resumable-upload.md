@@ -386,15 +386,21 @@ The following recommendations for limit changes can minimize the risk of causing
 
 Receivers of `Upload-Limit` parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
 
-When responding to an `OPTIONS` request without the `Upload-Complete` header field, if the resource that is the target of the request supports the creation of a resumable upload resource ({{upload-creation}}), the server MUST include the `Upload-Limit` header field with the corresponding limits in the response. If a server is configured such that all of its resources support the creation of upload resources with identical limits, it SHOULD include the `Upload-Limit` header field in response to an `OPTIONS` request for the target `*` (if this target is supported). If the server does not apply any limits, it MUST use `min-size=0` instead of an empty header value.
-
-A client can use an `OPTIONS` request without the `Upload-Complete` header field to discover whether the resource supports resumable uploads and to learn potential limits before creating an upload resource. To reduce the likelihood of failing requests, the limits announced in an `OPTIONS` response SHOULD NOT be less restrictive than the limits applied to an upload once the upload resource has been created, unless the request to create an upload resource included additional information that warrants different limits. For example, a server might announce a general maximum size limit of 1 GB, but reduce it to 100 MB when the media type indicates an image.
-
 When a request is rejected because limits were violated, the response SHOULD include the `Upload-Limit` header field carrying all limits of the corresponding upload if possible. This might not be possible if intermediaries enforce limits.
 
 Servers, including intermediaries, can (and often do) apply restrictions on the size of individual request message content. There is no standard mechanism to communicate such existing size restriction. A server that implements one can respond with a `413 (Content Too Large)` status code; see {{Section 15.5.14 of HTTP}}. Appending to an upload resource, as a series of appends, can be used to upload data up to the `max-size` limit without encountering per-message limits. Servers might apply restrictions that are smaller than the append limits, which would also result in a failed request.
 
-When a client receives a response with a `413 (Content Too Large)` status code during upload creation ({{upload-creation}}) or append ({{upload-appending}}), it SHOULD retry the request with a smaller size residing between `min-append-size` and `max-append-size`. If these limits are unknown at the time of receiving such a response, the client can attempt to discover them through an `OPTIONS` request. Retrying with the same request content size will likely yield the same error response. Cases where the request content size matches the `min-append-size` limit yet fails with a `413 (Content Too Large)` response might indicate a deployment mismatch that cannot be recovered from.
+When a client receives a response with a `413 (Content Too Large)` status code during upload creation ({{upload-creation}}) or append ({{upload-appending}}), it SHOULD retry the request with a smaller size residing between `min-append-size` and `max-append-size`. If these limits are unknown at the time of receiving such a response, the client can attempt to discover them through an `OPTIONS` request ({{upload-limit-options}}). Retrying with the same request content size will likely yield the same error response. Cases where the request content size matches the `min-append-size` limit yet fails with a `413 (Content Too Large)` response might indicate a deployment mismatch that cannot be recovered from.
+
+### Use with OPTIONS {#upload-limit-options}
+
+A client can use an `OPTIONS` request without the `Upload-Complete` header field to discover whether the resource supports resumable uploads and to learn potential limits before creating an upload resource.
+
+When responding to such a request, if the target resource supports the creation of a resumable upload resource ({{upload-creation}}), the server MUST include the `Upload-Limit` header field with the corresponding limits in the response. If a server is configured such that all of its resources support the creation of upload resources with identical limits, it SHOULD include the `Upload-Limit` header field in response to an `OPTIONS` request for the target `*` (if this target is supported).
+
+In an `OPTIONS` response, the presence of `Upload-Limit` signals support for resumable uploads, even when the server applies no limits. An empty Dictionary is equivalent to omitting the field ({{Section 3.2 of STRUCTURED-FIELDS}}), so it cannot carry this signal. If the server does not apply any limits, it MUST send `min-size=0`.
+
+To reduce the likelihood of failing requests, the limits announced in an `OPTIONS` response SHOULD NOT be less restrictive than the limits applied to an upload once the upload resource has been created, unless the request to create an upload resource included additional information that warrants different limits. For example, a server might announce a general maximum size limit of 1 GB, but reduce it to 100 MB when the media type indicates an image.
 
 # Upload Creation {#upload-creation}
 
@@ -552,7 +558,7 @@ If the client receives a 2xx successful response without a valid Upload-Offset h
 A successful response to a `HEAD` or `GET` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset-hdr}}),
-- MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}), and
+- MUST indicate the limits in the `Upload-Limit` header field ({{upload-limit}}) if existing, and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
 
 The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes because clients might follow the redirect without preserving the `HEAD` method.
