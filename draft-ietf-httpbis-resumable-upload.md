@@ -818,7 +818,7 @@ The following subsections describe two typical upload strategies that are suited
 
 An "optimistic upload creation" can be used regardless of the client's knowledge about the resource's support for resumable uploads. However, the client needs to be able to process interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.
 
-The benefit of this method is that if the upload creation request succeeded, the representation data was transferred in a single request without additional round trips.
+The benefit of this strategy is that if the upload creation request succeeds, the representation data is transferred in a single request without additional round trips.
 
 A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client receives a `104 (Upload Resumption Supported)` interim response with the upload resource's URI, the client cannot resume that upload due to the missing URI. The interim response might not be received if the interruption happens too early in the message exchange, the target resource of the initial request does not support resumable uploads, the server is not capable of sending the 104 interim response, or an intermediary dropped the interim response. Without a 104 interim response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.
 
