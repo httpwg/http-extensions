@@ -80,7 +80,7 @@ HTTP data transfers can encounter interruption due to reasons such as canceled r
 
 # Introduction {#introduction}
 
-HTTP data transfers can encounter interruption due to reasons such as canceled requests or dropped connections. If the intended recipient can indicate how much of the data was processed prior to interruption, a sender can resume data transfer at that point instead of attempting to transfer all of the data again. HTTP range requests (see {{Section 14 of HTTP}}) support this concept of resumable data transfers for downloads from server to client. While partial PUT is one method for uploading a partial representation (via Content-Range in the request), there are caveats that affect its deployability; see {{Section 14.5 of HTTP}}.
+HTTP data transfers can encounter interruption due to reasons such as canceled requests or dropped connections. If the intended recipient can indicate how much of the data was processed prior to interruption, a sender can resume data transfer at that point instead of attempting to transfer all of the data again. HTTP range requests (see {{Section 14 of HTTP}}) support this concept of resumable data transfers for downloads from server to client. While partial PUT is one method for uploading a partial representation (via the `Content-Range` header field in the request), there are caveats that affect its deployability; see {{Section 14.5 of HTTP}}.
 
 Upload requests can be canceled for various reasons, including but not limited to:
 
@@ -130,7 +130,7 @@ The remainder of this section uses examples to illustrate different interactions
 
 In this example, the client first attempts to upload representation data with a known size in a single HTTP request to the resource at `/project/123/files`. An interruption occurs and the client then attempts to resume the upload using subsequent HTTP requests to the upload resource at `/uploads/abc`.
 
-1) The client notifies the server that it wants to begin an upload ({{upload-creation}}). The server reserves the required resources to accept the upload from the client and then sends an interim response to the client, signaling support for resumable uploads and the upload resource's URI via the Location header field ({{Section 10.2.2 of HTTP}}). The client can start sending the representation data in the request content immediately after the request header section. Alternatively, it could also await the acknowledgment in the form of the interim response.
+1) The client notifies the server that it wants to begin an upload ({{upload-creation}}). The server reserves the required resources to accept the upload from the client and then sends an interim response to the client, signaling support for resumable uploads and the upload resource's URI via the `Location` header field ({{Section 10.2.2 of HTTP}}). The client can start sending the representation data in the request content immediately after the request header section. Alternatively, it could also await the acknowledgment in the form of the interim response.
 
 ~~~ aasvg
 Client                                  Server
@@ -544,9 +544,9 @@ The offset can be less than or equal to the number of bytes of representation da
 
 The client MUST NOT perform offset retrieval while the creation ({{upload-creation}}) of or appending ({{upload-appending}}) to the same upload resource is in progress as this can cause the previous request to be terminated by the server as described in {{concurrency}}.
 
-If the client receives a 2xx successful response with a valid Upload-Offset header field, the client can continue appending representation data to it ({{upload-appending}}).
+If the client receives a 2xx successful response with a valid `Upload-Offset` header field, the client can continue appending representation data to it ({{upload-appending}}).
 
-If the client receives a 2xx successful response without a valid Upload-Offset header field, a 4xx client error, or 5xx server error response, or if it did not receive a response, the client MAY retry retrieving the offset.
+If the client receives a 2xx successful response without a valid `Upload-Offset` header field, a 4xx client error, or 5xx server error response, or if it did not receive a response, the client MAY retry retrieving the offset.
 
 ## Server Behavior {#offset-retrieving-server}
 
