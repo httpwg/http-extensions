@@ -131,7 +131,7 @@ Resumable uploads are supported in HTTP through use of a temporary resource, an 
 
 The remainder of this section uses examples to illustrate different interactions with the upload resource. HTTP message exchanges, and thereby resumable uploads, use representation data (see {{Section 8.1 of HTTP}}). This means that resumable uploads can be used with many forms of content, such as static files, in-memory buffers, data from streaming sources, or on-demand generated data. Examples are purely illustrative and non-normative. Implementations of this protocol are expected to follow normative requirements defined in other sections, together with applying security considerations presented in {{security-considerations}}.
 
-## Example 1: Complete upload of representation data with known size {#example-1}
+## Example 1: Complete Upload of Representation Data with Known Size {#example-1}
 
 In this example, the client first attempts to upload representation data with a known size in a single HTTP request to the resource at `/project/123/files`. An interruption occurs and the client then attempts to resume the upload using subsequent HTTP requests to the upload resource at `/uploads/abc`.
 
@@ -209,7 +209,7 @@ Client                                       Server
 ~~~
 {: #fig-upload-cancellation title="Upload Cancellation"}
 
-## Example 2: Upload as a series of parts {#example-2}
+## Example 2: Upload as a Series of Parts {#example-2}
 
 In some cases, clients might prefer to upload a representation as a series of parts sent serially across multiple HTTP messages. One use case is to overcome server limits on HTTP message content size. Another use case is where the client does not know the final size of the representation data, such as when the data originates from a streaming source.
 
@@ -231,7 +231,7 @@ Client                                       Server
 |<------------------------------------------------|
 |                                                 |
 ~~~
-{: #fig-upload-creation-incomplete title="Upload creation with partial representation data"}
+{: #fig-upload-creation-incomplete title="Upload Creation with Partial Representation Data"}
 
 2) Next, intermediate parts are appended ({{upload-appending}}) with the `Upload-Complete` header field set to false, indicating that they are not the last part of the representation data.
 
@@ -250,7 +250,7 @@ Client                                       Server
 |<------------------------------------------------|
 |                                                 |
 ~~~
-{: #fig-upload-appending-incomplete title="Appending partial representation data to upload"}
+{: #fig-upload-appending-incomplete title="Appending Partial Representation Data to Upload"}
 
 3) If the connection was interrupted, the client might want to resume the upload, similar to the previous example ({{example-1}}). The client retrieves the offset ({{offset-retrieving}}) to learn the amount of representation data processed by the server and then continues appending the remaining parts to the upload as in the previous step.
 
@@ -276,7 +276,7 @@ Client                                       Server
 |<------------------------------------------------|
 |                                                 |
 ~~~
-{: #fig-upload-resume-incomplete title="Resuming an interrupted upload"}
+{: #fig-upload-resume-incomplete title="Resuming an Interrupted Upload"}
 
 4) The request to append the last part of the representation data has the `Upload-Complete` header field set to true to indicate the complete transfer. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if its representation had been fully transferred and processed, e.g., a `200 (OK)` response.
 
@@ -297,7 +297,7 @@ Client                                       Server
 |<------------------------------------------------|
 |                                                 |
 ~~~
-{: #fig-upload-appending-last-chunk title="Appending remaining representation data"}
+{: #fig-upload-appending-last-chunk title="Appending Remaining Representation Data"}
 
 # Upload Resource {#upload-resource}
 
@@ -824,7 +824,7 @@ A possible drawback is that the client might be unable to resume an upload. If a
 
 A client might wait for a limited duration to receive a 104 interim response before starting to transmit the request content. This way, the client can learn about the resource's support for resumable uploads and/or the upload resource's URI. This is conceptually similar to how a client might wait for a `100 (Continue)` interim response (see {{Section 10.1.1 of HTTP}}) before committing to work.
 
-### Upgrading To Resumable Uploads {#upgrading-uploads}
+### Upgrading to Resumable Uploads {#upgrading-uploads}
 
 Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the representation is transferred in a single request, usually `POST` or `PUT`, without any ability to resume from interruptions. The client can invite the server to upgrade such a request to a resumable upload by adding the `Upload-Complete: ?1` header field to the original request. The `Upload-Length` header field SHOULD be added if the representation's length is known upfront. The request is not changed otherwise.
 
