@@ -575,7 +575,7 @@ If the client receives a `2xx (Successful)` response without a valid `Upload-Off
 
 ## Server Behavior {#offset-retrieving-server}
 
-A successful response to a `HEAD` or `GET` request against an upload resource
+A successful response to a `HEAD` or `GET` request to an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset-hdr}}),
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limits}}) if any, and
