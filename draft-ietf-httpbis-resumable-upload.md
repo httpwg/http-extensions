@@ -464,9 +464,7 @@ HTTP/1.1 104 Upload Resumption Supported
 Upload-Offset: 23456789
 
 HTTP/1.1 200 OK
-Location: https://example.com/upload/b530ce8ff
 Upload-Complete: ?1
-Upload-Limit: max-size=1234567890
 Content-Type: application/json
 
 {"attachmentId": "b530ce8ff"}
@@ -487,6 +485,7 @@ Upload-Length: 123456789
 ~~~ http-message
 HTTP/1.1 104 Upload Resumption Supported
 Location: https://example.com/upload/3fd4994ad
+Upload-Limit: max-size=1234567890
 
 HTTP/1.1 201 Created
 Location: https://example.com/upload/3fd4994ad
