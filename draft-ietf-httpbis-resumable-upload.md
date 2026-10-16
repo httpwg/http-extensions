@@ -609,7 +609,7 @@ Cache-Control: no-store
 
 A client can continue the upload and append representation data by sending a `PATCH` request with the `application/partial-upload` media type ({{media-type-partial-upload}}) to the upload resource. The request content is the representation data to append. The request can benefit from incremental delivery; see {{incremental}}.
 
-The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` header field. To ensure that the upload resource will accept the request, the offset SHOULD be taken from an immediate previous response for retrieving the offset ({{offset-retrieving}}), creating the upload ({{upload-creation}}), or appending representation data ({{upload-appending}}).
+The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` header field. To ensure that the upload resource accepts the request, the client SHOULD take the offset from the most recent offset retrieval ({{offset-retrieving}}), upload creation ({{upload-creation}}), or upload append ({{upload-appending}}) response.
 
 The request MUST include the `Upload-Complete` header field. Its value is true in two cases:
 
