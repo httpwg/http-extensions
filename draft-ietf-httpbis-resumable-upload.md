@@ -821,7 +821,7 @@ A possible drawback is that the client might be unable to resume an upload. If a
 
 A client might wait for a limited duration to receive a 104 interim response before starting to transmit the request content. This way, the client can learn about the resource's support for resumable uploads and/or the upload resource's URI. This is conceptually similar to how a client might wait for a `100 (Continue)` interim response (see {{Section 10.1.1 of HTTP}}) before committing to work.
 
-### Upgrading To Resumable Uploads {#upgrading-uploads}
+### Upgrading to Resumable Uploads {#upgrading-uploads}
 
 Optimistic upload creation allows clients and servers to automatically upgrade non-resumable uploads to resumable ones. In a non-resumable upload, the representation is transferred in a single request, usually `POST` or `PUT`, without any ability to resume from interruptions. The client can invite the server to upgrade such a request to a resumable upload by adding the `Upload-Complete: ?1` header field to the original request. The `Upload-Length` header field SHOULD be added if the representation's length is known upfront. The request is not changed otherwise.
 
