@@ -426,7 +426,7 @@ When a client receives a response with a `413 (Content Too Large)` status code d
 
 ## Client Behavior
 
-A client can start a resumable upload from any request that can carry content by including the `Upload-Complete` header field ({{upload-complete-hdr}}). As a consequence, all request methods that allow content are possible, such as `POST`, `PUT`, and `PATCH`. The request can benefit from incremental delivery; see {{incremental}}.
+A client can start a resumable upload from any request that can carry content by including the `Upload-Complete` header field ({{upload-complete-hdr}}). Any method that allows content can be used, such as `POST`, `PUT`, and `PATCH`. The request can benefit from incremental delivery; see {{incremental}}.
 
 The `Upload-Complete` header field is set to true if the request content includes the entire representation data that the client intends to upload. This is also a requirement for transparently upgrading to resumable uploads from conventional uploads ({{upgrading-uploads}}).
 
