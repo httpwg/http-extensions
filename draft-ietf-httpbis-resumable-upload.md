@@ -831,7 +831,7 @@ This upgrade can also be performed transparently by a library or program that ac
 
 ## Careful Upload Creation
 
-For a "careful upload creation" the client knows that the resource targeted in the initial request supports resumable uploads and sends an empty upload creation request without including any representation data. Upon successful response reception, the client can use the included upload resource URI to transmit the representation data ({{upload-appending}}) and resume the upload at any stage if an interruption occurs. The response can include the `Upload-Limit` header field, which indicates limits for the rest of the upload ({{upload-limit}}).
+For a "careful upload creation" the client knows that the resource targeted in the initial request supports resumable uploads and sends an empty upload creation request without including any representation data. Upon successful response reception, the client can use the included upload resource URI to transmit the representation data ({{upload-appending}}) and resume the upload at any stage if an interruption occurs. The response can include the `Upload-Limit` header field, which indicates limits for the rest of the upload ({{upload-limits}}).
 
 The retransmission of representation data or the ultimate upload failure that can happen with an "optimistic upload creation" is therefore avoided at the expense of an additional request that does not carry representation data.
 
