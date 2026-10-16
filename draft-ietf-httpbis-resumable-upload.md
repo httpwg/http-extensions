@@ -160,7 +160,7 @@ X--------------Flow Interrupted--------------X
 ~~~
 {: #fig-upload-creation title="Upload Creation"}
 
-2) If the connection to the server is interrupted, the client might want to resume the upload. However, before this is possible the client needs to know the amount of representation data that the server processed before the interruption. It does so by retrieving the offset ({{offset-retrieving}}) from the upload resource.
+2) If the connection to the server is interrupted, the client might want to resume the upload. However, before this is possible, the client needs to know the amount of representation data that the server processed before the interruption. It does so by retrieving the offset ({{offset-retrieving}}) from the upload resource.
 
 ~~~ aasvg
 Client                                       Server
