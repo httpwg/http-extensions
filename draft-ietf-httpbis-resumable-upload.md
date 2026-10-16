@@ -349,7 +349,7 @@ Despite this, a client SHOULD communicate the representation's length to the ser
 
 If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. The representation's length, if known, MUST stay consistent across subsequent requests. A server can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) in responses to indicate inconsistent length indicators.
 
-Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` ({{upload-complete-hdr}}) header field to indicate that a request completes the upload. The offset could match the length, but the upload can still be incomplete.
+Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` header field ({{upload-complete-hdr}}) to indicate that a request completes the upload. The offset could match the length, but the upload can still be incomplete.
 
 ### Upload-Length {#upload-length-hdr}
 
@@ -436,7 +436,7 @@ While the request content is being processed, the server MAY send multiple inter
 
 Every response to the same request that identifies the upload resource in the `Location` header field MUST use the same URI. A final response with `Upload-Complete: ?1` is the result of processing the representation, so its `Location` header field can identify a different resource. Clients SHOULD check that the upload resource URI does not change, and SHOULD abort the current request and cancel the upload ({{upload-cancellation}}) if it does.
 
-The server SHOULD include the `Upload-Complete` ({{upload-complete-hdr}}) header field in the response to indicate whether it is the result of processing the uploaded representation.
+The server SHOULD include the `Upload-Complete` header field ({{upload-complete-hdr}}) in the response to indicate whether it is the result of processing the uploaded representation.
 
 The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes and the `Upload-Complete: ?0` header field because clients might follow the redirect without preserving the original method. See {{origin}} for redirecting a response that completes the upload.
 
@@ -615,7 +615,7 @@ The server MUST record the representation's length according to {{upload-length}
 
 While the request content is being processed, the server SHOULD send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
 
-The server SHOULD include the `Upload-Complete` ({{upload-complete-hdr}}) header field in the response to indicate whether it is the result of processing the uploaded representation.
+The server SHOULD include the `Upload-Complete` header field ({{upload-complete-hdr}}) in the response to indicate whether it is the result of processing the uploaded representation.
 
 The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes and the `Upload-Complete: ?0` header field because clients might follow the redirect without preserving the `PATCH` method. See {{origin}} for redirecting a response that completes the upload.
 
