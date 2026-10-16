@@ -323,11 +323,11 @@ Representation data processed by the upload resource cannot be removed again and
 
 The `Upload-Offset` request and response header field conveys the offset. It is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the current offset as viewed by the message sender. Other values MUST cause the entire header field to be ignored.
 
-The client obtains the current offset in multiple ways:
+The client can learn the current offset in three ways:
 
 - The offset can be explicitly retrieved from the upload resource ({{offset-retrieving}}).
 - Interim responses for creating the upload ({{upload-creation}}) or appending ({{upload-appending}}), and their final responses with a non-`2xx` status code and the `Upload-Complete: ?0` header field, can include the `Upload-Offset` header field.
-- Final responses for appending representation data ({{upload-appending}}) with a `2xx (Successful)` status code and the `Upload-Complete: ?0` header field acknowledge that the entire request content was received and the offset increased by the length of the appended representation data. An `Upload-Offset` header field's value MUST match this inferred offset, if present.
+- Final responses for appending representation data ({{upload-appending}}) with a `2xx (Successful)` status code and the `Upload-Complete: ?0` header field acknowledge that the entire request content was received and the offset increased by the length of the appended representation data. If present, the `Upload-Offset` header field value MUST match this inferred offset.
 
 ## Completeness {#upload-complete}
 
