@@ -455,7 +455,7 @@ The server MUST record the representation's length according to {{upload-length}
 
 While the request content is being processed, the server MAY send multiple interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress.
 
-Every response to the same request that identifies the upload resource in the `Location` header field MUST use the same URI. A final response with `Upload-Complete: ?1` is the result of processing the representation, so its `Location` header field can identify a different resource. Clients SHOULD check that the upload resource URI does not change, and SHOULD abort the current request and cancel the upload ({{upload-cancellation}}) if it does.
+Every response to the same request that identifies the upload resource in the `Location` header field MUST use the same URI. A final response with `Upload-Complete: ?1` is the result of processing the representation, so its `Location` header field can identify a different resource. Clients SHOULD check that the upload resource URI does not change, and SHOULD stop the current request immediately ({{request-cancellation}}) and cancel the upload ({{upload-cancellation}}) if it does.
 
 The server SHOULD include the `Upload-Complete` header field ({{upload-complete-hdr}}) in the response to indicate whether it is the result of processing the uploaded representation.
 
