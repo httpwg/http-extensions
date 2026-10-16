@@ -816,7 +816,7 @@ The following subsections describe two typical upload strategies that are suited
 
 ## Optimistic Upload Creation
 
-An "optimistic upload creation" can be used independent of the client's knowledge about the resource's support for resumable uploads. However, the client needs to be capable of handling and processing interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.
+An "optimistic upload creation" can be used regardless of the client's knowledge about the resource's support for resumable uploads. However, the client needs to be able to process interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.
 
 The benefit of this method is that if the upload creation request succeeded, the representation data was transferred in a single request without additional round trips.
 
