@@ -322,7 +322,7 @@ The client obtains the current offset in multiple ways:
 
 - The offset can be explicitly retrieved from the upload resource ({{offset-retrieving}}).
 - Interim responses for creating the upload ({{upload-creation}}) or appending ({{upload-appending}}), and their final responses with a non-`2xx` status code and the `Upload-Complete: ?0` header field, can include the `Upload-Offset` header field.
-- Final responses for appending representation data ({{upload-appending}}) with a `2xx` status code and the `Upload-Complete: ?0` header field acknowledge that the entire request content was received and the offset increased by the length of the appended representation data. An `Upload-Offset` header field's value MUST match this inferred offset, if present.
+- Final responses for appending representation data ({{upload-appending}}) with a `2xx (Successful)` status code and the `Upload-Complete: ?0` header field acknowledge that the entire request content was received and the offset increased by the length of the appended representation data. An `Upload-Offset` header field's value MUST match this inferred offset, if present.
 
 ## Completeness {#upload-complete}
 
@@ -414,9 +414,9 @@ Representation metadata included in the initial request (see {{Section 8.2 of HT
 
 If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete-hdr}}). Note that this does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, and therefore, resuming the upload would not resolve this error.
 
-If the client receives a 2xx successful final response with the `Upload-Complete` header field set to false or missing, and the client's `Upload-Complete` request header field was set to false, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
+If the client receives a `2xx (Successful)` final response with the `Upload-Complete` header field set to false or missing, and the client's `Upload-Complete` request header field was set to false, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
 
-If the client receives a 4xx client error or 5xx server error final response with the `Upload-Complete` header field set to false or missing, or if it did not receive a final response, it can apply the heuristics described in {{retry}} to retry or resume the upload.
+If the client receives a `4xx (Client Error)` or `5xx (Server Error)` final response with the `Upload-Complete` header field set to false or missing, or if it did not receive a final response, it can apply the heuristics described in {{retry}} to retry or resume the upload.
 
 ## Server Behavior
 
@@ -424,7 +424,7 @@ Upon receiving a request with the `Upload-Complete` header field, the server can
 
 The resource targeted by this initial request is responsible for processing the representation data transferred in the resumable upload according to the method and header fields in the initial request. The upload resource, on the other hand, enables resuming the transfer.
 
-If the `Upload-Complete` request header field is set to true, the client intends to transfer the entire representation data in one request. If the request content was fully processed, no resumable upload is needed and the server proceeds to process the request and generate a response. The server MUST NOT emit a 2xx successful response with the `Upload-Complete` header field set to false or missing in response to a request with the `Upload-Complete` request header field set to true.
+If the `Upload-Complete` request header field is set to true, the client intends to transfer the entire representation data in one request. If the request content was fully processed, no resumable upload is needed and the server proceeds to process the request and generate a response. The server MUST NOT emit a `2xx (Successful)` response with the `Upload-Complete` header field set to false or missing in response to a request with the `Upload-Complete` request header field set to true.
 
 If the `Upload-Complete` request header field is set to false, the client intends to transfer the representation over multiple requests. If the request content was fully processed, the server MUST include the `Location` response header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits if existing. Servers are RECOMMENDED to use the `201 (Created)` status code.
 
@@ -494,7 +494,7 @@ Upload-Complete: ?0
 Upload-Limit: max-size=1234567890
 ~~~
 
-C) The following example shows an upload creation, where the server responds with a 5xx status code. Thanks to the interim response containing the upload resource URI, the client can resume the upload.
+C) The following example shows an upload creation, where the server responds with a `5xx (Server Error)` status code. Thanks to the interim response containing the upload resource URI, the client can resume the upload.
 
 ~~~ http-message
 POST /upload HTTP/1.1
@@ -544,9 +544,9 @@ The offset can be less than or equal to the number of bytes of representation da
 
 The client MUST NOT perform offset retrieval while the creation ({{upload-creation}}) of or appending ({{upload-appending}}) to the same upload resource is in progress as this can cause the previous request to be terminated by the server as described in {{concurrency}}.
 
-If the client receives a 2xx successful response with a valid `Upload-Offset` header field, the client can continue appending representation data to it ({{upload-appending}}).
+If the client receives a `2xx (Successful)` response with a valid `Upload-Offset` header field, the client can continue appending representation data to it ({{upload-appending}}).
 
-If the client receives a 2xx successful response without a valid `Upload-Offset` header field, a 4xx client error, or 5xx server error response, or if it did not receive a response, the client MAY retry retrieving the offset.
+If the client receives a `2xx (Successful)` response without a valid `Upload-Offset` header field, a `4xx (Client Error)` or `5xx (Server Error)` response, or if it did not receive a response, the client MAY retry retrieving the offset.
 
 ## Server Behavior {#offset-retrieving-server}
 
@@ -593,7 +593,7 @@ The request MUST include the `Upload-Complete` header field. Its value is true i
 
 If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the resource processing the representation according to the initial request ({{upload-complete-hdr}}). Note that this does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, and therefore, resuming the upload would not resolve this error.
 
-If the client received a 4xx client error or 5xx server error final response with the `Upload-Complete` header field set to false or missing, or if it did not receive a final response, it can apply the heuristics described in {{retry}} to retry or resume the upload. Otherwise, the upload is considered a failure.
+If the client received a `4xx (Client Error)` or `5xx (Server Error)` final response with the `Upload-Complete` header field set to false or missing, or if it did not receive a final response, it can apply the heuristics described in {{retry}} to retry or resume the upload. Otherwise, the upload is considered a failure.
 
 ## Server Behavior
 
@@ -603,7 +603,7 @@ The server might not process the entire patch document when the upload is interr
 
 If the `Upload-Offset` request header field value does not match the current offset ({{upload-offset}}), the server MUST reject the request with a `409 (Conflict)` status code and the `Upload-Complete` header field set to false. The response MUST include the correct offset in the `Upload-Offset` header field. The response can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" ({{mismatching-offset}}).
 
-If the `Upload-Complete` request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully processed, the upload is marked as complete and the server SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had processed the entire representation in the initial request. However, the response MUST include the `Upload-Complete` header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the uploaded representation. The server MUST NOT emit a 2xx successful response with the `Upload-Complete` header field set to false or missing in response to a request with the `Upload-Complete` request header field set to true.
+If the `Upload-Complete` request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully processed, the upload is marked as complete and the server SHOULD generate the response that matches what the resource, that was targeted by the initial upload creation ({{upload-creation}}), would have generated if it had processed the entire representation in the initial request. However, the response MUST include the `Upload-Complete` header field with a true value, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the uploaded representation. The server MUST NOT emit a `2xx (Successful)` response with the `Upload-Complete` header field set to false or missing in response to a request with the `Upload-Complete` request header field set to true.
 
 If the `Upload-Complete` request header field is set to false, the client intends to transfer the remaining representation data over multiple requests. If the request content was fully processed, the server acknowledges the appended data by sending a `2xx (Successful)` response with the `Upload-Complete` header field set to false.
 
@@ -704,7 +704,7 @@ Since implementing this approach is not always technically possible or feasible,
 
 # Retry {#retry}
 
-If the client received a 4xx client error or 5xx server error response with the `Upload-Complete` header field set to false or missing when creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}), it can apply the heuristics described below to retry or resume the upload.
+If the client received a `4xx (Client Error)` or `5xx (Server Error)` response with the `Upload-Complete` header field set to false or missing when creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}), it can apply the heuristics described below to retry or resume the upload.
 
 - `409 (Conflict)` with the `Upload-Complete` header field set to false can be resumed with the correct offset ({{upload-offset}}). If no `Upload-Offset` header field is provided, the client SHOULD retrieve the offset ({{offset-retrieving}}) before resuming.
 - `413 (Content Too Large)` can be resumed after applying appropriate limits ({{upload-limit}}).
