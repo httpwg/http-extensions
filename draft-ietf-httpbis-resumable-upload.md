@@ -128,7 +128,7 @@ Resumable uploads are supported in HTTP through use of a temporary resource, an 
 
 The remainder of this section uses examples to illustrate different interactions with the upload resource. HTTP message exchanges, and thereby resumable uploads, use representation data (see {{Section 8.1 of HTTP}}). This means that resumable uploads can be used with many forms of content, such as static files, in-memory buffers, data from streaming sources, or on-demand generated data. Examples are purely illustrative and non-normative. Implementations of this protocol are expected to follow normative requirements defined in other sections, together with applying security considerations presented in {{security-considerations}}.
 
-## Example 1: Complete upload of representation data with known size {#example-1}
+## Example 1: Complete Upload of Representation Data with Known Size {#example-1}
 
 In this example, the client first attempts to upload representation data with a known size in a single HTTP request to the resource at `/project/123/files`. An interruption occurs and the client then attempts to resume the upload using subsequent HTTP requests to the upload resource at `/uploads/abc`.
 
@@ -206,7 +206,7 @@ Client                                       Server
 ~~~
 {: #fig-upload-cancellation title="Upload Cancellation"}
 
-## Example 2: Upload as a series of parts {#example-2}
+## Example 2: Upload as a Series of Parts {#example-2}
 
 In some cases, clients might prefer to upload a representation as a series of parts sent serially across multiple HTTP messages. One use case is to overcome server limits on HTTP message content size. Another use case is where the client does not know the final size of the representation data, such as when the data originates from a streaming source.
 
