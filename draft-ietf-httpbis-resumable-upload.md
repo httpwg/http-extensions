@@ -88,13 +88,13 @@ explicit client cancellation:
 : e.g., terminating a user-agent process
 
 implicit client cancellation:
-: e.g., terminating a tab, garbage collecting a process or internal error
+: e.g., terminating a tab, garbage collecting a process, or an internal error
 
 explicit server cancellation:
 : e.g., scheduled maintenance
 
 implicit server cancellation:
-: e.g., denial-of-service mitigation or internal error
+: e.g., denial-of-service mitigation or an internal error
 
 Connections can be dropped due to a variety of network or transport layer reasons triggered by endpoints or on-path elements.
 
@@ -112,7 +112,7 @@ Some examples in this document contain long lines that are folded, as described 
 
 The terms Structured Header, Item, Dictionary, Integer, and Boolean are imported from {{STRUCTURED-FIELDS}}.
 
-The terms "representation", "representation data", "representation metadata", "content", "client" and "server" are from {{Section 3 of HTTP}}.
+The terms "representation", "representation data", "representation metadata", "content", "client", and "server" are from {{Section 3 of HTTP}}.
 
 The term "URI" is used as defined in {{Section 4 of HTTP}}.
 
@@ -718,7 +718,7 @@ HTTP/1.1 204 No Content
 
 Resumable uploads, as defined in this document, do not permit uploading representation data in parallel requests for the same upload. The client MUST NOT perform multiple representation data transfers for the same upload resource in parallel, or perform representation data transfers while the creation of the same upload resource is still in progress.
 
-Even if the client is well-behaved and does not send concurrent requests, network interruptions can occur in such a way that the client considers a request as failed while the server is unaware of the problem and considers the request still ongoing. The client might then try to resume the upload with the best intentions, resulting in concurrent requests from the server's perspective. Therefore, the server MUST take measures to prevent race conditions, data loss and corruption from concurrent requests to append representation data ({{upload-appending}}) and/or cancellation ({{upload-cancellation}}) to the same upload resource. In addition, the server MUST NOT send outdated information in responses. This means that if a client appends at an offset from a final response ({{upload-offset-hdr}}), the server MUST NOT reject that request for having the wrong offset, unless another append or a cancellation arrived in between.
+Even if the client is well-behaved and does not send concurrent requests, network interruptions can occur in such a way that the client considers a request as failed while the server is unaware of the problem and considers the request still ongoing. The client might then try to resume the upload with the best intentions, resulting in concurrent requests from the server's perspective. Therefore, the server MUST take measures to prevent race conditions, data loss, and corruption from concurrent requests to append representation data ({{upload-appending}}) and/or cancellation ({{upload-cancellation}}) to the same upload resource. In addition, the server MUST NOT send outdated information in responses. This means that if a client appends at an offset from a final response ({{upload-offset-hdr}}), the server MUST NOT reject that request for having the wrong offset, unless another append or a cancellation arrived in between.
 
 The RECOMMENDED approach is as follows: If a server receives a new request to retrieve the offset ({{offset-retrieving}}), append representation data ({{upload-appending}}), or cancel the upload ({{upload-cancellation}}) while a previous request for creating the upload ({{upload-creation}}) or appending representation data ({{upload-appending}}) to the same upload resource is still ongoing, the server SHOULD prevent race conditions, data loss, and corruption by terminating the previous request before processing the new request. Due to network delay and reordering, the server might still be receiving representation data from an ongoing transfer for the same upload resource, which from the client's perspective has failed. Since the client is not allowed to perform multiple transfers for the same upload resource in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
 
@@ -837,7 +837,7 @@ The retransmission of representation data or the ultimate upload failure that ca
 
 This approach is best suited if the client cannot receive interim responses, e.g., due to a limitation in the provided HTTP interface, or if large representations are transferred where the cost of the additional request is minuscule compared to the effort of transferring the representation itself.
 
-# Incremental Transfer, Processing and Forwarding {#incremental}
+# Incremental Transfer, Processing, and Forwarding {#incremental}
 
 The resumable upload design is most effective when a server processes request message portions as they arrive, which ensures the greatest chance that data is processed before a possible transfer interruption.
 
