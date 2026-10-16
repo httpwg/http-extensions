@@ -454,4 +454,16 @@ IANA is requested to add the following entry to the "HTTP Capsule Types" registr
 # Acknowledgments
 {:numbered="false"}
 
-Thanks to Amos Jeffries, Tommy Pauly, Kyle Nekritz, David Schinazi, and Kazuho Oku for close review and suggested changes.
+This document benefited from close review and suggested changes by:
+
+* Mohamed Boucadair
+* Amos Jeffries
+* Eric Kinnear
+* Kyle Nekritz
+* Kazuho Oku
+* Tommy Pauly
+* Yaroslav Romakho
+* David Schinazi
+* Ketan Talaulikar
+* Willy Tarreau
+* Thomas Fossati
