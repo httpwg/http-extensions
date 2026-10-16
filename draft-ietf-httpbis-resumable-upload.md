@@ -345,7 +345,7 @@ When used in an upload creation response ({{upload-creation}}) or an upload appe
 
 The length of the representation data might not be known when starting the transfer, for example, because the representation is taken from a streaming source. The representation's length will, however, be known at the latest when the client completes the upload ({{upload-complete}}).
 
-Despite this, a client SHOULD communicate the representation's length to the server as soon as it becomes known to aid with resource management and facilitate early validation. There are two different ways for the client to indicate and for the server to discover the representation's length from requests for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}):
+A client SHOULD communicate the representation's length to the server as soon as it becomes known, without waiting for the upload to complete. This aids resource management and allows early validation. A request that creates the upload resource ({{upload-creation}}) or appends to it ({{upload-appending}}) has two possible indicators of the length:
 
 1. If the request includes the `Upload-Complete` header field set to true, the request content is the remaining representation data. The representation's length is then the sum of the current offset ({{upload-offset}}) and the request content's length, which might be announced in the `Content-Length` header field.
 2. The request can include the `Upload-Length` header field defined below.
