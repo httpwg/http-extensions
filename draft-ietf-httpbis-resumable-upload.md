@@ -317,7 +317,7 @@ The offset is the number of bytes from the representation data that have been pr
 
 The offset reflects application-level processing for the upload. Data might have been delivered and acknowledged at the transport layer without yet being reflected in the offset.
 
-Representation data processed by the upload resource cannot be removed again and, therefore, the offset as seen by the client MUST NOT decrease. Clients can use this guarantee to free resources associated to transferred representation data, as no retransmission of it will be necessary. If the server loses any part of the state, it MUST deactivate the upload resource and reject further interaction with it.
+Representation data processed by the upload resource cannot be removed again and, therefore, the offset as seen by the client MUST NOT decrease. Clients can use this guarantee to free resources associated with transferred representation data, as no retransmission of it will be necessary. If the server loses any part of the state, it MUST deactivate the upload resource and reject further interaction with it.
 
 ### Upload-Offset {#upload-offset-hdr}
 
