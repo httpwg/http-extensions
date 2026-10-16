@@ -861,7 +861,7 @@ HTTP/2:
 HTTP/3:
 : abruptly terminate the request stream ({{Section 4.1.1 of RFC9114}})
 
-Version-specific mechanisms place requirements on clients or servers for actioning the cancellation. However, for all versions of HTTP, resumable uploads allow the server to process received representation data and expose the upload offset via the upload resource, enabling continuation of the upload after interruption.
+Version-specific mechanisms place requirements on clients or servers for carrying out the cancellation. However, for all versions of HTTP, resumable uploads allow the server to process received representation data and expose the upload offset via the upload resource, enabling continuation of the upload after interruption.
 
 # Security Considerations
 
