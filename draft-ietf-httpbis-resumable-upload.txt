@@ -126,7 +126,7 @@ Table of Contents
      17.1.  Optimistic Upload Creation
        17.1.1.  Upgrading To Resumable Uploads
      17.2.  Careful Upload Creation
-   18. Incremental Transfer, Processing and Forwarding
+   18. Incremental Transfer, Processing, and Forwarding
    19. Request Cancellation
    20. Security Considerations
      20.1.  Upload Resource URIs
@@ -185,12 +185,12 @@ Table of Contents
    explicit client cancellation:  e.g., terminating a user-agent process
 
    implicit client cancellation:  e.g., terminating a tab, garbage
-      collecting a process or internal error
+      collecting a process, or an internal error
 
    explicit server cancellation:  e.g., scheduled maintenance
 
    implicit server cancellation:  e.g., denial-of-service mitigation or
-      internal error
+      an internal error
 
    Connections can be dropped due to a variety of network or transport
    layer reasons triggered by endpoints or on-path elements.
@@ -206,8 +206,8 @@ Table of Contents
    Utilizing resumable uploads, applications can recover from unintended
    interruptions, but also interrupt an upload on purpose to later
    resume it, for example, when a user wants to pause an upload, the
-   device's network connectivity changes, or bandwidth should be saved
-   for higher priority tasks.
+   device's network connectivity changes, or bandwidth is needed for
+   higher priority tasks.
 
    The document introduces the concept of an upload resource to
    facilitate resumable uploads (Section 4) and defines new header
@@ -226,14 +226,14 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-   Some examples in this document contain long lines that may be folded,
-   as described in [RFC8792].
+   Some examples in this document contain long lines that are folded, as
+   described in [RFC8792].
 
    The terms Structured Header, Item, Dictionary, Integer, and Boolean
    are imported from [STRUCTURED-FIELDS].
 
    The terms "representation", "representation data", "representation
-   metadata", "content", "client" and "server" are from Section 3 of
+   metadata", "content", "client", and "server" are from Section 3 of
    [HTTP].
 
    The term "URI" is used as defined in Section 4 of [HTTP].
@@ -517,8 +517,8 @@ Table of Contents
    transferred representation data.
 
    The offset reflects application-level processing for the upload.
-   Data may have been delivered and acknowledged at the transport layer
-   without yet being reflected in the offset.
+   Data might have been delivered and acknowledged at the transport
+   layer without yet being reflected in the offset.
 
    Representation data processed by the upload resource cannot be
    removed again and, therefore, the offset as seen by the client MUST
@@ -836,7 +836,7 @@ Table of Contents
    valid.  This can be used to retrieve the upload resource's URI before
    transferring any representation data.  Since interim responses are
    optional, this technique provides another mechanism to learn the URI,
-   at the cost of an additional round-trip before data upload can
+   at the cost of an additional round trip before data upload can
    commence.
 
    Representation metadata included in the initial request (see
@@ -1254,7 +1254,7 @@ Table of Contents
    HTTP/1.1 204 No Content
    Upload-Complete: ?0
 
-   B) The next example shows an upload append, where the client
+   B) The following example shows an upload append, where the client
    transfers the remaining 4567890 bytes and completes the upload with a
    length of 1234567890 bytes.  The server processes the uploaded
    representation and generates the corresponding response, in this
@@ -1321,14 +1321,14 @@ Table of Contents
    representation data transfers while the creation of the same upload
    resource is still in progress.
 
-   Even if the client is well-behaved and doesn't send concurrent
+   Even if the client is well-behaved and does not send concurrent
    requests, network interruptions can occur in such a way that the
    client considers a request as failed while the server is unaware of
    the problem and considers the request still ongoing.  The client
    might then try to resume the upload with the best intentions,
    resulting in concurrent requests from the server's perspective.
    Therefore, the server MUST take measures to prevent race conditions,
-   data loss and corruption from concurrent requests to append
+   data loss, and corruption from concurrent requests to append
    representation data (Section 8) and/or cancellation (Section 9) to
    the same upload resource.  In addition, the server MUST NOT send
    outdated information in responses.  This means that if a client
@@ -1413,7 +1413,7 @@ Table of Contents
       allows the client to show more accurate progress information about
       the amount of data processed by the server.  In addition, clients
       can use this information to release representation data that was
-      buffered, knowing that it doesn't have to be retransmitted.
+      buffered, knowing that it does not have to be retransmitted.
 
    When creating or appending resumable uploads, the client can generate
    a 100-continue expectation because it wants an indication that the
@@ -1425,11 +1425,11 @@ Table of Contents
 13.  Media Type application/partial-upload
 
    The application/partial-upload media type describes a contiguous
-   block from the representation data that should be uploaded to a
-   resource.  There is no minimum block size and the block might be
-   empty.  The block can be a subset of the representation data, where
-   the start and/or end of the block don't line up with the start and/or
-   end of the representation data respectively.
+   block from the representation data to be uploaded to a resource.
+   There is no minimum block size and the block might be empty.  The
+   block can be a subset of the representation data, where the start
+   and/or end of the block do not line up with the start and/or end of
+   the representation data respectively.
 
 14.  Problem Types
 
@@ -1532,7 +1532,7 @@ Table of Contents
 
    An "optimistic upload creation" can be used independent of the
    client's knowledge about the resource's support for resumable
-   uploads.  However, the client must be capable of handling and
+   uploads.  However, the client needs to be capable of handling and
    processing interim responses.  An upload creation request then
    includes the full representation data because the client anticipates
    that it will be transferred without interruptions or resumed if an
@@ -1588,8 +1588,8 @@ Table of Contents
    request, the client can perform the upgrade transparently and handle
    potential interruptions and resumptions under the hood without
    involving the user.  The last response received by the client is
-   considered the response for the entire upload and should be provided
-   to the user.
+   considered the response for the entire upload and needs to be
+   provided to the user.
 
 17.2.  Careful Upload Creation
 
@@ -1599,9 +1599,8 @@ Table of Contents
    data.  Upon successful response reception, the client can use the
    included upload resource URI to transmit the representation data
    (Section 8) and resume the upload at any stage if an interruption
-   occurs.  The client should inspect the response for the Upload-Limit
-   header field, which would indicate limits applying to the remaining
-   upload procedure.
+   occurs.  The response can include the Upload-Limit header field,
+   which indicates limits for the rest of the upload (Section 5).
 
    The retransmission of representation data or the ultimate upload
    failure that can happen with an "optimistic upload creation" is
@@ -1614,7 +1613,7 @@ Table of Contents
    additional request is minuscule compared to the effort of
    transferring the representation itself.
 
-18.  Incremental Transfer, Processing and Forwarding
+18.  Incremental Transfer, Processing, and Forwarding
 
    The resumable upload design is most effective when a server processes
    request message portions as they arrive, which ensures the greatest
@@ -1715,7 +1714,7 @@ Table of Contents
 20.5.  Resource Exhaustion
 
    Resumable uploads are vulnerable to Slowloris-style attacks
-   [SLOWLORIS].  A malicious client may create upload resources and keep
+   [SLOWLORIS].  A malicious client can create upload resources and keep
    them alive by regularly sending PATCH requests with no or small
    content to the upload resources.  This could be abused to exhaust
    server resources by creating and holding open uploads indefinitely
