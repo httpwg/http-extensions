@@ -894,11 +894,11 @@ Uploads performed as a series of appends can be used to upload data up to the `m
 
 ## Different Origins {#origin}
 
-The resource targeted by the initial request ({{upload-creation}}) and the upload resource might have different origins ({{ORIGIN}}). For example, the initial request might be sent to an application server, while the upload resource is hosted by a dedicated storage service.
+The target resource of the initial request ({{upload-creation}}) and the upload resource might have different origins ({{ORIGIN}}). For example, the initial request might be sent to an application server, while the upload resource is hosted by a dedicated storage service.
 
-Clients have to consider this change of origin when following the `Location` header field to the upload resource. Credentials and other per-origin state associated with the initially targeted resource are not necessarily applicable to the upload resource, and remain scoped to their respective origins. Clients also have to consider that disclosing an upload resource URI to a different origin can leak the capability to read, append to, or cancel the upload.
+Clients have to consider this change of origin when following the `Location` header field to the upload resource. Credentials and other per-origin state associated with the target resource of the initial request are not necessarily applicable to the upload resource, and remain scoped to their respective origins. Clients also have to consider that disclosing an upload resource URI to a different origin can leak the capability to read, append to, or cancel the upload.
 
-Because the upload can be completed either by the initial request or by an upload append request ({{upload-appending}}), the final response might come from a different origin depending on whether the upload was resumed. To avoid this, the server MAY respond to the request that completes the upload with a `303 (See Other)` status code, redirecting the user agent to the origin of the initially targeted resource. Because a `303 (See Other)` response directs the user agent to retrieve the result with `GET`, the considerations regarding method preservation in {{upload-creation}} and {{upload-appending}} do not apply in this case.
+Because the upload can be completed either by the initial request or by an upload append request ({{upload-appending}}), the final response might come from a different origin depending on whether the upload was resumed. To avoid this, the server MAY respond to the request that completes the upload with a `303 (See Other)` status code, redirecting the user agent to the origin of the target resource of the initial request. Because a `303 (See Other)` response directs the user agent to retrieve the result with `GET`, the considerations regarding method preservation in {{upload-creation}} and {{upload-appending}} do not apply in this case.
 
 # IANA Considerations
 
