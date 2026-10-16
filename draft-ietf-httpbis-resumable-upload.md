@@ -228,7 +228,7 @@ Client                                       Server
 |<------------------------------------------------|
 |                                                 |
 ~~~
-{: #fig-upload-creation-incomplete title="Upload creation with partial representation data"}
+{: #fig-upload-creation-incomplete title="Upload Creation with Partial Representation Data"}
 
 2) Next, intermediate parts are appended ({{upload-appending}}) with the `Upload-Complete` header field set to false, indicating that they are not the last part of the representation data.
 
@@ -247,7 +247,7 @@ Client                                       Server
 |<------------------------------------------------|
 |                                                 |
 ~~~
-{: #fig-upload-appending-incomplete title="Appending partial representation data to upload"}
+{: #fig-upload-appending-incomplete title="Appending Partial Representation Data to Upload"}
 
 3) If the connection was interrupted, the client might want to resume the upload, similar to the previous example ({{example-1}}). The client retrieves the offset ({{offset-retrieving}}) to learn the amount of representation data processed by the server and then continues appending the remaining parts to the upload as in the previous step.
 
@@ -273,7 +273,7 @@ Client                                       Server
 |<------------------------------------------------|
 |                                                 |
 ~~~
-{: #fig-upload-resume-incomplete title="Resuming an interrupted upload"}
+{: #fig-upload-resume-incomplete title="Resuming an Interrupted Upload"}
 
 4) The request to append the last part of the representation data has the `Upload-Complete` header field set to true to indicate the complete transfer. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if its representation had been fully transferred and processed, e.g., a `200 (OK)` response.
 
@@ -294,7 +294,7 @@ Client                                       Server
 |<------------------------------------------------|
 |                                                 |
 ~~~
-{: #fig-upload-appending-last-chunk title="Appending remaining representation data"}
+{: #fig-upload-appending-last-chunk title="Appending Remaining Representation Data"}
 
 # Upload Resource {#upload-resource}
 
