@@ -363,7 +363,7 @@ A client usually learns the limits when the upload resource is created ({{upload
 
 ## Upload-Limit {#upload-limit-hdr}
 
-`Upload-Limit` is a Dictionary Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
+The `Upload-Limit` response header field is a Dictionary Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
 Receivers of `Upload-Limit` parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
 
