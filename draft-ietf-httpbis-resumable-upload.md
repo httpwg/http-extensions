@@ -103,7 +103,7 @@ Connections can be dropped due to a variety of network or transport layer reason
 
 This specification defines a new mechanism for resumable uploads from client to server that can seamlessly fall back to conventional uploads. When an upload is interrupted, clients can send subsequent requests to query the server state and use this information to send the remaining representation data. Alternatively, they can cancel the upload entirely. Unlike ranged downloads, this protocol does not support transferring an upload as multiple requests in parallel.
 
-Utilizing resumable uploads, applications can recover from unintended interruptions, but also interrupt an upload on purpose to later resume it, for example, when a user wants to pause an upload, the device's network connectivity changes, or bandwidth is needed for higher priority tasks.
+With resumable uploads, applications can recover from unintended interruptions. They can also interrupt an upload on purpose and resume it later, for example, when a user wants to pause the upload, the device's network connectivity changes, or bandwidth is needed for higher-priority tasks.
 
 The document introduces the concept of an upload resource to facilitate resumable uploads ({{upload-resource}}) and defines new header fields to communicate the state of the upload ({{upload-offset-hdr}}, {{upload-complete-hdr}}, {{upload-length-hdr}}, and {{upload-limit-hdr}}), the status code `104 (Upload Resumption Supported)` to indicate the resource's support for resumable uploads ({{status-code-104}}), and the `application/partial-upload` media type to label partial representation data when resuming an upload ({{media-type-partial-upload}}).
 
