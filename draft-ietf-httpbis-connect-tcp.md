@@ -323,22 +323,22 @@ Proxies implementing this specification SHOULD include a "Proxy-Status" response
 
 ## Servers
 
-For server operators, template-driven TCP proxies are particularly valuable in situations where virtual-hosting is needed, or where multiple proxies must share an origin.  For example, the proxy might benefit from sharing an HTTP gateway that provides DDoS defense, performs request sanitization, or enforces user authorization ({{gateway-compatibility}}).
+For server operators, templated TCP proxies are particularly valuable in situations where virtual-hosting is needed, or where multiple proxies must share an origin.  For example, the proxy might benefit from sharing an HTTP gateway that provides DDoS defense, performs request sanitization, or enforces user authorization ({{gateway-compatibility}}).
 
-Template-driven TCP proxies can also be made invisible to probes from unauthorized clients:
+Templated TCP proxies can also be made invisible to probes from unauthorized clients:
 
 * The URI template can include a high-entropy path, similar to Capability URLs {{CAPABILITY}}.
 * The proxy can require HTTP Concealed Authentication ({{?CONCEALED=RFC9729, Section 6.4}}).
 
 ## Clients
 
-This specification does not require any specific configuration input type.  Suitable configuration input types include:
+This specification does not require any specific type of configuration input.  Suitable configuration input types include:
 
 * A URI Template string, as described in {{specification}}.
-* An IP address or hostname, with optional or required port and scheme (as often used to describe classic HTTP CONNECT proxies).  A corresponding template-driven TCP proxy might be found in two ways:
+* An IP address or hostname, with optional or required port and scheme (as often used to describe classic HTTP CONNECT proxies).  A corresponding templated TCP proxy might be found in two ways:
   - At the default template for "connect-tcp" ({{fig-default}}).
-  - In the "proxy" dictionary of a provisioning domain resource ({{?RFC8801, Section 4}}) at the corresponding .well-known URI ({{?I-D.ietf-intarea-proxy-config, Section 2}}).
-* A provisioning domain resource as above, configured directly or identified by a local or remote URI (e.g., using "file://" or "https://").
+  - In the "proxy" dictionary of a provisioning domain resource at the corresponding .well-known URI ({{?I-D.ietf-intarea-proxy-config, Section 2}}).
+* A provisioning domain resource, configured directly or identified by a local or remote URI (e.g., using "file://" or "https://").
 
 ~~~
 https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
