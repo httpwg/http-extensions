@@ -382,7 +382,7 @@ Table of Contents
 
    1) The client is aware that the targeted resource supports resumable
    uploads and therefore starts the upload with the Upload-Complete
-   field value set to false and the first part of the representation.
+   header field set to false and the first part of the representation.
 
    Client                                       Server
    |                                                 |
@@ -400,7 +400,7 @@ Table of Contents
          Figure 5: Upload creation with partial representation data
 
    2) Next, intermediate parts are appended (Section 8) with the Upload-
-   Complete field value set to false, indicating that they are not the
+   Complete header field set to false, indicating that they are not the
    last part of the representation data.
 
    Client                                       Server
@@ -449,7 +449,7 @@ Table of Contents
                   Figure 7: Resuming an interrupted upload
 
    4) The request to append the last part of the representation data has
-   an Upload-Complete field value set to true to indicate the complete
+   the Upload-Complete header field set to true to indicate the complete
    transfer.  Once the remaining representation data is transferred, the
    server processes the entire representation and responds with whatever
    the initial request to /project/123/files would have produced if its
@@ -556,7 +556,7 @@ Table of Contents
 
 4.2.  Completeness
 
-   An upload is incomplete until it is explicitly marked as completed by
+   An upload is incomplete until it is explicitly marked as complete by
    the client or the server.  After this point, no more representation
    data can be appended.
 
@@ -568,11 +568,11 @@ Table of Contents
    requests and responses is described below.  Other values MUST cause
    the entire header field to be ignored.
 
-   An upload is marked as completed either when a request for creating
+   An upload is marked as complete either when a request for creating
    the upload resource (Section 6) or appending to it (Section 8)
-   includes the Upload-Complete header field with a true value and the
-   request content was fully processed, or when a response includes the
-   Upload-Complete header field with a true value.
+   includes the Upload-Complete header field set to true and the request
+   content was fully processed, or when a response includes the Upload-
+   Complete header field set to true.
 
    When used in an upload creation response (Section 6) or an upload
    append response (Section 8), the Upload-Complete header field signals
@@ -581,7 +581,7 @@ Table of Contents
    apply, and the value of false means that the semantics of the
    resumable upload protocol apply.  The client SHOULD NOT perform
    upload resumption to the upload resource after receiving a response
-   with the Upload-Complete field value set to true.  Note that the
+   with the Upload-Complete header field set to true.  Note that the
    Upload-Complete header field can be true even when the full
    representation data was not transmitted in the case that the server
    decides to generate an early response when processing the targeted
@@ -603,7 +603,7 @@ Table of Contents
    representation's length from requests for creating the upload
    resource (Section 6) or appending to it (Section 8):
 
-   1.  If the request includes the Upload-Complete field value set to
+   1.  If the request includes the Upload-Complete header field set to
        true, the request content is the remaining representation data.
        The representation's length is then the sum of the current offset
        (Section 4.1) and the request content's length, which might be
@@ -849,7 +849,7 @@ Table of Contents
    filename.  For this purpose, the inline disposition type is
    RECOMMENDED.
 
-   If the client received a final response with the Upload-Complete: ?1
+   If the client receives a final response with the Upload-Complete: ?1
    header field, the upload is complete and the corresponding response
    comes from the resource processing the representation according to
    the initial request (Section 4.2.1).  Note that this does not
@@ -893,7 +893,7 @@ Table of Contents
    client intends to transfer the entire representation data in one
    request.  If the request content was fully processed, no resumable
    upload is needed and the server proceeds to process the request and
-   generate a response.  The server MUST NOT emit a 2xx (Successful)
+   generate a response.  The server MUST NOT generate a 2xx (Successful)
    response with the Upload-Complete header field set to false or
    missing in response to a request with the Upload-Complete request
    header field set to true.
@@ -920,8 +920,8 @@ Table of Contents
    response with Upload-Complete: ?1 is the result of processing the
    representation, so its Location header field can identify a different
    resource.  Clients SHOULD check that the upload resource URI does not
-   change, and SHOULD abort the current request and cancel the upload
-   (Section 9) if it does.
+   change, and SHOULD stop the current request immediately (Section 19)
+   and cancel the upload (Section 9) if it does.
 
    The server SHOULD include the Upload-Complete header field
    (Section 4.2.1) in the response to indicate whether it is the result
@@ -1014,8 +1014,8 @@ Table of Contents
    the server because the request content cannot be decoded.  The
    Upload-Complete header field in the response is set to true since the
    server is uninterested in receiving the full representation after the
-   decoding failure, and the upload is complete in its perspective.  The
-   client cannot continue the upload.
+   decoding failure, and the upload is complete from its perspective.
+   The client cannot continue the upload.
 
    POST /upload-gzip HTTP/1.1
    Host: example.com
@@ -1136,7 +1136,7 @@ Table of Contents
       server, the upload is complete.  This usage requires the full
       representation data to have been processed during prior requests.
 
-   If the client received a final response with the Upload-Complete: ?1
+   If the client receives a final response with the Upload-Complete: ?1
    header field, the upload is complete and the corresponding response
    comes from the resource processing the representation according to
    the initial request (Section 4.2.1).  Note that this does not
@@ -1145,7 +1145,7 @@ Table of Contents
    processing the representation, and therefore, resuming the upload
    would not resolve this error.
 
-   If the client received a 4xx (Client Error) or 5xx (Server Error)
+   If the client receives a 4xx (Client Error) or 5xx (Server Error)
    final response with the Upload-Complete header field set to false or
    missing, or if it did not receive a final response, it can apply the
    heuristics described in Section 11 to retry or resume the upload.
@@ -1183,13 +1183,13 @@ Table of Contents
    matches what the resource, that was targeted by the initial upload
    creation (Section 6), would have generated if it had processed the
    entire representation in the initial request.  However, the response
-   MUST include the Upload-Complete header field with a true value,
-   allowing clients to identify whether a response, in particular error
+   MUST include the Upload-Complete header field set to true, allowing
+   clients to identify whether a response, in particular error
    responses, is related to the resumable upload itself or the
-   processing of the uploaded representation.  The server MUST NOT emit
-   a 2xx (Successful) response with the Upload-Complete header field set
-   to false or missing in response to a request with the Upload-Complete
-   request header field set to true.
+   processing of the uploaded representation.  The server MUST NOT
+   generate a 2xx (Successful) response with the Upload-Complete header
+   field set to false or missing in response to a request with the
+   Upload-Complete request header field set to true.
 
    If the Upload-Complete request header field is set to false, the
    client intends to transfer the remaining representation data over
@@ -1197,7 +1197,7 @@ Table of Contents
    server acknowledges the appended data by sending a 2xx (Successful)
    response with the Upload-Complete header field set to false.
 
-   Even if the upload is complete (Section 4.2) in the server's
+   Even if the upload is complete (Section 4.2) from the server's
    perspective and the final response from the targeted resource has
    already been sent, the client might still perform an upload append
    (Section 8) after an offset retrieval (Section 7) due to the response
@@ -1345,7 +1345,7 @@ Table of Contents
    corruption by terminating the previous request before processing the
    new request.  Due to network delay and reordering, the server might
    still be receiving representation data from an ongoing transfer for
-   the same upload resource, which in the client's perspective has
+   the same upload resource, which from the client's perspective has
    failed.  Since the client is not allowed to perform multiple
    transfers for the same upload resource in parallel, the server can
    assume that the previous attempt has already failed.  Therefore, the
@@ -1368,7 +1368,7 @@ Table of Contents
 
 11.  Retry
 
-   If the client received a 4xx (Client Error) or 5xx (Server Error)
+   If the client receives a 4xx (Client Error) or 5xx (Server Error)
    response with the Upload-Complete header field set to false or
    missing when creating the upload resource (Section 6) or appending to
    it (Section 8), it can apply the heuristics described below to retry
