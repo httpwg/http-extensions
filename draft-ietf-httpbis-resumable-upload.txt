@@ -88,6 +88,7 @@ Table of Contents
      4.3.  Length
        4.3.1.  Upload-Length
      4.4.  Limits
+       4.4.1.  Use with OPTIONS
    5.  Upload Creation
      5.1.  Client Behavior
      5.2.  Server Behavior
@@ -699,28 +700,6 @@ Table of Contents
    or alternatively the complete HTTP message MUST be treated as
    malformed.
 
-   When responding to an OPTIONS request without the Upload-Complete
-   header field, if the resource that is the target of the request
-   supports the creation of a resumable upload resource (Section 5), the
-   server MUST include the Upload-Limit header field with the
-   corresponding limits in the response.  If a server is configured such
-   that all of its resources support the creation of upload resources
-   with identical limits, it SHOULD include the Upload-Limit header
-   field in response to an OPTIONS request for the target * (if this
-   target is supported).  If the server does not apply any limits, it
-   MUST use min-size=0 instead of an empty header value.
-
-   A client can use an OPTIONS request without the Upload-Complete
-   header field to discover whether the resource supports resumable
-   uploads and to learn potential limits before creating an upload
-   resource.  To reduce the likelihood of failing requests, the limits
-   announced in an OPTIONS response SHOULD NOT be less restrictive than
-   the limits applied to an upload once the upload resource has been
-   created, unless the request to create an upload resource included
-   additional information that warrants different limits.  For example,
-   a server might announce a general maximum size limit of 1 GB, but
-   reduce it to 100 MB when the media type indicates an image.
-
    When a request is rejected because limits were violated, the response
    SHOULD include the Upload-Limit header field carrying all limits of
    the corresponding upload if possible.  This might not be possible if
@@ -741,11 +720,40 @@ Table of Contents
    it SHOULD retry the request with a smaller size residing between min-
    append-size and max-append-size.  If these limits are unknown at the
    time of receiving such a response, the client can attempt to discover
-   them through an OPTIONS request.  Retrying with the same request
-   content size will likely yield the same error response.  Cases where
-   the request content size matches the min-append-size limit yet fails
-   with a 413 (Content Too Large) response might indicate a deployment
-   mismatch that cannot be recovered from.
+   them through an OPTIONS request (Section 4.4.1).  Retrying with the
+   same request content size will likely yield the same error response.
+   Cases where the request content size matches the min-append-size
+   limit yet fails with a 413 (Content Too Large) response might
+   indicate a deployment mismatch that cannot be recovered from.
+
+4.4.1.  Use with OPTIONS
+
+   A client can use an OPTIONS request without the Upload-Complete
+   header field to discover whether the resource supports resumable
+   uploads and to learn potential limits before creating an upload
+   resource.
+
+   When responding to such a request, if the target resource supports
+   the creation of a resumable upload resource (Section 5), the server
+   MUST include the Upload-Limit header field with the corresponding
+   limits in the response.  If a server is configured such that all of
+   its resources support the creation of upload resources with identical
+   limits, it SHOULD include the Upload-Limit header field in response
+   to an OPTIONS request for the target * (if this target is supported).
+
+   In an OPTIONS response, the presence of Upload-Limit signals support
+   for resumable uploads, even when the server applies no limits.  An
+   empty Dictionary is equivalent to omitting the field (Section 3.2 of
+   [STRUCTURED-FIELDS]), so it cannot carry this signal.  If the server
+   does not apply any limits, it MUST send min-size=0.
+
+   To reduce the likelihood of failing requests, the limits announced in
+   an OPTIONS response SHOULD NOT be less restrictive than the limits
+   applied to an upload once the upload resource has been created,
+   unless the request to create an upload resource included additional
+   information that warrants different limits.  For example, a server
+   might announce a general maximum size limit of 1 GB, but reduce it to
+   100 MB when the media type indicates an image.
 
 5.  Upload Creation
 
@@ -1030,7 +1038,7 @@ Table of Contents
       (Section 4.1.1),
 
    *  MUST indicate the limits in the Upload-Limit header field
-      (Section 4.4), and
+      (Section 4.4) if existing, and
 
    *  SHOULD include the Cache-Control header field with the value no-
       store to prevent HTTP caching ([CACHING]).
