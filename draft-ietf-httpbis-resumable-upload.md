@@ -212,7 +212,7 @@ In some cases, clients might prefer to upload a representation as a series of pa
 
 This example shows how the client, communicating with a resource known to support resumable upload, can upload parts of a representation incrementally.
 
-1) The client is aware that the targeted resource supports resumable uploads and therefore starts the upload with the `Upload-Complete` header field set to false and the first part of the representation.
+1) The client is aware that the target resource supports resumable uploads and therefore starts the upload with the `Upload-Complete` header field set to false and the first part of the representation.
 
 ~~~ aasvg
 Client                                       Server
