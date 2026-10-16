@@ -100,7 +100,7 @@ Connections can be dropped due to a variety of network or transport layer reason
 
 This specification defines a new mechanism for resumable uploads from client to server that can seamlessly fall back to conventional uploads. When an upload is interrupted, clients can send subsequent requests to query the server state and use this information to send the remaining representation data. Alternatively, they can cancel the upload entirely. Unlike ranged downloads, this protocol does not support transferring an upload as multiple requests in parallel.
 
-Utilizing resumable uploads, applications can recover from unintended interruptions, but also interrupt an upload on purpose to later resume it, for example, when a user wants to pause an upload, the device's network connectivity changes, or bandwidth should be saved for higher priority tasks.
+Utilizing resumable uploads, applications can recover from unintended interruptions, but also interrupt an upload on purpose to later resume it, for example, when a user wants to pause an upload, the device's network connectivity changes, or bandwidth is needed for higher priority tasks.
 
 The document introduces the concept of an upload resource to facilitate resumable uploads ({{upload-resource}}) and defines new header fields to communicate the state of the upload ({{upload-offset-hdr}}, {{upload-complete-hdr}}, {{upload-length-hdr}}, and {{upload-limit-hdr}}), the status code `104 (Upload Resumption Supported)` to indicate the resource's support for resumable uploads ({{status-code-104}}), and the `application/partial-upload` media type to label partial representation data when resuming an upload ({{media-type-partial-upload}}).
 
@@ -108,7 +108,7 @@ The document introduces the concept of an upload resource to facilitate resumabl
 
 {::boilerplate bcp14-tagged}
 
-Some examples in this document contain long lines that may be folded, as described in {{RFC8792}}.
+Some examples in this document contain long lines that are folded, as described in {{RFC8792}}.
 
 The terms Structured Header, Item, Dictionary, Integer, and Boolean are imported from {{STRUCTURED-FIELDS}}.
 
@@ -312,7 +312,7 @@ The state of an upload consists of the following properties that are tracked by 
 
 The offset is the number of bytes from the representation data that have been processed, either during the creation of the upload resource ({{upload-creation}}) or by appending to it ({{upload-appending}}). The offset is required when appending representation data ({{upload-appending}}) to synchronize the client and resource regarding the amount of transferred representation data.
 
-The offset reflects application-level processing for the upload. Data may have been delivered and acknowledged at the transport layer without yet being reflected in the offset.
+The offset reflects application-level processing for the upload. Data might have been delivered and acknowledged at the transport layer without yet being reflected in the offset.
 
 Representation data processed by the upload resource cannot be removed again and, therefore, the offset as seen by the client MUST NOT decrease. Clients can use this guarantee to free resources associated to transferred representation data, as no retransmission of it will be necessary. If the server loses any part of the state, it MUST deactivate the upload resource and reject further interaction with it.
 
@@ -748,7 +748,7 @@ When creating or appending resumable uploads, the client can generate a `100-con
 
 # Media Type `application/partial-upload` {#media-type-partial-upload}
 
-The `application/partial-upload` media type describes a contiguous block from the representation data that should be uploaded to a resource. There is no minimum block size and the block might be empty. The block can be a subset of the representation data, where the start and/or end of the block don't line up with the start and/or end of the representation data respectively.
+The `application/partial-upload` media type describes a contiguous block from the representation data to be uploaded to a resource. There is no minimum block size and the block might be empty. The block can be a subset of the representation data, where the start and/or end of the block don't line up with the start and/or end of the representation data respectively.
 
 # Problem Types
 
@@ -813,7 +813,7 @@ The following subsections describe two typical upload strategies that are suited
 
 ## Optimistic Upload Creation
 
-An "optimistic upload creation" can be used independent of the client's knowledge about the resource's support for resumable uploads. However, the client must be capable of handling and processing interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.
+An "optimistic upload creation" can be used independent of the client's knowledge about the resource's support for resumable uploads. However, the client needs to be capable of handling and processing interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.
 
 The benefit of this method is that if the upload creation request succeeded, the representation data was transferred in a single request without additional round trips.
 
@@ -827,11 +827,11 @@ Optimistic upload creation allows clients and servers to automatically upgrade n
 
 If the resource targeted in the initial request supports resumable uploads, the server can create an upload resource and send its URI in a 104 interim response for the client to resume the upload after interruptions. A resource that does not support resumable uploads or does not want to upgrade to a resumable upload for this request ignores the `Upload-Complete: ?1` header field. The transfer then falls back to a non-resumable upload without additional cost.
 
-This upgrade can also be performed transparently by a library or program that acts as an HTTP client by sending requests on behalf of a user. When the user instructs the client to send a non-resumable request, the client can perform the upgrade transparently and handle potential interruptions and resumptions under the hood without involving the user. The last response received by the client is considered the response for the entire upload and should be provided to the user.
+This upgrade can also be performed transparently by a library or program that acts as an HTTP client by sending requests on behalf of a user. When the user instructs the client to send a non-resumable request, the client can perform the upgrade transparently and handle potential interruptions and resumptions under the hood without involving the user. The last response received by the client is considered the response for the entire upload and needs to be provided to the user.
 
 ## Careful Upload Creation
 
-For a "careful upload creation" the client knows that the resource targeted in the initial request supports resumable uploads and sends an empty upload creation request without including any representation data. Upon successful response reception, the client can use the included upload resource URI to transmit the representation data ({{upload-appending}}) and resume the upload at any stage if an interruption occurs. The client should inspect the response for the `Upload-Limit` header field, which would indicate limits applying to the remaining upload procedure.
+For a "careful upload creation" the client knows that the resource targeted in the initial request supports resumable uploads and sends an empty upload creation request without including any representation data. Upon successful response reception, the client can use the included upload resource URI to transmit the representation data ({{upload-appending}}) and resume the upload at any stage if an interruption occurs. The response can include the `Upload-Limit` header field, which indicates limits for the rest of the upload ({{upload-limit}}).
 
 The retransmission of representation data or the ultimate upload failure that can happen with an "optimistic upload creation" is therefore avoided at the expense of an additional request that does not carry representation data.
 
@@ -886,7 +886,7 @@ There can be a significant delay between the creation of an upload resource and 
 
 ## Resource Exhaustion
 
-Resumable uploads are vulnerable to Slowloris-style attacks {{SLOWLORIS}}. A malicious client may create upload resources and keep them alive by regularly sending `PATCH` requests with no or small content to the upload resources. This could be abused to exhaust server resources by creating and holding open uploads indefinitely with minimal work. Servers SHOULD provide mitigations for Slowloris attacks, such as increasing the maximum number of clients the server will allow, limiting the number of uploads a single client is allowed to make, imposing restrictions on the minimum transfer speed an upload is allowed to have, and restricting the length of time an upload resource can exist.
+Resumable uploads are vulnerable to Slowloris-style attacks {{SLOWLORIS}}. A malicious client can create upload resources and keep them alive by regularly sending `PATCH` requests with no or small content to the upload resources. This could be abused to exhaust server resources by creating and holding open uploads indefinitely with minimal work. Servers SHOULD provide mitigations for Slowloris attacks, such as increasing the maximum number of clients the server will allow, limiting the number of uploads a single client is allowed to make, imposing restrictions on the minimum transfer speed an upload is allowed to have, and restricting the length of time an upload resource can exist.
 
 ## Message Size Limits
 
