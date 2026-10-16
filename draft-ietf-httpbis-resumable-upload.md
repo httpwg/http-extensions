@@ -731,10 +731,10 @@ Since implementing this approach is not always technically possible or feasible,
 
 If the client receives a `4xx (Client Error)` or `5xx (Server Error)` response with the `Upload-Complete` header field set to false or missing when creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}), it can apply the heuristics described below to retry or resume the upload.
 
-- `409 (Conflict)` with the `Upload-Complete` header field set to false can be resumed with the correct offset ({{upload-offset}}). If no `Upload-Offset` header field is provided, the client SHOULD retrieve the offset ({{offset-retrieving}}) before resuming.
-- `413 (Content Too Large)` can be resumed after applying appropriate limits ({{upload-limits}}).
-- `429 (Too Many Requests)` can be retried after appropriate delays.
-- `5xx (Server Error)` status codes can be retried.
+- `409 (Conflict)` with the `Upload-Complete` header field set to false: the upload can be resumed with the correct offset ({{upload-offset}}). If no `Upload-Offset` header field is provided, the client SHOULD retrieve the offset ({{offset-retrieving}}) before resuming.
+- `413 (Content Too Large)`: the upload can be resumed after applying appropriate limits ({{upload-limits}}).
+- `429 (Too Many Requests)`: the request can be retried after an appropriate delay.
+- `5xx (Server Error)`: the request can be retried.
 
 If no final response was received at all due to connectivity issues, the client MAY automatically attempt upload resumption by retrieving the current offset ({{offset-retrieving}}).
 
