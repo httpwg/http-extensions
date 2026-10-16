@@ -46,7 +46,7 @@ author:
 
 normative:
   HTTP: RFC9110
-  CACHING: RFC9111
+  HTTP-CACHING: RFC9111
   RFC9112:
     display: HTTP/1.1
   RFC9113:
@@ -71,6 +71,9 @@ informative:
   RFC8792:
   INCREMENTAL: RFC10036
   ORIGIN: RFC6454
+
+entity:
+  SELF: "RFC nnnn"
 
 --- abstract
 
@@ -110,7 +113,7 @@ The document introduces the concept of an upload resource to facilitate resumabl
 
 Some examples in this document contain long lines that are folded, as described in {{RFC8792}}.
 
-The terms Structured Header, Item, Dictionary, Integer, and Boolean are imported from {{STRUCTURED-FIELDS}}.
+This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}} to specify syntax and parsing: Item, Dictionary, Integer, and Boolean.
 
 The terms "representation", "representation data", "representation metadata", "content", "client", and "server" are from {{Section 3 of HTTP}}.
 
@@ -367,29 +370,29 @@ A client usually learns the limits when the upload resource is created ({{upload
 
 The `Upload-Limit` response header field is a Dictionary Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
-Receivers of `Upload-Limit` parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
+Receivers of the `Upload-Limit` header field parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
 
 The following key-value pairs are defined.
 
 ### max-size {#upload-limit-max-size}
 
-The `max-size` limit specifies a maximum size for the representation data, counted in bytes. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size. The value is an Integer.
+The `max-size` limit specifies a maximum size, in bytes, for the representation data. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size. The value is an Integer.
 
 ### min-size {#upload-limit-min-size}
 
-The `min-size` limit specifies a minimum size for the representation data, counted in bytes, for the server to offer resumable uploads. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. Resumable uploads impose additional overhead on the server, which might not be acceptable for small representations. Requests with representation data below this value might still be accepted by the server, although without the ability to resume them. The value is an Integer.
+The `min-size` limit specifies a minimum size, in bytes, for the representation data. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. Resumable uploads impose additional overhead on the server, which might not be acceptable for small representations. Requests with representation data below this value might still be accepted by the server, although without the ability to resume them. The value is an Integer.
 
 ### max-append-size {#upload-limit-max-append-size}
 
-The `max-append-size` limit specifies a maximum size counted in bytes for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append or upload creation requests. The value is an Integer.
+The `max-append-size` limit specifies a maximum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append or upload creation requests. The value is an Integer.
 
 ### min-append-size {#upload-limit-min-append-size}
 
-The `min-append-size` limit specifies a minimum size counted in bytes for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append or upload creation requests. The value is an Integer. This limit does not apply to upload creation requests with no content, or to requests completing the upload by including the `Upload-Complete: ?1` header field.
+The `min-append-size` limit specifies a minimum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append or upload creation requests. The value is an Integer. This limit does not apply to upload creation requests with no content, or to requests completing the upload by including the `Upload-Complete: ?1` header field.
 
 ### max-age {#upload-limit-max-age}
 
-The `max-age` limit specifies the remaining lifetime of the upload resource in seconds counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible. The value is an Integer.
+The `max-age` limit specifies the remaining lifetime, in seconds, of the upload resource, counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible. The value is an Integer.
 
 ## Use with OPTIONS {#upload-limits-options}
 
@@ -397,7 +400,7 @@ A client can use an `OPTIONS` request without the `Upload-Complete` header field
 
 When responding to such a request, if the target resource supports the creation of a resumable upload resource ({{upload-creation}}), the server MUST include the `Upload-Limit` header field with the corresponding limits in the response. If a server is configured such that all of its resources support the creation of upload resources with identical limits, it SHOULD include the `Upload-Limit` header field in response to an `OPTIONS` request for the target `*` (if this target is supported).
 
-In an `OPTIONS` response, the presence of `Upload-Limit` signals support for resumable uploads, even when the server applies no limits. An empty Dictionary is equivalent to omitting the field ({{Section 3.2 of STRUCTURED-FIELDS}}), so it cannot carry this signal. If the server does not apply any limits, it MUST send `min-size=0`.
+In an `OPTIONS` response, the presence of the `Upload-Limit` header field signals support for resumable uploads, even when the server applies no limits. An empty Dictionary is equivalent to omitting the field ({{Section 3.2 of STRUCTURED-FIELDS}}), so it cannot carry this signal. If the server does not apply any limits, it MUST send `min-size=0`.
 
 To reduce the likelihood of failing requests, the limits announced in an `OPTIONS` response SHOULD NOT be less restrictive than the limits applied to an upload once the upload resource has been created, unless the request to create an upload resource included additional information that warrants different limits. For example, a server might announce a general maximum size limit of 1 GB, but reduce it to 100 MB when the media type indicates an image.
 
@@ -443,13 +446,13 @@ If the client receives a `4xx (Client Error)` or `5xx (Server Error)` final resp
 
 ## Server Behavior
 
-Upon receiving a request with the `Upload-Complete` header field, the server can choose to offer resumption support for this request by creating an upload resource. If so, the server SHOULD announce the upload resource by sending an interim response with the `104 (Upload Resumption Supported)` status code unless the server is not capable of sending interim responses. The interim response allows the client to resume the upload even if the message exchange gets later interrupted. When sent, it MUST include `Location` header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits ({{upload-limits}}) if existing.
+Upon receiving a request with the `Upload-Complete` header field, the server can choose to offer resumption support for this request by creating an upload resource. If so, the server SHOULD announce the upload resource by sending an interim response with the `104 (Upload Resumption Supported)` status code unless the server is not capable of sending interim responses. The interim response allows the client to resume the upload even if the message exchange gets later interrupted. When sent, it MUST include `Location` header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits ({{upload-limits}}) if any.
 
 The resource targeted by this initial request is responsible for processing the representation data transferred in the resumable upload according to the method and header fields in the initial request. The upload resource, on the other hand, enables resuming the transfer.
 
 If the `Upload-Complete` request header field is set to true, the client intends to transfer the entire representation data in one request. If the request content was fully processed, no resumable upload is needed and the server proceeds to process the request and generate a response. The server MUST NOT generate a `2xx (Successful)` response with the `Upload-Complete` header field set to false or missing in response to a request with the `Upload-Complete` request header field set to true.
 
-If the `Upload-Complete` request header field is set to false, the client intends to transfer the representation over multiple requests. If the request content was fully processed, the server MUST include the `Location` response header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits if existing. Servers are RECOMMENDED to use the `201 (Created)` status code.
+If the `Upload-Complete` request header field is set to false, the client intends to transfer the representation over multiple requests. If the request content was fully processed, the server MUST include the `Location` response header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits if any. Servers are RECOMMENDED to use the `201 (Created)` status code.
 
 The server MUST record the representation's length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete: ?1` header fields are included in the request.
 
@@ -575,8 +578,8 @@ If the client receives a `2xx (Successful)` response without a valid `Upload-Off
 A successful response to a `HEAD` or `GET` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset-hdr}}),
-- MUST indicate the limits in the `Upload-Limit` header field ({{upload-limits}}) if existing, and
-- SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
+- MUST indicate the limits in the `Upload-Limit` header field ({{upload-limits}}) if any, and
+- SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{HTTP-CACHING}}).
 
 The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes because clients might follow the redirect without preserving the `HEAD` method.
 
@@ -909,15 +912,15 @@ IANA is asked to register the following entries in the "Hypertext Transfer Proto
 |----------------------|-----------|-----------------|-------------------------------------------|
 | Field Name           | Status    | Structured Type |                 Reference                 |
 |----------------------|-----------|-----------------|-------------------------------------------|
-| Upload-Offset        | permanent | Item            | {{upload-offset-hdr}} of this document    |
-| Upload-Complete      | permanent | Item            | {{upload-complete-hdr}} of this document  |
-| Upload-Length        | permanent | Item            | {{upload-length-hdr}} of this document    |
-| Upload-Limit         | permanent | Dictionary      | {{upload-limit-hdr}} of this document     |
+| Upload-Offset        | permanent | Item            | {{upload-offset-hdr}} of {{&SELF}}        |
+| Upload-Complete      | permanent | Item            | {{upload-complete-hdr}} of {{&SELF}}      |
+| Upload-Length        | permanent | Item            | {{upload-length-hdr}} of {{&SELF}}        |
+| Upload-Limit         | permanent | Dictionary      | {{upload-limit-hdr}} of {{&SELF}}         |
 |----------------------|-----------|-----------------|-------------------------------------------|
 
 ## HTTP Status Code
 
-IANA is asked to register the following entry in the "HTTP Status Codes" registry:
+IANA is asked to register the following entry in the "Hypertext Transfer Protocol (HTTP) Status Code Registry":
 
 Value:
 : 104 (suggested value)
@@ -926,7 +929,7 @@ Description:
 : Upload Resumption Supported
 
 Specification:
-: {{status-code-104}} of this document
+: {{status-code-104}} of {{&SELF}}
 
 ## Media Type
 
@@ -948,13 +951,13 @@ Encoding considerations:
 : binary
 
 Security considerations:
-: see {{security-considerations}} of this document
+: see {{security-considerations}} of {{&SELF}}
 
 Interoperability considerations:
 : N/A
 
 Published specification:
-: {{media-type-partial-upload}} of this document
+: {{media-type-partial-upload}} of {{&SELF}}
 
 Applications that use this media type:
 : Applications that transfer files over unreliable networks or want pause- and resumable uploads.
@@ -1003,7 +1006,7 @@ Recommended HTTP status code:
 : 409
 
 Reference:
-: {{mismatching-offset}} of this document
+: {{mismatching-offset}} of {{&SELF}}
 
 IANA is asked to register the following entry in the "HTTP Problem Types" registry:
 
@@ -1017,7 +1020,7 @@ Recommended HTTP status code:
 : 400
 
 Reference:
-: {{inconsistent-length}} of this document
+: {{inconsistent-length}} of {{&SELF}}
 
 --- back
 
