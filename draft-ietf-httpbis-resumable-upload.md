@@ -960,7 +960,7 @@ Published specification:
 : {{media-type-partial-upload}} of {{&SELF}}
 
 Applications that use this media type:
-: Applications that transfer files over unreliable networks or want pause- and resumable uploads.
+: Applications that transfer files over unreliable networks or want pausable and resumable uploads.
 
 Fragment identifier considerations:
 : N/A
