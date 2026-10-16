@@ -105,7 +105,7 @@ This specification defines a new mechanism for resumable uploads from client to 
 
 With resumable uploads, applications can recover from unintended interruptions. They can also interrupt an upload on purpose and resume it later, for example, when a user wants to pause the upload, the device's network connectivity changes, or bandwidth is needed for higher-priority tasks.
 
-The document introduces the concept of an upload resource to facilitate resumable uploads ({{upload-resource}}) and defines new header fields to communicate the state of the upload ({{upload-offset-hdr}}, {{upload-complete-hdr}}, {{upload-length-hdr}}, and {{upload-limit-hdr}}), the status code `104 (Upload Resumption Supported)` to indicate the resource's support for resumable uploads ({{status-code-104}}), and the `application/partial-upload` media type to label partial representation data when resuming an upload ({{media-type-partial-upload}}).
+This document introduces the concept of an upload resource to facilitate resumable uploads ({{upload-resource}}). It defines new header fields to communicate the state of the upload ({{upload-offset-hdr}}, {{upload-complete-hdr}}, {{upload-length-hdr}}, and {{upload-limit-hdr}}) and the `104 (Upload Resumption Supported)` status code to indicate the resource's support for resumable uploads ({{status-code-104}}). It also defines the `application/partial-upload` media type to label partial representation data when resuming an upload ({{media-type-partial-upload}}).
 
 # Conventions and Definitions
 
