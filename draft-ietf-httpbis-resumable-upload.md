@@ -443,13 +443,13 @@ If the client receives a `4xx (Client Error)` or `5xx (Server Error)` final resp
 
 ## Server Behavior
 
-Upon receiving a request with the `Upload-Complete` header field, the server can choose to offer resumption support for this request by creating an upload resource. If so, the server SHOULD announce the upload resource by sending an interim response with the `104 (Upload Resumption Supported)` status code unless the server is not capable of sending interim responses. The interim response allows the client to resume the upload even if the message exchange gets later interrupted. When sent, it MUST include `Location` header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits ({{upload-limits}}) if existing.
+Upon receiving a request with the `Upload-Complete` header field, the server can choose to offer resumption support for this request by creating an upload resource. If so, the server SHOULD announce the upload resource by sending an interim response with the `104 (Upload Resumption Supported)` status code unless the server is not capable of sending interim responses. The interim response allows the client to resume the upload even if the message exchange gets later interrupted. When sent, it MUST include `Location` header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits ({{upload-limits}}) if any.
 
 The resource targeted by this initial request is responsible for processing the representation data transferred in the resumable upload according to the method and header fields in the initial request. The upload resource, on the other hand, enables resuming the transfer.
 
 If the `Upload-Complete` request header field is set to true, the client intends to transfer the entire representation data in one request. If the request content was fully processed, no resumable upload is needed and the server proceeds to process the request and generate a response. The server MUST NOT generate a `2xx (Successful)` response with the `Upload-Complete` header field set to false or missing in response to a request with the `Upload-Complete` request header field set to true.
 
-If the `Upload-Complete` request header field is set to false, the client intends to transfer the representation over multiple requests. If the request content was fully processed, the server MUST include the `Location` response header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits if existing. Servers are RECOMMENDED to use the `201 (Created)` status code.
+If the `Upload-Complete` request header field is set to false, the client intends to transfer the representation over multiple requests. If the request content was fully processed, the server MUST include the `Location` response header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits if any. Servers are RECOMMENDED to use the `201 (Created)` status code.
 
 The server MUST record the representation's length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete: ?1` header fields are included in the request.
 
@@ -575,7 +575,7 @@ If the client receives a `2xx (Successful)` response without a valid `Upload-Off
 A successful response to a `HEAD` or `GET` request against an upload resource
 
 - MUST include the offset in the `Upload-Offset` header field ({{upload-offset-hdr}}),
-- MUST indicate the limits in the `Upload-Limit` header field ({{upload-limits}}) if existing, and
+- MUST indicate the limits in the `Upload-Limit` header field ({{upload-limits}}) if any, and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{CACHING}}).
 
 The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes because clients might follow the redirect without preserving the `HEAD` method.
