@@ -586,14 +586,13 @@ Table of Contents
 
 5.1.  Servers
 
-   For server operators, template-driven TCP proxies are particularly
-   valuable in situations where virtual-hosting is needed, or where
-   multiple proxies must share an origin.  For example, the proxy might
-   benefit from sharing an HTTP gateway that provides DDoS defense,
-   performs request sanitization, or enforces user authorization
-   (Section 5.3).
+   For server operators, templated TCP proxies are particularly valuable
+   in situations where virtual-hosting is needed, or where multiple
+   proxies must share an origin.  For example, the proxy might benefit
+   from sharing an HTTP gateway that provides DDoS defense, performs
+   request sanitization, or enforces user authorization (Section 5.3).
 
-   Template-driven TCP proxies can also be made invisible to probes from
+   Templated TCP proxies can also be made invisible to probes from
    unauthorized clients:
 
    *  The URI template can include a high-entropy path, similar to
@@ -604,25 +603,23 @@ Table of Contents
 
 5.2.  Clients
 
-   This specification does not require any specific configuration input
-   type.  Suitable configuration input types include:
+   This specification does not require any specific type of
+   configuration input.  Suitable configuration input types include:
 
    *  A URI Template string, as described in Section 3.
 
    *  An IP address or hostname, with optional or required port and
       scheme (as often used to describe classic HTTP CONNECT proxies).
-      A corresponding template-driven TCP proxy might be found in two
-      ways:
+      A corresponding templated TCP proxy might be found in two ways:
 
       -  At the default template for "connect-tcp" (Figure 8).
 
-      -  In the "proxy" dictionary of a provisioning domain resource
-         ([RFC8801], Section 4) at the corresponding .well-known URI
+      -  In the "proxy" dictionary of a provisioning domain resource at
+         the corresponding .well-known URI
          ([I-D.ietf-intarea-proxy-config], Section 2).
 
-   *  A provisioning domain resource as above, configured directly or
-      identified by a local or remote URI (e.g., using "file://" or
-      "https://").
+   *  A provisioning domain resource, configured directly or identified
+      by a local or remote URI (e.g., using "file://" or "https://").
 
    https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
                     /tcp/{target_host}/{target_port}/
@@ -1019,11 +1016,6 @@ Table of Contents
               Scheffenegger, Ed., "TCP Extensions for High Performance",
               RFC 7323, DOI 10.17487/RFC7323, September 2014,
               <https://www.rfc-editor.org/rfc/rfc7323>.
-
-   [RFC8801]  Pfister, P., Vyncke, É., Pauly, T., Schinazi, D., and W.
-              Shao, "Discovering Provisioning Domain Names and Data",
-              RFC 8801, DOI 10.17487/RFC8801, July 2020,
-              <https://www.rfc-editor.org/rfc/rfc8801>.
 
    [RFC8942]  Grigorik, I. and Y. Weiss, "HTTP Client Hints", RFC 8942,
               DOI 10.17487/RFC8942, February 2021,
