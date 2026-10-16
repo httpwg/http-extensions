@@ -761,7 +761,7 @@ This section defines the "https://iana.org/assignments/http-problem-types#mismat
 
 Two problem type extension members are defined: the `expected-offset` and `provided-offset` members. A response using this problem type SHOULD populate both members, with the value of `expected-offset` taken from the upload resource and the value of `provided-offset` taken from the upload append request.
 
-The following example shows an example response, where the resource's offset was 12500000, but the client attempted to append at offset 25000000:
+The following example shows a response, where the resource's offset was 12500000, but the client attempted to append at offset 25000000:
 
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
@@ -784,7 +784,7 @@ Upload-Complete: ?0
 
 This section defines the "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" problem type {{PROBLEM}}. A server can use this problem type when responding to an upload creation ({{upload-creation}}) or upload append request ({{upload-appending}}) to indicate that the request includes inconsistent length values, as described in {{upload-length}}.
 
-The following example shows an example response:
+The following example shows a response:
 
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
