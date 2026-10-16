@@ -328,13 +328,13 @@ The client obtains the current offset in multiple ways:
 
 ## Completeness {#upload-complete}
 
-An upload is incomplete until it is explicitly marked as completed by the client or the server. After this point, no more representation data can be appended.
+An upload is incomplete until it is explicitly marked as complete by the client or the server. After this point, no more representation data can be appended.
 
 ### Upload-Complete {#upload-complete-hdr}
 
 The `Upload-Complete` request and response header field is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}); its meaning in requests and responses is described below. Other values MUST cause the entire header field to be ignored.
 
-An upload is marked as completed either when a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) includes the `Upload-Complete` header field set to true and the request content was fully processed, or when a response includes the `Upload-Complete` header field set to true.
+An upload is marked as complete either when a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) includes the `Upload-Complete` header field set to true and the request content was fully processed, or when a response includes the `Upload-Complete` header field set to true.
 
 When used in an upload creation response ({{upload-creation}}) or an upload append response ({{upload-appending}}), the `Upload-Complete` header field signals whether the response comes from the initial targeted resource. The value of true means that the semantics of the targeted resource apply, and the value of false means that the semantics of the resumable upload protocol apply. The client SHOULD NOT perform upload resumption to the upload resource after receiving a response with the `Upload-Complete` header field set to true. Note that the `Upload-Complete` header field can be true even when the full representation data was not transmitted in the case that the server decides to generate an early response when processing the targeted resource. Also note that it can be false in response to an invalid operation performed on a completed upload.
 
