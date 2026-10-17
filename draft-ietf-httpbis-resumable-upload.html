@@ -2459,7 +2459,7 @@ HTTP/1.1 204 No Content
         </h3>
 <p id="section-14.1-1">This section defines the "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" problem type <span>[<a href="#PROBLEM" class="cite xref">PROBLEM</a>]</span>. A server can use this problem type when responding to an upload append request (<a href="#upload-appending" class="auto internal xref">Section 8</a>) to indicate that the <code>Upload-Offset</code> header field in the request does not match the upload resource's offset.<a href="#section-14.1-1" class="pilcrow">¶</a></p>
 <p id="section-14.1-2">Two problem type extension members are defined: the <code>expected-offset</code> and <code>provided-offset</code> members. A response using this problem type <span class="bcp14">SHOULD</span> populate both members, with the value of <code>expected-offset</code> taken from the upload resource and the value of <code>provided-offset</code> taken from the upload append request.<a href="#section-14.1-2" class="pilcrow">¶</a></p>
-<p id="section-14.1-3">The following example shows an example response, where the resource's offset was 12500000, but the client attempted to append at offset 25000000:<a href="#section-14.1-3" class="pilcrow">¶</a></p>
+<p id="section-14.1-3">The following example shows a response, where the resource's offset was 12500000, but the client attempted to append at offset 25000000:<a href="#section-14.1-3" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-14.1-4">
 <pre>
 # NOTE: '\' line wrapping per RFC 8792
@@ -2486,7 +2486,7 @@ Upload-Complete: ?0
 <a href="#section-14.2" class="section-number selfRef">14.2. </a><a href="#name-inconsistent-length" class="section-name selfRef">Inconsistent Length</a>
         </h3>
 <p id="section-14.2-1">This section defines the "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" problem type <span>[<a href="#PROBLEM" class="cite xref">PROBLEM</a>]</span>. A server can use this problem type when responding to an upload creation (<a href="#upload-creation" class="auto internal xref">Section 6</a>) or upload append request (<a href="#upload-appending" class="auto internal xref">Section 8</a>) to indicate that the request includes inconsistent length values, as described in <a href="#upload-length" class="auto internal xref">Section 4.3</a>.<a href="#section-14.2-1" class="pilcrow">¶</a></p>
-<p id="section-14.2-2">The following example shows an example response:<a href="#section-14.2-2" class="pilcrow">¶</a></p>
+<p id="section-14.2-2">The following example shows a response:<a href="#section-14.2-2" class="pilcrow">¶</a></p>
 <div class="lang-http-message sourcecode" id="section-14.2-3">
 <pre>
 # NOTE: '\' line wrapping per RFC 8792
@@ -2519,7 +2519,7 @@ Upload-Complete: ?0
       <h2 id="name-transfer-codings">
 <a href="#section-16" class="section-number selfRef">16. </a><a href="#name-transfer-codings" class="section-name selfRef">Transfer Codings</a>
       </h2>
-<p id="section-16-1">Unlike content codings (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4.1" class="relref">Section 8.4.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>), transfer codings (see <span><a href="https://rfc-editor.org/rfc/rfc9112#section-6.1" class="relref">Section 6.1</a> of [<a href="#RFC9112" class="cite xref">HTTP/1.1</a>]</span>) are a property of the message, not of the representation. Moreover, transfer codings can be applied in transit (e.g., by proxies). This means that a client does not have to consider the transfer codings to compute the upload offset, while a server is responsible for transfer decoding the message before computing the upload offset. The same applies to the <code>Upload-Length</code> header field value. Please note that the <code>Content-Length</code> header field cannot be used in conjunction with the <code>Transfer-Encoding</code> header field.<a href="#section-16-1" class="pilcrow">¶</a></p>
+<p id="section-16-1">Unlike content codings (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.4.1" class="relref">Section 8.4.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>), transfer codings (see <span><a href="https://rfc-editor.org/rfc/rfc9112#section-6.1" class="relref">Section 6.1</a> of [<a href="#RFC9112" class="cite xref">HTTP/1.1</a>]</span>) are a property of the message, not of the representation. Moreover, transfer codings can be applied in transit (e.g., by proxies). This means that a client does not have to consider the transfer codings to compute the upload offset, while a server is responsible for transfer decoding the message before computing the upload offset. The same applies to the <code>Upload-Length</code> header field value. See <span><a href="https://rfc-editor.org/rfc/rfc9112#section-6.2" class="relref">Section 6.2</a> of [<a href="#RFC9112" class="cite xref">HTTP/1.1</a>]</span> for how the <code>Content-Length</code> and <code>Transfer-Encoding</code> header fields interact.<a href="#section-16-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="upload-strategies">
@@ -2528,14 +2528,14 @@ Upload-Complete: ?0
 <a href="#section-17" class="section-number selfRef">17. </a><a href="#name-upload-strategies" class="section-name selfRef">Upload Strategies</a>
       </h2>
 <p id="section-17-1">The definition of the upload creation request (<a href="#upload-creation" class="auto internal xref">Section 6</a>) provides the client with flexibility to choose whether the representation data is fully or partially transferred in the first request, or if no representation data is included at all. Which behavior is best largely depends on the client's capabilities, its desire to avoid data retransmission, and its knowledge about the resource's support for resumable uploads.<a href="#section-17-1" class="pilcrow">¶</a></p>
-<p id="section-17-2">The following subsections describe two typical upload strategies that are suited for common environments. Note that these modes are never explicitly communicated to the server and clients are not required to stick to one strategy, but can mix and adapt them to their needs.<a href="#section-17-2" class="pilcrow">¶</a></p>
+<p id="section-17-2">The following subsections describe two typical upload strategies that are suited for common environments. Note that these strategies are never explicitly communicated to the server, and clients are not required to use only one strategy but can mix and adapt them to their needs.<a href="#section-17-2" class="pilcrow">¶</a></p>
 <div id="optimistic-upload-creation">
 <section id="section-17.1">
         <h3 id="name-optimistic-upload-creation">
 <a href="#section-17.1" class="section-number selfRef">17.1. </a><a href="#name-optimistic-upload-creation" class="section-name selfRef">Optimistic Upload Creation</a>
         </h3>
-<p id="section-17.1-1">An "optimistic upload creation" can be used independent of the client's knowledge about the resource's support for resumable uploads. However, the client needs to be capable of handling and processing interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.<a href="#section-17.1-1" class="pilcrow">¶</a></p>
-<p id="section-17.1-2">The benefit of this method is that if the upload creation request succeeded, the representation data was transferred in a single request without additional round trips.<a href="#section-17.1-2" class="pilcrow">¶</a></p>
+<p id="section-17.1-1">An "optimistic upload creation" can be used regardless of the client's knowledge about the resource's support for resumable uploads. However, the client needs to be able to process interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.<a href="#section-17.1-1" class="pilcrow">¶</a></p>
+<p id="section-17.1-2">The benefit of this strategy is that if the upload creation request succeeds, the representation data is transferred in a single request without additional round trips.<a href="#section-17.1-2" class="pilcrow">¶</a></p>
 <p id="section-17.1-3">A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client receives a <code>104 (Upload Resumption Supported)</code> interim response with the upload resource's URI, the client cannot resume that upload due to the missing URI. The interim response might not be received if the interruption happens too early in the message exchange, the target resource of the initial request does not support resumable uploads, the server is not capable of sending the 104 interim response, or an intermediary dropped the interim response. Without a 104 interim response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.<a href="#section-17.1-3" class="pilcrow">¶</a></p>
 <p id="section-17.1-4">A client might wait for a limited duration to receive a 104 interim response before starting to transmit the request content. This way, the client can learn about the resource's support for resumable uploads and/or the upload resource's URI. This is conceptually similar to how a client might wait for a <code>100 (Continue)</code> interim response (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.1.1" class="relref">Section 10.1.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) before committing to work.<a href="#section-17.1-4" class="pilcrow">¶</a></p>
 <div id="upgrading-uploads">
@@ -2595,7 +2595,7 @@ Upload-Complete: ?0
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-19-3">Version-specific mechanisms place requirements on clients or servers for actioning the cancellation. However, for all versions of HTTP, resumable uploads allow the server to process received representation data and expose the upload offset via the upload resource, enabling continuation of the upload after interruption.<a href="#section-19-3" class="pilcrow">¶</a></p>
+<p id="section-19-3">Version-specific mechanisms place requirements on clients or servers for carrying out the cancellation. However, for all versions of HTTP, resumable uploads allow the server to process received representation data and expose the upload offset via the upload resource, enabling continuation of the upload after interruption.<a href="#section-19-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
@@ -2619,7 +2619,7 @@ Upload-Complete: ?0
         <h3 id="name-untrusted-input">
 <a href="#section-20.2" class="section-number selfRef">20.2. </a><a href="#name-untrusted-input" class="section-name selfRef">Untrusted Input</a>
         </h3>
-<p id="section-20.2-1">Uploaded representation data and its metadata are untrusted input. Server operators have to be careful of where uploaded data is written and subsequently accessed, especially if the operations cause the representation to be processed or executed by the server. In addition, metadata <span class="bcp14">MUST</span> be validated and/or sanitized if the server takes its values into consideration for processing or storing the representation.<a href="#section-20.2-1" class="pilcrow">¶</a></p>
+<p id="section-20.2-1">Uploaded representation data and its metadata are untrusted input. Server operators have to be careful about where uploaded data is written and subsequently accessed, especially if the operations cause the representation to be processed or executed by the server. In addition, metadata <span class="bcp14">MUST</span> be validated and/or sanitized if the server takes its values into consideration for processing or storing the representation.<a href="#section-20.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="content-scanning">
@@ -2794,7 +2794,7 @@ Upload-Complete: ?0
           <dd class="break"></dd>
 <dt id="section-21.3-2.17">Applications that use this media type:</dt>
           <dd style="margin-left: 1.5em" id="section-21.3-2.18">
-            <p id="section-21.3-2.18.1">Applications that transfer files over unreliable networks or want pause- and resumable uploads.<a href="#section-21.3-2.18.1" class="pilcrow">¶</a></p>
+            <p id="section-21.3-2.18.1">Applications that transfer files over unreliable networks or want pausable and resumable uploads.<a href="#section-21.3-2.18.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-21.3-2.19">Fragment identifier considerations:</dt>
