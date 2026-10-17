@@ -761,7 +761,7 @@ This section defines the "https://iana.org/assignments/http-problem-types#mismat
 
 Two problem type extension members are defined: the `expected-offset` and `provided-offset` members. A response using this problem type SHOULD populate both members, with the value of `expected-offset` taken from the upload resource and the value of `provided-offset` taken from the upload append request.
 
-The following example shows an example response, where the resource's offset was 12500000, but the client attempted to append at offset 25000000:
+The following example shows a response, where the resource's offset was 12500000, but the client attempted to append at offset 25000000:
 
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
@@ -784,7 +784,7 @@ Upload-Complete: ?0
 
 This section defines the "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" problem type {{PROBLEM}}. A server can use this problem type when responding to an upload creation ({{upload-creation}}) or upload append request ({{upload-appending}}) to indicate that the request includes inconsistent length values, as described in {{upload-length}}.
 
-The following example shows an example response:
+The following example shows a response:
 
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
@@ -806,19 +806,19 @@ Since the codings listed in the `Content-Encoding` header field are a characteri
 
 # Transfer Codings
 
-Unlike content codings (see {{Section 8.4.1 of HTTP}}), transfer codings (see {{Section 6.1 of RFC9112}}) are a property of the message, not of the representation. Moreover, transfer codings can be applied in transit (e.g., by proxies). This means that a client does not have to consider the transfer codings to compute the upload offset, while a server is responsible for transfer decoding the message before computing the upload offset. The same applies to the `Upload-Length` header field value. Please note that the `Content-Length` header field cannot be used in conjunction with the `Transfer-Encoding` header field.
+Unlike content codings (see {{Section 8.4.1 of HTTP}}), transfer codings (see {{Section 6.1 of RFC9112}}) are a property of the message, not of the representation. Moreover, transfer codings can be applied in transit (e.g., by proxies). This means that a client does not have to consider the transfer codings to compute the upload offset, while a server is responsible for transfer decoding the message before computing the upload offset. The same applies to the `Upload-Length` header field value. See {{Section 6.2 of RFC9112}} for how the `Content-Length` and `Transfer-Encoding` header fields interact.
 
 # Upload Strategies
 
 The definition of the upload creation request ({{upload-creation}}) provides the client with flexibility to choose whether the representation data is fully or partially transferred in the first request, or if no representation data is included at all. Which behavior is best largely depends on the client's capabilities, its desire to avoid data retransmission, and its knowledge about the resource's support for resumable uploads.
 
-The following subsections describe two typical upload strategies that are suited for common environments. Note that these modes are never explicitly communicated to the server and clients are not required to stick to one strategy, but can mix and adapt them to their needs.
+The following subsections describe two typical upload strategies that are suited for common environments. Note that these strategies are never explicitly communicated to the server, and clients are not required to use only one strategy but can mix and adapt them to their needs.
 
 ## Optimistic Upload Creation
 
-An "optimistic upload creation" can be used independent of the client's knowledge about the resource's support for resumable uploads. However, the client needs to be capable of handling and processing interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.
+An "optimistic upload creation" can be used regardless of the client's knowledge about the resource's support for resumable uploads. However, the client needs to be able to process interim responses. An upload creation request then includes the full representation data because the client anticipates that it will be transferred without interruptions or resumed if an interruption occurs.
 
-The benefit of this method is that if the upload creation request succeeded, the representation data was transferred in a single request without additional round trips.
+The benefit of this strategy is that if the upload creation request succeeds, the representation data is transferred in a single request without additional round trips.
 
 A possible drawback is that the client might be unable to resume an upload. If an upload is interrupted before the client receives a `104 (Upload Resumption Supported)` interim response with the upload resource's URI, the client cannot resume that upload due to the missing URI. The interim response might not be received if the interruption happens too early in the message exchange, the target resource of the initial request does not support resumable uploads, the server is not capable of sending the 104 interim response, or an intermediary dropped the interim response. Without a 104 interim response, the client needs to either treat the upload as failed or retry the entire upload creation request if this is allowed by the application.
 
@@ -861,7 +861,7 @@ HTTP/2:
 HTTP/3:
 : abruptly terminate the request stream ({{Section 4.1.1 of RFC9114}})
 
-Version-specific mechanisms place requirements on clients or servers for actioning the cancellation. However, for all versions of HTTP, resumable uploads allow the server to process received representation data and expose the upload offset via the upload resource, enabling continuation of the upload after interruption.
+Version-specific mechanisms place requirements on clients or servers for carrying out the cancellation. However, for all versions of HTTP, resumable uploads allow the server to process received representation data and expose the upload offset via the upload resource, enabling continuation of the upload after interruption.
 
 # Security Considerations
 
@@ -877,7 +877,7 @@ If knowing the upload resource URI is enough to access the upload, the URI is in
 
 ## Untrusted Input
 
-Uploaded representation data and its metadata are untrusted input. Server operators have to be careful of where uploaded data is written and subsequently accessed, especially if the operations cause the representation to be processed or executed by the server. In addition, metadata MUST be validated and/or sanitized if the server takes its values into consideration for processing or storing the representation.
+Uploaded representation data and its metadata are untrusted input. Server operators have to be careful about where uploaded data is written and subsequently accessed, especially if the operations cause the representation to be processed or executed by the server. In addition, metadata MUST be validated and/or sanitized if the server takes its values into consideration for processing or storing the representation.
 
 ## Content Scanning
 
@@ -960,7 +960,7 @@ Published specification:
 : {{media-type-partial-upload}} of {{&SELF}}
 
 Applications that use this media type:
-: Applications that transfer files over unreliable networks or want pause- and resumable uploads.
+: Applications that transfer files over unreliable networks or want pausable and resumable uploads.
 
 Fragment identifier considerations:
 : N/A
