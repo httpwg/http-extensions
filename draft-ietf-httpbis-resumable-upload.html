@@ -1047,7 +1047,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Kleidl, et al.</td>
-<td class="center">Expires 19 April 2027</td>
+<td class="center">Expires 20 April 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1060,12 +1060,12 @@ svg {
 <dd class="internet-draft">draft-ietf-httpbis-resumable-upload-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-16" class="published">16 October 2026</time>
+<time datetime="2026-10-17" class="published">17 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-19">19 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-04-20">20 April 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1125,7 +1125,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 19 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 20 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1495,8 +1495,8 @@ svg {
 </dl>
 <p id="section-1-4">Connections can be dropped due to a variety of network or transport layer reasons triggered by endpoints or on-path elements.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">This specification defines a new mechanism for resumable uploads from client to server that can seamlessly fall back to conventional uploads. When an upload is interrupted, clients can send subsequent requests to query the server state and use this information to send the remaining representation data. Alternatively, they can cancel the upload entirely. Unlike ranged downloads, this protocol does not support transferring an upload as multiple requests in parallel.<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">Utilizing resumable uploads, applications can recover from unintended interruptions, but also interrupt an upload on purpose to later resume it, for example, when a user wants to pause an upload, the device's network connectivity changes, or bandwidth is needed for higher priority tasks.<a href="#section-1-6" class="pilcrow">¶</a></p>
-<p id="section-1-7">The document introduces the concept of an upload resource to facilitate resumable uploads (<a href="#upload-resource" class="auto internal xref">Section 4</a>) and defines new header fields to communicate the state of the upload (<a href="#upload-offset-hdr" class="auto internal xref">Section 4.1.1</a>, <a href="#upload-complete-hdr" class="auto internal xref">Section 4.2.1</a>, <a href="#upload-length-hdr" class="auto internal xref">Section 4.3.1</a>, and <a href="#upload-limit-hdr" class="auto internal xref">Section 5.1</a>), the status code <code>104 (Upload Resumption Supported)</code> to indicate the resource's support for resumable uploads (<a href="#status-code-104" class="auto internal xref">Section 12</a>), and the <code>application/partial-upload</code> media type to label partial representation data when resuming an upload (<a href="#media-type-partial-upload" class="auto internal xref">Section 13</a>).<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-6">With resumable uploads, applications can recover from unintended interruptions. They can also interrupt an upload on purpose and resume it later, for example, when a user wants to pause the upload, the device's network connectivity changes, or bandwidth is needed for higher-priority tasks.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">This document introduces the concept of an upload resource to facilitate resumable uploads (<a href="#upload-resource" class="auto internal xref">Section 4</a>). It defines new header fields to communicate the state of the upload (<a href="#upload-offset-hdr" class="auto internal xref">Section 4.1.1</a>, <a href="#upload-complete-hdr" class="auto internal xref">Section 4.2.1</a>, <a href="#upload-length-hdr" class="auto internal xref">Section 4.3.1</a>, and <a href="#upload-limit-hdr" class="auto internal xref">Section 5.1</a>) and the <code>104 (Upload Resumption Supported)</code> status code to indicate the resource's support for resumable uploads (<a href="#status-code-104" class="auto internal xref">Section 12</a>). It also defines the <code>application/partial-upload</code> media type to label partial representation data when resuming an upload (<a href="#media-type-partial-upload" class="auto internal xref">Section 13</a>).<a href="#section-1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1510,9 +1510,9 @@ described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</s
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">Some examples in this document contain long lines that are folded, as described in <span>[<a href="#RFC8792" class="cite xref">RFC8792</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
 <p id="section-2-3">This document uses the following terminology from <span><a href="https://rfc-editor.org/rfc/rfc9651#section-3" class="relref">Section 3</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span> to specify syntax and parsing: Item, Dictionary, Integer, and Boolean.<a href="#section-2-3" class="pilcrow">¶</a></p>
-<p id="section-2-4">The terms "representation", "representation data", "representation metadata", "content", "client", and "server" are from <span><a href="https://rfc-editor.org/rfc/rfc9110#section-3" class="relref">Section 3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">The term "URI" is used as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-4" class="relref">Section 4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2-5" class="pilcrow">¶</a></p>
-<p id="section-2-6">The term "patch document" is taken from <span>[<a href="#PATCH" class="cite xref">PATCH</a>]</span>.<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-4">This document uses the following terms from <span><a href="https://rfc-editor.org/rfc/rfc9110#section-3" class="relref">Section 3</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>: "representation", "representation data", "representation metadata", "content", "client", and "server".<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">This document uses the term "URI" as defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-4" class="relref">Section 4</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">This document uses the term "patch document" from <span>[<a href="#PATCH" class="cite xref">PATCH</a>]</span>.<a href="#section-2-6" class="pilcrow">¶</a></p>
 <p id="section-2-7">An <em>upload resource</em> is a temporary resource on the server that facilitates the resumable upload of one representation (<a href="#upload-resource" class="auto internal xref">Section 4</a>).<a href="#section-2-7" class="pilcrow">¶</a></p>
 <p id="section-2-8">A <em>104 interim response</em> is an interim response with the <code>104 (Upload Resumption Supported)</code> status code (<a href="#status-code-104" class="auto internal xref">Section 12</a>).<a href="#section-2-8" class="pilcrow">¶</a></p>
 </section>
@@ -1522,15 +1522,15 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-overview">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-overview" class="section-name selfRef">Overview</a>
       </h2>
-<p id="section-3-1">Resumable uploads are supported in HTTP through use of a temporary resource, an <em>upload resource</em> (<a href="#upload-resource" class="auto internal xref">Section 4</a>), that is separate from the resource being uploaded to and specific to that upload. By interacting with the upload resource, a client can retrieve the current offset of the upload (<a href="#offset-retrieving" class="auto internal xref">Section 7</a>), append to the upload (<a href="#upload-appending" class="auto internal xref">Section 8</a>), and cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 9</a>).<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">The remainder of this section uses examples to illustrate different interactions with the upload resource. HTTP message exchanges, and thereby resumable uploads, use representation data (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.1" class="relref">Section 8.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). This means that resumable uploads can be used with many forms of content, such as static files, in-memory buffers, data from streaming sources, or on-demand generated data. Examples are purely illustrative and non-normative. Implementations of this protocol are expected to follow normative requirements defined in other sections, together with applying security considerations presented in <a href="#security-considerations" class="auto internal xref">Section 20</a>.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-1">Resumable uploads are supported in HTTP by a temporary resource, an <em>upload resource</em> (<a href="#upload-resource" class="auto internal xref">Section 4</a>), that is separate from the resource being uploaded to and specific to that upload. By interacting with the upload resource, a client can retrieve the current offset of the upload (<a href="#offset-retrieving" class="auto internal xref">Section 7</a>), append to the upload (<a href="#upload-appending" class="auto internal xref">Section 8</a>), and cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 9</a>).<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">The remainder of this section uses examples to illustrate different interactions with the upload resource. HTTP message exchanges, and thereby resumable uploads, use representation data (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8.1" class="relref">Section 8.1</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). This means that resumable uploads can be used with many forms of content, such as static files, in-memory buffers, data from streaming sources, or on-demand generated data. Examples are purely illustrative and non-normative. Implementations follow the normative requirements in the other sections and the security considerations in <a href="#security-considerations" class="auto internal xref">Section 20</a>.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <div id="example-1">
 <section id="section-3.1">
         <h3 id="name-example-1-complete-upload-o">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-example-1-complete-upload-o" class="section-name selfRef">Example 1: Complete Upload of Representation Data with Known Size</a>
         </h3>
 <p id="section-3.1-1">In this example, the client first attempts to upload representation data with a known size in a single HTTP request to the resource at <code>/project/123/files</code>. An interruption occurs and the client then attempts to resume the upload using subsequent HTTP requests to the upload resource at <code>/uploads/abc</code>.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">1) The client notifies the server that it wants to begin an upload (<a href="#upload-creation" class="auto internal xref">Section 6</a>). The server reserves the required resources to accept the upload from the client and then sends an interim response to the client, signaling support for resumable uploads and the upload resource's URI via the <code>Location</code> header field (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). The client can start sending the representation data in the request content immediately after the request header section. Alternatively, it could also await the acknowledgment in the form of the interim response.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">1) The client notifies the server that it wants to begin an upload (<a href="#upload-creation" class="auto internal xref">Section 6</a>). The server reserves the required resources to accept the upload from the client and then sends an interim response to the client, signaling support for resumable uploads and the upload resource's URI via the <code>Location</code> header field (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-10.2.2" class="relref">Section 10.2.2</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>). The client can start sending the representation data in the request content immediately after the request header section. Alternatively, it can wait for the interim response first.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <span id="name-upload-creation"></span><div id="fig-upload-creation">
 <figure id="figure-1">
           <div id="section-3.1-3.1">
@@ -1578,7 +1578,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#name-upload-creation" class="selfRef">Upload Creation</a>
           </figcaption></figure>
 </div>
-<p id="section-3.1-4">2) If the connection to the server is interrupted, the client might want to resume the upload. However, before this is possible the client needs to know the amount of representation data that the server processed before the interruption. It does so by retrieving the offset (<a href="#offset-retrieving" class="auto internal xref">Section 7</a>) from the upload resource.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">2) If the connection to the server is interrupted, the client might want to resume the upload. However, before this is possible, the client needs to know the amount of representation data that the server processed before the interruption. It does so by retrieving the offset (<a href="#offset-retrieving" class="auto internal xref">Section 7</a>) from the upload resource.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
 <span id="name-offset-retrieval"></span><div id="fig-offset-retrieving">
 <figure id="figure-2">
           <div id="section-3.1-5.1">
@@ -1683,7 +1683,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-example-2-upload-as-a-serie" class="section-name selfRef">Example 2: Upload as a Series of Parts</a>
         </h3>
 <p id="section-3.2-1">In some cases, clients might prefer to upload a representation as a series of parts sent serially across multiple HTTP messages. One use case is to overcome server limits on HTTP message content size. Another use case is where the client does not know the final size of the representation data, such as when the data originates from a streaming source.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2-2">This example shows how the client, communicating with a resource known to support resumable upload, can upload parts of a representation incrementally.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">This example shows how the client, communicating with a resource known to support resumable uploads, can upload parts of a representation incrementally.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.2-3">1) The client is aware that the target resource supports resumable uploads and therefore starts the upload with the <code>Upload-Complete</code> header field set to false and the first part of the representation.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 <span id="name-upload-creation-with-partia"></span><div id="fig-upload-creation-incomplete">
 <figure id="figure-5">
@@ -1857,7 +1857,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       </h2>
 <p id="section-4-1">A resumable upload is enabled through interaction with an upload resource. When a resumable upload begins, the server is asked to create an upload resource through a request to another resource (<a href="#upload-creation" class="auto internal xref">Section 6</a>). Using this upload resource, the client can query the upload progress (<a href="#offset-retrieving" class="auto internal xref">Section 7</a>), append representation data (<a href="#upload-appending" class="auto internal xref">Section 8</a>), or cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 9</a>). The server is responsible for persisting the state of the upload resource (<a href="#upload-offset" class="auto internal xref">Section 4.1</a>, <a href="#upload-complete" class="auto internal xref">Section 4.2</a>, and <a href="#upload-length" class="auto internal xref">Section 4.3</a>) and updating it as the upload progresses. Limits (<a href="#upload-limits" class="auto internal xref">Section 5</a>) can also apply to the upload resource.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">An upload resource is specific to the upload of one representation. For uploading multiple representations, multiple upload resources have to be used.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">The server can clean up an upload resource and make it inaccessible immediately after the upload is complete. However, keeping the upload resource available for a period of time after completion allows the client to verify the state of the upload if it did not receive the last response acknowledging the completion. Implementations are responsible for deciding if they retain the resource and for what duration; they will need to consider the resource costs required to do so.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-3">The server can clean up an upload resource and make it inaccessible immediately after the upload is complete. However, keeping the upload resource available for a period of time after completion allows the client to verify the state of the upload if it did not receive the last response acknowledging the completion. Implementations are responsible for deciding whether they retain the resource and for what duration, considering the resource costs of doing so.<a href="#section-4-3" class="pilcrow">¶</a></p>
 <p id="section-4-4">An upload resource <span class="bcp14">SHOULD</span> be unique. Reuse of a URI for a different upload resource <span class="bcp14">SHOULD</span> be avoided in order to reduce the chance of misdirected or corrupted upload resources, as well as the potential security issues described in <a href="#security-uri" class="auto internal xref">Section 20.1</a>.<a href="#section-4-4" class="pilcrow">¶</a></p>
 <p id="section-4-5">The state of an upload consists of the following properties that are tracked by the server.<a href="#section-4-5" class="pilcrow">¶</a></p>
 <div id="upload-offset">
@@ -1867,14 +1867,14 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         </h3>
 <p id="section-4.1-1">The offset is the number of bytes from the representation data that have been processed, either during the creation of the upload resource (<a href="#upload-creation" class="auto internal xref">Section 6</a>) or by appending to it (<a href="#upload-appending" class="auto internal xref">Section 8</a>). The offset is required when appending representation data (<a href="#upload-appending" class="auto internal xref">Section 8</a>) to synchronize the client and resource regarding the amount of transferred representation data.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2">The offset reflects application-level processing for the upload. Data might have been delivered and acknowledged at the transport layer without yet being reflected in the offset.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.1-3">Representation data processed by the upload resource cannot be removed again and, therefore, the offset as seen by the client <span class="bcp14">MUST NOT</span> decrease. Clients can use this guarantee to free resources associated to transferred representation data, as no retransmission of it will be necessary. If the server loses any part of the state, it <span class="bcp14">MUST</span> deactivate the upload resource and reject further interaction with it.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1-3">Representation data processed by the upload resource cannot be removed again and, therefore, the offset as seen by the client <span class="bcp14">MUST NOT</span> decrease. Clients can use this guarantee to free resources associated with transferred representation data, as no retransmission of it will be necessary. If the server loses any part of the state, it <span class="bcp14">MUST</span> deactivate the upload resource and reject further interaction with it.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 <div id="upload-offset-hdr">
 <section id="section-4.1.1">
           <h4 id="name-upload-offset">
 <a href="#section-4.1.1" class="section-number selfRef">4.1.1. </a><a href="#name-upload-offset" class="section-name selfRef">Upload-Offset</a>
           </h4>
 <p id="section-4.1.1-1">The <code>Upload-Offset</code> request and response header field conveys the offset. It is an Item Structured Header Field (<span>[<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>). Its value is a non-negative Integer (<span><a href="https://rfc-editor.org/rfc/rfc9651#section-3.3.1" class="relref">Section 3.3.1</a> of [<a href="#STRUCTURED-FIELDS" class="cite xref">STRUCTURED-FIELDS</a>]</span>) and indicates the current offset as viewed by the message sender. Other values <span class="bcp14">MUST</span> cause the entire header field to be ignored.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-2">The client obtains the current offset in multiple ways:<a href="#section-4.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-2">The client can learn the current offset in three ways:<a href="#section-4.1.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.1.1-3.1">
               <p id="section-4.1.1-3.1.1">The offset can be explicitly retrieved from the upload resource (<a href="#offset-retrieving" class="auto internal xref">Section 7</a>).<a href="#section-4.1.1-3.1.1" class="pilcrow">¶</a></p>
@@ -1883,7 +1883,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
               <p id="section-4.1.1-3.2.1">Interim responses for creating the upload (<a href="#upload-creation" class="auto internal xref">Section 6</a>) or appending (<a href="#upload-appending" class="auto internal xref">Section 8</a>), and their final responses with a non-<code>2xx</code> status code and the <code>Upload-Complete: ?0</code> header field, can include the <code>Upload-Offset</code> header field.<a href="#section-4.1.1-3.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.1.1-3.3">
-              <p id="section-4.1.1-3.3.1">Final responses for appending representation data (<a href="#upload-appending" class="auto internal xref">Section 8</a>) with a <code>2xx (Successful)</code> status code and the <code>Upload-Complete: ?0</code> header field acknowledge that the entire request content was received and the offset increased by the length of the appended representation data. An <code>Upload-Offset</code> header field's value <span class="bcp14">MUST</span> match this inferred offset, if present.<a href="#section-4.1.1-3.3.1" class="pilcrow">¶</a></p>
+              <p id="section-4.1.1-3.3.1">Final responses for appending representation data (<a href="#upload-appending" class="auto internal xref">Section 8</a>) with a <code>2xx (Successful)</code> status code and the <code>Upload-Complete: ?0</code> header field acknowledge that the entire request content was received and the offset increased by the length of the appended representation data. If present, the <code>Upload-Offset</code> header field value <span class="bcp14">MUST</span> match this inferred offset.<a href="#section-4.1.1-3.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -1914,7 +1914,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-length" class="section-name selfRef">Length</a>
         </h3>
 <p id="section-4.3-1">The length of the representation data might not be known when starting the transfer, for example, because the representation is taken from a streaming source. The representation's length will, however, be known at the latest when the client completes the upload (<a href="#upload-complete" class="auto internal xref">Section 4.2</a>).<a href="#section-4.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.3-2">Despite this, a client <span class="bcp14">SHOULD</span> communicate the representation's length to the server as soon as it becomes known to aid with resource management and facilitate early validation. There are two different ways for the client to indicate and for the server to discover the representation's length from requests for creating the upload resource (<a href="#upload-creation" class="auto internal xref">Section 6</a>) or appending to it (<a href="#upload-appending" class="auto internal xref">Section 8</a>):<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">A client <span class="bcp14">SHOULD</span> communicate the representation's length to the server as soon as it becomes known, without waiting for the upload to complete. This aids resource management and allows early validation. A request that creates the upload resource (<a href="#upload-creation" class="auto internal xref">Section 6</a>) or appends to it (<a href="#upload-appending" class="auto internal xref">Section 8</a>) has two possible indicators of the length:<a href="#section-4.3-2" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-4.3-3">
 <li id="section-4.3-3.1">
             <p id="section-4.3-3.1.1">If the request includes the <code>Upload-Complete</code> header field set to true, the request content is the remaining representation data. The representation's length is then the sum of the current offset (<a href="#upload-offset" class="auto internal xref">Section 4.1</a>) and the request content's length, which might be announced in the <code>Content-Length</code> header field.<a href="#section-4.3-3.1.1" class="pilcrow">¶</a></p>

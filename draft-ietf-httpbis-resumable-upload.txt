@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 19 April 2027                                        Apple Inc.
+Expires: 20 April 2027                                        Apple Inc.
                                                           L. Pardue, Ed.
                                                                    Apple
-                                                         16 October 2026
+                                                         17 October 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 April 2027.
+   This Internet-Draft will expire on 20 April 2027.
 
 Copyright Notice
 
@@ -203,20 +203,20 @@ Table of Contents
    the upload entirely.  Unlike ranged downloads, this protocol does not
    support transferring an upload as multiple requests in parallel.
 
-   Utilizing resumable uploads, applications can recover from unintended
-   interruptions, but also interrupt an upload on purpose to later
-   resume it, for example, when a user wants to pause an upload, the
-   device's network connectivity changes, or bandwidth is needed for
-   higher priority tasks.
+   With resumable uploads, applications can recover from unintended
+   interruptions.  They can also interrupt an upload on purpose and
+   resume it later, for example, when a user wants to pause the upload,
+   the device's network connectivity changes, or bandwidth is needed for
+   higher-priority tasks.
 
-   The document introduces the concept of an upload resource to
-   facilitate resumable uploads (Section 4) and defines new header
+   This document introduces the concept of an upload resource to
+   facilitate resumable uploads (Section 4).  It defines new header
    fields to communicate the state of the upload (Section 4.1.1,
-   Section 4.2.1, Section 4.3.1, and Section 5.1), the status code 104
-   (Upload Resumption Supported) to indicate the resource's support for
-   resumable uploads (Section 12), and the application/partial-upload
-   media type to label partial representation data when resuming an
-   upload (Section 13).
+   Section 4.2.1, Section 4.3.1, and Section 5.1) and the 104 (Upload
+   Resumption Supported) status code to indicate the resource's support
+   for resumable uploads (Section 12).  It also defines the application/
+   partial-upload media type to label partial representation data when
+   resuming an upload (Section 13).
 
 2.  Conventions and Definitions
 
@@ -233,13 +233,13 @@ Table of Contents
    [STRUCTURED-FIELDS] to specify syntax and parsing: Item, Dictionary,
    Integer, and Boolean.
 
-   The terms "representation", "representation data", "representation
-   metadata", "content", "client", and "server" are from Section 3 of
-   [HTTP].
+   This document uses the following terms from Section 3 of [HTTP]:
+   "representation", "representation data", "representation metadata",
+   "content", "client", and "server".
 
-   The term "URI" is used as defined in Section 4 of [HTTP].
+   This document uses the term "URI" as defined in Section 4 of [HTTP].
 
-   The term "patch document" is taken from [PATCH].
+   This document uses the term "patch document" from [PATCH].
 
    An _upload resource_ is a temporary resource on the server that
    facilitates the resumable upload of one representation (Section 4).
@@ -249,12 +249,12 @@ Table of Contents
 
 3.  Overview
 
-   Resumable uploads are supported in HTTP through use of a temporary
-   resource, an _upload resource_ (Section 4), that is separate from the
-   resource being uploaded to and specific to that upload.  By
-   interacting with the upload resource, a client can retrieve the
-   current offset of the upload (Section 7), append to the upload
-   (Section 8), and cancel the upload (Section 9).
+   Resumable uploads are supported in HTTP by a temporary resource, an
+   _upload resource_ (Section 4), that is separate from the resource
+   being uploaded to and specific to that upload.  By interacting with
+   the upload resource, a client can retrieve the current offset of the
+   upload (Section 7), append to the upload (Section 8), and cancel the
+   upload (Section 9).
 
    The remainder of this section uses examples to illustrate different
    interactions with the upload resource.  HTTP message exchanges, and
@@ -262,9 +262,8 @@ Table of Contents
    of [HTTP]).  This means that resumable uploads can be used with many
    forms of content, such as static files, in-memory buffers, data from
    streaming sources, or on-demand generated data.  Examples are purely
-   illustrative and non-normative.  Implementations of this protocol are
-   expected to follow normative requirements defined in other sections,
-   together with applying security considerations presented in
+   illustrative and non-normative.  Implementations follow the normative
+   requirements in the other sections and the security considerations in
    Section 20.
 
 3.1.  Example 1: Complete Upload of Representation Data with Known Size
@@ -282,8 +281,7 @@ Table of Contents
    resource's URI via the Location header field (Section 10.2.2 of
    [HTTP]).  The client can start sending the representation data in the
    request content immediately after the request header section.
-   Alternatively, it could also await the acknowledgment in the form of
-   the interim response.
+   Alternatively, it can wait for the interim response first.
 
    Client                                  Server
    |                                            |
@@ -308,7 +306,7 @@ Table of Contents
                          Figure 1: Upload Creation
 
    2) If the connection to the server is interrupted, the client might
-   want to resume the upload.  However, before this is possible the
+   want to resume the upload.  However, before this is possible, the
    client needs to know the amount of representation data that the
    server processed before the interruption.  It does so by retrieving
    the offset (Section 7) from the upload resource.
@@ -378,7 +376,7 @@ Table of Contents
    streaming source.
 
    This example shows how the client, communicating with a resource
-   known to support resumable upload, can upload parts of a
+   known to support resumable uploads, can upload parts of a
    representation incrementally.
 
    1) The client is aware that the target resource supports resumable
@@ -496,9 +494,9 @@ Table of Contents
    upload resource available for a period of time after completion
    allows the client to verify the state of the upload if it did not
    receive the last response acknowledging the completion.
-   Implementations are responsible for deciding if they retain the
-   resource and for what duration; they will need to consider the
-   resource costs required to do so.
+   Implementations are responsible for deciding whether they retain the
+   resource and for what duration, considering the resource costs of
+   doing so.
 
    An upload resource SHOULD be unique.  Reuse of a URI for a different
    upload resource SHOULD be avoided in order to reduce the chance of
@@ -524,7 +522,7 @@ Table of Contents
    Representation data processed by the upload resource cannot be
    removed again and, therefore, the offset as seen by the client MUST
    NOT decrease.  Clients can use this guarantee to free resources
-   associated to transferred representation data, as no retransmission
+   associated with transferred representation data, as no retransmission
    of it will be necessary.  If the server loses any part of the state,
    it MUST deactivate the upload resource and reject further interaction
    with it.
@@ -538,7 +536,7 @@ Table of Contents
    the message sender.  Other values MUST cause the entire header field
    to be ignored.
 
-   The client obtains the current offset in multiple ways:
+   The client can learn the current offset in three ways:
 
    *  The offset can be explicitly retrieved from the upload resource
       (Section 7).
@@ -552,8 +550,8 @@ Table of Contents
       a 2xx (Successful) status code and the Upload-Complete: ?0 header
       field acknowledge that the entire request content was received and
       the offset increased by the length of the appended representation
-      data.  An Upload-Offset header field's value MUST match this
-      inferred offset, if present.
+      data.  If present, the Upload-Offset header field value MUST match
+      this inferred offset.
 
 4.2.  Completeness
 
@@ -597,12 +595,11 @@ Table of Contents
    however, be known at the latest when the client completes the upload
    (Section 4.2).
 
-   Despite this, a client SHOULD communicate the representation's length
-   to the server as soon as it becomes known to aid with resource
-   management and facilitate early validation.  There are two different
-   ways for the client to indicate and for the server to discover the
-   representation's length from requests for creating the upload
-   resource (Section 6) or appending to it (Section 8):
+   A client SHOULD communicate the representation's length to the server
+   as soon as it becomes known, without waiting for the upload to
+   complete.  This aids resource management and allows early validation.
+   A request that creates the upload resource (Section 6) or appends to
+   it (Section 8) has two possible indicators of the length:
 
    1.  If the request includes the Upload-Complete header field set to
        true, the request content is the remaining representation data.
