@@ -1030,7 +1030,7 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-13
 {:numbered="false"}
 
-None yet.
+Editorial changes only.
 
 ## Since draft-ietf-httpbis-resumable-upload-12
 {:numbered="false"}
