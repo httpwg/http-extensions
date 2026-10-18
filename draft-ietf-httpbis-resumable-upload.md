@@ -56,6 +56,7 @@ normative:
   STRUCTURED-FIELDS: RFC9651
   PATCH: RFC5789
   PROBLEM: RFC9457
+  URI: RFC3986
   CONTENT-DISPOSITION: RFC6266
 
 informative:
@@ -117,7 +118,7 @@ This document uses the following terminology from {{Section 3 of STRUCTURED-FIEL
 
 This document uses the following terms from {{Section 3 of HTTP}}: "representation", "representation data", "representation metadata", "content", "client", and "server".
 
-This document uses the term "URI" as defined in {{Section 4 of HTTP}}.
+This document uses the term "URI" as defined in {{URI}}.
 
 This document uses the term "patch document" from {{PATCH}}.
 
