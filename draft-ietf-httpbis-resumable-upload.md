@@ -322,7 +322,7 @@ Representation data processed by the upload resource cannot be removed again and
 
 ### Upload-Offset {#upload-offset-hdr}
 
-The `Upload-Offset` request and response header field conveys the offset. It is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the current offset in bytes, as viewed by the message sender. Other values MUST cause the entire header field to be ignored.
+The `Upload-Offset` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the current offset in bytes, as viewed by the message sender. Other values MUST cause the entire header field to be ignored.
 
 The client can learn the current offset in three ways:
 
@@ -336,7 +336,7 @@ An upload is incomplete until it is explicitly marked as complete by the client 
 
 ### Upload-Complete {#upload-complete-hdr}
 
-The `Upload-Complete` request and response header field is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}); its meaning in requests and responses is described below. Other values MUST cause the entire header field to be ignored.
+The `Upload-Complete` request and response header field is an Item Structured Header Field of type Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
 An upload is marked as complete either when a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) includes the `Upload-Complete` header field set to true and the request content was fully processed, or when a response includes the `Upload-Complete` header field set to true.
 
@@ -359,7 +359,7 @@ Note that the length and offset values do not determine whether an upload is com
 
 ### Upload-Length {#upload-length-hdr}
 
-The `Upload-Length` request and response header field is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the representation's length in bytes. Other values MUST cause the entire header field to be ignored.
+The `Upload-Length` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the representation's length in bytes. Other values MUST cause the entire header field to be ignored.
 
 The `Upload-Length` field can be used in response to an offset retrieval; see {{offset-retrieving-server}}.
 
@@ -371,7 +371,7 @@ A client usually learns the limits when the upload resource is created ({{upload
 
 ## Upload-Limit {#upload-limit-hdr}
 
-The `Upload-Limit` response header field is a Dictionary Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
+The `Upload-Limit` response header field is a Dictionary Structured Header Field ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
 Receivers of the `Upload-Limit` header field parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
 
