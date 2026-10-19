@@ -310,7 +310,7 @@ The server can clean up an upload resource and make it inaccessible immediately 
 
 An upload resource SHOULD be unique. Reuse of a URI for a different upload resource SHOULD be avoided in order to reduce the chance of misdirected or corrupted upload resources, as well as the potential security issues described in {{security-uri}}.
 
-The state of an upload consists of the following properties that are tracked by the server.
+The state of an upload includes the following properties that are tracked by the server.
 
 ## Offset {#upload-offset}
 
