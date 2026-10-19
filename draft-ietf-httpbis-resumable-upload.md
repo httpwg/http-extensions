@@ -308,7 +308,7 @@ An upload resource is specific to the upload of one representation. For uploadin
 
 The server can clean up an upload resource and make it inaccessible immediately after the upload is complete. However, keeping the upload resource available for a period of time after completion allows the client to verify the state of the upload if it did not receive the last response acknowledging the completion. Implementations are responsible for deciding whether they retain the resource and for what duration, considering the resource costs of doing so.
 
-An upload resource SHOULD be unique. Reuse of a URI for a different upload resource SHOULD be avoided in order to reduce the chance of misdirected or corrupted upload resources, as well as the potential security issues described in {{security-uri}}.
+A server SHOULD assign each upload resource a URI that has not identified any other upload resource. URI reuse increases the chance of misdirected requests or corrupted uploads, and the risk of the security issues described in {{security-uri}}.
 
 The state of an upload includes the following properties that are tracked by the server.
 
