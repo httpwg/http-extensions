@@ -322,7 +322,7 @@ Representation data processed by the upload resource cannot be removed again and
 
 ### Upload-Offset {#upload-offset-hdr}
 
-The `Upload-Offset` request and response header field conveys the offset. It is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the current offset as viewed by the message sender. Other values MUST cause the entire header field to be ignored.
+The `Upload-Offset` request and response header field conveys the offset. It is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the current offset in bytes, as viewed by the message sender. Other values MUST cause the entire header field to be ignored.
 
 The client can learn the current offset in three ways:
 
@@ -344,7 +344,7 @@ When used in an upload creation response ({{upload-creation}}) or an upload appe
 
 ## Length {#upload-length}
 
-The length of the representation data might not be known when starting the transfer, for example, because the representation is taken from a streaming source. The representation's length will, however, be known at the latest when the client completes the upload ({{upload-complete}}).
+The length is the number of bytes of the representation data. It might not be known when starting the transfer, for example, because the representation is taken from a streaming source. The length will, however, be known at the latest when the client completes the upload ({{upload-complete}}).
 
 A client SHOULD communicate the representation's length to the server as soon as it becomes known, without waiting for the upload to complete. This aids resource management and allows early validation. A request that creates the upload resource ({{upload-creation}}) or appends to it ({{upload-appending}}) has two possible indicators of the length:
 
@@ -357,7 +357,7 @@ Note that the length and offset values do not determine whether an upload is com
 
 ### Upload-Length {#upload-length-hdr}
 
-The `Upload-Length` request and response header field is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the representation's length as a number of bytes. Other values MUST cause the entire header field to be ignored.
+The `Upload-Length` request and response header field is an Item Structured Header Field ({{STRUCTURED-FIELDS}}). Its value is a non-negative Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) and indicates the representation's length in bytes. Other values MUST cause the entire header field to be ignored.
 
 The `Upload-Length` field can be used in response to an offset retrieval; see {{offset-retrieving-server}}.
 
