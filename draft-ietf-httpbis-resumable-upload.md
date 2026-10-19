@@ -397,7 +397,7 @@ The `max-age` limit specifies the remaining lifetime, in seconds, of the upload 
 
 ## Use with OPTIONS {#upload-limits-options}
 
-A client can use an `OPTIONS` request without the `Upload-Complete` header field to discover whether the resource supports resumable uploads and to learn potential limits before creating an upload resource.
+Before creating an upload resource, a client can send an `OPTIONS` request to discover whether the resource supports resumable uploads and to learn potential limits. The request does not include the `Upload-Complete` header field; otherwise, it would be a request to create an upload resource ({{upload-creation}}).
 
 When responding to such a request, if the target resource supports the creation of a resumable upload resource ({{upload-creation}}), the server MUST include the `Upload-Limit` header field with the corresponding limits in the response. If a server is configured such that all of its resources support the creation of upload resources with identical limits, it SHOULD include the `Upload-Limit` header field in response to an `OPTIONS` request for the target `*` (if this target is supported).
 
