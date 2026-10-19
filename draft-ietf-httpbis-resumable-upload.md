@@ -306,7 +306,7 @@ A resumable upload is enabled through interaction with an upload resource. When 
 
 An upload resource is specific to the upload of one representation. For uploading multiple representations, multiple upload resources have to be used.
 
-The server can clean up an upload resource and make it inaccessible immediately after the upload is complete. However, keeping the upload resource available for a period of time after completion allows the client to verify the state of the upload if it did not receive the last response acknowledging the completion. Implementations are responsible for deciding whether they retain the resource and for what duration, considering the resource costs of doing so.
+Server implementations need to decide how long to retain an upload resource after the upload is complete. The server can clean up the upload resource and make it inaccessible immediately. Keeping it longer lets a client that missed the final response verify the upload's state, at a cost to the server.
 
 A server SHOULD assign each upload resource a URI that has not identified any other upload resource. URI reuse increases the chance of misdirected requests or corrupted uploads, and the risk of the security issues described in {{security-uri}}.
 
