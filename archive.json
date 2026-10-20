@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-10-18T02:21:01.922253+00:00",
+  "timestamp": "2026-10-20T02:47:57.672515+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -78510,6 +78510,51 @@
           "updatedAt": "2026-10-16T14:35:27Z"
         }
       ]
+    },
+    {
+      "number": 3562,
+      "id": "I_kwDOAUA-v88AAAABYJ2lvA",
+      "title": "RESUMABLE: proposal: State Structured Fields error handling once, rather than in each field definition",
+      "url": "https://github.com/httpwg/http-extensions/issues/3562",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Julian Reschke's review of draft-ietf-httpbis-resumable-upload-14 on the [list](https://lists.w3.org/Archives/Public/ietf-http-wg/2026OctDec/0072.html) suggests stating the field error handling once, up front.\n\nThe definitions of Upload-Offset, Upload-Complete, Upload-Length and Upload-Limit each end with \"Other values MUST cause the entire header field to be ignored.\" That sentence restates the default in Section 2.2 of RFC 9651, and follows the model field definition in Section 2.1 of RFC 9651.\n\nUpload-Limit adds two requirements of its own, which a citation to RFC 9651 cannot replace:\n\n- A member with an unknown key MUST be ignored. Section 2.3 of RFC 9651 leaves this to the field definition.\n- A member with a known key but a value of unexpected type MUST cause the field to be ignored, or the message to be treated as malformed (from #3201).\n\nFurthermore, Juilan proposed stating \"unknown extensions (such as parameter keys) must be ignored.\". This highlights that Upload-Offset, Upload-Complete, Upload-Length currently say nothing about parameters. \n\nOptions:\n\nA) Do nothing and leave as is (Keep the rule next to the definition)\nB) Keep the rule next to the definition and add a statement about parameters\nC) Create a rule stated _somewhere_ once for Upload-Offset, Upload-Complete, Upload-Length. Leave the two Upload-Limit requirements where they are.\nD) Create a rule stated _somewhere_ once for Upload-Offset, Upload-Complete, Upload-Length, put the two Upload-Limit requirements there too.\n\n\n",
+      "createdAt": "2026-10-19T00:47:29Z",
+      "updatedAt": "2026-10-19T13:46:12Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Speaking as an individual, I see some merit in C or D but worry that people could end up missing it. Editorially it might stick out to have such a standalone statement plonked somewhere \"random\".\n\nTherefore I lean to option B",
+          "createdAt": "2026-10-19T00:51:15Z",
+          "updatedAt": "2026-10-19T13:46:12Z"
+        }
+      ]
+    },
+    {
+      "number": 3563,
+      "id": "I_kwDOAUA-v88AAAABYKfUWQ",
+      "title": "RESUMABLE: Examples answer a resource-creating POST with 200 (OK)",
+      "url": "https://github.com/httpwg/http-extensions/issues/3563",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editorial",
+        "resumable-upload"
+      ],
+      "body": "Julian Reschke's review of draft-ietf-httpbis-resumable-upload-14 on the [list](https://lists.w3.org/Archives/Public/ietf-http-wg/2026OctDec/0072.html) asks whether the final response in Example 2 should be 201 (Created) rather than 200 (OK).\n\nSection 9.3.3 of RFC 9110 says that if processing a POST creates a resource, the origin server SHOULD send a 201 (Created) response with a Location header field identifying it.\n\nThese examples end with a 200 (OK) response from the target resource:\n\n- Section 3.1 (Example 1), Figure 3 (\"Upload Append\"): the initial request is POST /project/123/files.\n- Section 3.2 (Example 2), Figure 8 (\"Appending Remaining Representation Data\"): the initial request is POST /project/123/files, and the text says \"e.g., a 200 (OK) response\".\n- Section 6.3, example A: POST /project/123/files, with content {\"attachmentId\": \"b530ce8ff\"}.\n- Section 8.3, example B: the initial request is not shown, and the response carries extracted metadata, so 200 (OK) might be appropriate there.\n",
+      "createdAt": "2026-10-19T02:08:37Z",
+      "updatedAt": "2026-10-19T02:08:37Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -221257,6 +221302,49 @@
           "body": "",
           "createdAt": "2026-10-17T10:56:42Z",
           "updatedAt": "2026-10-17T20:11:44Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3564,
+      "id": "PR_kwDOAUA-v88AAAABJPMg5w",
+      "title": "RESUMABLE: Editorial fixes from Julian Reschke's review",
+      "url": "https://github.com/httpwg/http-extensions/pull/3564",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "editorial",
+        "resumable-upload"
+      ],
+      "body": "Editorial fixes from Julian Reschke's review of -14 (https://lists.w3.org/Archives/Public/ietf-http-wg/2026OctDec/0072.html); one commit each:\n\n- Cite RFC 3986 for the term URI\n- Drop repeated and self-referential cross-references\n- Drop two more repeated cross-references\n- Point Upload Resource state at the subsections below\n- Cite HTTP Section 8 once for representation metadata\n- Drop request/response qualifiers that context makes redundant\n- State the unit for offset and length consistently\n- Say why an OPTIONS discovery request omits Upload-Complete\n- Simplify the meaning of Upload-Complete in responses\n- State each field's Structured type once\n- Say upload state includes, not consists of, the listed properties\n- State the URI reuse requirement about the URI, not the resource\n- Tighten the paragraph on retaining completed upload resources\n- Don't repeat the Upload-Complete name within one sentence\n\nTracked separately: #3562 (field error handling), #3563 (200 vs 201 in examples).\n",
+      "createdAt": "2026-10-19T02:16:20Z",
+      "updatedAt": "2026-10-19T05:36:50Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7ebcfaffe552ff895cd0e801d1485d32e03affe8",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-review-reschke",
+      "headRefOid": "116b82932b878824ab81f441655183b616876917",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABS9bJwg",
+          "commit": {
+            "abbreviatedOid": "116b829"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-19T05:36:50Z",
+          "updatedAt": "2026-10-19T05:36:50Z",
           "comments": []
         }
       ]
