@@ -2420,7 +2420,7 @@ HTTP/1.1 204 No Content
 </li>
       </ul>
 <p id="section-11-3">If no final response was received at all due to connectivity issues, the client <span class="bcp14">MAY</span> automatically attempt upload resumption by retrieving the current offset (<a href="#offset-retrieving" class="auto internal xref">Section 7</a>).<a href="#section-11-3" class="pilcrow">¶</a></p>
-<p id="section-11-4">The client <span class="bcp14">SHOULD</span> limit the number of retries it performs before considering the upload a failure.<a href="#section-11-4" class="pilcrow">¶</a></p>
+<p id="section-11-4">The client <span class="bcp14">SHOULD</span> limit the number of retries it performs before considering the upload a failure, and <span class="bcp14">SHOULD</span> then cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 9</a>) if it can still reach the upload resource.<a href="#section-11-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="status-code-104">

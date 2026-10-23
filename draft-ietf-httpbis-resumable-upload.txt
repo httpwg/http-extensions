@@ -1377,7 +1377,8 @@ Table of Contents
    the current offset (Section 7).
 
    The client SHOULD limit the number of retries it performs before
-   considering the upload a failure.
+   considering the upload a failure, and SHOULD then cancel the upload
+   (Section 9) if it can still reach the upload resource.
 
 12.  Status Code 104 (Upload Resumption Supported)
 
