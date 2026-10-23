@@ -605,10 +605,11 @@ Table of Contents
 
    If indicators (1) and (2) are both present in the same request, their
    indicated lengths MUST match.  The representation's length, if known,
-   MUST stay consistent across subsequent requests.  A server can use
-   the problem type [PROBLEM] of "https://iana.org/assignments/http-
-   problem-types#inconsistent-upload-length" (Section 14.2) in responses
-   to indicate inconsistent length indicators.
+   MUST stay consistent across subsequent requests.  A server SHOULD
+   respond to a request with inconsistent length indicators with a 400
+   (Bad Request) status code, and can use the problem type [PROBLEM] of
+   "https://iana.org/assignments/http-problem-types#inconsistent-upload-
+   length" (Section 14.2) to indicate why.
 
    Note that the length and offset values do not determine whether an
    upload is complete.  Instead, the client uses the Upload-Complete
