@@ -898,10 +898,10 @@ Table of Contents
    Section 4.3 if the Upload-Length or Upload-Complete: ?1 header fields
    are included in the request.
 
-   While the request content is being processed, the server MAY send
-   multiple interim responses with a 104 (Upload Resumption Supported)
-   status code and the Upload-Offset header field set to the current
-   offset to inform the client about the upload progress.
+   While the request content is being processed, the server SHOULD send
+   interim responses with a 104 (Upload Resumption Supported) status
+   code and the Upload-Offset header field set to the current offset to
+   inform the client about the upload progress.
 
    Every response to the same request that identifies the upload
    resource in the Location header field MUST use the same URI.  A final
