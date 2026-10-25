@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-10-20T02:47:57.672515+00:00",
+  "timestamp": "2026-10-25T02:31:21.470190+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -78233,7 +78233,7 @@
       "id": "I_kwDOAUA-v88AAAABXSoR6g",
       "title": "RESUMABLE: Should clients cancel an upload they give up on?",
       "url": "https://github.com/httpwg/http-extensions/issues/3531",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -78244,8 +78244,8 @@
       ],
       "body": "Drafted with an AI assistant while reviewing the draft; I checked the text against main.\n\nThe draft does tell clients to cancel the upload in four failure cases:\n\n- limits they can't meet (Limits, and Upload Creation client behavior)\n- a changed Location (Upload Creation server behavior),\n-  and an offset they can't continue from (Offset Retrieval client behavior).\n\nIt doesn't say anything about a client that runs out of running out of retries. Retry ends with:\n\n> The client SHOULD limit the number of retries it performs before considering the upload a failure.\n\nThe server then holds the partial upload until max-age or its own cleanup. With a transparent upgrade (Upgrading To Resumable Uploads), the user doesn't know the upload resource exists, so only the client can clean it up.\n\nSome proposals \n\n1) Tweak section 10 to match the other cases by adding a recommendation to cancel the upload- \"The client SHOULD limit the number of retries it performs before considering the upload a failure, and SHOULD then cancel the upload ({{upload-cancellation}}) if it can still reach the upload resource.\"\n2) consolidate all the cases that say SHOULD separately into one general rule in Upload Cancellation along lines of \"\"A client that stops an upload without completing it SHOULD cancel the upload, if it can still reach the upload resource.\"\n3) Say that a client can cancel but avoid any normative requirement to do so (a lighter version of 1)",
       "createdAt": "2026-10-15T00:40:44Z",
-      "updatedAt": "2026-10-15T20:16:38Z",
-      "closedAt": null,
+      "updatedAt": "2026-10-23T14:37:28Z",
+      "closedAt": "2026-10-23T14:37:28Z",
       "comments": [
         {
           "author": "Acconut",
@@ -78474,7 +78474,7 @@
       "id": "I_kwDOAUA-v88AAAABXVF9VQ",
       "title": "RESUMABLE: Progress 104s are MAY on creation, SHOULD on append",
       "url": "https://github.com/httpwg/http-extensions/issues/3541",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -78485,8 +78485,8 @@
       ],
       "body": "Drafted with an AI assistant; I checked the text.\n\nThe two progress sentences are identical apart from the keyword:\n\n- Upload Creation: \"the server MAY send multiple interim responses with a 104 ... to inform the client about the upload progress.\"\n- Upload Append: \"the server SHOULD send interim responses with a 104 ... to inform the client about the upload progress.\"\n\n#3092 changed the append one from MAY to SHOULD while reviewing MAYs per Julian's comments; the creation one wasn't touched. @Acconut, was that intended, or should creation be SHOULD too?",
       "createdAt": "2026-10-15T05:20:29Z",
-      "updatedAt": "2026-10-16T14:35:27Z",
-      "closedAt": null,
+      "updatedAt": "2026-10-23T14:34:44Z",
+      "closedAt": "2026-10-23T14:34:44Z",
       "comments": [
         {
           "author": "Acconut",
@@ -219892,7 +219892,7 @@
       "id": "PR_kwDOAUA-v88AAAABIiS8cQ",
       "title": "RESUMABLE: 400 for inconsistent length indicators",
       "url": "https://github.com/httpwg/http-extensions/pull/3538",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -219901,18 +219901,28 @@
       ],
       "body": "Makes the server response explicit (see #3431), matching the problem type's recommended 400 and the approach in #3536.",
       "createdAt": "2026-10-15T03:35:04Z",
-      "updatedAt": "2026-10-15T06:33:25Z",
+      "updatedAt": "2026-10-23T14:33:03Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "d8a235e33d1835a6247bfe47a3747353ba4dcbd5",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "resumable-inconsistent-length-400",
       "headRefOid": "bb2f41236edb68a88d986915f3af58b195df221e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "closedAt": "2026-10-23T14:33:00Z",
+      "mergedAt": "2026-10-23T14:33:00Z",
+      "mergedBy": "LPardue",
+      "mergeCommit": {
+        "oid": "d10b2b865a46b8a06216fea6fa31644599390ab9"
+      },
+      "comments": [
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Gathered approvals for a small normative change that makes the doc consistent with itself. Merging.",
+          "createdAt": "2026-10-23T14:32:53Z",
+          "updatedAt": "2026-10-23T14:32:53Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOAUA-v88AAAABSY7HzA",
@@ -220432,7 +220442,7 @@
       "id": "PR_kwDOAUA-v88AAAABIt7E7w",
       "title": "RESUMABLE: Recommend progress 104s on upload creation",
       "url": "https://github.com/httpwg/http-extensions/pull/3546",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -220441,18 +220451,28 @@
       ],
       "body": "Changes the progress 104 on upload creation from MAY to SHOULD, matching upload append.\n\nFixes #3541",
       "createdAt": "2026-10-15T21:18:34Z",
-      "updatedAt": "2026-10-16T17:46:20Z",
+      "updatedAt": "2026-10-23T14:34:45Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "63c7ebcb2cfeccbfcd2cecd0b0d553e91c1e206e",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "resumable-progress-104-3541",
       "headRefOid": "7431cff67ef3b92d9eb93b8ab6ed635973eb7a4a",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "closedAt": "2026-10-23T14:34:42Z",
+      "mergedAt": "2026-10-23T14:34:42Z",
+      "mergedBy": "LPardue",
+      "mergeCommit": {
+        "oid": "e71e1688043eddb85698b3f0d9d423b7cbbae333"
+      },
+      "comments": [
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Gathered approvals for a small normative change that makes the document consistent with itself. Merging.",
+          "createdAt": "2026-10-23T14:34:37Z",
+          "updatedAt": "2026-10-23T14:34:37Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOAUA-v88AAAABSsM5lA",
@@ -220542,7 +220562,7 @@
       "id": "PR_kwDOAUA-v88AAAABIuCF4w",
       "title": "RESUMABLE: Cancel the upload after giving up on retries",
       "url": "https://github.com/httpwg/http-extensions/pull/3548",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -220551,18 +220571,28 @@
       ],
       "body": "A client that exhausts its retries SHOULD cancel the upload if it can still reach the upload resource, matching the other cases that call for cancellation.\n\nFixes #3531",
       "createdAt": "2026-10-15T21:29:03Z",
-      "updatedAt": "2026-10-16T10:36:15Z",
+      "updatedAt": "2026-10-23T14:37:29Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "63c7ebcb2cfeccbfcd2cecd0b0d553e91c1e206e",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "resumable-cancel-after-retries-3531",
       "headRefOid": "8b8c28d5baf281fedf044ce7507cfc3eec50951f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "closedAt": "2026-10-23T14:37:27Z",
+      "mergedAt": "2026-10-23T14:37:27Z",
+      "mergedBy": "LPardue",
+      "mergeCommit": {
+        "oid": "8f34f224951ec94fa26d43926f405e38382defb0"
+      },
+      "comments": [
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Gathered approvals for a small normative change that makes the doc self consistent. Merging",
+          "createdAt": "2026-10-23T14:37:21Z",
+          "updatedAt": "2026-10-23T14:37:21Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOAUA-v88AAAABSlx5Tw",
@@ -221311,7 +221341,7 @@
       "id": "PR_kwDOAUA-v88AAAABJPMg5w",
       "title": "RESUMABLE: Editorial fixes from Julian Reschke's review",
       "url": "https://github.com/httpwg/http-extensions/pull/3564",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -221321,17 +221351,19 @@
       ],
       "body": "Editorial fixes from Julian Reschke's review of -14 (https://lists.w3.org/Archives/Public/ietf-http-wg/2026OctDec/0072.html); one commit each:\n\n- Cite RFC 3986 for the term URI\n- Drop repeated and self-referential cross-references\n- Drop two more repeated cross-references\n- Point Upload Resource state at the subsections below\n- Cite HTTP Section 8 once for representation metadata\n- Drop request/response qualifiers that context makes redundant\n- State the unit for offset and length consistently\n- Say why an OPTIONS discovery request omits Upload-Complete\n- Simplify the meaning of Upload-Complete in responses\n- State each field's Structured type once\n- Say upload state includes, not consists of, the listed properties\n- State the URI reuse requirement about the URI, not the resource\n- Tighten the paragraph on retaining completed upload resources\n- Don't repeat the Upload-Complete name within one sentence\n\nTracked separately: #3562 (field error handling), #3563 (200 vs 201 in examples).\n",
       "createdAt": "2026-10-19T02:16:20Z",
-      "updatedAt": "2026-10-19T05:36:50Z",
+      "updatedAt": "2026-10-23T14:30:01Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "7ebcfaffe552ff895cd0e801d1485d32e03affe8",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "resumable-review-reschke",
       "headRefOid": "116b82932b878824ab81f441655183b616876917",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-10-23T14:29:59Z",
+      "mergedAt": "2026-10-23T14:29:59Z",
+      "mergedBy": "LPardue",
+      "mergeCommit": {
+        "oid": "7179e55bfe01ef79706cf01d26b58749041f62a9"
+      },
       "comments": [],
       "reviews": [
         {
@@ -221345,6 +221377,59 @@
           "body": "",
           "createdAt": "2026-10-19T05:36:50Z",
           "updatedAt": "2026-10-19T05:36:50Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABT3M1Tg",
+          "commit": {
+            "abbreviatedOid": "116b829"
+          },
+          "author": "reschke",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Awesome.\n\nI'll do another pass soonish.",
+          "createdAt": "2026-10-23T12:01:08Z",
+          "updatedAt": "2026-10-23T12:01:08Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3565,
+      "id": "PR_kwDOAUA-v88AAAABKW8WGw",
+      "title": "Added optional payload to WRAP_UP capsule",
+      "url": "https://github.com/httpwg/http-extensions/pull/3565",
+      "state": "OPEN",
+      "author": "yaroslavros",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-10-23T22:38:18Z",
+      "updatedAt": "2026-10-24T02:05:42Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "8f34f224951ec94fa26d43926f405e38382defb0",
+      "headRepository": "yaroslavros/http-extensions",
+      "headRefName": "main",
+      "headRefOid": "f4bb6d8dfcbaa3ceecba8d1f12e8d7f8849d3028",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABT_OiPg",
+          "commit": {
+            "abbreviatedOid": "f4bb6d8"
+          },
+          "author": "DavidSchinazi",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "This sounds good to me",
+          "createdAt": "2026-10-24T02:05:42Z",
+          "updatedAt": "2026-10-24T02:05:42Z",
           "comments": []
         }
       ]
