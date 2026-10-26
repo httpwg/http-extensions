@@ -311,11 +311,13 @@ The 429 (Too Many Requests) and 503 (Service Unavailable) status codes indicate 
 
 ## Conveying metadata
 
-This specification supports the "Expect: 100-continue" request header ({{?RFC9110, Section 10.1.1}}) in any HTTP version.  The "100 (Continue)" status code confirms receipt of a request at the proxy without waiting for the proxy-destination TCP handshake to succeed or fail.  Clients MAY send "Expect: 100-continue", and proxies MUST respect it by returning "100 (Continue)" if the request is not immediately rejected.  This allows for a few useful improvements:
+This specification supports the "100 (Continue)" response status code ({{?RFC9110, Section 15.2.1}}) in any HTTP version.  Proxies SHOULD send this status code whenever they accept a request, without waiting for the proxy-destination TCP handshake to succeed or fail.  This allows for a few useful improvements:
 
 * Clients can provide a clearer status indication while waiting for the destination host to respond.  (TCP handshakes can hang for several minutes before failing.)
 * Clients can apply separate timeouts to the tunneling request and connection establishment.
 * In HTTP/2 and HTTP/3, clients have the option to delay some or all of the optimistic payload data until after confirming that the request is permissible.  This strategy reduces wasted effort when the request is rejected.
+
+Note that a client in this specification cannot send an "Expect: 100-continue" request header field, because the request does not include any "content" ({{?RFC9110, Section 10.1.1}}).
 
 Proxies implementing this specification SHOULD include a "Proxy-Status" response header field {{!PROXY-STATUS=RFC9209}} in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  Clients and proxies MUST NOT send trailer fields on "connect-tcp" streams.
 
@@ -459,6 +461,7 @@ This document benefited from close review and suggested changes by:
 * Mohamed Boucadair
 * Thomas Fossati
 * Amos Jeffries
+* Antun Jurkovic
 * Eric Kinnear
 * Kyle Nekritz
 * Kazuho Oku
