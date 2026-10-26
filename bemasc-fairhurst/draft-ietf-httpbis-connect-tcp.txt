@@ -81,7 +81,7 @@ Table of Contents
    7.  Operational Considerations
      7.1.  Avoiding HTTP/1.1
      7.2.  Timeouts
-     7.3.  Termination of Packet-Level Metadata
+     7.3.  Scope of Packet-Level Metadata
      7.4.  IP address sharing
    8.  IANA Considerations
      8.1.  New Upgrade Token
@@ -814,7 +814,7 @@ Table of Contents
    (e.g., mobile vs. fixed), characteristics of the tunneled
    application, and many other considerations.
 
-7.3.  Termination of Packet-Level Metadata
+7.3.  Scope of Packet-Level Metadata
 
    This specification does not provide a way to pass packet-level
    metadata such as IPv6 Extension Headers [RFC2460], Section 4,
