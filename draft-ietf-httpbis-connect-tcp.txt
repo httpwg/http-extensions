@@ -274,6 +274,8 @@ Table of Contents
    Upgrade: connect-tcp
    Capsule-Protocol: ?1
 
+                               HTTP/1.1 100 Continue
+
    ** Proxy establishes a TCP connection to 192.0.2.1:443 **
 
                                HTTP/1.1 101 Switching Protocols
@@ -556,13 +558,11 @@ Table of Contents
 
 4.3.  Conveying metadata
 
-   This specification supports the "Expect: 100-continue" request header
-   ([HTTP], Section 10.1.1) in any HTTP version.  The "100 (Continue)"
-   status code confirms receipt of a request at the proxy without
-   waiting for the proxy-destination TCP handshake to succeed or fail.
-   Clients MAY send "Expect: 100-continue", and proxies MUST respect it
-   by returning "100 (Continue)" if the request is not immediately
-   rejected.  This allows for a few useful improvements:
+   This specification supports the "100 (Continue)" response status code
+   ([HTTP], Section 15.2.1) in any HTTP version.  Proxies SHOULD send
+   this status code whenever they accept a request, without waiting for
+   the proxy-destination TCP handshake to succeed or fail.  This allows
+   for a few useful improvements:
 
    *  Clients can provide a clearer status indication while waiting for
       the destination host to respond.  (TCP handshakes can hang for
@@ -575,6 +575,10 @@ Table of Contents
       of the optimistic payload data until after confirming that the
       request is permissible.  This strategy reduces wasted effort when
       the request is rejected.
+
+   Note that a client in this specification cannot send an "Expect:
+   100-continue" request header field, because the request does not
+   include any "content" ([HTTP], Section 10.1.1).
 
    Proxies implementing this specification SHOULD include a "Proxy-
    Status" response header field [PROXY-STATUS] in any success or
@@ -1038,6 +1042,8 @@ Acknowledgments
    *  Thomas Fossati
 
    *  Amos Jeffries
+
+   *  Antun Jurkovic
 
    *  Eric Kinnear
 

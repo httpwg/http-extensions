@@ -1409,6 +1409,8 @@ Connection: Upgrade
 Upgrade: connect-tcp
 Capsule-Protocol: ?1
 
+                            HTTP/1.1 100 Continue
+
 ** Proxy establishes a TCP connection to 192.0.2.1:443 **
 
                             HTTP/1.1 101 Switching Protocols
@@ -1906,7 +1908,7 @@ capsule-protocol = ?1
         <h3 id="name-conveying-metadata">
 <a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-conveying-metadata" class="section-name selfRef">Conveying metadata</a>
         </h3>
-<p id="section-4.3-1">This specification supports the "Expect: 100-continue" request header (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-10.1.1" class="relref">Section 10.1.1</a></span>) in any HTTP version.  The "100 (Continue)" status code confirms receipt of a request at the proxy without waiting for the proxy-destination TCP handshake to succeed or fail.  Clients <span class="bcp14">MAY</span> send "Expect: 100-continue", and proxies <span class="bcp14">MUST</span> respect it by returning "100 (Continue)" if the request is not immediately rejected.  This allows for a few useful improvements:<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-1">This specification supports the "100 (Continue)" response status code (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-15.2.1" class="relref">Section 15.2.1</a></span>) in any HTTP version.  Proxies <span class="bcp14">SHOULD</span> send this status code whenever they accept a request, without waiting for the proxy-destination TCP handshake to succeed or fail.  This allows for a few useful improvements:<a href="#section-4.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3-2.1">
             <p id="section-4.3-2.1.1">Clients can provide a clearer status indication while waiting for the destination host to respond.  (TCP handshakes can hang for several minutes before failing.)<a href="#section-4.3-2.1.1" class="pilcrow">¶</a></p>
@@ -1918,7 +1920,8 @@ capsule-protocol = ?1
             <p id="section-4.3-2.3.1">In HTTP/2 and HTTP/3, clients have the option to delay some or all of the optimistic payload data until after confirming that the request is permissible.  This strategy reduces wasted effort when the request is rejected.<a href="#section-4.3-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.3-3">Proxies implementing this specification <span class="bcp14">SHOULD</span> include a "Proxy-Status" response header field <span>[<a href="#PROXY-STATUS" class="cite xref">PROXY-STATUS</a>]</span> in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  Clients and proxies <span class="bcp14">MUST NOT</span> send trailer fields on "connect-tcp" streams.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.3-3">Note that a client in this specification cannot send an "Expect: 100-continue" request header field, because the request does not include any "content" (<span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-10.1.1" class="relref">Section 10.1.1</a></span>).<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.3-4">Proxies implementing this specification <span class="bcp14">SHOULD</span> include a "Proxy-Status" response header field <span>[<a href="#PROXY-STATUS" class="cite xref">PROXY-STATUS</a>]</span> in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  Clients and proxies <span class="bcp14">MUST NOT</span> send trailer fields on "connect-tcp" streams.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2432,28 +2435,31 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
           <p id="appendix-A-2.3.1">Amos Jeffries<a href="#appendix-A-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.4">
-          <p id="appendix-A-2.4.1">Eric Kinnear<a href="#appendix-A-2.4.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.4.1">Antun Jurkovic<a href="#appendix-A-2.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.5">
-          <p id="appendix-A-2.5.1">Kyle Nekritz<a href="#appendix-A-2.5.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.5.1">Eric Kinnear<a href="#appendix-A-2.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.6">
-          <p id="appendix-A-2.6.1">Kazuho Oku<a href="#appendix-A-2.6.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.6.1">Kyle Nekritz<a href="#appendix-A-2.6.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.7">
-          <p id="appendix-A-2.7.1">Tommy Pauly<a href="#appendix-A-2.7.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.7.1">Kazuho Oku<a href="#appendix-A-2.7.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.8">
-          <p id="appendix-A-2.8.1">Yaroslav Romakho<a href="#appendix-A-2.8.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.8.1">Tommy Pauly<a href="#appendix-A-2.8.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.9">
-          <p id="appendix-A-2.9.1">David Schinazi<a href="#appendix-A-2.9.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.9.1">Yaroslav Romakho<a href="#appendix-A-2.9.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.10">
-          <p id="appendix-A-2.10.1">Ketan Talaulikar<a href="#appendix-A-2.10.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.10.1">David Schinazi<a href="#appendix-A-2.10.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.11">
-          <p id="appendix-A-2.11.1">Willy Tarreau<a href="#appendix-A-2.11.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.11.1">Ketan Talaulikar<a href="#appendix-A-2.11.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-2.12">
+          <p id="appendix-A-2.12.1">Willy Tarreau<a href="#appendix-A-2.12.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
