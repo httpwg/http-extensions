@@ -457,6 +457,7 @@ IANA is requested to add the following entry to the "HTTP Capsule Types" registr
 This document benefited from close review and suggested changes by:
 
 * Mohamed Boucadair
+* Thomas Fossati
 * Amos Jeffries
 * Eric Kinnear
 * Kyle Nekritz
@@ -466,4 +467,3 @@ This document benefited from close review and suggested changes by:
 * David Schinazi
 * Ketan Talaulikar
 * Willy Tarreau
-* Thomas Fossati
