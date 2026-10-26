@@ -140,6 +140,8 @@ Connection: Upgrade
 Upgrade: connect-tcp
 Capsule-Protocol: ?1
 
+                            HTTP/1.1 100 Continue
+
 ** Proxy establishes a TCP connection to 192.0.2.1:443 **
 
                             HTTP/1.1 101 Switching Protocols
