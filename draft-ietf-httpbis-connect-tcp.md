@@ -413,6 +413,14 @@ Except when actively sending or receiving data, an endpoint is always waiting fo
 
 Endpoints MAY impose additional timeouts, especially as a defense against certain resource exhaustion attacks ({{resource-exhaustion}}).  However, operators should apply timeouts cautiously to minimize the impact on connections that are functioning but slow.   See {{closing-connections}} for related requirements.
 
+For example, enabling PING frames on idle HTTP/2 connections allows the operator to prevent some kinds of failures and detect failed connections faster, but it uses more bandwidth, CPU time, and radio power, and increases the risk of false-positive connection failures.  Optimal transport settings will depend on the network environment (e.g., mobile vs. fixed), characteristics of the tunneled application, and many other considerations.
+
+## Scope of Packet-Level Metadata
+
+This specification does not provide a way to pass packet-level metadata such as IPv6 Extension Headers {{?RFC2460, Section 4}}, DiffServ Codepoints (DSCP) {{?RFC2474}}, or Explicit Congestion Notification (ECN) marks {{?RFC3168}} through the tunnel.  TCP options and non-fatal ICMP messages (e.g., Packet Too Big) are similarly not relayed.  Instead, these signals are processed by the relevant endpoint of this specification, which is also the TCP endpoint and only relays payload data through the tunnel.
+
+Consumption and generation of these signals on each connection is controlled by the endpoint, and is independent from any behaviors of the other endpoint and any similar signals on the tunnel's HTTP connection.  If the operator has requirements related to these behaviors, it must configure the relevant endpoint (typically the proxy) accordingly.
+
 ## IP address sharing
 
 A TCP proxy typically uses the same IP address to establish connections on behalf of multiple clients, especially in IPv4. {{?RFC6269}} provides guidance regarding difficulties that can arise from IP address sharing, including in this arrangement.
@@ -457,6 +465,7 @@ IANA is requested to add the following entry to the "HTTP Capsule Types" registr
 This document benefited from close review and suggested changes by:
 
 * Mohamed Boucadair
+* Gorry Fairhurst
 * Thomas Fossati
 * Amos Jeffries
 * Eric Kinnear
