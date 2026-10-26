@@ -52,7 +52,7 @@ TCP tunneling using HTTP CONNECT has long been part of the core HTTP specificati
 
 ## History
 
-HTTP has used the CONNECT method for tunneling TCP connections since HTTP/1.1.  When using CONNECT, the request target specifies a host and port number, and the proxy forwards TCP payloads between the client and the target destination ({{!RFC9110, Section 9.3.6}}). To date, this is the only mechanism defined for proxying TCP over HTTP.  In this specification, this is referred to as a "classic HTTP CONNECT proxy".
+HTTP has used the CONNECT method for tunneling TCP connections since HTTP/1.1.  When using CONNECT, the request target specifies a host and port number, and the proxy forwards TCP payloads between the client and the target destination ({{!RFC9110, Section 9.3.6}}). Prior to this specification, this was the only mechanism defined for proxying TCP over HTTP.  In this specification, this arrangement is referred to as a "classic HTTP CONNECT proxy".
 
 HTTP/3 {{!RFC9114}} uses a UDP transport, so it cannot be forwarded using the pre-existing CONNECT mechanism.  To enable forward proxying of HTTP/3, the MASQUE effort has defined proxy mechanisms that are capable of tunneling UDP datagrams {{!CONNECT-UDP=RFC9298}}, and more generally IP datagrams {{?CONNECT-IP=RFC9484}}.  The destination host and port number (if applicable) are encoded into the HTTP resource path, and end-to-end datagrams are wrapped into HTTP Datagrams {{CAPSULE}} on the client-proxy path.
 
@@ -80,7 +80,11 @@ The term "templated TCP proxy" refers to a proxy that is identified by a URI Tem
 
 # Specification
 
-A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "target_port".  This URI Template and its variable values MUST meet all the same requirements as for UDP proxying ({{!CONNECT-UDP, Section 2}}), and are subject to the same validation rules.  Clients MUST substitute the destination host and port number into this template to produce a request URI.  The derived URI serves as the destination of a Capsule Protocol connection using the Upgrade Token "connect-tcp" (see registration in {{new-upgrade-token}}).
+A template-driven TCP transport proxy for HTTP is identified by a URI Template {{!RFC6570}} containing variables named "target_host" and "target_port".  This URI Template and its variable values MUST meet all the same requirements as for UDP proxying ({{!CONNECT-UDP, Sections 2 and 3}}), and are subject to the same validation rules.  Clients MUST substitute the destination host and port number into this template to produce a request URI.  The derived URI serves as the destination of a Capsule Protocol connection using the Upgrade Token "connect-tcp" (see registration in {{new-upgrade-token}}).
+
+If the request is well-formed and permissible, the proxy MUST attempt to establish the TCP connection before sending a final success or failure response.
+
+## Payload Transport
 
 When using "connect-tcp", TCP payload data is sent in the payload of new Capsule Types named DATA and FINAL_DATA (see {{fig-capsules}} and registrations in {{data-capsule}}).  The ordered concatenation of these capsule payloads, which MAY be empty, represents the TCP payload data.  A FINAL_DATA capsule additionally indicates that the sender has closed this stream, semantically equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint MUST NOT send any more DATA or FINAL_DATA capsules on this data stream. See {{closing-connections}} for related requirements.
 
@@ -122,7 +126,7 @@ In HTTP/1.1 {{RFC9112}}, the client uses the proxy by issuing a request as follo
 * The request SHALL include an "Upgrade" header field with the value "connect-tcp".
 * The request SHOULD include a "Capsule-Protocol: ?1" header (as recommended in {{CAPSULE, Section 3.4}}).
 
-If the request is well-formed and permissible, the proxy MUST attempt to establish the TCP connection before sending any response status code other than "100 (Continue)" (see {{conveying-metadata}}).  If the TCP connection is successful, the response SHALL be as follows:
+If the TCP connection is successful, the response SHALL be as follows:
 
 * The HTTP status code SHALL be "101 (Switching Protocols)".
 * The response SHALL include a "Connection" header field with the value "Upgrade".
@@ -293,7 +297,7 @@ Note that very large DATA and FINAL_DATA capsules are still valid, as they can b
 
 This section discusses some behaviors that are permitted or recommended in order to enhance the performance or functionality of connection setup.
 
-## Latency optimizations
+## Latency Optimizations
 
 When using this specification in HTTP/2 or HTTP/3, clients MAY start sending TCP stream content optimistically, subject to flow control limits ({{Section 5.2 of !RFC9113}} or {{Section 4.1 of !QUIC}}).  Proxies MUST buffer this "optimistic" content until the TCP stream becomes writable, and discard it if the TCP connection fails.  (Clients MUST NOT use "optimistic" behavior in HTTP/1.1, as this would interfere with reuse of the connection after an error response such as "401 (Unauthorized)".)
 
@@ -305,13 +309,13 @@ When DNS resolution of `target_host` produces multiple IP addresses, proxies SHO
 
 Failure to initiate a tunnel is indicated by the HTTP response status code.
 
-A 4XX status code indicates the the request is malformed or impermissible.  For example, if the proxy performs DNS resolution of `target_host` and receives an IP address that is disallowed by the proxy's policy, it might return 403 (Forbidden).
+A 4XX status code indicates that the request is malformed or impermissible.  For example, if the proxy performs DNS resolution of `target_host` and receives an IP address that is disallowed by the proxy's policy, it might return 403 (Forbidden).
 
 A 5XX status code indicates a failure in the attempt, such as when a TCP connection was attempted but did not succeed.  The 502 (Bad Gateway) and 504 (Gateway Timeout) status codes are commonly used.
 
 The 429 (Too Many Requests) and 503 (Service Unavailable) status codes indicate a temporary failure, and can carry a "Retry-After" response header field.  If included, this field applies to all requests using this URI Template.
 
-## Conveying metadata
+## Conveying Metadata
 
 This specification supports the "100 (Continue)" response status code ({{?RFC9110, Section 15.2.1}}) in any HTTP version.  Proxies SHOULD send this status code whenever they accept a request, without waiting for the proxy-destination TCP handshake to succeed or fail.  This allows for a few useful improvements:
 
@@ -341,7 +345,7 @@ This specification does not require any specific type of configuration input.  S
 * A URI Template string, as described in {{specification}}.
 * An IP address or hostname, with optional or required port and scheme (as often used to describe classic HTTP CONNECT proxies).  A corresponding templated TCP proxy might be found in two ways:
   - At the default template for "connect-tcp" ({{fig-default}}).
-  - In the "proxy" dictionary of a provisioning domain resource at the corresponding .well-known URI ({{?I-D.ietf-intarea-proxy-config, Section 2}}).
+  - In the "proxies" array of a provisioning domain resource retrieved from the corresponding .well-known URI ({{?I-D.ietf-intarea-proxy-config, Sections 2 and 3}}).
 * A provisioning domain resource, configured directly or identified by a local or remote URI (e.g., using "file://" or "https://").
 
 ~~~
@@ -365,7 +369,7 @@ If the client infers that classic HTTP CONNECT is not supported, it SHOULD retry
 Templated TCP proxy requests can traverse standard HTTP gateways to ease implementation and allow use of shared infrastructure.  However, current gateways might need modifications to support TCP proxy services.  To be compatible, a gateway MUST:
 
 * support Extended CONNECT (if acting as an HTTP/2 or HTTP/3 server).
-* support HTTP/1.1 Upgrade to "connect-tcp" (if acting as an HTTP/1.1 server)
+* support HTTP/1.1 Upgrade to "connect-tcp" (if acting as an HTTP/1.1 server).
   - only after forwarding the upgrade request to the origin and observing a success response.
 * forward the "connect-tcp" protocol to the origin.
 * convert "connect-tcp" requests between all supported HTTP server and client versions.
@@ -429,6 +433,21 @@ Consumption and generation of these signals on each connection is controlled by 
 
 A TCP proxy typically uses the same IP address to establish connections on behalf of multiple clients, especially in IPv4. {{?RFC6269}} provides guidance regarding difficulties that can arise from IP address sharing, including in this arrangement.
 
+## Diagnostics and Monitoring
+
+A proxy in this protocol reports success or failure in each response via the HTTP status code and the Proxy-Status response header field.  Monitoring those error codes is a sensible way to assess the functioning of a proxy server.  Other relevant performance indicators may include:
+
+* Abrupt closure rates
+* Number of active tunnels per user
+* Total throughput in each direction
+* Number of bytes buffered
+* Connection duration
+* Time spent establishing or closing connections
+* Number of half-closed or WAIT-state connections
+* DNS resolution delay
+
+An increase in any of these measures could indicate an operational problem or a resource exhaustion attack ({{resource-exhaustion}}).  See {{resource-exhaustion}} for guidance on relevant defenses and limits.
+
 # IANA Considerations
 
 ## New Upgrade Token
@@ -472,6 +491,7 @@ This document benefited from close review and suggested changes by:
 * Gorry Fairhurst
 * Thomas Fossati
 * Amos Jeffries
+* Mahesh Jethanandani
 * Antun Jurkovic
 * Eric Kinnear
 * Kyle Nekritz
