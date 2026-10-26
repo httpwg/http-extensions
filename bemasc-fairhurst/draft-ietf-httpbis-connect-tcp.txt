@@ -825,9 +825,9 @@ Table of Contents
    endpoint of this specification, which is also the TCP endpoint and
    only relays payload data through the tunnel.
 
-   Consumption and generation of these signals on each connection is at
-   the discretion of the endpoint, and is independent from any behaviors
-   of the other endpoint and any similar signals on the tunnel's HTTP
+   Consumption and generation of these signals on each connection is
+   controlled by the endpoint, and is independent from any behaviors of
+   the other endpoint and any similar signals on the tunnel's HTTP
    connection.  If the operator has requirements related to these
    behaviors, it must configure the relevant endpoint (typically the
    proxy) accordingly.
