@@ -584,7 +584,7 @@ A successful response to a `HEAD` or `GET` request to an upload resource
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limits}}) if any, and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{HTTP-CACHING}}).
 
-The server SHOULD NOT generate a response with a `3xx (Redirection)` status code because the upload resource's URI is expected to remain the same for the lifetime of the upload. 
+The server SHOULD NOT generate a response with a `3xx (Redirection)` status code because the upload resource's URI is expected to remain the same for the lifetime of the upload.
 
 A client does not require response content for an offset retrieval request in order to successfully resume an upload. Therefore, serving response content for a `GET` request is unexpected. Its meaning is not defined by this protocol.
 
@@ -705,7 +705,7 @@ Upon receiving a `DELETE` request, the server SHOULD deactivate the upload resou
 
 The server SHOULD terminate any in-flight requests to the upload resource before sending the response by abruptly terminating their HTTP connection(s) or stream(s), as described in {{concurrency}}.
 
-The server SHOULD NOT generate a response with a `3xx (Redirection)` status code because the upload resource's URI is expected to remain the same for the lifetime of the upload. 
+The server SHOULD NOT generate a response with a `3xx (Redirection)` status code because the upload resource's URI is expected to remain the same for the lifetime of the upload.
 
 ## Example {#upload-cancellation-example}
 
