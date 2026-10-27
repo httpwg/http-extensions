@@ -522,14 +522,17 @@ Reference:
 This specification registers the following entry in the "HTTP/3 Settings"
 registry defined in {{H3}}:
 
-Code:
+Value:
 : TBD
 
-Name:
+Setting Name:
 : SETTINGS_HTTP_SERVER_CERT_AUTH
 
 Default:
 : 0
+
+Status:
+: permanent
 
 Reference:
 : This document
