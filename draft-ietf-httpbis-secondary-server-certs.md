@@ -56,7 +56,7 @@ on TLS Exported Authenticators.
 HTTP {{!HTTP=RFC9110}} clients need to know that the content they receive on a
 connection comes from the origin from which they intended to retrieve it. The
 traditional form of server authentication in HTTP has been in the form of a
-single X.509 certificate provided during the TLS {{!TLS13=RFC8446}} handshake.
+single X.509 certificate provided during the TLS {{!TLS13=RFC9846}} handshake.
 
 TLS supports one server and one client certificate on a connection. These
 certificates may contain multiple identities, but only one certificate may be
