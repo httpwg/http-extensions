@@ -614,7 +614,7 @@ A client can continue the upload and append representation data by sending a `PA
 
 The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` header field. To ensure that the upload resource accepts the request, the client SHOULD take the offset from the most recent offset retrieval ({{offset-retrieving}}), upload creation ({{upload-creation}}), or upload append response.
 
-The patch document uses the identity content coding, so the request MUST NOT include a `Content-Encoding` header field (see {{Section 8.4 of HTTP}}). Content codings of the representation, if any, are announced only in the upload creation request ({{upload-creation}}).
+The patch document uses no content coding, so the request MUST NOT include a `Content-Encoding` header field (see {{Section 8.4 of HTTP}}). Content codings of the representation, if any, are announced only in the upload creation request ({{upload-creation}}).
 
 The request MUST include the `Upload-Complete` header field. Its value is true in two cases:
 
