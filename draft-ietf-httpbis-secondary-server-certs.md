@@ -142,7 +142,7 @@ multiple origins.
 
 This document additionally defines SETTINGS parameters for HTTP/2 and HTTP/3
 ({{settings}}) that allow the client and server to indicate support for
-HTTP-Layer certificate authentication.
+HTTP-layer certificate authentication.
 
 # Conventions and Definitions
 
@@ -162,7 +162,7 @@ The `SETTINGS_HTTP_SERVER_CERT_AUTH` parameters for HTTP/2 and HTTP/3 are
 defined in {{settings}} so that clients and servers can indicate support for
 secondary server certificate authentication.
 
-HTTP/2 and HTTP/3 endpoints that wish to indicate support for HTTP-Layer
+HTTP/2 and HTTP/3 endpoints that wish to indicate support for HTTP-layer
 certificate authentication MUST send a `SETTINGS_HTTP_SERVER_CERT_AUTH`
 parameter set to "1" in their SETTINGS frame. Endpoints MUST NOT use any of the
 authentication functionality described in this document unless they have
