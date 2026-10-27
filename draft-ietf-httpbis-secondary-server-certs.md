@@ -248,7 +248,8 @@ This document adds a new HTTP/2 SETTINGS(0xTBD) parameter to those defined by
 {{Section 6.5.2 of H2}}.
 
 The new parameter name is `SETTINGS_HTTP_SERVER_CERT_AUTH`. The value of the
-parameter MUST be 0 or 1.
+parameter MUST be 0 or 1. A server MUST treat any other value as a connection
+error of type PROTOCOL_ERROR.
 
 The usage of this parameter is described in {{settings-usage}}.
 
@@ -257,7 +258,8 @@ This document adds a new HTTP/3 SETTINGS(0xTBD) parameter to those defined by
 {{Section 7.2.4.1 of H3}}.
 
 The new parameter name is `SETTINGS_HTTP_SERVER_CERT_AUTH`. The value of the
-parameter MUST be 0 or 1.
+parameter MUST be 0 or 1. A server MUST treat any other value as a connection
+error of type H3_SETTINGS_ERROR.
 
 The usage of this parameter is described in {{settings-usage}}.
 
