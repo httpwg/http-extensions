@@ -151,10 +151,10 @@ HTTP-layer certificate authentication.
 # Discovering Additional Certificates at the HTTP Layer {#discovery}
 
 A certificate chain with proof of possession of the private key corresponding to
-the end-entity certificate is sent as a sequence of `SERVER_CERTIFICATE`
-frames (see {{http2-cert}}, {{http3-cert}}) to the client. Once the holder of a
-certificate has sent the chain and proof, this certificate chain is cached by
-the recipient and available for future use.
+the end-entity certificate is sent as a `SERVER_CERTIFICATE` frame (see
+{{http2-cert}}, {{http3-cert}}) to the client. Once the holder of a certificate
+has sent the chain and proof, this certificate chain is cached by the recipient
+and available for future use.
 
 ## Indicating Support for HTTP-Layer Server Certificate Authentication {#settings-usage}
 
@@ -313,9 +313,9 @@ described in {{Section 4 of H2}}.
 
 The SERVER_CERTIFICATE frame does not define any flags.
 
-The authenticator field is a portion of the opaque data returned from the TLS
-connection exported authenticator authenticate API. See {{exp-auth}} for more
-details on the input to this API.
+The authenticator field is the opaque data returned from the TLS connection
+exported authenticator authenticate API. See {{exp-auth}} for more details on
+the input to this API.
 
 ## HTTP/3 SERVER_CERTIFICATE frame {#http3-cert}
 A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carries a TLS Exported
@@ -337,9 +337,9 @@ SERVER_CERTIFICATE Frame {
 
 The Type and Length fields are described in {{Section 7.1 of H3}}.
 
-The authenticator field is a portion of the opaque data returned from the TLS
-connection exported authenticator authenticate API. See {{exp-auth}} for more
-details on the input to this API.
+The authenticator field is the opaque data returned from the TLS connection
+exported authenticator authenticate API. See {{exp-auth}} for more details on
+the input to this API.
 
 ## Exported Authenticator Characteristics {#exp-auth}
 
