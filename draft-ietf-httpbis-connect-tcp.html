@@ -1209,6 +1209,12 @@ svg {
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
                 <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-resource-exhaustion-attacks" class="internal xref">Resource Exhaustion attacks</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-client-authentication" class="internal xref">Client Authentication</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-tls-early-data" class="internal xref">TLS Early Data</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
@@ -1890,9 +1896,10 @@ capsule-protocol = ?1
         <h3 id="name-latency-optimizations">
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-latency-optimizations" class="section-name selfRef">Latency optimizations</a>
         </h3>
-<p id="section-4.1-1">When using this specification in HTTP/2 or HTTP/3, clients <span class="bcp14">MAY</span> start sending TCP stream content optimistically, subject to flow control limits (<span><a href="https://rfc-editor.org/rfc/rfc9113#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC9113" class="cite xref">HTTP/2</a>]</span> or <span><a href="https://rfc-editor.org/rfc/rfc9000#section-4.1" class="relref">Section 4.1</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>).  Proxies <span class="bcp14">MUST</span> buffer this "optimistic" content until the TCP stream becomes writable, and discard it if the TCP connection fails.  (Clients <span class="bcp14">MUST NOT</span> use "optimistic" behavior in HTTP/1.1, as this would interfere with reuse of the connection after an error response such as "401 (Unauthorized)".)<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2">Servers that host a proxy under this specification <span class="bcp14">MAY</span> offer support for TLS early data in accordance with <span>[<a href="#RFC8470" class="cite xref">RFC8470</a>]</span>.  Clients <span class="bcp14">MAY</span> send "connect-tcp" requests in early data, and <span class="bcp14">MAY</span> include "optimistic" TCP content in early data (in HTTP/2 and HTTP/3).  At the TLS layer, proxies <span class="bcp14">MAY</span> ignore, reject, or accept the <code>early_data</code> extension (<span>[<a href="#TLS" class="cite xref">TLS</a>], <a href="https://rfc-editor.org/rfc/rfc9846#section-4.3.10" class="relref">Section 4.3.10</a></span>).  At the HTTP layer, proxies <span class="bcp14">MAY</span> process the request immediately, return a "425 (Too Early)" response (<span>[<a href="#RFC8470" class="cite xref">RFC8470</a>], <a href="https://rfc-editor.org/rfc/rfc8470#section-5.2" class="relref">Section 5.2</a></span>), or delay some or all processing of the request until the handshake completes.  For example, a proxy with limited anti-replay defenses might choose to perform DNS resolution of the <code>target_host</code> when a request arrives in early data, but delay the TCP connection until the TLS handshake completes.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.1-3">When DNS resolution of <code>target_host</code> produces multiple IP addresses, proxies <span class="bcp14">SHOULD</span> use a racing procedure such as Happy Eyeballs <span>[<a href="#HEv2" class="cite xref">HEv2</a>]</span> to accelerate connection establishment.  Proxies that race multiple connection attempts <span class="bcp14">MUST</span> buffer any optimistic content until a connection is selected and <span class="bcp14">MUST NOT</span> transmit any payload data on the other connections.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1-1">When using this specification in HTTP/2 or HTTP/3, clients <span class="bcp14">MAY</span> start sending TCP stream content optimistically, subject to flow control limits (<span><a href="https://rfc-editor.org/rfc/rfc9113#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC9113" class="cite xref">HTTP/2</a>]</span> or <span><a href="https://rfc-editor.org/rfc/rfc9000#section-4.1" class="relref">Section 4.1</a> of [<a href="#QUIC" class="cite xref">QUIC</a>]</span>).  Proxies <span class="bcp14">MUST</span> buffer this "optimistic" content until the TCP stream becomes writable, and discard it if the TCP connection fails.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">Clients <span class="bcp14">MUST NOT</span> use "optimistic" behavior in HTTP/1.1, as this would interfere with reuse of the connection after an error response such as "401 (Unauthorized)".<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1-3">Servers that host a proxy under this specification <span class="bcp14">MAY</span> offer support for TLS early data in accordance with <span>[<a href="#RFC8470" class="cite xref">RFC8470</a>]</span>.  Clients <span class="bcp14">MAY</span> send "connect-tcp" requests in early data, and <span class="bcp14">MAY</span> include "optimistic" TCP content in early data (in HTTP/2 and HTTP/3).  At the TLS layer, proxies <span class="bcp14">MAY</span> ignore, reject, or accept the <code>early_data</code> extension (<span>[<a href="#TLS" class="cite xref">TLS</a>], <a href="https://rfc-editor.org/rfc/rfc9846#section-4.3.10" class="relref">Section 4.3.10</a></span>).  At the HTTP layer, proxies <span class="bcp14">MAY</span> process the request immediately, return a "425 (Too Early)" response (<span>[<a href="#RFC8470" class="cite xref">RFC8470</a>], <a href="https://rfc-editor.org/rfc/rfc8470#section-5.2" class="relref">Section 5.2</a></span>), or delay some or all processing of the request until the handshake completes.  For example, a proxy with limited anti-replay defenses might choose to perform DNS resolution of the <code>target_host</code> when a request arrives in early data, but delay the TCP connection until the TLS handshake completes.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1-4">When DNS resolution of <code>target_host</code> produces multiple IP addresses, proxies <span class="bcp14">SHOULD</span> use a racing procedure such as Happy Eyeballs <span>[<a href="#HEv2" class="cite xref">HEv2</a>]</span> to accelerate connection establishment.  Proxies that race multiple connection attempts <span class="bcp14">MUST</span> buffer any optimistic content until a connection is selected and <span class="bcp14">MUST NOT</span> transmit any payload data on the other connections.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="indicating-failure">
@@ -2093,6 +2100,24 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
             </ul>
 </li>
         </ul>
+</section>
+</div>
+<div id="client-authentication">
+<section id="section-6.2">
+        <h3 id="name-client-authentication">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-client-authentication" class="section-name selfRef">Client Authentication</a>
+        </h3>
+<p id="section-6.2-1">A proxy server operating without access controls on the open internet (an "open proxy") is likely to be discovered and misused quickly by attackers.  HTTP client authentication is the most common way to avoid this misuse.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2-2"><a href="#authentication-headers" class="auto internal xref">Section 3.3.2</a> describes how to use HTTP client authentication with this specification.  Each HTTP client authentication scheme offers distinct security properties, so care should be taken to select an appropriate scheme for each deployment.  See <span>[<a href="#RFC9110" class="cite xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-17.16" class="relref">Section 17.16</a></span> for additional guidance related to HTTP authentication.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="tls-early-data">
+<section id="section-6.3">
+        <h3 id="name-tls-early-data">
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-tls-early-data" class="section-name selfRef">TLS Early Data</a>
+        </h3>
+<p id="section-6.3-1">This specification supports sending both proxying requests and optimistic payload data in TLS early data (<a href="#latency-optimizations" class="auto internal xref">Section 4.1</a>).  TLS 1.3 recommends, but does not require, replay protection for this data (<span>[<a href="#TLS" class="cite xref">TLS</a>], <a href="https://rfc-editor.org/rfc/rfc9846#section-8" class="relref">Section 8</a></span>), so a replay attack could cause the proxy service to establish multiple connections to the target, and to deliver any optimistic payload data on each of these connections.  When such a replay attack would cause harm (e.g., when the optimistic data represents a non-idempotent application command), clients <span class="bcp14">MUST NOT</span> use TLS early data.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.3-2">See <span><a href="https://rfc-editor.org/rfc/rfc8470#section-6" class="relref">Section 6</a> of [<a href="#RFC8470" class="cite xref">RFC8470</a>]</span> for additional relevant security considerations.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2454,40 +2479,43 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
           <p id="appendix-A-2.1.1">Mohamed Boucadair<a href="#appendix-A-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.2">
-          <p id="appendix-A-2.2.1">Gorry Fairhurst<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.2.1">Deb Cooley<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.3">
-          <p id="appendix-A-2.3.1">Thomas Fossati<a href="#appendix-A-2.3.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.3.1">Gorry Fairhurst<a href="#appendix-A-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.4">
-          <p id="appendix-A-2.4.1">Amos Jeffries<a href="#appendix-A-2.4.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.4.1">Thomas Fossati<a href="#appendix-A-2.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.5">
-          <p id="appendix-A-2.5.1">Antun Jurkovic<a href="#appendix-A-2.5.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.5.1">Amos Jeffries<a href="#appendix-A-2.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.6">
-          <p id="appendix-A-2.6.1">Eric Kinnear<a href="#appendix-A-2.6.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.6.1">Antun Jurkovic<a href="#appendix-A-2.6.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.7">
-          <p id="appendix-A-2.7.1">Kyle Nekritz<a href="#appendix-A-2.7.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.7.1">Eric Kinnear<a href="#appendix-A-2.7.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.8">
-          <p id="appendix-A-2.8.1">Kazuho Oku<a href="#appendix-A-2.8.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.8.1">Kyle Nekritz<a href="#appendix-A-2.8.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.9">
-          <p id="appendix-A-2.9.1">Tommy Pauly<a href="#appendix-A-2.9.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.9.1">Kazuho Oku<a href="#appendix-A-2.9.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.10">
-          <p id="appendix-A-2.10.1">Yaroslav Romakho<a href="#appendix-A-2.10.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.10.1">Tommy Pauly<a href="#appendix-A-2.10.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.11">
-          <p id="appendix-A-2.11.1">David Schinazi<a href="#appendix-A-2.11.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.11.1">Yaroslav Romakho<a href="#appendix-A-2.11.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.12">
-          <p id="appendix-A-2.12.1">Ketan Talaulikar<a href="#appendix-A-2.12.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.12.1">David Schinazi<a href="#appendix-A-2.12.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.13">
-          <p id="appendix-A-2.13.1">Willy Tarreau<a href="#appendix-A-2.13.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.13.1">Ketan Talaulikar<a href="#appendix-A-2.13.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-2.14">
+          <p id="appendix-A-2.14.1">Willy Tarreau<a href="#appendix-A-2.14.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
