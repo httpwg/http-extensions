@@ -1227,7 +1227,10 @@ svg {
                 <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-timeouts" class="internal xref">Timeouts</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
-                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-ip-address-sharing" class="internal xref">IP address sharing</a></p>
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-scope-of-packet-level-metad" class="internal xref">Scope of Packet-Level Metadata</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
+                <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="auto internal xref">7.4</a>.  <a href="#name-ip-address-sharing" class="internal xref">IP address sharing</a></p>
 </li>
             </ul>
 </li>
@@ -2169,14 +2172,24 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
         </h3>
 <p id="section-7.2-1">Except when actively sending or receiving data, an endpoint is always waiting for an event from its peer or its TCP connection.  HTTP and TCP are designed to ensure that such an event always arrives, so the connection is never permanently stuck in any state until it is fully closed.  However, for efficient operation, it may be necessary to adjust the settings for TCP keep-alives (<span>[<a href="#TCP" class="cite xref">TCP</a>], <a href="https://rfc-editor.org/rfc/rfc9293#section-3.8.4" class="relref">Section 3.8.4</a></span>), QUIC idle timeouts (<span>[<a href="#QUIC" class="cite xref">QUIC</a>], <a href="https://rfc-editor.org/rfc/rfc9000#section-10.1" class="relref">Section 10.1</a></span>), HTTP/2 PING frames (<span>[<a href="#RFC9113" class="cite xref">HTTP/2</a>], <a href="https://rfc-editor.org/rfc/rfc9113#section-6.7" class="relref">Section 6.7</a></span>), and other transport options.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <p id="section-7.2-2">Endpoints <span class="bcp14">MAY</span> impose additional timeouts, especially as a defense against certain resource exhaustion attacks (<a href="#resource-exhaustion" class="auto internal xref">Section 6.1</a>).  However, operators should apply timeouts cautiously to minimize the impact on connections that are functioning but slow.   See <a href="#closing-connections" class="auto internal xref">Section 3.4</a> for related requirements.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
+<p id="section-7.2-3">For example, enabling PING frames on idle HTTP/2 connections allows the operator to prevent some kinds of failures and detect failed connections faster, but it uses more bandwidth, CPU time, and radio power, and increases the risk of false-positive connection failures.  Optimal transport settings will depend on the network environment (e.g., mobile vs. fixed), characteristics of the tunneled application, and many other considerations.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="scope-of-packet-level-metadata">
+<section id="section-7.3">
+        <h3 id="name-scope-of-packet-level-metad">
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-scope-of-packet-level-metad" class="section-name selfRef">Scope of Packet-Level Metadata</a>
+        </h3>
+<p id="section-7.3-1">This specification does not provide a way to pass packet-level metadata such as IPv6 Extension Headers <span>[<a href="#RFC2460" class="cite xref">RFC2460</a>], <a href="https://rfc-editor.org/rfc/rfc2460#section-4" class="relref">Section 4</a></span>, DiffServ Codepoints (DSCP) <span>[<a href="#RFC2474" class="cite xref">RFC2474</a>]</span>, or Explicit Congestion Notification (ECN) marks <span>[<a href="#RFC3168" class="cite xref">RFC3168</a>]</span> through the tunnel.  TCP options and non-fatal ICMP messages (e.g., Packet Too Big) are similarly not relayed.  Instead, these signals are processed by the relevant endpoint of this specification, which is also the TCP endpoint and only relays payload data through the tunnel.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+<p id="section-7.3-2">Consumption and generation of these signals on each connection is controlled by the endpoint, and is independent from any behaviors of the other endpoint and any similar signals on the tunnel's HTTP connection.  If the operator has requirements related to these behaviors, it must configure the relevant endpoint (typically the proxy) accordingly.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="ip-address-sharing">
-<section id="section-7.3">
+<section id="section-7.4">
         <h3 id="name-ip-address-sharing">
-<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-ip-address-sharing" class="section-name selfRef">IP address sharing</a>
+<a href="#section-7.4" class="section-number selfRef">7.4. </a><a href="#name-ip-address-sharing" class="section-name selfRef">IP address sharing</a>
         </h3>
-<p id="section-7.3-1">A TCP proxy typically uses the same IP address to establish connections on behalf of multiple clients, especially in IPv4. <span>[<a href="#RFC6269" class="cite xref">RFC6269</a>]</span> provides guidance regarding difficulties that can arise from IP address sharing, including in this arrangement.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+<p id="section-7.4-1">A TCP proxy typically uses the same IP address to establish connections on behalf of multiple clients, especially in IPv4. <span>[<a href="#RFC6269" class="cite xref">RFC6269</a>]</span> provides guidance regarding difficulties that can arise from IP address sharing, including in this arrangement.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2414,6 +2427,18 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
         <dd>
 <span class="refAuthor">Seemann, M.</span> and <span class="refAuthor">K. Oku</span>, <span class="refTitle">"QUIC Stream Resets with Partial Delivery"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-quic-reliable-stream-reset-11</span>, <time datetime="2026-09-06" class="refDate">6 September 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-quic-reliable-stream-reset-11">https://datatracker.ietf.org/doc/html/draft-ietf-quic-reliable-stream-reset-11</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC2460">[RFC2460]</dt>
+        <dd>
+<span class="refAuthor">Deering, S.</span> and <span class="refAuthor">R. Hinden</span>, <span class="refTitle">"Internet Protocol, Version 6 (IPv6) Specification"</span>, <span class="seriesInfo">RFC 2460</span>, <span class="seriesInfo">DOI 10.17487/RFC2460</span>, <time datetime="1998-12" class="refDate">December 1998</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2460">https://www.rfc-editor.org/rfc/rfc2460</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2474">[RFC2474]</dt>
+        <dd>
+<span class="refAuthor">Nichols, K.</span>, <span class="refAuthor">Blake, S.</span>, <span class="refAuthor">Baker, F.</span>, and <span class="refAuthor">D. Black</span>, <span class="refTitle">"Definition of the Differentiated Services Field (DS Field) in the IPv4 and IPv6 Headers"</span>, <span class="seriesInfo">RFC 2474</span>, <span class="seriesInfo">DOI 10.17487/RFC2474</span>, <time datetime="1998-12" class="refDate">December 1998</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2474">https://www.rfc-editor.org/rfc/rfc2474</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3168">[RFC3168]</dt>
+        <dd>
+<span class="refAuthor">Ramakrishnan, K.</span>, <span class="refAuthor">Floyd, S.</span>, and <span class="refAuthor">D. Black</span>, <span class="refTitle">"The Addition of Explicit Congestion Notification (ECN) to IP"</span>, <span class="seriesInfo">RFC 3168</span>, <span class="seriesInfo">DOI 10.17487/RFC3168</span>, <time datetime="2001-09" class="refDate">September 2001</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3168">https://www.rfc-editor.org/rfc/rfc3168</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC6265">[RFC6265]</dt>
         <dd>
 <span class="refAuthor">Barth, A.</span>, <span class="refTitle">"HTTP State Management Mechanism"</span>, <span class="seriesInfo">RFC 6265</span>, <span class="seriesInfo">DOI 10.17487/RFC6265</span>, <time datetime="2011-04" class="refDate">April 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6265">https://www.rfc-editor.org/rfc/rfc6265</a>&gt;</span>. </dd>
@@ -2457,37 +2482,40 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
           <p id="appendix-A-2.2.1">Deb Cooley<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.3">
-          <p id="appendix-A-2.3.1">Thomas Fossati<a href="#appendix-A-2.3.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.3.1">Gorry Fairhurst<a href="#appendix-A-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.4">
-          <p id="appendix-A-2.4.1">Amos Jeffries<a href="#appendix-A-2.4.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.4.1">Thomas Fossati<a href="#appendix-A-2.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.5">
-          <p id="appendix-A-2.5.1">Antun Jurkovic<a href="#appendix-A-2.5.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.5.1">Amos Jeffries<a href="#appendix-A-2.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.6">
-          <p id="appendix-A-2.6.1">Eric Kinnear<a href="#appendix-A-2.6.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.6.1">Antun Jurkovic<a href="#appendix-A-2.6.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.7">
-          <p id="appendix-A-2.7.1">Kyle Nekritz<a href="#appendix-A-2.7.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.7.1">Eric Kinnear<a href="#appendix-A-2.7.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.8">
-          <p id="appendix-A-2.8.1">Kazuho Oku<a href="#appendix-A-2.8.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.8.1">Kyle Nekritz<a href="#appendix-A-2.8.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.9">
-          <p id="appendix-A-2.9.1">Tommy Pauly<a href="#appendix-A-2.9.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.9.1">Kazuho Oku<a href="#appendix-A-2.9.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.10">
-          <p id="appendix-A-2.10.1">Yaroslav Romakho<a href="#appendix-A-2.10.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.10.1">Tommy Pauly<a href="#appendix-A-2.10.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.11">
-          <p id="appendix-A-2.11.1">David Schinazi<a href="#appendix-A-2.11.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.11.1">Yaroslav Romakho<a href="#appendix-A-2.11.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.12">
-          <p id="appendix-A-2.12.1">Ketan Talaulikar<a href="#appendix-A-2.12.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.12.1">David Schinazi<a href="#appendix-A-2.12.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.13">
-          <p id="appendix-A-2.13.1">Willy Tarreau<a href="#appendix-A-2.13.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.13.1">Ketan Talaulikar<a href="#appendix-A-2.13.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-2.14">
+          <p id="appendix-A-2.14.1">Willy Tarreau<a href="#appendix-A-2.14.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
