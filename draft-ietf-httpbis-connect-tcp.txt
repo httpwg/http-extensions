@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                         26 October 2026
-Expires: 29 April 2027
+Intended status: Standards Track                         27 October 2026
+Expires: 30 April 2027
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 April 2027.
+   This Internet-Draft will expire on 30 April 2027.
 
 Copyright Notice
 
@@ -81,7 +81,8 @@ Table of Contents
    7.  Operational Considerations
      7.1.  Avoiding HTTP/1.1
      7.2.  Timeouts
-     7.3.  IP address sharing
+     7.3.  Scope of Packet-Level Metadata
+     7.4.  IP address sharing
    8.  IANA Considerations
      8.1.  New Upgrade Token
        8.1.1.  Interop testing
@@ -809,7 +810,33 @@ Table of Contents
    connections that are functioning but slow.  See Section 3.4 for
    related requirements.
 
-7.3.  IP address sharing
+   For example, enabling PING frames on idle HTTP/2 connections allows
+   the operator to prevent some kinds of failures and detect failed
+   connections faster, but it uses more bandwidth, CPU time, and radio
+   power, and increases the risk of false-positive connection failures.
+   Optimal transport settings will depend on the network environment
+   (e.g., mobile vs. fixed), characteristics of the tunneled
+   application, and many other considerations.
+
+7.3.  Scope of Packet-Level Metadata
+
+   This specification does not provide a way to pass packet-level
+   metadata such as IPv6 Extension Headers [RFC2460], Section 4,
+   DiffServ Codepoints (DSCP) [RFC2474], or Explicit Congestion
+   Notification (ECN) marks [RFC3168] through the tunnel.  TCP options
+   and non-fatal ICMP messages (e.g., Packet Too Big) are similarly not
+   relayed.  Instead, these signals are processed by the relevant
+   endpoint of this specification, which is also the TCP endpoint and
+   only relays payload data through the tunnel.
+
+   Consumption and generation of these signals on each connection is
+   controlled by the endpoint, and is independent from any behaviors of
+   the other endpoint and any similar signals on the tunnel's HTTP
+   connection.  If the operator has requirements related to these
+   behaviors, it must configure the relevant endpoint (typically the
+   proxy) accordingly.
+
+7.4.  IP address sharing
 
    A TCP proxy typically uses the same IP address to establish
    connections on behalf of multiple clients, especially in IPv4.
@@ -1007,6 +1034,21 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-quic-
               reliable-stream-reset-11>.
 
+   [RFC2460]  Deering, S. and R. Hinden, "Internet Protocol, Version 6
+              (IPv6) Specification", RFC 2460, DOI 10.17487/RFC2460,
+              December 1998, <https://www.rfc-editor.org/rfc/rfc2460>.
+
+   [RFC2474]  Nichols, K., Blake, S., Baker, F., and D. Black,
+              "Definition of the Differentiated Services Field (DS
+              Field) in the IPv4 and IPv6 Headers", RFC 2474,
+              DOI 10.17487/RFC2474, December 1998,
+              <https://www.rfc-editor.org/rfc/rfc2474>.
+
+   [RFC3168]  Ramakrishnan, K., Floyd, S., and D. Black, "The Addition
+              of Explicit Congestion Notification (ECN) to IP",
+              RFC 3168, DOI 10.17487/RFC3168, September 2001,
+              <https://www.rfc-editor.org/rfc/rfc3168>.
+
    [RFC6265]  Barth, A., "HTTP State Management Mechanism", RFC 6265,
               DOI 10.17487/RFC6265, April 2011,
               <https://www.rfc-editor.org/rfc/rfc6265>.
@@ -1038,6 +1080,8 @@ Acknowledgments
    This document benefited from close review and suggested changes by:
 
    *  Mohamed Boucadair
+
+   *  Gorry Fairhurst
 
    *  Thomas Fossati
 
