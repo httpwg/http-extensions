@@ -470,87 +470,117 @@ error code for both {{H2}} and {{H3}}.
 This specification registers the following entry in the "HTTP/2 Frame Type"
 registry defined in {{H2}}:
 
-Code: : TBD
+Code:
+: TBD
 
-Frame Type: : SERVER_CERTIFICATE
+Frame Type:
+: SERVER_CERTIFICATE
 
-Reference: : This document
+Reference:
+: This document
 
 
 This specification registers the following entry in the "HTTP/3 Frame Types"
 registry established by {{H3}}:
 
-Value: : TBD
+Value:
+: TBD
 
-Frame Type: : SERVER_CERTIFICATE
+Frame Type:
+: SERVER_CERTIFICATE
 
-Status: : permanent
+Status:
+: permanent
 
-Reference: : This document
+Reference:
+: This document
 
-Change Controller: : IETF
+Change Controller:
+: IETF
 
-Contact: : ietf-http-wg@w3.org
+Contact:
+: ietf-http-wg@w3.org
 
 ## Settings Parameters
 
 This specification registers the following entry in the "HTTP/2 Settings"
 registry defined in {{H2}}:
 
-Code: : TBD
+Code:
+: TBD
 
-Name: : SETTINGS_HTTP_SERVER_CERT_AUTH
+Name:
+: SETTINGS_HTTP_SERVER_CERT_AUTH
 
-Initial Value: : 0
+Initial Value:
+: 0
 
-Reference: : This document
+Reference:
+: This document
 
 
 This specification registers the following entry in the "HTTP/3 Settings"
 registry defined in {{H3}}:
 
-Code: : TBD
+Code:
+: TBD
 
-Name: : SETTINGS_HTTP_SERVER_CERT_AUTH
+Name:
+: SETTINGS_HTTP_SERVER_CERT_AUTH
 
-Default: : 0
+Default:
+: 0
 
-Reference: : This document
+Reference:
+: This document
 
-Change Controller: : IETF
+Change Controller:
+: IETF
 
-Contact: : ietf-http-wg@w3.org
+Contact:
+: ietf-http-wg@w3.org
 
 ## Error Codes
 
 This specification registers the following entry in the "HTTP/2 Error Code"
 registry defined in {{H2}}:
 
-Code: : TBD
+Code:
+: TBD
 
-Name: : SERVER_CERTIFICATE_INVALID
+Name:
+: SERVER_CERTIFICATE_INVALID
 
-Description: : There was an issue processing the SERVER_CERTIFICATE frame.
+Description:
+: There was an issue processing the SERVER_CERTIFICATE frame.
 
-Reference: : This document
+Reference:
+: This document
 
 
 This specification registers the following entry in the "HTTP/3 Error Codes"
 registry established by {{H3}}:
 
-Value: : TBD
+Value:
+: TBD
 
-Name: : SERVER_CERTIFICATE_INVALID
+Name:
+: SERVER_CERTIFICATE_INVALID
 
-Description: : There was an issue processing the SERVER_CERTIFICATE frame.
+Description:
+: There was an issue processing the SERVER_CERTIFICATE frame.
 
-Status: : permanent
+Status:
+: permanent
 
-Reference: : This document
+Reference:
+: This document
 
-Change Controller: : IETF
+Change Controller:
+: IETF
 
-Contact: : ietf-http-wg@w3.org
+Contact:
+: ietf-http-wg@w3.org
 
 --- back
 
