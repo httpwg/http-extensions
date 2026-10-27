@@ -1035,7 +1035,8 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-13
 {:numbered="false"}
 
-Editorial changes only.
+* Editorial changes.
+* Append request cannot use different content codings.
 
 ## Since draft-ietf-httpbis-resumable-upload-12
 {:numbered="false"}
