@@ -330,7 +330,7 @@ frame received on any stream other than the control stream as a connection error
 SERVER_CERTIFICATE Frame {
   Type (i) = 0xTBD,
   Length (i),
-  Authenticator (...),
+  Authenticator (..),
 }
 ~~~~~~~~~~
 {: title="HTTP/3 SERVER_CERTIFICATE Frame"}
