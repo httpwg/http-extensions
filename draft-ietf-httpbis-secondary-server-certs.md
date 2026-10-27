@@ -587,8 +587,8 @@ Contact:
 # Acknowledgments
 {:numbered="false"}
 
-Thanks to Mike Bishop, Nick Sullivan, Martin Thomson and other
-contributors for their work on the document that this is based on.
+This document is based on draft-ietf-httpbis-http2-secondary-certs. Thanks to
+Nick Sullivan, Martin Thomson and other contributors for their work on it.
 
 And thanks to Eric Kinnear, Tommy Pauly, and Lucas Pardue for their guidance and
 editorial contributions to this document.
