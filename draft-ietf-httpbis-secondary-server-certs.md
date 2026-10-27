@@ -140,8 +140,8 @@ send certificate frames which can be used to prove the server's authenticity for
 multiple origins.
 
 This document additionally defines SETTINGS parameters for HTTP/2 and HTTP/3
-({{settings}}) that allow the client and server to indicate support for
-HTTP-layer certificate authentication.
+({{settings}}) that allow a client to indicate that it is willing to receive
+HTTP-layer server certificates.
 
 # Conventions and Definitions
 
@@ -158,43 +158,34 @@ and available for future use.
 ## Indicating Support for HTTP-Layer Server Certificate Authentication {#settings-usage}
 
 The `SETTINGS_HTTP_SERVER_CERT_AUTH` parameters for HTTP/2 and HTTP/3 are
-defined in {{settings}} so that clients and servers can indicate support for
-secondary server certificate authentication.
+defined in {{settings}}.
 
-HTTP/2 and HTTP/3 endpoints that wish to indicate support for HTTP-layer
-certificate authentication MUST send a `SETTINGS_HTTP_SERVER_CERT_AUTH`
-parameter set to "1" in their SETTINGS frame. Endpoints MUST NOT use any of the
-authentication functionality described in this document unless they have
-both sent and received `SETTINGS_HTTP_SERVER_CERT_AUTH` with a value of 1.
+A client that is willing to receive secondary server certificates MUST send a
+`SETTINGS_HTTP_SERVER_CERT_AUTH` parameter with a value of 1. A value of 1
+indicates that the client is willing to receive `SERVER_CERTIFICATE` frames and
+to make requests for origins covered by certificates that it validates. Receipt
+of `SETTINGS_HTTP_SERVER_CERT_AUTH` by a client has no effect.
 
-Endpoints MUST NOT send a `SETTINGS_HTTP_SERVER_CERT_AUTH` parameter with a
-value of 0 after previously sending a value of 1.
+While the most recent value of `SETTINGS_HTTP_SERVER_CERT_AUTH` that a server
+has received from the client is 1, the server can send `SERVER_CERTIFICATE`
+frames at any time, including immediately after the SETTINGS frame that carried
+that value, as described by the `Spontaneous Server Authentication` message
+sequence in {{Section 3 of EXPORTED-AUTH}}. A server verifies the client's
+Finished message before sending an authenticator ({{Section 9 of
+EXPORTED-AUTH}}). A server MUST NOT send a `SERVER_CERTIFICATE` frame
+otherwise.
 
-`SETTINGS_HTTP_SERVER_CERT_AUTH` indicates that servers are able to offer
-additional certificates to demonstrate control over other origin hostnames, and
-that clients are able to make requests for hostnames received in a TLS Exported
-Authenticator that the server sends.
+A client MUST NOT use the authentication functionality described in this
+document unless it has sent `SETTINGS_HTTP_SERVER_CERT_AUTH` with a value of 1.
+
+A client MUST NOT send a `SETTINGS_HTTP_SERVER_CERT_AUTH` parameter with a value
+of 0 after previously sending a value of 1.
 
 ## Making Certificates Available {#cert-available}
 
-When both peers have advertised support for HTTP-layer server certificates as
-in {{settings-usage}}, the server can supply additional certificates into the
-connection at any time. That is, if both endpoints have sent
-`SETTINGS_HTTP_SERVER_CERT_AUTH` and validated the value received from the
-peer, the server may send certificates spontaneously, at any time, as described
-by the `Spontaneous Server Authentication` message sequence in {{Section 3 of
-EXPORTED-AUTH}}.
-
-This does mean that if a server knows it supports secondary certificate
-authentication, and it receives `SETTINGS_HTTP_SERVER_CERT_AUTH` from the
-client, that it can enqueue certificates immediately following the received
-SETTINGS frame.
-
 Certificates supplied by servers can be considered by clients without further
 action by the server. A server SHOULD NOT send certificates which do not cover
-origins which it is prepared to service on the current connection, and SHOULD
-NOT send them if the client has not indicated support with
-`SETTINGS_HTTP_SERVER_CERT_AUTH`.
+origins which it is prepared to service on the current connection.
 
 A client MUST NOT send certificates to the server. The server MUST close the
 connection upon receipt of a SERVER_CERTIFICATE frame from a client.
@@ -216,12 +207,12 @@ Client                                                    Server
 ~~~
 {: #ex-http-server-unprompted-basic title="Simple unprompted server authentication"}
 
-A server MAY send a `SERVER_CERTIFICATE` immediately after sending its `SETTINGS`.
-However, it MAY also send certificates at any time later. For example, a proxy
-might discover that a client is interested in an origin that it can reverse
-proxy at the time that a client sends a `CONNECT` request. It can then send
-certificates for those origins to allow for TLS-terminated reverse proxying to
-those origins for the remainder of the connection lifetime.
+A server can send certificates as soon as it receives
+`SETTINGS_HTTP_SERVER_CERT_AUTH` with a value of 1, or later in the connection
+based on the requests it receives. For example, a proxy that receives a
+`CONNECT` request for an origin that it can reverse proxy can send a certificate
+for that origin. The proxy can then serve later requests for that origin
+directly, as a TLS-terminating reverse proxy, instead of through the tunnel.
 {{ex-http-server-unprompted-reverse}} illustrates this behavior.
 
 ~~~ aasvg
@@ -348,7 +339,7 @@ certificate (Online Certificate Status Protocol (OCSP) responses, Signed
 Certificate Timestamps (SCTs), etc.). The result is an opaque token which is
 used when generating the `SERVER_CERTIFICATE` frame.
 
-Upon receipt of a `SERVER_CERTIFICATE` frame, a client which has negotiated
+Upon receipt of a `SERVER_CERTIFICATE` frame, a client which has advertised
 support for secondary certificates MUST perform the following steps to validate
 the token it contains:
 
