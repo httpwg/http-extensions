@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-10-25T02:31:21.470190+00:00",
+  "timestamp": "2026-10-27T03:05:12.326407+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -221433,6 +221433,102 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 3566,
+      "id": "PR_kwDOAUA-v88AAAABKzIpPA",
+      "title": "[connect-tcp] Make 100-continue \"on by default\"",
+      "url": "https://github.com/httpwg/http-extensions/pull/3566",
+      "state": "MERGED",
+      "author": "bemasc",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "connect-tcp"
+      ],
+      "body": "Antun Jurkovic points out that Expect: 100-continue is not really allowed in this case.  This change removes the use of \"Expect\", and instead RECOMMENDs that proxies send \"100 (Continue)\" unilaterally.",
+      "createdAt": "2026-10-26T15:02:19Z",
+      "updatedAt": "2026-10-26T21:04:59Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7da2473006a479c8d8c103922ef00752bd2b4e2d",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "bemasc-100",
+      "headRefOid": "aea75a3fc094f4b34f7eee6ba598ffbeda9928c8",
+      "closedAt": "2026-10-26T21:04:58Z",
+      "mergedAt": "2026-10-26T21:04:57Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "9eaf15728638d980f2d139b87c253e565a02aa30"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUQ6zXw",
+          "commit": {
+            "abbreviatedOid": "aea75a3"
+          },
+          "author": "DavidSchinazi",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-26T15:50:13Z",
+          "updatedAt": "2026-10-26T15:50:13Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3567,
+      "id": "PR_kwDOAUA-v88AAAABK1Mtyw",
+      "title": "[connect-tcp] Incorporate changes suggested by Mahesh Jethanandani",
+      "url": "https://github.com/httpwg/http-extensions/pull/3567",
+      "state": "OPEN",
+      "author": "bemasc",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-10-26T17:30:57Z",
+      "updatedAt": "2026-10-26T17:30:57Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7da2473006a479c8d8c103922ef00752bd2b4e2d",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "bemasc-mahesh",
+      "headRefOid": "b633f75bec33f321a6661cf790896f91e9b09199",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3568,
+      "id": "PR_kwDOAUA-v88AAAABK31bKg",
+      "title": "Response to questions from Gorry Fairhurst",
+      "url": "https://github.com/httpwg/http-extensions/pull/3568",
+      "state": "OPEN",
+      "author": "bemasc",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-10-26T21:03:05Z",
+      "updatedAt": "2026-10-26T21:03:05Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "7da2473006a479c8d8c103922ef00752bd2b4e2d",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "bemasc-fairhurst",
+      "headRefOid": "8906f87f3e30ba4fd04b3b876cde632a45d9a672",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
