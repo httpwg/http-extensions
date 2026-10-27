@@ -614,6 +614,8 @@ A client can continue the upload and append representation data by sending a `PA
 
 The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` header field. To ensure that the upload resource accepts the request, the client SHOULD take the offset from the most recent offset retrieval ({{offset-retrieving}}), upload creation ({{upload-creation}}), or upload append response.
 
+The patch document uses the identity content coding, so the request MUST NOT include a `Content-Encoding` header field (see {{Section 8.4 of HTTP}}). Content codings of the representation, if any, are announced only in the upload creation request ({{upload-creation}}).
+
 The request MUST include the `Upload-Complete` header field. Its value is true in two cases:
 
 - the request has content that is the end of the representation data. Once the content is fully processed by the server, the upload is complete.
@@ -805,7 +807,7 @@ Upload-Complete: ?0
 
 # Content Codings
 
-Since the codings listed in the `Content-Encoding` header field are a characteristic of the representation (see {{Section 8.4 of HTTP}}), both the client and the server always compute the values for the `Upload-Offset` and optionally `Upload-Length` header fields on the content coded data (that is, the representation data). Moreover, the content codings are retained throughout the entire upload, meaning that the server is not required to decode the representation data to support resumable uploads.
+Since the codings listed in the `Content-Encoding` header field are a characteristic of the representation (see {{Section 8.4 of HTTP}}), both the client and the server always compute the values for the `Upload-Offset` and optionally `Upload-Length` header fields on the content coded data (that is, the representation data). Moreover, the content codings are retained throughout the entire upload, meaning that the server is not required to decode the representation data to support resumable uploads. The content codings, if any, are announced in the upload creation request ({{upload-creation}}) and not repeated when appending representation data ({{upload-appending}}).
 
 # Transfer Codings
 
