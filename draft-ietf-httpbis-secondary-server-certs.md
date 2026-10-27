@@ -363,36 +363,18 @@ the token it contains:
 - Use the `validate` API to confirm the validity of the authenticator with
   regard to the generated request, if any.
 
-If the authenticator cannot be validated, this MUST be treated as a connection
-error of type SERVER_CERTIFICATE_INVALID ({{errors}}).
+A client that cannot validate the authenticator discards it.
 
 Once the authenticator is accepted, the endpoint can perform any other checks
 for the acceptability of the certificate itself.
 
-# Indicating Failures During HTTP-Layer Certificate Authentication {#errors}
+# Handling Certificate Failures {#errors}
 
-Because this document permits certificates to be exchanged at the HTTP framing
-layer instead of the TLS layer, several certificate-related errors which are
-defined at the TLS layer might now occur at the HTTP framing layer.
-
-There are two classes of errors which might be encountered, and they are handled
-differently.
-
-## Misbehavior
-
-This category of errors could indicate a peer failing to follow requirements in
-this document or might indicate that the connection is not fully secure. These
-errors are fatal to stream or connection, as appropriate.
-
-SERVER_CERTIFICATE_INVALID (0xTBD):
-: An exported authenticator could not be validated.
-
-## Invalid Certificates
-Unacceptable certificates (expired, revoked, or insufficient to satisfy the
-request) are not treated as stream or connection errors. This is typically not
-an indication of a protocol failure. Clients SHOULD establish a new connection
-in an attempt to reach an authoritative server if they deem a certificate from
-the server unacceptable.
+Neither a failed authenticator validation ({{exp-auth}}) nor an unacceptable
+certificate (expired, revoked, or insufficient to satisfy the request) is a
+stream or connection error. Clients SHOULD establish a new connection in an
+attempt to reach an authoritative server if they deem a certificate from the
+server unacceptable.
 
 # Security Considerations {#security}
 
