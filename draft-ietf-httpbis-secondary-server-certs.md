@@ -453,9 +453,9 @@ during the processing of a request, potentially multiple times, as
 authentication needs to be prepared to reevaluate the authorization state of a
 request as the set of certificates changes.
 
-Behavior for TLS-Terminated reverse proxies is also worth considering. If a
+Behavior for TLS-terminating reverse proxies is also worth considering. If a
 server which situationally reverse-proxies wishes for the client to view a
-request made prior to receipt of certificates as TLS-Terminated, or wishes for
+request made prior to receipt of certificates as TLS-terminated, or wishes for
 the client to start a new tunnel alternatively, this document does not currently
 define formal mechanisms to facilitate that intention.
 
