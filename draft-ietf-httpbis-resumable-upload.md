@@ -322,7 +322,7 @@ Representation data processed by the upload resource cannot be removed again and
 
 ### Upload-Offset {#upload-offset-hdr}
 
-The `Upload-Offset` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the current offset in bytes, as viewed by the message sender. Other values MUST cause the entire header field to be ignored.
+The `Upload-Offset` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the current offset in bytes, as viewed by the message sender. Other values MUST cause the entire header field to be ignored. This document does not define parameters for `Upload-Offset`; unknown parameters MUST be ignored.
 
 The client can learn the current offset in three ways:
 
@@ -336,7 +336,7 @@ An upload is incomplete until it is explicitly marked as complete by the client 
 
 ### Upload-Complete {#upload-complete-hdr}
 
-The `Upload-Complete` request and response header field is an Item Structured Header Field of type Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
+The `Upload-Complete` request and response header field is an Item Structured Header Field of type Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored. This document does not define parameters for `Upload-Complete`; unknown parameters MUST be ignored.
 
 An upload is marked as complete either when a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) includes the `Upload-Complete` header field set to true and the request content was fully processed, or when a response includes the field set to true.
 
@@ -359,7 +359,7 @@ Note that the length and offset values do not determine whether an upload is com
 
 ### Upload-Length {#upload-length-hdr}
 
-The `Upload-Length` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the representation's length in bytes. Other values MUST cause the entire header field to be ignored.
+The `Upload-Length` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the representation's length in bytes. Other values MUST cause the entire header field to be ignored. This document does not define parameters for `Upload-Length`; unknown parameters MUST be ignored.
 
 The `Upload-Length` field can be used in response to an offset retrieval; see {{offset-retrieving-server}}.
 
@@ -373,7 +373,7 @@ A client usually learns the limits when the upload resource is created ({{upload
 
 The `Upload-Limit` response header field is a Dictionary Structured Header Field ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
-Receivers of the `Upload-Limit` header field parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
+Receivers of the `Upload-Limit` header field parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places additional requirements on Dictionary members. A member with an unknown key MUST be ignored. A member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed. This document does not define parameters for Dictionary member values; unknown parameters MUST be ignored.
 
 The following key-value pairs are defined.
 
@@ -1029,6 +1029,11 @@ Reference:
 
 # Changes
 {:removeinrfc="true"}
+
+## Since draft-ietf-httpbis-resumable-upload-14
+{:numbered="false"}
+
+* State that unknown Structured Fields parameters MUST be ignored.
 
 ## Since draft-ietf-httpbis-resumable-upload-13
 {:numbered="false"}
