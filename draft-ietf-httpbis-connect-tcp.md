@@ -483,6 +483,7 @@ IANA is requested to add the following entry to the "HTTP Capsule Types" registr
 This document benefited from close review and suggested changes by:
 
 * Mohamed Boucadair
+* Deb Cooley
 * Gorry Fairhurst
 * Thomas Fossati
 * Amos Jeffries
