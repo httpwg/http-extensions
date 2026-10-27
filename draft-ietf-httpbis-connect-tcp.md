@@ -295,7 +295,9 @@ This section discusses some behaviors that are permitted or recommended in order
 
 ## Latency optimizations
 
-When using this specification in HTTP/2 or HTTP/3, clients MAY start sending TCP stream content optimistically, subject to flow control limits ({{Section 5.2 of !RFC9113}} or {{Section 4.1 of !QUIC}}).  Proxies MUST buffer this "optimistic" content until the TCP stream becomes writable, and discard it if the TCP connection fails.  (Clients MUST NOT use "optimistic" behavior in HTTP/1.1, as this would interfere with reuse of the connection after an error response such as "401 (Unauthorized)".)
+When using this specification in HTTP/2 or HTTP/3, clients MAY start sending TCP stream content optimistically, subject to flow control limits ({{Section 5.2 of !RFC9113}} or {{Section 4.1 of !QUIC}}).  Proxies MUST buffer this "optimistic" content until the TCP stream becomes writable, and discard it if the TCP connection fails.
+
+Clients MUST NOT use "optimistic" behavior in HTTP/1.1, as this would interfere with reuse of the connection after an error response such as "401 (Unauthorized)".
 
 Servers that host a proxy under this specification MAY offer support for TLS early data in accordance with {{!RFC8470}}.  Clients MAY send "connect-tcp" requests in early data, and MAY include "optimistic" TCP content in early data (in HTTP/2 and HTTP/3).  At the TLS layer, proxies MAY ignore, reject, or accept the `early_data` extension ({{TLS, Section 4.3.10}}).  At the HTTP layer, proxies MAY process the request immediately, return a "425 (Too Early)" response ({{!RFC8470, Section 5.2}}), or delay some or all processing of the request until the handshake completes.  For example, a proxy with limited anti-replay defenses might choose to perform DNS resolution of the `target_host` when a request arrives in early data, but delay the TCP connection until the TLS handshake completes.
 
@@ -395,6 +397,18 @@ A malicious client can cause highly asymmetric resource usage at the proxy by co
     * Allocate a large range of IP addresses for TCP connections (especially in IPv6).
     * Limit the number of connections for each client to each destination, even if those connections are in a waiting state and the corresponding CONNECT stream is closed.
     * If necessary, perform an abrupt TCP closure that destroys the Transmission Control Block.  Note that reusing a 4-tuple in this way can increase the risk of interference between successive connections.
+
+## Client Authentication
+
+A proxy server operating without access controls on the open internet (an "open proxy") is likely to be discovered and misused quickly by attackers.  HTTP client authentication is the most common way to avoid this misuse.
+
+{{authentication-headers}} describes how to use HTTP client authentication with this specification.  Each HTTP client authentication scheme offers distinct security properties, so care should be taken to select an appropriate scheme for each deployment.  See {{?RFC9110, Section 17.16}} for additional guidance related to HTTP authentication.
+
+## TLS Early Data
+
+This specification supports sending both proxying requests and optimistic payload data in TLS early data ({{latency-optimizations}}).  TLS 1.3 recommends, but does not require, replay protection for this data ({{?TLS, Section 8}}), so a replay attack could cause the proxy service to establish multiple connections to the target, and to deliver any optimistic payload data on each of these connections.  When such a replay attack would cause harm (e.g., when the optimistic data represents a non-idempotent application command), clients MUST NOT use TLS early data.
+
+See {{Section 6 of ?RFC8470}} for additional relevant security considerations.
 
 # Operational Considerations
 
