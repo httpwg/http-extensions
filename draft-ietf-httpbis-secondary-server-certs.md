@@ -381,7 +381,7 @@ This category of errors could indicate a peer failing to follow requirements in
 this document or might indicate that the connection is not fully secure. These
 errors are fatal to stream or connection, as appropriate.
 
-SERVER_CERTIFICATE_INVALID (0xERROR-TBD):
+SERVER_CERTIFICATE_INVALID (0xTBD):
 : An exported authenticator could not be validated.
 
 ## Invalid Certificates
