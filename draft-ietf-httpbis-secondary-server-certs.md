@@ -446,9 +446,8 @@ define formal mechanisms to facilitate that intention.
 
 # IANA Considerations
 
-This document registers the `SERVER_CERTIFICATE` frame type,
-`SETTINGS_HTTP_SERVER_CERT_AUTH` setting, and `SERVER_CERTIFICATE_INVALID`
-error code for both {{H2}} and {{H3}}.
+This document registers the `SERVER_CERTIFICATE` frame type and the
+`SETTINGS_HTTP_SERVER_CERT_AUTH` setting for both {{H2}} and {{H3}}.
 
 ## Frame Types
 
@@ -515,48 +514,6 @@ Setting Name:
 
 Default:
 : 0
-
-Status:
-: permanent
-
-Reference:
-: This document
-
-Change Controller:
-: IETF
-
-Contact:
-: ietf-http-wg@w3.org
-
-## Error Codes
-
-This specification registers the following entry in the "HTTP/2 Error Code"
-registry defined in {{H2}}:
-
-Code:
-: TBD
-
-Name:
-: SERVER_CERTIFICATE_INVALID
-
-Description:
-: There was an issue processing the SERVER_CERTIFICATE frame.
-
-Reference:
-: This document
-
-
-This specification registers the following entry in the "HTTP/3 Error Codes"
-registry established by {{H3}}:
-
-Value:
-: TBD
-
-Name:
-: SERVER_CERTIFICATE_INVALID
-
-Description:
-: There was an issue processing the SERVER_CERTIFICATE frame.
 
 Status:
 : permanent
