@@ -413,6 +413,14 @@ This document defines a mechanism which could be used to probe servers for
 origins they support, but it opens no new attack that was not already possible
 by making repeat TLS connections with different SNI values.
 
+## Denial of Service {#dos}
+
+The considerations in {{Section 10.5 of H2}} and {{Section 10.5 of H3}} apply to
+`SERVER_CERTIFICATE` frames. A client MAY close the connection with
+ENHANCE_YOUR_CALM ({{Section 7 of H2}}) or H3_EXCESSIVE_LOAD ({{Section 8.1 of
+H3}}) if it receives more `SERVER_CERTIFICATE` frames than it is willing to
+process.
+
 ## Persistence of Service
 
 CNAME records in the DNS are frequently used to delegate authority for an origin
