@@ -1111,10 +1111,10 @@ Table of Contents
    SHOULD take the offset from the most recent offset retrieval
    (Section 7), upload creation (Section 6), or upload append response.
 
-   The patch document uses the identity content coding, so the request
-   MUST NOT include a Content-Encoding header field (see Section 8.4 of
-   [HTTP]).  Content codings of the representation, if any, are
-   announced only in the upload creation request (Section 6).
+   The patch document uses no content coding, so the request MUST NOT
+   include a Content-Encoding header field (see Section 8.4 of [HTTP]).
+   Content codings of the representation, if any, are announced only in
+   the upload creation request (Section 6).
 
    The request MUST include the Upload-Complete header field.  Its value
    is true in two cases:
