@@ -196,8 +196,9 @@ origins which it is prepared to service on the current connection, and SHOULD
 NOT send them if the client has not indicated support with
 `SETTINGS_HTTP_SERVER_CERT_AUTH`.
 
-A client MUST NOT send certificates to the server. The server MUST close the
-connection upon receipt of a SERVER_CERTIFICATE frame from a client.
+A client MUST NOT send `SERVER_CERTIFICATE` frames. A server MUST treat receipt
+of a `SERVER_CERTIFICATE` frame from a client as a connection error of type
+PROTOCOL_ERROR in HTTP/2 or H3_FRAME_UNEXPECTED in HTTP/3.
 
 ~~~ aasvg
 Client                                                    Server
@@ -288,9 +289,10 @@ A SERVER_CERTIFICATE frame in HTTP/2 (type=0xTBD) carries a TLS Exported
 Authenticator that clients can use to authenticate secondary origins from a
 sending server.
 
-The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
-MUST be sent on stream 0. An endpoint MUST treat a SERVER_CERTIFICATE frame with a
-stream identifier other than 0x00 as a connection error.
+The SERVER_CERTIFICATE frame applies to the connection, not a specific stream.
+It MUST be sent on stream 0. An endpoint MUST treat a SERVER_CERTIFICATE frame
+with a stream identifier other than 0x00 as a connection error of type
+PROTOCOL_ERROR.
 
 ~~~~~~~~~~ ascii-art
 SERVER_CERTIFICATE Frame {
@@ -321,9 +323,10 @@ A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carries a TLS Exported
 Authenticator that clients can use to authenticate secondary origins from a
 sending server.
 
-The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
-MUST be sent on the control stream. An endpoint MUST treat a SERVER_CERTIFICATE
-frame received on any stream other than the control stream as a connection error.
+The SERVER_CERTIFICATE frame applies to the connection, not a specific stream.
+It MUST be sent on the control stream. An endpoint MUST treat a
+SERVER_CERTIFICATE frame received on any stream other than the control stream as
+a connection error of type H3_FRAME_UNEXPECTED.
 
 ~~~~~~~~~~ ascii-art
 SERVER_CERTIFICATE Frame {
