@@ -286,7 +286,7 @@ the certificate chain and extensions used to create the message.
 
 ## HTTP/2 SERVER_CERTIFICATE frame {#http2-cert}
 A SERVER_CERTIFICATE frame in HTTP/2 (type=0xTBD) carries a TLS Exported
-authenticator that clients can use to authenticate secondary origins from a
+Authenticator that clients can use to authenticate secondary origins from a
 sending server.
 
 The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
@@ -319,7 +319,7 @@ details on the input to this API.
 
 ## HTTP/3 SERVER_CERTIFICATE frame {#http3-cert}
 A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carries a TLS Exported
-authenticator that clients can use to authenticate secondary origins from a
+Authenticator that clients can use to authenticate secondary origins from a
 sending server.
 
 The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
