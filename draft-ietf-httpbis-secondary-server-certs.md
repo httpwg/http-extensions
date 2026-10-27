@@ -103,11 +103,10 @@ origins), or other factors which might drive this administrative decision.
 Clients connecting to such origins cannot currently reuse connections, even if
 both client and server would prefer to do so.
 
-Because the TLS SNI extension is exchanged in the clear, clients might also
-prefer to retrieve certificates inside the encrypted context. When this
-information is sensitive, it might be advantageous to request a general-purpose
-certificate or anonymous ciphersuite at the TLS layer, while acquiring the
-"real" certificate in HTTP after the connection is established.
+Because the TLS Server Name Indication (SNI) extension is exchanged in the
+clear, a server might prefer to present a general-purpose certificate at the TLS
+layer and provide the "real" certificates in HTTP after the connection is
+established.
 
 ## TLS Exported Authenticators
 
