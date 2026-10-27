@@ -98,10 +98,10 @@ a particular origin.
 Servers which host many origins often would prefer to have separate certificates
 for some sets of origins. This may be for ease of certificate management
 (the ability to separately revoke or renew them), due to different sources of
-certificates (a CDN acting on behalf of multiple origins), or other factors
-which might drive this administrative decision. Clients connecting to such
-origins cannot currently reuse connections, even if both client and server
-would prefer to do so.
+certificates (a content delivery network acting on behalf of multiple
+origins), or other factors which might drive this administrative decision.
+Clients connecting to such origins cannot currently reuse connections, even if
+both client and server would prefer to do so.
 
 Because the TLS SNI extension is exchanged in the clear, clients might also
 prefer to retrieve certificates inside the encrypted context. When this
@@ -345,8 +345,9 @@ details on the input to this API.
 
 The Exported Authenticator API defined in {{EXPORTED-AUTH}} takes as input a
 request, a set of certificates, and supporting information about the
-certificate (OCSP, SCT, etc.). The result is an opaque token which is used
-when generating the `SERVER_CERTIFICATE` frame.
+certificate (Online Certificate Status Protocol (OCSP) responses, Signed
+Certificate Timestamps (SCTs), etc.). The result is an opaque token which is
+used when generating the `SERVER_CERTIFICATE` frame.
 
 Upon receipt of a `SERVER_CERTIFICATE` frame, a client which has negotiated
 support for secondary certificates MUST perform the following steps to validate
