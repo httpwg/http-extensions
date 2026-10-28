@@ -312,7 +312,7 @@ described in {{Section 4 of H2}}.
 
 The SERVER_CERTIFICATE frame does not define any flags.
 
-The authenticator field is the opaque data returned from the TLS connection
+The Authenticator field is the opaque data returned from the TLS connection
 exported authenticator authenticate API. See {{exp-auth}} for more details on
 the input to this API.
 
@@ -336,7 +336,7 @@ SERVER_CERTIFICATE Frame {
 
 The Type and Length fields are described in {{Section 7.1 of H3}}.
 
-The authenticator field is the opaque data returned from the TLS connection
+The Authenticator field is the opaque data returned from the TLS connection
 exported authenticator authenticate API. See {{exp-auth}} for more details on
 the input to this API.
 
