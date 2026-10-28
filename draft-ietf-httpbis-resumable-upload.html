@@ -1047,7 +1047,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Kleidl, et al.</td>
-<td class="center">Expires 30 April 2027</td>
+<td class="center">Expires 1 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1060,12 +1060,12 @@ svg {
 <dd class="internet-draft">draft-ietf-httpbis-resumable-upload-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-27" class="published">27 October 2026</time>
+<time datetime="2026-10-28" class="published">28 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-30">30 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-01">1 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1125,7 +1125,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 30 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2054,7 +2054,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-6.1-3">If the client knows the representation's length, it <span class="bcp14">SHOULD</span> indicate the length in the request to help the server allocate necessary resources for the upload and provide early feedback if the representation violates a limit (<a href="#upload-limits" class="auto internal xref">Section 5</a>), as described in <a href="#upload-length" class="auto internal xref">Section 4.3</a>.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 <p id="section-6.1-4">Clients are not required to discover limits (<a href="#upload-limits" class="auto internal xref">Section 5</a>) before starting the upload and might therefore be initially unaware of limits enforced by the server. However, the client <span class="bcp14">SHOULD</span> respect any limits announced during the upload process in the <code>Upload-Limit</code> header field in interim or final responses. In particular, if the allowed maximum size is less than the amount of representation data the client intends to upload, the client <span class="bcp14">SHOULD</span> stop the current request immediately (<a href="#request-cancellation" class="auto internal xref">Section 19</a>) and cancel the upload (<a href="#upload-cancellation" class="auto internal xref">Section 9</a>). If the client knows that the representation data is smaller than <code>min-size</code> (<a href="#upload-limit-min-size" class="auto internal xref">Section 5.1.2</a>), it cannot expect resumability to be offered. The client might still attempt to transfer the representation in a single request, either in a request with the <code>Upload-Complete</code> header field set to true (see <a href="#upgrading-uploads" class="auto internal xref">Section 17.1.1</a>) or via a conventional upload.<a href="#section-6.1-4" class="pilcrow">¶</a></p>
 <p id="section-6.1-5">The request content can be empty. If the <code>Upload-Complete</code> header field is then set to true, the client intends to upload an empty representation. An <code>Upload-Complete</code> header field set to false is also valid. This can be used to retrieve the upload resource's URI before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URI, at the cost of an additional round trip before data upload can commence.<a href="#section-6.1-5" class="pilcrow">¶</a></p>
-<p id="section-6.1-6">Representation metadata included in the initial request (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8" class="relref">Section 8</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) can affect how servers act on the uploaded representation data. The <code>Content-Type</code> header field indicates the media type of the representation. The <code>Content-Encoding</code> header field names the content codings applied to the representation. The <code>Content-Disposition</code> header field (<span>[<a href="#CONTENT-DISPOSITION" class="cite xref">CONTENT-DISPOSITION</a>]</span>) can be used to transmit a filename. For this purpose, the <code>inline</code> disposition type is <span class="bcp14">RECOMMENDED</span>.<a href="#section-6.1-6" class="pilcrow">¶</a></p>
+<p id="section-6.1-6">Representation metadata included in the initial request (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-8" class="relref">Section 8</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>) can affect how servers act on the uploaded representation data. The <code>Content-Type</code> header field indicates the media type of the representation. The <code>Content-Encoding</code> header field names the content codings applied to the representation.<a href="#section-6.1-6" class="pilcrow">¶</a></p>
 <p id="section-6.1-7">If the client receives a final response with the <code>Upload-Complete: ?1</code> header field, the upload is complete and the corresponding response comes from the target resource of the initial request (<a href="#upload-complete-hdr" class="auto internal xref">Section 4.2.1</a>). Note that this does not necessarily indicate success. <code>4xx (Client Error)</code> or <code>5xx (Server Error)</code> status codes indicate in this case an error occurred while processing the representation, and therefore, resuming the upload would not resolve this error.<a href="#section-6.1-7" class="pilcrow">¶</a></p>
 <p id="section-6.1-8">If the client receives a <code>2xx (Successful)</code> final response with the <code>Upload-Complete</code> header field set to false or missing, and the client's <code>Upload-Complete</code> header field was set to false, the <code>Location</code> header field points the client to the created upload resource. The client can continue appending representation data to it (<a href="#upload-appending" class="auto internal xref">Section 8</a>).<a href="#section-6.1-8" class="pilcrow">¶</a></p>
 <p id="section-6.1-9">If the client receives a <code>4xx (Client Error)</code> or <code>5xx (Server Error)</code> final response with the <code>Upload-Complete</code> header field set to false or missing, or if it did not receive a final response, it can apply the heuristics described in <a href="#retry" class="auto internal xref">Section 11</a> to retry or resume the upload.<a href="#section-6.1-9" class="pilcrow">¶</a></p>
@@ -2087,7 +2087,6 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <pre>
 POST /project/123/files HTTP/1.1
 Host: example.com
-Content-Disposition: inline; filename="file name.jpg"; filename*=UTF-8''file%20name.jpg
 Content-Length: 123456789
 Upload-Length: 123456789
 Upload-Complete: ?1
@@ -2917,10 +2916,6 @@ Upload-Complete: ?0
 <a href="#section-22.1" class="section-number selfRef">22.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
-<dt id="CONTENT-DISPOSITION">[CONTENT-DISPOSITION]</dt>
-        <dd>
-<span class="refAuthor">Reschke, J.</span>, <span class="refTitle">"Use of the Content-Disposition Header Field in the Hypertext Transfer Protocol (HTTP)"</span>, <span class="seriesInfo">RFC 6266</span>, <span class="seriesInfo">DOI 10.17487/RFC6266</span>, <time datetime="2011-06" class="refDate">June 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6266">https://www.rfc-editor.org/rfc/rfc6266</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="HTTP">[HTTP]</dt>
         <dd>
 <span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI 10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>&gt;</span>. </dd>

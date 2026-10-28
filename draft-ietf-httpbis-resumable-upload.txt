@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 30 April 2027                                        Apple Inc.
+Expires: 1 May 2027                                           Apple Inc.
                                                           L. Pardue, Ed.
                                                                    Apple
-                                                         27 October 2026
+                                                         28 October 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 April 2027.
+   This Internet-Draft will expire on 1 May 2027.
 
 Copyright Notice
 
@@ -833,10 +833,7 @@ Table of Contents
    Section 8 of [HTTP]) can affect how servers act on the uploaded
    representation data.  The Content-Type header field indicates the
    media type of the representation.  The Content-Encoding header field
-   names the content codings applied to the representation.  The
-   Content-Disposition header field ([CONTENT-DISPOSITION]) can be used
-   to transmit a filename.  For this purpose, the inline disposition
-   type is RECOMMENDED.
+   names the content codings applied to the representation.
 
    If the client receives a final response with the Upload-Complete: ?1
    header field, the upload is complete and the corresponding response
@@ -938,7 +935,6 @@ Table of Contents
 
    POST /project/123/files HTTP/1.1
    Host: example.com
-   Content-Disposition: inline; filename="file name.jpg"; filename*=UTF-8''file%20name.jpg
    Content-Length: 123456789
    Upload-Length: 123456789
    Upload-Complete: ?1
@@ -1861,12 +1857,6 @@ Table of Contents
 22.  References
 
 22.1.  Normative References
-
-   [CONTENT-DISPOSITION]
-              Reschke, J., "Use of the Content-Disposition Header Field
-              in the Hypertext Transfer Protocol (HTTP)", RFC 6266,
-              DOI 10.17487/RFC6266, June 2011,
-              <https://www.rfc-editor.org/rfc/rfc6266>.
 
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
