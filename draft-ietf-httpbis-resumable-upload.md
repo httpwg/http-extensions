@@ -722,7 +722,7 @@ HTTP/1.1 204 No Content
 
 # Concurrency
 
-Resumable uploads, as defined in this document, do not permit uploading representation data in parallel requests for the same upload. The client MUST NOT perform multiple representation data transfers for the same upload resource in parallel, or perform representation data transfers while the creation of the same upload resource is still in progress.
+This document does not support parallel requests that transfer representation data to the same upload resource. The client MUST NOT send an upload append request ({{upload-appending}}) while an upload creation request ({{upload-creation}}) or another upload append request for the same upload resource is still in progress.
 
 Even if the client is well-behaved and does not send concurrent requests, network interruptions can occur in such a way that the client considers a request as failed while the server is unaware of the problem and considers the request still ongoing. The client might then try to resume the upload with the best intentions, resulting in concurrent requests from the server's perspective. Therefore, the server MUST take measures to prevent race conditions, data loss, and corruption from concurrent append ({{upload-appending}}) or cancellation ({{upload-cancellation}}) requests to the same upload resource. In addition, the server MUST NOT send outdated information in responses. This means that if a client appends at an offset from a final response ({{upload-offset-hdr}}), the server MUST NOT reject that request for having the wrong offset, unless another append or a cancellation arrived in between.
 
