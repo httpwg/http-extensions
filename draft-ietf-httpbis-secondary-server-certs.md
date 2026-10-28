@@ -151,8 +151,8 @@ HTTP-layer server certificates.
 
 A certificate chain with proof of possession of the private key corresponding to
 the end-entity certificate is sent as a `SERVER_CERTIFICATE` frame (see
-{{http2-cert}}, {{http3-cert}}) to the client. Once the holder of a certificate
-has sent the chain and proof, this certificate chain is cached by the recipient
+{{http2-cert}}, {{http3-cert}}) to the client. Once the client has validated the
+chain and proof ({{exp-auth}}), this certificate chain is cached by the client
 and available for future use.
 
 ## Indicating Support for HTTP-Layer Server Certificate Authentication {#settings-usage}
@@ -175,8 +175,9 @@ Finished message before sending an authenticator ({{Section 9 of
 EXPORTED-AUTH}}). A server MUST NOT send a `SERVER_CERTIFICATE` frame
 otherwise.
 
-A client MUST NOT use the authentication functionality described in this
-document unless it has sent `SETTINGS_HTTP_SERVER_CERT_AUTH` with a value of 1.
+A client ignores any `SERVER_CERTIFICATE` frame received on stream 0 in HTTP/2
+or on the control stream in HTTP/3 when the most recent value of
+`SETTINGS_HTTP_SERVER_CERT_AUTH` it has sent is not 1.
 
 A client MUST NOT send a `SETTINGS_HTTP_SERVER_CERT_AUTH` parameter with a value
 of 0 after previously sending a value of 1.
@@ -266,8 +267,8 @@ TLS layer that provides a chain of certificates and associated extensions,
 proving possession of the private key corresponding to the end-entity
 certificate.
 
-The client is permitted to make subsequent requests for resources upon receipt
-of a SERVER_CERTIFICATE frame without further action from the server.
+The client is permitted to make subsequent requests for resources once it has
+validated a SERVER_CERTIFICATE frame, without further action from the server.
 
 Upon receiving a SERVER_CERTIFICATE frame, the receiver may
 validate the Exported Authenticator value by using the exported authenticator
