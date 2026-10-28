@@ -880,7 +880,7 @@ If knowing the upload resource URI is enough to access the upload, the URI is in
 
 ## Untrusted Input
 
-Uploaded representation data and its metadata are untrusted input. Server operators have to be careful about where uploaded data is written and subsequently accessed, especially if the operations cause the representation to be processed or executed by the server. In addition, metadata MUST be validated and/or sanitized if the server takes its values into consideration for processing or storing the representation.
+Upload creation and upload append requests carry untrusted input; see {{Section 17.3 of HTTP}} and {{Section 17.4 of HTTP}}.
 
 ## Content Scanning
 
