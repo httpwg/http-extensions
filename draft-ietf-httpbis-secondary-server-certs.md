@@ -104,9 +104,9 @@ Clients connecting to such origins cannot currently reuse connections, even if
 both client and server would prefer to do so.
 
 Because the TLS Server Name Indication (SNI) extension is exchanged in the
-clear, a server might prefer to present a general-purpose certificate at the TLS
-layer and provide the "real" certificates in HTTP after the connection is
-established.
+clear unless TLS Encrypted Client Hello {{?ECH=RFC9849}} is used, a server
+might prefer to present a general-purpose certificate at the TLS layer and
+provide the "real" certificates in HTTP after the connection is established.
 
 ## TLS Exported Authenticators
 
