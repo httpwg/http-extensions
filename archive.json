@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-10-27T03:05:12.326407+00:00",
+  "timestamp": "2026-10-29T03:42:30.863084+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -78203,13 +78203,15 @@
       "state": "OPEN",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "Acconut"
+      ],
       "labels": [
         "resumable-upload"
       ],
       "body": "I'm loathe to open an issue on redirects because I know it's been discussed a lot already. However, one part of the text is wrong and in trying to fix just that I couldn't square the circle.\n\nThe following quote is drafted by an AI assistant; I checked as best I could:\n\n> Offset Retrieval, Upload Append and Upload Cancellation each say the server SHOULD NOT send 301, 302 or 303 \"because clients might follow the redirect without preserving the [HEAD/PATCH/DELETE] method\".\n> \n> That reason doesn't hold for HEAD. RFC 9110 lets 301 and 302 change only POST to GET (Sections 15.4.2 and 15.4.3), and a 303 is followed with \"a GET or HEAD request\" (Section 15.4.4). For PATCH and DELETE it holds for 303 only.\n> \n> The underlying concern seems to be that a redirect gives the upload resource a second URI, which the protocol doesn't define (see the Location requirements in Upload Creation, and #3203). That applies equally to 307 and 308, which aren't mentioned: a client that follows a 307 or 308 on an append continues the upload at a different URI, with nothing saying which URI to use next.\n> \n> Options:\n> \n> - Keep the three codes and fix the rationale, e.g. remove the incorrect statement about preserving HEAD and say something like \"because the upload resource URI is expected to stay the same for the whole upload\".\n> - Cover all redirects for requests to the upload resource, for the same reason.\n> - Allow 307 and 308, and say the client continues at the new URI.\n\nI think revisiting 307 and 308 opens up design issues we don't want again but I'm happy to hear from others",
       "createdAt": "2026-10-14T21:41:08Z",
-      "updatedAt": "2026-10-15T15:40:19Z",
+      "updatedAt": "2026-10-27T22:05:58Z",
       "closedAt": null,
       "comments": [
         {
@@ -78261,7 +78263,7 @@
       "id": "I_kwDOAUA-v88AAAABXS3x_g",
       "title": "RESUMABLE: Content-Disposition is defined only as a response header field",
       "url": "https://github.com/httpwg/http-extensions/issues/3532",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -78272,8 +78274,8 @@
       ],
       "body": "Drafted with an AI assistant while reviewing the draft; I checked the RFC text cited.\n\nUpload Creation  says \n\n> Content-Disposition \"can be used to transmit a filename. For this purpose, the inline disposition type is RECOMMENDED.\"\n\nRFC 6266 defines it only for responses; Section 4:\n\n> The Content-Disposition response header field is used to convey additional information about how to process the response payload\"\n\nNo other document formally extends Content-Disposition to be allowed for requests. Personally, I don't think this draft should try to either.\n\nApparently RFC 8607 (CalDAV) tried to and cited it as one reason for Informational status (Section 1.1):\n\n>  this extension misuses the Content-Disposition header field [RFC6266] as a request header field to convey a filename for an attachment rather than using an existing request header field suitable for that purpose, such as \"Slug\" (see Section 9.7 of [RFC5023]).\"\n\n#3372 settled which disposition type to use, but not whether the field can be used in a request.\n\nOptions, in my order of preference of \"yes do that\" to \"definitely don't do that\"\n\n- Drop the filename guidance; conveying a filename is application-specific.\n- Keep it, and say explicitly that this document uses Content-Disposition in requests (possibly as an update to RFC 6266).\n- Define a request field for the filename.\n- Use Slug, which RFC 8607 suggests, though RFC 5023 defines it for a POST to an AtomPub collection as a hint for the new resource's URI rather than as a filename.\n",
       "createdAt": "2026-10-15T01:06:39Z",
-      "updatedAt": "2026-10-15T20:17:09Z",
-      "closedAt": null,
+      "updatedAt": "2026-10-28T02:23:07Z",
+      "closedAt": "2026-10-28T02:23:07Z",
       "comments": [
         {
           "author": "Acconut",
@@ -78374,7 +78376,7 @@
       "id": "I_kwDOAUA-v88AAAABXUDLug",
       "title": "RESUMABLE: Append without Upload-Offset or Upload-Complete",
       "url": "https://github.com/httpwg/http-extensions/issues/3536",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -78385,8 +78387,8 @@
       ],
       "body": "Drafted with an AI assistant; I checked the text.\n\nUpload Append requires both fields, but doesn't say what a server does when one is missing or invalid. The 409 rule only covers aan Upload-Offset value that differs from the server's offset.\n\nSuggestion, following RFC 9110 Section 14.5 (Content-Range on PUT):\n\n> A server SHOULD respond with a `400 (Bad Request)` status code to an upload append request that lacks a valid `Upload-Offset` or `Upload-Complete` header field.",
       "createdAt": "2026-10-15T03:21:40Z",
-      "updatedAt": "2026-10-15T20:19:04Z",
-      "closedAt": null,
+      "updatedAt": "2026-10-28T02:59:00Z",
+      "closedAt": "2026-10-28T02:59:00Z",
       "comments": [
         {
           "author": "martinthomson",
@@ -78516,17 +78518,19 @@
       "id": "I_kwDOAUA-v88AAAABYJ2lvA",
       "title": "RESUMABLE: proposal: State Structured Fields error handling once, rather than in each field definition",
       "url": "https://github.com/httpwg/http-extensions/issues/3562",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "Acconut"
+      ],
       "labels": [
         "resumable-upload"
       ],
       "body": "Julian Reschke's review of draft-ietf-httpbis-resumable-upload-14 on the [list](https://lists.w3.org/Archives/Public/ietf-http-wg/2026OctDec/0072.html) suggests stating the field error handling once, up front.\n\nThe definitions of Upload-Offset, Upload-Complete, Upload-Length and Upload-Limit each end with \"Other values MUST cause the entire header field to be ignored.\" That sentence restates the default in Section 2.2 of RFC 9651, and follows the model field definition in Section 2.1 of RFC 9651.\n\nUpload-Limit adds two requirements of its own, which a citation to RFC 9651 cannot replace:\n\n- A member with an unknown key MUST be ignored. Section 2.3 of RFC 9651 leaves this to the field definition.\n- A member with a known key but a value of unexpected type MUST cause the field to be ignored, or the message to be treated as malformed (from #3201).\n\nFurthermore, Juilan proposed stating \"unknown extensions (such as parameter keys) must be ignored.\". This highlights that Upload-Offset, Upload-Complete, Upload-Length currently say nothing about parameters. \n\nOptions:\n\nA) Do nothing and leave as is (Keep the rule next to the definition)\nB) Keep the rule next to the definition and add a statement about parameters\nC) Create a rule stated _somewhere_ once for Upload-Offset, Upload-Complete, Upload-Length. Leave the two Upload-Limit requirements where they are.\nD) Create a rule stated _somewhere_ once for Upload-Offset, Upload-Complete, Upload-Length, put the two Upload-Limit requirements there too.\n\n\n",
       "createdAt": "2026-10-19T00:47:29Z",
-      "updatedAt": "2026-10-19T13:46:12Z",
-      "closedAt": null,
+      "updatedAt": "2026-10-28T07:46:55Z",
+      "closedAt": "2026-10-28T07:46:55Z",
       "comments": [
         {
           "author": "LPardue",
@@ -78534,6 +78538,13 @@
           "body": "Speaking as an individual, I see some merit in C or D but worry that people could end up missing it. Editorially it might stick out to have such a standalone statement plonked somewhere \"random\".\n\nTherefore I lean to option B",
           "createdAt": "2026-10-19T00:51:15Z",
           "updatedAt": "2026-10-19T13:46:12Z"
+        },
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "> Furthermore, Juilan proposed stating \"unknown extensions (such as parameter keys) must be ignored.\". This highlights that Upload-Offset, Upload-Complete, Upload-Length currently say nothing about parameters.\n\nThat's a good point. Section 2.3 of RFC 9651 says that forbidding unknown parameters is only discouraged, not that ignoring them is the default:\n\n> To preserve forward compatibility, field specifications are discouraged from defining the presence of an unrecognized parameter as an error condition.\n\n Hence, it makes sense to state that explicitly in the draft.\n\n> 2\\. Speaking as an individual, I see some merit in C or D but worry that people could end up missing it. Editorially it might stick out to have such a standalone statement plonked somewhere \"random\".\n\nI agree. Removing redundant text is a worthwhile goal, but deduplication would make the document harder to read. Readers who aren't aware of the default handling defined in RFC 9651 might then not be aware of the expectations and create implementations with incorrect error handling.\n\n> 2\\. Therefore I lean to option B\n\nMe too.",
+          "createdAt": "2026-10-27T20:38:03Z",
+          "updatedAt": "2026-10-27T20:38:03Z"
         }
       ]
     },
@@ -78552,7 +78563,33 @@
       ],
       "body": "Julian Reschke's review of draft-ietf-httpbis-resumable-upload-14 on the [list](https://lists.w3.org/Archives/Public/ietf-http-wg/2026OctDec/0072.html) asks whether the final response in Example 2 should be 201 (Created) rather than 200 (OK).\n\nSection 9.3.3 of RFC 9110 says that if processing a POST creates a resource, the origin server SHOULD send a 201 (Created) response with a Location header field identifying it.\n\nThese examples end with a 200 (OK) response from the target resource:\n\n- Section 3.1 (Example 1), Figure 3 (\"Upload Append\"): the initial request is POST /project/123/files.\n- Section 3.2 (Example 2), Figure 8 (\"Appending Remaining Representation Data\"): the initial request is POST /project/123/files, and the text says \"e.g., a 200 (OK) response\".\n- Section 6.3, example A: POST /project/123/files, with content {\"attachmentId\": \"b530ce8ff\"}.\n- Section 8.3, example B: the initial request is not shown, and the response carries extracted metadata, so 200 (OK) might be appropriate there.\n",
       "createdAt": "2026-10-19T02:08:37Z",
-      "updatedAt": "2026-10-19T02:08:37Z",
+      "updatedAt": "2026-10-27T20:28:44Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "> asks whether the final response in Example 2 should be 201 (Created) rather than 200 (OK).\n\nMy thinking so far has been that /project/123/files doesn't create a new resource and hence neither includes Location nor uses the 201 status code. The main motivation was to keep the example minimal and avoid giving the impression that the final response for an upload has to include a Location header. I also worry that including Location in the final response in examples could be confusing as there are then three URIs involved in the examples.\n\nIf the request `POST /project/123/files` gives the impression that a new resource is created, I'm open to changing this to something that doesn't. But I also wouldn't oppose the examples been switched to 201, as long as it doesn't make them too confusing.",
+          "createdAt": "2026-10-27T20:28:44Z",
+          "updatedAt": "2026-10-27T20:28:44Z"
+        }
+      ]
+    },
+    {
+      "number": 3576,
+      "id": "I_kwDOAUA-v88AAAABangHmg",
+      "title": "Trust Store Divergence",
+      "url": "https://github.com/httpwg/http-extensions/issues/3576",
+      "state": "OPEN",
+      "author": "MikeBishop",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "secondary-server-certs"
+      ],
+      "body": "In light of the eMudhra fiasco, @enygren raised the point that Secondary Certs carries the risk that the certificates exchanged at the HTTP layer might be compared against a different trust store or with different settings than would have been used in the TLS handshake. While that might sometimes be deliberate, it's worth a mention in the Security Considerations section. The exchange proves only that the peer holds the keys to the cert; whether the cert itself is trustworthy is a separate decision that has to be handled with the same care as in the TLS exchange itself.",
+      "createdAt": "2026-10-28T14:41:32Z",
+      "updatedAt": "2026-10-28T14:41:32Z",
       "closedAt": null,
       "comments": []
     }
@@ -219830,7 +219867,7 @@
       "id": "PR_kwDOAUA-v88AAAABIiPBDQ",
       "title": "RESUMABLE: 400 for an append missing Upload-Offset or Upload-Complete",
       "url": "https://github.com/httpwg/http-extensions/pull/3537",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -219839,17 +219876,19 @@
       ],
       "body": "Closes #3536.",
       "createdAt": "2026-10-15T03:26:02Z",
-      "updatedAt": "2026-10-15T20:15:26Z",
+      "updatedAt": "2026-10-28T02:59:01Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "d8a235e33d1835a6247bfe47a3747353ba4dcbd5",
+      "baseRefOid": "8cb9d4bfb0a055b251d0c967ad1f5976b4eb1245",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "resumable-append-missing-fields",
-      "headRefOid": "9a9c00f9c425af073bd0e83279693629e37381b0",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "628401d954aea81daba4c980262c04a471ca1a77",
+      "closedAt": "2026-10-28T02:58:58Z",
+      "mergedAt": "2026-10-28T02:58:58Z",
+      "mergedBy": "LPardue",
+      "mergeCommit": {
+        "oid": "0011039c2c039f639f0eba5c46a006b8ab851969"
+      },
       "comments": [],
       "reviews": [
         {
@@ -219884,6 +219923,26 @@
           "createdAt": "2026-10-15T15:26:57Z",
           "updatedAt": "2026-10-15T15:26:57Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUmONBw",
+          "commit": {
+            "abbreviatedOid": "628401d"
+          },
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-10-28T02:57:33Z",
+          "updatedAt": "2026-10-28T02:57:33Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "I rephrased the sentence to very explicit about the requirements and remove doubts.",
+              "createdAt": "2026-10-28T02:57:33Z",
+              "updatedAt": "2026-10-28T02:57:33Z"
+            }
+          ]
         }
       ]
     },
@@ -220507,7 +220566,7 @@
       "id": "PR_kwDOAUA-v88AAAABIt-NpA",
       "title": "RESUMABLE: Drop the Content-Disposition filename guidance",
       "url": "https://github.com/httpwg/http-extensions/pull/3547",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "LPardue",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -220516,17 +220575,19 @@
       ],
       "body": "RFC 6266 defines `Content-Disposition` only as a response header field. This drops the filename guidance, the example header, and the reference, since a filename is application-specific.\n\nFixes #3532",
       "createdAt": "2026-10-15T21:23:10Z",
-      "updatedAt": "2026-10-16T14:37:07Z",
+      "updatedAt": "2026-10-28T02:23:08Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "63c7ebcb2cfeccbfcd2cecd0b0d553e91c1e206e",
+      "baseRefOid": "9adda9822c4608a2cc6e0b4cfb499b2952d8c09e",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "resumable-content-disposition-3532",
-      "headRefOid": "896006da73a32ef8acc8ea2a2247583255648160",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "4f015d4de8821a96a5a47865612afefeac202ef5",
+      "closedAt": "2026-10-28T02:23:06Z",
+      "mergedAt": "2026-10-28T02:23:06Z",
+      "mergedBy": "LPardue",
+      "mergeCommit": {
+        "oid": "8cb9d4bfb0a055b251d0c967ad1f5976b4eb1245"
+      },
       "comments": [],
       "reviews": [
         {
@@ -221351,7 +221412,7 @@
       ],
       "body": "Editorial fixes from Julian Reschke's review of -14 (https://lists.w3.org/Archives/Public/ietf-http-wg/2026OctDec/0072.html); one commit each:\n\n- Cite RFC 3986 for the term URI\n- Drop repeated and self-referential cross-references\n- Drop two more repeated cross-references\n- Point Upload Resource state at the subsections below\n- Cite HTTP Section 8 once for representation metadata\n- Drop request/response qualifiers that context makes redundant\n- State the unit for offset and length consistently\n- Say why an OPTIONS discovery request omits Upload-Complete\n- Simplify the meaning of Upload-Complete in responses\n- State each field's Structured type once\n- Say upload state includes, not consists of, the listed properties\n- State the URI reuse requirement about the URI, not the resource\n- Tighten the paragraph on retaining completed upload resources\n- Don't repeat the Upload-Complete name within one sentence\n\nTracked separately: #3562 (field error handling), #3563 (200 vs 201 in examples).\n",
       "createdAt": "2026-10-19T02:16:20Z",
-      "updatedAt": "2026-10-23T14:30:01Z",
+      "updatedAt": "2026-10-27T20:12:46Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "7ebcfaffe552ff895cd0e801d1485d32e03affe8",
@@ -221364,7 +221425,15 @@
       "mergeCommit": {
         "oid": "7179e55bfe01ef79706cf01d26b58749041f62a9"
       },
-      "comments": [],
+      "comments": [
+        {
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "body": "Thank you for the review, Julian, and thank you for integrating the feedback, Lucas!",
+          "createdAt": "2026-10-27T20:12:46Z",
+          "updatedAt": "2026-10-27T20:12:46Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOAUA-v88AAAABS9bJwg",
@@ -221403,10 +221472,12 @@
       "author": "yaroslavros",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "wrap-up"
+      ],
       "body": "",
       "createdAt": "2026-10-23T22:38:18Z",
-      "updatedAt": "2026-10-24T02:05:42Z",
+      "updatedAt": "2026-10-28T02:50:58Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "8f34f224951ec94fa26d43926f405e38382defb0",
@@ -221487,16 +221558,18 @@
       "author": "bemasc",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "connect-tcp"
+      ],
       "body": "",
       "createdAt": "2026-10-26T17:30:57Z",
-      "updatedAt": "2026-10-26T17:30:57Z",
+      "updatedAt": "2026-10-27T12:39:34Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "7da2473006a479c8d8c103922ef00752bd2b4e2d",
+      "baseRefOid": "4ef7a2195eaf0b15369c733829e80f3ba138445b",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "bemasc-mahesh",
-      "headRefOid": "b633f75bec33f321a6661cf790896f91e9b09199",
+      "headRefOid": "bed24b6889893feadc41c4fa100b951425a00e3a",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -221509,26 +221582,590 @@
       "id": "PR_kwDOAUA-v88AAAABK31bKg",
       "title": "Response to questions from Gorry Fairhurst",
       "url": "https://github.com/httpwg/http-extensions/pull/3568",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bemasc",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "connect-tcp"
+      ],
       "body": "",
       "createdAt": "2026-10-26T21:03:05Z",
-      "updatedAt": "2026-10-26T21:03:05Z",
+      "updatedAt": "2026-10-27T11:57:11Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "7da2473006a479c8d8c103922ef00752bd2b4e2d",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "bemasc-fairhurst",
       "headRefOid": "8906f87f3e30ba4fd04b3b876cde632a45d9a672",
+      "closedAt": "2026-10-27T11:56:58Z",
+      "mergedAt": "2026-10-27T11:56:58Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "4ef7a2195eaf0b15369c733829e80f3ba138445b"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3569,
+      "id": "PR_kwDOAUA-v88AAAABLAdLTA",
+      "title": "Suggestions from Deb Cooley",
+      "url": "https://github.com/httpwg/http-extensions/pull/3569",
+      "state": "MERGED",
+      "author": "bemasc",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [
+        "connect-tcp"
+      ],
+      "body": "",
+      "createdAt": "2026-10-27T12:09:09Z",
+      "updatedAt": "2026-10-27T13:02:33Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "4ef7a2195eaf0b15369c733829e80f3ba138445b",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "bemasc-cooley",
+      "headRefOid": "a55015a6398d614cf05f2035498fd71f570afcc4",
+      "closedAt": "2026-10-27T13:02:29Z",
+      "mergedAt": "2026-10-27T13:02:29Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "9adda9822c4608a2cc6e0b4cfb499b2952d8c09e"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3570,
+      "id": "PR_kwDOAUA-v88AAAABLHneWg",
+      "title": "RESUMABLE: Append request cannot use different content codings",
+      "url": "https://github.com/httpwg/http-extensions/pull/3570",
+      "state": "OPEN",
+      "author": "Acconut",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "Acconut"
+      ],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Fixes the follow-up issues raised in https://github.com/httpwg/http-extensions/issues/2674#issuecomment-6184279774 by saying that append requests do not use content codings.\r\n\r\nCloses https://github.com/httpwg/http-extensions/issues/2674.",
+      "createdAt": "2026-10-27T21:08:59Z",
+      "updatedAt": "2026-10-28T02:47:25Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "9adda9822c4608a2cc6e0b4cfb499b2952d8c09e",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-upload-2674",
+      "headRefOid": "968d429dddced87b49618c12418c8138b3d9352f",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUjhnxQ",
+          "commit": {
+            "abbreviatedOid": "dc657a5"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-27T21:11:00Z",
+          "updatedAt": "2026-10-27T21:11:00Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUkRSeQ",
+          "commit": {
+            "abbreviatedOid": "968d429"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-27T22:17:12Z",
+          "updatedAt": "2026-10-27T22:17:12Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUmE58w",
+          "commit": {
+            "abbreviatedOid": "968d429"
+          },
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-10-28T02:36:02Z",
+          "updatedAt": "2026-10-28T02:36:02Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "Do we want to recommend the server enforces this rule by returning a [415](https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.16)? And if so, then would we say to return `Upload-Complete: ?0` to allow a retry without it?\n\nfrom 9110\n\n> indicates that the origin server is refusing to service the request because the content is in a format not supported by this method on the [target resource](https://datatracker.ietf.org/doc/html/rfc9110#target.resource).\n\n",
+              "createdAt": "2026-10-28T02:36:02Z",
+              "updatedAt": "2026-10-28T02:37:18Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUmJ2dg",
+          "commit": {
+            "abbreviatedOid": "968d429"
+          },
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-10-28T02:47:24Z",
+          "updatedAt": "2026-10-28T02:47:25Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "A small tweak on the statement you're making, same meaning but intended to make it clearer what the issue really is\n\n```suggestion\nThe request content is the representation data to append, so the patch document has no content coding of its own. A content coding would make the request content differ from the representation data that the offset ({{upload-offset}}) and length ({{upload-length}}) count. Therefore, the request MUST NOT include a `Content-Encoding` header field (see {{Section 8.4 of HTTP}}). Content codings of the representation, if any, are announced only in the upload creation request ({{upload-creation}}).\n```",
+              "createdAt": "2026-10-28T02:47:25Z",
+              "updatedAt": "2026-10-28T02:47:47Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 3571,
+      "id": "PR_kwDOAUA-v88AAAABLIC1hg",
+      "title": "RESUMABLE: Discourage change of upload resource's URI",
+      "url": "https://github.com/httpwg/http-extensions/pull/3571",
+      "state": "OPEN",
+      "author": "Acconut",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "Acconut"
+      ],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "As discussed, handling redirects in resumable uploads is tricky to get right in the specification as well as implementations. Paired with the fact that we haven't found a practical use for them yet, let's recommend against using redirects on upload resources. The final response is except, of course, and can redirect as the upload is complete by then.\n\nCloses #3530.",
+      "createdAt": "2026-10-27T21:45:28Z",
+      "updatedAt": "2026-10-28T03:55:54Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "9adda9822c4608a2cc6e0b4cfb499b2952d8c09e",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-upload-3530",
+      "headRefOid": "a7383560aba03667ed7cbf43d985f4324dcf35de",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think this addresses part of #3530 but I'm not sure if it's complete. \r\n\r\nIt's still possible for a client to receive a redirect (due to complicating factors like intermediaries that are not participating). I made one suggestion to increase the consistency of implicity handling received 3xx.\r\n\r\nIn addition, since we now discourage servers doing it, we could possibly make the client more defensive and add something like below to section 4\r\n\r\n> <current> An upload resource SHOULD be unique. Reuse of a URI for a different upload resource SHOULD be avoided in order to reduce the chance of misdirected or corrupted upload resources, as well as the potential security issues described in [Section 20.1](https://www.ietf.org/archive/id/draft-ietf-httpbis-resumable-upload-14.html#security-uri).\r\n>\r\n> <new> If the client receives a 3xx (Redirection) response to a request to the upload resource, and the response does not complete the upload ({{origin}}), the client is not expected to follow the redirect, because this protocol does not define how an upload continues at a different  URI.",
+          "createdAt": "2026-10-28T03:55:54Z",
+          "updatedAt": "2026-10-28T03:55:54Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUj944A",
+          "commit": {
+            "abbreviatedOid": "13ea3d9"
+          },
+          "author": "github-actions",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-10-27T21:46:16Z",
+          "updatedAt": "2026-10-27T21:46:17Z",
+          "comments": [
+            {
+              "originalPosition": 32,
+              "body": "````suggestion\nThe server SHOULD NOT generate a response with a `3xx (Redirection)` status code because the upload resource's URI is expected to remain the same for the lifetime of the upload.\n````",
+              "createdAt": "2026-10-27T21:46:16Z",
+              "updatedAt": "2026-10-27T21:46:17Z"
+            },
+            {
+              "originalPosition": 14,
+              "body": "````suggestion\nThe server SHOULD NOT generate a response with a `3xx (Redirection)` status code because the upload resource's URI is expected to remain the same for the lifetime of the upload.\n````",
+              "createdAt": "2026-10-27T21:46:16Z",
+              "updatedAt": "2026-10-27T21:46:17Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUkSjJg",
+          "commit": {
+            "abbreviatedOid": "a738356"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-27T22:19:30Z",
+          "updatedAt": "2026-10-27T22:19:30Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUmY37g",
+          "commit": {
+            "abbreviatedOid": "a738356"
+          },
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-10-28T03:21:45Z",
+          "updatedAt": "2026-10-28T03:21:45Z",
+          "comments": [
+            {
+              "originalPosition": 50,
+              "body": "should this be in a new section `since draft-ietf-httpbis-resumable-upload-14` \ud83d\ude04 ",
+              "createdAt": "2026-10-28T03:21:45Z",
+              "updatedAt": "2026-10-28T03:21:45Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUmlESA",
+          "commit": {
+            "abbreviatedOid": "a738356"
+          },
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-10-28T03:54:11Z",
+          "updatedAt": "2026-10-28T03:54:11Z",
+          "comments": [
+            {
+              "originalPosition": 1,
+              "body": "This matches the upload append behaviour that implicity covers any 3xx that might be received\n\n```suggestion\nIf the client receives a `2xx (Successful)` response without a valid `Upload-Offset` header field, a `4xx (Client Error)` or `5xx (Server Error)` response, or if it did not receive a response, the client MAY retry retrieving the offset. Otherwise, the upload is considered a failure.\n```",
+              "createdAt": "2026-10-28T03:54:11Z",
+              "updatedAt": "2026-10-28T03:54:11Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 3572,
+      "id": "PR_kwDOAUA-v88AAAABLIPptw",
+      "title": "RESUMABLE: Require unknown Structured Fields parameters to be ignored",
+      "url": "https://github.com/httpwg/http-extensions/pull/3572",
+      "state": "MERGED",
+      "author": "Acconut",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "Acconut"
+      ],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Keep per-field error handling and state that unknown parameters MUST be ignored, matching option B from https://github.com/httpwg/http-extensions/issues/3562.\n\nCloses https://github.com/httpwg/http-extensions/issues/3562.",
+      "createdAt": "2026-10-27T22:04:42Z",
+      "updatedAt": "2026-10-28T07:46:56Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "9adda9822c4608a2cc6e0b4cfb499b2952d8c09e",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-upload-3562",
+      "headRefOid": "d7b190d389ab8f3f638667ca6377e230d77d7eeb",
+      "closedAt": "2026-10-28T07:46:54Z",
+      "mergedAt": "2026-10-28T07:46:54Z",
+      "mergedBy": "Acconut",
+      "mergeCommit": {
+        "oid": "62ca5c1bdf8d8f61cfbc29559c90863de90d5f73"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUkRC7g",
+          "commit": {
+            "abbreviatedOid": "d7b190d"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-27T22:16:48Z",
+          "updatedAt": "2026-10-27T22:16:48Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUmnDXw",
+          "commit": {
+            "abbreviatedOid": "d7b190d"
+          },
+          "author": "LPardue",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-28T04:00:01Z",
+          "updatedAt": "2026-10-28T04:00:01Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3573,
+      "id": "PR_kwDOAUA-v88AAAABLI3kZg",
+      "title": "SECONDARY CERTS: Editorial pass",
+      "url": "https://github.com/httpwg/http-extensions/pull/3573",
+      "state": "OPEN",
+      "author": "egorbaty",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "egorbaty"
+      ],
+      "labels": [
+        "secondary-server-certs"
+      ],
+      "body": "Some easy changes from WGLC reviews, more to come in follow-up PRs.",
+      "createdAt": "2026-10-27T23:07:52Z",
+      "updatedAt": "2026-10-28T18:45:22Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "9adda9822c4608a2cc6e0b4cfb499b2952d8c09e",
+      "headRepository": "egorbaty/http-extensions",
+      "headRefName": "secondary-certs/wglc-editorial-review-1",
+      "headRefOid": "cecd6558a1bda0e6f3111d2ab6b1865db26db624",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUmrJLg",
+          "commit": {
+            "abbreviatedOid": "df064b8"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-10-28T04:11:34Z",
+          "updatedAt": "2026-10-28T04:12:45Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "We should probably reference Encrypted Client Hello if we don't already, since it is a case where the real SNI is not in the clear. ",
+              "createdAt": "2026-10-28T04:11:34Z",
+              "updatedAt": "2026-10-28T04:12:45Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUmr-Xg",
+          "commit": {
+            "abbreviatedOid": "df064b8"
+          },
+          "author": "tfpauly",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-10-28T04:13:41Z",
+          "updatedAt": "2026-10-28T04:14:04Z",
+          "comments": [
+            {
+              "originalPosition": 168,
+              "body": "Separately from this PR, do we want to get the values requested?",
+              "createdAt": "2026-10-28T04:13:42Z",
+              "updatedAt": "2026-10-28T04:14:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUtEJ-A",
+          "commit": {
+            "abbreviatedOid": "df064b8"
+          },
+          "author": "MikeBishop",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "LGTM.",
+          "createdAt": "2026-10-28T14:35:07Z",
+          "updatedAt": "2026-10-28T14:37:50Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "Yes, this is effectively framed as an alternative to ECH -- and perhaps that's the correct framing. ECH can be seen from the outside (though you can't know whether it's grease or not), but this can't.",
+              "createdAt": "2026-10-28T14:35:08Z",
+              "updatedAt": "2026-10-28T14:37:50Z"
+            },
+            {
+              "originalPosition": 109,
+              "body": "```suggestion\nThe Authenticator field is the opaque data returned from the TLS connection\n```",
+              "createdAt": "2026-10-28T14:36:10Z",
+              "updatedAt": "2026-10-28T14:37:50Z"
+            },
+            {
+              "originalPosition": 83,
+              "body": "```suggestion\nThe Authenticator field is the opaque data returned from the TLS connection\n```",
+              "createdAt": "2026-10-28T14:36:25Z",
+              "updatedAt": "2026-10-28T14:37:50Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUwUw3A",
+          "commit": {
+            "abbreviatedOid": "df064b8"
+          },
+          "author": "egorbaty",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-10-28T18:36:56Z",
+          "updatedAt": "2026-10-28T18:36:57Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "I added a brief reference mentioning that the SNI is not in the clear with ECH. As for mike's point, perhaps we should follow up and expand upon that framing somewhere else in the document? It might be worth making this 'tradeoff' with ECH more apparent? Not sure if it makes sense to expand upon that in this section or later in the security considerations.",
+              "createdAt": "2026-10-28T18:36:56Z",
+              "updatedAt": "2026-10-28T18:36:57Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUwbqEA",
+          "commit": {
+            "abbreviatedOid": "df064b8"
+          },
+          "author": "egorbaty",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-10-28T18:45:21Z",
+          "updatedAt": "2026-10-28T18:45:21Z",
+          "comments": [
+            {
+              "originalPosition": 168,
+              "body": "There are going to be some upcoming revisions to how the settings are negotiated which would affect interop with the current state of the draft but once we make those changes, yes, we'd probably want to get codepoints allocated. ",
+              "createdAt": "2026-10-28T18:45:21Z",
+              "updatedAt": "2026-10-28T18:45:22Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 3574,
+      "id": "PR_kwDOAUA-v88AAAABLLzEWA",
+      "title": "Resumable: address Julian's second review pass",
+      "url": "https://github.com/httpwg/http-extensions/pull/3574",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Addresses some comments from Julian's second review pass: https://www.w3.org/mid/0541c103-146b-4ac2-a2e6-f984d78f5ac3@gmx.de\n\n- Point Untrusted Input at HTTP's security considerations\n  - The section restated advice that applies to any upload. RFC 9110 Sections 17.3 and 17.4 cover the same risks, so cite them instead. This removes the metadata validation MUST.\n- Restate the parallel transfer rule in upload terms\n  - Names the upload creation and upload append requests. The requirement is unchanged.\n- Drop redundant \"in bytes\" from Upload-Offset and Upload-Length\n  - The Offset and Length sections already define both values as a number of bytes.\n",
+      "createdAt": "2026-10-28T05:09:54Z",
+      "updatedAt": "2026-10-28T07:46:08Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "0011039c2c039f639f0eba5c46a006b8ab851969",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-reschke-review-2",
+      "headRefOid": "dafee85cc75a33d785c4cac03c65f326a7817f0e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUnavug",
+          "commit": {
+            "abbreviatedOid": "dafee85"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-28T06:04:09Z",
+          "updatedAt": "2026-10-28T06:04:09Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUoPldQ",
+          "commit": {
+            "abbreviatedOid": "dafee85"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-10-28T07:46:08Z",
+          "updatedAt": "2026-10-28T07:46:08Z",
+          "comments": [
+            {
+              "originalPosition": 23,
+              "body": "This phrasing is good, I think. We don't define parallel uploading in this document, but this could be specified by other documents in the future (see the current proposal in the WG). So resumable uploads and parallel uploading aren't always exclusive. It's just not part of this document.",
+              "createdAt": "2026-10-28T07:46:08Z",
+              "updatedAt": "2026-10-28T07:46:08Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUoPsbQ",
+          "commit": {
+            "abbreviatedOid": "dafee85"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-28T07:46:17Z",
+          "updatedAt": "2026-10-28T07:46:17Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3575,
+      "id": "PR_kwDOAUA-v88AAAABLMEpfA",
+      "title": "Resumable: replace \"false or missing\" with \"does not mark the upload as complete\"",
+      "url": "https://github.com/httpwg/http-extensions/pull/3575",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Addresses the \"false or missing\" comment from Julian's second review pass: https://www.w3.org/mid/0541c103-146b-4ac2-a2e6-f984d78f5ac3@gmx.de\n\n- Replace \"false or missing\" with \"does not mark the upload as complete\"\n  - Upload-Complete defines when a response marks the upload as complete, so refer to that instead of listing field states.\n  - During my previous editorial pass, we do keep some instances of `Upload-Complete: ?1` where necessary and relevant, but I spotted one case here in line 620 that can be improved by using the \"marked as complete\" phrasing.\n- In a couple of places we can use Use \"marks the upload as complete\" for the positive case to match the negative case in the following paragraph.\n\nFollows #3574.\n",
+      "createdAt": "2026-10-28T05:44:08Z",
+      "updatedAt": "2026-10-28T06:07:21Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "0011039c2c039f639f0eba5c46a006b8ab851969",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-not-marked-complete",
+      "headRefOid": "74ddbbc7458f365098fbf705eba5a9eb963f59be",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABUncHqA",
+          "commit": {
+            "abbreviatedOid": "74ddbbc"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-10-28T06:07:21Z",
+          "updatedAt": "2026-10-28T06:07:21Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
