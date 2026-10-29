@@ -1197,10 +1197,9 @@ Table of Contents
    MUST include the Upload-Complete header field set to true, allowing
    clients to identify whether a response, in particular error
    responses, is related to the resumable upload itself or the
-   processing of the uploaded representation.  The server MUST NOT
-   generate a 2xx (Successful) response with the Upload-Complete header
-   field set to false or missing in response to a request with the
-   Upload-Complete header field set to true.
+   processing of the uploaded representation.  Any 2xx (Successful)
+   response that the server generates for such a request MUST mark the
+   upload as complete.
 
    If the Upload-Complete request header field is set to false, the
    client intends to transfer the remaining representation data over
