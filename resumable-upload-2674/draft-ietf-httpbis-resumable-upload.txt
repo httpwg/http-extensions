@@ -1177,6 +1177,14 @@ Table of Contents
    field, a valid Upload-Complete header field, or both, the server
    SHOULD respond with a 400 (Bad Request) status code.
 
+   The patch document cannot have a content coding of its own.  A
+   content coding would make the request content differ from the
+   representation data that the offset (Section 4.1) and length
+   (Section 4.3) count.  Therefore, if the request includes a Content-
+   Encoding header field, the server SHOULD respond with a 415
+   (Unsupported Media Type) status code and the Upload-Complete header
+   field set to false.
+
    If the Upload-Complete request header field is set to true, the
    client intends to transfer the remaining representation data in one
    request.  If the request content was fully processed, the upload is
