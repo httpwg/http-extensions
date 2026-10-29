@@ -495,10 +495,16 @@ Table of Contents
    longer lets a client that missed the final response verify the
    upload's state, at a cost to the server.
 
-   A server SHOULD assign each upload resource a URI that has not
-   identified any other upload resource.  URI reuse increases the chance
-   of misdirected requests or corrupted uploads, and the risk of the
+   An upload resource SHOULD be unique.  Reuse of a URI for a different
+   upload resource SHOULD be avoided in order to reduce the chance of
+   misdirected or corrupted upload resources, as well as the potential
    security issues described in Section 20.1.
+
+   If the client receives a 3xx (Redirection) response to a request to
+   the upload resource, and the response does not complete the upload
+   (Section 20.7), the client is not expected to follow the redirect,
+   because this protocol does not define how an upload continues at a
+   different URI.
 
    The state of an upload includes the following properties that are
    tracked by the server.
@@ -1057,7 +1063,8 @@ Table of Contents
    If the client receives a 2xx (Successful) response without a valid
    Upload-Offset header field, a 4xx (Client Error) or 5xx (Server
    Error) response, or if it did not receive a response, the client MAY
-   retry retrieving the offset.
+   retry retrieving the offset.  Otherwise, the upload is considered a
+   failure.
 
 7.2.  Server Behavior
 
