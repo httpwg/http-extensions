@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 1 May 2027                                           Apple Inc.
+Expires: 2 May 2027                                           Apple Inc.
                                                           L. Pardue, Ed.
                                                                    Apple
-                                                         28 October 2026
+                                                         29 October 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 May 2027.
+   This Internet-Draft will expire on 2 May 2027.
 
 Copyright Notice
 
@@ -529,10 +529,10 @@ Table of Contents
    The Upload-Offset request and response header field is an Item
    Structured Header Field of type Integer (Section 3.3.1 of
    [STRUCTURED-FIELDS]).  Its value is a non-negative Integer and
-   indicates the current offset in bytes, as viewed by the message
-   sender.  Other values MUST cause the entire header field to be
-   ignored.  This document does not define parameters for Upload-Offset;
-   unknown parameters MUST be ignored.
+   indicates the current offset, as viewed by the message sender.  Other
+   values MUST cause the entire header field to be ignored.  This
+   document does not define parameters for Upload-Offset; unknown
+   parameters MUST be ignored.
 
    The client can learn the current offset in three ways:
 
@@ -625,10 +625,9 @@ Table of Contents
    The Upload-Length request and response header field is an Item
    Structured Header Field of type Integer (Section 3.3.1 of
    [STRUCTURED-FIELDS]).  Its value is a non-negative Integer and
-   indicates the representation's length in bytes.  Other values MUST
-   cause the entire header field to be ignored.  This document does not
-   define parameters for Upload-Length; unknown parameters MUST be
-   ignored.
+   indicates the representation's length.  Other values MUST cause the
+   entire header field to be ignored.  This document does not define
+   parameters for Upload-Length; unknown parameters MUST be ignored.
 
    The Upload-Length field can be used in response to an offset
    retrieval; see Section 7.2.
@@ -1305,12 +1304,11 @@ Table of Contents
 
 10.  Concurrency
 
-   Resumable uploads, as defined in this document, do not permit
-   uploading representation data in parallel requests for the same
-   upload.  The client MUST NOT perform multiple representation data
-   transfers for the same upload resource in parallel, or perform
-   representation data transfers while the creation of the same upload
-   resource is still in progress.
+   This document does not support parallel requests that transfer
+   representation data to the same upload resource.  The client MUST NOT
+   send an upload append request (Section 8) while an upload creation
+   request (Section 6) or another upload append request for the same
+   upload resource is still in progress.
 
    Even if the client is well-behaved and does not send concurrent
    requests, network interruptions can occur in such a way that the
@@ -1671,13 +1669,8 @@ Table of Contents
 
 20.2.  Untrusted Input
 
-   Uploaded representation data and its metadata are untrusted input.
-   Server operators have to be careful about where uploaded data is
-   written and subsequently accessed, especially if the operations cause
-   the representation to be processed or executed by the server.  In
-   addition, metadata MUST be validated and/or sanitized if the server
-   takes its values into consideration for processing or storing the
-   representation.
+   Upload creation and upload append requests carry untrusted input; see
+   Section 17.3 of [HTTP] and Section 17.4 of [HTTP].
 
 20.3.  Content Scanning
 
