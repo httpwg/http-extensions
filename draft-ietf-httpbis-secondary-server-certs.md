@@ -179,8 +179,9 @@ A client ignores any `SERVER_CERTIFICATE` frame received on stream 0 in HTTP/2
 or on the control stream in HTTP/3 when the most recent value of
 `SETTINGS_HTTP_SERVER_CERT_AUTH` it has sent is not 1.
 
-A client MUST NOT send a `SETTINGS_HTTP_SERVER_CERT_AUTH` parameter with a value
-of 0 after previously sending a value of 1.
+In HTTP/2, a client MAY send `SETTINGS_HTTP_SERVER_CERT_AUTH` with a value of
+0 after sending a value of 1. A value of 0 does not affect certificates the
+client has already validated.
 
 ## Making Certificates Available {#cert-available}
 
@@ -340,9 +341,8 @@ certificate (Online Certificate Status Protocol (OCSP) responses, Signed
 Certificate Timestamps (SCTs), etc.). The result is an opaque token which is
 used when generating the `SERVER_CERTIFICATE` frame.
 
-Upon receipt of a `SERVER_CERTIFICATE` frame, a client which has advertised
-support for secondary certificates MUST perform the following steps to validate
-the token it contains:
+A client MUST perform the following steps to validate the token in each
+`SERVER_CERTIFICATE` frame that it does not ignore ({{settings-usage}}):
 
 - Using the `get context` API, retrieve the `certificate_request_context` used
   to generate the authenticator, if any. Because the
