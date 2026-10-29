@@ -333,7 +333,7 @@ Table of Contents
    representation data is transferred, the server processes the entire
    representation and responds with whatever the initial request to
    /project/123/files would have produced if it had not been
-   interrupted, e.g., a 200 (OK) response.
+   interrupted, e.g., a 201 (Created) response.
 
    Client                                       Server
    |                                                 |
@@ -345,7 +345,7 @@ Table of Contents
    | [representation from offset X]                  |
    |------------------------------------------------>|
    |                                                 |
-   |                                          200 OK |
+   |                                     201 Created |
    |                             Upload-Complete: ?1 |
    |<------------------------------------------------|
    |                                                 |
@@ -453,8 +453,8 @@ Table of Contents
    transfer.  Once the remaining representation data is transferred, the
    server processes the entire representation and responds with whatever
    the initial request to /project/123/files would have produced if its
-   representation had been fully transferred and processed, e.g., a 200
-   (OK) response.
+   representation had been fully transferred and processed, e.g., a 201
+   (Created) response.
 
    Client                                       Server
    |                                                 |
@@ -466,7 +466,7 @@ Table of Contents
    | [remaining representation from offset Z]        |
    |------------------------------------------------>|
    |                                                 |
-   |                                          200 OK |
+   |                                     201 Created |
    |                             Upload-Complete: ?1 |
    |<------------------------------------------------|
    |                                                 |
@@ -956,8 +956,9 @@ Table of Contents
    HTTP/1.1 104 Upload Resumption Supported
    Upload-Offset: 23456789
 
-   HTTP/1.1 200 OK
+   HTTP/1.1 201 Created
    Upload-Complete: ?1
+   Location: https://example.com/project/123/files/b530ce8ff
    Content-Type: application/json
 
    {"attachmentId": "b530ce8ff"}

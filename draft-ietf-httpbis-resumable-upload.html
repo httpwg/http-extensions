@@ -1611,7 +1611,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#name-offset-retrieval" class="selfRef">Offset Retrieval</a>
           </figcaption></figure>
 </div>
-<p id="section-3.1-6">3) The client can resume the upload by sending the remaining representation data to the upload resource (<a href="#upload-appending" class="auto internal xref">Section 8</a>), appending to the already stored representation data in the upload using the <code>application/partial-upload</code> media type. The <code>Upload-Offset</code> header field is included to ensure that the client and server agree on the offset that the upload resumes from. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to <code>/project/123/files</code> would have produced if it had not been interrupted, e.g., a <code>200 (OK)</code> response.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.1-6">3) The client can resume the upload by sending the remaining representation data to the upload resource (<a href="#upload-appending" class="auto internal xref">Section 8</a>), appending to the already stored representation data in the upload using the <code>application/partial-upload</code> media type. The <code>Upload-Offset</code> header field is included to ensure that the client and server agree on the offset that the upload resumes from. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to <code>/project/123/files</code> would have produced if it had not been interrupted, e.g., a <code>201 (Created)</code> response.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
 <span id="name-upload-append"></span><div id="fig-upload-appending">
 <figure id="figure-3">
           <div id="section-3.1-7.1">
@@ -1638,8 +1638,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
                   <text x="164" y="148">from</text>
                   <text x="212" y="148">offset</text>
                   <text x="252" y="148">X]</text>
-                  <text x="360" y="196">200</text>
-                  <text x="388" y="196">OK</text>
+                  <text x="320" y="196">201</text>
+                  <text x="368" y="196">Created</text>
                   <text x="308" y="212">Upload-Complete:</text>
                   <text x="388" y="212">?1</text>
                 </g>
@@ -1809,7 +1809,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#name-resuming-an-interrupted-upl" class="selfRef">Resuming an Interrupted Upload</a>
           </figcaption></figure>
 </div>
-<p id="section-3.2-9">4) The request to append the last part of the representation data has the <code>Upload-Complete</code> header field set to true to indicate the complete transfer. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to <code>/project/123/files</code> would have produced if its representation had been fully transferred and processed, e.g., a <code>200 (OK)</code> response.<a href="#section-3.2-9" class="pilcrow">¶</a></p>
+<p id="section-3.2-9">4) The request to append the last part of the representation data has the <code>Upload-Complete</code> header field set to true to indicate the complete transfer. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to <code>/project/123/files</code> would have produced if its representation had been fully transferred and processed, e.g., a <code>201 (Created)</code> response.<a href="#section-3.2-9" class="pilcrow">¶</a></p>
 <span id="name-appending-remaining-represe"></span><div id="fig-upload-appending-last-chunk">
 <figure id="figure-8">
           <div id="section-3.2-10.1">
@@ -1837,8 +1837,8 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
                   <text x="244" y="148">from</text>
                   <text x="292" y="148">offset</text>
                   <text x="332" y="148">Z]</text>
-                  <text x="360" y="196">200</text>
-                  <text x="388" y="196">OK</text>
+                  <text x="320" y="196">201</text>
+                  <text x="368" y="196">Created</text>
                   <text x="308" y="212">Upload-Complete:</text>
                   <text x="388" y="212">?1</text>
                 </g>
@@ -2107,8 +2107,9 @@ Upload-Limit: max-size=1234567890
 HTTP/1.1 104 Upload Resumption Supported
 Upload-Offset: 23456789
 
-HTTP/1.1 200 OK
+HTTP/1.1 201 Created
 Upload-Complete: ?1
+Location: https://example.com/project/123/files/b530ce8ff
 Content-Type: application/json
 
 {"attachmentId": "b530ce8ff"}
