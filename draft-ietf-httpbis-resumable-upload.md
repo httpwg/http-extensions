@@ -321,7 +321,7 @@ Representation data processed by the upload resource cannot be removed again and
 
 ### Upload-Offset {#upload-offset-hdr}
 
-The `Upload-Offset` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the current offset in bytes, as viewed by the message sender. Other values MUST cause the entire header field to be ignored. This document does not define parameters for `Upload-Offset`; unknown parameters MUST be ignored.
+The `Upload-Offset` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the current offset, as viewed by the message sender. Other values MUST cause the entire header field to be ignored. This document does not define parameters for `Upload-Offset`; unknown parameters MUST be ignored.
 
 The client can learn the current offset in three ways:
 
@@ -358,7 +358,7 @@ Note that the length and offset values do not determine whether an upload is com
 
 ### Upload-Length {#upload-length-hdr}
 
-The `Upload-Length` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the representation's length in bytes. Other values MUST cause the entire header field to be ignored. This document does not define parameters for `Upload-Length`; unknown parameters MUST be ignored.
+The `Upload-Length` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the representation's length. Other values MUST cause the entire header field to be ignored. This document does not define parameters for `Upload-Length`; unknown parameters MUST be ignored.
 
 The `Upload-Length` field can be used in response to an offset retrieval; see {{offset-retrieving-server}}.
 
@@ -722,7 +722,7 @@ HTTP/1.1 204 No Content
 
 # Concurrency
 
-Resumable uploads, as defined in this document, do not permit uploading representation data in parallel requests for the same upload. The client MUST NOT perform multiple representation data transfers for the same upload resource in parallel, or perform representation data transfers while the creation of the same upload resource is still in progress.
+This document does not support parallel requests that transfer representation data to the same upload resource. The client MUST NOT send an upload append request ({{upload-appending}}) while an upload creation request ({{upload-creation}}) or another upload append request for the same upload resource is still in progress.
 
 Even if the client is well-behaved and does not send concurrent requests, network interruptions can occur in such a way that the client considers a request as failed while the server is unaware of the problem and considers the request still ongoing. The client might then try to resume the upload with the best intentions, resulting in concurrent requests from the server's perspective. Therefore, the server MUST take measures to prevent race conditions, data loss, and corruption from concurrent append ({{upload-appending}}) or cancellation ({{upload-cancellation}}) requests to the same upload resource. In addition, the server MUST NOT send outdated information in responses. This means that if a client appends at an offset from a final response ({{upload-offset-hdr}}), the server MUST NOT reject that request for having the wrong offset, unless another append or a cancellation arrived in between.
 
@@ -880,7 +880,7 @@ If knowing the upload resource URI is enough to access the upload, the URI is in
 
 ## Untrusted Input
 
-Uploaded representation data and its metadata are untrusted input. Server operators have to be careful about where uploaded data is written and subsequently accessed, especially if the operations cause the representation to be processed or executed by the server. In addition, metadata MUST be validated and/or sanitized if the server takes its values into consideration for processing or storing the representation.
+Upload creation and upload append requests carry untrusted input; see {{Section 17.3 of HTTP}} and {{Section 17.4 of HTTP}}.
 
 ## Content Scanning
 
