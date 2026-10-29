@@ -56,7 +56,7 @@ on TLS Exported Authenticators.
 HTTP {{!HTTP=RFC9110}} clients need to know that the content they receive on a
 connection comes from the origin from which they intended to retrieve it. The
 traditional form of server authentication in HTTP has been in the form of a
-single X.509 certificate provided during the TLS {{!TLS13=RFC8446}} handshake.
+single X.509 certificate provided during the TLS {{!TLS13=RFC9846}} handshake.
 
 TLS supports one server and one client certificate on a connection. These
 certificates may contain multiple identities, but only one certificate may be
@@ -98,16 +98,15 @@ a particular origin.
 Servers which host many origins often would prefer to have separate certificates
 for some sets of origins. This may be for ease of certificate management
 (the ability to separately revoke or renew them), due to different sources of
-certificates (a CDN acting on behalf of multiple origins), or other factors
-which might drive this administrative decision. Clients connecting to such
-origins cannot currently reuse connections, even if both client and server
-would prefer to do so.
+certificates (a content delivery network acting on behalf of multiple
+origins), or other factors which might drive this administrative decision.
+Clients connecting to such origins cannot currently reuse connections, even if
+both client and server would prefer to do so.
 
-Because the TLS SNI extension is exchanged in the clear, clients might also
-prefer to retrieve certificates inside the encrypted context. When this
-information is sensitive, it might be advantageous to request a general-purpose
-certificate or anonymous ciphersuite at the TLS layer, while acquiring the
-"real" certificate in HTTP after the connection is established.
+Because the TLS Server Name Indication (SNI) extension is exchanged in the
+clear unless TLS Encrypted Client Hello {{?ECH=RFC9849}} is used, a server
+might prefer to present a general-purpose certificate at the TLS layer and
+provide the "real" certificates in HTTP after the connection is established.
 
 ## TLS Exported Authenticators
 
@@ -142,7 +141,7 @@ multiple origins.
 
 This document additionally defines SETTINGS parameters for HTTP/2 and HTTP/3
 ({{settings}}) that allow the client and server to indicate support for
-HTTP-Layer certificate authentication.
+HTTP-layer certificate authentication.
 
 # Conventions and Definitions
 
@@ -151,10 +150,10 @@ HTTP-Layer certificate authentication.
 # Discovering Additional Certificates at the HTTP Layer {#discovery}
 
 A certificate chain with proof of possession of the private key corresponding to
-the end-entity certificate is sent as a sequence of `SERVER_CERTIFICATE`
-frames (see {{http2-cert}}, {{http3-cert}}) to the client. Once the holder of a
-certificate has sent the chain and proof, this certificate chain is cached by
-the recipient and available for future use.
+the end-entity certificate is sent as a `SERVER_CERTIFICATE` frame (see
+{{http2-cert}}, {{http3-cert}}) to the client. Once the holder of a certificate
+has sent the chain and proof, this certificate chain is cached by the recipient
+and available for future use.
 
 ## Indicating Support for HTTP-Layer Server Certificate Authentication {#settings-usage}
 
@@ -162,7 +161,7 @@ The `SETTINGS_HTTP_SERVER_CERT_AUTH` parameters for HTTP/2 and HTTP/3 are
 defined in {{settings}} so that clients and servers can indicate support for
 secondary server certificate authentication.
 
-HTTP/2 and HTTP/3 endpoints that wish to indicate support for HTTP-Layer
+HTTP/2 and HTTP/3 endpoints that wish to indicate support for HTTP-layer
 certificate authentication MUST send a `SETTINGS_HTTP_SERVER_CERT_AUTH`
 parameter set to "1" in their SETTINGS frame. Endpoints MUST NOT use any of the
 authentication functionality described in this document unless they have
@@ -286,7 +285,7 @@ the certificate chain and extensions used to create the message.
 
 ## HTTP/2 SERVER_CERTIFICATE frame {#http2-cert}
 A SERVER_CERTIFICATE frame in HTTP/2 (type=0xTBD) carries a TLS Exported
-authenticator that clients can use to authenticate secondary origins from a
+Authenticator that clients can use to authenticate secondary origins from a
 sending server.
 
 The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
@@ -313,13 +312,13 @@ described in {{Section 4 of H2}}.
 
 The SERVER_CERTIFICATE frame does not define any flags.
 
-The authenticator field is a portion of the opaque data returned from the TLS
-connection exported authenticator authenticate API. See {{exp-auth}} for more
-details on the input to this API.
+The Authenticator field is the opaque data returned from the TLS connection
+exported authenticator authenticate API. See {{exp-auth}} for more details on
+the input to this API.
 
 ## HTTP/3 SERVER_CERTIFICATE frame {#http3-cert}
 A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carries a TLS Exported
-authenticator that clients can use to authenticate secondary origins from a
+Authenticator that clients can use to authenticate secondary origins from a
 sending server.
 
 The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
@@ -330,23 +329,24 @@ frame received on any stream other than the control stream as a connection error
 SERVER_CERTIFICATE Frame {
   Type (i) = 0xTBD,
   Length (i),
-  Authenticator (...),
+  Authenticator (..),
 }
 ~~~~~~~~~~
 {: title="HTTP/3 SERVER_CERTIFICATE Frame"}
 
 The Type and Length fields are described in {{Section 7.1 of H3}}.
 
-The authenticator field is a portion of the opaque data returned from the TLS
-connection exported authenticator authenticate API. See {{exp-auth}} for more
-details on the input to this API.
+The Authenticator field is the opaque data returned from the TLS connection
+exported authenticator authenticate API. See {{exp-auth}} for more details on
+the input to this API.
 
 ## Exported Authenticator Characteristics {#exp-auth}
 
 The Exported Authenticator API defined in {{EXPORTED-AUTH}} takes as input a
 request, a set of certificates, and supporting information about the
-certificate (OCSP, SCT, etc.). The result is an opaque token which is used
-when generating the `SERVER_CERTIFICATE` frame.
+certificate (Online Certificate Status Protocol (OCSP) responses, Signed
+Certificate Timestamps (SCTs), etc.). The result is an opaque token which is
+used when generating the `SERVER_CERTIFICATE` frame.
 
 Upon receipt of a `SERVER_CERTIFICATE` frame, a client which has negotiated
 support for secondary certificates MUST perform the following steps to validate
@@ -381,7 +381,7 @@ This category of errors could indicate a peer failing to follow requirements in
 this document or might indicate that the connection is not fully secure. These
 errors are fatal to stream or connection, as appropriate.
 
-SERVER_CERTIFICATE_INVALID (0xERROR-TBD):
+SERVER_CERTIFICATE_INVALID (0xTBD):
 : An exported authenticator could not be validated.
 
 ## Invalid Certificates
@@ -453,9 +453,9 @@ during the processing of a request, potentially multiple times, as
 authentication needs to be prepared to reevaluate the authorization state of a
 request as the set of certificates changes.
 
-Behavior for TLS-Terminated reverse proxies is also worth considering. If a
+Behavior for TLS-terminating reverse proxies is also worth considering. If a
 server which situationally reverse-proxies wishes for the client to view a
-request made prior to receipt of certificates as TLS-Terminated, or wishes for
+request made prior to receipt of certificates as TLS-terminated, or wishes for
 the client to start a new tunnel alternatively, this document does not currently
 define formal mechanisms to facilitate that intention.
 
@@ -470,95 +470,128 @@ error code for both {{H2}} and {{H3}}.
 This specification registers the following entry in the "HTTP/2 Frame Type"
 registry defined in {{H2}}:
 
-Code: : TBD
+Code:
+: TBD
 
-Frame Type: : SERVER_CERTIFICATE
+Frame Type:
+: SERVER_CERTIFICATE
 
-Reference: : This document
+Reference:
+: This document
 
 
 This specification registers the following entry in the "HTTP/3 Frame Types"
 registry established by {{H3}}:
 
-Value: : TBD
+Value:
+: TBD
 
-Frame Type: : SERVER_CERTIFICATE
+Frame Type:
+: SERVER_CERTIFICATE
 
-Status: : permanent
+Status:
+: permanent
 
-Reference: : This document
+Reference:
+: This document
 
-Change Controller: : IETF
+Change Controller:
+: IETF
 
-Contact: : ietf-http-wg@w3.org
+Contact:
+: ietf-http-wg@w3.org
 
 ## Settings Parameters
 
 This specification registers the following entry in the "HTTP/2 Settings"
 registry defined in {{H2}}:
 
-Code: : TBD
+Code:
+: TBD
 
-Name: : SETTINGS_HTTP_SERVER_CERT_AUTH
+Name:
+: SETTINGS_HTTP_SERVER_CERT_AUTH
 
-Initial Value: : 0
+Initial Value:
+: 0
 
-Reference: : This document
+Reference:
+: This document
 
 
 This specification registers the following entry in the "HTTP/3 Settings"
 registry defined in {{H3}}:
 
-Code: : TBD
+Value:
+: TBD
 
-Name: : SETTINGS_HTTP_SERVER_CERT_AUTH
+Setting Name:
+: SETTINGS_HTTP_SERVER_CERT_AUTH
 
-Default: : 0
+Default:
+: 0
 
-Reference: : This document
+Status:
+: permanent
 
-Change Controller: : IETF
+Reference:
+: This document
 
-Contact: : ietf-http-wg@w3.org
+Change Controller:
+: IETF
+
+Contact:
+: ietf-http-wg@w3.org
 
 ## Error Codes
 
 This specification registers the following entry in the "HTTP/2 Error Code"
 registry defined in {{H2}}:
 
-Code: : TBD
+Code:
+: TBD
 
-Name: : SERVER_CERTIFICATE_INVALID
+Name:
+: SERVER_CERTIFICATE_INVALID
 
-Description: : There was an issue processing the SERVER_CERTIFICATE frame.
+Description:
+: There was an issue processing the SERVER_CERTIFICATE frame.
 
-Reference: : This document
+Reference:
+: This document
 
 
 This specification registers the following entry in the "HTTP/3 Error Codes"
 registry established by {{H3}}:
 
-Value: : TBD
+Value:
+: TBD
 
-Name: : SERVER_CERTIFICATE_INVALID
+Name:
+: SERVER_CERTIFICATE_INVALID
 
-Description: : There was an issue processing the SERVER_CERTIFICATE frame.
+Description:
+: There was an issue processing the SERVER_CERTIFICATE frame.
 
-Status: : permanent
+Status:
+: permanent
 
-Reference: : This document
+Reference:
+: This document
 
-Change Controller: : IETF
+Change Controller:
+: IETF
 
-Contact: : ietf-http-wg@w3.org
+Contact:
+: ietf-http-wg@w3.org
 
 --- back
 
 # Acknowledgments
 {:numbered="false"}
 
-Thanks to Mike Bishop, Nick Sullivan, Martin Thomson and other
-contributors for their work on the document that this is based on.
+This document is based on draft-ietf-httpbis-http2-secondary-certs. Thanks to
+Nick Sullivan, Martin Thomson and other contributors for their work on it.
 
 And thanks to Eric Kinnear, Tommy Pauly, and Lucas Pardue for their guidance and
 editorial contributions to this document.
