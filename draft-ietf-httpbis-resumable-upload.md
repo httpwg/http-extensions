@@ -374,29 +374,29 @@ A client usually learns the limits when the upload resource is created ({{upload
 
 The `Upload-Limit` response header field is a Dictionary Structured Header Field ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
-Receivers of the `Upload-Limit` header field parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places additional requirements on Dictionary members. A member with an unknown key MUST be ignored. A member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed. This document does not define parameters for Dictionary member values; unknown parameters MUST be ignored.
+Receivers of the `Upload-Limit` header field parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places additional requirements on Dictionary members. A member with an unknown key MUST be ignored. A member with a known key but a value of unexpected type or outside the allowed range MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed. This document does not define parameters for Dictionary member values; unknown parameters MUST be ignored.
 
 The following key-value pairs are defined.
 
 ### max-size {#upload-limit-max-size}
 
-The `max-size` limit specifies a maximum size, in bytes, for the representation data. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size. The value is an Integer.
+The `max-size` limit specifies a maximum size, in bytes, for the representation data. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size. The value is an Integer greater than zero; a value of zero would only permit empty uploads.
 
 ### min-size {#upload-limit-min-size}
 
-The `min-size` limit specifies a minimum size, in bytes, for the representation data. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. Resumable uploads impose additional overhead on the server, which might not be acceptable for small representations. Requests with representation data below this value might still be accepted by the server, although without the ability to resume them. The value is an Integer.
+The `min-size` limit specifies a minimum size, in bytes, for the representation data. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. Resumable uploads impose additional overhead on the server, which might not be acceptable for small representations. Requests with representation data below this value might still be accepted by the server, although without the ability to resume them. The value is a non-negative Integer. It MUST NOT be greater than the `max-size` value, if present.
 
 ### max-append-size {#upload-limit-max-append-size}
 
-The `max-append-size` limit specifies a maximum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append or upload creation requests. The value is an Integer.
+The `max-append-size` limit specifies a maximum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append or upload creation requests. The value is an Integer greater than zero.
 
 ### min-append-size {#upload-limit-min-append-size}
 
-The `min-append-size` limit specifies a minimum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append or upload creation requests. The value is an Integer. This limit does not apply to upload creation requests with no content, or to requests completing the upload by including the `Upload-Complete: ?1` header field.
+The `min-append-size` limit specifies a minimum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append or upload creation requests. The value is a non-negative Integer. It MUST NOT be greater than the `max-append-size` or `max-size` values, if present. This limit does not apply to upload creation requests with no content, or to requests completing the upload by including the `Upload-Complete: ?1` header field.
 
 ### max-age {#upload-limit-max-age}
 
-The `max-age` limit specifies the remaining lifetime, in seconds, of the upload resource, counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible. The value is an Integer.
+The `max-age` limit specifies the remaining lifetime, in seconds, of the upload resource, counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible. The value is a non-negative Integer.
 
 ## Use with OPTIONS {#upload-limits-options}
 
@@ -768,7 +768,7 @@ The `application/partial-upload` media type describes a contiguous block from th
 
 This section defines the "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" problem type {{PROBLEM}}. A server can use this problem type when responding to an upload append request ({{upload-appending}}) to indicate that the `Upload-Offset` header field in the request does not match the upload resource's offset.
 
-Two problem type extension members are defined: the `expected-offset` and `provided-offset` members. A response using this problem type SHOULD populate both members, with the value of `expected-offset` taken from the upload resource and the value of `provided-offset` taken from the upload append request.
+Two problem type extension members are defined: the `expected-offset` and `provided-offset` members. Both are non-negative integers. A response using this problem type SHOULD populate both members, with the value of `expected-offset` taken from the upload resource and the value of `provided-offset` taken from the upload append request.
 
 The following example shows a response, where the resource's offset was 12500000, but the client attempted to append at offset 25000000:
 
@@ -1042,6 +1042,7 @@ Reference:
 * State that unknown Structured Fields parameters MUST be ignored.
 * Discourage change of upload URLs.
 * Append request cannot use different content codings.
+* Define ranges for integer values in `Upload-Limit` and problem type members.
 
 ## Since draft-ietf-httpbis-resumable-upload-13
 {:numbered="false"}
