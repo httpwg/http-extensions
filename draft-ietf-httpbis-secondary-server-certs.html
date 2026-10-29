@@ -1315,15 +1315,14 @@ a particular origin.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
 <p id="section-1.1-4">Servers which host many origins often would prefer to have separate certificates
 for some sets of origins. This may be for ease of certificate management
 (the ability to separately revoke or renew them), due to different sources of
-certificates (a CDN acting on behalf of multiple origins), or other factors
-which might drive this administrative decision. Clients connecting to such
-origins cannot currently reuse connections, even if both client and server
-would prefer to do so.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
-<p id="section-1.1-5">Because the TLS SNI extension is exchanged in the clear, clients might also
-prefer to retrieve certificates inside the encrypted context. When this
-information is sensitive, it might be advantageous to request a general-purpose
-certificate or anonymous ciphersuite at the TLS layer, while acquiring the
-"real" certificate in HTTP after the connection is established.<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+certificates (a content delivery network acting on behalf of multiple
+origins), or other factors which might drive this administrative decision.
+Clients connecting to such origins cannot currently reuse connections, even if
+both client and server would prefer to do so.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.1-5">Because the TLS Server Name Indication (SNI) extension is exchanged in the
+clear unless TLS Encrypted Client Hello <span>[<a href="#ECH" class="cite xref">ECH</a>]</span> is used, a server
+might prefer to present a general-purpose certificate at the TLS layer and
+provide the "real" certificates in HTTP after the connection is established.<a href="#section-1.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="tls-exported-authenticators">
@@ -1362,7 +1361,7 @@ send certificate frames which can be used to prove the server's authenticity for
 multiple origins.<a href="#section-1.3-2" class="pilcrow">¶</a></p>
 <p id="section-1.3-3">This document additionally defines SETTINGS parameters for HTTP/2 and HTTP/3
 (<a href="#settings" class="auto internal xref">Section 4</a>) that allow the client and server to indicate support for
-HTTP-Layer certificate authentication.<a href="#section-1.3-3" class="pilcrow">¶</a></p>
+HTTP-layer certificate authentication.<a href="#section-1.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1384,10 +1383,10 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-discovering-additional-cert" class="section-name selfRef">Discovering Additional Certificates at the HTTP Layer</a>
       </h2>
 <p id="section-3-1">A certificate chain with proof of possession of the private key corresponding to
-the end-entity certificate is sent as a sequence of <code>SERVER_CERTIFICATE</code>
-frames (see <a href="#http2-cert" class="auto internal xref">Section 5.1</a>, <a href="#http3-cert" class="auto internal xref">Section 5.2</a>) to the client. Once the holder of a
-certificate has sent the chain and proof, this certificate chain is cached by
-the recipient and available for future use.<a href="#section-3-1" class="pilcrow">¶</a></p>
+the end-entity certificate is sent as a <code>SERVER_CERTIFICATE</code> frame (see
+<a href="#http2-cert" class="auto internal xref">Section 5.1</a>, <a href="#http3-cert" class="auto internal xref">Section 5.2</a>) to the client. Once the holder of a certificate
+has sent the chain and proof, this certificate chain is cached by the recipient
+and available for future use.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <div id="settings-usage">
 <section id="section-3.1">
         <h3 id="name-indicating-support-for-http">
@@ -1396,7 +1395,7 @@ the recipient and available for future use.<a href="#section-3-1" class="pilcrow
 <p id="section-3.1-1">The <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code> parameters for HTTP/2 and HTTP/3 are
 defined in <a href="#settings" class="auto internal xref">Section 4</a> so that clients and servers can indicate support for
 secondary server certificate authentication.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">HTTP/2 and HTTP/3 endpoints that wish to indicate support for HTTP-Layer
+<p id="section-3.1-2">HTTP/2 and HTTP/3 endpoints that wish to indicate support for HTTP-layer
 certificate authentication <span class="bcp14">MUST</span> send a <code>SETTINGS_HTTP_SERVER_CERT_AUTH</code>
 parameter set to "1" in their SETTINGS frame. Endpoints <span class="bcp14">MUST NOT</span> use any of the
 authentication functionality described in this document unless they have
@@ -1587,7 +1586,7 @@ the certificate chain and extensions used to create the message.<a href="#sectio
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-http-2-server_certificate-f" class="section-name selfRef">HTTP/2 SERVER_CERTIFICATE frame</a>
         </h3>
 <p id="section-5.1-1">A SERVER_CERTIFICATE frame in HTTP/2 (type=0xTBD) carries a TLS Exported
-authenticator that clients can use to authenticate secondary origins from a
+Authenticator that clients can use to authenticate secondary origins from a
 sending server.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2">The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
 <span class="bcp14">MUST</span> be sent on stream 0. An endpoint <span class="bcp14">MUST</span> treat a SERVER_CERTIFICATE frame with a
@@ -1614,9 +1613,9 @@ SERVER_CERTIFICATE Frame {
 <p id="section-5.1-4">The Length, Type, Unused Flag(s), Reserved, and Stream Identifier fields are
 described in <span><a href="https://rfc-editor.org/rfc/rfc9113#section-4" class="relref">Section 4</a> of [<a href="#H2" class="cite xref">H2</a>]</span>.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
 <p id="section-5.1-5">The SERVER_CERTIFICATE frame does not define any flags.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
-<p id="section-5.1-6">The authenticator field is a portion of the opaque data returned from the TLS
-connection exported authenticator authenticate API. See <a href="#exp-auth" class="auto internal xref">Section 5.3</a> for more
-details on the input to this API.<a href="#section-5.1-6" class="pilcrow">¶</a></p>
+<p id="section-5.1-6">The Authenticator field is the opaque data returned from the TLS connection
+exported authenticator authenticate API. See <a href="#exp-auth" class="auto internal xref">Section 5.3</a> for more details on
+the input to this API.<a href="#section-5.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="http3-cert">
@@ -1625,7 +1624,7 @@ details on the input to this API.<a href="#section-5.1-6" class="pilcrow">¶</a>
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-http-3-server_certificate-f" class="section-name selfRef">HTTP/3 SERVER_CERTIFICATE frame</a>
         </h3>
 <p id="section-5.2-1">A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carries a TLS Exported
-authenticator that clients can use to authenticate secondary origins from a
+Authenticator that clients can use to authenticate secondary origins from a
 sending server.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <p id="section-5.2-2">The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
 <span class="bcp14">MUST</span> be sent on the control stream. An endpoint <span class="bcp14">MUST</span> treat a SERVER_CERTIFICATE
@@ -1636,7 +1635,7 @@ frame received on any stream other than the control stream as a connection error
 SERVER_CERTIFICATE Frame {
   Type (i) = 0xTBD,
   Length (i),
-  Authenticator (...),
+  Authenticator (..),
 }
 </pre>
 </div>
@@ -1644,9 +1643,9 @@ SERVER_CERTIFICATE Frame {
 <a href="#name-http-3-server_certificate-fr" class="selfRef">HTTP/3 SERVER_CERTIFICATE Frame</a>
           </figcaption></figure>
 <p id="section-5.2-4">The Type and Length fields are described in <span><a href="https://rfc-editor.org/rfc/rfc9114#section-7.1" class="relref">Section 7.1</a> of [<a href="#H3" class="cite xref">H3</a>]</span>.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
-<p id="section-5.2-5">The authenticator field is a portion of the opaque data returned from the TLS
-connection exported authenticator authenticate API. See <a href="#exp-auth" class="auto internal xref">Section 5.3</a> for more
-details on the input to this API.<a href="#section-5.2-5" class="pilcrow">¶</a></p>
+<p id="section-5.2-5">The Authenticator field is the opaque data returned from the TLS connection
+exported authenticator authenticate API. See <a href="#exp-auth" class="auto internal xref">Section 5.3</a> for more details on
+the input to this API.<a href="#section-5.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="exp-auth">
@@ -1656,8 +1655,9 @@ details on the input to this API.<a href="#section-5.2-5" class="pilcrow">¶</a>
         </h3>
 <p id="section-5.3-1">The Exported Authenticator API defined in <span>[<a href="#EXPORTED-AUTH" class="cite xref">EXPORTED-AUTH</a>]</span> takes as input a
 request, a set of certificates, and supporting information about the
-certificate (OCSP, SCT, etc.). The result is an opaque token which is used
-when generating the <code>SERVER_CERTIFICATE</code> frame.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+certificate (Online Certificate Status Protocol (OCSP) responses, Signed
+Certificate Timestamps (SCTs), etc.). The result is an opaque token which is
+used when generating the <code>SERVER_CERTIFICATE</code> frame.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <p id="section-5.3-2">Upon receipt of a <code>SERVER_CERTIFICATE</code> frame, a client which has negotiated
 support for secondary certificates <span class="bcp14">MUST</span> perform the following steps to validate
 the token it contains:<a href="#section-5.3-2" class="pilcrow">¶</a></p>
@@ -1701,7 +1701,7 @@ differently.<a href="#section-6-2" class="pilcrow">¶</a></p>
 this document or might indicate that the connection is not fully secure. These
 errors are fatal to stream or connection, as appropriate.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-6.1-2">
-          <dt id="section-6.1-2.1">SERVER_CERTIFICATE_INVALID (0xERROR-TBD):</dt>
+          <dt id="section-6.1-2.1">SERVER_CERTIFICATE_INVALID (0xTBD):</dt>
           <dd style="margin-left: 1.5em" id="section-6.1-2.2">
             <p id="section-6.1-2.2.1">An exported authenticator could not be validated.<a href="#section-6.1-2.2.1" class="pilcrow">¶</a></p>
 </dd>
@@ -1798,9 +1798,9 @@ during the processing of a request, potentially multiple times, as
 <code>SERVER_CERTIFICATE</code> frames are received. A client that uses certificate
 authentication needs to be prepared to reevaluate the authorization state of a
 request as the set of certificates changes.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
-<p id="section-7.4-2">Behavior for TLS-Terminated reverse proxies is also worth considering. If a
+<p id="section-7.4-2">Behavior for TLS-terminating reverse proxies is also worth considering. If a
 server which situationally reverse-proxies wishes for the client to view a
-request made prior to receipt of certificates as TLS-Terminated, or wishes for
+request made prior to receipt of certificates as TLS-terminated, or wishes for
 the client to start a new tunnel alternatively, this document does not currently
 define formal mechanisms to facilitate that intention.<a href="#section-7.4-2" class="pilcrow">¶</a></p>
 </section>
@@ -1822,17 +1822,57 @@ error code for both <span>[<a href="#H2" class="cite xref">H2</a>]</span> and <s
         </h3>
 <p id="section-8.1-1">This specification registers the following entry in the "HTTP/2 Frame Type"
 registry defined in <span>[<a href="#H2" class="cite xref">H2</a>]</span>:<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1-2">Code: : TBD<a href="#section-8.1-2" class="pilcrow">¶</a></p>
-<p id="section-8.1-3">Frame Type: : SERVER_CERTIFICATE<a href="#section-8.1-3" class="pilcrow">¶</a></p>
-<p id="section-8.1-4">Reference: : This document<a href="#section-8.1-4" class="pilcrow">¶</a></p>
-<p id="section-8.1-5">This specification registers the following entry in the "HTTP/3 Frame Types"
-registry established by <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a href="#section-8.1-5" class="pilcrow">¶</a></p>
-<p id="section-8.1-6">Value: : TBD<a href="#section-8.1-6" class="pilcrow">¶</a></p>
-<p id="section-8.1-7">Frame Type: : SERVER_CERTIFICATE<a href="#section-8.1-7" class="pilcrow">¶</a></p>
-<p id="section-8.1-8">Status: : permanent<a href="#section-8.1-8" class="pilcrow">¶</a></p>
-<p id="section-8.1-9">Reference: : This document<a href="#section-8.1-9" class="pilcrow">¶</a></p>
-<p id="section-8.1-10">Change Controller: : IETF<a href="#section-8.1-10" class="pilcrow">¶</a></p>
-<p id="section-8.1-11">Contact: : ietf-http-wg@w3.org<a href="#section-8.1-11" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-8.1-2">
+          <dt id="section-8.1-2.1">Code:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.1-2.2">
+            <p id="section-8.1-2.2.1">TBD<a href="#section-8.1-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.1-2.3">Frame Type:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.1-2.4">
+            <p id="section-8.1-2.4.1">SERVER_CERTIFICATE<a href="#section-8.1-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.1-2.5">Reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.1-2.6">
+            <p id="section-8.1-2.6.1">This document<a href="#section-8.1-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-8.1-3">This specification registers the following entry in the "HTTP/3 Frame Types"
+registry established by <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-8.1-4">
+          <dt id="section-8.1-4.1">Value:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.1-4.2">
+            <p id="section-8.1-4.2.1">TBD<a href="#section-8.1-4.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.1-4.3">Frame Type:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.1-4.4">
+            <p id="section-8.1-4.4.1">SERVER_CERTIFICATE<a href="#section-8.1-4.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.1-4.5">Status:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.1-4.6">
+            <p id="section-8.1-4.6.1">permanent<a href="#section-8.1-4.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.1-4.7">Reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.1-4.8">
+            <p id="section-8.1-4.8.1">This document<a href="#section-8.1-4.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.1-4.9">Change Controller:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.1-4.10">
+            <p id="section-8.1-4.10.1">IETF<a href="#section-8.1-4.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.1-4.11">Contact:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.1-4.12">
+            <p id="section-8.1-4.12.1">ietf-http-wg@w3.org<a href="#section-8.1-4.12.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
 </section>
 </div>
 <div id="settings-parameters">
@@ -1842,18 +1882,67 @@ registry established by <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a
         </h3>
 <p id="section-8.2-1">This specification registers the following entry in the "HTTP/2 Settings"
 registry defined in <span>[<a href="#H2" class="cite xref">H2</a>]</span>:<a href="#section-8.2-1" class="pilcrow">¶</a></p>
-<p id="section-8.2-2">Code: : TBD<a href="#section-8.2-2" class="pilcrow">¶</a></p>
-<p id="section-8.2-3">Name: : SETTINGS_HTTP_SERVER_CERT_AUTH<a href="#section-8.2-3" class="pilcrow">¶</a></p>
-<p id="section-8.2-4">Initial Value: : 0<a href="#section-8.2-4" class="pilcrow">¶</a></p>
-<p id="section-8.2-5">Reference: : This document<a href="#section-8.2-5" class="pilcrow">¶</a></p>
-<p id="section-8.2-6">This specification registers the following entry in the "HTTP/3 Settings"
-registry defined in <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a href="#section-8.2-6" class="pilcrow">¶</a></p>
-<p id="section-8.2-7">Code: : TBD<a href="#section-8.2-7" class="pilcrow">¶</a></p>
-<p id="section-8.2-8">Name: : SETTINGS_HTTP_SERVER_CERT_AUTH<a href="#section-8.2-8" class="pilcrow">¶</a></p>
-<p id="section-8.2-9">Default: : 0<a href="#section-8.2-9" class="pilcrow">¶</a></p>
-<p id="section-8.2-10">Reference: : This document<a href="#section-8.2-10" class="pilcrow">¶</a></p>
-<p id="section-8.2-11">Change Controller: : IETF<a href="#section-8.2-11" class="pilcrow">¶</a></p>
-<p id="section-8.2-12">Contact: : ietf-http-wg@w3.org<a href="#section-8.2-12" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-8.2-2">
+          <dt id="section-8.2-2.1">Code:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.2-2.2">
+            <p id="section-8.2-2.2.1">TBD<a href="#section-8.2-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.2-2.3">Name:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.2-2.4">
+            <p id="section-8.2-2.4.1">SETTINGS_HTTP_SERVER_CERT_AUTH<a href="#section-8.2-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.2-2.5">Initial Value:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.2-2.6">
+            <p id="section-8.2-2.6.1">0<a href="#section-8.2-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.2-2.7">Reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.2-2.8">
+            <p id="section-8.2-2.8.1">This document<a href="#section-8.2-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-8.2-3">This specification registers the following entry in the "HTTP/3 Settings"
+registry defined in <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a href="#section-8.2-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-8.2-4">
+          <dt id="section-8.2-4.1">Value:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.2-4.2">
+            <p id="section-8.2-4.2.1">TBD<a href="#section-8.2-4.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.2-4.3">Setting Name:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.2-4.4">
+            <p id="section-8.2-4.4.1">SETTINGS_HTTP_SERVER_CERT_AUTH<a href="#section-8.2-4.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.2-4.5">Default:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.2-4.6">
+            <p id="section-8.2-4.6.1">0<a href="#section-8.2-4.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.2-4.7">Status:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.2-4.8">
+            <p id="section-8.2-4.8.1">permanent<a href="#section-8.2-4.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.2-4.9">Reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.2-4.10">
+            <p id="section-8.2-4.10.1">This document<a href="#section-8.2-4.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.2-4.11">Change Controller:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.2-4.12">
+            <p id="section-8.2-4.12.1">IETF<a href="#section-8.2-4.12.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.2-4.13">Contact:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.2-4.14">
+            <p id="section-8.2-4.14.1">ietf-http-wg@w3.org<a href="#section-8.2-4.14.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
 </section>
 </div>
 <div id="error-codes">
@@ -1863,19 +1952,67 @@ registry defined in <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a hre
         </h3>
 <p id="section-8.3-1">This specification registers the following entry in the "HTTP/2 Error Code"
 registry defined in <span>[<a href="#H2" class="cite xref">H2</a>]</span>:<a href="#section-8.3-1" class="pilcrow">¶</a></p>
-<p id="section-8.3-2">Code: : TBD<a href="#section-8.3-2" class="pilcrow">¶</a></p>
-<p id="section-8.3-3">Name: : SERVER_CERTIFICATE_INVALID<a href="#section-8.3-3" class="pilcrow">¶</a></p>
-<p id="section-8.3-4">Description: : There was an issue processing the SERVER_CERTIFICATE frame.<a href="#section-8.3-4" class="pilcrow">¶</a></p>
-<p id="section-8.3-5">Reference: : This document<a href="#section-8.3-5" class="pilcrow">¶</a></p>
-<p id="section-8.3-6">This specification registers the following entry in the "HTTP/3 Error Codes"
-registry established by <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a href="#section-8.3-6" class="pilcrow">¶</a></p>
-<p id="section-8.3-7">Value: : TBD<a href="#section-8.3-7" class="pilcrow">¶</a></p>
-<p id="section-8.3-8">Name: : SERVER_CERTIFICATE_INVALID<a href="#section-8.3-8" class="pilcrow">¶</a></p>
-<p id="section-8.3-9">Description: : There was an issue processing the SERVER_CERTIFICATE frame.<a href="#section-8.3-9" class="pilcrow">¶</a></p>
-<p id="section-8.3-10">Status: : permanent<a href="#section-8.3-10" class="pilcrow">¶</a></p>
-<p id="section-8.3-11">Reference: : This document<a href="#section-8.3-11" class="pilcrow">¶</a></p>
-<p id="section-8.3-12">Change Controller: : IETF<a href="#section-8.3-12" class="pilcrow">¶</a></p>
-<p id="section-8.3-13">Contact: : ietf-http-wg@w3.org<a href="#section-8.3-13" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-8.3-2">
+          <dt id="section-8.3-2.1">Code:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.3-2.2">
+            <p id="section-8.3-2.2.1">TBD<a href="#section-8.3-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.3-2.3">Name:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.3-2.4">
+            <p id="section-8.3-2.4.1">SERVER_CERTIFICATE_INVALID<a href="#section-8.3-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.3-2.5">Description:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.3-2.6">
+            <p id="section-8.3-2.6.1">There was an issue processing the SERVER_CERTIFICATE frame.<a href="#section-8.3-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.3-2.7">Reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.3-2.8">
+            <p id="section-8.3-2.8.1">This document<a href="#section-8.3-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-8.3-3">This specification registers the following entry in the "HTTP/3 Error Codes"
+registry established by <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a href="#section-8.3-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-8.3-4">
+          <dt id="section-8.3-4.1">Value:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.3-4.2">
+            <p id="section-8.3-4.2.1">TBD<a href="#section-8.3-4.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.3-4.3">Name:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.3-4.4">
+            <p id="section-8.3-4.4.1">SERVER_CERTIFICATE_INVALID<a href="#section-8.3-4.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.3-4.5">Description:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.3-4.6">
+            <p id="section-8.3-4.6.1">There was an issue processing the SERVER_CERTIFICATE frame.<a href="#section-8.3-4.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.3-4.7">Status:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.3-4.8">
+            <p id="section-8.3-4.8.1">permanent<a href="#section-8.3-4.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.3-4.9">Reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.3-4.10">
+            <p id="section-8.3-4.10.1">This document<a href="#section-8.3-4.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.3-4.11">Change Controller:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.3-4.12">
+            <p id="section-8.3-4.12.1">IETF<a href="#section-8.3-4.12.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-8.3-4.13">Contact:</dt>
+          <dd style="margin-left: 1.5em" id="section-8.3-4.14">
+            <p id="section-8.3-4.14.1">ietf-http-wg@w3.org<a href="#section-8.3-4.14.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
 </section>
 </div>
 </section>
@@ -1917,7 +2054,7 @@ registry established by <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a
 <dd class="break"></dd>
 <dt id="TLS13">[TLS13]</dt>
       <dd>
-<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 9846</span>, <span class="seriesInfo">DOI 10.17487/RFC9846</span>, <time datetime="2026-07" class="refDate">July 2026</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9846">https://www.rfc-editor.org/rfc/rfc9846</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -1931,6 +2068,10 @@ registry established by <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a
 <dt id="ALTSVC">[ALTSVC]</dt>
         <dd>
 <span class="refAuthor">Nottingham, M.</span>, <span class="refAuthor">McManus, P.</span>, and <span class="refAuthor">J. Reschke</span>, <span class="refTitle">"HTTP Alternative Services"</span>, <span class="seriesInfo">RFC 7838</span>, <span class="seriesInfo">DOI 10.17487/RFC7838</span>, <time datetime="2016-04" class="refDate">April 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7838">https://www.rfc-editor.org/rfc/rfc7838</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="ECH">[ECH]</dt>
+        <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refAuthor">Oku, K.</span>, <span class="refAuthor">Sullivan, N.</span>, and <span class="refAuthor">C. A. Wood</span>, <span class="refTitle">"TLS Encrypted Client Hello"</span>, <span class="seriesInfo">RFC 9849</span>, <span class="seriesInfo">DOI 10.17487/RFC9849</span>, <time datetime="2026-03" class="refDate">March 2026</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9849">https://www.rfc-editor.org/rfc/rfc9849</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="ORIGIN">[ORIGIN]</dt>
       <dd>
@@ -1946,8 +2087,8 @@ registry established by <span>[<a href="#H3" class="cite xref">H3</a>]</span>:<a
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">Thanks to Mike Bishop, Nick Sullivan, Martin Thomson and other
-contributors for their work on the document that this is based on.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">This document is based on draft-ietf-httpbis-http2-secondary-certs. Thanks to
+Nick Sullivan, Martin Thomson and other contributors for their work on it.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <p id="appendix-A-2">And thanks to Eric Kinnear, Tommy Pauly, and Lucas Pardue for their guidance and
 editorial contributions to this document.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
 </section>

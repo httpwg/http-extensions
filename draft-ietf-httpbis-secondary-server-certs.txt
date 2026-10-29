@@ -158,18 +158,17 @@ Table of Contents
    Servers which host many origins often would prefer to have separate
    certificates for some sets of origins.  This may be for ease of
    certificate management (the ability to separately revoke or renew
-   them), due to different sources of certificates (a CDN acting on
-   behalf of multiple origins), or other factors which might drive this
-   administrative decision.  Clients connecting to such origins cannot
-   currently reuse connections, even if both client and server would
-   prefer to do so.
+   them), due to different sources of certificates (a content delivery
+   network acting on behalf of multiple origins), or other factors which
+   might drive this administrative decision.  Clients connecting to such
+   origins cannot currently reuse connections, even if both client and
+   server would prefer to do so.
 
-   Because the TLS SNI extension is exchanged in the clear, clients
-   might also prefer to retrieve certificates inside the encrypted
-   context.  When this information is sensitive, it might be
-   advantageous to request a general-purpose certificate or anonymous
-   ciphersuite at the TLS layer, while acquiring the "real" certificate
-   in HTTP after the connection is established.
+   Because the TLS Server Name Indication (SNI) extension is exchanged
+   in the clear unless TLS Encrypted Client Hello [ECH] is used, a
+   server might prefer to present a general-purpose certificate at the
+   TLS layer and provide the "real" certificates in HTTP after the
+   connection is established.
 
 1.2.  TLS Exported Authenticators
 
@@ -208,7 +207,7 @@ Table of Contents
 
    This document additionally defines SETTINGS parameters for HTTP/2 and
    HTTP/3 (Section 4) that allow the client and server to indicate
-   support for HTTP-Layer certificate authentication.
+   support for HTTP-layer certificate authentication.
 
 2.  Conventions and Definitions
 
@@ -221,8 +220,8 @@ Table of Contents
 3.  Discovering Additional Certificates at the HTTP Layer
 
    A certificate chain with proof of possession of the private key
-   corresponding to the end-entity certificate is sent as a sequence of
-   SERVER_CERTIFICATE frames (see Section 5.1, Section 5.2) to the
+   corresponding to the end-entity certificate is sent as a
+   SERVER_CERTIFICATE frame (see Section 5.1, Section 5.2) to the
    client.  Once the holder of a certificate has sent the chain and
    proof, this certificate chain is cached by the recipient and
    available for future use.
@@ -235,7 +234,7 @@ Table of Contents
    support for secondary server certificate authentication.
 
    HTTP/2 and HTTP/3 endpoints that wish to indicate support for HTTP-
-   Layer certificate authentication MUST send a
+   layer certificate authentication MUST send a
    SETTINGS_HTTP_SERVER_CERT_AUTH parameter set to "1" in their SETTINGS
    frame.  Endpoints MUST NOT use any of the authentication
    functionality described in this document unless they have both sent
@@ -367,7 +366,7 @@ Table of Contents
 5.1.  HTTP/2 SERVER_CERTIFICATE frame
 
    A SERVER_CERTIFICATE frame in HTTP/2 (type=0xTBD) carries a TLS
-   Exported authenticator that clients can use to authenticate secondary
+   Exported Authenticator that clients can use to authenticate secondary
    origins from a sending server.
 
    The SERVER_CERTIFICATE frame applies to the connection, not a
@@ -394,14 +393,14 @@ Table of Contents
 
    The SERVER_CERTIFICATE frame does not define any flags.
 
-   The authenticator field is a portion of the opaque data returned from
-   the TLS connection exported authenticator authenticate API.  See
-   Section 5.3 for more details on the input to this API.
+   The Authenticator field is the opaque data returned from the TLS
+   connection exported authenticator authenticate API.  See Section 5.3
+   for more details on the input to this API.
 
 5.2.  HTTP/3 SERVER_CERTIFICATE frame
 
    A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carries a TLS
-   Exported authenticator that clients can use to authenticate secondary
+   Exported Authenticator that clients can use to authenticate secondary
    origins from a sending server.
 
    The SERVER_CERTIFICATE frame applies to the connection, not a
@@ -412,23 +411,25 @@ Table of Contents
    SERVER_CERTIFICATE Frame {
      Type (i) = 0xTBD,
      Length (i),
-     Authenticator (...),
+     Authenticator (..),
    }
 
                  Figure 4: HTTP/3 SERVER_CERTIFICATE Frame
 
    The Type and Length fields are described in Section 7.1 of [H3].
 
-   The authenticator field is a portion of the opaque data returned from
-   the TLS connection exported authenticator authenticate API.  See
-   Section 5.3 for more details on the input to this API.
+   The Authenticator field is the opaque data returned from the TLS
+   connection exported authenticator authenticate API.  See Section 5.3
+   for more details on the input to this API.
 
 5.3.  Exported Authenticator Characteristics
 
    The Exported Authenticator API defined in [EXPORTED-AUTH] takes as
    input a request, a set of certificates, and supporting information
-   about the certificate (OCSP, SCT, etc.).  The result is an opaque
-   token which is used when generating the SERVER_CERTIFICATE frame.
+   about the certificate (Online Certificate Status Protocol (OCSP)
+   responses, Signed Certificate Timestamps (SCTs), etc.).  The result
+   is an opaque token which is used when generating the
+   SERVER_CERTIFICATE frame.
 
    Upon receipt of a SERVER_CERTIFICATE frame, a client which has
    negotiated support for secondary certificates MUST perform the
@@ -467,8 +468,8 @@ Table of Contents
    is not fully secure.  These errors are fatal to stream or connection,
    as appropriate.
 
-   SERVER_CERTIFICATE_INVALID (0xERROR-TBD):  An exported authenticator
-      could not be validated.
+   SERVER_CERTIFICATE_INVALID (0xTBD):  An exported authenticator could
+      not be validated.
 
 6.2.  Invalid Certificates
 
@@ -548,10 +549,10 @@ Table of Contents
    prepared to reevaluate the authorization state of a request as the
    set of certificates changes.
 
-   Behavior for TLS-Terminated reverse proxies is also worth
+   Behavior for TLS-terminating reverse proxies is also worth
    considering.  If a server which situationally reverse-proxies wishes
    for the client to view a request made prior to receipt of
-   certificates as TLS-Terminated, or wishes for the client to start a
+   certificates as TLS-terminated, or wishes for the client to start a
    new tunnel alternatively, this document does not currently define
    formal mechanisms to facilitate that intention.
 
@@ -566,86 +567,88 @@ Table of Contents
    This specification registers the following entry in the "HTTP/2 Frame
    Type" registry defined in [H2]:
 
-   Code: : TBD
+   Code:  TBD
 
-   Frame Type: : SERVER_CERTIFICATE
+   Frame Type:  SERVER_CERTIFICATE
 
-   Reference: : This document
+   Reference:  This document
 
    This specification registers the following entry in the "HTTP/3 Frame
    Types" registry established by [H3]:
 
-   Value: : TBD
+   Value:  TBD
 
-   Frame Type: : SERVER_CERTIFICATE
+   Frame Type:  SERVER_CERTIFICATE
 
-   Status: : permanent
+   Status:  permanent
 
-   Reference: : This document
+   Reference:  This document
 
-   Change Controller: : IETF
+   Change Controller:  IETF
 
-   Contact: : ietf-http-wg@w3.org
+   Contact:  ietf-http-wg@w3.org
 
 8.2.  Settings Parameters
 
    This specification registers the following entry in the "HTTP/2
    Settings" registry defined in [H2]:
 
-   Code: : TBD
+   Code:  TBD
 
-   Name: : SETTINGS_HTTP_SERVER_CERT_AUTH
+   Name:  SETTINGS_HTTP_SERVER_CERT_AUTH
 
-   Initial Value: : 0
+   Initial Value:  0
 
-   Reference: : This document
+   Reference:  This document
 
    This specification registers the following entry in the "HTTP/3
    Settings" registry defined in [H3]:
 
-   Code: : TBD
+   Value:  TBD
 
-   Name: : SETTINGS_HTTP_SERVER_CERT_AUTH
+   Setting Name:  SETTINGS_HTTP_SERVER_CERT_AUTH
 
-   Default: : 0
+   Default:  0
 
-   Reference: : This document
+   Status:  permanent
 
-   Change Controller: : IETF
+   Reference:  This document
 
-   Contact: : ietf-http-wg@w3.org
+   Change Controller:  IETF
+
+   Contact:  ietf-http-wg@w3.org
 
 8.3.  Error Codes
 
    This specification registers the following entry in the "HTTP/2 Error
    Code" registry defined in [H2]:
 
-   Code: : TBD
+   Code:  TBD
 
-   Name: : SERVER_CERTIFICATE_INVALID
+   Name:  SERVER_CERTIFICATE_INVALID
 
-   Description: : There was an issue processing the SERVER_CERTIFICATE
-   frame.
+   Description:  There was an issue processing the SERVER_CERTIFICATE
+      frame.
 
-   Reference: : This document
+   Reference:  This document
 
    This specification registers the following entry in the "HTTP/3 Error
    Codes" registry established by [H3]:
 
-   Value: : TBD
+   Value:  TBD
 
-   Name: : SERVER_CERTIFICATE_INVALID
+   Name:  SERVER_CERTIFICATE_INVALID
 
-   Description: : There was an issue processing the SERVER_CERTIFICATE
-   frame.
+   Description:  There was an issue processing the SERVER_CERTIFICATE
+      frame.
 
-   Status: : permanent
+   Status:  permanent
 
-   Reference: : This document
+   Reference:  This document
 
-   Change Controller: : IETF
+   Change Controller:  IETF
 
-   Contact: : ietf-http-wg@w3.org
+   Contact:  ietf-http-wg@w3.org
 
 9.  References
 
@@ -678,8 +681,8 @@ Table of Contents
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
    [TLS13]    Rescorla, E., "The Transport Layer Security (TLS) Protocol
-              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
-              <https://www.rfc-editor.org/rfc/rfc8446>.
+              Version 1.3", RFC 9846, DOI 10.17487/RFC9846, July 2026,
+              <https://www.rfc-editor.org/rfc/rfc9846>.
 
 9.2.  Informative References
 
@@ -687,14 +690,19 @@ Table of Contents
               Alternative Services", RFC 7838, DOI 10.17487/RFC7838,
               April 2016, <https://www.rfc-editor.org/rfc/rfc7838>.
 
+   [ECH]      Rescorla, E., Oku, K., Sullivan, N., and C. A. Wood, "TLS
+              Encrypted Client Hello", RFC 9849, DOI 10.17487/RFC9849,
+              March 2026, <https://www.rfc-editor.org/rfc/rfc9849>.
+
    [ORIGIN]   Nottingham, M. and E. Nygren, "The ORIGIN HTTP/2 Frame",
               RFC 8336, DOI 10.17487/RFC8336, March 2018,
               <https://www.rfc-editor.org/rfc/rfc8336>.
 
 Acknowledgments
 
-   Thanks to Mike Bishop, Nick Sullivan, Martin Thomson and other
-   contributors for their work on the document that this is based on.
+   This document is based on draft-ietf-httpbis-http2-secondary-certs.
+   Thanks to Nick Sullivan, Martin Thomson and other contributors for
+   their work on it.
 
    And thanks to Eric Kinnear, Tommy Pauly, and Lucas Pardue for their
    guidance and editorial contributions to this document.
