@@ -307,7 +307,9 @@ An upload resource is specific to the upload of one representation. For uploadin
 
 Server implementations need to decide how long to retain an upload resource after the upload is complete. The server can clean up the upload resource and make it inaccessible immediately. Keeping it longer lets a client that missed the final response verify the upload's state, at a cost to the server.
 
-A server SHOULD assign each upload resource a URI that has not identified any other upload resource. URI reuse increases the chance of misdirected requests or corrupted uploads, and the risk of the security issues described in {{security-uri}}.
+An upload resource SHOULD be unique. Reuse of a URI for a different upload resource SHOULD be avoided in order to reduce the chance of misdirected or corrupted upload resources, as well as the potential security issues described in {{security-uri}}.
+
+If the client receives a `3xx (Redirection)` response to a request to the upload resource, and the response does not complete the upload ({{origin}}), the client is not expected to follow the redirect, because this protocol does not define how an upload continues at a different URI.
 
 The state of an upload includes the following properties that are tracked by the server.
 
@@ -464,7 +466,7 @@ Every response to the same request that identifies the upload resource in the `L
 
 The server SHOULD include the `Upload-Complete` header field ({{upload-complete-hdr}}) in the response to indicate whether it is the result of processing the uploaded representation.
 
-The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes and the `Upload-Complete: ?0` header field because clients might follow the redirect without preserving the original method. See {{origin}} for redirecting a response that completes the upload.
+The server SHOULD NOT generate a response with a `3xx (Redirection)` status code and the `Upload-Complete: ?0` header field because the upload resource's URI is expected to remain the same for the lifetime of the upload. See {{origin}} for redirecting a response that completes the upload.
 
 The server might not process the entire request content when the upload is interrupted, for example, because of a dropped connection or a canceled request. In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. The upload resource MUST NOT be considered complete in this case.
 
@@ -572,7 +574,7 @@ The client MUST NOT retrieve the offset while it is still creating ({{upload-cre
 
 If the client receives a `2xx (Successful)` response with a valid `Upload-Offset` header field, the client can continue appending representation data to it ({{upload-appending}}).
 
-If the client receives a `2xx (Successful)` response without a valid `Upload-Offset` header field, a `4xx (Client Error)` or `5xx (Server Error)` response, or if it did not receive a response, the client MAY retry retrieving the offset.
+If the client receives a `2xx (Successful)` response without a valid `Upload-Offset` header field, a `4xx (Client Error)` or `5xx (Server Error)` response, or if it did not receive a response, the client MAY retry retrieving the offset. Otherwise, the upload is considered a failure.
 
 ## Server Behavior {#offset-retrieving-server}
 
@@ -582,7 +584,7 @@ A successful response to a `HEAD` or `GET` request to an upload resource
 - MUST indicate the limits in the `Upload-Limit` header field ({{upload-limits}}) if any, and
 - SHOULD include the `Cache-Control` header field with the value `no-store` to prevent HTTP caching ({{HTTP-CACHING}}).
 
-The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes because clients might follow the redirect without preserving the `HEAD` method.
+The server SHOULD NOT generate a response with a `3xx (Redirection)` status code because the upload resource's URI is expected to remain the same for the lifetime of the upload.
 
 A client does not require response content for an offset retrieval request in order to successfully resume an upload. Therefore, serving response content for a `GET` request is unexpected. Its meaning is not defined by this protocol.
 
@@ -643,7 +645,7 @@ While the request content is being processed, the server SHOULD send interim res
 
 The server SHOULD include the `Upload-Complete` header field ({{upload-complete-hdr}}) in the response to indicate whether it is the result of processing the uploaded representation.
 
-The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes and the `Upload-Complete: ?0` header field because clients might follow the redirect without preserving the `PATCH` method. See {{origin}} for redirecting a response that completes the upload.
+The server SHOULD NOT generate a response with a `3xx (Redirection)` status code and the `Upload-Complete: ?0` header field because the upload resource's URI is expected to remain the same for the lifetime of the upload. See {{origin}} for redirecting a response that completes the upload.
 
 ## Examples {#upload-appending-example}
 
@@ -705,7 +707,7 @@ Upon receiving a `DELETE` request, the server SHOULD deactivate the upload resou
 
 The server SHOULD terminate any in-flight requests to the upload resource before sending the response by abruptly terminating their HTTP connection(s) or stream(s), as described in {{concurrency}}.
 
-The server SHOULD NOT generate a response with the `301 (Moved Permanently)`, `302 (Found)`, or `303 (See Other)` status codes because clients might follow the redirect without preserving the `DELETE` method.
+The server SHOULD NOT generate a response with a `3xx (Redirection)` status code because the upload resource's URI is expected to remain the same for the lifetime of the upload.
 
 ## Example {#upload-cancellation-example}
 
@@ -904,7 +906,7 @@ The target resource of the initial request ({{upload-creation}}) and the upload 
 
 Clients have to consider this change of origin when following the `Location` header field to the upload resource. Credentials and other per-origin state associated with the target resource of the initial request are not necessarily applicable to the upload resource, and remain scoped to their respective origins. Clients also have to consider that disclosing an upload resource URI to a different origin can leak the capability to read, append to, or cancel the upload.
 
-Because the upload can be completed either by the initial request or by an upload append request, the final response might come from a different origin depending on whether the upload was resumed. To avoid this, the server MAY respond to the request that completes the upload with a `303 (See Other)` status code, redirecting the user agent to the origin of the target resource of the initial request. Because a `303 (See Other)` response directs the user agent to retrieve the result with `GET`, the considerations regarding method preservation in {{upload-creation}} and {{upload-appending}} do not apply in this case.
+Because the upload can be completed either by the initial request or by an upload append request, the final response might come from a different origin depending on whether the upload was resumed. To avoid this, the server MAY respond to the request that completes the upload with a `303 (See Other)` status code, redirecting the user agent to the origin of the target resource of the initial request.
 
 # IANA Considerations
 
@@ -1034,6 +1036,7 @@ Reference:
 {:numbered="false"}
 
 * State that unknown Structured Fields parameters MUST be ignored.
+* Discourage change of upload URLs.
 
 ## Since draft-ietf-httpbis-resumable-upload-13
 {:numbered="false"}
