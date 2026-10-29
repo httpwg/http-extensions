@@ -60,18 +60,19 @@ Table of Contents
      1.3.  Overview
    2.  Conventions and Definitions
    3.  Specification
-     3.1.  In HTTP/1.1
-     3.2.  In HTTP/2 and HTTP/3
-     3.3.  Use of Other Relevant Headers
-       3.3.1.  Origin-scoped Headers
-       3.3.2.  Authentication Headers
-       3.3.3.  Caching Headers
-     3.4.  Closing Connections
-       3.4.1.  Handling Invalid Data
+     3.1.  Payload Transport
+     3.2.  In HTTP/1.1
+     3.3.  In HTTP/2 and HTTP/3
+     3.4.  Use of Other Relevant Headers
+       3.4.1.  Origin-scoped Headers
+       3.4.2.  Authentication Headers
+       3.4.3.  Caching Headers
+     3.5.  Closing Connections
+       3.5.1.  Handling Invalid Data
    4.  Additional Connection Setup Behaviors
-     4.1.  Latency optimizations
+     4.1.  Latency Optimizations
      4.2.  Indicating Failure
-     4.3.  Conveying metadata
+     4.3.  Conveying Metadata
    5.  Applicability
      5.1.  Servers
      5.2.  Clients
@@ -85,6 +86,7 @@ Table of Contents
      7.2.  Timeouts
      7.3.  Scope of Packet-Level Metadata
      7.4.  IP address sharing
+     7.5.  Diagnostics and Monitoring
    8.  IANA Considerations
      8.1.  New Upgrade Token
        8.1.1.  Interop testing
@@ -103,10 +105,10 @@ Table of Contents
    HTTP has used the CONNECT method for tunneling TCP connections since
    HTTP/1.1.  When using CONNECT, the request target specifies a host
    and port number, and the proxy forwards TCP payloads between the
-   client and the target destination ([HTTP], Section 9.3.6).  To date,
-   this is the only mechanism defined for proxying TCP over HTTP.  In
-   this specification, this is referred to as a "classic HTTP CONNECT
-   proxy".
+   client and the target destination ([HTTP], Section 9.3.6).  Prior to
+   this specification, this was the only mechanism defined for proxying
+   TCP over HTTP.  In this specification, this arrangement is referred
+   to as a "classic HTTP CONNECT proxy".
 
    HTTP/3 [HTTP/3] uses a UDP transport, so it cannot be forwarded using
    the pre-existing CONNECT mechanism.  To enable forward proxying of
@@ -171,12 +173,18 @@ Table of Contents
    A template-driven TCP transport proxy for HTTP is identified by a URI
    Template [RFC6570] containing variables named "target_host" and
    "target_port".  This URI Template and its variable values MUST meet
-   all the same requirements as for UDP proxying ([CONNECT-UDP],
-   Section 2), and are subject to the same validation rules.  Clients
-   MUST substitute the destination host and port number into this
-   template to produce a request URI.  The derived URI serves as the
-   destination of a Capsule Protocol connection using the Upgrade Token
-   "connect-tcp" (see registration in Section 8.1).
+   all the same requirements as for UDP proxying (Sections 2 and 3 of
+   [CONNECT-UDP]), and are subject to the same validation rules.
+   Clients MUST substitute the destination host and port number into
+   this template to produce a request URI.  The derived URI serves as
+   the destination of a Capsule Protocol connection using the Upgrade
+   Token "connect-tcp" (see registration in Section 8.1).
+
+   If the request is well-formed and permissible, the proxy MUST attempt
+   to establish the TCP connection before sending a final success or
+   failure response.
+
+3.1.  Payload Transport
 
    When using "connect-tcp", TCP payload data is sent in the payload of
    new Capsule Types named DATA and FINAL_DATA (see Figure 1 and
@@ -185,7 +193,7 @@ Table of Contents
    data.  A FINAL_DATA capsule additionally indicates that the sender
    has closed this stream, semantically equivalent to TCP FIN.  After
    sending a FINAL_DATA capsule, an endpoint MUST NOT send any more DATA
-   or FINAL_DATA capsules on this data stream.  See Section 3.4 for
+   or FINAL_DATA capsules on this data stream.  See Section 3.5 for
    related requirements.
 
    DATA Capsule {
@@ -226,7 +234,7 @@ Table of Contents
    This protocol supports backward-compatible extensions via additional
    Capsule Types, as described in Section 3.2 of [CAPSULE].
 
-3.1.  In HTTP/1.1
+3.2.  In HTTP/1.1
 
    In HTTP/1.1 [HTTP/1.1], the client uses the proxy by issuing a
    request as follows:
@@ -249,10 +257,8 @@ Table of Contents
    *  The request SHOULD include a "Capsule-Protocol: ?1" header (as
       recommended in [CAPSULE], Section 3.4).
 
-   If the request is well-formed and permissible, the proxy MUST attempt
-   to establish the TCP connection before sending any response status
-   code other than "100 (Continue)" (see Section 4.3).  If the TCP
-   connection is successful, the response SHALL be as follows:
+   If the TCP connection is successful, the response SHALL be as
+   follows:
 
    *  The HTTP status code SHALL be "101 (Switching Protocols)".
 
@@ -289,7 +295,7 @@ Table of Contents
 
              Figure 2: Templated TCP proxy example in HTTP/1.1
 
-3.2.  In HTTP/2 and HTTP/3
+3.3.  In HTTP/2 and HTTP/3
 
    In HTTP/2 and HTTP/3, the proxy MUST include
    SETTINGS_ENABLE_CONNECT_PROTOCOL in its SETTINGS frame
@@ -326,9 +332,9 @@ Table of Contents
 
               Figure 3: Templated TCP proxy example in HTTP/2
 
-3.3.  Use of Other Relevant Headers
+3.4.  Use of Other Relevant Headers
 
-3.3.1.  Origin-scoped Headers
+3.4.1.  Origin-scoped Headers
 
    Ordinary HTTP headers apply only to the single resource identified in
    the request or response.  An origin-scoped HTTP header is a special
@@ -351,7 +357,7 @@ Table of Contents
 
    *  "Clear-Site-Data" [CLEAR-SITE-DATA]
 
-3.3.2.  Authentication Headers
+3.4.2.  Authentication Headers
 
    Authentication to a templated TCP proxy normally uses ordinary HTTP
    authentication via the "401 (Unauthorized)" response code, the "WWW-
@@ -370,7 +376,7 @@ Table of Contents
    TLS Client Certificate authentication can also be used (see
    Section 5.3).
 
-3.3.3.  Caching Headers
+3.4.3.  Caching Headers
 
    In HTTP/2 and HTTP/3, this specification uses the CONNECT method,
    which is not subject to caching ([HTTP], Section 9.3.6).  However, in
@@ -388,7 +394,7 @@ Table of Contents
    *  The proxy SHOULD NOT attach any other caching-related header
       fields to the response.
 
-3.4.  Closing Connections
+3.5.  Closing Connections
 
    Connection termination is essentially symmetrical for proxies and
    their clients, which we refer to here as the "endpoints" of a
@@ -483,11 +489,11 @@ Table of Contents
 
                   Figure 7: RST after FIN example (HTTP/3)
 
-3.4.1.  Handling Invalid Data
+3.5.1.  Handling Invalid Data
 
    An endpoint that receives invalid data from its peer is subject to
    the same requirements as when receiving an abrupt closure of the
-   receive stream (see Section 3.4).  Some examples of invalid data
+   receive stream (see Section 3.5).  Some examples of invalid data
    include:
 
    *  A second FINAL_DATA capsule.
@@ -509,7 +515,7 @@ Table of Contents
    recommended in order to enhance the performance or functionality of
    connection setup.
 
-4.1.  Latency optimizations
+4.1.  Latency Optimizations
 
    When using this specification in HTTP/2 or HTTP/3, clients MAY start
    sending TCP stream content optimistically, subject to flow control
@@ -546,7 +552,7 @@ Table of Contents
    Failure to initiate a tunnel is indicated by the HTTP response status
    code.
 
-   A 4XX status code indicates the the request is malformed or
+   A 4XX status code indicates that the request is malformed or
    impermissible.  For example, if the proxy performs DNS resolution of
    target_host and receives an IP address that is disallowed by the
    proxy's policy, it might return 403 (Forbidden).
@@ -560,7 +566,7 @@ Table of Contents
    response header field.  If included, this field applies to all
    requests using this URI Template.
 
-4.3.  Conveying metadata
+4.3.  Conveying Metadata
 
    This specification supports the "100 (Continue)" response status code
    ([HTTP], Section 15.2.1) in any HTTP version.  Proxies SHOULD send
@@ -622,9 +628,9 @@ Table of Contents
 
       -  At the default template for "connect-tcp" (Figure 8).
 
-      -  In the "proxy" dictionary of a provisioning domain resource at
-         the corresponding .well-known URI
-         ([I-D.ietf-intarea-proxy-config], Section 2).
+      -  In the "proxies" array of a provisioning domain resource
+         retrieved from the corresponding .well-known URI (Sections 2
+         and 3 of [I-D.ietf-intarea-proxy-config]).
 
    *  A provisioning domain resource, configured directly or identified
       by a local or remote URI (e.g., using "file://" or "https://").
@@ -669,7 +675,7 @@ Table of Contents
       server).
 
    *  support HTTP/1.1 Upgrade to "connect-tcp" (if acting as an
-      HTTP/1.1 server)
+      HTTP/1.1 server).
 
       -  only after forwarding the upgrade request to the origin and
          observing a success response.
@@ -763,7 +769,7 @@ Table of Contents
    attackers.  HTTP client authentication is the most common way to
    avoid this misuse.
 
-   Section 3.3.2 describes how to use HTTP client authentication with
+   Section 3.4.2 describes how to use HTTP client authentication with
    this specification.  Each HTTP client authentication scheme offers
    distinct security properties, so care should be taken to select an
    appropriate scheme for each deployment.  See [HTTP], Section 17.16
@@ -796,7 +802,7 @@ Table of Contents
       imposing a higher cost in setup latency, congestion control
       convergence, CPU time, and data transfer.
 
-   *  The graceful and abrupt closure signals (Section 3.4) are more
+   *  The graceful and abrupt closure signals (Section 3.5) are more
       likely to be missing or corrupted:
 
       -  Some implementations may be unable to emit the recommended
@@ -838,7 +844,7 @@ Table of Contents
    Endpoints MAY impose additional timeouts, especially as a defense
    against certain resource exhaustion attacks (Section 6.1).  However,
    operators should apply timeouts cautiously to minimize the impact on
-   connections that are functioning but slow.  See Section 3.4 for
+   connections that are functioning but slow.  See Section 3.5 for
    related requirements.
 
    For example, enabling PING frames on idle HTTP/2 connections allows
@@ -873,6 +879,34 @@ Table of Contents
    connections on behalf of multiple clients, especially in IPv4.
    [RFC6269] provides guidance regarding difficulties that can arise
    from IP address sharing, including in this arrangement.
+
+7.5.  Diagnostics and Monitoring
+
+   A proxy in this protocol reports success or failure in each response
+   via the HTTP status code and the Proxy-Status response header field.
+   Monitoring those error codes is a sensible way to assess the
+   functioning of a proxy server.  Other relevant performance indicators
+   may include:
+
+   *  Abrupt closure rates
+
+   *  Number of active tunnels per user
+
+   *  Total throughput in each direction
+
+   *  Number of bytes buffered
+
+   *  Connection duration
+
+   *  Time spent establishing or closing connections
+
+   *  Number of half-closed or WAIT-state connections
+
+   *  DNS resolution delay
+
+   An increase in any of these measures could indicate an operational
+   problem or a resource exhaustion attack (Section 6.1).  See
+   Section 6.1 for guidance on relevant defenses and limits.
 
 8.  IANA Considerations
 
@@ -1119,6 +1153,8 @@ Acknowledgments
    *  Thomas Fossati
 
    *  Amos Jeffries
+
+   *  Mahesh Jethanandani
 
    *  Antun Jurkovic
 
