@@ -623,7 +623,7 @@ The request MUST include the `Upload-Complete` header field. Its value is true i
 
 If the client receives a final response that marks the upload as complete, the response comes from the target resource of the initial request ({{upload-complete-hdr}}). Note that this does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, and therefore, resuming the upload would not resolve this error.
 
-If the client sent the `Upload-Complete` header field set to false and receives a `2xx (Successful)` final response that does not mark the upload as complete, the entire request content was appended to the upload resource ({{upload-offset-hdr}}). The client can continue appending representation data to it.
+If the client sent the `Upload-Complete` header field set to false and receives a `2xx (Successful)` final response with the `Upload-Complete` header field set to false, the entire request content was appended to the upload resource ({{upload-offset-hdr}}). The client can continue appending representation data to it.
 
 If the client receives a `4xx (Client Error)` or `5xx (Server Error)` final response that does not mark the upload as complete, or if it did not receive a final response, it can apply the heuristics described in {{retry}} to retry or resume the upload. Otherwise, the upload is considered a failure.
 
