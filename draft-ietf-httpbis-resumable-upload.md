@@ -175,7 +175,7 @@ Client                                       Server
 ~~~
 {: #fig-offset-retrieving title="Offset Retrieval"}
 
-3) The client can resume the upload by sending the remaining representation data to the upload resource ({{upload-appending}}), appending to the already stored representation data in the upload using the `application/partial-upload` media type. The `Upload-Offset` header field is included to ensure that the client and server agree on the offset that the upload resumes from. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if it had not been interrupted, e.g., a `200 (OK)` response.
+3) The client can resume the upload by sending the remaining representation data to the upload resource ({{upload-appending}}), appending to the already stored representation data in the upload using the `application/partial-upload` media type. The `Upload-Offset` header field is included to ensure that the client and server agree on the offset that the upload resumes from. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if it had not been interrupted, e.g., a `201 (Created)` response.
 
 ~~~ aasvg
 Client                                       Server
@@ -188,7 +188,7 @@ Client                                       Server
 | [representation from offset X]                  |
 |------------------------------------------------>|
 |                                                 |
-|                                          200 OK |
+|                                     201 Created |
 |                             Upload-Complete: ?1 |
 |<------------------------------------------------|
 |                                                 |
@@ -278,7 +278,7 @@ Client                                       Server
 ~~~
 {: #fig-upload-resume-incomplete title="Resuming an Interrupted Upload"}
 
-4) The request to append the last part of the representation data has the `Upload-Complete` header field set to true to indicate the complete transfer. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if its representation had been fully transferred and processed, e.g., a `200 (OK)` response.
+4) The request to append the last part of the representation data has the `Upload-Complete` header field set to true to indicate the complete transfer. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if its representation had been fully transferred and processed, e.g., a `201 (Created)` response.
 
 
 ~~~ aasvg
@@ -292,7 +292,7 @@ Client                                       Server
 | [remaining representation from offset Z]        |
 |------------------------------------------------>|
 |                                                 |
-|                                          200 OK |
+|                                     201 Created |
 |                             Upload-Complete: ?1 |
 |<------------------------------------------------|
 |                                                 |
@@ -492,8 +492,9 @@ Upload-Limit: max-size=1234567890
 HTTP/1.1 104 Upload Resumption Supported
 Upload-Offset: 23456789
 
-HTTP/1.1 200 OK
+HTTP/1.1 201 Created
 Upload-Complete: ?1
+Location: https://example.com/project/123/files/b530ce8ff
 Content-Type: application/json
 
 {"attachmentId": "b530ce8ff"}
