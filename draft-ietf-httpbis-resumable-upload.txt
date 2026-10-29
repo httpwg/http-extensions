@@ -840,25 +840,24 @@ Table of Contents
    media type of the representation.  The Content-Encoding header field
    names the content codings applied to the representation.
 
-   If the client receives a final response with the Upload-Complete: ?1
-   header field, the upload is complete and the corresponding response
-   comes from the target resource of the initial request
-   (Section 4.2.1).  Note that this does not necessarily indicate
-   success. 4xx (Client Error) or 5xx (Server Error) status codes
-   indicate in this case an error occurred while processing the
+   If the client receives a final response that marks the upload as
+   complete, the response comes from the target resource of the initial
+   request (Section 4.2.1).  Note that this does not necessarily
+   indicate success. 4xx (Client Error) or 5xx (Server Error) status
+   codes indicate in this case an error occurred while processing the
    representation, and therefore, resuming the upload would not resolve
    this error.
 
-   If the client receives a 2xx (Successful) final response with the
-   Upload-Complete header field set to false or missing, and the
-   client's Upload-Complete header field was set to false, the Location
-   header field points the client to the created upload resource.  The
-   client can continue appending representation data to it (Section 8).
+   If the client sent the Upload-Complete header field set to false and
+   receives a 2xx (Successful) final response that does not mark the
+   upload as complete, the Location header field points the client to
+   the created upload resource.  The client can continue appending
+   representation data to it (Section 8).
 
    If the client receives a 4xx (Client Error) or 5xx (Server Error)
-   final response with the Upload-Complete header field set to false or
-   missing, or if it did not receive a final response, it can apply the
-   heuristics described in Section 11 to retry or resume the upload.
+   final response that does not mark the upload as complete, or if it
+   did not receive a final response, it can apply the heuristics
+   described in Section 11 to retry or resume the upload.
 
 6.2.  Server Behavior
 
@@ -883,10 +882,8 @@ Table of Contents
    client intends to transfer the entire representation data in one
    request.  If the request content was fully processed, no resumable
    upload is needed and the server proceeds to process the request and
-   generate a response.  The server MUST NOT generate a 2xx (Successful)
-   response with the Upload-Complete header field set to false or
-   missing in response to a request with the Upload-Complete header
-   field set to true.
+   generate a response.  Any 2xx (Successful) response that the server
+   generates for such a request MUST mark the upload as complete.
 
    If the Upload-Complete request header field is set to false, the
    client intends to transfer the representation over multiple requests.
@@ -1123,20 +1120,19 @@ Table of Contents
       server, the upload is complete.  This usage requires the full
       representation data to have been processed during prior requests.
 
-   If the client receives a final response with the Upload-Complete: ?1
-   header field, the upload is complete and the corresponding response
-   comes from the target resource of the initial request
-   (Section 4.2.1).  Note that this does not necessarily indicate
-   success. 4xx (Client Error) or 5xx (Server Error) status codes
-   indicate in this case an error occurred while processing the
+   If the client receives a final response that marks the upload as
+   complete, the response comes from the target resource of the initial
+   request (Section 4.2.1).  Note that this does not necessarily
+   indicate success. 4xx (Client Error) or 5xx (Server Error) status
+   codes indicate in this case an error occurred while processing the
    representation, and therefore, resuming the upload would not resolve
    this error.
 
    If the client receives a 4xx (Client Error) or 5xx (Server Error)
-   final response with the Upload-Complete header field set to false or
-   missing, or if it did not receive a final response, it can apply the
-   heuristics described in Section 11 to retry or resume the upload.
-   Otherwise, the upload is considered a failure.
+   final response that does not mark the upload as complete, or if it
+   did not receive a final response, it can apply the heuristics
+   described in Section 11 to retry or resume the upload.  Otherwise,
+   the upload is considered a failure.
 
 8.2.  Server Behavior
 
@@ -1177,10 +1173,9 @@ Table of Contents
    MUST include the Upload-Complete header field set to true, allowing
    clients to identify whether a response, in particular error
    responses, is related to the resumable upload itself or the
-   processing of the uploaded representation.  The server MUST NOT
-   generate a 2xx (Successful) response with the Upload-Complete header
-   field set to false or missing in response to a request with the
-   Upload-Complete header field set to true.
+   processing of the uploaded representation.  Any 2xx (Successful)
+   response that the server generates for such a request MUST mark the
+   upload as complete.
 
    If the Upload-Complete request header field is set to false, the
    client intends to transfer the remaining representation data over
@@ -1358,10 +1353,10 @@ Table of Contents
 11.  Retry
 
    If the client receives a 4xx (Client Error) or 5xx (Server Error)
-   response with the Upload-Complete header field set to false or
-   missing when creating the upload resource (Section 6) or appending to
-   it (Section 8), it can apply the heuristics described below to retry
-   or resume the upload.
+   response that does not mark the upload as complete (Section 4.2.1)
+   when creating the upload resource (Section 6) or appending to it
+   (Section 8), it can apply the heuristics described below to retry or
+   resume the upload.
 
    *  409 (Conflict) with the Upload-Complete header field set to false:
       the upload can be resumed with the correct offset (Section 4.1).
