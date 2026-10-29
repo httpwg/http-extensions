@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 30 April 2027                                        Apple Inc.
+Expires: 2 May 2027                                           Apple Inc.
                                                           L. Pardue, Ed.
                                                                    Apple
-                                                         27 October 2026
+                                                         29 October 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 April 2027.
+   This Internet-Draft will expire on 2 May 2027.
 
 Copyright Notice
 
@@ -1111,12 +1111,14 @@ Table of Contents
    SHOULD take the offset from the most recent offset retrieval
    (Section 7), upload creation (Section 6), or upload append response.
 
-   The patch document uses no content coding as this could change the
-   value of the Content-Length header field and impact the ability to
-   determine the representation's length (Section 4.3).  Therefore, the
-   request MUST NOT include a Content-Encoding header field (see
-   Section 8.4 of [HTTP]).  Content codings of the representation, if
-   any, are announced only in the upload creation request (Section 6).
+   The request content is the representation data to append, so the
+   patch document has no content coding of its own.  A content coding
+   would make the request content differ from the representation data
+   that the offset (Section 4.1) and length (Section 4.3) count.
+   Therefore, the request MUST NOT include a Content-Encoding header
+   field (see Section 8.4 of [HTTP]).  Content codings of the
+   representation, if any, are announced only in the upload creation
+   request (Section 6).
 
    The request MUST include the Upload-Complete header field.  Its value
    is true in two cases:
