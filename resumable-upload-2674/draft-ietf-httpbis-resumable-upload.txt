@@ -145,6 +145,7 @@ Table of Contents
      22.1.  Normative References
      22.2.  Informative References
    Appendix A.  Changes
+     Since draft-ietf-httpbis-resumable-upload-14
      Since draft-ietf-httpbis-resumable-upload-13
      Since draft-ietf-httpbis-resumable-upload-12
      Since draft-ietf-httpbis-resumable-upload-11
@@ -530,7 +531,8 @@ Table of Contents
    [STRUCTURED-FIELDS]).  Its value is a non-negative Integer and
    indicates the current offset in bytes, as viewed by the message
    sender.  Other values MUST cause the entire header field to be
-   ignored.
+   ignored.  This document does not define parameters for Upload-Offset;
+   unknown parameters MUST be ignored.
 
    The client can learn the current offset in three ways:
 
@@ -560,7 +562,8 @@ Table of Contents
    The Upload-Complete request and response header field is an Item
    Structured Header Field of type Boolean (Section 3.3.6 of
    [STRUCTURED-FIELDS]).  Other values MUST cause the entire header
-   field to be ignored.
+   field to be ignored.  This document does not define parameters for
+   Upload-Complete; unknown parameters MUST be ignored.
 
    An upload is marked as complete either when a request for creating
    the upload resource (Section 6) or appending to it (Section 8)
@@ -623,7 +626,9 @@ Table of Contents
    Structured Header Field of type Integer (Section 3.3.1 of
    [STRUCTURED-FIELDS]).  Its value is a non-negative Integer and
    indicates the representation's length in bytes.  Other values MUST
-   cause the entire header field to be ignored.
+   cause the entire header field to be ignored.  This document does not
+   define parameters for Upload-Length; unknown parameters MUST be
+   ignored.
 
    The Upload-Length field can be used in response to an offset
    retrieval; see Section 7.2.
@@ -648,12 +653,13 @@ Table of Contents
 
    Receivers of the Upload-Limit header field parse the Dictionary as
    described in Section 4.2 of [STRUCTURED-FIELDS].  Where the
-   Dictionary is successfully parsed, this document places two
-   additional requirements on Dictionary members.  First, a member with
-   an unknown key MUST be ignored.  Second, a member with a known key
-   but a value of unexpected type MUST cause the entire Upload-Limit
-   header field to be ignored, or alternatively the complete HTTP
-   message MUST be treated as malformed.
+   Dictionary is successfully parsed, this document places additional
+   requirements on Dictionary members.  A member with an unknown key
+   MUST be ignored.  A member with a known key but a value of unexpected
+   type MUST cause the entire Upload-Limit header field to be ignored,
+   or alternatively the complete HTTP message MUST be treated as
+   malformed.  This document does not define parameters for Dictionary
+   member values; unknown parameters MUST be ignored.
 
    The following key-value pairs are defined.
 
@@ -833,10 +839,7 @@ Table of Contents
    Section 8 of [HTTP]) can affect how servers act on the uploaded
    representation data.  The Content-Type header field indicates the
    media type of the representation.  The Content-Encoding header field
-   names the content codings applied to the representation.  The
-   Content-Disposition header field ([CONTENT-DISPOSITION]) can be used
-   to transmit a filename.  For this purpose, the inline disposition
-   type is RECOMMENDED.
+   names the content codings applied to the representation.
 
    If the client receives a final response with the Upload-Complete: ?1
    header field, the upload is complete and the corresponding response
@@ -938,7 +941,6 @@ Table of Contents
 
    POST /project/123/files HTTP/1.1
    Host: example.com
-   Content-Disposition: inline; filename="file name.jpg"; filename*=UTF-8''file%20name.jpg
    Content-Length: 123456789
    Upload-Length: 123456789
    Upload-Complete: ?1
@@ -1170,6 +1172,10 @@ Table of Contents
    Upload-Offset header field.  The response can use the problem type
    [PROBLEM] of "https://iana.org/assignments/http-problem-
    types#mismatching-upload-offset" (Section 14.1).
+
+   If an upload append request is missing a valid Upload-Offset header
+   field, a valid Upload-Complete header field, or both, the server
+   SHOULD respond with a 400 (Bad Request) status code.
 
    If the Upload-Complete request header field is set to true, the
    client intends to transfer the remaining representation data in one
@@ -1873,12 +1879,6 @@ Table of Contents
 
 22.1.  Normative References
 
-   [CONTENT-DISPOSITION]
-              Reschke, J., "Use of the Content-Disposition Header Field
-              in the Hypertext Transfer Protocol (HTTP)", RFC 6266,
-              DOI 10.17487/RFC6266, June 2011,
-              <https://www.rfc-editor.org/rfc/rfc6266>.
-
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
               DOI 10.17487/RFC9110, June 2022,
@@ -1954,6 +1954,10 @@ Table of Contents
 Appendix A.  Changes
 
    This section is to be removed before publishing as an RFC.
+
+Since draft-ietf-httpbis-resumable-upload-14
+
+   *  State that unknown Structured Fields parameters MUST be ignored.
 
 Since draft-ietf-httpbis-resumable-upload-13
 
