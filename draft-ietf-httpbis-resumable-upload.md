@@ -307,7 +307,9 @@ An upload resource is specific to the upload of one representation. For uploadin
 
 Server implementations need to decide how long to retain an upload resource after the upload is complete. The server can clean up the upload resource and make it inaccessible immediately. Keeping it longer lets a client that missed the final response verify the upload's state, at a cost to the server.
 
-A server SHOULD assign each upload resource a URI that has not identified any other upload resource. URI reuse increases the chance of misdirected requests or corrupted uploads, and the risk of the security issues described in {{security-uri}}.
+An upload resource SHOULD be unique. Reuse of a URI for a different upload resource SHOULD be avoided in order to reduce the chance of misdirected or corrupted upload resources, as well as the potential security issues described in {{security-uri}}.
+
+If the client receives a `3xx (Redirection)` response to a request to the upload resource, and the response does not complete the upload ({{origin}}), the client is not expected to follow the redirect, because this protocol does not define how an upload continues at a different URI.
 
 The state of an upload includes the following properties that are tracked by the server.
 
@@ -572,7 +574,7 @@ The client MUST NOT retrieve the offset while it is still creating ({{upload-cre
 
 If the client receives a `2xx (Successful)` response with a valid `Upload-Offset` header field, the client can continue appending representation data to it ({{upload-appending}}).
 
-If the client receives a `2xx (Successful)` response without a valid `Upload-Offset` header field, a `4xx (Client Error)` or `5xx (Server Error)` response, or if it did not receive a response, the client MAY retry retrieving the offset.
+If the client receives a `2xx (Successful)` response without a valid `Upload-Offset` header field, a `4xx (Client Error)` or `5xx (Server Error)` response, or if it did not receive a response, the client MAY retry retrieving the offset. Otherwise, the upload is considered a failure.
 
 ## Server Behavior {#offset-retrieving-server}
 
