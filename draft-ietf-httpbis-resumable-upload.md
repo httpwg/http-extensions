@@ -1036,12 +1036,12 @@ Reference:
 {:numbered="false"}
 
 * State that unknown Structured Fields parameters MUST be ignored.
+* Append request cannot use different content codings.
 
 ## Since draft-ietf-httpbis-resumable-upload-13
 {:numbered="false"}
 
-* Editorial changes.
-* Append request cannot use different content codings.
+Editorial changes only.
 
 ## Since draft-ietf-httpbis-resumable-upload-12
 {:numbered="false"}
