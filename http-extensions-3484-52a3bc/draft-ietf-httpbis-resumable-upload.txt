@@ -1149,10 +1149,10 @@ Table of Contents
    this error.
 
    If the client sent the Upload-Complete header field set to false and
-   receives a 2xx (Successful) final response that does not mark the
-   upload as complete, the entire request content was appended to the
-   upload resource (Section 4.1.1).  The client can continue appending
-   representation data to it.
+   receives a 2xx (Successful) final response with the Upload-Complete
+   header field set to false, the entire request content was appended to
+   the upload resource (Section 4.1.1).  The client can continue
+   appending representation data to it.
 
    If the client receives a 4xx (Client Error) or 5xx (Server Error)
    final response that does not mark the upload as complete, or if it
