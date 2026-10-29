@@ -614,6 +614,8 @@ A client can continue the upload and append representation data by sending a `PA
 
 The client MUST indicate the offset of the request content inside the representation data by including the `Upload-Offset` header field. To ensure that the upload resource accepts the request, the client SHOULD take the offset from the most recent offset retrieval ({{offset-retrieving}}), upload creation ({{upload-creation}}), or upload append response.
 
+The request content is the representation data to append, so the patch document has no content coding of its own. A content coding would make the request content differ from the representation data that the offset ({{upload-offset}}) and length ({{upload-length}}) count. Therefore, the request MUST NOT include a `Content-Encoding` header field (see {{Section 8.4 of HTTP}}). Content codings of the representation, if any, are announced only in the upload creation request ({{upload-creation}}).
+
 The request MUST include the `Upload-Complete` header field. Its value is true in two cases:
 
 - the request has content that is the end of the representation data. Once the content is fully processed by the server, the upload is complete.
@@ -632,6 +634,8 @@ The server might not process the entire patch document when the upload is interr
 If the `Upload-Offset` request header field value does not match the current offset ({{upload-offset}}), the server MUST reject the request with a `409 (Conflict)` status code and the `Upload-Complete` header field set to false. The response MUST include the correct offset in the `Upload-Offset` header field. The response can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" ({{mismatching-offset}}).
 
 If an upload append request is missing a valid `Upload-Offset` header field, a valid `Upload-Complete` header field, or both, the server SHOULD respond with a `400 (Bad Request)` status code.
+
+The patch document cannot have a content coding of its own. A content coding would make the request content differ from the representation data that the offset ({{upload-offset}}) and length ({{upload-length}}) count. Therefore, if the request includes a `Content-Encoding` header field, the server SHOULD respond with a `415 (Unsupported Media Type)` status code and the `Upload-Complete` header field set to false.
 
 If the `Upload-Complete` request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully processed, the upload is marked as complete and the server SHOULD generate the response that matches what the target resource of the initial upload creation request ({{upload-creation}}) would have generated if it had processed the entire representation in the initial request. However, the response MUST include the `Upload-Complete` header field set to true, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the uploaded representation. Any `2xx (Successful)` response that the server generates for such a request MUST mark the upload as complete.
 
@@ -807,7 +811,7 @@ Upload-Complete: ?0
 
 # Content Codings
 
-Since the codings listed in the `Content-Encoding` header field are a characteristic of the representation (see {{Section 8.4 of HTTP}}), both the client and the server always compute the values for the `Upload-Offset` and optionally `Upload-Length` header fields on the content coded data (that is, the representation data). Moreover, the content codings are retained throughout the entire upload, meaning that the server is not required to decode the representation data to support resumable uploads.
+Since the codings listed in the `Content-Encoding` header field are a characteristic of the representation (see {{Section 8.4 of HTTP}}), both the client and the server always compute the values for the `Upload-Offset` and optionally `Upload-Length` header fields on the content coded data (that is, the representation data). Moreover, the content codings are retained throughout the entire upload, meaning that the server is not required to decode the representation data to support resumable uploads. The content codings, if any, are announced in the upload creation request ({{upload-creation}}) and not repeated when appending representation data ({{upload-appending}}).
 
 # Transfer Codings
 
@@ -1037,6 +1041,7 @@ Reference:
 
 * State that unknown Structured Fields parameters MUST be ignored.
 * Discourage change of upload URLs.
+* Append request cannot use different content codings.
 
 ## Since draft-ietf-httpbis-resumable-upload-13
 {:numbered="false"}
