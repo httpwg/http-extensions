@@ -57,7 +57,6 @@ normative:
   PATCH: RFC5789
   PROBLEM: RFC9457
   URI: RFC3986
-  CONTENT-DISPOSITION: RFC6266
 
 informative:
   SLOWLORIS:
@@ -322,7 +321,7 @@ Representation data processed by the upload resource cannot be removed again and
 
 ### Upload-Offset {#upload-offset-hdr}
 
-The `Upload-Offset` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the current offset in bytes, as viewed by the message sender. Other values MUST cause the entire header field to be ignored.
+The `Upload-Offset` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the current offset in bytes, as viewed by the message sender. Other values MUST cause the entire header field to be ignored. This document does not define parameters for `Upload-Offset`; unknown parameters MUST be ignored.
 
 The client can learn the current offset in three ways:
 
@@ -336,7 +335,7 @@ An upload is incomplete until it is explicitly marked as complete by the client 
 
 ### Upload-Complete {#upload-complete-hdr}
 
-The `Upload-Complete` request and response header field is an Item Structured Header Field of type Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
+The `Upload-Complete` request and response header field is an Item Structured Header Field of type Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored. This document does not define parameters for `Upload-Complete`; unknown parameters MUST be ignored.
 
 An upload is marked as complete either when a request for creating the upload resource ({{upload-creation}}) or appending to it ({{upload-appending}}) includes the `Upload-Complete` header field set to true and the request content was fully processed, or when a response includes the field set to true.
 
@@ -359,7 +358,7 @@ Note that the length and offset values do not determine whether an upload is com
 
 ### Upload-Length {#upload-length-hdr}
 
-The `Upload-Length` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the representation's length in bytes. Other values MUST cause the entire header field to be ignored.
+The `Upload-Length` request and response header field is an Item Structured Header Field of type Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}). Its value is a non-negative Integer and indicates the representation's length in bytes. Other values MUST cause the entire header field to be ignored. This document does not define parameters for `Upload-Length`; unknown parameters MUST be ignored.
 
 The `Upload-Length` field can be used in response to an offset retrieval; see {{offset-retrieving-server}}.
 
@@ -373,7 +372,7 @@ A client usually learns the limits when the upload resource is created ({{upload
 
 The `Upload-Limit` response header field is a Dictionary Structured Header Field ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
 
-Receivers of the `Upload-Limit` header field parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places two additional requirements on Dictionary members. First, a member with an unknown key MUST be ignored. Second, a member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
+Receivers of the `Upload-Limit` header field parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places additional requirements on Dictionary members. A member with an unknown key MUST be ignored. A member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed. This document does not define parameters for Dictionary member values; unknown parameters MUST be ignored.
 
 The following key-value pairs are defined.
 
@@ -439,7 +438,7 @@ Clients are not required to discover limits ({{upload-limits}}) before starting 
 
 The request content can be empty. If the `Upload-Complete` header field is then set to true, the client intends to upload an empty representation. An `Upload-Complete` header field set to false is also valid. This can be used to retrieve the upload resource's URI before transferring any representation data. Since interim responses are optional, this technique provides another mechanism to learn the URI, at the cost of an additional round trip before data upload can commence.
 
-Representation metadata included in the initial request (see {{Section 8 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field indicates the media type of the representation. The `Content-Encoding` header field names the content codings applied to the representation. The `Content-Disposition` header field ({{CONTENT-DISPOSITION}}) can be used to transmit a filename. For this purpose, the `inline` disposition type is RECOMMENDED.
+Representation metadata included in the initial request (see {{Section 8 of HTTP}}) can affect how servers act on the uploaded representation data. The `Content-Type` header field indicates the media type of the representation. The `Content-Encoding` header field names the content codings applied to the representation.
 
 If the client receives a final response with the `Upload-Complete: ?1` header field, the upload is complete and the corresponding response comes from the target resource of the initial request ({{upload-complete-hdr}}). Note that this does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, and therefore, resuming the upload would not resolve this error.
 
@@ -476,7 +475,6 @@ A) The following example shows an upload creation, where all 123456789 bytes are
 ~~~ http-message
 POST /project/123/files HTTP/1.1
 Host: example.com
-Content-Disposition: inline; filename="file name.jpg"; filename*=UTF-8''file%20name.jpg
 Content-Length: 123456789
 Upload-Length: 123456789
 Upload-Complete: ?1
@@ -630,6 +628,8 @@ A server applies a `PATCH` request with the `application/partial-upload` media t
 The server might not process the entire patch document when the upload is interrupted, for example, because of a dropped connection or a canceled request. In this case, the server SHOULD append as much of the patch document as possible to the upload resource, starting at its beginning and without discontinuities. Appending a continuous section starting at the patch document's beginning constitutes a successful PATCH as defined in {{Section 2 of PATCH}}. Saving the processed data allows the client to resume the upload from where it was interrupted. The upload resource MUST NOT be considered complete in this case.
 
 If the `Upload-Offset` request header field value does not match the current offset ({{upload-offset}}), the server MUST reject the request with a `409 (Conflict)` status code and the `Upload-Complete` header field set to false. The response MUST include the correct offset in the `Upload-Offset` header field. The response can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" ({{mismatching-offset}}).
+
+If an upload append request is missing a valid `Upload-Offset` header field, a valid `Upload-Complete` header field, or both, the server SHOULD respond with a `400 (Bad Request)` status code.
 
 If the `Upload-Complete` request header field is set to true, the client intends to transfer the remaining representation data in one request. If the request content was fully processed, the upload is marked as complete and the server SHOULD generate the response that matches what the target resource of the initial upload creation request ({{upload-creation}}) would have generated if it had processed the entire representation in the initial request. However, the response MUST include the `Upload-Complete` header field set to true, allowing clients to identify whether a response, in particular error responses, is related to the resumable upload itself or the processing of the uploaded representation. The server MUST NOT generate a `2xx (Successful)` response with the `Upload-Complete` header field set to false or missing in response to a request with the `Upload-Complete` header field set to true.
 
@@ -1029,6 +1029,11 @@ Reference:
 
 # Changes
 {:removeinrfc="true"}
+
+## Since draft-ietf-httpbis-resumable-upload-14
+{:numbered="false"}
+
+* State that unknown Structured Fields parameters MUST be ignored.
 
 ## Since draft-ietf-httpbis-resumable-upload-13
 {:numbered="false"}
