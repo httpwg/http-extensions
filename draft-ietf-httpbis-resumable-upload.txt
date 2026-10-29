@@ -495,10 +495,16 @@ Table of Contents
    longer lets a client that missed the final response verify the
    upload's state, at a cost to the server.
 
-   A server SHOULD assign each upload resource a URI that has not
-   identified any other upload resource.  URI reuse increases the chance
-   of misdirected requests or corrupted uploads, and the risk of the
+   An upload resource SHOULD be unique.  Reuse of a URI for a different
+   upload resource SHOULD be avoided in order to reduce the chance of
+   misdirected or corrupted upload resources, as well as the potential
    security issues described in Section 20.1.
+
+   If the client receives a 3xx (Redirection) response to a request to
+   the upload resource, and the response does not complete the upload
+   (Section 20.7), the client is not expected to follow the redirect,
+   because this protocol does not define how an upload continues at a
+   different URI.
 
    The state of an upload includes the following properties that are
    tracked by the server.
@@ -914,11 +920,11 @@ Table of Contents
    (Section 4.2.1) in the response to indicate whether it is the result
    of processing the uploaded representation.
 
-   The server SHOULD NOT generate a response with the 301 (Moved
-   Permanently), 302 (Found), or 303 (See Other) status codes and the
-   Upload-Complete: ?0 header field because clients might follow the
-   redirect without preserving the original method.  See Section 20.7
-   for redirecting a response that completes the upload.
+   The server SHOULD NOT generate a response with a 3xx (Redirection)
+   status code and the Upload-Complete: ?0 header field because the
+   upload resource's URI is expected to remain the same for the lifetime
+   of the upload.  See Section 20.7 for redirecting a response that
+   completes the upload.
 
    The server might not process the entire request content when the
    upload is interrupted, for example, because of a dropped connection
@@ -1053,7 +1059,8 @@ Table of Contents
    If the client receives a 2xx (Successful) response without a valid
    Upload-Offset header field, a 4xx (Client Error) or 5xx (Server
    Error) response, or if it did not receive a response, the client MAY
-   retry retrieving the offset.
+   retry retrieving the offset.  Otherwise, the upload is considered a
+   failure.
 
 7.2.  Server Behavior
 
@@ -1068,9 +1075,9 @@ Table of Contents
    *  SHOULD include the Cache-Control header field with the value no-
       store to prevent HTTP caching ([HTTP-CACHING]).
 
-   The server SHOULD NOT generate a response with the 301 (Moved
-   Permanently), 302 (Found), or 303 (See Other) status codes because
-   clients might follow the redirect without preserving the HEAD method.
+   The server SHOULD NOT generate a response with a 3xx (Redirection)
+   status code because the upload resource's URI is expected to remain
+   the same for the lifetime of the upload.
 
    A client does not require response content for an offset retrieval
    request in order to successfully resume an upload.  Therefore,
@@ -1211,11 +1218,11 @@ Table of Contents
    (Section 4.2.1) in the response to indicate whether it is the result
    of processing the uploaded representation.
 
-   The server SHOULD NOT generate a response with the 301 (Moved
-   Permanently), 302 (Found), or 303 (See Other) status codes and the
-   Upload-Complete: ?0 header field because clients might follow the
-   redirect without preserving the PATCH method.  See Section 20.7 for
-   redirecting a response that completes the upload.
+   The server SHOULD NOT generate a response with a 3xx (Redirection)
+   status code and the Upload-Complete: ?0 header field because the
+   upload resource's URI is expected to remain the same for the lifetime
+   of the upload.  See Section 20.7 for redirecting a response that
+   completes the upload.
 
 8.3.  Examples
 
@@ -1283,10 +1290,9 @@ Table of Contents
    resource before sending the response by abruptly terminating their
    HTTP connection(s) or stream(s), as described in Section 10.
 
-   The server SHOULD NOT generate a response with the 301 (Moved
-   Permanently), 302 (Found), or 303 (See Other) status codes because
-   clients might follow the redirect without preserving the DELETE
-   method.
+   The server SHOULD NOT generate a response with a 3xx (Redirection)
+   status code because the upload resource's URI is expected to remain
+   the same for the lifetime of the upload.
 
 9.3.  Example
 
@@ -1735,10 +1741,7 @@ Table of Contents
    different origin depending on whether the upload was resumed.  To
    avoid this, the server MAY respond to the request that completes the
    upload with a 303 (See Other) status code, redirecting the user agent
-   to the origin of the target resource of the initial request.  Because
-   a 303 (See Other) response directs the user agent to retrieve the
-   result with GET, the considerations regarding method preservation in
-   Section 6 and Section 8 do not apply in this case.
+   to the origin of the target resource of the initial request.
 
 21.  IANA Considerations
 
@@ -1935,6 +1938,8 @@ Appendix A.  Changes
 Since draft-ietf-httpbis-resumable-upload-14
 
    *  State that unknown Structured Fields parameters MUST be ignored.
+
+   *  Discourage change of upload URLs.
 
 Since draft-ietf-httpbis-resumable-upload-13
 
