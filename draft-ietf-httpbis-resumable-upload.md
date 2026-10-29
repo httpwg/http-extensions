@@ -1034,11 +1034,12 @@ Reference:
 {:numbered="false"}
 
 * State that unknown Structured Fields parameters MUST be ignored.
+* Discourage change of upload URLs.
 
 ## Since draft-ietf-httpbis-resumable-upload-13
 {:numbered="false"}
 
-* Discourage change of upload URLs.
+Editorial changes only.
 
 ## Since draft-ietf-httpbis-resumable-upload-12
 {:numbered="false"}
