@@ -175,7 +175,7 @@ Client                                       Server
 ~~~
 {: #fig-offset-retrieving title="Offset Retrieval"}
 
-3) The client can resume the upload by sending the remaining representation data to the upload resource ({{upload-appending}}), appending to the already stored representation data in the upload using the `application/partial-upload` media type. The `Upload-Offset` header field is included to ensure that the client and server agree on the offset that the upload resumes from. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if it had not been interrupted, e.g., a `200 (OK)` response.
+3) The client can resume the upload by sending the remaining representation data to the upload resource ({{upload-appending}}), appending to the already stored representation data in the upload using the `application/partial-upload` media type. The `Upload-Offset` header field is included to ensure that the client and server agree on the offset that the upload resumes from. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if it had not been interrupted, e.g., a `201 (Created)` response.
 
 ~~~ aasvg
 Client                                       Server
@@ -188,7 +188,7 @@ Client                                       Server
 | [representation from offset X]                  |
 |------------------------------------------------>|
 |                                                 |
-|                                          200 OK |
+|                                     201 Created |
 |                             Upload-Complete: ?1 |
 |<------------------------------------------------|
 |                                                 |
@@ -278,7 +278,7 @@ Client                                       Server
 ~~~
 {: #fig-upload-resume-incomplete title="Resuming an Interrupted Upload"}
 
-4) The request to append the last part of the representation data has the `Upload-Complete` header field set to true to indicate the complete transfer. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if its representation had been fully transferred and processed, e.g., a `200 (OK)` response.
+4) The request to append the last part of the representation data has the `Upload-Complete` header field set to true to indicate the complete transfer. Once the remaining representation data is transferred, the server processes the entire representation and responds with whatever the initial request to `/project/123/files` would have produced if its representation had been fully transferred and processed, e.g., a `201 (Created)` response.
 
 
 ~~~ aasvg
@@ -292,7 +292,7 @@ Client                                       Server
 | [remaining representation from offset Z]        |
 |------------------------------------------------>|
 |                                                 |
-|                                          200 OK |
+|                                     201 Created |
 |                             Upload-Complete: ?1 |
 |<------------------------------------------------|
 |                                                 |
@@ -372,31 +372,45 @@ A client usually learns the limits when the upload resource is created ({{upload
 
 ## Upload-Limit {#upload-limit-hdr}
 
-The `Upload-Limit` response header field is a Dictionary Structured Header Field ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored.
+The `Upload-Limit` response header field is a Dictionary Structured Header Field ({{Section 3.2 of STRUCTURED-FIELDS}}). Other values MUST cause the entire header field to be ignored. Receivers of the `Upload-Limit` header field parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places the following additional requirements on Dictionary members.
 
-Receivers of the `Upload-Limit` header field parse the Dictionary as described in {{Section 4.2 of STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document places additional requirements on Dictionary members. A member with an unknown key MUST be ignored. A member with a known key but a value of unexpected type MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed. This document does not define parameters for Dictionary member values; unknown parameters MUST be ignored.
+A member with an unknown key MUST be ignored. A member with a known key is only valid if it has the expected type and its value is within the permitted range. Some members are related and their values can specify a combined range, which has its own definition of validity.
+
+Receiving an invalid member or members that specify an invalid combined range is an error. It MUST cause the entire `Upload-Limit` header field to be ignored, or alternatively the complete HTTP message MUST be treated as malformed.
+
+This document does not define parameters for Dictionary member values; unknown parameters MUST be ignored.
 
 The following key-value pairs are defined.
 
 ### max-size {#upload-limit-max-size}
 
-The `max-size` limit specifies a maximum size, in bytes, for the representation data. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size. The value is an Integer.
+The `max-size` limit specifies a maximum size, in bytes, for the representation data. The value is an Integer greater than zero; a value of zero would only permit empty uploads.
+
+The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size.
 
 ### min-size {#upload-limit-min-size}
 
-The `min-size` limit specifies a minimum size, in bytes, for the representation data. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. Resumable uploads impose additional overhead on the server, which might not be acceptable for small representations. Requests with representation data below this value might still be accepted by the server, although without the ability to resume them. The value is an Integer.
+The `min-size` limit specifies a minimum size, in bytes, for the representation data. The value is a non-negative Integer. It MUST NOT be greater than the `max-size` value, if present.
+
+The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. Resumable uploads impose additional overhead on the server, which might not be acceptable for small representations. Requests with representation data below this value might still be accepted by the server, although without the ability to resume them.
 
 ### max-append-size {#upload-limit-max-append-size}
 
-The `max-append-size` limit specifies a maximum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append or upload creation requests. The value is an Integer.
+The `max-append-size` limit specifies a maximum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The value is an Integer greater than zero; a value of zero would only permit requests with no content.
+
+The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append or upload creation requests.
 
 ### min-append-size {#upload-limit-min-append-size}
 
-The `min-append-size` limit specifies a minimum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append or upload creation requests. The value is an Integer. This limit does not apply to upload creation requests with no content, or to requests completing the upload by including the `Upload-Complete: ?1` header field.
+The `min-append-size` limit specifies a minimum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The value is a non-negative Integer. It MUST NOT be greater than the `max-append-size` or `max-size` values, if present. This limit does not apply to upload creation requests with no content, or to requests completing the upload by including the `Upload-Complete: ?1` header field.
+
+The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append or upload creation requests.
 
 ### max-age {#upload-limit-max-age}
 
-The `max-age` limit specifies the remaining lifetime, in seconds, of the upload resource, counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible. The value is an Integer.
+The `max-age` limit specifies the remaining lifetime, in seconds, of the upload resource, counted from the generation of the response. The value is a non-negative Integer.
+
+After the resource's lifetime is reached, the server might make the upload resource inaccessible.
 
 ## Use with OPTIONS {#upload-limits-options}
 
@@ -492,8 +506,9 @@ Upload-Limit: max-size=1234567890
 HTTP/1.1 104 Upload Resumption Supported
 Upload-Offset: 23456789
 
-HTTP/1.1 200 OK
+HTTP/1.1 201 Created
 Upload-Complete: ?1
+Location: https://example.com/project/123/files/b530ce8ff
 Content-Type: application/json
 
 {"attachmentId": "b530ce8ff"}
@@ -770,7 +785,7 @@ The `application/partial-upload` media type describes a contiguous block from th
 
 This section defines the "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" problem type {{PROBLEM}}. A server can use this problem type when responding to an upload append request ({{upload-appending}}) to indicate that the `Upload-Offset` header field in the request does not match the upload resource's offset.
 
-Two problem type extension members are defined: the `expected-offset` and `provided-offset` members. A response using this problem type SHOULD populate both members, with the value of `expected-offset` taken from the upload resource and the value of `provided-offset` taken from the upload append request.
+Two problem type extension members are defined: the `expected-offset` and `provided-offset` members. Both are non-negative integers. A response using this problem type SHOULD populate both members, with the value of `expected-offset` taken from the upload resource and the value of `provided-offset` taken from the upload append request.
 
 The following example shows a response, where the resource's offset was 12500000, but the client attempted to append at offset 25000000:
 
@@ -1044,6 +1059,7 @@ Reference:
 * State that unknown Structured Fields parameters MUST be ignored.
 * Discourage change of upload URLs.
 * Append request cannot use different content codings.
+* Define ranges for integer values in `Upload-Limit` and problem type members.
 * Clarify that final response after creation doesn't need Upload-Complete.
 * Explicitly mention that client can continue after incomplete append.
 
