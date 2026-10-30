@@ -384,23 +384,33 @@ The following key-value pairs are defined.
 
 ### max-size {#upload-limit-max-size}
 
-The `max-size` limit specifies a maximum size, in bytes, for the representation data. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size. The value is an Integer greater than zero; a value of zero would only permit empty uploads.
+The `max-size` limit specifies a maximum size, in bytes, for the representation data. The value is an Integer greater than zero; a value of zero would only permit empty uploads.
+
+The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is larger than the maximum size. The server might also deactivate the upload resource if the offset ({{upload-offset}}) exceeds the maximum size.
 
 ### min-size {#upload-limit-min-size}
 
-The `min-size` limit specifies a minimum size, in bytes, for the representation data. The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. Resumable uploads impose additional overhead on the server, which might not be acceptable for small representations. Requests with representation data below this value might still be accepted by the server, although without the ability to resume them. The value is a non-negative Integer. It MUST NOT be greater than the `max-size` value, if present.
+The `min-size` limit specifies a minimum size, in bytes, for the representation data. The value is a non-negative Integer. It MUST NOT be greater than the `max-size` value, if present.
+
+The server might not create an upload resource if the representation's length ({{upload-length}}) deduced from the upload creation request is smaller than the minimum size or no length can be deduced at all. Resumable uploads impose additional overhead on the server, which might not be acceptable for small representations. Requests with representation data below this value might still be accepted by the server, although without the ability to resume them.
 
 ### max-append-size {#upload-limit-max-append-size}
 
-The `max-append-size` limit specifies a maximum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append or upload creation requests. The value is an Integer greater than zero.
+The `max-append-size` limit specifies a maximum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The value is an Integer greater than zero.
+
+The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append or upload creation requests.
 
 ### min-append-size {#upload-limit-min-append-size}
 
-The `min-append-size` limit specifies a minimum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append or upload creation requests. The value is a non-negative Integer. It MUST NOT be greater than the `max-append-size` or `max-size` values, if present. This limit does not apply to upload creation requests with no content, or to requests completing the upload by including the `Upload-Complete: ?1` header field.
+The `min-append-size` limit specifies a minimum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The value is a non-negative Integer. It MUST NOT be greater than the `max-append-size` or `max-size` values, if present. This limit does not apply to upload creation requests with no content, or to requests completing the upload by including the `Upload-Complete: ?1` header field.
+
+The server might reject requests below this limit. A client that is aware of this limit MUST NOT send smaller upload append or upload creation requests.
 
 ### max-age {#upload-limit-max-age}
 
-The `max-age` limit specifies the remaining lifetime, in seconds, of the upload resource, counted from the generation of the response. After the resource's lifetime is reached, the server might make the upload resource inaccessible. The value is a non-negative Integer.
+The `max-age` limit specifies the remaining lifetime, in seconds, of the upload resource, counted from the generation of the response. The value is a non-negative Integer.
+
+After the resource's lifetime is reached, the server might make the upload resource inaccessible.
 
 ## Use with OPTIONS {#upload-limits-options}
 
