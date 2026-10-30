@@ -101,7 +101,7 @@ FINAL_DATA Capsule {
   TCP Payload (..),
 }
 ~~~
-{: #fig-capsules title="DATA and FINAL_DATA Capsule Formats"}
+{: #fig-capsules title="DATA and FINAL_DATA Capsule Formats, using notation from Section 1.3 of [QUIC]"}
 
 The boundaries between DATA and FINAL_DATA capsules are not significant, and are not expected to match TCP segments, TLS records, HTTP DATA frames, QUIC STREAM frames, etc.  Recipients SHOULD begin forwarding payload from a DATA or FINAL_DATA capsule without waiting to receive the entire capsule, especially if the capsule is large.
 
