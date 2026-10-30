@@ -396,7 +396,7 @@ The server might not create an upload resource if the representation's length ({
 
 ### max-append-size {#upload-limit-max-append-size}
 
-The `max-append-size` limit specifies a maximum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The value is an Integer greater than zero.
+The `max-append-size` limit specifies a maximum size, in bytes, for the request content in a single upload append ({{upload-appending}}) or upload creation ({{upload-creation}}) request. The value is an Integer greater than zero; a value of zero would only permit requests with no content.
 
 The server might reject requests exceeding this limit. A client that is aware of this limit MUST NOT send larger upload append or upload creation requests.
 
