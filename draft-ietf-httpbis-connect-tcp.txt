@@ -4,8 +4,8 @@
 
 httpbis                                                   B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
-Intended status: Standards Track                         29 October 2026
-Expires: 2 May 2027
+Intended status: Standards Track                         30 October 2026
+Expires: 3 May 2027
 
 
              Template-Driven HTTP CONNECT Proxying for TCP
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 May 2027.
+   This Internet-Draft will expire on 3 May 2027.
 
 Copyright Notice
 
@@ -208,7 +208,8 @@ Table of Contents
      TCP Payload (..),
    }
 
-               Figure 1: DATA and FINAL_DATA Capsule Formats
+       Figure 1: DATA and FINAL_DATA Capsule Formats, using notation
+                         from Section 1.3 of [QUIC]
 
    The boundaries between DATA and FINAL_DATA capsules are not
    significant, and are not expected to match TCP segments, TLS records,
