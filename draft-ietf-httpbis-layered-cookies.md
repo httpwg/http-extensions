@@ -1117,9 +1117,9 @@ URL path _path_, run these steps. They return a new cookie or failure:
 
 1. Let _pathAttributeValue_ be null.
 
-1. While _attributesInput_ is not an empty byte sequence:
+1. Let _maxAgeSeen_ be false.
 
-    1. Let _maxAgeSeen_ be false.
+1. While _attributesInput_ is not an empty byte sequence:
 
     1. Let _char_ be the result of consuming the first byte of _attributesInput_.
 
@@ -1153,10 +1153,10 @@ URL path _path_, run these steps. They return a new cookie or failure:
 
         1. Let _expiryTime_ be the result of running Parse a Date given _attributeValue_.
 
-        1. If _attributeValue_ is failure, then continue.
+        1. If _expiryTime_ is failure, then continue.
 
         1. If _expiryTime_ is greater than the current time and date + the user agent's cookie age limit,
-           then set _expiryTime_ to the user agent's cookie age limit.
+           then set _expiryTime_ to the current time and date + the user agent's cookie age limit.
 
         1. If _expiryTime_ is earlier than the earliest date the user agent can
            represent, the user agent MAY replace _expiryTime_ with the earliest
