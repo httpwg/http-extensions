@@ -1,6 +1,6 @@
 ---
 title: "Template-Driven HTTP CONNECT Proxying for TCP"
-abbrev: "Templated CONNECT-TCP"
+abbrev: "CONNECT-TCP"
 category: std
 
 docname: draft-ietf-httpbis-connect-tcp-latest
@@ -44,7 +44,7 @@ informative:
 
 --- abstract
 
-TCP tunneling using HTTP CONNECT has long been part of the core HTTP specification.  However, this tunneling functionality has several important deficiencies due to the lack of a well-defined HTTP origin or path.  This specification defines an alternative HTTP proxy service configuration for TCP connections.  This configuration is described by a URI Template, similar to the CONNECT-UDP and CONNECT-IP protocols.
+TCP tunneling using HTTP CONNECT has long been part of the core HTTP specification.  However, this tunneling functionality has several important deficiencies due to the lack of a well-defined HTTP origin or path.  This specification remedies those deficiencies by defining CONNECT-TCP, an alternative protocol for tunneling TCP in HTTP.  A proxy service for this protocol is described by a URI Template, similar to the CONNECT-UDP and CONNECT-IP protocols.
 
 --- middle
 
@@ -60,7 +60,7 @@ HTTP/3 {{!RFC9114}} uses a UDP transport, so it cannot be forwarded using the pr
 
 HTTP clients can be configured to use proxies by selecting a proxy hostname, a port number, and whether to use a security protocol. However, classic HTTP CONNECT requests using the proxy do not carry this configuration information. Instead, they only indicate the hostname and port of the target. This prevents any HTTP server from hosting multiple distinct proxy services, as the server cannot distinguish them by path (as with distinct resources) or by origin (as in "virtual hosting").
 
-The absence of an explicit origin for the proxy also rules out the usual defenses against server port misdirection attacks (see {{Section 7.4 of !RFC9110}}) and creates ambiguity about the use of origin-scoped response header fields (e.g., "Alt-Svc" {{?ALT-SVC=RFC7838}} or "Strict-Transport-Security" {{?HSTS=RFC6797}}).
+The absence of an explicit origin for the proxy also rules out the usual defenses against server port misdirection attacks (see {{Section 7.4 of !RFC9110}}) and creates ambiguity about the use of origin-scoped response header fields (e.g., Alt-Svc {{?ALT-SVC=RFC7838}} or Strict-Transport-Security {{?HSTS=RFC6797}}).
 
 Classic HTTP CONNECT requests are not extensible to carry in-stream metadata. For example, the WRAP_UP capsule {{?I-D.ietf-httpbis-wrap-up}} cannot be used with classic HTTP CONNECT.
 
@@ -76,7 +76,9 @@ In this document, the term "proxy" refers to the HTTP server that acts upon a cl
 
 The term "endpoint" describes an implementation of this specification in either client or proxy role.
 
-The term "templated TCP proxy" refers to a proxy that is identified by a URI Template in accordance with this specification.
+The protocol defined in this specification is termed "CONNECT-TCP".
+
+The term "CONNECT-TCP proxy" refers to a proxy that is identified by a URI Template for CONNECT-TCP.
 
 # Specification
 
@@ -86,7 +88,7 @@ If the request is well-formed and permissible, the proxy MUST attempt to establi
 
 ## Payload Transport
 
-When using "connect-tcp", TCP payload data is sent in the payload of new Capsule Types named DATA and FINAL_DATA (see {{fig-capsules}} and registrations in {{data-capsule}}).  The ordered concatenation of these capsule payloads, which MAY be empty, represents the TCP payload data.  A FINAL_DATA capsule additionally indicates that the sender has closed this stream, semantically equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint MUST NOT send any more DATA or FINAL_DATA capsules on this data stream. See {{closing-connections}} for related requirements.
+When using CONNECT-TCP, TCP payload data is sent in the payload of new Capsule Types named DATA and FINAL_DATA (see {{fig-capsules}} and registrations in {{data-capsule}}).  The ordered concatenation of these capsule payloads, which MAY be empty, represents the TCP payload data.  A FINAL_DATA capsule additionally indicates that the sender has closed this stream, semantically equivalent to TCP FIN.  After sending a FINAL_DATA capsule, an endpoint MUST NOT send any more DATA or FINAL_DATA capsules on this data stream. See {{closing-connections}} for related requirements.
 
 ~~~
 DATA Capsule {
@@ -119,67 +121,69 @@ This protocol supports backward-compatible extensions via additional Capsule Typ
 
 In HTTP/1.1 {{RFC9112}}, the client uses the proxy by issuing a request as follows:
 
-* The method SHALL be "GET".
+* The method SHALL be GET.
 * The request's target SHALL correspond to the URI derived from expansion of the proxy's URI Template.
-* The request SHALL include a single "Host" header field whose value identifies the proxy.
-* The request SHALL include a "Connection" header field with the value "Upgrade".  (Note that this requirement is case-insensitive as per {{Section 7.6.1 of !RFC9110}}.)
-* The request SHALL include an "Upgrade" header field with the value "connect-tcp".
-* The request SHOULD include a "Capsule-Protocol: ?1" header (as recommended in {{CAPSULE, Section 3.4}}).
+* The request SHALL include a single Host header field whose value identifies the proxy.
+* The request SHALL include a Connection header field with the value "Upgrade".  (Note that this requirement is case-insensitive as per {{Section 7.6.1 of !RFC9110}}.)
+* The request SHALL include an Upgrade header field with the value "connect-tcp".
+* The request SHOULD include a "Capsule-Protocol: ?1" header field (as recommended in {{CAPSULE, Section 3.4}}).
 
 If the TCP connection is successful, the response SHALL be as follows:
 
-* The HTTP status code SHALL be "101 (Switching Protocols)".
-* The response SHALL include a "Connection" header field with the value "Upgrade".
-* The response SHALL include a single "Upgrade" header field with the value "connect-tcp".
-* The response SHOULD include a "Capsule-Protocol: ?1" header (as above).
+* The HTTP status code SHALL be 101 (Switching Protocols).
+* The response SHALL include a Connection header field with the value "Upgrade".
+* The response SHALL include a single Upgrade header field with the value "connect-tcp".
+* The response SHOULD include a "Capsule-Protocol: ?1" header field (as above).
 
-If a TCP connection was not established, the proxy MUST NOT switch protocols to "connect-tcp", and the client MAY reuse this connection for additional HTTP requests.
+If a TCP connection was not established, the proxy MUST NOT switch protocols to CONNECT-TCP, and the client MAY reuse this connection for additional HTTP requests.
 
-~~~
-Client                                                 Proxy
-
+~~~ http-message
 GET /proxy?target_host=192.0.2.1&target_port=443 HTTP/1.1
 Host: example.com
 Connection: Upgrade
 Upgrade: connect-tcp
 Capsule-Protocol: ?1
-
-                            HTTP/1.1 100 Continue
-
-** Proxy establishes a TCP connection to 192.0.2.1:443 **
-
-                            HTTP/1.1 101 Switching Protocols
-                            Connection: Upgrade
-                            Upgrade: connect-tcp
-                            Capsule-Protocol: ?1
-                            Proxy-Status: example.com
 ~~~
-{: title="Templated TCP proxy example in HTTP/1.1"}
+{: title="CONNECT-TCP in HTTP/1.1: Example request for a connection to 192.0.2.1:443 via https://example.com/proxy{?target_host,target_port\}"}
+
+~~~ http-message
+HTTP/1.1 100 Continue
+~~~
+{: title="CONNECT-TCP in HTTP/1.1: Initial response"}
+
+~~~ http-message
+HTTP/1.1 101 Switching Protocols
+Connection: Upgrade
+Upgrade: connect-tcp
+Capsule-Protocol: ?1
+Proxy-Status: example.com
+~~~
+{: title="CONNECT-TCP in HTTP/1.1: Final success response"}
 
 ## In HTTP/2 and HTTP/3
 
 In HTTP/2 and HTTP/3, the proxy MUST include SETTINGS_ENABLE_CONNECT_PROTOCOL in its SETTINGS frame {{!RFC8441}}{{!RFC9220}}.  The client uses the proxy by issuing an "extended CONNECT" request as follows:
 
-* The :method pseudo-header field SHALL be "CONNECT".
+* The :method pseudo-header field SHALL be CONNECT.
 * The :protocol pseudo-header field SHALL be "connect-tcp".
 * The :authority pseudo-header field SHALL contain the authority of the proxy.
 * The :path and :scheme pseudo-header fields SHALL contain the path and scheme of the request URI derived from the proxy's URI Template.
 
-A templated TCP proxying request that does not conform to all of these requirements represents a client error (see {{!RFC9110, Section 15.5}}) and may be malformed (see {{Section 8.1.1 of !RFC9113}} and {{Section 4.1.2 of !RFC9114}}).
+A CONNECT-TCP request that does not conform to all of these requirements represents a client error (see {{!RFC9110, Section 15.5}}) and may be malformed (see {{Section 8.1.1 of !RFC9113}} and {{Section 4.1.2 of !RFC9114}}).
 
-Additionally, the "capsule-protocol" header field SHOULD be present with a value of "?1" (as recommended in {{CAPSULE, Section 3.4}}).
+Additionally, the Capsule-Protocol header field SHOULD be present with a value of "?1" (as recommended in {{CAPSULE, Section 3.4}}).
 
 ~~~
 HEADERS
 :method = CONNECT
 :scheme = https
-:authority = templated-proxy.example
+:authority = example.com
 :path = /proxy?target_host=2001%3Adb8%3A%3A1&target_port=443
 :protocol = connect-tcp
 capsule-protocol = ?1
 ...
 ~~~
-{: title="Templated TCP proxy example in HTTP/2"}
+{: title="CONNECT-TCP in HTTP/2: Example request to [2001:db8::1]:443"}
 
 ## Use of Other Relevant Headers
 
@@ -187,19 +191,19 @@ capsule-protocol = ?1
 
 Ordinary HTTP headers apply only to the single resource identified in the request or response.  An origin-scoped HTTP header is a special response header that is intended to change the client's behavior for subsequent requests to any resource on this origin.
 
-Unlike classic HTTP CONNECT proxies, a templated TCP proxy has an unambiguous origin of its own.  Origin-scoped headers apply to this origin when they are associated with a templated TCP proxy response.  Here are some origin-scoped headers that could potentially be sent by a templated TCP proxy:
+Unlike classic HTTP CONNECT proxies, a CONNECT-TCP proxy has an unambiguous origin of its own.  Origin-scoped headers apply to this origin when they are associated with a CONNECT-TCP response.  Here are some origin-scoped headers that could potentially be sent by a CONNECT-TCP proxy:
 
-* "Alt-Svc" {{ALT-SVC}}
-* "Strict-Transport-Security" {{HSTS}}
-* "Accept-CH" {{?RFC8942}}
-* "Set-Cookie" {{?RFC6265}}, which has configurable scope.
-* "Clear-Site-Data" {{CLEAR-SITE-DATA}}
+* Alt-Svc {{ALT-SVC}}
+* Strict-Transport-Security {{HSTS}}
+* Accept-CH {{?RFC8942}}
+* Set-Cookie {{?RFC6265}}, which has configurable scope.
+* Clear-Site-Data {{CLEAR-SITE-DATA}}
 
 ### Authentication Headers
 
-Authentication to a templated TCP proxy normally uses ordinary HTTP authentication via the "401 (Unauthorized)" response code, the "WWW-Authenticate" response header field, and the "Authorization" request header field ({{!RFC9110, Section 11.6}}).  A templated TCP proxy does not use the "407 (Proxy Authentication Required)" response code and related header fields ({{?RFC9110, Section 11.7}}) because they do not traverse HTTP gateways (see {{gateway-compatibility}}).
+Authentication to a CONNECT-TCP proxy normally uses ordinary HTTP authentication via the 401 (Unauthorized) response code, the WWW-Authenticate response header field, and the Authorization request header field ({{!RFC9110, Section 11.6}}).  A CONNECT-TCP proxy does not use the 407 (Proxy Authentication Required) status code and related header fields ({{?RFC9110, Section 11.7}}) because they do not traverse HTTP gateways (see {{gateway-compatibility}}).
 
-Clients SHOULD assume that all proxy resources generated by a single template share a protection space (i.e., a realm) ({{!RFC9110, Section 11.5}}).  For many authentication schemes, this will allow the client to avoid waiting for a "401 (Unauthorized)" response before each new connection through the proxy.
+Clients SHOULD assume that all proxy resources generated by a single template share a protection space (i.e., a realm) ({{!RFC9110, Section 11.5}}).  For many authentication schemes, this will allow the client to avoid waiting for a 401 (Unauthorized) response before each new connection through the proxy.
 
 TLS Client Certificate authentication can also be used (see {{gateway-compatibility}}).
 
@@ -207,7 +211,7 @@ TLS Client Certificate authentication can also be used (see {{gateway-compatibil
 
 In HTTP/2 and HTTP/3, this specification uses the CONNECT method, which is not subject to caching ({{?RFC9110, Section 9.3.6}}).  However, in HTTP/1.1, the method is GET, which in other usages can be cacheable.  To minimize discrepancies between HTTP versions, the following requirements apply when using HTTP/1.1:
 
-* If the response has a heuristically cacheable status code ({{!RFC9110, Section 15.1}}), it SHOULD also carry a `Cache-Control: no-store` header field.
+* If the response has a heuristically cacheable status code ({{!RFC9110, Section 15.1}}), it SHOULD also carry a "Cache-Control: no-store" header field ({{?HTTP-CACHING=RFC9111, Section 5.2}}).
   - This can occur if the request is rejected or the connection fails.
 * The proxy SHOULD NOT attach any other caching-related header fields to the response.
 
@@ -301,41 +305,41 @@ This section discusses some behaviors that are permitted or recommended in order
 
 When using this specification in HTTP/2 or HTTP/3, clients MAY start sending TCP stream content optimistically, subject to flow control limits ({{Section 5.2 of !RFC9113}} or {{Section 4.1 of !QUIC}}).  Proxies MUST buffer this "optimistic" content until the TCP stream becomes writable, and discard it if the TCP connection fails.
 
-Clients MUST NOT use "optimistic" behavior in HTTP/1.1, as this would interfere with reuse of the connection after an error response such as "401 (Unauthorized)".
+Clients MUST NOT use "optimistic" behavior in HTTP/1.1, as this would interfere with reuse of the connection after an error response such as 401 (Unauthorized).
 
-Servers that host a proxy under this specification MAY offer support for TLS early data in accordance with {{!RFC8470}}.  Clients MAY send "connect-tcp" requests in early data, and MAY include "optimistic" TCP content in early data (in HTTP/2 and HTTP/3).  At the TLS layer, proxies MAY ignore, reject, or accept the `early_data` extension ({{TLS, Section 4.3.10}}).  At the HTTP layer, proxies MAY process the request immediately, return a "425 (Too Early)" response ({{!RFC8470, Section 5.2}}), or delay some or all processing of the request until the handshake completes.  For example, a proxy with limited anti-replay defenses might choose to perform DNS resolution of the `target_host` when a request arrives in early data, but delay the TCP connection until the TLS handshake completes.
+Servers that host a proxy under this specification MAY offer support for TLS early data in accordance with {{!RFC8470}}.  Clients MAY send CONNECT-TCP requests in early data, and MAY include "optimistic" TCP content in early data (in HTTP/2 and HTTP/3).  At the TLS layer, proxies MAY ignore, reject, or accept the `early_data` extension ({{TLS, Section 4.3.10}}).  At the HTTP layer, proxies MAY process the request immediately, return a 425 (Too Early) response ({{!RFC8470, Section 5.2}}), or delay some or all processing of the request until the handshake completes.  For example, a proxy with limited anti-replay defenses might choose to perform DNS resolution of `target_host` when a request arrives in early data, but delay the TCP connection until the TLS handshake completes.
 
-When DNS resolution of `target_host` produces multiple IP addresses, proxies SHOULD use a racing procedure such as Happy Eyeballs {{?HEv2=RFC8305}} to accelerate connection establishment.  Proxies that race multiple connection attempts MUST buffer any optimistic content until a connection is selected and MUST NOT transmit any payload data on the other connections.
+When DNS resolution of `target_host` produces IP addresses from multiple address families, proxies SHOULD use a racing procedure such as Happy Eyeballs {{?HEv2=RFC8305}} to accelerate connection establishment.  Proxies that race multiple connection attempts MUST buffer any optimistic content until a connection is selected and MUST NOT transmit any payload data on the other connections.
 
 ## Indicating Failure
 
-Failure to initiate a tunnel is indicated by the HTTP response status code.
+Failure to initiate a tunnel is indicated by the HTTP status code.
 
-A 4XX status code indicates that the request is malformed or impermissible.  For example, if the proxy performs DNS resolution of `target_host` and receives an IP address that is disallowed by the proxy's policy, it might return 403 (Forbidden).
+A 4xx status code indicates that the request is malformed or impermissible.  For example, if the proxy performs DNS resolution of `target_host` and receives an IP address that is disallowed by the proxy's policy, it might return 403 (Forbidden).
 
-A 5XX status code indicates a failure in the attempt, such as when a TCP connection was attempted but did not succeed.  The 502 (Bad Gateway) and 504 (Gateway Timeout) status codes are commonly used.
+A 5xx status code indicates a failure in the attempt, such as when a TCP connection was attempted but did not succeed.  The 502 (Bad Gateway) and 504 (Gateway Timeout) status codes are commonly used.
 
-The 429 (Too Many Requests) and 503 (Service Unavailable) status codes indicate a temporary failure, and can carry a "Retry-After" response header field.  If included, this field applies to all requests using this URI Template.
+The 429 (Too Many Requests) and 503 (Service Unavailable) status codes indicate a temporary failure, and can carry a Retry-After response header field.  If included, this field applies to all requests using this URI Template.
 
 ## Conveying Metadata
 
-This specification supports the "100 (Continue)" response status code ({{?RFC9110, Section 15.2.1}}) in any HTTP version.  Proxies SHOULD send this status code whenever they accept a request, without waiting for the proxy-destination TCP handshake to succeed or fail.  This allows for a few useful improvements:
+This specification supports the 100 (Continue) status code ({{?RFC9110, Section 15.2.1}}) in any HTTP version.  Proxies SHOULD send this status code whenever they accept a request, without waiting for the proxy-destination TCP handshake to succeed or fail.  This allows for a few useful improvements:
 
 * Clients can provide a clearer status indication while waiting for the destination host to respond.  (TCP handshakes can hang for several minutes before failing.)
 * Clients can apply separate timeouts to the tunneling request and connection establishment.
 * In HTTP/2 and HTTP/3, clients have the option to delay some or all of the optimistic payload data until after confirming that the request is permissible.  This strategy reduces wasted effort when the request is rejected.
 
-Note that a client in this specification cannot send an "Expect: 100-continue" request header field, because the request does not include any "content" ({{?RFC9110, Section 10.1.1}}).
+Note that a client in this specification cannot send an Expect: 100-continue request header field, because the request does not include any "content" ({{?RFC9110, Section 10.1.1}}).
 
-Proxies implementing this specification SHOULD include a "Proxy-Status" response header field {{!PROXY-STATUS=RFC9209}} in any success or failure response (i.e., status codes 101, 2XX, 4XX, or 5XX) to support advanced client behaviors and diagnostics.  Clients and proxies MUST NOT send trailer fields on "connect-tcp" streams.
+Proxies implementing this specification SHOULD include a Proxy-Status response header field {{!PROXY-STATUS=RFC9209}} in any success or failure response (i.e., status codes 101, 2xx, 4xx, or 5xx) to support advanced client behaviors and diagnostics.  Clients and proxies MUST NOT send trailer fields on CONNECT-TCP streams.
 
 # Applicability
 
 ## Servers
 
-For server operators, templated TCP proxies are particularly valuable in situations where virtual-hosting is needed, or where multiple proxies must share an origin.  For example, the proxy might benefit from sharing an HTTP gateway that provides DDoS defense, performs request sanitization, or enforces user authorization ({{gateway-compatibility}}).
+For server operators, CONNECT-TCP proxies are particularly valuable in situations where virtual-hosting is needed, or where multiple proxies must share an origin.  For example, the proxy might benefit from sharing an HTTP gateway that provides DDoS defense, performs request sanitization, or enforces user authorization ({{gateway-compatibility}}).
 
-Templated TCP proxies can also be made invisible to probes from unauthorized clients:
+CONNECT-TCP proxies can also be made invisible to probes from unauthorized clients:
 
 * The URI template can include a high-entropy path, similar to Capability URLs {{CAPABILITY}}.
 * The proxy can require HTTP Concealed Authentication ({{?CONCEALED=RFC9729, Section 6.4}}).
@@ -345,9 +349,9 @@ Templated TCP proxies can also be made invisible to probes from unauthorized cli
 This specification does not require any specific type of configuration input.  Suitable configuration input types include:
 
 * A URI Template string, as described in {{specification}}.
-* An IP address or hostname, with optional or required port and scheme (as often used to describe classic HTTP CONNECT proxies).  A corresponding templated TCP proxy might be found in two ways:
+* An IP address or hostname, with optional or required port and scheme (as often used to describe classic HTTP CONNECT proxies).  A corresponding CONNECT-TCP proxy might be found in two ways:
   - At the default template for "connect-tcp" ({{fig-default}}).
-  - In the "proxies" array of a provisioning domain resource retrieved from the corresponding .well-known URI ({{?I-D.ietf-intarea-proxy-config, Sections 2 and 3}}).
+  - In the "proxies" array of a provisioning domain resource retrieved from the corresponding ".well-known" URI ({{?I-D.ietf-intarea-proxy-config, Sections 2 and 3}}).
 * A provisioning domain resource, configured directly or identified by a local or remote URI (e.g., using "file://" or "https://").
 
 ~~~
@@ -358,30 +362,30 @@ https://$PROXY_HOST:$PROXY_PORT/.well-known/masque
 
 All of these input types MAY share a single input string, as they can be disambiguated reliably by parsing and probing.  However, it may be preferable to indicate the configuration input type explicitly, to reduce probing delays while supporting clients with differing capabilities.
 
-Clients SHOULD treat certain errors during classic HTTP CONNECT as indications that the proxy might only support "connect-tcp":
+Clients SHOULD treat certain errors during classic HTTP CONNECT as indications that the proxy might only support CONNECT-TCP:
 
-* In HTTP/1.1: the response status code is "426 (Upgrade Required)", with an "Upgrade: connect-tcp" response header.
-* In any HTTP version: the response status code is "501 (Not Implemented)".
+* In HTTP/1.1: the status code is 426 (Upgrade Required), with an "Upgrade: connect-tcp" response header.
+* In any HTTP version: the status code is 501 (Not Implemented).
   - Requires SETTINGS_ENABLE_CONNECT_PROTOCOL to have been negotiated in HTTP/2 or HTTP/3.
 
-If the client infers that classic HTTP CONNECT is not supported, it SHOULD retry the request using the registered default template for "connect-tcp" ({{fig-default}}).  If this request succeeds, the client SHOULD record a preference for "connect-tcp" to avoid further retry delays.
+If the client infers that classic HTTP CONNECT is not supported, it SHOULD retry the request using the registered default template for "connect-tcp" ({{fig-default}}).  If this request succeeds, the client SHOULD record a preference for CONNECT-TCP to avoid further retry delays.
 
 ## Gateways {#gateway-compatibility}
 
-Templated TCP proxy requests can traverse standard HTTP gateways to ease implementation and allow use of shared infrastructure.  However, current gateways might need modifications to support TCP proxy services.  To be compatible, a gateway MUST:
+CONNECT-TCP requests can traverse standard HTTP gateways to ease implementation and allow use of shared infrastructure.  However, current gateways might need modifications to support TCP proxy services.  To be compatible, a gateway MUST:
 
 * support Extended CONNECT (if acting as an HTTP/2 or HTTP/3 server).
 * support HTTP/1.1 Upgrade to "connect-tcp" (if acting as an HTTP/1.1 server).
   - only after forwarding the upgrade request to the origin and observing a success response.
 * forward the "connect-tcp" protocol to the origin.
-* convert "connect-tcp" requests between all supported HTTP server and client versions.
-* allow any "Proxy-Status" headers to traverse the gateway.
+* convert CONNECT-TCP requests between all supported HTTP server and client versions.
+* allow any Proxy-Status headers to traverse the gateway.
 
-If the proxy relies on TLS Client Certificates for client authentication, the gateway MUST perform this authentication itself or pass the relevant information to the origin (e.g., using a "Client-Cert" request header field {{?RFC9440}}).
+If the proxy relies on TLS Client Certificates for client authentication, the gateway MUST perform this authentication itself or pass the relevant information to the origin (e.g., using a Client-Cert request header field {{?RFC9440}}).
 
 # Security Considerations
 
-Template-driven TCP proxying is largely subject to the same security risks as classic HTTP CONNECT.  For example, any restrictions on authorized use of the proxy (see {{?RFC9110, Section 9.3.6}}) apply equally to both.  The `destination_ip_prohibited` Proxy Error Type from {{Section 2.3.5 of PROXY-STATUS}} can be useful when rejecting unauthorized requests.
+CONNECT-TCP is largely subject to the same security risks as classic HTTP CONNECT.  For example, any restrictions on authorized use of the proxy (see {{?RFC9110, Section 9.3.6}}) apply equally to both.  The "destination_ip_prohibited" Proxy Error Type from {{Section 2.3.5 of PROXY-STATUS}} can be useful when rejecting unauthorized requests.
 
 A small additional risk is posed by the use of a URI Template parser on the client side.  The template input string could be crafted to exploit any vulnerabilities in the parser implementation.  Client implementers should apply their usual precautions for code that processes untrusted inputs.
 
