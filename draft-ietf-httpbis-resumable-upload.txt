@@ -145,6 +145,7 @@ Table of Contents
      22.1.  Normative References
      22.2.  Informative References
    Appendix A.  Changes
+     Since draft-ietf-httpbis-resumable-upload-15
      Since draft-ietf-httpbis-resumable-upload-14
      Since draft-ietf-httpbis-resumable-upload-13
      Since draft-ietf-httpbis-resumable-upload-12
@@ -1973,6 +1974,10 @@ Table of Contents
 Appendix A.  Changes
 
    This section is to be removed before publishing as an RFC.
+
+Since draft-ietf-httpbis-resumable-upload-15
+
+   No changes yet.
 
 Since draft-ietf-httpbis-resumable-upload-14
 
