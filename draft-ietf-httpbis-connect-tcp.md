@@ -319,7 +319,7 @@ A 4xx status code indicates that the request is malformed or impermissible.  For
 
 A 5xx status code indicates a failure in the attempt, such as when a TCP connection was attempted but did not succeed.  The 502 (Bad Gateway) and 504 (Gateway Timeout) status codes are commonly used.
 
-The 429 (Too Many Requests) and 503 (Service Unavailable) status codes indicate a temporary failure, and can carry a Retry-After response header field.  If included, this field applies to all requests using this URI Template.
+The 429 (Too Many Requests) and 503 (Service Unavailable) status codes indicate a temporary failure, and can carry a Retry-After response header field ({{?RFC9110, Section 10.2.3}}).  If included, this field applies to all requests using this URI Template.
 
 ## Conveying Metadata
 
@@ -329,7 +329,7 @@ This specification supports the 100 (Continue) status code ({{?RFC9110, Section 
 * Clients can apply separate timeouts to the tunneling request and connection establishment.
 * In HTTP/2 and HTTP/3, clients have the option to delay some or all of the optimistic payload data until after confirming that the request is permissible.  This strategy reduces wasted effort when the request is rejected.
 
-Note that a client in this specification cannot send an Expect: 100-continue request header field, because the request does not include any "content" ({{?RFC9110, Section 10.1.1}}).
+Note that a client in this specification cannot send an "Expect: 100-continue" request header field, because the request does not include any "content" ({{?RFC9110, Section 10.1.1}}).
 
 Proxies implementing this specification SHOULD include a Proxy-Status response header field {{!PROXY-STATUS=RFC9209}} in any success or failure response (i.e., status codes 101, 2xx, 4xx, or 5xx) to support advanced client behaviors and diagnostics.  Clients and proxies MUST NOT send trailer fields on CONNECT-TCP streams.
 
@@ -364,8 +364,8 @@ All of these input types MAY share a single input string, as they can be disambi
 
 Clients SHOULD treat certain errors during classic HTTP CONNECT as indications that the proxy might only support CONNECT-TCP:
 
-* In HTTP/1.1: the status code is 426 (Upgrade Required), with an "Upgrade: connect-tcp" response header.
-* In any HTTP version: the status code is 501 (Not Implemented).
+* In HTTP/1.1: the response's status code is 426 (Upgrade Required), with an "Upgrade: connect-tcp" response header.
+* In any HTTP version: the response's status code is 501 (Not Implemented).
   - Requires SETTINGS_ENABLE_CONNECT_PROTOCOL to have been negotiated in HTTP/2 or HTTP/3.
 
 If the client infers that classic HTTP CONNECT is not supported, it SHOULD retry the request using the registered default template for "connect-tcp" ({{fig-default}}).  If this request succeeds, the client SHOULD record a preference for CONNECT-TCP to avoid further retry delays.
