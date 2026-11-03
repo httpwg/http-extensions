@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-01T03:32:54.208221+00:00",
+  "timestamp": "2026-11-03T04:44:40.445791+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -78606,6 +78606,22 @@
       "body": "In light of the eMudhra fiasco, @enygren raised the point that Secondary Certs carries the risk that the certificates exchanged at the HTTP layer might be compared against a different trust store or with different settings than would have been used in the TLS handshake. While that might sometimes be deliberate, it's worth a mention in the Security Considerations section. The exchange proves only that the peer holds the keys to the cert; whether the cert itself is trustworthy is a separate decision that has to be handled with the same care as in the TLS exchange itself.",
       "createdAt": "2026-10-28T14:41:32Z",
       "updatedAt": "2026-10-28T14:41:32Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 3581,
+      "id": "I_kwDOAUA-v88AAAABb2RaXA",
+      "title": "layered-cookies: Parse a Cookie differs from RFC 6265bis and browsers when the last attribute is invalid",
+      "url": "https://github.com/httpwg/http-extensions/issues/3581",
+      "state": "OPEN",
+      "author": "rifmj",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Spec: draft-ietf-httpbis-layered-cookies, editor's copy at f9f079a, [Parse a Cookie](https://github.com/httpwg/http-extensions/blob/f9f079af84fe047359daa712e54a6912d2882e12/draft-ietf-httpbis-layered-cookies.md#L1076), against draft-ietf-httpbis-rfc6265bis-22, which it says it replaces.\n\n#2046 settled that the handling may vary per attribute. These cases change results compared with 6265bis, and existing WPT follows 6265bis, so I am listing them in case they were not meant to change.\n\n| Input | layered-cookies | 6265bis-22 | Chromium 156, Firefox 157, WebKit 27.2 |\n|---|---|---|---|\n| `n=1; SameSite=None; SameSite=foo` | `none` stays; no Secure, so not stored | 5.6.7: \"Default\"; stored | stored |\n| `t=1; SameSite=Strict; SameSite=foo`, then a cross-site link | `strict` stays; not sent | 5.6.7: \"Default\"; sent | sent |\n| `q=1; Path=/x; Path=foo` from `/y/set` | path `/x` | 5.6.4: default path `/y` | `/y` in Chromium and Firefox; see the note on WebKit |\n| `e=1; Domain=` | host parsing the empty string fails; not stored | 5.7 step 7: host-only; stored | stored |\n\nExisting tests: `attributes/path.html` (test 21, `path=/dog; path=`), `attributes/domain.sub.html` (bare `domain=`), `samesite/multiple-samesite-attributes.https.html` (`*_unsupported`). web-platform-tests/wpt#64550 adds `attributes/last-attribute.html` for a last Path without a leading `/`.\n\nThe empty Domain case needs the host to go back to null, not the attribute to be skipped, or `Domain=a.example; Domain=` would keep the earlier value. #1939 is about the same parser call.\n\nTwo other cases are less clear, so they are only in `attributes/last-attribute.tentative.html` in the same PR:\n\n- `x=1; Expires=<past>; Expires=garbage`: 6265bis ignores the bad date, and layered-cookies would too once its check tests `expiryTime`. The past date then applies and the cookie is not kept. All three browsers keep it.\n- `d=1; Domain=.`: 6265bis 5.6.3 strips the dot and gives a host-only cookie; layered-cookies and all three browsers reject it (#1744).\n\nNote on WebKit: For `Path=foo`, WebKit 27.2 (Playwright build, macOS) reports the literal path `foo` through the cookie API and does not return the cookie on the default path, so it fails this subtest. I have not checked Safari.\n\nDrafted with AI help.\n",
+      "createdAt": "2026-11-02T13:47:02Z",
+      "updatedAt": "2026-11-02T13:47:02Z",
       "closedAt": null,
       "comments": []
     }
@@ -221535,7 +221551,7 @@
       ],
       "body": "Antun Jurkovic points out that Expect: 100-continue is not really allowed in this case.  This change removes the use of \"Expect\", and instead RECOMMENDs that proxies send \"100 (Continue)\" unilaterally.",
       "createdAt": "2026-10-26T15:02:19Z",
-      "updatedAt": "2026-10-26T21:04:59Z",
+      "updatedAt": "2026-11-02T13:10:07Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "7da2473006a479c8d8c103922ef00752bd2b4e2d",
@@ -221548,7 +221564,15 @@
       "mergeCommit": {
         "oid": "9eaf15728638d980f2d139b87c253e565a02aa30"
       },
-      "comments": [],
+      "comments": [
+        {
+          "author": "mustafaharun941-afk",
+          "authorAssociation": "NONE",
+          "body": "uygulama \u015fuanda kulan yorum yard\u0131mc\u0131 olursan\u0131z sevinirim ev internet kulan\u0131 yorum yard\u0131mc\u0131 olun te\u015fekk\u00fcr ederim sayg\u0131lar sunar\u0131m \ud83d\udc4d\ud83d\udc4d\ud83d\udc4d\ud83d\udc4d\ud83d\udc4b muazzam derecede s\u00fcper uygulama ",
+          "createdAt": "2026-11-02T12:52:58Z",
+          "updatedAt": "2026-11-02T13:10:07Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOAUA-v88AAAABUQ6zXw",
@@ -222858,6 +222882,88 @@
           ]
         }
       ]
+    },
+    {
+      "number": 3582,
+      "id": "PR_kwDOAUA-v88AAAABMUHjhw",
+      "title": "layered-cookies: fix three errors in Parse a Cookie",
+      "url": "https://github.com/httpwg/http-extensions/pull/3582",
+      "state": "OPEN",
+      "author": "rifmj",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Three small corrections to the Expires and Max-Age steps of `draft-ietf-httpbis-layered-cookies`.\n\n1. `maxAgeSeen` is created inside the loop, so it is false again for every attribute. `Max-Age=3600; Expires=<past>` is then rejected, and `Max-Age=0; Expires=<future>` is kept. #2046 says Max-Age and Expires are meant to interact, and all browsers I tried give Max-Age priority (Chromium 156, Firefox 157, WebKit 27.2). The fix moves the variable above the loop.\n2. \"If attributeValue is failure\" tests the wrong variable, so a failed date goes on to the later steps. The fix tests `expiryTime`.\n3. \"set expiryTime to the user agent's cookie age limit\" assigns a number of days to a time. The fix uses the current time plus the limit, as the comparison just before it does.\n\nThere is no change of intent. How a later invalid Expires should behave is a separate question, in #3581.\n\nWPT: `cookies/attributes/last-attribute.html` in web-platform-tests/wpt#64550 covers item 1.\n\nDrafted with AI help.\n",
+      "createdAt": "2026-11-02T13:47:34Z",
+      "updatedAt": "2026-11-02T13:47:37Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "569a21fe3ea1b7a27719e436def9b41ab6662cdc",
+      "headRepository": "rifmj/http-extensions",
+      "headRefName": "layered-parse-fixes",
+      "headRefOid": "6ae44c90743189b8f6edfd2179bc27adb100ef18",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3583,
+      "id": "PR_kwDOAUA-v88AAAABMUHoNg",
+      "title": "layered-cookies: sort Retrieve Cookies by path length, not segment count",
+      "url": "https://github.com/httpwg/http-extensions/pull/3583",
+      "state": "OPEN",
+      "author": "rifmj",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Retrieve Cookies sorts by \"path's size\", the number of segments. RFC 6265, RFC 6265bis 5.8.3, browsers and WPT all use length. The results differ in two ways.\n\n- A URL path `/` is `[\"\"]` and `/foo` is `[\"foo\"]`, both of size 1. With `a=1; Path=/`, then `b=2; Path=/foo`, a request to `/foo/bar` gives `a=1; b=2` by the steps. Chromium 156, Firefox 157 and WebKit 27.2 give `b=2; a=1`. `cookies/ordering/ordering.sub.html` \"(2)\" already expects this (`testH` on `/cookies` before `testC` on `/`, though created later).\n- `/a/` and `/a/b` are both of size 2. The steps fall back to creation order; all three put `/a/b` first. I found no test for equal segment counts, so web-platform-tests/wpt#64550 adds `cookies/ordering/equal-segment-count.html` (1/1 in all three).\n\nDrafted with AI help.\n",
+      "createdAt": "2026-11-02T13:47:39Z",
+      "updatedAt": "2026-11-02T13:47:42Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "569a21fe3ea1b7a27719e436def9b41ab6662cdc",
+      "headRepository": "rifmj/http-extensions",
+      "headRefName": "layered-sort-path-length",
+      "headRefOid": "c3ba785beed19858b2f9f0e6c71531eead10d07e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3584,
+      "id": "PR_kwDOAUA-v88AAAABMcpibw",
+      "title": "SECONDARY CERTS: Client-only SETTINGS negotiation",
+      "url": "https://github.com/httpwg/http-extensions/pull/3584",
+      "state": "OPEN",
+      "author": "egorbaty",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "egorbaty"
+      ],
+      "labels": [
+        "secondary-server-certs"
+      ],
+      "body": "MT raised in his review that having the server send a setting that it supports secondary certs is not really necessary; as long as the client said it supported it, a SERVER_CERTIFICATE should be usable immediately for them, so it seems reasonable to relax this requirement and not require the server to indicate a setting back.\n\nThat said, it makes sense to me to still permit the server to be able to send a value informatively in the event that a client/server pair has some informal way to hint/solicit about usage of this mechanism, but the client doesn't want to do anything with request headers and/or make a soliciting request unless it knew the particular server supported it. ",
+      "createdAt": "2026-11-03T01:33:04Z",
+      "updatedAt": "2026-11-03T01:33:07Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "b5b0e275e3b53e6d527a9a2212e3e40e01acab6a",
+      "headRepository": "egorbaty/http-extensions",
+      "headRefName": "secondary-certs/client-only-setting-negotiation",
+      "headRefOid": "d2c2b1572ef94696babd4a276b1763806a5ebed5",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
