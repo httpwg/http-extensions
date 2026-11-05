@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-03T04:44:40.445791+00:00",
+  "timestamp": "2026-11-05T04:28:57.921465+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -222951,13 +222951,81 @@
       ],
       "body": "MT raised in his review that having the server send a setting that it supports secondary certs is not really necessary; as long as the client said it supported it, a SERVER_CERTIFICATE should be usable immediately for them, so it seems reasonable to relax this requirement and not require the server to indicate a setting back.\n\nThat said, it makes sense to me to still permit the server to be able to send a value informatively in the event that a client/server pair has some informal way to hint/solicit about usage of this mechanism, but the client doesn't want to do anything with request headers and/or make a soliciting request unless it knew the particular server supported it. ",
       "createdAt": "2026-11-03T01:33:04Z",
-      "updatedAt": "2026-11-03T01:33:07Z",
+      "updatedAt": "2026-11-03T05:46:21Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "b5b0e275e3b53e6d527a9a2212e3e40e01acab6a",
       "headRepository": "egorbaty/http-extensions",
       "headRefName": "secondary-certs/client-only-setting-negotiation",
       "headRefOid": "d2c2b1572ef94696babd4a276b1763806a5ebed5",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "MikeBishop",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "In the previous generation of the draft, there was a mechanism to ask the server for a particular cert, assuming the server might not want to disclose its full range of available certs. However, if we don't have that mechanism, I agree there's no requirement for the client to know about server support. If something adds that mechanism in the future, it can also add a corresponding setting.",
+          "createdAt": "2026-11-03T05:46:21Z",
+          "updatedAt": "2026-11-03T05:46:21Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 3585,
+      "id": "PR_kwDOAUA-v88AAAABM7J4qQ",
+      "title": "SECONDARY-CERTS: Add a section addressing trust-store divergence",
+      "url": "https://github.com/httpwg/http-extensions/pull/3585",
+      "state": "OPEN",
+      "author": "egorbaty",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "egorbaty"
+      ],
+      "labels": [
+        "secondary-server-certs"
+      ],
+      "body": "Closes #3576.\n\nAdds a section in security considerations suggesting that secondary certs should be validated with the same scrutiny as a certificate presented in the initial TLS handshake. The text says SHOULD as it _may_ be deliberate to not always do this, but the vast majority of clients should.\n\n\n\n",
+      "createdAt": "2026-11-04T22:00:27Z",
+      "updatedAt": "2026-11-04T22:00:28Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "b5b0e275e3b53e6d527a9a2212e3e40e01acab6a",
+      "headRepository": "egorbaty/http-extensions",
+      "headRefName": "secondary-certs/trust-store-divergence",
+      "headRefOid": "3dd46166591d46f30c693f65c9c9c63ba38a3870",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3586,
+      "id": "PR_kwDOAUA-v88AAAABM7aZ_Q",
+      "title": "SECONDARY CERTS: Remove certificate errors & denial of service handling",
+      "url": "https://github.com/httpwg/http-extensions/pull/3586",
+      "state": "OPEN",
+      "author": "egorbaty",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "egorbaty"
+      ],
+      "labels": [
+        "secondary-server-certs"
+      ],
+      "body": "It was noted in reviews for WGLC that there were a number of cases in the existing text which indicated certs that came in but could not be validated would be connection errors, but this blast radius is probably too large given the initial connection should still be valid.\n\nThis change removes the dedicated error for certs being invalid and changes the model a little bit about what clients should do when getting bad certs. Existing errors _can_ be used if the client decides that a bad secondary cert is worth closing the connection over, but it's no longer a requirement and not given an error code to encourage such behavior.\n\nWe're also encouraging usage of ENHANCE_YOUR_CALM and friends here for denial of service concerns.",
+      "createdAt": "2026-11-04T22:22:19Z",
+      "updatedAt": "2026-11-04T22:22:20Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "b5b0e275e3b53e6d527a9a2212e3e40e01acab6a",
+      "headRepository": "egorbaty/http-extensions",
+      "headRefName": "secondary-certs/certificate-error-handling",
+      "headRefOid": "eb160e56b941cec0f209fce179903b6a1fcf6c2d",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
