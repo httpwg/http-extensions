@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-05T04:28:57.921465+00:00",
+  "timestamp": "2026-11-08T03:38:55.480775+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -78624,6 +78624,46 @@
       "updatedAt": "2026-11-02T13:47:02Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 3587,
+      "id": "I_kwDOAUA-v88AAAABc1Kz7w",
+      "title": "Allow No-Vary-Search params to be a boolean",
+      "url": "https://github.com/httpwg/http-extensions/issues/3587",
+      "state": "OPEN",
+      "author": "achristensen07",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [
+        "no-vary-search"
+      ],
+      "body": "It currently says this:\n`If present, the params entry's value MUST be an inner list of strings`\nHowever, MDN and wpt say it should be allowed to be a boolean also.\nFound by work on https://github.com/WebKit/WebKit/pull/79813",
+      "createdAt": "2026-11-05T19:03:54Z",
+      "updatedAt": "2026-11-06T06:46:42Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "That's not what the algorithm says, and the document is in the RFC Editor queue. Fix MDN and WPT?",
+          "createdAt": "2026-11-06T06:25:05Z",
+          "updatedAt": "2026-11-06T06:25:05Z"
+        },
+        {
+          "author": "annevk",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think this is a bit more serious as what @achristensen07 reports is what Chrome and Firefox ship and have shipped for a while. I think at a minimum we need some feedback from @nidhijaju.",
+          "createdAt": "2026-11-06T06:43:08Z",
+          "updatedAt": "2026-11-06T06:43:08Z"
+        },
+        {
+          "author": "mnot",
+          "authorAssociation": "MEMBER",
+          "body": "ok but this will need discussion in the WG and AD approval too -- hopefully perfunctory. ",
+          "createdAt": "2026-11-06T06:46:42Z",
+          "updatedAt": "2026-11-06T06:46:42Z"
+        }
+      ]
     }
   ],
   "pulls": [
