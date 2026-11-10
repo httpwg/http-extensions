@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-08T03:38:55.480775+00:00",
+  "timestamp": "2026-11-10T05:26:18.653028+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -78664,6 +78664,22 @@
           "updatedAt": "2026-11-06T06:46:42Z"
         }
       ]
+    },
+    {
+      "number": 3588,
+      "id": "I_kwDOAUA-v88AAAABdiShuQ",
+      "title": "OJUL",
+      "url": "https://github.com/httpwg/http-extensions/issues/3588",
+      "state": "CLOSED",
+      "author": "mayowaolatundun2-beep",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "fa0007b2e5f823437e184341c5322b184038b1c3",
+      "createdAt": "2026-11-08T23:39:34Z",
+      "updatedAt": "2026-11-09T00:10:39Z",
+      "closedAt": "2026-11-09T00:10:39Z",
+      "comments": []
     }
   ],
   "pulls": [
