@@ -6,7 +6,7 @@ HTTP                                                A. van Kesteren, Ed.
 Internet-Draft                                                     Apple
 Obsoletes: [6265] (if approved)                          J. Hofmann, Ed.
 Intended status: Standards Track                                  Google
-Expires: 6 May 2027                                      2 November 2026
+Expires: 16 May 2027                                    12 November 2026
 
 
                 Cookies: HTTP State Management Mechanism
@@ -52,7 +52,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 May 2027.
+   This Internet-Draft will expire on 16 May 2027.
 
 Copyright Notice
 
@@ -1161,45 +1161,45 @@ Table of Contents
 
    15.  Let _pathAttributeValue_ be null.
 
-   16.  While _attributesInput_ is not an empty byte sequence:
+   16.  Let _maxAgeSeen_ be false.
 
-        1.   Let _maxAgeSeen_ be false.
+   17.  While _attributesInput_ is not an empty byte sequence:
 
-        2.   Let _char_ be the result of consuming the first byte of
+        1.   Let _char_ be the result of consuming the first byte of
              _attributesInput_.
 
-        3.   Assert: _char_ is 0x3B (;).
+        2.   Assert: _char_ is 0x3B (;).
 
-        4.   Let _attributeNameValueInput_ be null.
+        3.   Let _attributeNameValueInput_ be null.
 
-        5.   If _attributesInput_ contains 0x3B (;), then set
+        4.   If _attributesInput_ contains 0x3B (;), then set
              _attributeNameValueInput_ to the result of consuming the
              bytes of _attributesInput_ up to, but not including, the
              first 0x3B (;).
 
-        6.   Otherwise, set _attributeNameValueInput_ to the result of
+        5.   Otherwise, set _attributeNameValueInput_ to the result of
              consuming the remainder of _attributesInput_.
 
-        7.   Let _attributeName_ be null.
+        6.   Let _attributeName_ be null.
 
-        8.   Let _attributeValue_ be the empty string.
+        7.   Let _attributeValue_ be the empty string.
 
-        9.   If _attributeNameValueInput_ contains a 0x3D (=), then set
+        8.   If _attributeNameValueInput_ contains a 0x3D (=), then set
              _attributeName_ to the bytes up to, but not including, the
              first 0x3D (=) of _attributeNameValueInput_, and
              _attributeValue_ to the bytes after the first 0x3D (=) of
              _attributeNameValueInput_.
 
-        10.  Otherwise, set _attributeName_ to
+        9.   Otherwise, set _attributeName_ to
              _attributeNameValueInput_.
 
-        11.  Remove any leading or trailing WSP bytes from
+        10.  Remove any leading or trailing WSP bytes from
              _attributeName_ and _attributeValue_.
 
-        12.  If _attributeValue_'s length is greater than 1024, then
+        11.  If _attributeValue_'s length is greater than 1024, then
              continue.
 
-        13.  If _attributeName_ is a byte-case-insensitive match for
+        12.  If _attributeName_ is a byte-case-insensitive match for
              Expires:
 
              1.  If _maxAgeSeen_ is true, then continue.
@@ -1207,11 +1207,12 @@ Table of Contents
              2.  Let _expiryTime_ be the result of running Parse a Date
                  given _attributeValue_.
 
-             3.  If _attributeValue_ is failure, then continue.
+             3.  If _expiryTime_ is failure, then continue.
 
              4.  If _expiryTime_ is greater than the current time and
                  date + the user agent's cookie age limit, then set
-                 _expiryTime_ to the user agent's cookie age limit.
+                 _expiryTime_ to the current time and date + the user
+                 agent's cookie age limit.
 
              5.  If _expiryTime_ is earlier than the earliest date the
                  user agent can represent, the user agent MAY replace
@@ -1219,7 +1220,7 @@ Table of Contents
 
              6.  Set _cookie_'s expiry-time to _expiryTime_.
 
-        14.  If _attributeName_ is a byte-case-insensitive match for
+        13.  If _attributeName_ is a byte-case-insensitive match for
              Max-Age:
 
              1.  If _attributeValue_ is empty, continue.
@@ -1245,7 +1246,7 @@ Table of Contents
 
              8.  Set _maxAgeSeen_ to true.
 
-        15.  If _attributeName_ is a byte-case-insensitive match for
+        14.  If _attributeName_ is a byte-case-insensitive match for
              Domain:
 
              1.  Let _host_ be failure.
@@ -1263,24 +1264,24 @@ Table of Contents
 
              3.  Set _cookie_'s host to _host_.
 
-        16.  If _attributeName_ is a byte-case-insensitive match for
+        15.  If _attributeName_ is a byte-case-insensitive match for
              Path:
 
              1.  If _attributeValue_ is not empty and if the first byte
                  of _attributeValue_ is 0x2F (/), then set
                  _pathAttributeValue_ to _attributeValue_.
 
-        17.  If _attributeName_ is a byte-case-insensitive match for
+        16.  If _attributeName_ is a byte-case-insensitive match for
              Secure:
 
              1.  Set _cookie_'s secure to true.
 
-        18.  If _attributeName_ is a byte-case-insensitive match for
+        17.  If _attributeName_ is a byte-case-insensitive match for
              HttpOnly:
 
              1.  Set _cookie_'s http-only to true.
 
-        19.  If _attributeName_ is a byte-case-insensitive match for
+        18.  If _attributeName_ is a byte-case-insensitive match for
              SameSite:
 
              1.  If _attributeValue_ is a byte-case-insensitive match
@@ -1292,7 +1293,7 @@ Table of Contents
              3.  If _attributeValue_ is a byte-case-insensitive match
                  for Lax, then set _cookie_'s same-site to "lax".
 
-   17.  If _pathAttributeValue_ is non-null:
+   18.  If _pathAttributeValue_ is non-null:
 
         1.  Let _pathString_ be the isomorphic decoding of
             _pathAttributeValue_.
@@ -1323,7 +1324,7 @@ Table of Contents
         keeping with how the rest of _cookie_ is checked once parsing
         has settled on its final values.
 
-   18.  Return _cookie_.
+   19.  Return _cookie_.
 
    Note: Attributes with an unrecognized _attributeName_ are ignored.
 
