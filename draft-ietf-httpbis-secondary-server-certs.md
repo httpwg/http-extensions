@@ -399,6 +399,14 @@ values is expected to be equally secure, it is important to recognize that a
 vulnerability in this code path is at least equal to a vulnerability in the TLS
 handshake.
 
+## Certificate Trust {#certificate-trust}
+
+A `SERVER_CERTIFICATE` frame with a validated authenticator proves only that
+the server holds the private key corresponding to the end-entity certificate
+({{EXPORTED-AUTH}}). A client SHOULD evaluate the certificate using the same
+trust anchors and revocation checking that it applies to a certificate
+presented in the TLS handshake for the same origin ({{Section 4.3.4 of HTTP}}).
+
 ## Impersonation
 
 This mechanism could increase the impact of a key compromise. Rather than
