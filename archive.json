@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-10T05:26:18.653028+00:00",
+  "timestamp": "2026-11-12T05:04:58.603652+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -222944,26 +222944,50 @@
       "id": "PR_kwDOAUA-v88AAAABMUHjhw",
       "title": "layered-cookies: fix three errors in Parse a Cookie",
       "url": "https://github.com/httpwg/http-extensions/pull/3582",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "rifmj",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Three small corrections to the Expires and Max-Age steps of `draft-ietf-httpbis-layered-cookies`.\n\n1. `maxAgeSeen` is created inside the loop, so it is false again for every attribute. `Max-Age=3600; Expires=<past>` is then rejected, and `Max-Age=0; Expires=<future>` is kept. #2046 says Max-Age and Expires are meant to interact, and all browsers I tried give Max-Age priority (Chromium 156, Firefox 157, WebKit 27.2). The fix moves the variable above the loop.\n2. \"If attributeValue is failure\" tests the wrong variable, so a failed date goes on to the later steps. The fix tests `expiryTime`.\n3. \"set expiryTime to the user agent's cookie age limit\" assigns a number of days to a time. The fix uses the current time plus the limit, as the comparison just before it does.\n\nThere is no change of intent. How a later invalid Expires should behave is a separate question, in #3581.\n\nWPT: `cookies/attributes/last-attribute.html` in web-platform-tests/wpt#64550 covers item 1.\n\nDrafted with AI help.\n",
       "createdAt": "2026-11-02T13:47:34Z",
-      "updatedAt": "2026-11-02T13:47:37Z",
+      "updatedAt": "2026-11-12T03:54:56Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "569a21fe3ea1b7a27719e436def9b41ab6662cdc",
       "headRepository": "rifmj/http-extensions",
       "headRefName": "layered-parse-fixes",
       "headRefOid": "6ae44c90743189b8f6edfd2179bc27adb100ef18",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "closedAt": "2026-11-12T03:54:56Z",
+      "mergedAt": "2026-11-12T03:54:56Z",
+      "mergedBy": "johannhof",
+      "mergeCommit": {
+        "oid": "14b1143b9fe8cb4ff31257aaf44fc8dcb2314bed"
+      },
+      "comments": [
+        {
+          "author": "johannhof",
+          "authorAssociation": "MEMBER",
+          "body": "Thanks!",
+          "createdAt": "2026-11-12T03:52:50Z",
+          "updatedAt": "2026-11-12T03:52:50Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABXc5YMA",
+          "commit": {
+            "abbreviatedOid": "6ae44c9"
+          },
+          "author": "johannhof",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-11-12T03:52:18Z",
+          "updatedAt": "2026-11-12T03:52:18Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 3583,
