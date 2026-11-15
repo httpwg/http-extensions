@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-12T05:04:58.603652+00:00",
+  "timestamp": "2026-11-15T04:01:00.746753+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -78639,7 +78639,7 @@
       ],
       "body": "It currently says this:\n`If present, the params entry's value MUST be an inner list of strings`\nHowever, MDN and wpt say it should be allowed to be a boolean also.\nFound by work on https://github.com/WebKit/WebKit/pull/79813",
       "createdAt": "2026-11-05T19:03:54Z",
-      "updatedAt": "2026-11-06T06:46:42Z",
+      "updatedAt": "2026-11-13T01:51:02Z",
       "closedAt": null,
       "comments": [
         {
@@ -78662,6 +78662,13 @@
           "body": "ok but this will need discussion in the WG and AD approval too -- hopefully perfunctory. ",
           "createdAt": "2026-11-06T06:46:42Z",
           "updatedAt": "2026-11-06T06:46:42Z"
+        },
+        {
+          "author": "ricea",
+          "authorAssociation": "NONE",
+          "body": "I have sent a proposal to remove support for boolean \"params\" in Chrome: https://groups.google.com/a/chromium.org/g/blink-dev/c/rQ8KctRq2Ic/m/9BbW2g1PAgAJ. I am awaiting feedback on the proposal.",
+          "createdAt": "2026-11-13T01:51:02Z",
+          "updatedAt": "2026-11-13T01:51:02Z"
         }
       ]
     },
@@ -222951,7 +222958,7 @@
       "labels": [],
       "body": "Three small corrections to the Expires and Max-Age steps of `draft-ietf-httpbis-layered-cookies`.\n\n1. `maxAgeSeen` is created inside the loop, so it is false again for every attribute. `Max-Age=3600; Expires=<past>` is then rejected, and `Max-Age=0; Expires=<future>` is kept. #2046 says Max-Age and Expires are meant to interact, and all browsers I tried give Max-Age priority (Chromium 156, Firefox 157, WebKit 27.2). The fix moves the variable above the loop.\n2. \"If attributeValue is failure\" tests the wrong variable, so a failed date goes on to the later steps. The fix tests `expiryTime`.\n3. \"set expiryTime to the user agent's cookie age limit\" assigns a number of days to a time. The fix uses the current time plus the limit, as the comparison just before it does.\n\nThere is no change of intent. How a later invalid Expires should behave is a separate question, in #3581.\n\nWPT: `cookies/attributes/last-attribute.html` in web-platform-tests/wpt#64550 covers item 1.\n\nDrafted with AI help.\n",
       "createdAt": "2026-11-02T13:47:34Z",
-      "updatedAt": "2026-11-12T03:54:56Z",
+      "updatedAt": "2026-11-12T12:49:30Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "569a21fe3ea1b7a27719e436def9b41ab6662cdc",
@@ -222971,6 +222978,13 @@
           "body": "Thanks!",
           "createdAt": "2026-11-12T03:52:50Z",
           "updatedAt": "2026-11-12T03:52:50Z"
+        },
+        {
+          "author": "annevk",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@johannhof the tests are not merged? We should merge these in tandem.",
+          "createdAt": "2026-11-12T12:49:30Z",
+          "updatedAt": "2026-11-12T12:49:30Z"
         }
       ],
       "reviews": [
