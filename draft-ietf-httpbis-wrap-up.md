@@ -63,8 +63,8 @@ is best for the intermediary to inform the client of upcoming request stream
 terminations in advance of the actual termination so that the client can wrap
 up existing operations related to that stream and start sending new work to a
 different stream or connection. This document specifies a new "WRAP_UP" capsule
-that allows a proxy to instruct a client that it should not start new requests
-on a tunneled connection, while still allowing it to finish existing requests.
+that allows a proxy to inform a client of an intended request stream closure,
+optionally including an estimate of the time remaining before closure.
 
 --- middle
 
@@ -191,9 +191,9 @@ This document specifies a new "WRAP_UP" capsule (see {{Section 3 of
 !HTTP-DGRAM=RFC9297}}), which a server can send on an HTTP Data Stream, to
 inform a client that it intends to close the stream.
 
-An HTTP proxy can send a WRAP_UP capsule to instruct a client that it should
-not start new requests on a tunneled connection, while still allowing it to
-finish existing requests.
+An HTTP proxy can send a WRAP_UP capsule to suggest that a client avoid starting
+new requests on a tunneled connection, while still allowing it to finish
+existing requests.
 
 ## Conventions and Definitions
 
@@ -207,8 +207,24 @@ from {{Section 3.7 of HTTP}}.
 
 This document defines the "WRAP_UP" capsule (see {{iana}} for the value). The
 WRAP_UP capsule allows a proxy to indicate to a client that it wishes to close
-the request stream that the capsule was sent on. The WRAP_UP capsule has no
-Capsule Value.
+the request stream that the capsule was sent on.
+
+~~~
+WRAP_UP Capsule {
+  Type (i) = 0x0638A624,
+  Length (i),
+  Seconds (i)?,
+}
+~~~
+{: #wrap-up-format title="WRAP_UP Capsule Format"}
+
+The Capsule Value is either empty or contains a single Seconds field, encoded
+as a variable-length integer (see {{Section 16 of !QUIC=RFC9000}}).
+When present, Seconds estimates the number of seconds from sending the capsule
+until the proxy expects to close the request stream. An empty value provides
+no timing estimate; zero indicates
+that closure is imminent. The estimate is advisory: the stream can close
+earlier or later, and delivery delays reduce the time available to the client.
 
 ## Proxy Behavior
 
@@ -221,24 +237,28 @@ release resources associated with a request stream, such as HTTP Datagrams (see
 {{Section 2 of HTTP-DGRAM}}) or WebTransport streams (see
 {{?WEBTRANSPORT=I-D.ietf-webtrans-http3}}).
 
+A proxy MAY send additional WRAP_UP capsules on the same request stream to
+update its estimate. The most recently received capsule supersedes any
+previous timing estimate; an empty value indicates that no estimate is
+currently available.
+
 ## Client Handling
 
-When a client receives a WRAP_UP capsule on a request stream, it SHOULD try to
-wrap up its use of that stream. For example, if the stream carried a
-connect-udp request and is used as the underlying transport for an HTTP/3
-connection, then after receiving a WRAP_UP capsule the client SHOULD NOT send
-any new requests on the proxied HTTP/3 connection - but existing in-progress
-proxied requests are not affected by the WRAP_UP capsule.
+When a client receives a WRAP_UP capsule on a request stream, it MAY use the
+hint and any timing estimate to decide whether and how to wrap up its use of
+that stream. For example, it might stop sending new requests on a tunneled
+connection while allowing existing requests to complete, inform the user, or
+establish a replacement tunnel before the existing one closes. A client MAY
+ignore the hint. Receipt of a WRAP_UP capsule does not itself affect existing
+in-progress requests or require the client to close the stream when the
+estimated time elapses.
 
 ## Minutiae
 
 Clients MUST NOT send the WRAP_UP capsule. If a server receives a WRAP_UP
-capsule, it MUST abort the corresponding request stream. Endpoints MUST NOT
-send the WRAP_UP capsule with a non-zero Capsule Length. If an endpoint
-receives a WRAP_UP capsule with a non-zero Capsule Length, it MUST abort the
-corresponding request stream. Proxies MUST NOT send more than one WRAP_UP
-capsule on a given stream. If a client receives a second WRAP_UP capsule on a
-given request stream, it MUST abort the stream. Endpoints that abort the
+capsule, it MUST abort the corresponding request stream. If a client receives
+a WRAP_UP capsule with a malformed Capsule Value, it MUST abort the
+corresponding request stream. Endpoints that abort the
 request stream due to an unexpected or malformed WRAP_UP capsule MUST follow
 the error-handling procedure defined in {{Section 3.3 of HTTP-DGRAM}}.
 
@@ -262,7 +282,7 @@ This document (if approved) will request IANA to add the following entry to the
 
 Value:
 
-: 0x272DDA5E (will be changed to a lower value if this document is approved)
+: 0x0638A624 (will be changed to a lower value if this document is approved)
 
 Capsule Type:
 
