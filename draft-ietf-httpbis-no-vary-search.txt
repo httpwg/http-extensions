@@ -5,8 +5,8 @@
 HyperText Transfer Protocol                                  D. Denicola
 Internet-Draft                                                  J. Roman
 Intended status: Standards Track                            N. Jaju, Ed.
-Expires: 16 May 2027                                          Google LLC
-                                                        12 November 2026
+Expires: 21 May 2027                                          Google LLC
+                                                        17 November 2026
 
 
                The No-Vary-Search HTTP Caching Extension
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 May 2027.
+   This Internet-Draft will expire on 21 May 2027.
 
 Copyright Notice
 
@@ -822,8 +822,9 @@ Table of Contents
 10.2.  No-Vary-Search Dictionary Keys Registry
 
    IANA is requested to create a new registry, "No-Vary-Search
-   Dictionary Keys", at https://www.iana.org/assignments/http-fields/
-   (https://www.iana.org/assignments/http-fields/).
+   Dictionary Keys", in a new "Hypertext Transfer Protocol (HTTP) No-
+   Vary-Search" registry group, at https://www.iana.org/assignments/no-
+   vary-search/ (https://www.iana.org/assignments/no-vary-search/).
 
    The registration policy is "IETF Review" (see Section 4.8 of
    [RFC8126]).
