@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-15T04:01:00.746753+00:00",
+  "timestamp": "2026-11-19T05:15:56.909959+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -223124,6 +223124,34 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3589,
+      "id": "PR_kwDOAUA-v88AAAABPxqJ1Q",
+      "title": "Update NVS IANA considerations",
+      "url": "https://github.com/httpwg/http-extensions/pull/3589",
+      "state": "MERGED",
+      "author": "nidhijaju",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Update the IANA registry and category for NVS.",
+      "createdAt": "2026-11-17T08:48:40Z",
+      "updatedAt": "2026-11-17T08:50:17Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "14b1143b9fe8cb4ff31257aaf44fc8dcb2314bed",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "nvs-registry",
+      "headRefOid": "17bdc423e85aaafb00eb28d695f3c726964cad7e",
+      "closedAt": "2026-11-17T08:50:15Z",
+      "mergedAt": "2026-11-17T08:50:15Z",
+      "mergedBy": "nidhijaju",
+      "mergeCommit": {
+        "oid": "c52de428fd827c8f51a618f553c816d4481c5399"
+      },
       "comments": [],
       "reviews": []
     }
