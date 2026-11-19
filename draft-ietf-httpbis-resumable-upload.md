@@ -478,8 +478,6 @@ While the request content is being processed, the server SHOULD send interim res
 
 Every response to the same request that identifies the upload resource in the `Location` header field MUST use the same URI. A final response with `Upload-Complete: ?1` is the result of processing the representation, so its `Location` header field can identify a different resource. Clients SHOULD check that the upload resource URI does not change, and SHOULD stop the current request immediately ({{request-cancellation}}) and cancel the upload ({{upload-cancellation}}) if it does.
 
-The server SHOULD include the `Upload-Complete` header field ({{upload-complete-hdr}}) in the response to indicate whether it is the result of processing the uploaded representation.
-
 The server SHOULD NOT generate a response with a `3xx (Redirection)` status code and the `Upload-Complete: ?0` header field because the upload resource's URI is expected to remain the same for the lifetime of the upload. See {{origin}} for redirecting a response that completes the upload.
 
 The server might not process the entire request content when the upload is interrupted, for example, because of a dropped connection or a canceled request. In this case, the server SHOULD append as much of the request content as possible to the upload resource, allowing the client to resume the upload from where it was interrupted. The upload resource MUST NOT be considered complete in this case.
@@ -663,8 +661,6 @@ Even if the upload is complete ({{upload-complete}}) from the server's perspecti
 The server MUST record the representation's length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete: ?1` header fields are included in the request. If the representation's length is known, the server MUST NOT let the offset exceed it: if appending a request's content would take the offset past the length, the server MUST reject the request, deactivate the upload resource, and reject any further interaction with it. It is not sufficient to rely on the `Content-Length` header field for enforcement because this header field might not be present.
 
 While the request content is being processed, the server SHOULD send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
-
-The server SHOULD include the `Upload-Complete` header field ({{upload-complete-hdr}}) in the response to indicate whether it is the result of processing the uploaded representation.
 
 The server SHOULD NOT generate a response with a `3xx (Redirection)` status code and the `Upload-Complete: ?0` header field because the upload resource's URI is expected to remain the same for the lifetime of the upload. See {{origin}} for redirecting a response that completes the upload.
 
@@ -1062,6 +1058,7 @@ Reference:
 * Define ranges for integer values in `Upload-Limit` and problem type members.
 * Clarify that final response after creation doesn't need Upload-Complete.
 * Explicitly mention that client can continue after incomplete append.
+* Remove recommendation to include Upload-Complete in all responses.
 
 ## Since draft-ietf-httpbis-resumable-upload-13
 {:numbered="false"}
