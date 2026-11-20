@@ -458,7 +458,7 @@ Representation metadata included in the initial request (see {{Section 8 of HTTP
 
 If the client receives a final response that marks the upload as complete, the response comes from the target resource of the initial request ({{upload-complete-hdr}}). Note that this does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, and therefore, resuming the upload would not resolve this error.
 
-If the client sent the `Upload-Complete` header field set to false and receives a `2xx (Successful)` final response that does not mark the upload as complete, the `Location` header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
+If the client sent the `Upload-Complete` header field set to false and receives a `2xx (Successful)` final response with the `Upload-Complete` header field set to false, the `Location` header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
 
 If the client receives a `4xx (Client Error)` or `5xx (Server Error)` final response that does not mark the upload as complete, or if it did not receive a final response, it can apply the heuristics described in {{retry}} to retry or resume the upload.
 
@@ -470,7 +470,7 @@ The target resource of the initial request is responsible for processing the rep
 
 If the `Upload-Complete` request header field is set to true, the client intends to transfer the entire representation data in one request. If the request content was fully processed, no resumable upload is needed and the server proceeds to process the request and generate a response. Any `2xx (Successful)` response that the server generates for such a request MUST mark the upload as complete.
 
-If the `Upload-Complete` request header field is set to false, the client intends to transfer the representation over multiple requests. If the request content was fully processed, the server MUST include the `Location` header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits if any. Servers are RECOMMENDED to use the `201 (Created)` status code.
+If the `Upload-Complete` request header field is set to false, the client intends to transfer the representation over multiple requests. If the request content was fully processed, the server acknowledges the upload by sending a `2xx (Successful)` response with the `Upload-Complete` header field set to false. The response MUST include the `Location` header field pointing to the upload resource and MUST include the `Upload-Limit` header field with the corresponding limits if any. Servers are RECOMMENDED to use the `201 (Created)` status code.
 
 The server MUST record the representation's length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete: ?1` header fields are included in the request.
 
@@ -1054,7 +1054,7 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-15
 {:numbered="false"}
 
-No changes yet.
+* Require `Upload-Complete: ?0` on successful incomplete creation responses.
 
 ## Since draft-ietf-httpbis-resumable-upload-14
 {:numbered="false"}
