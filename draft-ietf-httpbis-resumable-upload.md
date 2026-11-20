@@ -354,7 +354,7 @@ A client SHOULD communicate the representation's length to the server as soon as
 1. If the request includes the `Upload-Complete` header field set to true, the request content is the remaining representation data. The representation's length is then the sum of the current offset ({{upload-offset}}) and the request content's length, which might be announced in the `Content-Length` header field.
 2. The request can include the `Upload-Length` header field defined below.
 
-If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. The representation's length, if known, MUST stay consistent across subsequent requests. A server SHOULD respond to a request with inconsistent length indicators with a `400 (Bad Request)` status code, and can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) to indicate why.
+If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. The representation's length, if known, MUST stay consistent across subsequent requests. A server SHOULD respond to a request with inconsistent length indicators with a `400 (Bad Request)` status code and the `Upload-Complete` header field set to false, and can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) to indicate why.
 
 Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` header field ({{upload-complete-hdr}}) to indicate that a request completes the upload. The offset could match the length, but the upload can still be incomplete.
 
@@ -648,7 +648,7 @@ The server might not process the entire patch document when the upload is interr
 
 If the `Upload-Offset` request header field value does not match the current offset ({{upload-offset}}), the server MUST reject the request with a `409 (Conflict)` status code and the `Upload-Complete` header field set to false. The response MUST include the correct offset in the `Upload-Offset` header field. The response can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" ({{mismatching-offset}}).
 
-If an upload append request is missing a valid `Upload-Offset` header field, a valid `Upload-Complete` header field, or both, the server SHOULD respond with a `400 (Bad Request)` status code.
+If an upload append request is missing a valid `Upload-Offset` header field, a valid `Upload-Complete` header field, or both, the server SHOULD respond with a `400 (Bad Request)` status code and the `Upload-Complete` header field set to false.
 
 The patch document cannot have a content coding of its own. A content coding would make the request content differ from the representation data that the offset ({{upload-offset}}) and length ({{upload-length}}) count. Therefore, if the request includes a `Content-Encoding` header field, the server SHOULD respond with a `415 (Unsupported Media Type)` status code and the `Upload-Complete` header field set to false.
 
@@ -1054,7 +1054,7 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-15
 {:numbered="false"}
 
-No changes yet.
+* Include `Upload-Complete: ?0` in `400` responses for missing append headers or inconsistent length.
 
 ## Since draft-ietf-httpbis-resumable-upload-14
 {:numbered="false"}
