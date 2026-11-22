@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-19T05:15:56.909959+00:00",
+  "timestamp": "2026-11-22T04:18:56.854656+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -286,7 +286,7 @@
     {
       "name": "wrap-up",
       "description": "",
-      "color": "f62681"
+      "color": "fbca04"
     },
     {
       "name": "incremental",
@@ -301,7 +301,7 @@
     {
       "name": "unencoded-digest",
       "description": "",
-      "color": "540DE5"
+      "color": "fbca04"
     },
     {
       "name": "invalid",
@@ -73454,7 +73454,7 @@
       "id": "I_kwDOAUA-v87OEr5A",
       "title": "Change Github default to \"Squash & Merge\"",
       "url": "https://github.com/httpwg/http-extensions/issues/3260",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "reschke",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -73464,8 +73464,8 @@
       "labels": [],
       "body": "I keep forgetting to squash, creating huge numbers of commits in the main branch.",
       "createdAt": "2025-09-26T12:14:52Z",
-      "updatedAt": "2025-09-28T06:12:19Z",
-      "closedAt": null,
+      "updatedAt": "2026-11-19T17:38:36Z",
+      "closedAt": "2026-11-19T17:38:36Z",
       "comments": [
         {
           "author": "mnot",
@@ -76814,10 +76814,12 @@
       "author": "will-bartlett",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "cookies"
+      ],
       "body": "[FedCM](https://github.com/w3c-fedid/FedCM) has some additional privacy complexities that are motivated by the current cookie retrieval algorithm. In particular, FedCM retrieves metadata from the _registrable domain_ rather than the _origin_ (like most specifications) because cookies are scoped to registrable domains and not origins. See [FedCM section 5.3.1 Manifest Fingerprinting](https://w3c-fedid.github.io/FedCM/#manifest-fingerprinting) for motivation and https://github.com/w3c-fedid/FedCM/issues/809 and https://github.com/w3c-fedid/FedCM/pull/821 for the problems this causes and an attempt to resolve them.\n\nSome participants [observed](https://github.com/w3c-fedid/FedCM/pull/821#issuecomment-4239660472) that only retrieving host-only cookies would resolve this issue cleanly. FedCM could switch to metadata on the _origin_ (like most specifications) if cookies were origin scoped. \n\nProposal: The retrieve cookie algorithm from draft-ietf-httpbis-layered-cookies takes five inputs (\"To Retrieve Cookies given a boolean isSecure, host host, URL path path, boolean httpOnlyAllowed, and string sameSite\"). Add a sixth input boolean originScoped and update the retrieval algorithm such that, when originScoped is true, cookies are only retrieved if the host-only flag is true or if host exact-matches cookie's host.\n\nOnce in the cookie specification, fetch can consume it as a new credential mode, and FedCM consume it through fetch.",
       "createdAt": "2026-04-24T17:23:46Z",
-      "updatedAt": "2026-04-27T19:20:26Z",
+      "updatedAt": "2026-11-19T17:39:01Z",
       "closedAt": null,
       "comments": [
         {
@@ -77479,10 +77481,12 @@
       "author": "yatuk",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "connect-tcp"
+      ],
       "body": "Section 6.1 (Resource Exhaustion attacks) opens with:\n\n> A malicious client can achieve cause highly asymmetric resource\n> usage at the proxy by colluding with a destination server...\n\n\"achieve cause\" looks like an editing artifact two verbs where one\nis intended. Suggest simply:\n\n> A malicious client can cause highly asymmetric resource usage at the\n> proxy by colluding with a destination server...\n\n(draft-ietf-httpbis-connect-tcp-11, Section 6.1)",
       "createdAt": "2026-06-23T19:42:10Z",
-      "updatedAt": "2026-06-23T19:42:10Z",
+      "updatedAt": "2026-11-19T17:39:34Z",
       "closedAt": null,
       "comments": []
     },
@@ -77878,17 +77882,19 @@
       "id": "I_kwDOAUA-v88AAAABJuc8JQ",
       "title": "secondary-server-certs: frame name",
       "url": "https://github.com/httpwg/http-extensions/issues/3497",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "yaroslavros",
       "authorAssociation": "NONE",
-      "assignees": [],
+      "assignees": [
+        "egorbaty"
+      ],
       "labels": [
         "secondary-server-certs"
       ],
       "body": "Can we please change `SERVER_CERTIFICATE` frame name back to `CERTIFICATE`?\n\nPotential future specification of client side secondary certificates could use the same frame to send client certificates. The content would be identical - carrying an exported authenticator.\n\nOn top of that, all other HTTP frame types do not have CLIENT_ or SERVER_ prefix even if they are applicable only in a single direction.",
       "createdAt": "2026-07-22T09:48:16Z",
-      "updatedAt": "2026-09-10T05:34:40Z",
-      "closedAt": null,
+      "updatedAt": "2026-11-20T22:31:38Z",
+      "closedAt": "2026-11-20T22:31:37Z",
       "comments": [
         {
           "author": "LPardue",
@@ -77910,6 +77916,13 @@
           "body": "This extension is a clear example of where \ud83e\udd54 would need special handling.  TLS EAs are asymmetric, such that a TLS client needs to be challenged, whereas a server does not.  (A fix for that might involve the use of a Fiat-Shamir heuristic-like synthetic challenge, but that's considerably more work.)",
           "createdAt": "2026-09-10T05:34:40Z",
           "updatedAt": "2026-09-10T05:34:40Z"
+        },
+        {
+          "author": "egorbaty",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Discussed during IETF 127, since the only benefit to really doing this is saving codepoints (which are cheap) and we had previously made the decision to have the frame type be dedicated to server auth, and there was no objection to closing this, we'll just close the issue here and keep things the way they are.",
+          "createdAt": "2026-11-20T22:31:38Z",
+          "updatedAt": "2026-11-20T22:31:38Z"
         }
       ]
     },
@@ -78605,9 +78618,31 @@
       ],
       "body": "In light of the eMudhra fiasco, @enygren raised the point that Secondary Certs carries the risk that the certificates exchanged at the HTTP layer might be compared against a different trust store or with different settings than would have been used in the TLS handshake. While that might sometimes be deliberate, it's worth a mention in the Security Considerations section. The exchange proves only that the peer holds the keys to the cert; whether the cert itself is trustworthy is a separate decision that has to be handled with the same care as in the TLS exchange itself.",
       "createdAt": "2026-10-28T14:41:32Z",
-      "updatedAt": "2026-10-28T14:41:32Z",
+      "updatedAt": "2026-11-20T23:29:24Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'm not sure if the description conveyed my concern.  Specifically, eMudhra is an example of where I'm worried our warnings and mitigations in Impersonation are adequate:\n\n> This mechanism could increase the impact of a key compromise. Rather than needing to subvert DNS or IP routing in order to use a compromised certificate, a malicious server now only needs a client to connect to some HTTPS site under its control in order to present the compromised certificate. Clients SHOULD consult DNS for hostnames presented in secondary certificates if they would have done so for the same hostname if it were present in the primary certificate.\n\nie, with the combination Seconday Certs (+ORIGIN) it becomes far easier to get clients to establish connections to a compromised/impersonated site in the case of a CA or Intermediate compromise.\n\nI'm not sure how we effectively defend against this -- not everyone is as good as the major browsers in responding to Intermediate CA compromise.",
+          "createdAt": "2026-11-20T22:27:02Z",
+          "updatedAt": "2026-11-20T22:27:02Z"
+        },
+        {
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I'll open a specific issue on the above to make it more clear.",
+          "createdAt": "2026-11-20T22:27:49Z",
+          "updatedAt": "2026-11-20T22:27:49Z"
+        },
+        {
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Opened #3592 although after thinking about this more it is unclear that this makes things worse than the situation we already have with the ORIGIN frame if clients don't follow DNS.  (eg, the attacker can already have a malicious SAN on the cert for the initial connection)",
+          "createdAt": "2026-11-20T23:29:24Z",
+          "updatedAt": "2026-11-20T23:29:24Z"
+        }
+      ]
     },
     {
       "number": 3581,
@@ -78616,12 +78651,14 @@
       "url": "https://github.com/httpwg/http-extensions/issues/3581",
       "state": "OPEN",
       "author": "rifmj",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "cookies"
+      ],
       "body": "Spec: draft-ietf-httpbis-layered-cookies, editor's copy at f9f079a, [Parse a Cookie](https://github.com/httpwg/http-extensions/blob/f9f079af84fe047359daa712e54a6912d2882e12/draft-ietf-httpbis-layered-cookies.md#L1076), against draft-ietf-httpbis-rfc6265bis-22, which it says it replaces.\n\n#2046 settled that the handling may vary per attribute. These cases change results compared with 6265bis, and existing WPT follows 6265bis, so I am listing them in case they were not meant to change.\n\n| Input | layered-cookies | 6265bis-22 | Chromium 156, Firefox 157, WebKit 27.2 |\n|---|---|---|---|\n| `n=1; SameSite=None; SameSite=foo` | `none` stays; no Secure, so not stored | 5.6.7: \"Default\"; stored | stored |\n| `t=1; SameSite=Strict; SameSite=foo`, then a cross-site link | `strict` stays; not sent | 5.6.7: \"Default\"; sent | sent |\n| `q=1; Path=/x; Path=foo` from `/y/set` | path `/x` | 5.6.4: default path `/y` | `/y` in Chromium and Firefox; see the note on WebKit |\n| `e=1; Domain=` | host parsing the empty string fails; not stored | 5.7 step 7: host-only; stored | stored |\n\nExisting tests: `attributes/path.html` (test 21, `path=/dog; path=`), `attributes/domain.sub.html` (bare `domain=`), `samesite/multiple-samesite-attributes.https.html` (`*_unsupported`). web-platform-tests/wpt#64550 adds `attributes/last-attribute.html` for a last Path without a leading `/`.\n\nThe empty Domain case needs the host to go back to null, not the attribute to be skipped, or `Domain=a.example; Domain=` would keep the earlier value. #1939 is about the same parser call.\n\nTwo other cases are less clear, so they are only in `attributes/last-attribute.tentative.html` in the same PR:\n\n- `x=1; Expires=<past>; Expires=garbage`: 6265bis ignores the bad date, and layered-cookies would too once its check tests `expiryTime`. The past date then applies and the cookie is not kept. All three browsers keep it.\n- `d=1; Domain=.`: 6265bis 5.6.3 strips the dot and gives a host-only cookie; layered-cookies and all three browsers reject it (#1744).\n\nNote on WebKit: For `Path=foo`, WebKit 27.2 (Playwright build, macOS) reports the literal path `foo` through the cookie API and does not return the cookie on the default path, so it fails this subtest. I have not checked Safari.\n\nDrafted with AI help.\n",
       "createdAt": "2026-11-02T13:47:02Z",
-      "updatedAt": "2026-11-02T13:47:02Z",
+      "updatedAt": "2026-11-19T17:39:13Z",
       "closedAt": null,
       "comments": []
     },
@@ -78687,6 +78724,65 @@
       "updatedAt": "2026-11-09T00:10:39Z",
       "closedAt": "2026-11-09T00:10:39Z",
       "comments": []
+    },
+    {
+      "number": 3590,
+      "id": "I_kwDOAUA-v88AAAABg3Fitg",
+      "title": "Scope & Authority of secondary certificates is unclear",
+      "url": "https://github.com/httpwg/http-extensions/issues/3590",
+      "state": "OPEN",
+      "author": "egorbaty",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "egorbaty"
+      ],
+      "labels": [
+        "secondary-server-certs"
+      ],
+      "body": "From WGLC review (Mark, Martin): the draft should state more clearly what a validated SERVER_CERTIFICATE lets a client do.\n\n-  Authority: The current text is spread loosely about the way that a servers authority can expand when a client validates a secondary cert, we should state it more clearly\n - Scope/lifetime: \u00a73 says certs are \"cached \u2026 and available for future use\", with no bound. At the minimum we should state that they are valid for the lifetime of the connection they were sent over. Should (or can) we allow them to be valid for longer? (like across TLS session resumption?)",
+      "createdAt": "2026-11-19T22:19:38Z",
+      "updatedAt": "2026-11-20T22:32:55Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "egorbaty",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Discussed during IETF 127, takeaways:\n\nWe should update and tighten the text to scope certificates to the HTTP/2 or HTTP/3 Connection specifically, their scope should absolutely NOT extend through resumption and we should not make much mention to TLS in these specs.",
+          "createdAt": "2026-11-20T22:32:55Z",
+          "updatedAt": "2026-11-20T22:32:55Z"
+        }
+      ]
+    },
+    {
+      "number": 3592,
+      "id": "I_kwDOAUA-v88AAAABhK0oKg",
+      "title": "Adversary attacks to hijack traffic without being on-path",
+      "url": "https://github.com/httpwg/http-extensions/issues/3592",
+      "state": "OPEN",
+      "author": "enygren",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The eMudhra failure (intermediate with a private key of \"4\", making it trivial for anyone to mint arbitrary certs) is a case where I'm worried our warnings and mitigations in Impersonation are adequate.  Right now we say:\n\n>  This mechanism could increase the impact of a key compromise. Rather than needing to subvert DNS or IP routing in order to use a compromised certificate, a malicious server now only needs a client to connect to some HTTPS site under its control in order to present the compromised certificate. Clients SHOULD consult DNS for hostnames presented in secondary certificates if they would have done so for the same hostname if it were present in the primary certificate.\n\nWith the combination Seconday Certs (+ORIGIN) it becomes far easier to get clients to establish connections to arbitrary compromised/impersonated sites in the case of a CA or Intermediate compromise.\n\nI'm not sure how we effectively defend against this -- not everyone is as good as the major browsers in responding to Intermediate CA compromise. Even #3585 (require the Secondary cert and initial cert have the same trust chain) would not necessarily help.\n\nA specific / concrete attack:\n\n1) Get client to make a connection through DNS to a server under the attacker's control.  This could be as simple as an image in an advertisement.\n2) Server sends a Secondary Cert and ORIGIN Frame on that connection for \"bank.example\" which is a compromised/impersonated cert (eg, signed by an eMudhra intermediate or the next iteration of that)\n3) Response to 1 gets client to make a request  to \"bank.example\"  (which could be issuing a redirect from the image in the advertisement)\n4) Client now uses the connection for \"bank.example\" and sends cookies set on that origin to the attacker\n5) If the client were to visit bank.example that request would also go to the attacker given the connection being established.\n\nThis doesn't require the attacker to be on-path, and doesn't require the attacker to do anything with the DNS.\nThis is far easier to exploit at scale due to not requiring being on-path nor needing to compromise anything else.\n\n",
+      "createdAt": "2026-11-20T22:41:33Z",
+      "updatedAt": "2026-11-21T23:43:01Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "enygren",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "On some further thought (and having Claude argue with me), we did already cross this bridge with ORIGIN.  An attacker could just as easily have the initial connection in (1) be to something with a SAN containing bank.example and then push an ORIGIN frame, so this may be no worse than ORIGIN.\n\nWe may want to copy some of the text from RFC 8336 into Security Considerations, for example:\n\n>  As a result, clients opting not to consult DNS ought to employ some\n>    alternative means to establish a high degree of confidence that the\n>    certificate is legitimate.  For example, clients might skip\n>    consulting DNS only if they receive proof of inclusion in a\n>    Certificate Transparency log [[RFC6962](https://www.rfc-editor.org/info/rfc6962/)] or if they have a recent\n>    Online Certificate Status Protocol (OCSP) response [[RFC6960](https://www.rfc-editor.org/info/rfc6960/)]\n>    (possibly using the \"status_request\" TLS extension [[RFC6066](https://www.rfc-editor.org/info/rfc6066/)]) showing\n>    that the certificate was not revoked.",
+          "createdAt": "2026-11-20T22:52:37Z",
+          "updatedAt": "2026-11-20T22:52:37Z"
+        },
+        {
+          "author": "martinthomson",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "To be fair, secondary certs change the threat profile meaningfully.  Names that share a certificate will be easily discoverable through CT, whereas a secondary certificate has no connection to the one that was originally presented.\n\nThe language you cite is still good (and I am still personally of the view that it suffices) but the reach of an attacker is greatly increased, which is a concern that is worth being cautious about.",
+          "createdAt": "2026-11-21T23:43:01Z",
+          "updatedAt": "2026-11-21T23:43:01Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -222645,13 +222741,13 @@
       ],
       "body": "Closes #3484.\r\n\r\nThis PR addresses two points that were raised when reopening this issue:\r\n\r\n1. **Upload creation**: a client that sent `Upload-Complete: ?1` and receives a `2xx (Successful)` response without the `Upload-Complete` header field considers the upload complete.\r\n  - This is what a server that does not support resumable uploads, or declines to upgrade, sends. Previously, the client text only covered responses that mark the upload as complete, but this should be a helpful addition.\r\n2. **Upload append**: a client that sent `Upload-Complete: ?0` and receives a `2xx (Successful)` response that does not mark the upload as complete can continue appending.\r\n  - This should be obvious, but without it, the closing \"Otherwise, the upload is considered a failure\" could be read to cover this case, which isn't the intention.\r\n",
       "createdAt": "2026-10-29T20:01:58Z",
-      "updatedAt": "2026-10-31T00:31:26Z",
+      "updatedAt": "2026-11-19T15:06:34Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "569a21fe3ea1b7a27719e436def9b41ab6662cdc",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "http-extensions-3484-52a3bc",
-      "headRefOid": "c931d0c6e77d5a711982c754df5dc04e1753c578",
+      "headRefOid": "3ccee74eab247b86367f6551677020bb31cb98a8",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -222943,6 +223039,46 @@
               "updatedAt": "2026-10-31T00:32:27Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABZEglZQ",
+          "commit": {
+            "abbreviatedOid": "dd77595"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-11-19T14:58:54Z",
+          "updatedAt": "2026-11-19T14:58:54Z",
+          "comments": [
+            {
+              "originalPosition": 60,
+              "body": "> Could we get rid of the \"SHOULD include the Upload-Complete\" sentence or make it stricter?\r\n\r\nI just did that in 2e1cbbf6ff5419d94c3c81e6d5aef050ca500712.",
+              "createdAt": "2026-11-19T14:58:54Z",
+              "updatedAt": "2026-11-19T14:58:55Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABZEpQUA",
+          "commit": {
+            "abbreviatedOid": "dd77595"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-11-19T15:06:34Z",
+          "updatedAt": "2026-11-19T15:06:34Z",
+          "comments": [
+            {
+              "originalPosition": 41,
+              "body": "I expanded that text to cover cases where the upload is complete and cases where the client can resume after getting a 104: 3ccee74eab247b86367f6551677020bb31cb98a8",
+              "createdAt": "2026-11-19T15:06:34Z",
+              "updatedAt": "2026-11-19T15:06:42Z"
+            }
+          ]
         }
       ]
     },
@@ -223045,7 +223181,7 @@
       ],
       "body": "MT raised in his review that having the server send a setting that it supports secondary certs is not really necessary; as long as the client said it supported it, a SERVER_CERTIFICATE should be usable immediately for them, so it seems reasonable to relax this requirement and not require the server to indicate a setting back.\n\nThat said, it makes sense to me to still permit the server to be able to send a value informatively in the event that a client/server pair has some informal way to hint/solicit about usage of this mechanism, but the client doesn't want to do anything with request headers and/or make a soliciting request unless it knew the particular server supported it. ",
       "createdAt": "2026-11-03T01:33:04Z",
-      "updatedAt": "2026-11-03T05:46:21Z",
+      "updatedAt": "2026-11-20T22:39:05Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "b5b0e275e3b53e6d527a9a2212e3e40e01acab6a",
@@ -223063,6 +223199,13 @@
           "body": "In the previous generation of the draft, there was a mechanism to ask the server for a particular cert, assuming the server might not want to disclose its full range of available certs. However, if we don't have that mechanism, I agree there's no requirement for the client to know about server support. If something adds that mechanism in the future, it can also add a corresponding setting.",
           "createdAt": "2026-11-03T05:46:21Z",
           "updatedAt": "2026-11-03T05:46:21Z"
+        },
+        {
+          "author": "egorbaty",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Discussed during IETF 127, no objection to the nature of these changes.",
+          "createdAt": "2026-11-20T22:39:05Z",
+          "updatedAt": "2026-11-20T22:39:05Z"
         }
       ],
       "reviews": []
@@ -223072,7 +223215,7 @@
       "id": "PR_kwDOAUA-v88AAAABM7J4qQ",
       "title": "SECONDARY-CERTS: Add a section addressing trust-store divergence",
       "url": "https://github.com/httpwg/http-extensions/pull/3585",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "egorbaty",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -223083,18 +223226,26 @@
       ],
       "body": "Closes #3576.\n\nAdds a section in security considerations suggesting that secondary certs should be validated with the same scrutiny as a certificate presented in the initial TLS handshake. The text says SHOULD as it _may_ be deliberate to not always do this, but the vast majority of clients should.\n\n\n\n",
       "createdAt": "2026-11-04T22:00:27Z",
-      "updatedAt": "2026-11-04T22:00:28Z",
+      "updatedAt": "2026-11-20T22:36:05Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "b5b0e275e3b53e6d527a9a2212e3e40e01acab6a",
       "headRepository": "egorbaty/http-extensions",
       "headRefName": "secondary-certs/trust-store-divergence",
       "headRefOid": "3dd46166591d46f30c693f65c9c9c63ba38a3870",
-      "closedAt": null,
+      "closedAt": "2026-11-20T22:36:05Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "egorbaty",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Discussed during IETF 127:\r\n\r\nMT noted that as a client which checks against many different trust stores, this is a common enough thing that even the _SHOULD_ text goes against this fairly common pattern. Consensus seemed aligned on closing this with no change and not adding the additional text at all.\r\n\r\nClosing with no changes.",
+          "createdAt": "2026-11-20T22:36:05Z",
+          "updatedAt": "2026-11-20T22:36:05Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -223113,7 +223264,7 @@
       ],
       "body": "It was noted in reviews for WGLC that there were a number of cases in the existing text which indicated certs that came in but could not be validated would be connection errors, but this blast radius is probably too large given the initial connection should still be valid.\n\nThis change removes the dedicated error for certs being invalid and changes the model a little bit about what clients should do when getting bad certs. Existing errors _can_ be used if the client decides that a bad secondary cert is worth closing the connection over, but it's no longer a requirement and not given an error code to encourage such behavior.\n\nWe're also encouraging usage of ENHANCE_YOUR_CALM and friends here for denial of service concerns.",
       "createdAt": "2026-11-04T22:22:19Z",
-      "updatedAt": "2026-11-04T22:22:20Z",
+      "updatedAt": "2026-11-20T22:38:35Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
       "baseRefOid": "b5b0e275e3b53e6d527a9a2212e3e40e01acab6a",
@@ -223124,7 +223275,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "egorbaty",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Discussed during IETF 127, removing the error code is probably taking things too far; the language should not really encourage closing the connection with the error unless it's actually causing problems but it still can be a useful signal for server operators.",
+          "createdAt": "2026-11-20T22:38:35Z",
+          "updatedAt": "2026-11-20T22:38:35Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -223154,6 +223313,193 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 3591,
+      "id": "PR_kwDOAUA-v88AAAABQwgqVw",
+      "title": "RESUMABLE: Bump interop version to 11",
+      "url": "https://github.com/httpwg/http-extensions/pull/3591",
+      "state": "OPEN",
+      "author": "Acconut",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "The interop version was bumped the last time in revision -13. Since then there have been changes to normative text, warranting a new interop version.",
+      "createdAt": "2026-11-20T20:09:08Z",
+      "updatedAt": "2026-11-20T20:11:03Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "c52de428fd827c8f51a618f553c816d4481c5399",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-upload/bump-interop-version-11",
+      "headRefOid": "1d12cd995ca84cb035b34622026bfe082a6bf4a4",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3593,
+      "id": "PR_kwDOAUA-v88AAAABQyloCQ",
+      "title": "RESUMABLE: Allow client to resume from upload-level 400 errors",
+      "url": "https://github.com/httpwg/http-extensions/pull/3593",
+      "state": "OPEN",
+      "author": "Acconut",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "Acconut"
+      ],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "Including `Upload-Complete: ?0` on 400 responses that were triggered by violations of resumable upload logic signals that the response didn't come from the resource targeted by the initial request. This allows a client to retry, in theory, if it were to resolve the root cause. However, this isn't done consistently at the moment.\n\nThis PR addresses this by mirroring how the draft already handles error responses for requests that include Content-Encoding, for example.",
+      "createdAt": "2026-11-20T23:25:33Z",
+      "updatedAt": "2026-11-20T23:29:45Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "c52de428fd827c8f51a618f553c816d4481c5399",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-upload/400-upload-complete-false",
+      "headRefOid": "c30c532a050055bc4dbc5e686e6c026eed17564d",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABZaxQNw",
+          "commit": {
+            "abbreviatedOid": "c30c532"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-11-20T23:28:12Z",
+          "updatedAt": "2026-11-20T23:28:12Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABZax8_A",
+          "commit": {
+            "abbreviatedOid": "c30c532"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-11-20T23:29:45Z",
+          "updatedAt": "2026-11-20T23:29:45Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3594,
+      "id": "PR_kwDOAUA-v88AAAABQymORg",
+      "title": "RESUMABLE: Do not resume upload after creation without server support",
+      "url": "https://github.com/httpwg/http-extensions/pull/3594",
+      "state": "OPEN",
+      "author": "Acconut",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "Acconut"
+      ],
+      "labels": [
+        "resumable-upload"
+      ],
+      "body": "If the client creates an upload with `Upload-Complete: ?0` and receives a 2xx response without any Upload-Complete header field, the current text allows it to resume the upload from the `Location` header. However, the server might not even support resumable uploads and the resource pointed to in the Location header isn't an upload resource.\n\nIn theory, this scenario shouldn't happen since a client should only send Upload-Complete: ?0 request if it knows that the server supports that. But we can tighten the client rules a bit to clarify this and state that it may only continue if the server opted in.",
+      "createdAt": "2026-11-20T23:26:33Z",
+      "updatedAt": "2026-11-21T01:04:13Z",
+      "baseRepository": "httpwg/http-extensions",
+      "baseRefName": "main",
+      "baseRefOid": "c52de428fd827c8f51a618f553c816d4481c5399",
+      "headRepository": "httpwg/http-extensions",
+      "headRefName": "resumable-upload/incomplete-create-upload-complete",
+      "headRefOid": "7e00ac8b99856eac6a024b871bcbf1b144a3e3c1",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOAUA-v88AAAABZayT3g",
+          "commit": {
+            "abbreviatedOid": "7e00ac8"
+          },
+          "author": "guoye-zhang",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-11-20T23:30:32Z",
+          "updatedAt": "2026-11-20T23:30:32Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABZazBdA",
+          "commit": {
+            "abbreviatedOid": "7e00ac8"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-11-20T23:31:37Z",
+          "updatedAt": "2026-11-20T23:31:50Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "What about non-2xx status codes that still convey a created upload resource, such as 413?",
+              "createdAt": "2026-11-20T23:31:37Z",
+              "updatedAt": "2026-11-20T23:31:50Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABZa2PpQ",
+          "commit": {
+            "abbreviatedOid": "7e00ac8"
+          },
+          "author": "Acconut",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-11-20T23:37:51Z",
+          "updatedAt": "2026-11-20T23:37:51Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "The sever should send a 104 as soon as the upload resource is available, allowing the client to resume from there. This was always the intention and https://github.com/httpwg/http-extensions/pull/3579 makes the client's behavior in that case a bit clearer.",
+              "createdAt": "2026-11-20T23:37:51Z",
+              "updatedAt": "2026-11-20T23:37:51Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOAUA-v88AAAABZbkbUQ",
+          "commit": {
+            "abbreviatedOid": "7e00ac8"
+          },
+          "author": "GrantGryczan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-11-21T01:04:13Z",
+          "updatedAt": "2026-11-21T01:04:13Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "Right. I forgot the `Location` header can't be reliably defined over 4xx responses.",
+              "createdAt": "2026-11-21T01:04:13Z",
+              "updatedAt": "2026-11-21T01:04:13Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
