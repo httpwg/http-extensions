@@ -472,7 +472,7 @@ Comments:
 
 ## No-Vary-Search Dictionary Keys Registry
 
-IANA is requested to create a new registry, "No-Vary-Search Dictionary Keys", at <https://www.iana.org/assignments/http-fields/>.
+IANA is requested to create a new registry, "No-Vary-Search Dictionary Keys", in a new "Hypertext Transfer Protocol (HTTP) No-Vary-Search" registry group, at <https://www.iana.org/assignments/no-vary-search/>.
 
 The registration policy is "IETF Review" (see Section 4.8 of {{?RFC8126}}).
 
