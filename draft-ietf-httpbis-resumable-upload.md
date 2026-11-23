@@ -1056,6 +1056,11 @@ Reference:
 # Changes
 {:removeinrfc="true"}
 
+## Since draft-ietf-httpbis-resumable-upload-16
+{:numbered="false"}
+
+None yet.
+
 ## Since draft-ietf-httpbis-resumable-upload-15
 {:numbered="false"}
 
