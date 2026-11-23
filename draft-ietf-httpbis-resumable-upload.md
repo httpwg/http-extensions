@@ -354,7 +354,7 @@ A client SHOULD communicate the representation's length to the server as soon as
 1. If the request includes the `Upload-Complete` header field set to true, the request content is the remaining representation data. The representation's length is then the sum of the current offset ({{upload-offset}}) and the request content's length, which might be announced in the `Content-Length` header field.
 2. The request can include the `Upload-Length` header field defined below.
 
-If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. The representation's length, if known, MUST stay consistent across subsequent requests. A server SHOULD respond to a request with inconsistent length indicators with a `400 (Bad Request)` status code, and can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) to indicate why.
+If indicators (1) and (2) are both present in the same request, their indicated lengths MUST match. The representation's length, if known, MUST stay consistent across subsequent requests. A server SHOULD respond to a request with inconsistent length indicators with a `400 (Bad Request)` status code and the `Upload-Complete` header field set to false, and can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#inconsistent-upload-length" ({{inconsistent-length}}) to indicate why.
 
 Note that the length and offset values do not determine whether an upload is complete. Instead, the client uses the `Upload-Complete` header field ({{upload-complete-hdr}}) to indicate that a request completes the upload. The offset could match the length, but the upload can still be incomplete.
 
@@ -458,6 +458,13 @@ Representation metadata included in the initial request (see {{Section 8 of HTTP
 
 If the client receives a final response that marks the upload as complete, the response comes from the target resource of the initial request ({{upload-complete-hdr}}). Note that this does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, and therefore, resuming the upload would not resolve this error.
 
+If the client sent the `Upload-Complete` header field set to true and receives a final response without the `Upload-Complete` header field, the upload is complete and the response comes from the target resource of the initial request when:
+
+- the response has a `2xx (Successful)` status code, or
+- the client did not receive the upload resource's URI in a `104 (Upload Resumption Supported)` interim response. The client then has no upload resource to resume, for example because the server does not support resumable uploads ({{upgrading-uploads}}).
+
+Otherwise, if the client received the upload resource's URI in a `104 (Upload Resumption Supported)` interim response and the final response has a `5xx (Server Error)` status code, the client can resume the upload ({{retry}}).
+
 If the client sent the `Upload-Complete` header field set to false and receives a `2xx (Successful)` final response that does not mark the upload as complete, the `Location` header field points the client to the created upload resource. The client can continue appending representation data to it ({{upload-appending}}).
 
 If the client receives a `4xx (Client Error)` or `5xx (Server Error)` final response that does not mark the upload as complete, or if it did not receive a final response, it can apply the heuristics described in {{retry}} to retry or resume the upload.
@@ -477,8 +484,6 @@ The server MUST record the representation's length according to {{upload-length}
 While the request content is being processed, the server SHOULD send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress.
 
 Every response to the same request that identifies the upload resource in the `Location` header field MUST use the same URI. A final response with `Upload-Complete: ?1` is the result of processing the representation, so its `Location` header field can identify a different resource. Clients SHOULD check that the upload resource URI does not change, and SHOULD stop the current request immediately ({{request-cancellation}}) and cancel the upload ({{upload-cancellation}}) if it does.
-
-The server SHOULD include the `Upload-Complete` header field ({{upload-complete-hdr}}) in the response to indicate whether it is the result of processing the uploaded representation.
 
 The server SHOULD NOT generate a response with a `3xx (Redirection)` status code and the `Upload-Complete: ?0` header field because the upload resource's URI is expected to remain the same for the lifetime of the upload. See {{origin}} for redirecting a response that completes the upload.
 
@@ -638,6 +643,8 @@ The request MUST include the `Upload-Complete` header field. Its value is true i
 
 If the client receives a final response that marks the upload as complete, the response comes from the target resource of the initial request ({{upload-complete-hdr}}). Note that this does not necessarily indicate success. `4xx (Client Error)` or `5xx (Server Error)` status codes indicate in this case an error occurred while processing the representation, and therefore, resuming the upload would not resolve this error.
 
+If the client sent the `Upload-Complete` header field set to false and receives a `2xx (Successful)` final response with the `Upload-Complete` header field set to false, the entire request content was appended to the upload resource ({{upload-offset-hdr}}). The client can continue appending representation data to it.
+
 If the client receives a `4xx (Client Error)` or `5xx (Server Error)` final response that does not mark the upload as complete, or if it did not receive a final response, it can apply the heuristics described in {{retry}} to retry or resume the upload. Otherwise, the upload is considered a failure.
 
 ## Server Behavior
@@ -648,7 +655,7 @@ The server might not process the entire patch document when the upload is interr
 
 If the `Upload-Offset` request header field value does not match the current offset ({{upload-offset}}), the server MUST reject the request with a `409 (Conflict)` status code and the `Upload-Complete` header field set to false. The response MUST include the correct offset in the `Upload-Offset` header field. The response can use the problem type {{PROBLEM}} of "https://iana.org/assignments/http-problem-types#mismatching-upload-offset" ({{mismatching-offset}}).
 
-If an upload append request is missing a valid `Upload-Offset` header field, a valid `Upload-Complete` header field, or both, the server SHOULD respond with a `400 (Bad Request)` status code.
+If an upload append request is missing a valid `Upload-Offset` header field, a valid `Upload-Complete` header field, or both, the server SHOULD respond with a `400 (Bad Request)` status code and the `Upload-Complete` header field set to false.
 
 The patch document cannot have a content coding of its own. A content coding would make the request content differ from the representation data that the offset ({{upload-offset}}) and length ({{upload-length}}) count. Therefore, if the request includes a `Content-Encoding` header field, the server SHOULD respond with a `415 (Unsupported Media Type)` status code and the `Upload-Complete` header field set to false.
 
@@ -661,8 +668,6 @@ Even if the upload is complete ({{upload-complete}}) from the server's perspecti
 The server MUST record the representation's length according to {{upload-length}} if the `Upload-Length` or `Upload-Complete: ?1` header fields are included in the request. If the representation's length is known, the server MUST NOT let the offset exceed it: if appending a request's content would take the offset past the length, the server MUST reject the request, deactivate the upload resource, and reject any further interaction with it. It is not sufficient to rely on the `Content-Length` header field for enforcement because this header field might not be present.
 
 While the request content is being processed, the server SHOULD send interim responses with a `104 (Upload Resumption Supported)` status code and the `Upload-Offset` header field set to the current offset to inform the client about the upload progress. These interim responses MUST NOT include the `Location` header field.
-
-The server SHOULD include the `Upload-Complete` header field ({{upload-complete-hdr}}) in the response to indicate whether it is the result of processing the uploaded representation.
 
 The server SHOULD NOT generate a response with a `3xx (Redirection)` status code and the `Upload-Complete: ?0` header field because the upload resource's URI is expected to remain the same for the lifetime of the upload. See {{origin}} for redirecting a response that completes the upload.
 
@@ -1054,6 +1059,10 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-15
 {:numbered="false"}
 
+* Clarify that final response after creation doesn't need Upload-Complete.
+* Explicitly mention that client can continue after incomplete append.
+* Remove recommendation to include Upload-Complete in all responses.
+* Include `Upload-Complete: ?0` in `400` responses for missing append headers or inconsistent length.
 * Increase the draft interop version.
 
 ## Since draft-ietf-httpbis-resumable-upload-14
