@@ -196,8 +196,9 @@ origins which it is prepared to service on the current connection, and SHOULD
 NOT send them if the client has not indicated support with
 `SETTINGS_HTTP_SERVER_CERT_AUTH`.
 
-A client MUST NOT send certificates to the server. The server MUST close the
-connection upon receipt of a SERVER_CERTIFICATE frame from a client.
+A client MUST NOT send `SERVER_CERTIFICATE` frames. A server MUST treat receipt
+of a `SERVER_CERTIFICATE` frame from a client as a connection error of type
+PROTOCOL_ERROR in HTTP/2 or H3_FRAME_UNEXPECTED in HTTP/3.
 
 ~~~ aasvg
 Client                                                    Server
@@ -288,9 +289,10 @@ A SERVER_CERTIFICATE frame in HTTP/2 (type=0xTBD) carries a TLS Exported
 Authenticator that clients can use to authenticate secondary origins from a
 sending server.
 
-The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
-MUST be sent on stream 0. An endpoint MUST treat a SERVER_CERTIFICATE frame with a
-stream identifier other than 0x00 as a connection error.
+The SERVER_CERTIFICATE frame applies to the connection, not a specific stream.
+It MUST be sent on stream 0. An endpoint MUST treat a SERVER_CERTIFICATE frame
+with a stream identifier other than 0x00 as a connection error of type
+PROTOCOL_ERROR.
 
 ~~~~~~~~~~ ascii-art
 SERVER_CERTIFICATE Frame {
@@ -321,9 +323,10 @@ A SERVER_CERTIFICATE frame in HTTP/3 (type=0xTBD) carries a TLS Exported
 Authenticator that clients can use to authenticate secondary origins from a
 sending server.
 
-The SERVER_CERTIFICATE frame applies to the connection, not a specific stream. It
-MUST be sent on the control stream. An endpoint MUST treat a SERVER_CERTIFICATE
-frame received on any stream other than the control stream as a connection error.
+The SERVER_CERTIFICATE frame applies to the connection, not a specific stream.
+It MUST be sent on the control stream. An endpoint MUST treat a
+SERVER_CERTIFICATE frame received on any stream other than the control stream as
+a connection error of type H3_FRAME_UNEXPECTED.
 
 ~~~~~~~~~~ ascii-art
 SERVER_CERTIFICATE Frame {
@@ -360,36 +363,18 @@ the token it contains:
 - Use the `validate` API to confirm the validity of the authenticator with
   regard to the generated request, if any.
 
-If the authenticator cannot be validated, this MUST be treated as a connection
-error of type SERVER_CERTIFICATE_INVALID ({{errors}}).
+A client that cannot validate the authenticator discards it.
 
 Once the authenticator is accepted, the endpoint can perform any other checks
 for the acceptability of the certificate itself.
 
-# Indicating Failures During HTTP-Layer Certificate Authentication {#errors}
+# Handling Certificate Failures {#errors}
 
-Because this document permits certificates to be exchanged at the HTTP framing
-layer instead of the TLS layer, several certificate-related errors which are
-defined at the TLS layer might now occur at the HTTP framing layer.
-
-There are two classes of errors which might be encountered, and they are handled
-differently.
-
-## Misbehavior
-
-This category of errors could indicate a peer failing to follow requirements in
-this document or might indicate that the connection is not fully secure. These
-errors are fatal to stream or connection, as appropriate.
-
-SERVER_CERTIFICATE_INVALID (0xTBD):
-: An exported authenticator could not be validated.
-
-## Invalid Certificates
-Unacceptable certificates (expired, revoked, or insufficient to satisfy the
-request) are not treated as stream or connection errors. This is typically not
-an indication of a protocol failure. Clients SHOULD establish a new connection
-in an attempt to reach an authoritative server if they deem a certificate from
-the server unacceptable.
+Neither a failed authenticator validation ({{exp-auth}}) nor an unacceptable
+certificate (expired, revoked, or insufficient to satisfy the request) is a
+stream or connection error. Clients SHOULD establish a new connection in an
+attempt to reach an authoritative server if they deem a certificate from the
+server unacceptable.
 
 # Security Considerations {#security}
 
@@ -428,6 +413,14 @@ This document defines a mechanism which could be used to probe servers for
 origins they support, but it opens no new attack that was not already possible
 by making repeat TLS connections with different SNI values.
 
+## Denial of Service {#dos}
+
+The considerations in {{Section 10.5 of H2}} and {{Section 10.5 of H3}} apply to
+`SERVER_CERTIFICATE` frames. A client MAY close the connection with
+ENHANCE_YOUR_CALM ({{Section 7 of H2}}) or H3_EXCESSIVE_LOAD ({{Section 8.1 of
+H3}}) if it receives more `SERVER_CERTIFICATE` frames than it is willing to
+process.
+
 ## Persistence of Service
 
 CNAME records in the DNS are frequently used to delegate authority for an origin
@@ -461,9 +454,8 @@ define formal mechanisms to facilitate that intention.
 
 # IANA Considerations
 
-This document registers the `SERVER_CERTIFICATE` frame type,
-`SETTINGS_HTTP_SERVER_CERT_AUTH` setting, and `SERVER_CERTIFICATE_INVALID`
-error code for both {{H2}} and {{H3}}.
+This document registers the `SERVER_CERTIFICATE` frame type and the
+`SETTINGS_HTTP_SERVER_CERT_AUTH` setting for both {{H2}} and {{H3}}.
 
 ## Frame Types
 
@@ -530,48 +522,6 @@ Setting Name:
 
 Default:
 : 0
-
-Status:
-: permanent
-
-Reference:
-: This document
-
-Change Controller:
-: IETF
-
-Contact:
-: ietf-http-wg@w3.org
-
-## Error Codes
-
-This specification registers the following entry in the "HTTP/2 Error Code"
-registry defined in {{H2}}:
-
-Code:
-: TBD
-
-Name:
-: SERVER_CERTIFICATE_INVALID
-
-Description:
-: There was an issue processing the SERVER_CERTIFICATE frame.
-
-Reference:
-: This document
-
-
-This specification registers the following entry in the "HTTP/3 Error Codes"
-registry established by {{H3}}:
-
-Value:
-: TBD
-
-Name:
-: SERVER_CERTIFICATE_INVALID
-
-Description:
-: There was an issue processing the SERVER_CERTIFICATE frame.
 
 Status:
 : permanent
