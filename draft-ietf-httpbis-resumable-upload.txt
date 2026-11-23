@@ -617,7 +617,8 @@ Table of Contents
    indicated lengths MUST match.  The representation's length, if known,
    MUST stay consistent across subsequent requests.  A server SHOULD
    respond to a request with inconsistent length indicators with a 400
-   (Bad Request) status code, and can use the problem type [PROBLEM] of
+   (Bad Request) status code and the Upload-Complete header field set to
+   false, and can use the problem type [PROBLEM] of
    "https://iana.org/assignments/http-problem-types#inconsistent-upload-
    length" (Section 14.2) to indicate why.
 
@@ -1217,7 +1218,8 @@ Table of Contents
 
    If an upload append request is missing a valid Upload-Offset header
    field, a valid Upload-Complete header field, or both, the server
-   SHOULD respond with a 400 (Bad Request) status code.
+   SHOULD respond with a 400 (Bad Request) status code and the Upload-
+   Complete header field set to false.
 
    The patch document cannot have a content coding of its own.  A
    content coding would make the request content differ from the
@@ -1999,6 +2001,9 @@ Since draft-ietf-httpbis-resumable-upload-15
       append.
 
    *  Remove recommendation to include Upload-Complete in all responses.
+
+   *  Include Upload-Complete: ?0 in 400 responses for missing append
+      headers or inconsistent length.
 
 Since draft-ietf-httpbis-resumable-upload-14
 
