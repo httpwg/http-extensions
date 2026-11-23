@@ -1446,10 +1446,11 @@ boolean _httpOnlyAllowed_, and string _sameSite_:
 
 1. Sort _cookies_ in the following order:
 
-   * Cookies whose path's size is greater are listed before cookies whose path's size
-     is smaller.
+   * Cookies whose path length is greater are listed before cookies whose path length
+     is smaller, where a cookie's path length is its path's size plus the sum of the
+     lengths of its path's segments.
 
-   * Among cookies whose path's size is equal, cookies whose creation-time is earlier
+   * Among cookies whose path length is equal, cookies whose creation-time is earlier
      are listed before cookies whose creation-time is later.
 
 1. Set the last-access-time of each cookie of _cookies_ to the current date and time
