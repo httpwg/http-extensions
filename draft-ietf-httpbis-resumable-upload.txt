@@ -5,10 +5,10 @@
 HTTP                                                      M. Kleidl, Ed.
 Internet-Draft                                               Transloadit
 Intended status: Standards Track                           G. Zhang, Ed.
-Expires: 21 May 2027                                          Apple Inc.
+Expires: 27 May 2027                                          Apple Inc.
                                                           L. Pardue, Ed.
                                                                    Apple
-                                                        17 November 2026
+                                                        23 November 2026
 
 
                        Resumable Uploads for HTTP
@@ -56,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 May 2027.
+   This Internet-Draft will expire on 27 May 2027.
 
 Copyright Notice
 
@@ -874,6 +874,23 @@ Table of Contents
    representation, and therefore, resuming the upload would not resolve
    this error.
 
+   If the client sent the Upload-Complete header field set to true and
+   receives a final response without the Upload-Complete header field,
+   the upload is complete and the response comes from the target
+   resource of the initial request when:
+
+   *  the response has a 2xx (Successful) status code, or
+
+   *  the client did not receive the upload resource's URI in a 104
+      (Upload Resumption Supported) interim response.  The client then
+      has no upload resource to resume, for example because the server
+      does not support resumable uploads (Section 17.1.1).
+
+   Otherwise, if the client received the upload resource's URI in a 104
+   (Upload Resumption Supported) interim response and the final response
+   has a 5xx (Server Error) status code, the client can resume the
+   upload (Section 11).
+
    If the client sent the Upload-Complete header field set to false and
    receives a 2xx (Successful) final response that does not mark the
    upload as complete, the Location header field points the client to
@@ -935,10 +952,6 @@ Table of Contents
    resource.  Clients SHOULD check that the upload resource URI does not
    change, and SHOULD stop the current request immediately (Section 19)
    and cancel the upload (Section 9) if it does.
-
-   The server SHOULD include the Upload-Complete header field
-   (Section 4.2.1) in the response to indicate whether it is the result
-   of processing the uploaded representation.
 
    The server SHOULD NOT generate a response with a 3xx (Redirection)
    status code and the Upload-Complete: ?0 header field because the
@@ -1165,6 +1178,12 @@ Table of Contents
    representation, and therefore, resuming the upload would not resolve
    this error.
 
+   If the client sent the Upload-Complete header field set to false and
+   receives a 2xx (Successful) final response with the Upload-Complete
+   header field set to false, the entire request content was appended to
+   the upload resource (Section 4.1.1).  The client can continue
+   appending representation data to it.
+
    If the client receives a 4xx (Client Error) or 5xx (Server Error)
    final response that does not mark the upload as complete, or if it
    did not receive a final response, it can apply the heuristics
@@ -1251,10 +1270,6 @@ Table of Contents
    code and the Upload-Offset header field set to the current offset to
    inform the client about the upload progress.  These interim responses
    MUST NOT include the Location header field.
-
-   The server SHOULD include the Upload-Complete header field
-   (Section 4.2.1) in the response to indicate whether it is the result
-   of processing the uploaded representation.
 
    The server SHOULD NOT generate a response with a 3xx (Redirection)
    status code and the Upload-Complete: ?0 header field because the
@@ -1977,7 +1992,13 @@ Appendix A.  Changes
 
 Since draft-ietf-httpbis-resumable-upload-15
 
-   No changes yet.
+   *  Clarify that final response after creation doesn't need Upload-
+      Complete.
+
+   *  Explicitly mention that client can continue after incomplete
+      append.
+
+   *  Remove recommendation to include Upload-Complete in all responses.
 
 Since draft-ietf-httpbis-resumable-upload-14
 
