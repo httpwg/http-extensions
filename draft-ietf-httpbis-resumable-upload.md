@@ -1059,7 +1059,9 @@ Reference:
 ## Since draft-ietf-httpbis-resumable-upload-15
 {:numbered="false"}
 
-No changes yet.
+* Clarify that final response after creation doesn't need Upload-Complete.
+* Explicitly mention that client can continue after incomplete append.
+* Remove recommendation to include Upload-Complete in all responses.
 
 ## Since draft-ietf-httpbis-resumable-upload-14
 {:numbered="false"}
@@ -1068,9 +1070,6 @@ No changes yet.
 * Discourage change of upload URLs.
 * Append request cannot use different content codings.
 * Define ranges for integer values in `Upload-Limit` and problem type members.
-* Clarify that final response after creation doesn't need Upload-Complete.
-* Explicitly mention that client can continue after incomplete append.
-* Remove recommendation to include Upload-Complete in all responses.
 
 ## Since draft-ietf-httpbis-resumable-upload-13
 {:numbered="false"}
