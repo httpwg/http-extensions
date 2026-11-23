@@ -1063,6 +1063,7 @@ Reference:
 * Explicitly mention that client can continue after incomplete append.
 * Remove recommendation to include Upload-Complete in all responses.
 * Include `Upload-Complete: ?0` in `400` responses for missing append headers or inconsistent length.
+* Increase the draft interop version.
 
 ## Since draft-ietf-httpbis-resumable-upload-14
 {:numbered="false"}
@@ -1226,7 +1227,7 @@ None
 
 To assist the development of implementations and interoperability testing while this document is still a draft, an interop version is defined. Implementations of this draft use the interop version to identify the iteration of the draft that they implement. The interop version is bumped for breaking changes.
 
-The current interop version is 10.
+The current interop version is 11.
 
 Client implementations of draft versions of the protocol MUST send a header field `Upload-Draft-Interop-Version` with the interop version as its value to its requests. The `Upload-Draft-Interop-Version` field value is an Integer.
 
