@@ -2005,6 +2005,8 @@ Since draft-ietf-httpbis-resumable-upload-15
    *  Include Upload-Complete: ?0 in 400 responses for missing append
       headers or inconsistent length.
 
+   *  Increase the draft interop version.
+
 Since draft-ietf-httpbis-resumable-upload-14
 
    *  State that unknown Structured Fields parameters MUST be ignored.
@@ -2237,7 +2239,7 @@ Appendix B.  Draft Version Identification
    identify the iteration of the draft that they implement.  The interop
    version is bumped for breaking changes.
 
-   The current interop version is 10.
+   The current interop version is 11.
 
    Client implementations of draft versions of the protocol MUST send a
    header field Upload-Draft-Interop-Version with the interop version as
