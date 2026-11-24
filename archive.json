@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-22T04:18:56.854656+00:00",
+  "timestamp": "2026-11-24T07:45:31.941563+00:00",
   "repo": "httpwg/http-extensions",
   "labels": [
     {
@@ -77697,7 +77697,7 @@
       "id": "I_kwDOAUA-v88AAAABIXr5cw",
       "title": "RESUMABLE: Problems with completeness in 2xx creation and append responses",
       "url": "https://github.com/httpwg/http-extensions/issues/3484",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "GrantGryczan",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -77708,8 +77708,8 @@
       ],
       "body": "#3472 seems to have created a regression by removing the following text from upload creation's client specifications:\n\n> If the client received a final response with a\n> \n> - `2xx (Successful)` status code and the request content contained the entire representation data, the upload is complete and the response comes from the resource targeted by the initial request processing the representation.\n> - [...]\n\nThis was replaced with the following:\n\n> If the client received a final response with the `Upload-Complete: ?1` header field, the upload is complete and [...].\n> \n> If the client receives a 2xx successful final response with the `Upload-Complete` header field set to false or missing, the `Location` response header field points the client to the created upload resource. The client can continue appending representation data to it ([Section 4.4](https://httpwg.org/http-extensions/draft-ietf-httpbis-resumable-upload.html#upload-appending)).\n> \n> [...]\n\nIn particular, if a client sends a creation request with `Upload-Complete: ?1`, a 2xx response with `Upload-Complete` missing should be treated as if the upload had been completed. In general, if the client sent `Upload-Complete: ?1`, then a 2xx response should mean the upload was completed. The old text (poorly) captured that, but the new text always treats `Upload-Complete` missing as `Upload-Complete: ?0`.\n\nA similar regression occurred for upload append's client specifications. The new text no longer specifies how 2xx should be treated at all. To simplify the client implementation, I would hope for 2xx responses to an `Upload-Complete: ?1` upload append request to also be considered complete. I don't want to have to special-case the response handler for upload creation to treat 2xx without `Upload-Complete` differently from the same for upload append.\n\nFurther, perhaps servers should be required not to use `Upload-Complete: ?0` in a 2xx response to a request with `Upload-Complete: ?1`? That seems self-contradictory: 2xx means \"I fulfilled your request\", but `Upload-Complete: ?0` means \"I didn't complete the upload (even though you requested me to)\".",
       "createdAt": "2026-07-10T16:07:48Z",
-      "updatedAt": "2026-10-29T20:06:43Z",
-      "closedAt": null,
+      "updatedAt": "2026-11-23T07:37:48Z",
+      "closedAt": "2026-11-23T07:37:48Z",
       "comments": [
         {
           "author": "guoye-zhang",
@@ -222729,7 +222729,7 @@
       "id": "PR_kwDOAUA-v88AAAABLnoQow",
       "title": "RESUMABLE: Clarify client handling of 2xx creation and append responses",
       "url": "https://github.com/httpwg/http-extensions/pull/3579",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "Acconut",
       "authorAssociation": "MEMBER",
       "assignees": [
@@ -222741,17 +222741,19 @@
       ],
       "body": "Closes #3484.\r\n\r\nThis PR addresses two points that were raised when reopening this issue:\r\n\r\n1. **Upload creation**: a client that sent `Upload-Complete: ?1` and receives a `2xx (Successful)` response without the `Upload-Complete` header field considers the upload complete.\r\n  - This is what a server that does not support resumable uploads, or declines to upgrade, sends. Previously, the client text only covered responses that mark the upload as complete, but this should be a helpful addition.\r\n2. **Upload append**: a client that sent `Upload-Complete: ?0` and receives a `2xx (Successful)` response that does not mark the upload as complete can continue appending.\r\n  - This should be obvious, but without it, the closing \"Otherwise, the upload is considered a failure\" could be read to cover this case, which isn't the intention.\r\n",
       "createdAt": "2026-10-29T20:01:58Z",
-      "updatedAt": "2026-11-19T15:06:34Z",
+      "updatedAt": "2026-11-23T07:37:49Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "569a21fe3ea1b7a27719e436def9b41ab6662cdc",
+      "baseRefOid": "c52de428fd827c8f51a618f553c816d4481c5399",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "http-extensions-3484-52a3bc",
-      "headRefOid": "3ccee74eab247b86367f6551677020bb31cb98a8",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "ffeb181abce5cd9bbb0dbfb286c1fdf72a3db092",
+      "closedAt": "2026-11-23T07:37:46Z",
+      "mergedAt": "2026-11-23T07:37:46Z",
+      "mergedBy": "Acconut",
+      "mergeCommit": {
+        "oid": "b9d82a1a6e7d0c16a828d4c198db64ca0389a1c1"
+      },
       "comments": [],
       "reviews": [
         {
@@ -223319,24 +223321,30 @@
       "id": "PR_kwDOAUA-v88AAAABQwgqVw",
       "title": "RESUMABLE: Bump interop version to 11",
       "url": "https://github.com/httpwg/http-extensions/pull/3591",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "Acconut",
       "authorAssociation": "MEMBER",
-      "assignees": [],
-      "labels": [],
+      "assignees": [
+        "Acconut"
+      ],
+      "labels": [
+        "resumable-upload"
+      ],
       "body": "The interop version was bumped the last time in revision -13. Since then there have been changes to normative text, warranting a new interop version.",
       "createdAt": "2026-11-20T20:09:08Z",
-      "updatedAt": "2026-11-20T20:11:03Z",
+      "updatedAt": "2026-11-23T07:41:36Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "c52de428fd827c8f51a618f553c816d4481c5399",
+      "baseRefOid": "c54618374c6fb724b6952cd10f897a81d47914c3",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "resumable-upload/bump-interop-version-11",
-      "headRefOid": "1d12cd995ca84cb035b34622026bfe082a6bf4a4",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "5b46e4f5e51c967bbbe099bc676de2950021e6ad",
+      "closedAt": "2026-11-23T07:41:34Z",
+      "mergedAt": "2026-11-23T07:41:33Z",
+      "mergedBy": "Acconut",
+      "mergeCommit": {
+        "oid": "2c42690eb66976b3fea66338b8483bd3386e73f5"
+      },
       "comments": [],
       "reviews": []
     },
@@ -223345,7 +223353,7 @@
       "id": "PR_kwDOAUA-v88AAAABQyloCQ",
       "title": "RESUMABLE: Allow client to resume from upload-level 400 errors",
       "url": "https://github.com/httpwg/http-extensions/pull/3593",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "Acconut",
       "authorAssociation": "MEMBER",
       "assignees": [
@@ -223356,17 +223364,19 @@
       ],
       "body": "Including `Upload-Complete: ?0` on 400 responses that were triggered by violations of resumable upload logic signals that the response didn't come from the resource targeted by the initial request. This allows a client to retry, in theory, if it were to resolve the root cause. However, this isn't done consistently at the moment.\n\nThis PR addresses this by mirroring how the draft already handles error responses for requests that include Content-Encoding, for example.",
       "createdAt": "2026-11-20T23:25:33Z",
-      "updatedAt": "2026-11-20T23:29:45Z",
+      "updatedAt": "2026-11-23T07:40:39Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "c52de428fd827c8f51a618f553c816d4481c5399",
+      "baseRefOid": "b9d82a1a6e7d0c16a828d4c198db64ca0389a1c1",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "resumable-upload/400-upload-complete-false",
-      "headRefOid": "c30c532a050055bc4dbc5e686e6c026eed17564d",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "a2b1581b6a50132693e580392e01a20f7b3995ac",
+      "closedAt": "2026-11-23T07:40:37Z",
+      "mergedAt": "2026-11-23T07:40:37Z",
+      "mergedBy": "Acconut",
+      "mergeCommit": {
+        "oid": "c54618374c6fb724b6952cd10f897a81d47914c3"
+      },
       "comments": [],
       "reviews": [
         {
@@ -223402,7 +223412,7 @@
       "id": "PR_kwDOAUA-v88AAAABQymORg",
       "title": "RESUMABLE: Do not resume upload after creation without server support",
       "url": "https://github.com/httpwg/http-extensions/pull/3594",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "Acconut",
       "authorAssociation": "MEMBER",
       "assignees": [
@@ -223413,17 +223423,19 @@
       ],
       "body": "If the client creates an upload with `Upload-Complete: ?0` and receives a 2xx response without any Upload-Complete header field, the current text allows it to resume the upload from the `Location` header. However, the server might not even support resumable uploads and the resource pointed to in the Location header isn't an upload resource.\n\nIn theory, this scenario shouldn't happen since a client should only send Upload-Complete: ?0 request if it knows that the server supports that. But we can tighten the client rules a bit to clarify this and state that it may only continue if the server opted in.",
       "createdAt": "2026-11-20T23:26:33Z",
-      "updatedAt": "2026-11-21T01:04:13Z",
+      "updatedAt": "2026-11-23T07:49:59Z",
       "baseRepository": "httpwg/http-extensions",
       "baseRefName": "main",
-      "baseRefOid": "c52de428fd827c8f51a618f553c816d4481c5399",
+      "baseRefOid": "2c42690eb66976b3fea66338b8483bd3386e73f5",
       "headRepository": "httpwg/http-extensions",
       "headRefName": "resumable-upload/incomplete-create-upload-complete",
-      "headRefOid": "7e00ac8b99856eac6a024b871bcbf1b144a3e3c1",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "57034055c9a125b2289220bd8f66870c9a944475",
+      "closedAt": "2026-11-23T07:49:57Z",
+      "mergedAt": "2026-11-23T07:49:57Z",
+      "mergedBy": "Acconut",
+      "mergeCommit": {
+        "oid": "5cc4b452bff744333a8d6569d939f86d516719ca"
+      },
       "comments": [],
       "reviews": [
         {
